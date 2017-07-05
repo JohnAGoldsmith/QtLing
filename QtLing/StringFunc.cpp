@@ -803,6 +803,9 @@ QString Filter( StringToString* filter, QString string )
 //        }
 //    }
 //    return filtered;
+    int i = filter->count();
+    i++;
+    i--;
     return string;
 }
 QString DisplayInt ( int n )
