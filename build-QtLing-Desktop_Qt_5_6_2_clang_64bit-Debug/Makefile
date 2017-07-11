@@ -185,6 +185,7 @@ DIST          = ../QtLing/test.txt \
 		../../Qt5.6.2/5.6/clang_64/mkspecs/features/qt_config.prf \
 		../../Qt5.6.2/5.6/clang_64/mkspecs/macx-clang/qmake.conf \
 		../../Qt5.6.2/5.6/clang_64/mkspecs/features/spec_post.prf \
+		../QtLing/.qmake.stash \
 		../../Qt5.6.2/5.6/clang_64/mkspecs/features/exclusive_builds.prf \
 		../../Qt5.6.2/5.6/clang_64/mkspecs/features/default_pre.prf \
 		../../Qt5.6.2/5.6/clang_64/mkspecs/features/mac/default_pre.prf \
@@ -355,6 +356,7 @@ Makefile: ../QtLing/QtLing.pro ../../Qt5.6.2/5.6/clang_64/mkspecs/macx-clang/qma
 		../../Qt5.6.2/5.6/clang_64/mkspecs/features/qt_config.prf \
 		../../Qt5.6.2/5.6/clang_64/mkspecs/macx-clang/qmake.conf \
 		../../Qt5.6.2/5.6/clang_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		../../Qt5.6.2/5.6/clang_64/mkspecs/features/exclusive_builds.prf \
 		../../Qt5.6.2/5.6/clang_64/mkspecs/features/default_pre.prf \
 		../../Qt5.6.2/5.6/clang_64/mkspecs/features/mac/default_pre.prf \
@@ -501,6 +503,7 @@ Makefile: ../QtLing/QtLing.pro ../../Qt5.6.2/5.6/clang_64/mkspecs/macx-clang/qma
 ../../Qt5.6.2/5.6/clang_64/mkspecs/features/qt_config.prf:
 ../../Qt5.6.2/5.6/clang_64/mkspecs/macx-clang/qmake.conf:
 ../../Qt5.6.2/5.6/clang_64/mkspecs/features/spec_post.prf:
+.qmake.stash:
 ../../Qt5.6.2/5.6/clang_64/mkspecs/features/exclusive_builds.prf:
 ../../Qt5.6.2/5.6/clang_64/mkspecs/features/default_pre.prf:
 ../../Qt5.6.2/5.6/clang_64/mkspecs/features/mac/default_pre.prf:

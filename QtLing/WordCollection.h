@@ -24,7 +24,7 @@ protected:
     // construction/destruction.
 
     CWordCollection();
-    CWordCollection(/*CLexicon* Lex,*/ QString MemberName = QString());
+//    CWordCollection(CLexicon* Lex, QString MemberName = QString());
     ~CWordCollection();
 
 // disable copy
@@ -40,6 +40,10 @@ public:
     CWord* operator^= ( CStringSurrogate );
     CWord* operator^= ( QString );
 //    CWord* operator[] ( uint n );
+
+
+    CWord GetAt( uint );
+    int GetLength() const { return m_WordList.length(); };
 
 };
 

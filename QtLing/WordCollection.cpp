@@ -12,15 +12,15 @@ CWordCollection::CWordCollection()
     m_SortValidFlag			= 0;
     m_SortStyle				= KEY;
 }
-CWordCollection::CWordCollection(/*CLexicon* Lex*/ QString MemberName)
-{
-    m_WordList              = QList<CWord>();
-    m_CorpusCount			= 0;
-    m_MemberName			= QString::null;
-    m_SortArray				= NULL;
-    m_SortValidFlag			= 0;
-    m_SortStyle				= KEY;
-}
+//CWordCollection::CWordCollection(/*CLexicon* Lex*/ QString MemberName)
+//{
+//    m_WordList              = QList<CWord>();
+//    m_CorpusCount			= 0;
+//    m_MemberName			= QString::null;
+//    m_SortArray				= NULL;
+//    m_SortValidFlag			= 0;
+//    m_SortStyle				= KEY;
+//}
 CWordCollection::~CWordCollection()
 {
     if ( m_SortArray )         { delete [] m_SortArray; m_SortArray = NULL;  }
@@ -47,9 +47,12 @@ CWord* CWordCollection::operator <<(CStringSurrogate SS)
 CWord* CWordCollection::operator <<(QString szWord)
 {
     CStringSurrogate cssKey = CStringSurrogate(szWord, szWord.length());
-    CWord* word = new CWord(cssKey);
-    m_WordList << cssKey;
-    return word;
+//    CWord* word = new CWord(cssKey);
+//    m_WordList << *word;
+//    return word;
+    CWord word = CWord(cssKey);
+    m_WordList << word;
+    return &word;
 }
 CWord* CWordCollection::operator ^=(CParse* string)
 {
@@ -91,4 +94,8 @@ CWord* CWordCollection::operator ^=(QString szWord)
     }
     return 0;
 
+}
+CWord CWordCollection::GetAt( uint n )
+{
+    return m_WordList.at(n);
 }

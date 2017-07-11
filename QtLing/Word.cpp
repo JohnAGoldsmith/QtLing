@@ -1,10 +1,7 @@
 #include "Word.h"
 
-CWord::CWord(CStringSurrogate ssWord) : CParse(ssWord)
-{
-    m_WordCount = 0;
-    m_Word = QString(ssWord.GetKey());
-}
+CWord::CWord(CStringSurrogate ssWord) : CParse(ssWord), m_WordCount(0), m_Word(ssWord.GetKey()) {}
+
 CWord::CWord(CWord& word)
 {
     m_WordCount = word.GetWordCount();
