@@ -1,5 +1,6 @@
 #include "WordCollection.h"
 
+#include <QDebug>
 #include "Parse.h"
 #include "Word.h"
 
@@ -46,13 +47,11 @@ CWord* CWordCollection::operator <<(CStringSurrogate SS)
 
 CWord* CWordCollection::operator <<(QString szWord)
 {
-    CStringSurrogate cssKey = CStringSurrogate(szWord, szWord.length());
-//    CWord* word = new CWord(cssKey);
-//    m_WordList << *word;
-//    return word;
-    CWord word = CWord(cssKey);
-    m_WordList << word;
-    return &word;
+    const QChar* key = szWord.constData();
+    CStringSurrogate cssKey = CStringSurrogate(key, szWord.length());
+    CWord* word = new CWord(cssKey);
+    m_WordList << *word;
+    return word;
 }
 CWord* CWordCollection::operator ^=(CParse* string)
 {
@@ -95,6 +94,7 @@ CWord* CWordCollection::operator ^=(QString szWord)
     return 0;
 
 }
+
 CWord CWordCollection::GetAt( uint n )
 {
     return m_WordList.at(n);

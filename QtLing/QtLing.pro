@@ -35,4 +35,5 @@ HEADERS  += mainwindow.h \
 FORMS    += mainwindow.ui
 
 DISTFILES += \
-    test.txt
+    test.txt \
+    browncorpus.dx1

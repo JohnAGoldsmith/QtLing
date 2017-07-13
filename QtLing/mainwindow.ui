@@ -15,15 +15,22 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="2">
+     <widget class="QTableView" name="tableView"/>
+    </item>
     <item row="0" column="0">
-     <widget class="QPushButton" name="pushButton">
+     <widget class="QPushButton" name="pushButton_2">
       <property name="text">
-       <string>PushButton</string>
+       <string>Analyze</string>
       </property>
      </widget>
     </item>
     <item row="0" column="1">
-     <widget class="QTableView" name="tableView"/>
+     <widget class="QPushButton" name="pushButton">
+      <property name="text">
+       <string>Display Corpus</string>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -57,12 +64,12 @@
    <slot>resizeColumnsToContents()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>48</x>
-     <y>262</y>
+     <x>169</x>
+     <y>283</y>
     </hint>
     <hint type="destinationlabel">
-     <x>222</x>
-     <y>267</y>
+     <x>464</x>
+     <y>314</y>
     </hint>
    </hints>
   </connection>

@@ -1,10 +1,12 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "iostream"
 #include <QStandardItemModel>
 #include <QList>
 #include <QFile>
 #include <QTextStream>
 #include <QDebug>
+#include <algorithm>
 #include <stdio.h>
 #include "WordCollection.h"
 #include "Word.h"
@@ -30,44 +32,97 @@ bool wordLessThan(CWord word1, CWord word2)
 
 void MainWindow::on_pushButton_clicked()
 {
-    qDebug() << QDir::currentPath();
-    QFile infile("../../../../QtLing/test.txt");
-    if (!infile.exists()) {
-        qDebug() << "file read error";
+    // works for reading in .dx1 files
+    // works on absolute paths
+    QString abspath("/Users/Tapan/QtLing/QtLing");
+    if (!QDir::setCurrent(abspath))
+    {
+        qDebug() << "Could not change to home directory";
     }
-    if (!infile.open( QIODevice::ReadOnly)) {
+    QString filename("browncorpus.dx1");
+    QFile infile(filename);
+
+    if (!infile.exists())
+    {
+        qDebug() << "file doesn't exist";
+    }
+    else
+    {
+        qDebug() << "file exists at least";
+    }
+
+    if (!infile.open( QIODevice::ReadOnly | QFile::Text)) {
         qDebug() << "file open error";
         return;
     }
-    QString content = infile.readAll();
-    qDebug() << content;
 
+    QTextStream in(&infile);
 
-    QList<QString> list = content.split(" ");
-    qSort(list);
     CWordCollection wordCollection;
-    int i;
-    int count = list.count();
-
-    for (i = 0; i < count; i++) {
-        qDebug() << list.at(i);
-        wordCollection << list.at(i);
-//        qDebug() << wordCollection.GetAt(i).GetWord();
+    while (!in.atEnd())
+    {
+        QString line = in.readLine();
+        line.simplified();
+        QList<QString> wordsInLine = line.split(" ");
+        QString word = wordsInLine[0]; //first word in line is the word to be analyzed
+        Words[word] = 1; // map for qstring to frequency: what the CWord class should do
+        wordCollection << word;
     }
-//    qSort(wordCollection.m_WordList);
 
-    QStandardItemModel *model = new QStandardItemModel(list.count(),1,this); //n Rows and 3 Columns
+//    CWordCollection wordCollection;
+//    wordCollection << QString("hello");
+//    qDebug() << wordCollection.GetAt(0).GetWord();
+
+    QMapIterator<QString,int> iter(Words);
+    QList<CWord>::iterator word_iter;
+
+    QStandardItemModel *model = new QStandardItemModel(Words.size(),1,this); //n Rows and 3 Columns
     model->setHorizontalHeaderItem(0, new QStandardItem(QString("Column1 Header")));
-    //    model->setHorizontalHeaderItem(1, new QStandardItem(QString("Column2 Header")));
-    //    model->setHorizontalHeaderItem(2, new QStandardItem(QString("Column3 Header")));
+    model->setHorizontalHeaderItem(1, new QStandardItem(QString("Column2 Header")));
+    model->setHorizontalHeaderItem(2, new QStandardItem(QString("Column3 Header")));
 
     ui->tableView->setModel(model);
-    uint len = (uint)list.count();
-    for (uint j = 0; j < len; j++) {
-        QStandardItem *ithRow = new QStandardItem(wordCollection.GetAt(j).GetWord() );
-        qDebug() << wordCollection.GetAt(j).GetWord();
-        qDebug() << wordCollection.GetLength();
-//        QStandardItem *ithRow = new QStandardItem(list.at(j));
-        model->setItem(j,0,ithRow);
+
+    int rowno = 0;
+//    std::sort(wordCollection.GetBegin(), wordCollection.GetEnd(), wordLessThan);
+//    for (word_iter = wordCollection.GetBegin(); word_iter != wordCollection.GetEnd(); ++word_iter)
+//    {
+//        QStandardItem* ithRow = new QStandardItem(word_iter->GetWord());
+//        model->setItem(rowno,0,ithRow);
+//        rowno++;
+//    }
+
+    while (iter.hasNext()) {
+        iter.next();
+        QStandardItem *ithRow = new QStandardItem(iter.key());
+        model->setItem(rowno,0,ithRow);
+        rowno++;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

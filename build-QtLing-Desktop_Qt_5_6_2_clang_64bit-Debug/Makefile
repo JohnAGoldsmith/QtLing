@@ -66,6 +66,7 @@ OBJECTS       = main.o \
 		WordCollection.o \
 		moc_mainwindow.o
 DIST          = ../QtLing/test.txt \
+		../QtLing/browncorpus.dx1 \
 		../../Qt5.6.2/5.6/clang_64/mkspecs/features/spec_pre.prf \
 		../../Qt5.6.2/5.6/clang_64/mkspecs/qdevice.pri \
 		../../Qt5.6.2/5.6/clang_64/mkspecs/features/device_config.prf \
@@ -592,6 +593,10 @@ compiler_moc_header_clean:
 	-$(DEL_FILE) moc_mainwindow.cpp
 moc_mainwindow.cpp: ../../Qt5.6.2/5.6/clang_64/lib/QtWidgets.framework/Headers/QMainWindow \
 		../../Qt5.6.2/5.6/clang_64/lib/QtWidgets.framework/Headers/qmainwindow.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QMap \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qmap.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QList \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qlist.h \
 		../QtLing/mainwindow.h
 	/Users/Tapan/Qt5.6.2/5.6/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/Tapan/Qt5.6.2/5.6/clang_64/mkspecs/macx-clang -I/Users/Tapan/QtLing/QtLing -I/Users/Tapan/Qt5.6.2/5.6/clang_64/lib/QtWidgets.framework/Headers -I/Users/Tapan/Qt5.6.2/5.6/clang_64/lib/QtGui.framework/Headers -I/Users/Tapan/Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers -I. -F/Users/Tapan/Qt5.6.2/5.6/clang_64/lib ../QtLing/mainwindow.h -o moc_mainwindow.cpp
 
@@ -618,6 +623,10 @@ compiler_clean: compiler_moc_header_clean compiler_uic_clean
 main.o: ../QtLing/main.cpp ../QtLing/mainwindow.h \
 		../../Qt5.6.2/5.6/clang_64/lib/QtWidgets.framework/Headers/QMainWindow \
 		../../Qt5.6.2/5.6/clang_64/lib/QtWidgets.framework/Headers/qmainwindow.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QMap \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qmap.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QList \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qlist.h \
 		../../Qt5.6.2/5.6/clang_64/lib/QtWidgets.framework/Headers/QApplication \
 		../../Qt5.6.2/5.6/clang_64/lib/QtWidgets.framework/Headers/qapplication.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../QtLing/main.cpp
@@ -625,11 +634,13 @@ main.o: ../QtLing/main.cpp ../QtLing/mainwindow.h \
 mainwindow.o: ../QtLing/mainwindow.cpp ../QtLing/mainwindow.h \
 		../../Qt5.6.2/5.6/clang_64/lib/QtWidgets.framework/Headers/QMainWindow \
 		../../Qt5.6.2/5.6/clang_64/lib/QtWidgets.framework/Headers/qmainwindow.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QMap \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qmap.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QList \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qlist.h \
 		ui_mainwindow.h \
 		../../Qt5.6.2/5.6/clang_64/lib/QtGui.framework/Headers/QStandardItemModel \
 		../../Qt5.6.2/5.6/clang_64/lib/QtGui.framework/Headers/qstandarditemmodel.h \
-		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QList \
-		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qlist.h \
 		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QFile \
 		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qfile.h \
 		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QTextStream \
@@ -641,8 +652,12 @@ mainwindow.o: ../QtLing/mainwindow.cpp ../QtLing/mainwindow.h \
 		../QtLing/StringSurrogate.h \
 		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QString \
 		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qstring.h \
-		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QMap \
-		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qmap.h
+		../QtLing/Word.h \
+		../QtLing/Parse.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QChar \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qchar.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QDir \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qdir.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../QtLing/mainwindow.cpp
 
 CompareFunc.o: ../QtLing/CompareFunc.cpp ../QtLing/CompareFunc.h \
