@@ -32,8 +32,14 @@ HEADERS  += mainwindow.h \
     Word.h \
     WordCollection.h
 
-FORMS    += mainwindow.ui
+FORMS    +=
 
 DISTFILES += \
     test.txt \
-    browncorpus.dx1
+    browncorpus.dx1 \
+    images/copy.png \
+    images/cut.png \
+    images/new.png \
+    images/open.png \
+    images/paste.png \
+    images/save.png
