@@ -278,6 +278,23 @@ void MainWindow::loadFile(const QString &fileName)
     lexicon.CreateStemAffixPairs();
     lexicon.AssignSuffixesToStems();
 
+    QListIterator<CSignature*> signatures_iter(lexicon.GetSignatures().GetSignatures());
+    while(signatures_iter.hasNext())
+    {
+        if (signatures_iter.next()->GetSignature().length() < 2)
+        {
+            signatures_iter.remove();
+        }
+        else
+        {
+            QString signature = signatures_iter.GetSignature();
+            textEdit->appendPlainText("");
+            textEdit->appendPlainText(signature);
+            textEdit->appendPlainText(signatures_iter.value().join(" ") );
+        }
+    }
+
+
 #ifndef QT_NO_CURSOR
     QApplication::restoreOverrideCursor();
 #endif

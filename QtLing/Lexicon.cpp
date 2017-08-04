@@ -137,20 +137,21 @@ void CLexicon::AssignSuffixesToStems()
         Signatures[signature_string].append(stem);
     }
 
-    QMutableMapIterator<QString,QStringList> signatures_iter(Signatures);
-    while(signatures_iter.hasNext()){
-        if (signatures_iter.next().value().length() < 2)
-        {
-            signatures_iter.remove();
-        }
-        else
-        {
-            QString signature= signatures_iter.key();
-            textEdit->appendPlainText("");
-            textEdit->appendPlainText(signature);
-            textEdit->appendPlainText(signatures_iter.value().join(" ") );
-        }
-    }
+//    QMutableMapIterator<QString,QStringList> signatures_iter(Signatures);
+//    while(signatures_iter.hasNext())
+//    {
+//        if (signatures_iter.next().value().length() < 2)
+//        {
+//            signatures_iter.remove();
+//        }
+//        else
+//        {
+//            QString signature= signatures_iter.key();
+//            textEdit->appendPlainText("");
+//            textEdit->appendPlainText(signature);
+//            textEdit->appendPlainText(signatures_iter.value().join(" ") );
+//        }
+//    }
 }
 
 

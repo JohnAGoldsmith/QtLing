@@ -33,6 +33,8 @@ public:
     void CreateStemAffixPairs();
     void AssignSuffixesToStems();
 
+    CSignatureCollection GetSignatures() { return m_Signatures; }
+
 };
 
 #endif // CLEXICON_H

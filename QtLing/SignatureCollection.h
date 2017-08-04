@@ -42,6 +42,7 @@ public:
 
     CSignature* GetAt( uint );
     int GetLength() const { return m_SignatureList.length(); }
+    QList<CSignature*> GetSignatures() { return m_SignatureList; }
 
 //    QList<CSignature>::iterator GetBegin()   { return m_SignatureList.begin();  }
 //    QList<CSignature>::iterator GetEnd()     { return m_SignatureList.end();  }
