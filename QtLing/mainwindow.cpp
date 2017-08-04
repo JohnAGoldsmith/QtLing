@@ -17,13 +17,11 @@
 #include <QString>
 #include <QDebug>
 #include <QPair>
-
 #include <QDir>
 
 
-
 MainWindow::MainWindow()
-    : textEdit(new QPlainTextEdit)
+    : lexicon(), textEdit(new QPlainTextEdit)
 {
     createHorizontalGroupBox();
     setCentralWidget(horizontalGroupBox);
@@ -32,6 +30,7 @@ MainWindow::MainWindow()
     createStatusBar();
 
     readSettings();
+    textEdit->setReadOnly(true);
 
     connect(textEdit->document(), &QTextDocument::contentsChanged,
             this, &MainWindow::documentWasModified);
@@ -118,7 +117,6 @@ void MainWindow::documentWasModified()
 }
 void MainWindow::createActions()
 {
-
     QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
     QToolBar *fileToolBar = addToolBar(tr("File"));
     const QIcon newIcon = QIcon::fromTheme("document-new", QIcon("../../../../QtLing/images/new.png"));
@@ -248,9 +246,11 @@ bool MainWindow::maybeSave()
     }
     return true;
 }
+//loadFile opens/reads in input
 void MainWindow::loadFile(const QString &fileName)
 {
-    QFile file(fileName);
+//    QFile file(fileName);
+    QFile file("../../../../QtLing/browncorpus.dx1");
     if (!file.open(QFile::ReadOnly | QFile::Text)) {
         QMessageBox::warning(this, tr("Application"),
                              tr("Cannot read file %1:\n%2.")
@@ -270,12 +270,13 @@ void MainWindow::loadFile(const QString &fileName)
         QStringList words = line.split(" ");
         QString word = words[0];
         Words[word]=1;
-        //textEdit->appendPlainText(word);
-        //textEdit->appendPlainText(line);
+//        textEdit->appendPlainText(word);
+//        textEdit->appendPlainText(line);
     }
-    FindProtostems();
-    CreateStemAffixPairs();
-    AssignSuffixesToStems();
+    //TODO function calls
+    lexicon.FindProtostems();
+    lexicon.CreateStemAffixPairs();
+    lexicon.AssignSuffixesToStems();
 
 #ifndef QT_NO_CURSOR
     QApplication::restoreOverrideCursor();
@@ -336,134 +337,4 @@ void MainWindow::commitData(QSessionManager &manager)
     }
 }
 #endif
-
-void MainWindow::FindProtostems()
-{  QString word, previous_word;
-   QMapIterator<QString,int> iter(Words);
-   bool StartFlag = true;
-   bool DifferenceFoundFlag = false;
-   QString stem;
-   while (iter.hasNext()){
-     iter.next();
-     word = iter.key();
-     if (StartFlag){
-         StartFlag = false;
-         previous_word = word;
-         continue;
-     }
-     DifferenceFoundFlag = false;
-     int end = qMin(word.length(), previous_word.length());
-
-     for (int i=0; i <end; i++){
-         if (previous_word[i] != word[i]){
-             stem = previous_word.left(i);
-             DifferenceFoundFlag = true;
-             if (!Protostems.contains(stem))
-             {
-                 Protostems[stem] = 1;
-                 //textEdit->appendPlainText(stem);
-             }
-             break;
-         }
-     }
-     if (DifferenceFoundFlag == true)
-     {
-         previous_word = word;
-         continue;
-     }
-     else {
-        if (previous_word.length() < word.length()) {
-            Protostems[previous_word] = 1;
-            //textEdit->appendPlainText(previous_word + "  "+ word + " method 2");
-        }
-     }
-     previous_word = word;
-   }
-   return;
-}
-
-void MainWindow::CreateStemAffixPairs()
-{   QMapIterator<QString,int> iter(Words);
-    QString stem, suffix;
-    int suffix_length;
-    while (iter.hasNext() ){
-        iter.next();
-        QString word = iter.key();
-
-        for (int letterno = 1; letterno < word.length(); letterno++){
-            stem = word.left(letterno);
-            if (Protostems.contains(stem)){
-                    suffix_length = word.length() - letterno;
-                    suffix = word.right(suffix_length);
-                    Parses.append(QPair<QString,QString>(stem,suffix));
-                    //textEdit->appendPlainText(stem + " " + suffix);
-                    if (Words.contains(stem)){
-                        Parses.append(QPair<QString,QString>(stem,QString("NULL")));
-                        //textEdit->appendPlainText(stem + " NULL");
-                    }
-            }
-        }
-    }
-}
-void   MainWindow::AssignSuffixesToStems()
-{
-    //
-    QListIterator<QPair<QString,QString>> iter(Parses);
-    QPair<QString,QString> this_pair;
-    QString stem, suffix, signature_string;
-    while (iter.hasNext() ){
-        this_pair = iter.next();
-        stem = this_pair.first;
-        suffix = this_pair.second;
-        QMap<QString,int>& suffix_map = Stems[stem];
-        suffix_map[suffix] = 1;
-    }
-    QList<QString>  Stems_list = Stems.keys();
-    QListIterator<QString> stem_iter(Stems_list);
-
-
-
-
-    while(stem_iter.hasNext()){
-        stem = stem_iter.next();
-        QMap<QString,int>& suffixes = Stems[stem];
-        signature_string = suffixes.keys().join("=");
-        Signatures[signature_string].append(stem);
-    }
-
-    QMutableMapIterator<QString,QStringList> signatures_iter(Signatures);
-    while(signatures_iter.hasNext()){
-        if (signatures_iter.next().value().length() < 2){
-            signatures_iter.remove();
-        }
-        else{   QString signature= signatures_iter.key();
-                textEdit->appendPlainText("");
-                textEdit->appendPlainText(signature);
-                textEdit->appendPlainText(signatures_iter.value().join(" ") );
-        }
-    }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

@@ -55,7 +55,14 @@ SOURCES       = ../QtLing/main.cpp \
 		../QtLing/StringFunc.cpp \
 		../QtLing/StringSurrogate.cpp \
 		../QtLing/Word.cpp \
-		../QtLing/WordCollection.cpp moc_mainwindow.cpp
+		../QtLing/WordCollection.cpp \
+		../QtLing/Lexicon.cpp \
+		../QtLing/SignatureCollection.cpp \
+		../QtLing/Signature.cpp \
+		../QtLing/StemCollection.cpp \
+		../QtLing/Stem.cpp \
+		../QtLing/SuffixCollection.cpp \
+		../QtLing/Suffix.cpp moc_mainwindow.cpp
 OBJECTS       = main.o \
 		mainwindow.o \
 		CompareFunc.o \
@@ -64,6 +71,13 @@ OBJECTS       = main.o \
 		StringSurrogate.o \
 		Word.o \
 		WordCollection.o \
+		Lexicon.o \
+		SignatureCollection.o \
+		Signature.o \
+		StemCollection.o \
+		Stem.o \
+		SuffixCollection.o \
+		Suffix.o \
 		moc_mainwindow.o
 DIST          = ../QtLing/test.txt \
 		../QtLing/browncorpus.dx1 \
@@ -224,14 +238,28 @@ DIST          = ../QtLing/test.txt \
 		../QtLing/StringSurrogate.h \
 		../QtLing/Typedefs.h \
 		../QtLing/Word.h \
-		../QtLing/WordCollection.h ../QtLing/main.cpp \
+		../QtLing/WordCollection.h \
+		../QtLing/Lexicon.h \
+		../QtLing/SignatureCollection.h \
+		../QtLing/Signature.h \
+		../QtLing/StemCollection.h \
+		../QtLing/Stem.h \
+		../QtLing/SuffixCollection.h \
+		../QtLing/Suffix.h ../QtLing/main.cpp \
 		../QtLing/mainwindow.cpp \
 		../QtLing/CompareFunc.cpp \
 		../QtLing/Parse.cpp \
 		../QtLing/StringFunc.cpp \
 		../QtLing/StringSurrogate.cpp \
 		../QtLing/Word.cpp \
-		../QtLing/WordCollection.cpp
+		../QtLing/WordCollection.cpp \
+		../QtLing/Lexicon.cpp \
+		../QtLing/SignatureCollection.cpp \
+		../QtLing/Signature.cpp \
+		../QtLing/StemCollection.cpp \
+		../QtLing/Stem.cpp \
+		../QtLing/SuffixCollection.cpp \
+		../QtLing/Suffix.cpp
 QMAKE_TARGET  = QtLing
 DESTDIR       = 
 TARGET        = QtLing.app/Contents/MacOS/QtLing
@@ -566,8 +594,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents ../QtLing/mainwindow.h ../QtLing/CompareFunc.h ../QtLing/generaldefinitions.h ../QtLing/log2.h ../QtLing/Parse.h ../QtLing/StringFunc.h ../QtLing/StringSurrogate.h ../QtLing/Typedefs.h ../QtLing/Word.h ../QtLing/WordCollection.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../QtLing/main.cpp ../QtLing/mainwindow.cpp ../QtLing/CompareFunc.cpp ../QtLing/Parse.cpp ../QtLing/StringFunc.cpp ../QtLing/StringSurrogate.cpp ../QtLing/Word.cpp ../QtLing/WordCollection.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../QtLing/mainwindow.h ../QtLing/CompareFunc.h ../QtLing/generaldefinitions.h ../QtLing/log2.h ../QtLing/Parse.h ../QtLing/StringFunc.h ../QtLing/StringSurrogate.h ../QtLing/Typedefs.h ../QtLing/Word.h ../QtLing/WordCollection.h ../QtLing/Lexicon.h ../QtLing/SignatureCollection.h ../QtLing/Signature.h ../QtLing/StemCollection.h ../QtLing/Stem.h ../QtLing/SuffixCollection.h ../QtLing/Suffix.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../QtLing/main.cpp ../QtLing/mainwindow.cpp ../QtLing/CompareFunc.cpp ../QtLing/Parse.cpp ../QtLing/StringFunc.cpp ../QtLing/StringSurrogate.cpp ../QtLing/Word.cpp ../QtLing/WordCollection.cpp ../QtLing/Lexicon.cpp ../QtLing/SignatureCollection.cpp ../QtLing/Signature.cpp ../QtLing/StemCollection.cpp ../QtLing/Stem.cpp ../QtLing/SuffixCollection.cpp ../QtLing/Suffix.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -640,23 +668,6 @@ mainwindow.o: ../QtLing/mainwindow.cpp ../QtLing/mainwindow.h \
 		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QList \
 		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qlist.h \
 		ui_mainwindow.h \
-		../../Qt5.6.2/5.6/clang_64/lib/QtGui.framework/Headers/QStandardItemModel \
-		../../Qt5.6.2/5.6/clang_64/lib/QtGui.framework/Headers/qstandarditemmodel.h \
-		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QFile \
-		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qfile.h \
-		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QTextStream \
-		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qtextstream.h \
-		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QDebug \
-		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qdebug.h \
-		../QtLing/WordCollection.h \
-		../QtLing/generaldefinitions.h \
-		../QtLing/StringSurrogate.h \
-		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QString \
-		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qstring.h \
-		../QtLing/Word.h \
-		../QtLing/Parse.h \
-		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QChar \
-		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qchar.h \
 		../../Qt5.6.2/5.6/clang_64/lib/QtWidgets.framework/Headers/QtWidgets \
 		../../Qt5.6.2/5.6/clang_64/lib/QtWidgets.framework/Headers/qaccessiblewidget.h \
 		../../Qt5.6.2/5.6/clang_64/lib/QtWidgets.framework/Headers/qcolordialog.h \
@@ -784,6 +795,24 @@ mainwindow.o: ../QtLing/mainwindow.cpp ../QtLing/mainwindow.h \
 		../../Qt5.6.2/5.6/clang_64/lib/QtWidgets.framework/Headers/qtoolbox.h \
 		../../Qt5.6.2/5.6/clang_64/lib/QtWidgets.framework/Headers/qtoolbutton.h \
 		../../Qt5.6.2/5.6/clang_64/lib/QtWidgets.framework/Headers/qtwidgetsversion.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtWidgets.framework/Headers/QTreeView \
+		../../Qt5.6.2/5.6/clang_64/lib/QtGui.framework/Headers/QStandardItemModel \
+		../../Qt5.6.2/5.6/clang_64/lib/QtGui.framework/Headers/qstandarditemmodel.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QFile \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qfile.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QTextStream \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qtextstream.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QDebug \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qdebug.h \
+		../QtLing/WordCollection.h \
+		../QtLing/generaldefinitions.h \
+		../QtLing/StringSurrogate.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QString \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qstring.h \
+		../QtLing/Word.h \
+		../QtLing/Parse.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QChar \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qchar.h \
 		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QPair \
 		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qpair.h \
 		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QDir \
@@ -853,7 +882,12 @@ Word.o: ../QtLing/Word.cpp ../QtLing/Word.h \
 		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qmap.h \
 		../QtLing/generaldefinitions.h \
 		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QList \
-		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qlist.h
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qlist.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QPair \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qpair.h \
+		../QtLing/Stem.h \
+		../QtLing/Suffix.h \
+		../QtLing/Signature.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Word.o ../QtLing/Word.cpp
 
 WordCollection.o: ../QtLing/WordCollection.cpp ../QtLing/WordCollection.h \
@@ -870,8 +904,119 @@ WordCollection.o: ../QtLing/WordCollection.cpp ../QtLing/WordCollection.h \
 		../QtLing/Parse.h \
 		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QChar \
 		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qchar.h \
-		../QtLing/Word.h
+		../QtLing/Word.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QPair \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qpair.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o WordCollection.o ../QtLing/WordCollection.cpp
+
+Lexicon.o: ../QtLing/Lexicon.cpp ../QtLing/Lexicon.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QMap \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qmap.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QString \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qstring.h \
+		../QtLing/SignatureCollection.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QList \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qlist.h \
+		../QtLing/generaldefinitions.h \
+		../QtLing/StringSurrogate.h \
+		../QtLing/StemCollection.h \
+		../QtLing/SuffixCollection.h \
+		../QtLing/WordCollection.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Lexicon.o ../QtLing/Lexicon.cpp
+
+SignatureCollection.o: ../QtLing/SignatureCollection.cpp ../QtLing/SignatureCollection.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QList \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qlist.h \
+		../QtLing/generaldefinitions.h \
+		../QtLing/StringSurrogate.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QString \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qstring.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QMap \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qmap.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QDebug \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qdebug.h \
+		../QtLing/Parse.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QChar \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qchar.h \
+		../QtLing/Signature.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o SignatureCollection.o ../QtLing/SignatureCollection.cpp
+
+Signature.o: ../QtLing/Signature.cpp ../QtLing/Signature.h \
+		../QtLing/Parse.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QChar \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qchar.h \
+		../QtLing/StringSurrogate.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QString \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qstring.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QMap \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qmap.h \
+		../QtLing/generaldefinitions.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QList \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qlist.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Signature.o ../QtLing/Signature.cpp
+
+StemCollection.o: ../QtLing/StemCollection.cpp ../QtLing/StemCollection.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QList \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qlist.h \
+		../QtLing/generaldefinitions.h \
+		../QtLing/StringSurrogate.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QString \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qstring.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QMap \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qmap.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QDebug \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qdebug.h \
+		../QtLing/Parse.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QChar \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qchar.h \
+		../QtLing/Stem.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o StemCollection.o ../QtLing/StemCollection.cpp
+
+Stem.o: ../QtLing/Stem.cpp ../QtLing/Stem.h \
+		../QtLing/Parse.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QChar \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qchar.h \
+		../QtLing/StringSurrogate.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QString \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qstring.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QMap \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qmap.h \
+		../QtLing/generaldefinitions.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QList \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qlist.h \
+		../QtLing/Signature.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Stem.o ../QtLing/Stem.cpp
+
+SuffixCollection.o: ../QtLing/SuffixCollection.cpp ../QtLing/SuffixCollection.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QList \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qlist.h \
+		../QtLing/generaldefinitions.h \
+		../QtLing/StringSurrogate.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QString \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qstring.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QMap \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qmap.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QDebug \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qdebug.h \
+		../QtLing/Parse.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QChar \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qchar.h \
+		../QtLing/Suffix.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o SuffixCollection.o ../QtLing/SuffixCollection.cpp
+
+Suffix.o: ../QtLing/Suffix.cpp ../QtLing/Suffix.h \
+		../QtLing/Parse.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QChar \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qchar.h \
+		../QtLing/StringSurrogate.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QString \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qstring.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QMap \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qmap.h \
+		../QtLing/generaldefinitions.h \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/QList \
+		../../Qt5.6.2/5.6/clang_64/lib/QtCore.framework/Headers/qlist.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Suffix.o ../QtLing/Suffix.cpp
 
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp

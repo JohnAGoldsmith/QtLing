@@ -19,7 +19,14 @@ SOURCES += main.cpp\
     StringFunc.cpp \
     StringSurrogate.cpp \
     Word.cpp \
-    WordCollection.cpp
+    WordCollection.cpp \
+    Lexicon.cpp \
+    SignatureCollection.cpp \
+    Signature.cpp \
+    StemCollection.cpp \
+    Stem.cpp \
+    SuffixCollection.cpp \
+    Suffix.cpp
 
 HEADERS  += mainwindow.h \
     CompareFunc.h \
@@ -30,7 +37,14 @@ HEADERS  += mainwindow.h \
     StringSurrogate.h \
     Typedefs.h \
     Word.h \
-    WordCollection.h
+    WordCollection.h \
+    Lexicon.h \
+    SignatureCollection.h \
+    Signature.h \
+    StemCollection.h \
+    Stem.h \
+    SuffixCollection.h \
+    Suffix.h
 
 FORMS    +=
 

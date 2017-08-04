@@ -20,6 +20,8 @@ class QTextEdit;
 class QSessionManager;
 QT_END_NAMESPACE
 
+#include "Lexicon.h"
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -29,6 +31,7 @@ class MainWindow : public QMainWindow
     QList<QPair<QString,QString>> Parses;
     QMap<QString,QMap<QString,int>> Stems; // value is a map from suffixes so that it acts like a set.
     QMap<QString,QStringList> Signatures;
+    CLexicon lexicon;
 public:
     MainWindow();
 
