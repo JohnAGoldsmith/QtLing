@@ -18,11 +18,12 @@
 #include <QDebug>
 #include <QPair>
 #include <QDir>
-
+#include <QMutableListIterator>
 
 MainWindow::MainWindow()
-    : lexicon(), textEdit(new QPlainTextEdit)
+    : textEdit(new QPlainTextEdit)
 {
+    lexicon = new CLexicon();
     createHorizontalGroupBox();
     setCentralWidget(horizontalGroupBox);
 
@@ -246,11 +247,10 @@ bool MainWindow::maybeSave()
     }
     return true;
 }
-//loadFile opens/reads in input
+
 void MainWindow::loadFile(const QString &fileName)
 {
-//    QFile file(fileName);
-    QFile file("../../../../QtLing/browncorpus.dx1");
+    QFile file(fileName);
     if (!file.open(QFile::ReadOnly | QFile::Text)) {
         QMessageBox::warning(this, tr("Application"),
                              tr("Cannot read file %1:\n%2.")
@@ -266,19 +266,27 @@ void MainWindow::loadFile(const QString &fileName)
     while (!in.atEnd())
     {
         QString line = in.readLine();
-        line.simplified(); // get rid of extra spaces
+        line.simplified();
         QStringList words = line.split(" ");
         QString word = words[0];
-        Words[word]=1;
-//        textEdit->appendPlainText(word);
-//        textEdit->appendPlainText(line);
+        lexicon->m_Words << word;
     }
-    //TODO function calls
-    lexicon.FindProtostems();
-    lexicon.CreateStemAffixPairs();
-    lexicon.AssignSuffixesToStems();
 
-    QListIterator<CSignature*> signatures_iter(lexicon.GetSignatures().GetSignatures());
+    /*
+     * Put here's where the linguistic functions should go.
+     *
+     */
+    lexicon->FindProtostems();
+    lexicon->CreateStemAffixPairs();
+    lexicon->AssignSuffixesToStems();
+
+
+    /*
+     * printing out signatures
+     */
+    QList<int> list;
+    QList<CSignature*> list1 = lexicon->m_Signatures.GetSignatures();
+    QMutableListIterator<CSignature*> signatures_iter(list1); // = lexicon->GetSignatures().GetSignatures().begin();
     while(signatures_iter.hasNext())
     {
         if (signatures_iter.next()->GetSignature().length() < 2)
@@ -287,10 +295,18 @@ void MainWindow::loadFile(const QString &fileName)
         }
         else
         {
-            QString signature = signatures_iter.GetSignature();
+            QString signature = signatures_iter.value()->GetSignature();
             textEdit->appendPlainText("");
             textEdit->appendPlainText(signature);
-            textEdit->appendPlainText(signatures_iter.value().join(" ") );
+
+            QListIterator<CSuffix*> suffix_iter(signatures_iter.value()->GetList());
+            QList<QString> suffix_list;
+            while (suffix_iter.hasNext())
+            {
+                CSuffix* p_suffix = suffix_iter.next();
+                suffix_list << p_suffix->GetSuffix();
+            }
+            textEdit->appendPlainText(suffix_list.join(" ") );
         }
     }
 

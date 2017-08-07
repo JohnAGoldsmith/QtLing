@@ -21,7 +21,7 @@ public:
     CStem(CStem&);
 public:
     //Accessors
-    QString            GetWord()       const { return m_Word; }
+    QString            GetStem()       const { return m_Word; }
     QList<CSignature*> GetSignatures() const { return m_Signatures; }
 
     QList<CSignature*>::iterator GetBegin()   { return m_Signatures.begin();  }

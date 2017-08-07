@@ -34,6 +34,7 @@ private:
     CWordCollection& operator=(const CWordCollection& x);
 
 public:
+    friend class CLexicon;
     CWord* operator<< ( CParse* );
     CWord* operator<< ( CStringSurrogate );
     CWord* operator<< ( QString );

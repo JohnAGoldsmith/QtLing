@@ -15,25 +15,23 @@ class CLexicon
 {
 protected:
 //    CWordCollection m_Words;
-//    CStemCollection m_Stems;
-//    CSuffixCollection m_Suffixes;
+    CStemCollection m_Stems;
+    CSuffixCollection m_Suffixes;
 //    CSignatureCollection m_Signatures;
 public:
     CLexicon();
-    CWordCollection m_Words;
-    CStemCollection m_Stems;
-    CSuffixCollection m_Suffixes;
-    CSignatureCollection m_Signatures;
-
 public:
     // accessors
     QMap<CStringSurrogate, int> m_Protostems;
+    CWordCollection m_Words;
+    CSignatureCollection m_Signatures;
 
     void FindProtostems();
     void CreateStemAffixPairs();
     void AssignSuffixesToStems();
 
-    CSignatureCollection GetSignatures() { return m_Signatures; }
+    CWordCollection      GetWordCollection() { return m_Words; }
+    CSignatureCollection GetSignatures()     { return m_Signatures; }
 
 };
 

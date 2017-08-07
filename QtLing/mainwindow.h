@@ -25,13 +25,14 @@ QT_END_NAMESPACE
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
+    CLexicon* lexicon;
 
-    QMap<QString, int> Words; //would correspond to word collection
+    // to be deleted
+    QMap<QString, int> Words;
     QMap<QString, int> Protostems;
     QList<QPair<QString,QString>> Parses;
-    QMap<QString,QMap<QString,int>> Stems; // value is a map from suffixes so that it acts like a set.
+    QMap<QString,QMap<QString,int>> Stems;
     QMap<QString,QStringList> Signatures;
-    CLexicon lexicon;
 public:
     MainWindow();
 

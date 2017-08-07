@@ -5,7 +5,7 @@
 
 CStemCollection::CStemCollection()
 {
-    m_StemList              = QList<CStem>();
+    m_StemList              = QList<CStem*>();
     m_CorpusCount			= 0;
     m_MemberName			= QString::null;
     m_SortArray				= NULL;

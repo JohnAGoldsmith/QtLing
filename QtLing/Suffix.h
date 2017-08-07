@@ -21,7 +21,7 @@ public:
     //Accessors
     QString GetSuffix() const { return m_Suffix;    }
     int     GetFrequency()    { return m_frequency; }
-    void    SetFrequency(int frequency) { m_frequency = frequency;}
+    void    SetFrequency(int frequency) { m_frequency = frequency; }
 };
 
 #endif // CSUFFIX_H

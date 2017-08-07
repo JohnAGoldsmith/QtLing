@@ -16,7 +16,6 @@ CSuffix* CSuffixCollection::operator<<( CParse* pParse )
 
     CSuffix* Suffix = new CSuffix(cssKey);
     m_SuffixList << Suffix;
-    m_SuffixList[cssKey] = Suffix;
     return Suffix;
 }
 CSuffix* CSuffixCollection::operator <<(CStringSurrogate SS)

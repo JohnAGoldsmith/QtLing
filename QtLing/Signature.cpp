@@ -1,9 +1,9 @@
 #include "Signature.h"
 
-CSignature::CSignature(CStringSurrogate ssWord) : CParse(ssWord), m_Word(ssWord.GetKey()), m_Signatures() {}
+CSignature::CSignature(CStringSurrogate ssWord) : CParse(ssWord), m_Signature(ssWord.GetKey()), m_Affixes() {}
 
 CSignature::CSignature(CSignature& signature) {
     m_Signature = signature.GetSignature();
-    m_Affixes(signature.GetList());
+    m_Affixes = signature.GetList();
 }
 
