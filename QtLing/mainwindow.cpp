@@ -84,8 +84,9 @@ void MainWindow::open()
 {
     if (maybeSave()) {
         QString fileName = QFileDialog::getOpenFileName(this);
-        if (!fileName.isEmpty())
+        if (!fileName.isEmpty()) {
             loadFile(fileName);
+        }
     }
 }
 bool MainWindow::save()
@@ -262,14 +263,13 @@ void MainWindow::loadFile(const QString &fileName)
 #ifndef QT_NO_CURSOR
     QApplication::setOverrideCursor(Qt::WaitCursor);
 #endif
-
     while (!in.atEnd())
     {
         QString line = in.readLine();
         line.simplified();
         QStringList words = line.split(" ");
         QString word = words[0];
-        lexicon->m_Words << word;
+        lexicon->GetWordCollection()->operator <<( word); //throws error
     }
 
     /*
@@ -280,13 +280,11 @@ void MainWindow::loadFile(const QString &fileName)
     lexicon->CreateStemAffixPairs();
     lexicon->AssignSuffixesToStems();
 
-
     /*
-     * printing out signatures
+     * printing out signatures : needs work
      */
-    QList<int> list;
-    QList<CSignature*> list1 = lexicon->m_Signatures.GetSignatures();
-    QMutableListIterator<CSignature*> signatures_iter(list1); // = lexicon->GetSignatures().GetSignatures().begin();
+    QList<CSignature*> list = lexicon->GetSignatureCollection()->GetSignatures();
+    QMutableListIterator<CSignature*> signatures_iter(list);
     while(signatures_iter.hasNext())
     {
         if (signatures_iter.next()->GetSignature().length() < 2)

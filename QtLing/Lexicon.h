@@ -3,12 +3,11 @@
 
 #include <QMap>
 #include <QString>
-
+#include "SignatureCollection.h"
 
 class CWordCollection;
 class CStemCollection;
 class CSuffixCollection;
-class CSignatureCollection;
 class CStringSurrogate;
 
 class CLexicon
