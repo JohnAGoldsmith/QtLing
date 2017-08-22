@@ -20,6 +20,7 @@ void CLexicon::FindProtostems()
 void CLexicon::CreateStemAffixPairs()
 {
 }
+
 void CLexicon::AssignSuffixesToStems()
 {
 }

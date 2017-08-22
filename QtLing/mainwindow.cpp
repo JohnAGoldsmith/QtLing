@@ -31,7 +31,6 @@ MainWindow::MainWindow()
     createStatusBar();
 
     readSettings();
-    textEdit->setReadOnly(true);
 
     connect(textEdit->document(), &QTextDocument::contentsChanged,
             this, &MainWindow::documentWasModified);
@@ -54,13 +53,14 @@ void MainWindow::createHorizontalGroupBox()
     QVBoxLayout *vLayout = new QVBoxLayout;
     littleEditor = new QPlainTextEdit;
     littleEditor->setPlainText(tr("To be HTML box."));
+    textEdit->setReadOnly(true);
     vLayout->addWidget(textEdit);
     vLayout->addWidget(littleEditor);
     verticalGroupBox->setLayout(vLayout);
 
-    QTreeView* tree = new QTreeView(horizontalGroupBox);
-    tree->header()->resizeSection(0, 100);
-    layout->addWidget(tree);
+    treeView = new QTreeView(horizontalGroupBox);
+    treeView->header()->resizeSection(0, 100);
+    layout->addWidget(treeView);
     layout->addWidget(verticalGroupBox);
     horizontalGroupBox->setLayout(layout);
 }
@@ -269,7 +269,7 @@ void MainWindow::loadFile(const QString &fileName)
         line.simplified();
         QStringList words = line.split(" ");
         QString word = words[0];
-        lexicon->GetWordCollection()->operator <<( word); //throws error
+        lexicon->GetWordCollection()->operator <<(word); //throws error
     }
 
     /*

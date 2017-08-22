@@ -18,6 +18,7 @@ class QPushButton;
 class QPlainTextEdit;
 class QTextEdit;
 class QSessionManager;
+class QTreeView;
 QT_END_NAMESPACE
 
 #include "Lexicon.h"
@@ -70,6 +71,7 @@ private:
     QGroupBox *verticalGroupBox;
     QPlainTextEdit *textEdit;
     QPlainTextEdit *littleEditor;
+    QTreeView      *treeView;
     QString curFile;
 };
 
