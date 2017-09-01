@@ -25,6 +25,7 @@
 MainWindow::MainWindow()
     : textEdit(new QPlainTextEdit)
 {
+    Lexicon = new CLexicon();
     createHorizontalGroupBox();
     setCentralWidget(horizontalGroupBox);
 
@@ -262,7 +263,7 @@ void MainWindow::loadFile(const QString &fileName)
 #ifndef QT_NO_CURSOR
     QApplication::setOverrideCursor(Qt::WaitCursor);
 #endif
-
+    CWordCollection test;
     while (!in.atEnd())
     {
         QString line = in.readLine();

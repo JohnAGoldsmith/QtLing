@@ -14,11 +14,11 @@
 #include "StringSurrogate.h"
 #include "Word.h"
 
-CLexicon::CLexicon() : m_Words(), m_Stems(), m_Suffixes(), m_Signatures()
+CLexicon::CLexicon() : m_Words(new CWordCollection), m_Stems(new CStemCollection), m_Suffixes(new CSuffixCollection), m_Signatures(new CSignatureCollection)
 {
+    m_Parses = new QList<QPair<QString,QString>>();
     m_Protostems = QMap<CStringSurrogate, int>();
 }
-
 
 //linguistic methods
 
