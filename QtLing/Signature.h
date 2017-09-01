@@ -3,6 +3,7 @@
 
 #include "Parse.h"
 #include "StringSurrogate.h"
+#include "Stem.h"
 #include <QString>
 #include <QChar>
 #include <QList>
@@ -16,11 +17,12 @@ class CSignature : public CParse
 protected:
     QString m_Signature;
     QList<CSuffix*> m_Affixes;
+    QList<CStem*> m_Stems;
 
 public:
     CSignature(CStringSurrogate ssWord);
     CSignature(CSignature&);
-
+    CSignature( QString);
 public:
     //Accessors
     QString        GetSignature()               const { return m_Signature; }
@@ -28,6 +30,11 @@ public:
 
     QList<CSuffix*>::iterator GetBegin()   { return m_Affixes.begin();  }
     QList<CSuffix*>::iterator GetEnd()     { return m_Affixes.end();    }
+    
+    void add_stem_pointer(CStem*);
+    
+    QString display();
+    QString display_stems();
 
 };
 

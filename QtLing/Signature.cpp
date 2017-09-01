@@ -7,3 +7,29 @@ CSignature::CSignature(CSignature& signature) {
     m_Affixes = signature.GetList();
 }
 
+CSignature::CSignature(QString  qstring) {
+    m_Signature = qstring;
+}
+
+
+
+void CSignature::add_stem_pointer(CStem* pStem)
+{
+    m_Stems.append(pStem);
+    
+}
+
+QString CSignature::display()
+{
+    return m_Signature;
+}
+
+QString CSignature::display_stems()
+{
+    QString outstring;
+    CStem *qStem;
+    foreach (qStem, m_Stems){
+        outstring += " " + qStem->display();
+    }
+    
+}

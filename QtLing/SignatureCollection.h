@@ -14,8 +14,8 @@ class CParse;
 class CSignatureCollection
 {
 protected:
-    QList<CSignature*> m_SignatureList;
-    QMap<CStringSurrogate, CSignature*> m_SignatureMap;
+    //QList<CSignature*> m_SignatureList;
+    QMap<QString, CSignature*> m_SignatureMap;
     int m_CorpusCount;
     QString m_MemberName;
     CSignature** m_SortArray;
@@ -40,10 +40,11 @@ public:
     CSignature* operator^= ( CParse* );
     CSignature* operator^= ( CStringSurrogate );
     CSignature* operator^= ( QString );
+    CSignature* find ( QString); // same as operatorˆ=
 
     CSignature* GetAt( uint );
-    int GetLength() const { return m_SignatureList.length(); }
-    QList<CSignature*> GetSignatures() const { return m_SignatureList; }
+    int GetLength() const { return m_SignatureMap.size(); }
+    QMap<QString, CSignature*> GetSignatures() const { return m_SignatureMap; }
 
 //    QList<CSignature>::iterator GetBegin()   { return m_SignatureList.begin();  }
 //    QList<CSignature>::iterator GetEnd()     { return m_SignatureList.end();  }

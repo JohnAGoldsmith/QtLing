@@ -14,8 +14,8 @@ class CParse;
 class CStemCollection
 {
 protected:
-    QList<CStem*> m_StemList;
-    QMap<CStringSurrogate, CStem*> m_StemMap;
+    //QList<CStem*> m_StemList;
+    QMap<QString  , CStem*> m_StringToStemMap;
     int m_CorpusCount;
     QString m_MemberName;
     CStem** m_SortArray;
@@ -39,13 +39,16 @@ public:
     CStem* operator^= ( CParse* );
     CStem* operator^= ( CStringSurrogate );
     CStem* operator^= ( QString );
+    CStem* find_stem(QString);  // same as ˆ=
 
-    CStem* GetAt( uint );
-    int GetLength() const { return m_StemList.length(); }
-
-    QList<CStem*> GetList()              { return m_StemList; }
-    QList<CStem*>::iterator GetBegin()   { return m_StemList.begin();  }
-    QList<CStem*>::iterator GetEnd()     { return m_StemList.end();  }
+    CStem* GetAtKey( QString);
+    int GetSize() const { return m_StringToStemMap.size(); }
+    void add_stem_pointer (CStem* pStem);
+    
+    QMap<QString,CStem*>::iterator GetBegin()   { return m_StringToStemMap.begin();  }
+    QMap<QString,CStem*>::iterator GetEnd()     { return m_StringToStemMap.end();  }
+    
+    
 };
 
 #endif // CSTEMCOLLECTION_H

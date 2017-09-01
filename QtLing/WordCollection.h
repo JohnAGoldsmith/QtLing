@@ -42,12 +42,14 @@ public:
     CWord* operator^= ( CStringSurrogate );
     CWord* operator^= ( QString );
 
-    CWord* GetAt( uint );
+    CWord* GetAt( uint itemno);
     int GetLength() const { return m_WordList.length(); }
 
     QList<CWord*>::iterator GetBegin()   { return m_WordList.begin();  }
     QList<CWord*>::iterator GetEnd()     { return m_WordList.end();    }
     QList<CWord*>           GetList()    { return m_WordList;          }
+    
+    bool contains(QString string)  {return m_WordMap.contains(string);}
 
     QMap<CStringSurrogate, CWord*> GetMap() { return m_WordMap; }
 

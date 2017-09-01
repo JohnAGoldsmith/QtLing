@@ -24,16 +24,13 @@ QT_END_NAMESPACE
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-    CLexicon *lexicon;
-    QMap<QString, int> Words; //would correspond to word collection
-    QMap<QString, int> Protostems;
-    QList<QPair<QString,QString>> Parses;
-    QMap<QString,QMap<QString,int>> Stems; // value is a map from suffixes so that it acts like a set.
-    QMap<QString,QStringList> Signatures;
+    CLexicon * Lexicon;
+     
 public:
     MainWindow();
 
     void loadFile(const QString &fileName);
+    void DisplaySignatures();
 
 protected:
     void closeEvent(QCloseEvent *event) override;

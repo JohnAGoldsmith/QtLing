@@ -14,10 +14,12 @@ class CSignature;
 class CStem : public CParse
 {
 protected:
+    QString m_key;
     QString m_Word;
     QList<CSignature*> m_Signatures;
 public:
     CStem(CStringSurrogate ssWord);
+    CStem (QString);
     CStem(CStem&);
 public:
     //Accessors
@@ -26,6 +28,8 @@ public:
 
     QList<CSignature*>::iterator GetBegin()   { return m_Signatures.begin();  }
     QList<CSignature*>::iterator GetEnd()     { return m_Signatures.end();  }
+    
+    QString display();
 };
 
 #endif // CSTEM_H

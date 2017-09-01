@@ -94,7 +94,7 @@ CWord* CWordCollection::operator ^=(QString szWord)
     }
     return 0;
 }
-CWord* CWordCollection::GetAt( uint n )
+CWord* CWordCollection::GetAt( uint wordno )
 {
-    return m_WordList.at(n);
+    return m_WordList.at(wordno);
 }

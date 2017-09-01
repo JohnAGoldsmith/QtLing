@@ -269,14 +269,13 @@ void MainWindow::loadFile(const QString &fileName)
         line.simplified(); // get rid of extra spaces
         QStringList words = line.split(" ");
         QString word = words[0];
-        Words[word]=1;
-        //textEdit->appendPlainText(word);
-        //textEdit->appendPlainText(line);
+        *Lexicon->GetWordCollection() << word;
+ 
     }
     //this is where functions are called: should be replaced by lexicon
-    FindProtostems();
-    CreateStemAffixPairs();
-    AssignSuffixesToStems();
+    Lexicon->Crab_1();
+    //DisplaySignatures();
+    
 
 #ifndef QT_NO_CURSOR
     QApplication::restoreOverrideCursor();
@@ -338,6 +337,8 @@ void MainWindow::commitData(QSessionManager &manager)
 }
 #endif
 
+
+/*
 void MainWindow::FindProtostems()
 {  QString word, previous_word;
    QMapIterator<QString,int> iter(Words);
@@ -445,8 +446,18 @@ void   MainWindow::AssignSuffixesToStems()
     }
 }
 
-
-
+*/
+void MainWindow::DisplaySignatures()
+{
+    CSignature* pSig;
+//    foreach (pSig, Lexicon->GetSignatureCollection()->GetSignatures()){
+//        textEdit->appendPlainText("");
+//        textEdit->appendPlainText(pSig->display());
+//        textEdit->appendPlainText(pSig->display_stems()  );
+ //   }
+    
+    
+}
 
 
 
