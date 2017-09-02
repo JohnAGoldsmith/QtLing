@@ -37,6 +37,7 @@ public:
     CSignature* operator<< ( CParse* );
     CSignature* operator<< ( CStringSurrogate );
     CSignature* operator<< ( QString );
+    void        operator<< ( CSignature* );
     CSignature* operator^= ( CParse* );
     CSignature* operator^= ( CStringSurrogate );
     CSignature* operator^= ( QString );

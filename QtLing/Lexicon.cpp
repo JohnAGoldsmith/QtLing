@@ -2,6 +2,7 @@
 #include <QList>
 #include <QMap>
 #include <QMultiMap>
+#include <QSet>
 
 #include <QtDebug>
 
@@ -26,20 +27,19 @@ void CLexicon::Crab_1()
 {
     FindProtostems();
     CreateStemAffixPairs();
-    
-    qDebug() << "Hello world";
-    
-    //AssignSuffixesToStems();
+    AssignSuffixesToStems();
 }
 
 void CLexicon::FindProtostems()
 {  QString word, previous_word;
-    CWordCollection & Words =  * m_Words;
+    QStringList * Words =  GetWordCollection()->GetSortArray();
     bool StartFlag = true;
     bool DifferenceFoundFlag = false;
     QString stem;
-    for (int wordno=0; wordno<Words.GetLength(); wordno ++){
-        word = Words.GetAt(wordno)->GetWord();
+    for (int wordno=0; wordno<Words->size(); wordno ++){
+
+        word = Words->at(wordno);
+        //qDebug() << "0 "<<word;
         if (StartFlag){
             StartFlag = false;
             previous_word = word;
@@ -55,6 +55,7 @@ void CLexicon::FindProtostems()
                 if (!m_Protostems.contains(stem))
                 {
                     m_Protostems[stem] = 1;
+                   // qDebug() << "1 " << stem << previous_word<< " "<<word;
                 }
                 break;
             }
@@ -87,8 +88,10 @@ void CLexicon::CreateStemAffixPairs()
                 suffix_length = word.length() - letterno;
                 suffix = word.right(suffix_length);
                 m_Parses->append(QPair<QString,QString>(stem,suffix));
+                qDebug() <<"2 "<< stem << " " << suffix << endl;
                 if (m_Words->contains(stem)){
                     m_Parses->append(QPair<QString,QString>(stem,QString("NULL")));
+
                 }
             }
         }
@@ -102,7 +105,7 @@ void   CLexicon::AssignSuffixesToStems()
     CSignature* pSig;
     QString stem, affix, signature_string;
     CStem* pStem;
-    QMultiMap<QString,QString> temp_stems_to_affixes;
+    QMap<QString,QSet<QString>*> temp_stems_to_affixes;
     
 
     
@@ -110,29 +113,51 @@ void   CLexicon::AssignSuffixesToStems()
         this_pair = m_Parses->at(parseno);
         stem = this_pair.first;
         affix = this_pair.second;
-        temp_stems_to_affixes.insert(stem,affix);
+        if (! temp_stems_to_affixes.contains(stem)){
+            QSet<QString> * pSet = new QSet<QString>;
+            temp_stems_to_affixes.insert(stem,pSet);
+        }
+        temp_stems_to_affixes.value(stem)->insert(affix);
+
+
     }
     
-    QMultiMap<QString,QString>::const_iterator stem_iter;
+
+    QMap<QString,QSet<QString>*>::const_iterator stem_iter;
     QMultiMap<QString,QString> temp_signatures_to_stems;
     for (stem_iter = temp_stems_to_affixes.constBegin(); stem_iter != temp_stems_to_affixes.constEnd(); ++ stem_iter) {
         stem = stem_iter.key();
-        QStringList affixes = temp_stems_to_affixes.values(stem);
+        QStringList affixes;
+        foreach (QString affix, *temp_stems_to_affixes.value(stem)){
+            affixes.append(affix);
+        }
         affixes.sort();
         signature_string = affixes.join("=");
+        //qDebug() << "4 "<< signature_string << endl;
         temp_signatures_to_stems.insertMulti(signature_string,stem);
     }
-    
+
+
+
+
+
     QMultiMap<QString,QString>::const_iterator signatures_iter;
     for (signatures_iter = temp_signatures_to_stems.constBegin(); signatures_iter != temp_signatures_to_stems.constEnd(); ++ signatures_iter ){
         if (signatures_iter.value().length() >= MINIMUM_NUMBER_OF_STEMS){
-            pSig = m_Signatures->find(signature_string);
+            signature_string = signatures_iter.key();
+            pSig = new CSignature(signature_string);
+            *m_Signatures<< pSig;
+            qDebug() << signature_string;
             foreach (stem, temp_signatures_to_stems.values(signature_string)) {
                 pStem = m_Stems->find_stem(stem);
                 pSig->add_stem_pointer(pStem);
+                //qDebug() << pStem->display();
             }
         }
     }
+
+
+
 }
 
 

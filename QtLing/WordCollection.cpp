@@ -9,7 +9,7 @@ CWordCollection::CWordCollection()
     m_WordList              = QList<CWord*>();
     m_CorpusCount			= 0;
     m_MemberName			= QString::null;
-    m_SortArray				= NULL;
+    //m_SortArray				= NULL;
     m_SortValidFlag			= 0;
     m_SortStyle				= KEY;
 }
@@ -24,8 +24,9 @@ CWordCollection::CWordCollection()
 //}
 CWordCollection::~CWordCollection()
 {
-    if ( m_SortArray )         { delete [] m_SortArray; m_SortArray = NULL;  }
+    if ( m_SortArray.size() > 0 )         {  m_SortArray.empty();  }
 }
+/*
 CWord* CWordCollection::operator<<( CParse* pParse )
 {
     CStringSurrogate  cssKey;
@@ -45,14 +46,15 @@ CWord* CWordCollection::operator <<(CStringSurrogate SS)
     m_WordMap[SS] = word;
     return word;
 }
+*/
 CWord* CWordCollection::operator <<(QString szWord)
 {
-    const QChar* key = szWord.constData();
-    CStringSurrogate cssKey = CStringSurrogate(key, szWord.length());
-    CWord* word = new CWord(cssKey);
-    m_WordList << word;
-    m_WordMap[cssKey] = word;
-    return word;
+    //const QChar* key = szWord.constData();
+    //CStringSurrogate cssKey = CStringSurrogate(key, szWord.length());
+    CWord* pWord = new CWord(szWord);
+    m_WordList << pWord;
+    m_WordMap[szWord] = pWord;
+    return pWord;
 }
 CWord* CWordCollection::operator ^=(CParse* string)
 {
@@ -97,4 +99,13 @@ CWord* CWordCollection::operator ^=(QString szWord)
 CWord* CWordCollection::GetAt( uint wordno )
 {
     return m_WordList.at(wordno);
+}
+void CWordCollection::sort_word_list()
+{
+    foreach(QString word, m_WordMap.keys()){
+        m_SortArray.append(word);
+        //qDebug() << "word collection "<< word;
+    }
+    m_SortArray.sort();
+
 }

@@ -15,10 +15,11 @@ class CWordCollection
 {
 protected:
     QList<CWord*> m_WordList;
-    QMap<CStringSurrogate, CWord*> m_WordMap;
+    QMap<QString, CWord*> m_WordMap;
     int m_CorpusCount;
     QString m_MemberName;
-    CWord** m_SortArray;
+    //CWord** m_SortArray;
+    QStringList m_SortArray;
     bool m_SortValidFlag;
     enum eSortStyle m_SortStyle;
 
@@ -50,8 +51,9 @@ public:
     QList<CWord*>           GetList()    { return m_WordList;          }
     
     bool contains(QString string)  {return m_WordMap.contains(string);}
-
-    QMap<CStringSurrogate, CWord*> GetMap() { return m_WordMap; }
+    void sort_word_list();
+    QStringList* GetSortArray() {return & m_SortArray;}
+    QMap<QString, CWord*> GetMap() { return m_WordMap; }
 
 //    QMapIterator<CStringSurrogate,CWord*> GetIter() { return QMapIterator<CStringSurrogate,CWord*>iter(m_WordMap); }
 

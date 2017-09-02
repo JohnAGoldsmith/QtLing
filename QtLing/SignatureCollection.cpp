@@ -26,6 +26,10 @@ CSignature* CSignatureCollection::operator <<(QString szSignature)
     return pSig;
 }
 
+void CSignatureCollection::operator<< (CSignature * pSig)
+{
+    m_SignatureMap.insert(pSig->display(), pSig);
+}
 
 CSignature* CSignatureCollection::operator ^=(QString szSignature)
 {

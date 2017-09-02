@@ -31,5 +31,5 @@ QString CSignature::display_stems()
     foreach (qStem, m_Stems){
         outstring += " " + qStem->display();
     }
-    
+    return outstring;
 }

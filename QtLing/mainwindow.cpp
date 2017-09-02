@@ -271,11 +271,13 @@ void MainWindow::loadFile(const QString &fileName)
         QStringList words = line.split(" ");
         QString word = words[0];
         *Lexicon->GetWordCollection() << word;
- 
+
+
     }
-    //this is where functions are called: should be replaced by lexicon
+
+    Lexicon->GetWordCollection()->sort_word_list();
     Lexicon->Crab_1();
-    //DisplaySignatures();
+    DisplaySignatures();
     
 
 #ifndef QT_NO_CURSOR
@@ -451,11 +453,11 @@ void   MainWindow::AssignSuffixesToStems()
 void MainWindow::DisplaySignatures()
 {
     CSignature* pSig;
-//    foreach (pSig, Lexicon->GetSignatureCollection()->GetSignatures()){
-//        textEdit->appendPlainText("");
-//        textEdit->appendPlainText(pSig->display());
-//        textEdit->appendPlainText(pSig->display_stems()  );
- //   }
+    foreach (pSig, Lexicon->GetSignatureCollection()->GetSignatures()){
+        textEdit->appendPlainText("");
+        textEdit->appendPlainText(pSig->display());
+        textEdit->appendPlainText(pSig->display_stems()  );
+    }
     
     
 }
