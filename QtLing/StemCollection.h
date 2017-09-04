@@ -14,7 +14,7 @@ class CParse;
 class CStemCollection
 {
 protected:
-    //QList<CStem*> m_StemList;
+
     QMap<QString  , CStem*> m_StringToStemMap;
     int m_CorpusCount;
     QString m_MemberName;

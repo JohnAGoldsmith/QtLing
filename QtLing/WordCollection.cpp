@@ -26,27 +26,7 @@ CWordCollection::~CWordCollection()
 {
     if ( m_SortArray.size() > 0 )         {  m_SortArray.empty();  }
 }
-/*
-CWord* CWordCollection::operator<<( CParse* pParse )
-{
-    CStringSurrogate  cssKey;
-    cssKey = pParse->GetKey();
 
-    CWord* word = new CWord(cssKey);
-    word->IncrementWordCount();
-    m_WordList << word;
-    m_WordMap[cssKey] = word;
-    return word;
-}
-CWord* CWordCollection::operator <<(CStringSurrogate SS)
-{
-    CWord* word = new CWord(SS);
-    word->IncrementWordCount();
-    m_WordList << word;
-    m_WordMap[SS] = word;
-    return word;
-}
-*/
 CWord* CWordCollection::operator <<(QString szWord)
 {
     //const QChar* key = szWord.constData();
@@ -104,7 +84,6 @@ void CWordCollection::sort_word_list()
 {
     foreach(QString word, m_WordMap.keys()){
         m_SortArray.append(word);
-        //qDebug() << "word collection "<< word;
     }
     m_SortArray.sort();
 

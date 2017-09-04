@@ -30,7 +30,7 @@ public:
     CWordCollection*      GetWordCollection() { return m_Words; }
     CStemCollection*      GetStemCollection() { return m_Stems; }
     CSuffixCollection*    GetSuffixCollection() { return m_Suffixes; }
-    CSignatureCollection* GetSignatureCollection()     { return m_Signatures; }
+    CSignatureCollection* GetSignatures()     { return m_Signatures; }
     QList<QPair<QString,QString>>*           GetParses() {return m_Parses;}
 public:
     // insert functions here

@@ -271,11 +271,11 @@ void MainWindow::loadFile(const QString &fileName)
         QStringList words = line.split(" ");
         QString word = words[0];
         *Lexicon->GetWordCollection() << word;
-
-
     }
-
     Lexicon->GetWordCollection()->sort_word_list();
+
+
+
     Lexicon->Crab_1();
     DisplaySignatures();
     
@@ -341,124 +341,20 @@ void MainWindow::commitData(QSessionManager &manager)
 #endif
 
 
-/*
-void MainWindow::FindProtostems()
-{  QString word, previous_word;
-   QMapIterator<QString,int> iter(Words);
-   bool StartFlag = true;
-   bool DifferenceFoundFlag = false;
-   QString stem;
-   while (iter.hasNext()){
-     iter.next();
-     word = iter.key();
-     if (StartFlag){
-         StartFlag = false;
-         previous_word = word;
-         continue;
-     }
-     DifferenceFoundFlag = false;
-     int end = qMin(word.length(), previous_word.length());
-
-     for (int i=0; i <end; i++){
-         if (previous_word[i] != word[i]){
-             stem = previous_word.left(i);
-             DifferenceFoundFlag = true;
-             if (!Protostems.contains(stem))
-             {
-                 Protostems[stem] = 1;
-                 //textEdit->appendPlainText(stem);
-             }
-             break;
-         }
-     }
-     if (DifferenceFoundFlag == true)
-     {
-         previous_word = word;
-         continue;
-     }
-     else {
-        if (previous_word.length() < word.length()) {
-            Protostems[previous_word] = 1;
-            //textEdit->appendPlainText(previous_word + "  "+ word + " method 2");
-        }
-     }
-     previous_word = word;
-   }
-   return;
-}
-
-void MainWindow::CreateStemAffixPairs()
-{   QMapIterator<QString,int> iter(Words);
-    QString stem, suffix;
-    int suffix_length;
-    while (iter.hasNext() ){
-        iter.next();
-        QString word = iter.key();
-
-        for (int letterno = 1; letterno < word.length(); letterno++){
-            stem = word.left(letterno);
-            if (Protostems.contains(stem)){
-                    suffix_length = word.length() - letterno;
-                    suffix = word.right(suffix_length);
-                    Parses.append(QPair<QString,QString>(stem,suffix));
-                    //textEdit->appendPlainText(stem + " " + suffix);
-                    if (Words.contains(stem)){
-                        Parses.append(QPair<QString,QString>(stem,QString("NULL")));
-                        //textEdit->appendPlainText(stem + " NULL");
-                    }
-            }
-        }
-    }
-}
-void   MainWindow::AssignSuffixesToStems()
-{
-    //
-    QListIterator<QPair<QString,QString>> iter(Parses);
-    QPair<QString,QString> this_pair;
-    QString stem, suffix, signature_string;
-    while (iter.hasNext() ){
-        this_pair = iter.next();
-        stem = this_pair.first;
-        suffix = this_pair.second;
-        QMap<QString,int>& suffix_map = Stems[stem];
-        suffix_map[suffix] = 1;
-    }
-    QList<QString>  Stems_list = Stems.keys();
-    QListIterator<QString> stem_iter(Stems_list);
-
-
-
-
-    while(stem_iter.hasNext()){
-        stem = stem_iter.next();
-        QMap<QString,int>& suffixes = Stems[stem];
-        signature_string = suffixes.keys().join("=");
-        Signatures[signature_string].append(stem);
-    }
-
-    QMutableMapIterator<QString,QStringList> signatures_iter(Signatures);
-    while(signatures_iter.hasNext()){
-        if (signatures_iter.next().value().length() < 2){
-            signatures_iter.remove();
-        }
-        else{   QString signature= signatures_iter.key();
-                textEdit->appendPlainText("");
-                textEdit->appendPlainText(signature);
-                textEdit->appendPlainText(signatures_iter.value().join(" ") );
-        }
-    }
-}
-
-*/
 void MainWindow::DisplaySignatures()
 {
     CSignature* pSig;
-    foreach (pSig, Lexicon->GetSignatureCollection()->GetSignatures()){
-        textEdit->appendPlainText("");
-        textEdit->appendPlainText(pSig->display());
-        textEdit->appendPlainText(pSig->display_stems()  );
+    Lexicon->GetSignatures()->sort();
+    QList<CSignature*>* pSortedSignatures = Lexicon->GetSignatures()->GetSortedSignatures();
+
+    QListIterator<CSignature*> sig_iter (*pSortedSignatures);
+    while (sig_iter.hasNext()){
+       pSig = sig_iter.next();
+       textEdit->appendPlainText(pSig->display());
+       textEdit->appendPlainText(pSig->display_stems()  );
+
     }
-    
+
     
 }
 

@@ -30,11 +30,13 @@ public:
 
     QList<CSuffix*>::iterator GetBegin()   { return m_Affixes.begin();  }
     QList<CSuffix*>::iterator GetEnd()     { return m_Affixes.end();    }
+    QList<CStem*>*  get_stems() { return  & m_Stems;}
     
     void add_stem_pointer(CStem*);
     
     QString display();
-    QString display_stems();
+    QString display_stems() ;
+    int get_number_of_stems() const {return m_Stems.count();}
 
 };
 

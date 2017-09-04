@@ -18,7 +18,6 @@ protected:
     QMap<QString, CWord*> m_WordMap;
     int m_CorpusCount;
     QString m_MemberName;
-    //CWord** m_SortArray;
     QStringList m_SortArray;
     bool m_SortValidFlag;
     enum eSortStyle m_SortStyle;
@@ -55,7 +54,6 @@ public:
     QStringList* GetSortArray() {return & m_SortArray;}
     QMap<QString, CWord*> GetMap() { return m_WordMap; }
 
-//    QMapIterator<CStringSurrogate,CWord*> GetIter() { return QMapIterator<CStringSurrogate,CWord*>iter(m_WordMap); }
 
 };
 

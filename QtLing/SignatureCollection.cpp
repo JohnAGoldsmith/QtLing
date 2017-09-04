@@ -8,7 +8,6 @@ CSignatureCollection::CSignatureCollection()
     //m_SignatureList         = QList<CSignature*>();
     m_CorpusCount			= 0;
     m_MemberName			= QString::null;
-    m_SortArray				= NULL;
     m_SortValidFlag			= 0;
     m_SortStyle				= KEY;
 }
@@ -16,7 +15,7 @@ CSignatureCollection::CSignatureCollection()
 
 CSignatureCollection::~CSignatureCollection()
 {
-    if ( m_SortArray )         { delete [] m_SortArray; m_SortArray = NULL;  }
+
 }
 
 CSignature* CSignatureCollection::operator <<(QString szSignature)
@@ -44,3 +43,15 @@ CSignature* CSignatureCollection::find (QString szSignature)
  
 }
 
+bool compare_stem_count(const CSignature* pSig1, const CSignature* pSig2)
+{
+ return  pSig1->get_number_of_stems() > pSig2->get_number_of_stems();
+}
+void CSignatureCollection::sort()
+{
+    QMap<QString,CSignature*>::iterator sig_iter;
+    foreach (CSignature* pSig, m_SignatureMap){
+        m_SortList.append(pSig);
+    }
+    qSort(m_SortList.begin(), m_SortList.end(),  compare_stem_count);
+}

@@ -14,11 +14,11 @@ class CParse;
 class CSignatureCollection
 {
 protected:
-    //QList<CSignature*> m_SignatureList;
+
     QMap<QString, CSignature*> m_SignatureMap;
     int m_CorpusCount;
     QString m_MemberName;
-    CSignature** m_SortArray;
+    QList<CSignature*> m_SortList;
     bool m_SortValidFlag;
     enum eSortStyle m_SortStyle;
 
@@ -31,6 +31,7 @@ public:
 private:
     CSignatureCollection(const CSignatureCollection& x);
     CSignatureCollection& operator=(const CSignatureCollection& x);
+
 
 public:
     friend class CLexicon;
@@ -46,9 +47,10 @@ public:
     CSignature* GetAt( uint );
     int GetLength() const { return m_SignatureMap.size(); }
     QMap<QString, CSignature*> GetSignatures() const { return m_SignatureMap; }
+    QList<CSignature*>*  GetSortedSignatures() { return &  m_SortList;}
 
-//    QList<CSignature>::iterator GetBegin()   { return m_SignatureList.begin();  }
-//    QList<CSignature>::iterator GetEnd()     { return m_SignatureList.end();  }
+    void sort();
+
 
 };
 #endif // CSIGNATURECOLLECTION_H
