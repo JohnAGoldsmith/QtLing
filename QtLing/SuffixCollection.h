@@ -37,8 +37,9 @@ public:
     CSuffix* GetAt( uint );
     int GetLength() const { return m_SuffixList.length(); }
 
-    QList<CSuffix*>::iterator GetBegin()   { return m_SuffixList.begin();  }
-    QList<CSuffix*>::iterator GetEnd()     { return m_SuffixList.end();  }
+    QList<CSuffix*>::iterator GetBegin()   { return m_SuffixList.begin(); }
+    QList<CSuffix*>::iterator GetEnd()     { return m_SuffixList.end();   }
+    QList<CSuffix*> GetList()              { return m_SuffixList;         }
 };
 
 #endif // CSUFFIXCOLLECTION_H
