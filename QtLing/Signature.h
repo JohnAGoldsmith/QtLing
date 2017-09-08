@@ -37,6 +37,7 @@ public:
     QString display();
     QString display_stems() ;
     int get_number_of_stems() const {return m_Stems.count();}
+    int get_robustness();
 
 };
 

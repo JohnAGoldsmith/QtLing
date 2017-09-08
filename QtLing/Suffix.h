@@ -19,6 +19,7 @@ public:
     CSuffix(CSuffix&);
 public:
     //Accessors
+    QString get_key() const {return m_Suffix;}
     QString GetSuffix() const { return m_Suffix;    }
     int     GetFrequency()    { return m_frequency; }
     void    SetFrequency(int frequency) { m_frequency = frequency; }

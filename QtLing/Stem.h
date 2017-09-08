@@ -23,6 +23,7 @@ public:
     CStem(CStem&);
 public:
     //Accessors
+    QString            get_key() const{return m_key;}
     QString            GetStem()       const { return m_Word; }
     QList<CSignature*> GetSignatures() const { return m_Signatures; }
 

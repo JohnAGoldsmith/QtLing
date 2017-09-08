@@ -111,7 +111,9 @@ void MainWindow::loadWords()
     {
         word = iter.next();
         QStandardItem *item = new QStandardItem(word->GetWord());
+        QStandardItem *item2 = new QStandardItem(word->GetWordCount());
         tableModel->setItem(row, 0, item);
+        tableModel->setItem(row,1, item2);
         row++;
     }
 
@@ -153,8 +155,12 @@ void MainWindow::loadSignatures()
     while (iter.hasNext())
     {
         sig = iter.next();
-        QStandardItem *item = new QStandardItem(sig->GetSignature());
-        tableModel->setItem(row, 0, item);
+        QStandardItem *item1 = new QStandardItem(sig->GetSignature());
+        QStandardItem *item2 = new QStandardItem(QString::number(sig->get_number_of_stems()));
+        QStandardItem *item3 = new QStandardItem(QString::number(sig->get_robustness()));
+        tableModel->setItem(row, 0, item1);
+        tableModel->setItem(row,1,item2);
+        tableModel->setItem(row,2, item3 );
         row++;
     }
 
