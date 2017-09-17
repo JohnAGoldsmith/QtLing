@@ -18,7 +18,7 @@
 CLexicon::CLexicon() : m_Words(new CWordCollection), m_Stems(new CStemCollection), m_Suffixes(new CSuffixCollection), m_Signatures(new CSignatureCollection)
 {
     m_Parses = new QList<QPair<QString,QString>>();
-    m_Protostems = QMap<CStringSurrogate, int>();
+    m_Protostems = QMap<QString, int>();
 }
 
 //linguistic methods
@@ -26,13 +26,16 @@ CLexicon::CLexicon() : m_Words(new CWordCollection), m_Stems(new CStemCollection
 void CLexicon::Crab_1()
 {
     FindProtostems();
+    qDebug() << "finished finding protostems";
     CreateStemAffixPairs();
+    qDebug() << "finished creating stem affix pairs.";
     AssignSuffixesToStems();
+    qDebug() << "assigned stuffixes to stems";
 }
 
 void CLexicon::FindProtostems()
 {  QString word, previous_word;
-    QStringList * Words =  GetWordCollection()->GetSortArray();
+    QStringList * Words =  GetWordCollection()->GetSortedStringArray();
     bool StartFlag = true;
     bool DifferenceFoundFlag = false;
     QString stem;

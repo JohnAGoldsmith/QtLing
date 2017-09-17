@@ -25,7 +25,7 @@ public:
     CLexicon();
 public:
     // accessors and protostems
-    QMap<CStringSurrogate, int> m_Protostems;
+    QMap<QString, int> m_Protostems;
 
     CWordCollection*      GetWordCollection() { return m_Words; }
     CStemCollection*      GetStemCollection() { return m_Stems; }

@@ -3,6 +3,7 @@
 CWord::CWord(CStringSurrogate ssWord) : CParse(ssWord), m_WordCount(0), m_Word(ssWord.GetKey())
 {
 //    m_Parses = QList<WordParse>();
+    m_WordCount = 0;
 }
 
 CWord::CWord(CWord& word)

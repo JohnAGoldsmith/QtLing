@@ -24,7 +24,7 @@ CWordCollection::CWordCollection()
 //}
 CWordCollection::~CWordCollection()
 {
-    if ( m_SortArray.size() > 0 )         {  m_SortArray.empty();  }
+    if ( m_SortedStringArray.size() > 0 )         {  m_SortedStringArray.empty();  }
 }
 
 CWord* CWordCollection::operator <<(QString szWord)
@@ -76,15 +76,12 @@ CWord* CWordCollection::operator ^=(QString szWord)
     }
     return 0;
 }
-CWord* CWordCollection::GetAt( uint wordno )
-{
-    return m_WordList.at(wordno);
-}
+
 void CWordCollection::sort_word_list()
 {
     foreach(QString word, m_WordMap.keys()){
-        m_SortArray.append(word);
+        m_SortedStringArray.append(word);
     }
-    m_SortArray.sort();
+    m_SortedStringArray.sort();
 
 }

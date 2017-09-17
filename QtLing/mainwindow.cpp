@@ -36,13 +36,20 @@
 
 
 MainWindow::MainWindow()
-    : tableView(new QTableView),  textEdit(new QPlainTextEdit)
+    : tableView_upper(new QTableView),  tableView_lower(new QTableView)
 {
     Lexicon = new CLexicon();
     treeModel = new QStandardItemModel();
-    tableModel = new QStandardItemModel();
+
+    Word_model= new QStandardItemModel(1,3);
+    Stem_model= new QStandardItemModel;
+    Signature_model= new QStandardItemModel;
+    Affix_model= new QStandardItemModel();
+
+
 //    createHorizontalGroupBox();
 //    setCentralWidget(horizontalGroupBox);
+
     createSplitter();
     setCentralWidget(mainSplitter);
     createActions();
@@ -50,8 +57,8 @@ MainWindow::MainWindow()
 
     readSettings();
 
-    connect(textEdit->document(), &QTextDocument::contentsChanged,
-            this, &MainWindow::documentWasModified);
+//    connect(textEdit->document(), &QTextDocument::contentsChanged,
+//            this, &MainWindow::documentWasModified);
 
 #ifndef QT_NO_SESSIONMANAGER
     QGuiApplication::setFallbackSessionManagementEnabled(false);
@@ -67,12 +74,9 @@ void MainWindow::createSplitter()
     mainSplitter = new QSplitter();
     rightSplitter = new QSplitter(Qt::Vertical);
 
-    littleEditor = new QPlainTextEdit;
-    littleEditor->setPlainText(tr("To be HTML box."));
-
-    tableView->setModel(tableModel);
-    rightSplitter->addWidget(tableView);
-    rightSplitter->addWidget(littleEditor);
+    rightSplitter->addWidget(tableView_upper);
+    rightSplitter->addWidget(tableView_lower);
+    rightSplitter->addWidget(tableView_lower);
 
     treeView = new QTreeView(rightSplitter);
     treeView->setModel(treeModel);
@@ -82,6 +86,7 @@ void MainWindow::createSplitter()
     mainSplitter->addWidget(rightSplitter);
 }
 
+// not used: delete...
 void MainWindow::createHorizontalGroupBox()
 {
     horizontalGroupBox = new QGroupBox(tr("Horizontal layout"));
@@ -89,10 +94,7 @@ void MainWindow::createHorizontalGroupBox()
 
     verticalGroupBox = new QGroupBox(tr("Vertical layout"));
     QVBoxLayout *vLayout = new QVBoxLayout;
-    littleEditor = new QPlainTextEdit;
-    littleEditor->setPlainText(tr("To be HTML box."));
-    vLayout->addWidget(textEdit);
-    vLayout->addWidget(littleEditor);
+
     verticalGroupBox->setLayout(vLayout);
 
     QTreeView* tree = new QTreeView(horizontalGroupBox);
@@ -101,24 +103,26 @@ void MainWindow::createHorizontalGroupBox()
     layout->addWidget(verticalGroupBox);
     horizontalGroupBox->setLayout(layout);
 }
-void MainWindow::loadWords()
+void MainWindow::read_DX1_file()
 {
     CWord* word;
-    QListIterator<CWord*> iter(Lexicon->GetWordCollection()->GetList());
+    QListIterator<CWord*> iter(* Lexicon->GetWordCollection()->GetList()) ;
     int row = 0;
-
+    QString number_string;
     while (iter.hasNext())
     {
         word = iter.next();
-        QStandardItem *item = new QStandardItem(word->GetWord());
-        QStandardItem *item2 = new QStandardItem(word->GetWordCount());
-        tableModel->setItem(row, 0, item);
-        tableModel->setItem(row,1, item2);
-        row++;
-    }
+        number_string = QString::number(word->GetWordCount());
+        QStandardItem *item3 = new QStandardItem(word->GetWord());
+        QStandardItem *item4 = new QStandardItem(number_string);
+        Word_model->setItem(row,0,item3);
+        Word_model->setItem(row,1,item4);
 
+    }
 }
-void MainWindow::loadStems()
+
+
+void MainWindow::load_word_model()
 {
     CStem* stem;
     QMap<QString, CStem*>::iterator iter;
@@ -127,13 +131,27 @@ void MainWindow::loadStems()
     {
         stem = iter.value();
         QStandardItem *item = new QStandardItem(stem->GetStem());
-        tableModel->setItem(row, 0, item);
-        row++;
+        QList<QStandardItem*> item_list;
+        item_list.append(item);
+        Stem_model->appendRow(item_list);
     }
-
-
 }
-void MainWindow::loadSuffixes()
+void MainWindow::load_stem_model()
+{
+    CStem* stem;
+    QMap<QString, CStem*>::iterator iter;
+    int row = 0;
+    for (iter = Lexicon->GetStemCollection()->GetBegin(); iter != Lexicon->GetStemCollection()->GetEnd(); ++iter)
+    {
+        stem = iter.value();
+        QStandardItem *item = new QStandardItem(stem->GetStem());
+        QList<QStandardItem*> item_list;
+        item_list.append(item);
+        Stem_model->appendRow(item_list);
+        qDebug() << stem->GetStem();
+    }
+}
+void MainWindow::load_affix_model()
 {
     CSuffix* suffix;
     QListIterator<CSuffix*> iter(Lexicon->GetSuffixCollection()->GetList());
@@ -142,49 +160,34 @@ void MainWindow::loadSuffixes()
     {
         suffix = iter.next();
         QStandardItem *item = new QStandardItem(suffix->GetSuffix());
-        tableModel->setItem(row, 0, item);
+        Affix_model->setItem(row, 0, item);
         row++;
     }
 
 }
-void MainWindow::loadSignatures()
+
+void display_signatures()
 {
-    CSignature* sig;
-    QListIterator<CSignature*> iter(*Lexicon->GetSignatures()->GetSortedSignatures());
-    int row = 0;
+
+}
+
+void MainWindow::load_signature_model()
+{   CSignature* sig;
+    Lexicon->GetSignatures()->sort();
+    QList<CSignature*>* pSortedSignatures = Lexicon->GetSignatures()->GetSortedSignatures();
+    QListIterator<CSignature*> iter(*pSortedSignatures );
+
     while (iter.hasNext())
     {
         sig = iter.next();
-        QStandardItem *item1 = new QStandardItem(sig->GetSignature());
-        QStandardItem *item2 = new QStandardItem(QString::number(sig->get_number_of_stems()));
-        QStandardItem *item3 = new QStandardItem(QString::number(sig->get_robustness()));
-        tableModel->setItem(row, 0, item1);
-        tableModel->setItem(row,1,item2);
-        tableModel->setItem(row,2, item3 );
-        row++;
-    }
+        QList<QStandardItem*> items;
+        QStandardItem * item2 = new QStandardItem(QString::number(sig->get_number_of_stems()));
+        QStandardItem * item3 = new QStandardItem(QString::number(sig->get_robustness()));
+        items.append(new QStandardItem(sig->GetSignature()));
+        items.append(item2);
+        items.append(item3);
+        Signature_model->appendRow(items);
 
-}
-void MainWindow::loadProtostems()
-{
-    QMap<CStringSurrogate,int>::iterator iter;
-
-    CStringSurrogate ss;
-    int freq;
-    QMap<CStringSurrogate,int> protostems = Lexicon->m_Protostems;
-
-    int row = 0;
-    for (iter = protostems.begin(); iter != protostems.end(); ++iter)
-    {
-        ss = iter.key();
-        freq = iter.value();
-        QString str = tr("%0").arg(freq);
-        QStandardItem *itemCol1 = new QStandardItem(ss.Display());
-        QStandardItem *itemCol2 = new QStandardItem(str);
-
-        tableModel->setItem(row, 0, itemCol1);
-        tableModel->setItem(row, 1, itemCol2);
-        row++;
     }
 
 }
@@ -192,18 +195,16 @@ void MainWindow::loadProtostems()
 void MainWindow::rowClicked(const QModelIndex &index)
 {
     QStandardItem *item = treeModel->itemFromIndex(index);
-    tableModel->clear();
     QString key = item->text();
     if (key == "Words")
-        loadWords();
+        tableView_upper->setModel(Word_model);
     else if (key == "Stems")
-        loadStems();
+        load_stem_model();
     else if (key == "Suffixes")
-        loadSuffixes();
-    else if (key == "Signatures")
-        loadSignatures();
-    else if (key == "Protostems")
-        loadProtostems();
+        load_affix_model();
+    else if (key == "Signatures"){
+        tableView_upper->setModel(Signature_model);
+    }
     else
         qDebug() << "Invalid selection: rowClicked";
 }
@@ -220,7 +221,6 @@ void MainWindow::closeEvent(QCloseEvent *event)
 void MainWindow::newFile()
 {
     if (maybeSave()) {
-        textEdit->clear();
         setCurrentFile(QString());
     }
 }
@@ -229,7 +229,7 @@ void MainWindow::open()
     if (maybeSave()) {
         QString fileName = QFileDialog::getOpenFileName(this);
         if (!fileName.isEmpty())
-            loadFile(fileName);
+            load_file(fileName);
     }
 }
 bool MainWindow::save()
@@ -258,7 +258,7 @@ void MainWindow::about()
 }
 void MainWindow::documentWasModified()
 {
-    setWindowModified(textEdit->document()->isModified());
+    //setWindowModified(textEdit->document()->isModified());
 }
 void MainWindow::createActions()
 {
@@ -311,7 +311,7 @@ void MainWindow::createActions()
     cutAct->setShortcuts(QKeySequence::Cut);
     cutAct->setStatusTip(tr("Cut the current selection's contents to the "
                             "clipboard"));
-    connect(cutAct, &QAction::triggered, textEdit, &QPlainTextEdit::cut);
+//    connect(cutAct, &QAction::triggered, textEdit, &QPlainTextEdit::cut);
     editMenu->addAction(cutAct);
     editToolBar->addAction(cutAct);
 
@@ -320,7 +320,7 @@ void MainWindow::createActions()
     copyAct->setShortcuts(QKeySequence::Copy);
     copyAct->setStatusTip(tr("Copy the current selection's contents to the "
                              "clipboard"));
-    connect(copyAct, &QAction::triggered, textEdit, &QPlainTextEdit::copy);
+//    connect(copyAct, &QAction::triggered, textEdit, &QPlainTextEdit::copy);
     editMenu->addAction(copyAct);
     editToolBar->addAction(copyAct);
 
@@ -329,7 +329,7 @@ void MainWindow::createActions()
     pasteAct->setShortcuts(QKeySequence::Paste);
     pasteAct->setStatusTip(tr("Paste the clipboard's contents into the current "
                               "selection"));
-    connect(pasteAct, &QAction::triggered, textEdit, &QPlainTextEdit::paste);
+//    connect(pasteAct, &QAction::triggered, textEdit, &QPlainTextEdit::paste);
     editMenu->addAction(pasteAct);
     editToolBar->addAction(pasteAct);
 
@@ -347,8 +347,8 @@ void MainWindow::createActions()
     cutAct->setEnabled(false);
 
     copyAct->setEnabled(false);
-    connect(textEdit, &QPlainTextEdit::copyAvailable, cutAct, &QAction::setEnabled);
-    connect(textEdit, &QPlainTextEdit::copyAvailable, copyAct, &QAction::setEnabled);
+//    connect(textEdit, &QPlainTextEdit::copyAvailable, cutAct, &QAction::setEnabled);
+//    connect(textEdit, &QPlainTextEdit::copyAvailable, copyAct, &QAction::setEnabled);
 #endif // !QT_NO_CLIPBOARD
 }
 void MainWindow::createStatusBar()
@@ -375,8 +375,8 @@ void MainWindow::writeSettings()
 }
 bool MainWindow::maybeSave()
 {
-    if (!textEdit->document()->isModified())
-        return true;
+//    if (!textEdit->document()->isModified())
+//        return true;
     const QMessageBox::StandardButton ret
         = QMessageBox::warning(this, tr("Application"),
                                tr("The document has been modified.\n"
@@ -409,7 +409,7 @@ void MainWindow::createTreeModel()
     parent->appendRow(prStemItem);
 }
 
-void MainWindow::loadFile(const QString &fileName)
+void MainWindow::load_file(const QString &fileName)
 {
     QFile file(fileName);
     if (!file.open(QFile::ReadOnly | QFile::Text)) {
@@ -429,15 +429,32 @@ void MainWindow::loadFile(const QString &fileName)
         line.simplified(); // get rid of extra spaces
         QStringList words = line.split(" ");
         QString word = words[0];
-        *Lexicon->GetWordCollection() << word;
+        CWord* pWord = *Lexicon->GetWordCollection() << word;
+        pWord->SetWordCount(words[1].toInt());
+
     }
-    Lexicon->GetWordCollection()->sort_word_list();
 
+    CWordCollection * Words = Lexicon->GetWordCollection();
+    Words->sort_word_list();
+    QList<CWord*> * pWordList = Words->GetList();
+    CWord * pWord;
+    int rowno =0;
+    Word_model->setColumnCount(2);
+    for (int wordno = 0; wordno < Words->GetLength() ; wordno++){
+        pWord = Words->GetAt(wordno);
+        QStandardItem * pItem1 = new QStandardItem(pWord->GetWord());
+        QStandardItem * pItem2 = new QStandardItem(pWord->GetWordCount());
+        Word_model->setItem(rowno,0,pItem1);
+        Word_model->setItem(rowno,1,pItem2);
+        rowno++;
 
+    }
 
     Lexicon->Crab_1();
-    DisplaySignatures();
-    
+
+    load_signature_model();
+    load_affix_model();
+    load_stem_model();
     createTreeModel();
 
 #ifndef QT_NO_CURSOR
@@ -462,7 +479,7 @@ bool MainWindow::saveFile(const QString &fileName)
 #ifndef QT_NO_CURSOR
     QApplication::setOverrideCursor(Qt::WaitCursor);
 #endif
-    out << textEdit->toPlainText();
+    //out << textEdit->toPlainText();
 #ifndef QT_NO_CURSOR
     QApplication::restoreOverrideCursor();
 #endif
@@ -474,7 +491,7 @@ bool MainWindow::saveFile(const QString &fileName)
 void MainWindow::setCurrentFile(const QString &fileName)
 {
     curFile = fileName;
-    textEdit->document()->setModified(false);
+    //textEdit->document()->setModified(false);
     setWindowModified(false);
 
     QString shownName = curFile;
@@ -494,13 +511,13 @@ void MainWindow::commitData(QSessionManager &manager)
             manager.cancel();
     } else {
         // Non-interactive: save without asking
-        if (textEdit->document()->isModified())
-            save();
+//        if (textEdit->document()->isModified())
+//            save();
     }
 }
 #endif
 
-
+//not used:
 void MainWindow::DisplaySignatures()
 {
     CSignature* pSig;
@@ -508,12 +525,11 @@ void MainWindow::DisplaySignatures()
     QList<CSignature*>* pSortedSignatures = Lexicon->GetSignatures()->GetSortedSignatures();
 
     QListIterator<CSignature*> sig_iter (*pSortedSignatures);
-    while (sig_iter.hasNext()){
-       pSig = sig_iter.next();
-       textEdit->appendPlainText(pSig->display());
-       textEdit->appendPlainText(pSig->display_stems()  );
-
-    }
+//    while (sig_iter.hasNext()){
+//       pSig = sig_iter.next();
+//       textEdit->appendPlainText(pSig->display());
+//       textEdit->appendPlainText(pSig->display_stems()  );
+//    }
 
     
 }

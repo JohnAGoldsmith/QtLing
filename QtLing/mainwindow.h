@@ -33,7 +33,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow();
 
-    void loadFile(const QString &fileName);
+    void load_file(const QString &fileName);
     void DisplaySignatures();
 
 protected:
@@ -58,11 +58,12 @@ private:
     void createSplitter();
     void createTreeModel();
 
-    void loadWords();
-    void loadStems();
-    void loadSuffixes();
-    void loadSignatures();
-    void loadProtostems();
+    void load_word_model();
+    void read_DX1_file();
+    void load_stem_model();
+    void load_affix_model();
+    void load_signature_model();
+    void load_protostem_model();
 
     void createActions();
     void createStatusBar();
@@ -75,15 +76,24 @@ private:
 
     QSplitter *mainSplitter;
     QSplitter *rightSplitter;
-    QTableView *tableView;
+    QTableView *tableView_upper;
+    QTableView *tableView_lower;
     QTreeView *treeView;
     QStandardItemModel *treeModel;
-    QStandardItemModel *tableModel;
+//    QStandardItemModel *tableModel_upper;
+//    QStandardItemModel *tableModel_lower;
+
+    QStandardItemModel * Word_model;
+    QStandardItemModel * Stem_model;
+    QStandardItemModel * Signature_model;
+    QStandardItemModel * Affix_model;
+    QStandardItemModel * Protostem_model;
+
 
     QGroupBox *horizontalGroupBox;
     QGroupBox *verticalGroupBox;
-    QPlainTextEdit *textEdit;
-    QPlainTextEdit *littleEditor;
+    //QPlainTextEdit *textEdit;
+    //QPlainTextEdit *littleEditor;
     QString curFile;
 };
 
