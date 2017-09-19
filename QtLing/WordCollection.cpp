@@ -27,7 +27,7 @@ CWordCollection::~CWordCollection()
     if ( m_SortedStringArray.size() > 0 )         {  m_SortedStringArray.empty();  }
 }
 
-CWord* CWordCollection::add(QString word_string){
+CWord* CWordCollection::find_or_add(QString word_string){
     *this << word_string;
 }
 

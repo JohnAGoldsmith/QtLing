@@ -42,7 +42,7 @@ public:
     CSignature* operator^= ( CParse* );
     CSignature* operator^= ( CStringSurrogate );
     CSignature* operator^= ( QString );
-    CSignature* find ( QString); // same as operatorˆ=
+    CSignature* find_or_add ( QString); // same as operatorˆ=
 
     CSignature* GetAt( uint );
     int GetLength() const { return m_SignatureMap.size(); }

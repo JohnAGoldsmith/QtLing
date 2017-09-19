@@ -21,17 +21,19 @@ protected:
     CSuffixCollection * m_Suffixes;
     CSignatureCollection * m_Signatures;
     QList<QPair<QString,QString>> *m_Parses;
+    QMap<QString, int> m_Protostems;
 public:
     CLexicon();
 public:
     // accessors and protostems
-    QMap<QString, int> m_Protostems;
+
 
     CWordCollection*      GetWordCollection() { return m_Words; }
     CStemCollection*      GetStemCollection() { return m_Stems; }
     CSuffixCollection*    GetSuffixCollection() { return m_Suffixes; }
     CSignatureCollection* GetSignatures()     { return m_Signatures; }
     QList<QPair<QString,QString>>*           GetParses() {return m_Parses;}
+    QMap<QString,int>*   GetProtostems() {return &m_Protostems;}
 public:
     // insert functions here
     void Crab_1();

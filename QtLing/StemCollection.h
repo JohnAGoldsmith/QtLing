@@ -39,11 +39,12 @@ public:
     CStem* operator^= ( CParse* );
     CStem* operator^= ( CStringSurrogate );
     CStem* operator^= ( QString );
-    CStem* find_stem(QString);  // same as ˆ=
+    CStem* find_or_add (QString);  // same as ˆ=
 
     CStem* GetAtKey( QString);
     int GetSize() const { return m_StringToStemMap.size(); }
     void add_stem_pointer (CStem* pStem);
+
     
     QMap<QString,CStem*>::iterator GetBegin()   { return m_StringToStemMap.begin();  }
     QMap<QString,CStem*>::iterator GetEnd()     { return m_StringToStemMap.end();  }

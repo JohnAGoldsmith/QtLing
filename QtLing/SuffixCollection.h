@@ -14,12 +14,11 @@ class CParse;
 class CSuffixCollection
 {
 protected:
-    QList<CSuffix*> m_SuffixList;
-    // map for suffixes?
+    QMap<QString, CSuffix*> m_SuffixMap;
+
 public:
     //construction/destruction
     CSuffixCollection();
-//    CWordCollection(CLexicon* Lex, QString MemberName = QString());
     ~CSuffixCollection();
 
 // disable copy
@@ -27,19 +26,16 @@ private:
     CSuffixCollection(const CSuffixCollection& x);
     CSuffixCollection& operator=(const CSuffixCollection& x);
 public:
-    CSuffix* operator<< ( CParse* );
-    CSuffix* operator<< ( CStringSurrogate );
+
     CSuffix* operator<< ( QString );
-    CSuffix* operator^= ( CParse* );
-    CSuffix* operator^= ( CStringSurrogate );
     CSuffix* operator^= ( QString );
-
+    CSuffix* find_or_add        ( QString ); //same as ˆ= (find if it is there, else add)
     CSuffix* GetAt( uint );
-    int GetLength() const { return m_SuffixList.length(); }
+    int GetLength() const { return m_SuffixMap.size(); }
 
-    QList<CSuffix*>::iterator GetBegin()   { return m_SuffixList.begin(); }
-    QList<CSuffix*>::iterator GetEnd()     { return m_SuffixList.end();   }
-    QList<CSuffix*> GetList()              { return m_SuffixList;         }
+    QMap<QString,CSuffix*>::iterator GetBegin()   { return m_SuffixMap.begin(); }
+    QMap<QString,CSuffix*>::iterator GetEnd()     { return m_SuffixMap.end();   }
+    QMap<QString,CSuffix*> GetMap()              { return m_SuffixMap;         }
 };
 
 #endif // CSUFFIXCOLLECTION_H

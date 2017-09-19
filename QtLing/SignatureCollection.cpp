@@ -32,9 +32,9 @@ void CSignatureCollection::operator<< (CSignature * pSig)
 
 CSignature* CSignatureCollection::operator ^=(QString szSignature)
 {
-    return this->find(szSignature);
+    return this->find_or_add(szSignature);
 }
-CSignature* CSignatureCollection::find (QString szSignature)
+CSignature* CSignatureCollection::find_or_add (QString szSignature)
 {    if (! m_SignatureMap.contains(szSignature) ) {
     CSignature* pSig = new CSignature(szSignature);
     return pSig;

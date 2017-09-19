@@ -144,13 +144,20 @@ void   CLexicon::AssignSuffixesToStems()
     for (signatures_iter = temp_signatures_to_stems.begin(); signatures_iter != temp_signatures_to_stems.end(); ++ signatures_iter ){
         if (signatures_iter.value()->size() >= MINIMUM_NUMBER_OF_STEMS){
             signature_string = signatures_iter.key();
+            QList<QString> affixes = signature_string.split("=");
+            QListIterator<QString> affix_iter(affixes);
+            while(affix_iter.hasNext()){
+                  affix = affix_iter.next();
+                  m_Suffixes->find_or_add(affix);
+                  qDebug() << affix;
+            }
             qDebug() << signature_string << " Lexicon cpp 145";
             pSig = new CSignature(signature_string);
             *m_Signatures<< pSig;
-            foreach (stem, *signatures_iter.value()) {
-                pStem = m_Stems->find_stem(stem);
+            foreach (stem, *signatures_iter.value()){
+                pStem = m_Stems->find_or_add(stem);
                 pStem->add_signature (signature_string);
-                qDebug() << signature_string << " "<< stem << " " << pStem->GetStem() << "154";
+                //qDebug() << signature_string << " "<< stem << " " << pStem->GetStem() << "154";
                 pSig->add_stem_pointer(pStem);
 
             }

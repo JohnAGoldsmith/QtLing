@@ -5,71 +5,32 @@
 
 CSuffixCollection::CSuffixCollection()
 {
-    m_SuffixList = QList<CSuffix*>();
+    m_SuffixMap = QMap<QString, CSuffix*>();
 }
 CSuffixCollection::~CSuffixCollection() {}
 
-CSuffix* CSuffixCollection::operator<<( CParse* pParse )
-{
-    CStringSurrogate  cssKey;
-    cssKey = pParse->GetKey();
 
-    CSuffix* Suffix = new CSuffix(cssKey);
-    m_SuffixList << Suffix;
-    return Suffix;
+CSuffix* CSuffixCollection::operator <<(QString suffix)
+{ 
+    CSuffix* pSuffix = new CSuffix(suffix);
+    m_SuffixMap.insert(suffix, pSuffix);
+    return pSuffix;
 }
-CSuffix* CSuffixCollection::operator <<(CStringSurrogate SS)
-{
-    CSuffix* Suffix = new CSuffix(SS);
-    m_SuffixList << Suffix;
-    return Suffix;
-}
-CSuffix* CSuffixCollection::operator <<(QString szSuffix)
-{
-    const QChar* key = szSuffix.constData();
-    CStringSurrogate cssKey = CStringSurrogate(key, szSuffix.length());
-    CSuffix* Suffix = new CSuffix(cssKey);
-    m_SuffixList << Suffix;
-    return Suffix;
-}
-CSuffix* CSuffixCollection::operator ^=(CParse* string)
-{
-    CStringSurrogate cssKey = string->GetKey();
 
-    CSuffix* pSuffix = new CSuffix(cssKey);
-    int length = m_SuffixList.length();
-    for (int i = 0 ; i < length; i++) {
-        if (pSuffix->GetSuffix() == m_SuffixList.at(i)->GetSuffix()) {
-            return pSuffix;
-        }
-    }
-    return 0;
-}
-CSuffix* CSuffixCollection::operator ^=(CStringSurrogate string)
+CSuffix* CSuffixCollection::find_or_add(QString suffix)
 {
-    CSuffix* pSuffix = new CSuffix(string);
-    int length = m_SuffixList.length();
-    for (int i = 0 ; i < length; i++) {
-        if (pSuffix->GetSuffix() == m_SuffixList.at(i)->GetSuffix()) {
-            return pSuffix;
-        }
-    }
-    return 0;
-}
-CSuffix* CSuffixCollection::operator ^=(QString szSuffix)
-{
-    CStringSurrogate cssKey = CStringSurrogate(szSuffix, szSuffix.length());
-    CSuffix* pSuffix = new CSuffix(cssKey);
 
-    int length = m_SuffixList.length();
-    for (int i = 0 ; i < length; i++) {
-        if (pSuffix->GetSuffix() == m_SuffixList.at(i)->GetSuffix()) {
-            return pSuffix;
-        }
+    QMap<QString,CSuffix*>::const_iterator suffix_iter = m_SuffixMap.find(suffix);
+
+    if (suffix_iter == m_SuffixMap.end()){
+      CSuffix* pSuffix = new CSuffix(suffix);
+      m_SuffixMap.insert(suffix, pSuffix);
     }
-    return 0;
+    return suffix_iter.value();
 }
-CSuffix* CSuffixCollection::GetAt( uint n )
+
+
+CSuffix* CSuffixCollection::operator ^=(QString suffix)
 {
-    return m_SuffixList.at(n);
+    return this->find_or_add(suffix);
 }

@@ -42,7 +42,7 @@ public:
     CWord* operator^= ( CStringSurrogate );
     CWord* operator^= ( QString );
 
-    CWord* add (QString);
+    CWord* find_or_add (QString);
 
     CWord* GetAt( uint itemno) {return m_WordList.at(itemno);}
     int GetLength() const { return m_WordList.length(); }

@@ -41,7 +41,7 @@ CStem* CStemCollection::GetAtKey( QString stem)
     return m_StringToStemMap[stem];
 }
 
-CStem* CStemCollection::find_stem(QString stem)
+CStem* CStemCollection::find_or_add(QString stem)
 {
     if (m_StringToStemMap.contains(stem)){
         return m_StringToStemMap.value(stem);
