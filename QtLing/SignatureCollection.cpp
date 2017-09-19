@@ -48,10 +48,11 @@ bool compare_stem_count(const CSignature* pSig1, const CSignature* pSig2)
  return  pSig1->get_number_of_stems() > pSig2->get_number_of_stems();
 }
 void CSignatureCollection::sort()
-{
+{   qDebug() << "sorting signatures.";
     QMap<QString,CSignature*>::iterator sig_iter;
     foreach (CSignature* pSig, m_SignatureMap){
         m_SortList.append(pSig);
+        //qDebug() << pSig->GetSignature();
     }
     qSort(m_SortList.begin(), m_SortList.end(),  compare_stem_count);
 }

@@ -68,6 +68,7 @@ void CLexicon::FindProtostems()
         else {
             if (previous_word.length() < word.length()) {
                 m_Protostems[previous_word] = 1;
+                qDebug() <<  previous_word << "line 71 in lexicon cpp";
             }
         }
         previous_word = word;
@@ -121,9 +122,11 @@ void   CLexicon::AssignSuffixesToStems()
     QMap<QString,QSet<QString>*> temp_signatures_to_stems;
     for (stem_iter = temp_stems_to_affixes.begin(); stem_iter != temp_stems_to_affixes.end(); ++ stem_iter) {
          stem = stem_iter.key();
+         //qDebug() << stem << " Lexicon line 126";
          QStringList temp_presignature;
          foreach (affix, *temp_stems_to_affixes.value(stem)){
             temp_presignature.append(affix);
+            //qDebug() << stem << " "<<affix;
         }
 
 
@@ -134,7 +137,7 @@ void   CLexicon::AssignSuffixesToStems()
             temp_signatures_to_stems.insert(signature,pStemSet);
         }
         temp_signatures_to_stems.value(signature)->insert(stem);
-
+        //qDebug() << signature <<  stem;
     }
 
 
@@ -142,10 +145,12 @@ void   CLexicon::AssignSuffixesToStems()
     for (signatures_iter = temp_signatures_to_stems.begin(); signatures_iter != temp_signatures_to_stems.end(); ++ signatures_iter ){
         if (signatures_iter.value()->size() >= MINIMUM_NUMBER_OF_STEMS){
             signature_string = signatures_iter.key();
+            //qDebug() << signature_string << " Lexicon cpp 145";
             pSig = new CSignature(signature_string);
             *m_Signatures<< pSig;
             foreach (stem, *signatures_iter.value()) {
-                pStem = m_Stems->find_stem(stem);
+                pStem = *m_Stems << stem;
+                //qDebug() << signature_string << " "<< stem << " " << pStem->GetStem() << "154";
                 pSig->add_stem_pointer(pStem);
             }
         }

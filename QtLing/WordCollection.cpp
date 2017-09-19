@@ -27,10 +27,13 @@ CWordCollection::~CWordCollection()
     if ( m_SortedStringArray.size() > 0 )         {  m_SortedStringArray.empty();  }
 }
 
+CWord* CWordCollection::add(QString word_string){
+    *this << word_string;
+}
+
 CWord* CWordCollection::operator <<(QString szWord)
 {
-    //const QChar* key = szWord.constData();
-    //CStringSurrogate cssKey = CStringSurrogate(key, szWord.length());
+    qDebug() << szWord << " line 36 in word colletion";
     CWord* pWord = new CWord(szWord);
     m_WordList << pWord;
     m_WordMap[szWord] = pWord;

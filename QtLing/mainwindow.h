@@ -33,7 +33,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow();
 
-    void load_file(const QString &fileName);
+
     void DisplaySignatures();
 
 protected:
@@ -59,7 +59,8 @@ private:
     void createTreeModel();
 
     void load_word_model();
-    void read_DX1_file();
+    void read_dx1_file(const QString filename);
+    void read_text_file();
     void load_stem_model();
     void load_affix_model();
     void load_signature_model();

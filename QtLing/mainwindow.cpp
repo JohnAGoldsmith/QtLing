@@ -103,43 +103,29 @@ void MainWindow::createHorizontalGroupBox()
     layout->addWidget(verticalGroupBox);
     horizontalGroupBox->setLayout(layout);
 }
-void MainWindow::read_DX1_file()
-{
-    CWord* word;
-    QListIterator<CWord*> iter(* Lexicon->GetWordCollection()->GetList()) ;
-    int row = 0;
-    QString number_string;
-    while (iter.hasNext())
-    {
-        word = iter.next();
-        number_string = QString::number(word->GetWordCount());
-        QStandardItem *item3 = new QStandardItem(word->GetWord());
-        QStandardItem *item4 = new QStandardItem(number_string);
-        Word_model->setItem(row,0,item3);
-        Word_model->setItem(row,1,item4);
 
-    }
-}
 
 
 void MainWindow::load_word_model()
-{
-    CStem* stem;
-    QMap<QString, CStem*>::iterator iter;
-    int row = 0;
-    for (iter = Lexicon->GetStemCollection()->GetBegin(); iter != Lexicon->GetStemCollection()->GetEnd(); ++iter)
-    {
-        stem = iter.value();
-        QStandardItem *item = new QStandardItem(stem->GetStem());
+{   CWordCollection * Words = Lexicon->GetWordCollection();
+    for (int wordno = 0; wordno < Words->GetLength(); wordno++ )
+    {   CWord* pWord = Words->GetAt(wordno);
         QList<QStandardItem*> item_list;
-        item_list.append(item);
-        Stem_model->appendRow(item_list);
+
+        QStandardItem* pItem = new QStandardItem(pWord->GetWord());
+        item_list.append(pItem);
+
+        QStandardItem* pItem2 = new QStandardItem(pWord->GetWordCount());
+        item_list.append(pItem2);
+
+        Word_model->appendRow(item_list);
     }
 }
 void MainWindow::load_stem_model()
 {
     CStem* stem;
     QMap<QString, CStem*>::iterator iter;
+
     int row = 0;
     for (iter = Lexicon->GetStemCollection()->GetBegin(); iter != Lexicon->GetStemCollection()->GetEnd(); ++iter)
     {
@@ -147,8 +133,15 @@ void MainWindow::load_stem_model()
         QStandardItem *item = new QStandardItem(stem->GetStem());
         QList<QStandardItem*> item_list;
         item_list.append(item);
+        QListIterator<QString> sig_iter(*stem->GetSignatures());
+        while (sig_iter.hasNext()){
+           QString sig = sig_iter.next();
+           QStandardItem *item = new QStandardItem(sig);
+           item_list.append(item);
+           qDebug() << stem->GetStem() << sig;
+
+        }
         Stem_model->appendRow(item_list);
-        qDebug() << stem->GetStem();
     }
 }
 void MainWindow::load_affix_model()
@@ -173,6 +166,7 @@ void display_signatures()
 
 void MainWindow::load_signature_model()
 {   CSignature* sig;
+    qDebug() << "we're in load_signature_model. " <<Lexicon->GetSignatures()->GetLength();
     Lexicon->GetSignatures()->sort();
     QList<CSignature*>* pSortedSignatures = Lexicon->GetSignatures()->GetSortedSignatures();
     QListIterator<CSignature*> iter(*pSortedSignatures );
@@ -187,6 +181,7 @@ void MainWindow::load_signature_model()
         items.append(item2);
         items.append(item3);
         Signature_model->appendRow(items);
+        //qDebug() << sig->GetSignature();
 
     }
 
@@ -196,14 +191,22 @@ void MainWindow::rowClicked(const QModelIndex &index)
 {
     QStandardItem *item = treeModel->itemFromIndex(index);
     QString key = item->text();
-    if (key == "Words")
+    if (key == "Words"){
+        //load_word_model();
         tableView_upper->setModel(Word_model);
-    else if (key == "Stems")
-        load_stem_model();
-    else if (key == "Suffixes")
-        load_affix_model();
+    }
+    else if (key == "Stems"){
+        //load_stem_model();
+        tableView_upper->setModel(Stem_model);
+    }
+    else if (key == "Suffixes"){
+        //load_affix_model();
+        tableView_upper->setModel(Affix_model);
+    }
     else if (key == "Signatures"){
+       // ();
         tableView_upper->setModel(Signature_model);
+        qDebug() <<"clicked on signatures";
     }
     else
         qDebug() << "Invalid selection: rowClicked";
@@ -229,7 +232,16 @@ void MainWindow::open()
     if (maybeSave()) {
         QString fileName = QFileDialog::getOpenFileName(this);
         if (!fileName.isEmpty())
-            load_file(fileName);
+            read_dx1_file(fileName);
+
+        Lexicon->Crab_1();
+        qDebug()<<"Finished crab.";
+        load_word_model();
+        load_signature_model();
+        load_affix_model();
+        load_stem_model();
+        createTreeModel();
+
     }
 }
 bool MainWindow::save()
@@ -409,7 +421,7 @@ void MainWindow::createTreeModel()
     parent->appendRow(prStemItem);
 }
 
-void MainWindow::load_file(const QString &fileName)
+void MainWindow::read_dx1_file(const QString fileName)
 {
     QFile file(fileName);
     if (!file.open(QFile::ReadOnly | QFile::Text)) {
@@ -423,39 +435,20 @@ void MainWindow::load_file(const QString &fileName)
 #ifndef QT_NO_CURSOR
     QApplication::setOverrideCursor(Qt::WaitCursor);
 #endif
+
+    CWordCollection * Words = Lexicon->GetWordCollection();
+
     while (!in.atEnd())
     {
         QString line = in.readLine();
         line.simplified(); // get rid of extra spaces
         QStringList words = line.split(" ");
         QString word = words[0];
-        CWord* pWord = *Lexicon->GetWordCollection() << word;
+        CWord* pWord = *Words << word;
         pWord->SetWordCount(words[1].toInt());
 
     }
-
-    CWordCollection * Words = Lexicon->GetWordCollection();
     Words->sort_word_list();
-    QList<CWord*> * pWordList = Words->GetList();
-    CWord * pWord;
-    int rowno =0;
-    Word_model->setColumnCount(2);
-    for (int wordno = 0; wordno < Words->GetLength() ; wordno++){
-        pWord = Words->GetAt(wordno);
-        QStandardItem * pItem1 = new QStandardItem(pWord->GetWord());
-        QStandardItem * pItem2 = new QStandardItem(pWord->GetWordCount());
-        Word_model->setItem(rowno,0,pItem1);
-        Word_model->setItem(rowno,1,pItem2);
-        rowno++;
-
-    }
-
-    Lexicon->Crab_1();
-
-    load_signature_model();
-    load_affix_model();
-    load_stem_model();
-    createTreeModel();
 
 #ifndef QT_NO_CURSOR
     QApplication::restoreOverrideCursor();
@@ -517,19 +510,4 @@ void MainWindow::commitData(QSessionManager &manager)
 }
 #endif
 
-//not used:
-void MainWindow::DisplaySignatures()
-{
-    CSignature* pSig;
-    Lexicon->GetSignatures()->sort();
-    QList<CSignature*>* pSortedSignatures = Lexicon->GetSignatures()->GetSortedSignatures();
 
-    QListIterator<CSignature*> sig_iter (*pSortedSignatures);
-//    while (sig_iter.hasNext()){
-//       pSig = sig_iter.next();
-//       textEdit->appendPlainText(pSig->display());
-//       textEdit->appendPlainText(pSig->display_stems()  );
-//    }
-
-    
-}
