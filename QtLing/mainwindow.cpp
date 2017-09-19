@@ -47,8 +47,7 @@ MainWindow::MainWindow()
     Affix_model= new QStandardItemModel();
 
 
-//    createHorizontalGroupBox();
-//    setCentralWidget(horizontalGroupBox);
+
 
     createSplitter();
     setCentralWidget(mainSplitter);
@@ -115,8 +114,9 @@ void MainWindow::load_word_model()
         QStandardItem* pItem = new QStandardItem(pWord->GetWord());
         item_list.append(pItem);
 
-        QStandardItem* pItem2 = new QStandardItem(pWord->GetWordCount());
+        QStandardItem* pItem2 = new QStandardItem(QString::number(pWord->GetWordCount()));
         item_list.append(pItem2);
+        //qDebug() << pWord->GetWord() << pWord->GetWordCount();
 
         Word_model->appendRow(item_list);
     }
@@ -130,7 +130,7 @@ void MainWindow::load_stem_model()
     for (iter = Lexicon->GetStemCollection()->GetBegin(); iter != Lexicon->GetStemCollection()->GetEnd(); ++iter)
     {
         stem = iter.value();
-        qDebug() << stem->GetStem()<< "line 133 in mainwindow";
+        //qDebug() << stem->GetStem()<< "line 133 in mainwindow";
         QStandardItem *item = new QStandardItem(stem->GetStem());
         QList<QStandardItem*> item_list;
         item_list.append(item);
@@ -139,7 +139,7 @@ void MainWindow::load_stem_model()
            QString sig = sig_iter.next();
            QStandardItem *item = new QStandardItem(sig);
            item_list.append(item);
-           qDebug() << stem->GetStem() << sig << "main window 142";
+           //qDebug() << stem->GetStem() << sig << "main window 142";
 
         }
         Stem_model->appendRow(item_list);
@@ -148,14 +148,16 @@ void MainWindow::load_stem_model()
 void MainWindow::load_affix_model()
 {
     CSuffix* suffix;
-    QListIterator<CSuffix*> iter(Lexicon->GetSuffixCollection()->GetList());
-    int row = 0;
-    while (iter.hasNext())
+    QMapIterator<QString, CSuffix*> suffix_iter(Lexicon->GetSuffixCollection()->GetMap());
+
+    while (suffix_iter.hasNext())
     {
-        suffix = iter.next();
-        QStandardItem *item = new QStandardItem(suffix->GetSuffix());
-        Affix_model->setItem(row, 0, item);
-        row++;
+        CSuffix* pSuffix = suffix_iter.next().value();
+        QStandardItem *item = new QStandardItem(pSuffix->GetSuffix());
+        QList<QStandardItem*> item_list;
+        item_list.append(item);
+        Affix_model->appendRow(item_list);
+
     }
 
 }
