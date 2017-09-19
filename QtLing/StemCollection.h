@@ -18,7 +18,7 @@ protected:
     QMap<QString  , CStem*> m_StringToStemMap;
     int m_CorpusCount;
     QString m_MemberName;
-    CStem** m_SortArray;
+    //CStem**                 m_SortArray;
     bool m_SortValidFlag;
     enum eSortStyle m_SortStyle;
 

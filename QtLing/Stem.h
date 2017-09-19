@@ -26,6 +26,8 @@ public:
     QString            GetStem()       const { return m_key; }
     QList<QString>*    GetSignatures()  { return &m_Signatures; }
 
+    void                add_signature(QString sig_string ) {m_Signatures.append(sig_string); }
+
     QList<QString>::iterator GetBegin()   { return m_Signatures.begin();  }
     QList<QString>::iterator GetEnd()     { return m_Signatures.end();  }
     

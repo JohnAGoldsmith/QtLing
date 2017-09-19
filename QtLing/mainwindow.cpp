@@ -125,11 +125,12 @@ void MainWindow::load_stem_model()
 {
     CStem* stem;
     QMap<QString, CStem*>::iterator iter;
-
+    qDebug() << "Running load stems.";
     int row = 0;
     for (iter = Lexicon->GetStemCollection()->GetBegin(); iter != Lexicon->GetStemCollection()->GetEnd(); ++iter)
     {
         stem = iter.value();
+        qDebug() << stem->GetStem()<< "line 133 in mainwindow";
         QStandardItem *item = new QStandardItem(stem->GetStem());
         QList<QStandardItem*> item_list;
         item_list.append(item);
@@ -138,7 +139,7 @@ void MainWindow::load_stem_model()
            QString sig = sig_iter.next();
            QStandardItem *item = new QStandardItem(sig);
            item_list.append(item);
-           qDebug() << stem->GetStem() << sig;
+           qDebug() << stem->GetStem() << sig << "main window 142";
 
         }
         Stem_model->appendRow(item_list);
@@ -198,6 +199,7 @@ void MainWindow::rowClicked(const QModelIndex &index)
     else if (key == "Stems"){
         //load_stem_model();
         tableView_upper->setModel(Stem_model);
+        qDebug() << "Clicked on show stems.";
     }
     else if (key == "Suffixes"){
         //load_affix_model();

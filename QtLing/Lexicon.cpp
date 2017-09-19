@@ -68,7 +68,6 @@ void CLexicon::FindProtostems()
         else {
             if (previous_word.length() < word.length()) {
                 m_Protostems[previous_word] = 1;
-                qDebug() <<  previous_word << "line 71 in lexicon cpp";
             }
         }
         previous_word = word;
@@ -137,7 +136,7 @@ void   CLexicon::AssignSuffixesToStems()
             temp_signatures_to_stems.insert(signature,pStemSet);
         }
         temp_signatures_to_stems.value(signature)->insert(stem);
-        //qDebug() << signature <<  stem;
+        //qDebug() << signature <<  stem << "lexicon 139";
     }
 
 
@@ -145,13 +144,15 @@ void   CLexicon::AssignSuffixesToStems()
     for (signatures_iter = temp_signatures_to_stems.begin(); signatures_iter != temp_signatures_to_stems.end(); ++ signatures_iter ){
         if (signatures_iter.value()->size() >= MINIMUM_NUMBER_OF_STEMS){
             signature_string = signatures_iter.key();
-            //qDebug() << signature_string << " Lexicon cpp 145";
+            qDebug() << signature_string << " Lexicon cpp 145";
             pSig = new CSignature(signature_string);
             *m_Signatures<< pSig;
             foreach (stem, *signatures_iter.value()) {
-                pStem = *m_Stems << stem;
-                //qDebug() << signature_string << " "<< stem << " " << pStem->GetStem() << "154";
+                pStem = m_Stems->find_stem(stem);
+                pStem->add_signature (signature_string);
+                qDebug() << signature_string << " "<< stem << " " << pStem->GetStem() << "154";
                 pSig->add_stem_pointer(pStem);
+
             }
         }
     }

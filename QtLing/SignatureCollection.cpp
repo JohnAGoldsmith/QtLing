@@ -38,7 +38,7 @@ CSignature* CSignatureCollection::find (QString szSignature)
 {    if (! m_SignatureMap.contains(szSignature) ) {
     CSignature* pSig = new CSignature(szSignature);
     return pSig;
-}
+    }
     return m_SignatureMap.value(szSignature);
  
 }

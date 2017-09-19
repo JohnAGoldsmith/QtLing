@@ -33,7 +33,6 @@ CWord* CWordCollection::add(QString word_string){
 
 CWord* CWordCollection::operator <<(QString szWord)
 {
-    qDebug() << szWord << " line 36 in word colletion";
     CWord* pWord = new CWord(szWord);
     m_WordList << pWord;
     m_WordMap[szWord] = pWord;
