@@ -26,11 +26,8 @@ CLexicon::CLexicon() : m_Words(new CWordCollection), m_Stems(new CStemCollection
 void CLexicon::Crab_1()
 {
     FindProtostems();
-    qDebug() << "finished finding protostems";
     CreateStemAffixPairs();
-    qDebug() << "finished creating stem affix pairs.";
     AssignSuffixesToStems();
-    qDebug() << "assigned stuffixes to stems";
 }
 
 void CLexicon::FindProtostems()
