@@ -106,9 +106,11 @@ void MainWindow::createHorizontalGroupBox()
 
 
 void MainWindow::load_word_model()
-{   CWordCollection * Words = Lexicon->GetWordCollection();
-    for (int wordno = 0; wordno < Words->GetLength(); wordno++ )
-    {   CWord* pWord = Words->GetAt(wordno);
+{   //CWordCollection * Words = Lexicon->GetWordCollection();
+    QMap<QString,CWord*> * WordMap = Lexicon->GetWordCollection()->GetMap();
+    QMapIterator<QString,CWord*> word_iter(*WordMap);
+    while (word_iter.hasNext())
+    {   CWord* pWord = word_iter.next().value();
         QList<QStandardItem*> item_list;
 
         QStandardItem* pItem = new QStandardItem(pWord->GetWord());
@@ -117,6 +119,12 @@ void MainWindow::load_word_model()
         QStandardItem* pItem2 = new QStandardItem(QString::number(pWord->GetWordCount()));
         item_list.append(pItem2);
         //qDebug() << pWord->GetWord() << pWord->GetWordCount();
+
+        QListIterator<CSignature*> sig_iter(*pWord->GetSignatures());
+        while (sig_iter.hasNext()){
+            QStandardItem* pItem3 = new QStandardItem(sig_iter.next()->GetSignature());
+            item_list.append(pItem3);
+        }
 
         Word_model->appendRow(item_list);
     }
@@ -169,7 +177,6 @@ void display_signatures()
 
 void MainWindow::load_signature_model()
 {   CSignature* sig;
-    qDebug() << "we're in load_signature_model. " <<Lexicon->GetSignatures()->GetLength();
     Lexicon->GetSignatures()->sort();
     QList<CSignature*>* pSortedSignatures = Lexicon->GetSignatures()->GetSortedSignatures();
     QListIterator<CSignature*> iter(*pSortedSignatures );

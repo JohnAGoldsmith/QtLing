@@ -33,3 +33,9 @@ void CWord::AddParse(CStem* stem, CSuffix* suffix, CSignature* signature)
     parse.p_signature = signature;
     m_Parses << parse;
 }
+
+void CWord::add_signature(CSignature * pSig)
+{
+    m_Signatures.append(pSig);
+
+}

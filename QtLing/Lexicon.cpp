@@ -79,8 +79,10 @@ void CLexicon::CreateStemAffixPairs()
 {
     QString stem, suffix, word;
     int suffix_length;
-    for (int wordno=0; wordno<m_Words->GetLength(); wordno ++){
-        word = m_Words->GetAt(wordno)->GetWord();
+    QMap<QString,CWord*>* WordMap = m_Words->GetMap();
+    QMapIterator<QString,CWord*> word_iter(*WordMap);
+    while (word_iter.hasNext())   {
+        word = word_iter.next().value()->GetWord();
         for (int letterno = 1; letterno < word.length(); letterno++){
             stem = word.left(letterno);
             if (m_Protostems.contains(stem)){
@@ -121,14 +123,10 @@ void   CLexicon::AssignSuffixesToStems()
     QMap<QString,QSet<QString>*> temp_signatures_to_stems;
     for (stem_iter = temp_stems_to_affixes.begin(); stem_iter != temp_stems_to_affixes.end(); ++ stem_iter) {
          stem = stem_iter.key();
-         //qDebug() << stem << " Lexicon line 126";
          QStringList temp_presignature;
          foreach (affix, *temp_stems_to_affixes.value(stem)){
-            temp_presignature.append(affix);
-            //qDebug() << stem << " "<<affix;
+            temp_presignature.append(affix);           
         }
-
-
         temp_presignature.sort();
         QString signature = temp_presignature.join("=");
         if ( ! temp_signatures_to_stems.contains(signature)){
@@ -136,10 +134,9 @@ void   CLexicon::AssignSuffixesToStems()
             temp_signatures_to_stems.insert(signature,pStemSet);
         }
         temp_signatures_to_stems.value(signature)->insert(stem);
-        //qDebug() << signature <<  stem << "lexicon 139";
     }
 
-
+    // create signatures, stems, affixes:
     QMap<QString,QSet<QString>*>::iterator signatures_iter;
     for (signatures_iter = temp_signatures_to_stems.begin(); signatures_iter != temp_signatures_to_stems.end(); ++ signatures_iter ){
         if (signatures_iter.value()->size() >= MINIMUM_NUMBER_OF_STEMS){
@@ -148,17 +145,27 @@ void   CLexicon::AssignSuffixesToStems()
             QListIterator<QString> affix_iter(affixes);
             while(affix_iter.hasNext()){
                   affix = affix_iter.next();
-                  m_Suffixes->find_or_add(affix);
-                  qDebug() << affix;
+                  m_Suffixes->find_or_add(affix);                   
             }
-            qDebug() << signature_string << " Lexicon cpp 145";
+
             pSig = new CSignature(signature_string);
             *m_Signatures<< pSig;
             foreach (stem, *signatures_iter.value()){
                 pStem = m_Stems->find_or_add(stem);
                 pStem->add_signature (signature_string);
-                //qDebug() << signature_string << " "<< stem << " " << pStem->GetStem() << "154";
                 pSig->add_stem_pointer(pStem);
+                QStringList affixes = signature_string.split("=");
+                QString word;
+                foreach (QString affix,  affixes){
+                    if (affix == "NULL"){
+                        word = stem;
+                    }
+                    else{
+                        word = stem + affix;
+                    }
+                    CWord* pWord = m_Words->find(word);
+                    pWord->add_signature(pSig);
+                }
 
             }
         }

@@ -14,7 +14,7 @@ class CParse;
 class CWordCollection
 {
 protected:
-    QList<CWord*> m_WordList;
+    //QList<CWord*> m_WordList;
     QMap<QString, CWord*> m_WordMap;
     int m_CorpusCount;
     QString m_MemberName;
@@ -43,18 +43,20 @@ public:
     CWord* operator^= ( QString );
 
     CWord* find_or_add (QString);
+    CWord* add (QString);
+    CWord* find (QString); // returns false if the string is not in the word collection
 
-    CWord* GetAt( uint itemno) {return m_WordList.at(itemno);}
-    int GetLength() const { return m_WordList.length(); }
+    //CWord* GetAt( uint itemno) {return m_WordList.at(itemno);}
+    int GetLength() const { return m_WordMap.size(); }
 
-    QList<CWord*>::iterator GetBegin()   { return m_WordList.begin();  }
-    QList<CWord*>::iterator GetEnd()     { return m_WordList.end();    }
-    QList<CWord*> *         GetList()    { return & m_WordList;          }
+    QMap<QString,CWord*>::iterator GetBegin()   { return m_WordMap.begin();  }
+    QMap<QString,CWord*>::iterator GetEnd()     { return m_WordMap.end();    }
+    QMap<QString,CWord*> *         GetList()    { return & m_WordMap;          }
 
     bool contains(QString string)  {return m_WordMap.contains(string);}
     void sort_word_list();
     QStringList* GetSortedStringArray() {return & m_SortedStringArray;}
-    QMap<QString, CWord*> GetMap() { return m_WordMap; }
+    QMap<QString, CWord*>* GetMap() { return & m_WordMap; }
 
 
 };

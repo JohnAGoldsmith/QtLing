@@ -21,6 +21,7 @@ struct Parse {
     CStem* p_stem;
     CSuffix* p_suffix;
     CSignature* p_signature;
+    QList<CSignature*>  m_Signatures;
 };
 
 class CWord : public CParse
@@ -29,7 +30,7 @@ protected:
     QString m_Word;
     int m_WordCount;
     QList<Parse> m_Parses;
-
+    QList<CSignature*>  m_Signatures;
 public:
     CWord(CStringSurrogate ssWord);
     CWord(CWord&);
@@ -41,9 +42,9 @@ public:
     QString                 GetWord()      const { return m_Word; }
 
     QList<Parse>            GetParses()    const { return m_Parses; }
-
+    QList<CSignature*> *    GetSignatures ()   {return &m_Signatures;}
     void                    AddParse(CStem* stem, CSuffix* suffix, CSignature* signature);
-
+    void                    add_signature(CSignature*);
     void                    IncrementWordCount(int n = 1);
 
 };

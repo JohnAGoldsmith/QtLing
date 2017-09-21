@@ -6,77 +6,52 @@
 
 CWordCollection::CWordCollection()
 {
-    m_WordList              = QList<CWord*>();
     m_CorpusCount			= 0;
     m_MemberName			= QString::null;
-    //m_SortArray				= NULL;
     m_SortValidFlag			= 0;
     m_SortStyle				= KEY;
 }
-//CWordCollection::CWordCollection(CLexicon* Lex, QString MemberName)
-//{
-//    m_WordList              = QList<CWord>();
-//    m_CorpusCount			= 0;
-//    m_MemberName			= QString::null;
-//    m_SortArray				= NULL;
-//    m_SortValidFlag			= 0;
-//    m_SortStyle				= KEY;
-//}
+
 CWordCollection::~CWordCollection()
 {
     if ( m_SortedStringArray.size() > 0 )         {  m_SortedStringArray.empty();  }
 }
 
-CWord* CWordCollection::find_or_add(QString word_string){
-    *this << word_string;
+CWord* CWordCollection::find(QString word){
+    QMap<QString,CWord*>::const_iterator word_iter = m_WordMap.find(word);
+    if (word_iter == m_WordMap.end()){
+        return NULL;
+    }
+    return word_iter.value();
 }
 
-CWord* CWordCollection::operator <<(QString szWord)
+CWord* CWordCollection::find_or_add(QString word_string){
+    QMap<QString,CWord*>::const_iterator word_iter = m_WordMap.find(word_string);
+    if (word_iter == m_WordMap.end()){
+        CWord* pWord = new CWord(word_string);
+        m_WordMap[word_string] = pWord;
+    }else{
+        return word_iter.value();
+    }
+}
+
+CWord* CWordCollection::add(QString word)
 {
-    CWord* pWord = new CWord(szWord);
-    m_WordList << pWord;
-    m_WordMap[szWord] = pWord;
+    CWord* pWord = new CWord(word);
+    m_WordMap[word] = pWord;
     return pWord;
 }
-CWord* CWordCollection::operator ^=(CParse* string)
-{
-    CStringSurrogate cssKey = string->GetKey();
 
-    CWord* pWord = new CWord(cssKey);
-    int length = m_WordList.length();
-    for (int i = 0 ; i < length; i++) {
-        if (pWord->GetWord() == m_WordList.at(i)->GetWord()) {
-            pWord->IncrementWordCount();
-            return pWord;
-        }
-    }
-    return 0;
-}
-CWord* CWordCollection::operator ^=(CStringSurrogate string)
+CWord* CWordCollection::operator <<(QString word)
 {
-    CWord* pWord = new CWord(string);
-    int length = m_WordList.length();
-    for (int i = 0 ; i < length; i++) {
-        if (pWord->GetWord() == m_WordList.at(i)->GetWord()) {
-            pWord->IncrementWordCount();
-            return pWord;
-        }
-    }
-    return 0;
+     return this->add(word);
 }
-CWord* CWordCollection::operator ^=(QString szWord)
-{
-    CStringSurrogate cssKey = CStringSurrogate(szWord, szWord.length());
-    CWord* pWord = new CWord(cssKey);
 
-    int length = m_WordList.length();
-    for (int i = 0 ; i < length; i++) {
-        if (pWord->GetWord() == m_WordList.at(i)->GetWord()) {
-            pWord->IncrementWordCount();
-            return pWord;
-        }
-    }
-    return 0;
+
+CWord* CWordCollection::operator ^=(QString word)
+{
+    this->find_or_add(word);
+
 }
 
 void CWordCollection::sort_word_list()

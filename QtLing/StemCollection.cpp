@@ -19,20 +19,19 @@ CStemCollection::~CStemCollection()
     //if ( m_SortArray )         { delete [] m_SortArray; m_SortArray = NULL;  }
 }
 
-CStem* CStemCollection::operator <<(QString szStem)
+CStem* CStemCollection::add(QString stem)
 {
-    CStem* pStem = new CStem(szStem);
-    m_StringToStemMap[szStem] = pStem;
+    CStem* pStem = new CStem(stem);
+    m_StringToStemMap[stem] = pStem;
     return pStem;
 }
+CStem* CStemCollection::operator <<(QString stem)
+{
+    return this->add(stem);
+}
 
-CStem* CStemCollection::operator ^=(QString szStem)
-{ if (m_StringToStemMap.contains(szStem)){
-    return m_StringToStemMap.value(szStem);
-    }
-    CStem* pStem = new CStem(szStem);
-    m_StringToStemMap[szStem] = pStem;
-    return pStem;
+CStem* CStemCollection::operator ^=(QString stem)
+{ return this->find_or_add(stem);
 }
 
 
@@ -52,3 +51,7 @@ CStem* CStemCollection::find_or_add(QString stem)
     }
 }
 
+CStem* CStemCollection::find(QString stem)
+{
+
+}

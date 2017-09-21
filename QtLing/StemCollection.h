@@ -40,6 +40,8 @@ public:
     CStem* operator^= ( CStringSurrogate );
     CStem* operator^= ( QString );
     CStem* find_or_add (QString);  // same as ˆ=
+    CStem* find (QString);
+    CStem* add (QString);
 
     CStem* GetAtKey( QString);
     int GetSize() const { return m_StringToStemMap.size(); }
