@@ -47,7 +47,7 @@ public:
     CWord* find (QString); // returns false if the string is not in the word collection
 
     //CWord* GetAt( uint itemno) {return m_WordList.at(itemno);}
-    int GetLength() const { return m_WordMap.size(); }
+    int get_count() const { return m_WordMap.size(); }
 
     QMap<QString,CWord*>::iterator GetBegin()   { return m_WordMap.begin();  }
     QMap<QString,CWord*>::iterator GetEnd()     { return m_WordMap.end();    }

@@ -44,7 +44,7 @@ public:
     CStem* add (QString);
 
     CStem* GetAtKey( QString);
-    int GetSize() const { return m_StringToStemMap.size(); }
+    int get_count() const { return m_StringToStemMap.size(); }
     void add_stem_pointer (CStem* pStem);
 
     

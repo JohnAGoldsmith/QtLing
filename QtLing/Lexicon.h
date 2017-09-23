@@ -31,7 +31,8 @@ public:
     CWordCollection*      GetWordCollection() { return m_Words; }
     CStemCollection*      GetStemCollection() { return m_Stems; }
     CSuffixCollection*    GetSuffixCollection() { return m_Suffixes; }
-    CSignatureCollection* GetSignatures()     { return m_Signatures; }
+    CSignatureCollection*    GetSignatures() { return m_Signatures;}
+    CSignatureCollection* GetSignatureCollection()     { return m_Signatures; }
     QList<QPair<QString,QString>>*           GetParses() {return m_Parses;}
     QMap<QString,int>*   GetProtostems() {return &m_Protostems;}
 public:

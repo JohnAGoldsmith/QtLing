@@ -138,7 +138,6 @@ void MainWindow::load_stem_model()
     for (iter = Lexicon->GetStemCollection()->GetBegin(); iter != Lexicon->GetStemCollection()->GetEnd(); ++iter)
     {
         stem = iter.value();
-        //qDebug() << stem->GetStem()<< "line 133 in mainwindow";
         QStandardItem *item = new QStandardItem(stem->GetStem());
         QList<QStandardItem*> item_list;
         item_list.append(item);
@@ -147,8 +146,6 @@ void MainWindow::load_stem_model()
            QString sig = sig_iter.next();
            QStandardItem *item = new QStandardItem(sig);
            item_list.append(item);
-           //qDebug() << stem->GetStem() << sig << "main window 142";
-
         }
         Stem_model->appendRow(item_list);
     }
@@ -211,11 +208,9 @@ void MainWindow::rowClicked(const QModelIndex &index)
         qDebug() << "Clicked on show stems.";
     }
     else if (key == "Suffixes"){
-        //load_affix_model();
         tableView_upper->setModel(Affix_model);
     }
     else if (key == "Signatures"){
-       // ();
         tableView_upper->setModel(Signature_model);
         qDebug() <<"clicked on signatures";
     }
@@ -418,17 +413,39 @@ bool MainWindow::maybeSave()
 void MainWindow::createTreeModel()
 {
     QStandardItem *parent = treeModel->invisibleRootItem();
-    QStandardItem *wordItem = new QStandardItem(QString("Words"));
-    QStandardItem *stemItem = new QStandardItem(QString("Stems"));
-    QStandardItem *suffixItem = new QStandardItem(QString("Suffixes"));
-    QStandardItem *sigItem = new QStandardItem(QString("Signatures"));
+    QStandardItem *word_item = new QStandardItem(QString("Words"));
+    QStandardItem * word_count_item = new QStandardItem(QString::number(Lexicon->GetWordCollection()->get_count()));
+    QStandardItem *stem_item = new QStandardItem(QString("Stems"));
+    QStandardItem * stem_count_item = new QStandardItem(QString::number(Lexicon->GetStemCollection()->get_count()));
+    QStandardItem *suffix_item = new QStandardItem(QString("Suffixes"));
+    QStandardItem * suffix_count_item = new QStandardItem(QString::number(Lexicon->GetSuffixCollection()->get_count()));
+
+    QStandardItem *sig_item = new QStandardItem(QString("Signatures"));
+    QStandardItem * sig_count_item = new QStandardItem(QString::number(Lexicon->GetSignatureCollection()->get_count()));
+
     QStandardItem *prStemItem = new QStandardItem(QString("Protostems"));
 
+    QList<QStandardItem*> word_items;
+    word_items.append(word_item);
+    word_items.append(word_count_item);
 
-    parent->appendRow(wordItem);
-    parent->appendRow(stemItem);
-    parent->appendRow(suffixItem);
-    parent->appendRow(sigItem);
+    QList<QStandardItem*> stem_items;
+    stem_items.append(stem_item);
+    stem_items.append(stem_count_item);
+
+    QList<QStandardItem*> suffix_items;
+    suffix_items.append(suffix_item);
+    suffix_items.append(suffix_count_item);
+
+    QList<QStandardItem*> sig_items;
+    sig_items.append(sig_item);
+    sig_items.append(sig_count_item);
+
+
+    parent->appendRow(word_items);
+    parent->appendRow(stem_items);
+    parent->appendRow(suffix_items);
+    parent->appendRow(sig_items);
     parent->appendRow(prStemItem);
 }
 

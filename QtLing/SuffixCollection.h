@@ -31,7 +31,7 @@ public:
     CSuffix* operator^= ( QString );
     CSuffix* find_or_add        ( QString ); //same as ˆ= (find if it is there, else add)
     CSuffix* GetAt( uint );
-    int GetLength() const { return m_SuffixMap.size(); }
+    int get_count() const { return m_SuffixMap.size(); }
 
     QMap<QString,CSuffix*>::iterator GetBegin()   { return m_SuffixMap.begin(); }
     QMap<QString,CSuffix*>::iterator GetEnd()     { return m_SuffixMap.end();   }
