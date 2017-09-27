@@ -19,7 +19,7 @@
 #include "Suffix.h"
 #include "SignatureCollection.h"
 #include "Signature.h"
-
+#include <QKeyEvent>
 #include <QtWidgets>
 #include <QString>
 #include <QDebug>
@@ -46,9 +46,6 @@ MainWindow::MainWindow()
     Signature_model= new QStandardItemModel;
     Affix_model= new QStandardItemModel();
 
-
-
-
     createSplitter();
     setCentralWidget(mainSplitter);
     createActions();
@@ -56,8 +53,6 @@ MainWindow::MainWindow()
 
     readSettings();
 
-//    connect(textEdit->document(), &QTextDocument::contentsChanged,
-//            this, &MainWindow::documentWasModified);
 
 #ifndef QT_NO_SESSIONMANAGER
     QGuiApplication::setFallbackSessionManagementEnabled(false);
@@ -71,19 +66,25 @@ MainWindow::MainWindow()
 void MainWindow::createSplitter()
 {
     mainSplitter = new QSplitter();
-    rightSplitter = new QSplitter(Qt::Vertical);
 
+    rightSplitter = new QSplitter(Qt::Vertical);
     rightSplitter->addWidget(tableView_upper);
     rightSplitter->addWidget(tableView_lower);
-    rightSplitter->addWidget(tableView_lower);
 
-    treeView = new QTreeView(rightSplitter);
+//    treeView = new QTreeView(rightSplitter);
+//  shouldn't that be: (the argument to QTreeView constructor is the parent of the treeview. It gets added to the main splitter just below.
+    treeView = new QTreeView();
     treeView->setModel(treeModel);
 
     connect(treeView, SIGNAL(clicked(const QModelIndex&)), this, SLOT(rowClicked(const QModelIndex&)));
     mainSplitter->addWidget(treeView);
     mainSplitter->addWidget(rightSplitter);
 }
+
+
+
+
+
 
 // not used: delete...
 void MainWindow::createHorizontalGroupBox()
@@ -106,7 +107,7 @@ void MainWindow::createHorizontalGroupBox()
 
 
 void MainWindow::load_word_model()
-{   //CWordCollection * Words = Lexicon->GetWordCollection();
+{
     QMap<QString,CWord*> * WordMap = Lexicon->GetWordCollection()->GetMap();
     QMapIterator<QString,CWord*> word_iter(*WordMap);
     while (word_iter.hasNext())
@@ -118,7 +119,6 @@ void MainWindow::load_word_model()
 
         QStandardItem* pItem2 = new QStandardItem(QString::number(pWord->GetWordCount()));
         item_list.append(pItem2);
-        //qDebug() << pWord->GetWord() << pWord->GetWordCount();
 
         QListIterator<CSignature*> sig_iter(*pWord->GetSignatures());
         while (sig_iter.hasNext()){
@@ -133,7 +133,7 @@ void MainWindow::load_stem_model()
 {
     CStem* stem;
     QMap<QString, CStem*>::iterator iter;
-    qDebug() << "Running load stems.";
+
     int row = 0;
     for (iter = Lexicon->GetStemCollection()->GetBegin(); iter != Lexicon->GetStemCollection()->GetEnd(); ++iter)
     {
@@ -154,7 +154,6 @@ void MainWindow::load_affix_model()
 {
     CSuffix* suffix;
     QMapIterator<QString, CSuffix*> suffix_iter(Lexicon->GetSuffixCollection()->GetMap());
-
     while (suffix_iter.hasNext())
     {
         CSuffix* pSuffix = suffix_iter.next().value();
@@ -162,14 +161,7 @@ void MainWindow::load_affix_model()
         QList<QStandardItem*> item_list;
         item_list.append(item);
         Affix_model->appendRow(item_list);
-
     }
-
-}
-
-void display_signatures()
-{
-
 }
 
 void MainWindow::load_signature_model()
@@ -177,7 +169,6 @@ void MainWindow::load_signature_model()
     Lexicon->GetSignatures()->sort();
     QList<CSignature*>* pSortedSignatures = Lexicon->GetSignatures()->GetSortedSignatures();
     QListIterator<CSignature*> iter(*pSortedSignatures );
-
     while (iter.hasNext())
     {
         sig = iter.next();
@@ -188,10 +179,7 @@ void MainWindow::load_signature_model()
         items.append(item2);
         items.append(item3);
         Signature_model->appendRow(items);
-        //qDebug() << sig->GetSignature();
-
     }
-
 }
 
 void MainWindow::rowClicked(const QModelIndex &index)
@@ -199,20 +187,16 @@ void MainWindow::rowClicked(const QModelIndex &index)
     QStandardItem *item = treeModel->itemFromIndex(index);
     QString key = item->text();
     if (key == "Words"){
-        //load_word_model();
         tableView_upper->setModel(Word_model);
     }
     else if (key == "Stems"){
-        //load_stem_model();
         tableView_upper->setModel(Stem_model);
-        qDebug() << "Clicked on show stems.";
     }
     else if (key == "Suffixes"){
         tableView_upper->setModel(Affix_model);
     }
     else if (key == "Signatures"){
         tableView_upper->setModel(Signature_model);
-        qDebug() <<"clicked on signatures";
     }
     else
         qDebug() << "Invalid selection: rowClicked";
@@ -220,7 +204,7 @@ void MainWindow::rowClicked(const QModelIndex &index)
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    if (maybeSave()) {
+    if (ask_to_save()) {
         writeSettings();
         event->accept();
     } else {
@@ -229,17 +213,25 @@ void MainWindow::closeEvent(QCloseEvent *event)
 }
 void MainWindow::newFile()
 {
-    if (maybeSave()) {
+    if (ask_to_save()) {
         setCurrentFile(QString());
     }
 }
-void MainWindow::open()
-{
-    if (maybeSave()) {
-        QString fileName = QFileDialog::getOpenFileName(this);
-        if (!fileName.isEmpty())
-            read_dx1_file(fileName);
 
+
+void MainWindow::ask_for_filename()
+{
+    qDebug() << " ask for filename" ;
+    m_name_of_data_file = QFileDialog::getOpenFileName(this);
+    if (m_name_of_data_file.length() > 0){
+        read_file_do_crab();
+    }
+}
+
+
+void MainWindow::read_file_do_crab()
+{
+        read_dx1_file();
         Lexicon->Crab_1();
         qDebug()<<"Finished crab.";
         load_word_model();
@@ -247,8 +239,6 @@ void MainWindow::open()
         load_affix_model();
         load_stem_model();
         createTreeModel();
-
-    }
 }
 bool MainWindow::save()
 {
@@ -283,6 +273,9 @@ void MainWindow::createActions()
 
     QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
     QToolBar *fileToolBar = addToolBar(tr("File"));
+
+    /*
+    // No action associated with this.
     const QIcon newIcon = QIcon::fromTheme("document-new", QIcon("../../../../QtLing/images/new.png"));
     QAction *newAct = new QAction(newIcon, tr("&New"), this);
     newAct->setShortcuts(QKeySequence::New);
@@ -290,15 +283,19 @@ void MainWindow::createActions()
     connect(newAct, &QAction::triggered, this, &MainWindow::newFile);
     fileMenu->addAction(newAct);
     fileToolBar->addAction(newAct);
+*/
 
+
+    // Give a data file name, store the name, and read the file.
     const QIcon openIcon = QIcon::fromTheme("document-open", QIcon("../../../../QtLing/images/open.png"));
     QAction *openAct = new QAction(openIcon, tr("&Open..."), this);
     openAct->setShortcuts(QKeySequence::Open);
     openAct->setStatusTip(tr("Open an existing file"));
-    connect(openAct, &QAction::triggered, this, &MainWindow::open);
+    connect(openAct, &QAction::triggered, this, &MainWindow::ask_for_filename);
     fileMenu->addAction(openAct);
     fileToolBar->addAction(openAct);
-
+/*
+    // No action associated with this yet.
     const QIcon saveIcon = QIcon::fromTheme("document-save", QIcon("../../../../QtLing/images/save.png"));
     QAction *saveAct = new QAction(saveIcon, tr("&Save"), this);
     saveAct->setShortcuts(QKeySequence::Save);
@@ -306,7 +303,9 @@ void MainWindow::createActions()
     connect(saveAct, &QAction::triggered, this, &MainWindow::save);
     fileMenu->addAction(saveAct);
     fileToolBar->addAction(saveAct);
+*/
 
+    // No action associated with this yet.
     const QIcon saveAsIcon = QIcon::fromTheme("document-save-as");
     QAction *saveAsAct = fileMenu->addAction(saveAsIcon, tr("Save &As..."), this, &MainWindow::saveAs);
     saveAsAct->setShortcuts(QKeySequence::SaveAs);
@@ -376,6 +375,8 @@ void MainWindow::createStatusBar()
 void MainWindow::readSettings()
 {
     QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
+
+    m_name_of_data_file = settings.value("name_of_data_file").toString();
     const QByteArray geometry = settings.value("geometry", QByteArray()).toByteArray();
     if (geometry.isEmpty()) {
         const QRect availableGeometry = QApplication::desktop()->availableGeometry(this);
@@ -390,9 +391,12 @@ void MainWindow::writeSettings()
 {
     QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
     settings.setValue("geometry", saveGeometry());
+    settings.setValue("name_of_data_file", m_name_of_data_file );
 }
-bool MainWindow::maybeSave()
+bool MainWindow::ask_to_save()
 {
+    return false;
+
 //    if (!textEdit->document()->isModified())
 //        return true;
     const QMessageBox::StandardButton ret
@@ -449,13 +453,13 @@ void MainWindow::createTreeModel()
     parent->appendRow(prStemItem);
 }
 
-void MainWindow::read_dx1_file(const QString fileName)
+void MainWindow::read_dx1_file()
 {
-    QFile file(fileName);
+    QFile file(m_name_of_data_file);
     if (!file.open(QFile::ReadOnly | QFile::Text)) {
         QMessageBox::warning(this, tr("Application"),
                              tr("Cannot read file %1:\n%2.")
-                             .arg(QDir::toNativeSeparators(fileName), file.errorString()));
+                             .arg(QDir::toNativeSeparators(m_name_of_data_file), file.errorString()));
         return;
     }
 
@@ -482,7 +486,7 @@ void MainWindow::read_dx1_file(const QString fileName)
     QApplication::restoreOverrideCursor();
 #endif
 
-    setCurrentFile(fileName);
+    setCurrentFile(m_name_of_data_file);
     statusBar()->showMessage(tr("File loaded"), 2000);
 }
 bool MainWindow::saveFile(const QString &fileName)
@@ -528,7 +532,7 @@ QString MainWindow::strippedName(const QString &fullFileName)
 void MainWindow::commitData(QSessionManager &manager)
 {
     if (manager.allowsInteraction()) {
-        if (!maybeSave())
+        if (!ask_to_save())
             manager.cancel();
     } else {
         // Non-interactive: save without asking
