@@ -38,7 +38,8 @@
 MainWindow::MainWindow()
     : tableView_upper(new QTableView),  tableView_lower(new QTableView)
 {
-    Lexicon = new CLexicon();
+//    Lexicon = new CLexicon();
+    m_lexicon_list.append ( new CLexicon() );
     treeModel = new QStandardItemModel();
 
     Word_model= new QStandardItemModel(1,3);
@@ -108,7 +109,7 @@ void MainWindow::createHorizontalGroupBox()
 
 void MainWindow::load_word_model()
 {
-    QMap<QString,CWord*> * WordMap = Lexicon->GetWordCollection()->GetMap();
+    QMap<QString,CWord*> * WordMap = get_lexicon()->GetWordCollection()->GetMap();
     QMapIterator<QString,CWord*> word_iter(*WordMap);
     while (word_iter.hasNext())
     {   CWord* pWord = word_iter.next().value();
@@ -134,8 +135,7 @@ void MainWindow::load_stem_model()
     CStem* stem;
     QMap<QString, CStem*>::iterator iter;
 
-    int row = 0;
-    for (iter = Lexicon->GetStemCollection()->GetBegin(); iter != Lexicon->GetStemCollection()->GetEnd(); ++iter)
+    for (iter = get_lexicon()->GetStemCollection()->GetBegin(); iter != get_lexicon()->GetStemCollection()->GetEnd(); ++iter)
     {
         stem = iter.value();
         QStandardItem *item = new QStandardItem(stem->GetStem());
@@ -152,8 +152,7 @@ void MainWindow::load_stem_model()
 }
 void MainWindow::load_affix_model()
 {
-    CSuffix* suffix;
-    QMapIterator<QString, CSuffix*> suffix_iter(Lexicon->GetSuffixCollection()->GetMap());
+     QMapIterator<QString, CSuffix*> suffix_iter(get_lexicon()->GetSuffixCollection()->GetMap());
     while (suffix_iter.hasNext())
     {
         CSuffix* pSuffix = suffix_iter.next().value();
@@ -166,8 +165,8 @@ void MainWindow::load_affix_model()
 
 void MainWindow::load_signature_model()
 {   CSignature* sig;
-    Lexicon->GetSignatures()->sort();
-    QList<CSignature*>* pSortedSignatures = Lexicon->GetSignatures()->GetSortedSignatures();
+    get_lexicon()->GetSignatures()->sort();
+    QList<CSignature*>* pSortedSignatures = get_lexicon()->GetSignatures()->GetSortedSignatures();
     QListIterator<CSignature*> iter(*pSortedSignatures );
     while (iter.hasNext())
     {
@@ -232,7 +231,7 @@ void MainWindow::ask_for_filename()
 void MainWindow::read_file_do_crab()
 {
         read_dx1_file();
-        Lexicon->Crab_1();
+        get_lexicon()->Crab_1();
         qDebug()<<"Finished crab.";
         load_word_model();
         load_signature_model();
@@ -418,14 +417,14 @@ void MainWindow::createTreeModel()
 {
     QStandardItem *parent = treeModel->invisibleRootItem();
     QStandardItem *word_item = new QStandardItem(QString("Words"));
-    QStandardItem * word_count_item = new QStandardItem(QString::number(Lexicon->GetWordCollection()->get_count()));
+    QStandardItem * word_count_item = new QStandardItem(QString::number(get_lexicon()->GetWordCollection()->get_count()));
     QStandardItem *stem_item = new QStandardItem(QString("Stems"));
-    QStandardItem * stem_count_item = new QStandardItem(QString::number(Lexicon->GetStemCollection()->get_count()));
+    QStandardItem * stem_count_item = new QStandardItem(QString::number(get_lexicon()->GetStemCollection()->get_count()));
     QStandardItem *suffix_item = new QStandardItem(QString("Suffixes"));
-    QStandardItem * suffix_count_item = new QStandardItem(QString::number(Lexicon->GetSuffixCollection()->get_count()));
+    QStandardItem * suffix_count_item = new QStandardItem(QString::number(get_lexicon()->GetSuffixCollection()->get_count()));
 
     QStandardItem *sig_item = new QStandardItem(QString("Signatures"));
-    QStandardItem * sig_count_item = new QStandardItem(QString::number(Lexicon->GetSignatureCollection()->get_count()));
+    QStandardItem * sig_count_item = new QStandardItem(QString::number(get_lexicon()->GetSignatureCollection()->get_count()));
 
     QStandardItem *prStemItem = new QStandardItem(QString("Protostems"));
 
@@ -468,7 +467,7 @@ void MainWindow::read_dx1_file()
     QApplication::setOverrideCursor(Qt::WaitCursor);
 #endif
 
-    CWordCollection * Words = Lexicon->GetWordCollection();
+    CWordCollection * Words = get_lexicon()->GetWordCollection();
 
     while (!in.atEnd())
     {

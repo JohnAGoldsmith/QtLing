@@ -28,7 +28,7 @@ QT_END_NAMESPACE
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-    CLexicon *Lexicon;
+    QList<CLexicon*> m_lexicon_list;
     QString m_name_of_data_file;
      
 public:
@@ -78,6 +78,8 @@ private:
     bool saveFile(const QString &fileName);
     void setCurrentFile(const QString &fileName);
     QString strippedName(const QString &fullFileName);
+
+    CLexicon*  get_lexicon() {return m_lexicon_list.last();  }
 
     QSplitter *mainSplitter;
     QSplitter *rightSplitter;
