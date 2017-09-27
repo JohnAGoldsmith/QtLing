@@ -203,12 +203,17 @@ void MainWindow::rowClicked(const QModelIndex &index)
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    if (ask_to_save()) {
+    event->accept();
+
+/*    if (ask_to_save()) {
         writeSettings();
         event->accept();
+        qDebug() << " closing 1";
     } else {
         event->ignore();
+        qDebug() << "   closing 2" ;
     }
+*/
 }
 void MainWindow::newFile()
 {
