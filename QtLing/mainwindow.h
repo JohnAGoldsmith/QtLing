@@ -2,9 +2,10 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-
+#include <QTableView>
 #include <QMap>
 #include <QList>
+#include <QObject>
 #include "Lexicon.h"
 
 QT_BEGIN_NAMESPACE
@@ -21,9 +22,41 @@ class QSessionManager;
 class QSplitter;
 class QStandardItemModel;
 class QTextEdit;
-class QTableView;
 class QTreeView;
 QT_END_NAMESPACE
+
+
+
+class UpperTableView : public QTableView
+{
+    Q_OBJECT
+
+public:
+
+public slots:
+
+    signals:
+    void please_display_this_signature(QString sig);
+
+
+};
+
+
+class LowerTableView : public QTableView
+{
+    Q_OBJECT
+
+public:
+CLexicon * p_lexicon;
+
+
+public slots:
+        void display_this_signature(QString);
+signals:
+
+
+};
+
 
 class MainWindow : public QMainWindow
 {
@@ -83,8 +116,8 @@ private:
 
     QSplitter *mainSplitter;
     QSplitter *rightSplitter;
-    QTableView *tableView_upper;
-    QTableView *tableView_lower;
+    UpperTableView *tableView_upper;
+    LowerTableView *tableView_lower;
     QTreeView *treeView;
     QStandardItemModel *treeModel;
 
@@ -101,5 +134,7 @@ private:
     //QPlainTextEdit *littleEditor;
     QString curFile;
 };
+
+
 
 #endif

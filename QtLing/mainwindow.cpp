@@ -36,7 +36,7 @@
 
 
 MainWindow::MainWindow()
-    : tableView_upper(new QTableView),  tableView_lower(new QTableView)
+    : tableView_upper(new UpperTableView),  tableView_lower(new LowerTableView)
 {
 //    Lexicon = new CLexicon();
     m_lexicon_list.append ( new CLexicon() );
@@ -63,6 +63,12 @@ MainWindow::MainWindow()
 
     setCurrentFile(QString());
     setUnifiedTitleAndToolBarOnMac(true);
+
+    connect(tableView_upper,SIGNAL(please_display_this_signature(sig)), tableView_lower,SLOT(display_this_signature(QString sig)));
+
+
+
+
 }
 void MainWindow::createSplitter()
 {
@@ -547,3 +553,11 @@ void MainWindow::commitData(QSessionManager &manager)
 #endif
 
 
+
+
+
+ void LowerTableView::display_this_signature(QString)
+ {
+
+
+ }
