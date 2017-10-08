@@ -2,7 +2,7 @@
 #define CWORD_H
 
 #include "Parse.h"
-#include "StringSurrogate.h"
+//#include "StringSurrogate.h"
 #include <QString>
 #include <QChar>
 #include <QList>
@@ -32,7 +32,7 @@ protected:
     QList<Parse> m_Parses;
     QList<CSignature*>  m_Signatures;
 public:
-    CWord(CStringSurrogate ssWord);
+    CWord(QString  Word);
     CWord(CWord&);
 
 public:

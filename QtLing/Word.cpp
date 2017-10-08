@@ -1,6 +1,6 @@
 #include "Word.h"
 
-CWord::CWord(CStringSurrogate ssWord) : CParse(ssWord), m_WordCount(0), m_Word(ssWord.GetKey())
+CWord::CWord(QString word) : CParse(word), m_WordCount(0), m_Word(word)
 {
 //    m_Parses = QList<WordParse>();
     m_WordCount = 0;

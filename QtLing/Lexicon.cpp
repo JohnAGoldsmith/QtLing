@@ -12,7 +12,7 @@
 #include "StemCollection.h"
 #include "SuffixCollection.h"
 #include "WordCollection.h"
-#include "StringSurrogate.h"
+//#include "StringSurrogate.h"
 #include "Word.h"
 
 CLexicon::CLexicon() : m_Words(new CWordCollection), m_Stems(new CStemCollection), m_Suffixes(new CSuffixCollection), m_Signatures(new CSignatureCollection)

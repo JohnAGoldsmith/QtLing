@@ -23,6 +23,7 @@ class QSplitter;
 class QStandardItemModel;
 class QTextEdit;
 class QTreeView;
+class MainWindow;
 QT_END_NAMESPACE
 
 
@@ -31,8 +32,12 @@ class UpperTableView : public QTableView
 {
     Q_OBJECT
 
+    QString m_content;
+    MainWindow* m_parent_window;
 public:
-
+    QString get_content() {return m_content;}
+    void    set_content_type(QString text) {m_content = text;}
+    MainWindow* get_parent_window() {return m_parent_window;}
 public slots:
 
     signals:
@@ -46,12 +51,18 @@ class LowerTableView : public QTableView
 {
     Q_OBJECT
 
+    MainWindow* m_parent_window;
+    int     m_number_of_columns;
+
 public:
-CLexicon * p_lexicon;
-
-
+    LowerTableView();
+    CLexicon * p_lexicon;
+    MainWindow* get_parent_window() {return m_parent_window;}
+    int m_how_many_columns;
+    void set_parent(MainWindow* window) {m_parent_window = window;}
 public slots:
         void display_this_signature(QString);
+        int  get_number_of_columns () {return m_how_many_columns;}
 signals:
 
 
@@ -69,6 +80,7 @@ public:
 
 
     void DisplaySignatures();
+        CLexicon*  get_lexicon() {return m_lexicon_list.last();  }
 
 protected:
     void closeEvent(QCloseEvent *event) override;
@@ -112,7 +124,6 @@ private:
     void setCurrentFile(const QString &fileName);
     QString strippedName(const QString &fullFileName);
 
-    CLexicon*  get_lexicon() {return m_lexicon_list.last();  }
 
     QSplitter *mainSplitter;
     QSplitter *rightSplitter;

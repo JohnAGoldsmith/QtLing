@@ -4,7 +4,7 @@
 #include <QList>
 #include <iterator>
 #include "generaldefinitions.h"
-#include "StringSurrogate.h"
+//#include "StringSurrogate.h"
 #include "Signature.h"
 
 //class CSignature;
@@ -36,11 +36,11 @@ private:
 public:
     friend class CLexicon;
     CSignature* operator<< ( CParse* );
-    CSignature* operator<< ( CStringSurrogate );
+//    CSignature* operator<< ( CStringSurrogate );
     CSignature* operator<< ( QString );
     void        operator<< ( CSignature* );
     CSignature* operator^= ( CParse* );
-    CSignature* operator^= ( CStringSurrogate );
+ //   CSignature* operator^= ( CStringSurrogate );
     CSignature* operator^= ( QString );
     CSignature* find_or_add ( QString); // same as operatorˆ=
 
@@ -48,6 +48,8 @@ public:
     int get_count() const { return m_SignatureMap.size(); }
     QMap<QString, CSignature*> GetSignatures() const { return m_SignatureMap; }
     QList<CSignature*>*  GetSortedSignatures() { return &  m_SortList;}
+
+    CSignature* get_signature(QString sig) {return m_SignatureMap.value(sig); }
 
     void sort();
 

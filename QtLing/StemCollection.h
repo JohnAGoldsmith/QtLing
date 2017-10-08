@@ -4,7 +4,7 @@
 #include <QList>
 #include <iterator>
 #include "generaldefinitions.h"
-#include "StringSurrogate.h"
+//#include "StringSurrogate.h"
 #include "Stem.h"
 
 //class CStem;
@@ -34,10 +34,10 @@ private:
 
 public:
     CStem* operator<< ( CParse* );
-    CStem* operator<< ( CStringSurrogate );
+//    CStem* operator<< ( CStringSurrogate );
     CStem* operator<< ( QString );
     CStem* operator^= ( CParse* );
-    CStem* operator^= ( CStringSurrogate );
+//    CStem* operator^= ( CStringSurrogate );
     CStem* operator^= ( QString );
     CStem* find_or_add (QString);  // same as ˆ=
     CStem* find (QString);

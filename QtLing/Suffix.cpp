@@ -1,10 +1,10 @@
 #include "Suffix.h"
 
-CSuffix::CSuffix(CStringSurrogate ssWord) : CParse(ssWord), m_Suffix(ssWord.GetKey()), m_frequency(0)
+CSuffix::CSuffix(QString  suffix): m_key(suffix)
 {}
 
 CSuffix::CSuffix(CSuffix& suffix)
 {
-    m_Suffix = suffix.GetSuffix();
+    m_key = suffix.get_key();
     m_frequency = suffix.GetFrequency();
 }

@@ -1,15 +1,12 @@
 #include "Signature.h"
 #include "Suffix.h"
 
-CSignature::CSignature(CStringSurrogate ssWord) : CParse(ssWord), m_Signature(ssWord.GetKey()), m_Affixes() {}
+CSignature::CSignature(QString Word) : m_Signature(Word)
+{}
 
 CSignature::CSignature(CSignature& signature) {
     m_Signature = signature.GetSignature();
     m_Affixes = signature.GetList();
-}
-
-CSignature::CSignature(QString  qstring) {
-    m_Signature = qstring;
 }
 
 

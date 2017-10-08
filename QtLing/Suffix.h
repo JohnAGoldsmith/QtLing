@@ -2,7 +2,7 @@
 #define CSUFFIX_H
 
 #include "Parse.h"
-#include "StringSurrogate.h"
+//#include "StringSurrogate.h"
 #include <QString>
 #include <QChar>
 #include <QList>
@@ -12,15 +12,15 @@
 class CSuffix : public CParse
 {
 protected:
-    QString m_Suffix;
+    QString m_key;
     int m_frequency;
 public:
-    CSuffix(CStringSurrogate ssWord);
+    CSuffix(QString ssWord);
     CSuffix(CSuffix&);
 public:
     //Accessors
-    QString get_key() const {return m_Suffix;}
-    QString GetSuffix() const { return m_Suffix;    }
+    QString get_key() const {return m_key;}
+    QString GetSuffix() const { return m_key;    }
     int     GetFrequency()    { return m_frequency; }
     void    SetFrequency(int frequency) { m_frequency = frequency; }
 };

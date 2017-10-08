@@ -34,6 +34,7 @@
 #include <QStandardItem>
 #include <QMapIterator>
 
+typedef  QMap<QString,CWord*> StringToWordPtr;
 
 MainWindow::MainWindow()
     : tableView_upper(new UpperTableView),  tableView_lower(new LowerTableView)
@@ -41,6 +42,7 @@ MainWindow::MainWindow()
 //    Lexicon = new CLexicon();
     m_lexicon_list.append ( new CLexicon() );
     treeModel = new QStandardItemModel();
+    tableView_lower->set_parent(this);
 
     Word_model= new QStandardItemModel(1,3);
     Stem_model= new QStandardItemModel;
@@ -64,7 +66,7 @@ MainWindow::MainWindow()
     setCurrentFile(QString());
     setUnifiedTitleAndToolBarOnMac(true);
 
-    connect(tableView_upper,SIGNAL(please_display_this_signature(sig)), tableView_lower,SLOT(display_this_signature(QString sig)));
+    connect(tableView_upper,SIGNAL(clicked(const QModelIndex & )), tableView_lower,SLOT(display_this_signature(const QModelIndex &  )));
 
 
 
@@ -115,7 +117,8 @@ void MainWindow::createHorizontalGroupBox()
 
 void MainWindow::load_word_model()
 {
-    QMap<QString,CWord*> * WordMap = get_lexicon()->GetWordCollection()->GetMap();
+
+    StringToWordPtr * WordMap = get_lexicon()->GetWordCollection()->GetMap();
     QMapIterator<QString,CWord*> word_iter(*WordMap);
     while (word_iter.hasNext())
     {   CWord* pWord = word_iter.next().value();
@@ -144,7 +147,7 @@ void MainWindow::load_stem_model()
     for (iter = get_lexicon()->GetStemCollection()->GetBegin(); iter != get_lexicon()->GetStemCollection()->GetEnd(); ++iter)
     {
         stem = iter.value();
-        QStandardItem *item = new QStandardItem(stem->GetStem());
+        QStandardItem *item = new QStandardItem(stem->get_key());
         QList<QStandardItem*> item_list;
         item_list.append(item);
         QListIterator<QString> sig_iter(*stem->GetSignatures());
@@ -171,8 +174,8 @@ void MainWindow::load_affix_model()
 
 void MainWindow::load_signature_model()
 {   CSignature* sig;
-    get_lexicon()->GetSignatures()->sort();
-    QList<CSignature*>* pSortedSignatures = get_lexicon()->GetSignatures()->GetSortedSignatures();
+    get_lexicon()->get_signatures()->sort();
+    QList<CSignature*>* pSortedSignatures = get_lexicon()->get_signatures()->GetSortedSignatures();
     QListIterator<CSignature*> iter(*pSortedSignatures );
     while (iter.hasNext())
     {
@@ -193,15 +196,19 @@ void MainWindow::rowClicked(const QModelIndex &index)
     QString key = item->text();
     if (key == "Words"){
         tableView_upper->setModel(Word_model);
+        tableView_upper->set_content_type( "words");
     }
     else if (key == "Stems"){
         tableView_upper->setModel(Stem_model);
+        tableView_upper->set_content_type( "stems");
     }
     else if (key == "Suffixes"){
         tableView_upper->setModel(Affix_model);
+        tableView_upper->set_content_type( "suffixes");
     }
     else if (key == "Signatures"){
         tableView_upper->setModel(Signature_model);
+        tableView_upper->set_content_type(  "signatures");
     }
     else
         qDebug() << "Invalid selection: rowClicked";
@@ -539,6 +546,7 @@ QString MainWindow::strippedName(const QString &fullFileName)
     return QFileInfo(fullFileName).fileName();
 }
 #ifndef QT_NO_SESSIONMANAGER
+
 void MainWindow::commitData(QSessionManager &manager)
 {
     if (manager.allowsInteraction()) {
@@ -552,12 +560,31 @@ void MainWindow::commitData(QSessionManager &manager)
 }
 #endif
 
+LowerTableView::LowerTableView()
+{
+   m_how_many_columns = 6;
 
-
-
-
- void LowerTableView::display_this_signature(QString)
+}
+ void LowerTableView::display_this_signature(QString signature)
  {
+    CSignature*           pSig = m_parent_window->get_lexicon()->get_signatures()->get_signature(signature);
+    CStem*                p_Stem;
+    QList<CStem*>*        sig_stems = pSig->get_stems();
+    QStandardItem*        p_item;
+    QList<QStandardItem*> item_list;
 
+ // Start by building a model fo this view.
+    
+    QStandardItemModel one_signature_model;
+    
+    foreach (p_Stem, *sig_stems)  {
+        p_item = new QStandardItem(p_Stem->get_key() );
+        item_list.append(p_item);
+        if (item_list.length() >= m_number_of_columns){
+            one_signature_model.appendRow(item_list);
+            item_list.clear();
+        }
+    }
+    setModel(& one_signature_model);
 
  }

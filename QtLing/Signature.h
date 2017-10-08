@@ -2,7 +2,7 @@
 #define CSIGNATURE_H
 
 #include "Parse.h"
-#include "StringSurrogate.h"
+//#include "StringSurrogate.h"
 #include "Stem.h"
 #include <QString>
 #include <QChar>
@@ -20,7 +20,7 @@ protected:
     QList<CStem*> m_Stems;
 
 public:
-    CSignature(CStringSurrogate ssWord);
+   // CSignature(CStringSurrogate ssWord);
     CSignature(CSignature&);
     CSignature( QString);
 public:

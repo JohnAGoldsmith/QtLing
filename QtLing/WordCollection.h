@@ -4,7 +4,7 @@
 #include <QList>
 #include <iterator>
 #include "generaldefinitions.h"
-#include "StringSurrogate.h"
+#//include "StringSurrogate.h"
 #include <QMapIterator>
 
 class CWord;
@@ -36,10 +36,10 @@ private:
 public:
     friend class CLexicon;
     CWord* operator<< ( CParse* );
-    CWord* operator<< ( CStringSurrogate );
+//    CWord* operator<< ( CStringSurrogate );
     CWord* operator<< ( QString );
     CWord* operator^= ( CParse* );
-    CWord* operator^= ( CStringSurrogate );
+//    CWord* operator^= ( CStringSurrogate );
     CWord* operator^= ( QString );
 
     CWord* find_or_add (QString);

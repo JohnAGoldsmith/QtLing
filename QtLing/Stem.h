@@ -2,7 +2,6 @@
 #define CSTEM_H
 
 #include "Parse.h"
-#include "StringSurrogate.h"
 #include <QString>
 #include <QChar>
 #include <QList>
@@ -17,13 +16,12 @@ protected:
     QString m_key;
     QList<QString> m_Signatures;
 public:
-    CStem(CStringSurrogate ssWord);
     CStem (QString);
     CStem(CStem&);
 public:
     //Accessors
     QString            get_key()       const{return m_key;}
-    QString            GetStem()       const { return m_key; }
+    QString            get_stem()       const { return m_key; }
     QList<QString>*    GetSignatures()  { return &m_Signatures; }
 
     void                add_signature(QString sig_string ) {m_Signatures.append(sig_string); }
