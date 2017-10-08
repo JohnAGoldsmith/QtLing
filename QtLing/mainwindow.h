@@ -6,6 +6,7 @@
 #include <QMap>
 #include <QList>
 #include <QObject>
+#include <QTreeView>
 #include "Lexicon.h"
 
 QT_BEGIN_NAMESPACE
@@ -69,12 +70,24 @@ signals:
 };
 
 
+class LeftSideTreeView : public QTreeView
+{
+    Q_OBJECT
+
+    MainWindow * m_parent_window;
+public:
+    LeftSideTreeView(MainWindow* );
+    void set_parent(MainWindow* window) {m_parent_window = window;}
+};
+
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-    QList<CLexicon*> m_lexicon_list;
-    QString m_name_of_data_file;
+    QList<CLexicon*>    m_lexicon_list;
+    QString             m_name_of_data_file;
      
+
 public:
     MainWindow();
 
@@ -125,13 +138,14 @@ private:
     QString strippedName(const QString &fullFileName);
 
 
-    QSplitter *mainSplitter;
-    QSplitter *rightSplitter;
-    UpperTableView *tableView_upper;
-    LowerTableView *tableView_lower;
-    QTreeView *treeView;
-    QStandardItemModel *treeModel;
+    QSplitter *         m_mainSplitter;
+    QSplitter *         m_rightSplitter;
+    UpperTableView *    m_tableView_upper;
+    LowerTableView *    m_tableView_lower;
+    LeftSideTreeView *  m_leftTreeView;
+//    QTreeView *         treeView;
 
+    QStandardItemModel * m_treeModel;
     QStandardItemModel * Word_model;
     QStandardItemModel * Stem_model;
     QStandardItemModel * Signature_model;

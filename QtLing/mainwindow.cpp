@@ -37,12 +37,12 @@
 typedef  QMap<QString,CWord*> StringToWordPtr;
 
 MainWindow::MainWindow()
-    : tableView_upper(new UpperTableView),  tableView_lower(new LowerTableView)
+    : m_tableView_upper(new UpperTableView),  m_tableView_lower(new LowerTableView)
 {
 //    Lexicon = new CLexicon();
     m_lexicon_list.append ( new CLexicon() );
-    treeModel = new QStandardItemModel();
-    tableView_lower->set_parent(this);
+    m_treeModel = new QStandardItemModel();
+    m_tableView_lower->set_parent(this);
 
     Word_model= new QStandardItemModel(1,3);
     Stem_model= new QStandardItemModel;
@@ -50,7 +50,7 @@ MainWindow::MainWindow()
     Affix_model= new QStandardItemModel();
 
     createSplitter();
-    setCentralWidget(mainSplitter);
+    setCentralWidget(m_mainSplitter);
     createActions();
     createStatusBar();
 
@@ -66,28 +66,25 @@ MainWindow::MainWindow()
     setCurrentFile(QString());
     setUnifiedTitleAndToolBarOnMac(true);
 
-    connect(tableView_upper,SIGNAL(clicked(const QModelIndex & )), tableView_lower,SLOT(display_this_signature(const QModelIndex &  )));
-
-
-
+    connect(m_tableView_upper,SIGNAL(clicked(const QModelIndex & )), m_tableView_lower,SLOT(display_this_signature(const QModelIndex &  )));
 
 }
+
 void MainWindow::createSplitter()
 {
-    mainSplitter = new QSplitter();
+    m_mainSplitter = new QSplitter();
 
-    rightSplitter = new QSplitter(Qt::Vertical);
-    rightSplitter->addWidget(tableView_upper);
-    rightSplitter->addWidget(tableView_lower);
+    m_rightSplitter = new QSplitter(Qt::Vertical);
+    m_rightSplitter->addWidget(m_tableView_upper);
+    m_rightSplitter->addWidget(m_tableView_lower);
 
-//    treeView = new QTreeView(rightSplitter);
-//  shouldn't that be: (the argument to QTreeView constructor is the parent of the treeview. It gets added to the main splitter just below.
-    treeView = new QTreeView();
-    treeView->setModel(treeModel);
+    m_leftTreeView = new LeftSideTreeView(this);
+    m_leftTreeView->setModel(m_treeModel);
 
-    connect(treeView, SIGNAL(clicked(const QModelIndex&)), this, SLOT(rowClicked(const QModelIndex&)));
-    mainSplitter->addWidget(treeView);
-    mainSplitter->addWidget(rightSplitter);
+    m_mainSplitter->addWidget(m_leftTreeView);
+    m_mainSplitter->addWidget(m_rightSplitter);
+
+    connect(m_leftTreeView, SIGNAL(clicked(const QModelIndex&)), this, SLOT(rowClicked(const QModelIndex&)));
 }
 
 
@@ -192,23 +189,23 @@ void MainWindow::load_signature_model()
 
 void MainWindow::rowClicked(const QModelIndex &index)
 {
-    QStandardItem *item = treeModel->itemFromIndex(index);
+    QStandardItem *item = m_treeModel->itemFromIndex(index);
     QString key = item->text();
     if (key == "Words"){
-        tableView_upper->setModel(Word_model);
-        tableView_upper->set_content_type( "words");
+        m_tableView_upper->setModel(Word_model);
+        m_tableView_upper->set_content_type( "words");
     }
     else if (key == "Stems"){
-        tableView_upper->setModel(Stem_model);
-        tableView_upper->set_content_type( "stems");
+        m_tableView_upper->setModel(Stem_model);
+        m_tableView_upper->set_content_type( "stems");
     }
     else if (key == "Suffixes"){
-        tableView_upper->setModel(Affix_model);
-        tableView_upper->set_content_type( "suffixes");
+        m_tableView_upper->setModel(Affix_model);
+        m_tableView_upper->set_content_type( "suffixes");
     }
     else if (key == "Signatures"){
-        tableView_upper->setModel(Signature_model);
-        tableView_upper->set_content_type(  "signatures");
+        m_tableView_upper->setModel(Signature_model);
+        m_tableView_upper->set_content_type(  "signatures");
     }
     else
         qDebug() << "Invalid selection: rowClicked";
@@ -433,7 +430,7 @@ bool MainWindow::ask_to_save()
 }
 void MainWindow::createTreeModel()
 {
-    QStandardItem *parent = treeModel->invisibleRootItem();
+    QStandardItem *parent = m_treeModel->invisibleRootItem();
     QStandardItem *word_item = new QStandardItem(QString("Words"));
     QStandardItem * word_count_item = new QStandardItem(QString::number(get_lexicon()->GetWordCollection()->get_count()));
     QStandardItem *stem_item = new QStandardItem(QString("Stems"));
@@ -495,7 +492,7 @@ void MainWindow::read_dx1_file()
         QString word = words[0];
         CWord* pWord = *Words << word;
         pWord->SetWordCount(words[1].toInt());
-
+        qDebug() << word;
     }
     Words->sort_word_list();
 
@@ -574,7 +571,7 @@ LowerTableView::LowerTableView()
     QList<QStandardItem*> item_list;
 
  // Start by building a model fo this view.
-    
+    qDebug() << " building lower view" ;
     QStandardItemModel one_signature_model;
     
     foreach (p_Stem, *sig_stems)  {
@@ -586,5 +583,11 @@ LowerTableView::LowerTableView()
         }
     }
     setModel(& one_signature_model);
+
+ }
+
+ LeftSideTreeView::LeftSideTreeView(MainWindow* window)
+ {
+     m_parent_window = window;
 
  }
