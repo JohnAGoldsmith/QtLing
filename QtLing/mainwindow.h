@@ -67,7 +67,7 @@ public:
     LowerTableView(MainWindow*);
     CLexicon * p_lexicon;
     MainWindow* get_parent_window() {return m_parent_window;}
-    int m_how_many_columns;
+
    // void set_parent(MainWindow* window) {m_parent_window = window;}
     void change_current_model(QStandardItemModel*);
 
@@ -77,7 +77,7 @@ public slots:
 
 
         void display_this_item(const QModelIndex&);
-        int  get_number_of_columns () {return m_how_many_columns;}
+        int  get_number_of_columns () {return m_number_of_columns;}
 signals:
 
 

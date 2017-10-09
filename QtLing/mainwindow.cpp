@@ -512,14 +512,14 @@ void MainWindow::commitData(QSessionManager &manager)
 
 LowerTableView::LowerTableView()
 {
-   m_how_many_columns = 6;
+   m_number_of_columns = 6;
 
 }
 
 LowerTableView::LowerTableView(MainWindow * window)
 {
  m_parent_window = window;
-   m_how_many_columns = 6;
+   m_number_of_columns = 6;
 }
 
 
