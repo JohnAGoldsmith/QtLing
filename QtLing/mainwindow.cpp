@@ -37,24 +37,60 @@
 typedef  QMap<QString,CWord*> StringToWordPtr;
 
 MainWindow::MainWindow()
-    : m_tableView_upper(new UpperTableView),  m_tableView_lower(new LowerTableView)
 {
-//    Lexicon = new CLexicon();
+
     m_lexicon_list.append ( new CLexicon() );
-    m_treeModel = new QStandardItemModel();
-    m_tableView_lower->set_parent(this);
 
-    Word_model= new QStandardItemModel(1,3);
-    Stem_model= new QStandardItemModel;
-    Signature_model= new QStandardItemModel;
-    Affix_model= new QStandardItemModel();
+    // models
+    m_treeModel     = new QStandardItemModel();
+    Word_model      = new QStandardItemModel(1,3);
+    Stem_model      = new QStandardItemModel();
+    Signature_model = new QStandardItemModel();
+    Affix_model     = new QStandardItemModel();
 
-    createSplitter();
+    qDebug() << "reach 1";
+
+    // views
+    m_leftTreeView      = new LeftSideTreeView(this);
+    m_tableView_upper   = new UpperTableView (this);
+    m_tableView_lower   = new LowerTableView (this);
+//    m_tableView_upper->setPalette(this);                  PUT THIS BACK IN?
+
+
+    qDebug() << "reach 2";
+
+
+    // set model for tree view
+    m_leftTreeView->setModel(m_treeModel);
+
+    // layout
+    m_mainSplitter = new QSplitter();
+    qDebug() << "reach 3";
+
+    m_rightSplitter = new QSplitter(Qt::Vertical);
+    qDebug() << "reach 4";
+
+    m_rightSplitter->addWidget(m_tableView_upper);
+    qDebug() << "reach 5";
+
+    m_rightSplitter->addWidget(m_tableView_lower);
+    qDebug() << "reach 6";
+
+    m_mainSplitter->addWidget(m_leftTreeView);
+    m_mainSplitter->addWidget(m_rightSplitter);
+    qDebug() << "reach 7";
+
     setCentralWidget(m_mainSplitter);
+
+
+
     createActions();
     createStatusBar();
-
     readSettings();
+    qDebug() << "reach 6";
+
+
+    connect(m_leftTreeView, SIGNAL(clicked(const QModelIndex&)), m_tableView_upper, SLOT(ShowModelsUpperTableView(const QModelIndex&)));
 
 
 #ifndef QT_NO_SESSIONMANAGER
@@ -68,24 +104,8 @@ MainWindow::MainWindow()
 
     connect(m_tableView_upper,SIGNAL(clicked(const QModelIndex & )), m_tableView_lower,SLOT(display_this_signature(const QModelIndex &  )));
 
-}
+ }
 
-void MainWindow::createSplitter()
-{
-    m_mainSplitter = new QSplitter();
-
-    m_rightSplitter = new QSplitter(Qt::Vertical);
-    m_rightSplitter->addWidget(m_tableView_upper);
-    m_rightSplitter->addWidget(m_tableView_lower);
-
-    m_leftTreeView = new LeftSideTreeView(this);
-    m_leftTreeView->setModel(m_treeModel);
-
-    m_mainSplitter->addWidget(m_leftTreeView);
-    m_mainSplitter->addWidget(m_rightSplitter);
-
-    connect(m_leftTreeView, SIGNAL(clicked(const QModelIndex&)), this, SLOT(rowClicked(const QModelIndex&)));
-}
 
 
 
@@ -187,6 +207,32 @@ void MainWindow::load_signature_model()
     }
 }
 
+/*
+void LeftSideTreeView::rowClicked(const QModelIndex &index)
+{
+    QStandardItem *item = m_parent_window->m_treeModel->itemFromIndex(index);
+    QString key = item->text();
+    if (key == "Words"){
+        m_parent_window->m_tableView_upper->setModel(Word_model);
+        m_parent_window->m_tableView_upper->set_content_type( "words");
+    }
+    else if (key == "Stems"){
+        m_parent_window->m_parent_window->m_tableView_upper->setModel(Stem_model);
+        m_parent_window->m_parent_window->m_tableView_upper->set_content_type( "stems");
+    }
+    else if (key == "Suffixes"){
+        m_parent_window->m_parent_window->m_tableView_upper->setModel(Affix_model);
+        m_parent_window->m_parent_window->m_tableView_upper->set_content_type( "suffixes");
+    }
+    else if (key == "Signatures"){
+        m_parent_window->m_parent_window->m_tableView_upper->setModel(Signature_model);
+        m_parent_window->m_parent_window->m_tableView_upper->set_content_type(  "signatures");
+    }
+    else
+        qDebug() << "Invalid selection: rowClicked";
+}
+*/
+/*
 void MainWindow::rowClicked(const QModelIndex &index)
 {
     QStandardItem *item = m_treeModel->itemFromIndex(index);
@@ -210,7 +256,7 @@ void MainWindow::rowClicked(const QModelIndex &index)
     else
         qDebug() << "Invalid selection: rowClicked";
 }
-
+*/
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     event->accept();
@@ -247,7 +293,6 @@ void MainWindow::read_file_do_crab()
 {
         read_dx1_file();
         get_lexicon()->Crab_1();
-        qDebug()<<"Finished crab.";
         load_word_model();
         load_signature_model();
         load_affix_model();
@@ -492,7 +537,7 @@ void MainWindow::read_dx1_file()
         QString word = words[0];
         CWord* pWord = *Words << word;
         pWord->SetWordCount(words[1].toInt());
-        qDebug() << word;
+
     }
     Words->sort_word_list();
 
@@ -562,15 +607,30 @@ LowerTableView::LowerTableView()
    m_how_many_columns = 6;
 
 }
- void LowerTableView::display_this_signature(QString signature)
+
+LowerTableView::LowerTableView(MainWindow * window)
+{
+ m_parent_window = window;
+}
+
+
+ void LowerTableView::display_this_signature(  QModelIndex & index )
  {
+     qDebug() << "lower table sig.";
+     QString signature;
+     if (index.isValid()){
+         signature = index.data().toString();
+     }
+
     CSignature*           pSig = m_parent_window->get_lexicon()->get_signatures()->get_signature(signature);
     CStem*                p_Stem;
     QList<CStem*>*        sig_stems = pSig->get_stems();
     QStandardItem*        p_item;
     QList<QStandardItem*> item_list;
 
- // Start by building a model fo this view.
+
+    qDebug() << "lower table sig. 2";
+    // Start by building a model fo this view.
     qDebug() << " building lower view" ;
     QStandardItemModel one_signature_model;
     
@@ -590,4 +650,36 @@ LowerTableView::LowerTableView()
  {
      m_parent_window = window;
 
+
  }
+
+UpperTableView::UpperTableView (MainWindow* window)
+{
+        m_parent_window = window;
+
+}
+void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
+{
+    QString component;
+    qDebug() << "show model upper table";
+    if (index.isValid()){
+        component = index.data().toString();
+    }
+    if (component == "Words"){
+        setModel(m_parent_window->Word_model);
+        set_content_type( "words");
+    }
+    else     if (component == "Stems"){
+        setModel(m_parent_window->Stem_model);
+        set_content_type( "stems");
+    }
+    else     if (component == "Suffixes"){
+        setModel(m_parent_window->Affix_model);
+        set_content_type( "suffixes");
+    }
+    else     if (component == "Signatures"){
+        setModel(m_parent_window->Signature_model);
+        set_content_type( "signatures");
+    }
+
+}

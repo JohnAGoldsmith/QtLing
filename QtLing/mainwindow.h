@@ -36,10 +36,16 @@ class UpperTableView : public QTableView
     QString m_content;
     MainWindow* m_parent_window;
 public:
+    UpperTableView ();
+    UpperTableView (MainWindow*);
     QString get_content() {return m_content;}
     void    set_content_type(QString text) {m_content = text;}
     MainWindow* get_parent_window() {return m_parent_window;}
+
+
 public slots:
+
+    void ShowModelsUpperTableView(const QModelIndex& );
 
     signals:
     void please_display_this_signature(QString sig);
@@ -57,12 +63,13 @@ class LowerTableView : public QTableView
 
 public:
     LowerTableView();
+    LowerTableView(MainWindow*);
     CLexicon * p_lexicon;
     MainWindow* get_parent_window() {return m_parent_window;}
     int m_how_many_columns;
-    void set_parent(MainWindow* window) {m_parent_window = window;}
+   // void set_parent(MainWindow* window) {m_parent_window = window;}
 public slots:
-        void display_this_signature(QString);
+        void display_this_signature(QModelIndex&);
         int  get_number_of_columns () {return m_how_many_columns;}
 signals:
 
@@ -75,22 +82,26 @@ class LeftSideTreeView : public QTreeView
     Q_OBJECT
 
     MainWindow * m_parent_window;
+
 public:
-    LeftSideTreeView(MainWindow* );
-    void set_parent(MainWindow* window) {m_parent_window = window;}
+    LeftSideTreeView(MainWindow*  window);
+    //void set_parent(MainWindow* window) {m_parent_window = window;}
+    void rowClicked(const QModelIndex& index);
 };
 
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
+    friend class LeftSideTreeView;
+    friend class UpperTableView;
+    friend class LowerTableView;
     QList<CLexicon*>    m_lexicon_list;
     QString             m_name_of_data_file;
      
 
 public:
     MainWindow();
-
 
     void DisplaySignatures();
         CLexicon*  get_lexicon() {return m_lexicon_list.last();  }
@@ -107,7 +118,7 @@ private slots:
     bool saveAs();
     void about();
     void documentWasModified();
-    void rowClicked(const QModelIndex& index);
+//    void rowClicked(const QModelIndex& index);
 
 #ifndef QT_NO_SESSIONMANAGER
     void commitData(QSessionManager &);
@@ -136,7 +147,6 @@ private:
     bool saveFile(const QString &fileName);
     void setCurrentFile(const QString &fileName);
     QString strippedName(const QString &fullFileName);
-
 
     QSplitter *         m_mainSplitter;
     QSplitter *         m_rightSplitter;
