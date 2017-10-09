@@ -160,7 +160,7 @@ void   CLexicon::AssignSuffixesToStems()
                     else{
                         word = stem + affix;
                     }
-                    CWord* pWord = m_Words->find(word);
+                    CWord* pWord = m_Words->get_word(word);
                     pWord->add_signature(pSig);
                 }
 

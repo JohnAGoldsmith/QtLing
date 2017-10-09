@@ -44,7 +44,7 @@ public:
 
     CWord* find_or_add (QString);
     CWord* add (QString);
-    CWord* find (QString); // returns false if the string is not in the word collection
+    CWord* get_word (QString); // returns false if the string is not in the word collection
 
     //CWord* GetAt( uint itemno) {return m_WordList.at(itemno);}
     int get_count() const { return m_WordMap.size(); }

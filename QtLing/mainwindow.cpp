@@ -54,43 +54,24 @@ MainWindow::MainWindow()
     m_leftTreeView      = new LeftSideTreeView(this);
     m_tableView_upper   = new UpperTableView (this);
     m_tableView_lower   = new LowerTableView (this);
-//    m_tableView_upper->setPalette(this);                  PUT THIS BACK IN?
-
-
-    qDebug() << "reach 2";
-
 
     // set model for tree view
     m_leftTreeView->setModel(m_treeModel);
 
     // layout
     m_mainSplitter = new QSplitter();
-    qDebug() << "reach 3";
-
-    m_rightSplitter = new QSplitter(Qt::Vertical);
-    qDebug() << "reach 4";
-
+    m_rightSplitter = new QSplitter(Qt::Vertical);   
     m_rightSplitter->addWidget(m_tableView_upper);
-    qDebug() << "reach 5";
-
     m_rightSplitter->addWidget(m_tableView_lower);
-    qDebug() << "reach 6";
-
     m_mainSplitter->addWidget(m_leftTreeView);
     m_mainSplitter->addWidget(m_rightSplitter);
-    qDebug() << "reach 7";
-
     setCentralWidget(m_mainSplitter);
-
-
 
     createActions();
     createStatusBar();
     readSettings();
     qDebug() << "reach 6";
 
-
-    connect(m_leftTreeView, SIGNAL(clicked(const QModelIndex&)), m_tableView_upper, SLOT(ShowModelsUpperTableView(const QModelIndex&)));
 
 
 #ifndef QT_NO_SESSIONMANAGER
@@ -102,35 +83,15 @@ MainWindow::MainWindow()
     setCurrentFile(QString());
     setUnifiedTitleAndToolBarOnMac(true);
 
-    connect(m_tableView_upper,SIGNAL(clicked(const QModelIndex & )), m_tableView_lower,SLOT(display_this_signature(const QModelIndex &  )));
+
+    connect(m_leftTreeView, SIGNAL(clicked(const QModelIndex&)), m_tableView_upper, SLOT(ShowModelsUpperTableView(const QModelIndex&)));
+    connect(m_tableView_upper,SIGNAL(clicked(const QModelIndex & )), m_tableView_lower,SLOT(display_this_item(const QModelIndex &  )));
 
  }
 
+///////////////////////////////////////
 
-
-
-
-
-
-// not used: delete...
-void MainWindow::createHorizontalGroupBox()
-{
-    horizontalGroupBox = new QGroupBox(tr("Horizontal layout"));
-    QHBoxLayout *layout = new QHBoxLayout;
-
-    verticalGroupBox = new QGroupBox(tr("Vertical layout"));
-    QVBoxLayout *vLayout = new QVBoxLayout;
-
-    verticalGroupBox->setLayout(vLayout);
-
-    QTreeView* tree = new QTreeView(horizontalGroupBox);
-    tree->header()->resizeSection(0, 100);
-    layout->addWidget(tree);
-    layout->addWidget(verticalGroupBox);
-    horizontalGroupBox->setLayout(layout);
-}
-
-
+//         load various models
 
 void MainWindow::load_word_model()
 {
@@ -190,7 +151,9 @@ void MainWindow::load_affix_model()
 }
 
 void MainWindow::load_signature_model()
-{   CSignature* sig;
+{
+
+    CSignature* sig;
     get_lexicon()->get_signatures()->sort();
     QList<CSignature*>* pSortedSignatures = get_lexicon()->get_signatures()->GetSortedSignatures();
     QListIterator<CSignature*> iter(*pSortedSignatures );
@@ -207,56 +170,6 @@ void MainWindow::load_signature_model()
     }
 }
 
-/*
-void LeftSideTreeView::rowClicked(const QModelIndex &index)
-{
-    QStandardItem *item = m_parent_window->m_treeModel->itemFromIndex(index);
-    QString key = item->text();
-    if (key == "Words"){
-        m_parent_window->m_tableView_upper->setModel(Word_model);
-        m_parent_window->m_tableView_upper->set_content_type( "words");
-    }
-    else if (key == "Stems"){
-        m_parent_window->m_parent_window->m_tableView_upper->setModel(Stem_model);
-        m_parent_window->m_parent_window->m_tableView_upper->set_content_type( "stems");
-    }
-    else if (key == "Suffixes"){
-        m_parent_window->m_parent_window->m_tableView_upper->setModel(Affix_model);
-        m_parent_window->m_parent_window->m_tableView_upper->set_content_type( "suffixes");
-    }
-    else if (key == "Signatures"){
-        m_parent_window->m_parent_window->m_tableView_upper->setModel(Signature_model);
-        m_parent_window->m_parent_window->m_tableView_upper->set_content_type(  "signatures");
-    }
-    else
-        qDebug() << "Invalid selection: rowClicked";
-}
-*/
-/*
-void MainWindow::rowClicked(const QModelIndex &index)
-{
-    QStandardItem *item = m_treeModel->itemFromIndex(index);
-    QString key = item->text();
-    if (key == "Words"){
-        m_tableView_upper->setModel(Word_model);
-        m_tableView_upper->set_content_type( "words");
-    }
-    else if (key == "Stems"){
-        m_tableView_upper->setModel(Stem_model);
-        m_tableView_upper->set_content_type( "stems");
-    }
-    else if (key == "Suffixes"){
-        m_tableView_upper->setModel(Affix_model);
-        m_tableView_upper->set_content_type( "suffixes");
-    }
-    else if (key == "Signatures"){
-        m_tableView_upper->setModel(Signature_model);
-        m_tableView_upper->set_content_type(  "signatures");
-    }
-    else
-        qDebug() << "Invalid selection: rowClicked";
-}
-*/
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     event->accept();
@@ -423,8 +336,7 @@ void MainWindow::createActions()
     cutAct->setEnabled(false);
 
     copyAct->setEnabled(false);
-//    connect(textEdit, &QPlainTextEdit::copyAvailable, cutAct, &QAction::setEnabled);
-//    connect(textEdit, &QPlainTextEdit::copyAvailable, copyAct, &QAction::setEnabled);
+
 #endif // !QT_NO_CLIPBOARD
 }
 void MainWindow::createStatusBar()
@@ -456,8 +368,6 @@ bool MainWindow::ask_to_save()
 {
     return false;
 
-//    if (!textEdit->document()->isModified())
-//        return true;
     const QMessageBox::StandardButton ret
         = QMessageBox::warning(this, tr("Application"),
                                tr("The document has been modified.\n"
@@ -595,9 +505,7 @@ void MainWindow::commitData(QSessionManager &manager)
         if (!ask_to_save())
             manager.cancel();
     } else {
-        // Non-interactive: save without asking
-//        if (textEdit->document()->isModified())
-//            save();
+
     }
 }
 #endif
@@ -611,38 +519,67 @@ LowerTableView::LowerTableView()
 LowerTableView::LowerTableView(MainWindow * window)
 {
  m_parent_window = window;
+   m_how_many_columns = 6;
 }
 
 
- void LowerTableView::display_this_signature(  QModelIndex & index )
+ void LowerTableView::display_this_item( const  QModelIndex & index )
  {
-     qDebug() << "lower table sig.";
-     QString signature;
-     if (index.isValid()){
-         signature = index.data().toString();
-     }
-
-    CSignature*           pSig = m_parent_window->get_lexicon()->get_signatures()->get_signature(signature);
-    CStem*                p_Stem;
-    QList<CStem*>*        sig_stems = pSig->get_stems();
-    QStandardItem*        p_item;
-    QList<QStandardItem*> item_list;
+     QString component = m_parent_window->m_tableView_upper->get_content();
+     QString word, stem, prefix, suffix, signature;
 
 
-    qDebug() << "lower table sig. 2";
-    // Start by building a model fo this view.
-    qDebug() << " building lower view" ;
-    QStandardItemModel one_signature_model;
-    
-    foreach (p_Stem, *sig_stems)  {
-        p_item = new QStandardItem(p_Stem->get_key() );
-        item_list.append(p_item);
-        if (item_list.length() >= m_number_of_columns){
-            one_signature_model.appendRow(item_list);
-            item_list.clear();
-        }
+
+     if (component == "words"){
+         if (index.isValid()){
+             word = index.data().toString();
+         }
+
+        CWord*           pWord = m_parent_window->get_lexicon()->get_words()->get_word(word);
+        CStem*                p_Stem;
+
+        QStandardItem*        p_item;
+        QList<QStandardItem*> item_list;
+
+        delete m_my_current_model;
+        m_my_current_model = new QStandardItemModel();
+
+
+        // fsetModel( m_my_current_model);
     }
-    setModel(& one_signature_model);
+
+
+
+     else if (component == "signatures"){
+
+         if (index.isValid()){
+             signature = index.data().toString();
+         }
+
+        CSignature*           pSig = m_parent_window->get_lexicon()->get_signatures()->get_signature(signature);
+        CStem*                p_Stem;
+        QList<CStem*>*        sig_stems = pSig->get_stems();
+        QStandardItem*        p_item;
+        QList<QStandardItem*> item_list;
+
+        delete m_my_current_model;
+        m_my_current_model = new QStandardItemModel();
+
+        foreach (p_Stem, *sig_stems)  {
+            p_item = new QStandardItem(p_Stem->get_key() );
+            item_list.append(p_item);
+
+            if (item_list.length() >= m_number_of_columns){
+                m_my_current_model->appendRow(item_list);
+                item_list.clear();
+            }
+        }
+        setModel( m_my_current_model);
+    }
+
+
+
+
 
  }
 
@@ -661,7 +598,7 @@ UpperTableView::UpperTableView (MainWindow* window)
 void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
 {
     QString component;
-    qDebug() << "show model upper table";
+    qDebug() << "show model upper table" << index.data().toString();
     if (index.isValid()){
         component = index.data().toString();
     }

@@ -17,7 +17,7 @@ CWordCollection::~CWordCollection()
     if ( m_SortedStringArray.size() > 0 )         {  m_SortedStringArray.empty();  }
 }
 
-CWord* CWordCollection::find(QString word){
+CWord* CWordCollection::get_word(QString word){
     QMap<QString,CWord*>::const_iterator word_iter = m_WordMap.find(word);
     if (word_iter == m_WordMap.end()){
         return NULL;
