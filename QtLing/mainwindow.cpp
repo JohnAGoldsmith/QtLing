@@ -108,9 +108,9 @@ void MainWindow::load_word_model()
         QStandardItem* pItem2 = new QStandardItem(QString::number(pWord->GetWordCount()));
         item_list.append(pItem2);
 
-        QListIterator<CSignature*> sig_iter(*pWord->GetSignatures());
+        QListIterator<QPair<CStem*,CSignature*>*> sig_iter(*pWord->GetSignatures());
         while (sig_iter.hasNext()){
-            QStandardItem* pItem3 = new QStandardItem(sig_iter.next()->GetSignature());
+            QStandardItem* pItem3 = new QStandardItem(sig_iter.next()->second->GetSignature());
             item_list.append(pItem3);
         }
 

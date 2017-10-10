@@ -1,17 +1,17 @@
 #include "Word.h"
 
-CWord::CWord(QString word) : CParse(word), m_WordCount(0), m_Word(word)
+CWord::CWord(QString word) : m_WordCount(0), m_Word(word)
 {
-//    m_Parses = QList<WordParse>();
-    m_WordCount = 0;
+     m_WordCount = 0;
+    m_Signatures.clear();
 }
 
 CWord::CWord(CWord& word)
 {
     m_WordCount = word.GetWordCount();
     m_Word      = word.GetWord();
-//    m_Parses    = word.GetParses();
-}
+    m_Signatures.clear();
+ }
 
 // Increment the word count
 //
@@ -34,8 +34,9 @@ void CWord::AddParse(CStem* stem, CSuffix* suffix, CSignature* signature)
     m_Parses << parse;
 }
 
-void CWord::add_signature(CSignature * pSig)
+void CWord::add_stem_and_signature(CStem* pStem, CSignature * pSig)
 {
-    m_Signatures.append(pSig);
+    QPair<CStem*,CSignature*>* pPair = new QPair<CStem*,CSignature*>(pStem,pSig);
+    m_Signatures.append(pPair);
 
 }

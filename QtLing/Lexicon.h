@@ -42,6 +42,7 @@ public:
     void FindProtostems();
     void CreateStemAffixPairs();
     void AssignSuffixesToStems();
+    void ComputeMultiparses();
 };
 
 #endif // CLEXICON_H

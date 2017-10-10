@@ -161,18 +161,32 @@ void   CLexicon::AssignSuffixesToStems()
                         word = stem + affix;
                     }
                     CWord* pWord = m_Words->get_word(word);
-                    pWord->add_signature(pSig);
+                    pWord->add_stem_and_signature(pStem,pSig);
                 }
-
             }
         }
+    }
+}
+
+
+void CLexicon::ComputeMultiparses()
+{
+    CWord* pWord;
+    QMap<QString,CWord*>* WordMap = m_Words->GetMap();
+    QMapIterator<QString,CWord*> word_iter(*WordMap);
+    while (word_iter.hasNext())   {
+        pWord = word_iter.next().value();
+        if (pWord->GetSignatures()->size() > 2){
+
+        }
+
+
+
+
     }
 
 
 }
-
-
-
 
 
 
