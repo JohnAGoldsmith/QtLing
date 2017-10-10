@@ -451,18 +451,16 @@ bool MainWindow::ask_to_save()
 }
 void MainWindow::createTreeModel()
 {
-    QStandardItem *parent = m_treeModel->invisibleRootItem();
-    QStandardItem *word_item = new QStandardItem(QString("Words"));
+    QStandardItem * parent = m_treeModel->invisibleRootItem();
+    QStandardItem * word_item = new QStandardItem(QString("Words"));
     QStandardItem * word_count_item = new QStandardItem(QString::number(get_lexicon()->GetWordCollection()->get_count()));
-    QStandardItem *stem_item = new QStandardItem(QString("Stems"));
+    QStandardItem * stem_item = new QStandardItem(QString("Stems"));
     QStandardItem * stem_count_item = new QStandardItem(QString::number(get_lexicon()->GetStemCollection()->get_count()));
-    QStandardItem *suffix_item = new QStandardItem(QString("Suffixes"));
+    QStandardItem * suffix_item = new QStandardItem(QString("Suffixes"));
     QStandardItem * suffix_count_item = new QStandardItem(QString::number(get_lexicon()->GetSuffixCollection()->get_count()));
-
-    QStandardItem *sig_item = new QStandardItem(QString("Signatures"));
-    QStandardItem * sig_count_item = new QStandardItem(QString::number(get_lexicon()->GetSignatureCollection()->get_count()));
-
-    QStandardItem *prStemItem = new QStandardItem(QString("Protostems"));
+    QStandardItem * sig_item = new QStandardItem(QString("Signatures"));
+    QStandardItem * sig_count_item = new QStandardItem(QString::number(get_lexicon()->GetSignatureCollection()->get_count()))
+    QStandardItem * prStemItem = new QStandardItem(QString("Protostems"));
 
     QList<QStandardItem*> word_items;
     word_items.append(word_item);
@@ -479,7 +477,6 @@ void MainWindow::createTreeModel()
     QList<QStandardItem*> sig_items;
     sig_items.append(sig_item);
     sig_items.append(sig_count_item);
-
 
     parent->appendRow(word_items);
     parent->appendRow(stem_items);
