@@ -2,7 +2,7 @@
 #include "ui_mainwindow.h"
 #include <QtWidgets>
 #include <QTreeView>
-
+#include <QKeyEvent>
 #include "iostream"
 #include <QStandardItemModel>
 #include <QList>
@@ -72,6 +72,8 @@ MainWindow::MainWindow()
     readSettings();
     qDebug() << "reach 6";
 
+    // By default, we open the last dx1 file that was opened on the previous run. This is probably not a good idea long-term!
+    read_dx1_file();
 
 
 #ifndef QT_NO_SESSIONMANAGER
@@ -88,6 +90,21 @@ MainWindow::MainWindow()
     connect(m_tableView_upper,SIGNAL(clicked(const QModelIndex & )), m_tableView_lower,SLOT(display_this_item(const QModelIndex &  )));
 
  }
+
+
+
+void MainWindow::keyPressEvent(QKeyEvent* ke)
+{
+    if (ke->key() == Qt::Key_S){
+        do_crab();
+    }
+    QMainWindow::keyPressEvent(ke);
+}
+
+
+
+
+
 
 ///////////////////////////////////////
 
@@ -192,26 +209,73 @@ void MainWindow::newFile()
 }
 
 
+
+
+
+
+
 void MainWindow::ask_for_filename()
 {
     qDebug() << " ask for filename" ;
     m_name_of_data_file = QFileDialog::getOpenFileName(this);
-    if (m_name_of_data_file.length() > 0){
-        read_file_do_crab();
-    }
 }
 
+void MainWindow::do_crab()
+{
+    get_lexicon()->Crab_1();
+    load_word_model();
+    load_signature_model();
+    load_affix_model();
+    load_stem_model();
+    createTreeModel();
+
+}
 
 void MainWindow::read_file_do_crab()
 {
         read_dx1_file();
-        get_lexicon()->Crab_1();
-        load_word_model();
-        load_signature_model();
-        load_affix_model();
-        load_stem_model();
-        createTreeModel();
+        do_crab();
+
 }
+
+
+void MainWindow::read_dx1_file()
+    {
+            QFile file(m_name_of_data_file);
+            if (!file.open(QFile::ReadOnly | QFile::Text)) {
+            QMessageBox::warning(this, tr("Application"),
+                                 tr("Cannot read file %1:\n%2.")
+                                 .arg(QDir::toNativeSeparators(m_name_of_data_file), file.errorString()));
+            return;
+            }
+
+            QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
+            settings.setValue("name_of_data_file", m_name_of_data_file );
+            qDebug() << m_name_of_data_file << "Filename saved 2.";
+
+            QTextStream in(&file);
+            CWordCollection * Words = get_lexicon()->GetWordCollection();
+
+    while (!in.atEnd())
+    {
+            QString line = in.readLine();
+            line.simplified(); // get rid of extra spaces
+            QStringList words = line.split(" ");
+            QString word = words[0];
+            CWord* pWord = *Words << word;
+            pWord->SetWordCount(words[1].toInt());
+
+    }
+    Words->sort_word_list();
+
+
+    setCurrentFile(m_name_of_data_file);
+    statusBar()->showMessage(tr("File loaded"), 2000);
+}
+
+
+
+
 bool MainWindow::save()
 {
     if (curFile.isEmpty()) {
@@ -348,6 +412,7 @@ void MainWindow::readSettings()
     QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
 
     m_name_of_data_file = settings.value("name_of_data_file").toString();
+    qDebug() << m_name_of_data_file << "data file retrieved.";
     const QByteArray geometry = settings.value("geometry", QByteArray()).toByteArray();
     if (geometry.isEmpty()) {
         const QRect availableGeometry = QApplication::desktop()->availableGeometry(this);
@@ -363,6 +428,7 @@ void MainWindow::writeSettings()
     QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
     settings.setValue("geometry", saveGeometry());
     settings.setValue("name_of_data_file", m_name_of_data_file );
+    qDebug() << m_name_of_data_file << "Filename saved.";
 }
 bool MainWindow::ask_to_save()
 {
@@ -422,42 +488,6 @@ void MainWindow::createTreeModel()
     parent->appendRow(prStemItem);
 }
 
-void MainWindow::read_dx1_file()
-{
-    QFile file(m_name_of_data_file);
-    if (!file.open(QFile::ReadOnly | QFile::Text)) {
-        QMessageBox::warning(this, tr("Application"),
-                             tr("Cannot read file %1:\n%2.")
-                             .arg(QDir::toNativeSeparators(m_name_of_data_file), file.errorString()));
-        return;
-    }
-
-    QTextStream in(&file);
-#ifndef QT_NO_CURSOR
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-#endif
-
-    CWordCollection * Words = get_lexicon()->GetWordCollection();
-
-    while (!in.atEnd())
-    {
-        QString line = in.readLine();
-        line.simplified(); // get rid of extra spaces
-        QStringList words = line.split(" ");
-        QString word = words[0];
-        CWord* pWord = *Words << word;
-        pWord->SetWordCount(words[1].toInt());
-
-    }
-    Words->sort_word_list();
-
-#ifndef QT_NO_CURSOR
-    QApplication::restoreOverrideCursor();
-#endif
-
-    setCurrentFile(m_name_of_data_file);
-    statusBar()->showMessage(tr("File loaded"), 2000);
-}
 bool MainWindow::saveFile(const QString &fileName)
 {
     QFile file(fileName);

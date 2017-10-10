@@ -121,6 +121,7 @@ protected:
 private slots:
     void newFile();
     void read_file_do_crab();
+    void do_crab();
     bool save();
     bool saveAs();
     void about();
@@ -175,6 +176,10 @@ private:
     //QPlainTextEdit *textEdit;
     //QPlainTextEdit *littleEditor;
     QString curFile;
+
+protected:
+   void keyPressEvent(QKeyEvent *e);
+
 };
 
 
