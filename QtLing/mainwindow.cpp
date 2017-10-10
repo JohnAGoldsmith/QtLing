@@ -512,13 +512,15 @@ void MainWindow::commitData(QSessionManager &manager)
 
 LowerTableView::LowerTableView()
 {
+   m_my_current_model =new  QStandardItemModel();
    m_number_of_columns = 6;
 
 }
 
 LowerTableView::LowerTableView(MainWindow * window)
 {
- m_parent_window = window;
+   m_my_current_model =new  QStandardItemModel();
+   m_parent_window = window;
    m_number_of_columns = 6;
 }
 
@@ -552,6 +554,7 @@ LowerTableView::LowerTableView(MainWindow * window)
 
      else if (component == "signatures"){
 
+         qDebug() << "line 555";
          if (index.isValid()){
              signature = index.data().toString();
          }
@@ -562,9 +565,13 @@ LowerTableView::LowerTableView(MainWindow * window)
         QStandardItem*        p_item;
         QList<QStandardItem*> item_list;
 
-        delete m_my_current_model;
+                 qDebug() << "line 566";
+        if (m_my_current_model) {
+            delete m_my_current_model;
+        }
+                          qDebug() << "line 568";
         m_my_current_model = new QStandardItemModel();
-
+         qDebug() << "line 569";
         foreach (p_Stem, *sig_stems)  {
             p_item = new QStandardItem(p_Stem->get_key() );
             item_list.append(p_item);
@@ -574,6 +581,7 @@ LowerTableView::LowerTableView(MainWindow * window)
                 item_list.clear();
             }
         }
+                 qDebug() << "line 579";
         setModel( m_my_current_model);
     }
 
