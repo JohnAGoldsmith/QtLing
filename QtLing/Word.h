@@ -16,7 +16,8 @@
 #include "Suffix.h"
 #include "Signature.h"
 
-//typedef QPair<CStem,QPair<CSuffix, CSignature>> WordParse;
+
+typedef  QPair<CStem*,CSignature*>* ptr_to_stem_sig_pair;
 struct Parse {
     CStem* p_stem;
     CSuffix* p_suffix;
@@ -30,7 +31,7 @@ protected:
     QString                             m_Word;
     int                                 m_WordCount;
     QList<Parse>                        m_Parses;
-    QList<QPair<CStem*,CSignature*>*>    m_Signatures;
+    QList<ptr_to_stem_sig_pair>         m_Signatures;
 public:
     CWord(QString  Word);
     CWord(CWord&);

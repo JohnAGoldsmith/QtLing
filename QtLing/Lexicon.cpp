@@ -168,16 +168,40 @@ void   CLexicon::AssignSuffixesToStems()
     }
 }
 
-
+typedef  QPair<CStem*,CSignature*>  stem_sig_pair;
+typedef  QPair<stem_sig_pair*,  stem_sig_pair*> pair_of_stem_sig_pairs;
+typedef  QPair<QString, pair_of_stem_sig_pairs*> five_tuple_sig_diffs;
 void CLexicon::ComputeMultiparses()
 {
     CWord* pWord;
     QMap<QString,CWord*>* WordMap = m_Words->GetMap();
     QMapIterator<QString,CWord*> word_iter(*WordMap);
+    const five_tuple_sig_diffs *  five_tuple;
+
     while (word_iter.hasNext())   {
         pWord = word_iter.next().value();
-        if (pWord->GetSignatures()->size() > 2){
-
+        int number_of_signatures = pWord->GetSignatures()->size();
+        if ( number_of_signatures > 2){
+            for (int signo1=0; signo1 < number_of_signatures; signo1++){
+                stem_sig_pair* pair1 =  pWord->GetSignatures()->value(signo1);
+                CStem * stem1       = pair1->first;
+                CSignature* sig1    = pair1->second;
+                for (int signo2=signo1 + 1; signo2 < number_of_signatures; signo2++){
+                    stem_sig_pair * pair2 = pWord->GetSignatures()->at(signo2);
+                    CStem *  stem2       = pair2->first;
+                    CSignature* sig2    = pair2->second;
+                    if ( stem1->get_key().length() > stem2->get_key().length() ){
+                        QString difference = stem1->get_key().left(stem2->get_key().length());
+                        pair_of_stem_sig_pairs * super_pair = new pair_of_stem_sig_pairs (pair1, pair2);
+                        five_tuple = new five_tuple_sig_diffs (difference, super_pair);
+                    } else{
+                        QString difference = stem2->get_key().left(stem1->get_key().length());
+                        pair_of_stem_sig_pairs * super_pair = new pair_of_stem_sig_pairs (pair2, pair1);
+                        five_tuple = new five_tuple_sig_diffs (difference, super_pair);
+                    }
+                    m_Multiparses.append( *five_tuple);
+                }
+            }
         }
 
 

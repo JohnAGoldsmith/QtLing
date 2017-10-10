@@ -13,15 +13,20 @@ class CStemCollection;
 class CSuffixCollection;
 //class CStringSurrogate;
 
+typedef  QPair<CStem*,CSignature*>  stem_sig_pair;
+typedef  QPair<stem_sig_pair*,  stem_sig_pair*> pair_of_stem_sig_pairs;
+typedef  QPair<QString, pair_of_stem_sig_pairs*> five_tuple_sig_diffs;
+
 class CLexicon
 {
 protected:
-    CWordCollection * m_Words;
-    CStemCollection * m_Stems;
-    CSuffixCollection * m_Suffixes;
-    CSignatureCollection * m_Signatures;
-    QList<QPair<QString,QString>> *m_Parses;
-    QMap<QString, int> m_Protostems;
+    CWordCollection *               m_Words;
+    CStemCollection *               m_Stems;
+    CSuffixCollection *             m_Suffixes;
+    CSignatureCollection *          m_Signatures;
+    QList<QPair<QString,QString>> * m_Parses;
+    QMap<QString, int>              m_Protostems;
+    QList<five_tuple_sig_diffs>     m_Multiparses;
 public:
     CLexicon();
 public:

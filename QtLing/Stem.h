@@ -10,7 +10,7 @@
 
 class CSignature;
 
-class CStem : public CParse
+class CStem
 {
 protected:
     QString m_key;

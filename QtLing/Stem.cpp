@@ -1,7 +1,7 @@
 #include "Stem.h"
 #include "Signature.h"
 
-CStem::CStem(QString stem) : CParse(stem), m_key(stem), m_Signatures() {}
+CStem::CStem(QString stem) :  m_key(stem), m_Signatures() {}
 
 CStem::CStem(CStem& stem) {
     m_key = stem.get_key();
