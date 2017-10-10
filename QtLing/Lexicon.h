@@ -11,7 +11,7 @@
 class CWordCollection;
 class CStemCollection;
 class CSuffixCollection;
-//class CStringSurrogate;
+
 
 typedef  QPair<CStem*,CSignature*>  stem_sig_pair;
 typedef  QPair<stem_sig_pair*,  stem_sig_pair*> pair_of_stem_sig_pairs;
@@ -48,6 +48,7 @@ public:
     void CreateStemAffixPairs();
     void AssignSuffixesToStems();
     void ComputeMultiparses();
+    void SortMultiparses(int styleno);
 };
 
 #endif // CLEXICON_H

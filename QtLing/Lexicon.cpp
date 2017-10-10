@@ -12,7 +12,7 @@
 #include "StemCollection.h"
 #include "SuffixCollection.h"
 #include "WordCollection.h"
-//#include "StringSurrogate.h"
+
 #include "Word.h"
 
 CLexicon::CLexicon() : m_Words(new CWordCollection), m_Stems(new CStemCollection), m_Suffixes(new CSuffixCollection), m_Signatures(new CSignatureCollection)
@@ -28,6 +28,8 @@ void CLexicon::Crab_1()
     FindProtostems();
     CreateStemAffixPairs();
     AssignSuffixesToStems();
+    ComputeMultiparses();
+    SortMultiparses(1);
 }
 
 void CLexicon::FindProtostems()
@@ -187,15 +189,15 @@ void CLexicon::ComputeMultiparses()
                 CStem * stem1       = pair1->first;
                 CSignature* sig1    = pair1->second;
                 for (int signo2=signo1 + 1; signo2 < number_of_signatures; signo2++){
-                    stem_sig_pair * pair2 = pWord->GetSignatures()->at(signo2);
+                    stem_sig_pair * pair2 = pWord->GetSignatures()->value(signo2);
                     CStem *  stem2       = pair2->first;
                     CSignature* sig2    = pair2->second;
                     if ( stem1->get_key().length() > stem2->get_key().length() ){
-                        QString difference = stem1->get_key().left(stem2->get_key().length());
+                        QString difference = stem1->get_key().mid(stem2->get_key().length());
                         pair_of_stem_sig_pairs * super_pair = new pair_of_stem_sig_pairs (pair1, pair2);
                         five_tuple = new five_tuple_sig_diffs (difference, super_pair);
                     } else{
-                        QString difference = stem2->get_key().left(stem1->get_key().length());
+                        QString difference = stem2->get_key().mid(stem1->get_key().length());
                         pair_of_stem_sig_pairs * super_pair = new pair_of_stem_sig_pairs (pair2, pair1);
                         five_tuple = new five_tuple_sig_diffs (difference, super_pair);
                     }
@@ -203,15 +205,33 @@ void CLexicon::ComputeMultiparses()
                 }
             }
         }
-
-
-
-
     }
-
-
 }
 
+void CLexicon::SortMultiparses(int styleno){
+
+    const five_tuple_sig_diffs * multiparse;
+    pair_of_stem_sig_pairs * this_pair_of_stem_sig_pairs;
+    stem_sig_pair * stem_sig_pair_1, * stem_sig_pair_2;
+    int mp_no;
+    QString difference;
+    QString stem1, stem2;
+    QString sig1, sig2;
+    if (styleno == 1) {
+    for (mp_no = 0; mp_no < m_Multiparses.size(); mp_no++){
+        multiparse = & m_Multiparses.at(mp_no);
+        difference = multiparse->first;
+        this_pair_of_stem_sig_pairs = multiparse->second;
+        stem_sig_pair_1 = this_pair_of_stem_sig_pairs->first;
+        stem_sig_pair_2 = this_pair_of_stem_sig_pairs->second;
+        stem1 = stem_sig_pair_1->first->get_key();
+        sig1 = stem_sig_pair_1->second->get_key();
+        stem2 = stem_sig_pair_2->first->get_key();
+        sig2 = stem_sig_pair_2->second->get_key();
+        qDebug() << "**" << difference << stem1  << sig1 << stem2<< sig2;
+      }
+    }
+}
 
 
 

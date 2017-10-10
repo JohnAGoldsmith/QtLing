@@ -12,7 +12,7 @@
 
 class CSuffix;
 
-class CSignature : public CParse
+class CSignature
 {
 protected:
     QString m_Signature;
@@ -26,6 +26,7 @@ public:
 public:
     //Accessors
     QString        GetSignature()               const { return m_Signature; }
+    QString         get_key()                   const {return m_Signature;}
     QList<CSuffix*> GetList()                          { return m_Affixes;   }
 
     QList<CSuffix*>::iterator GetBegin()   { return m_Affixes.begin();  }
