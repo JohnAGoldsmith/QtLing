@@ -35,6 +35,11 @@
 #include <QMapIterator>
 
 typedef  QMap<QString,CWord*> StringToWordPtr;
+typedef  QPair<CStem*,CSignature*>  stem_sig_pair;
+typedef  QPair<stem_sig_pair*,  stem_sig_pair*> pair_of_stem_sig_pairs;
+typedef  QPair<QString, pair_of_stem_sig_pairs*> five_tuple_sig_diffs;
+
+
 
 MainWindow::MainWindow()
 {
@@ -46,14 +51,17 @@ MainWindow::MainWindow()
     Word_model      = new QStandardItemModel(1,3);
     Stem_model      = new QStandardItemModel();
     Signature_model = new QStandardItemModel();
+    Raw_Signature_model = new QStandardItemModel();
     Affix_model     = new QStandardItemModel();
-
+    Multiparse_model = new QStandardItemModel();
     qDebug() << "reach 1";
 
     // views
     m_leftTreeView      = new LeftSideTreeView(this);
     m_tableView_upper   = new UpperTableView (this);
     m_tableView_lower   = new LowerTableView (this);
+    m_tableView_upper->setSortingEnabled(true);
+
 
     // set model for tree view
     m_leftTreeView->setModel(m_treeModel);
@@ -137,11 +145,11 @@ void MainWindow::load_word_model()
 void MainWindow::load_stem_model()
 {
     CStem* stem;
-    QMap<QString, CStem*>::iterator iter;
-
-    for (iter = get_lexicon()->GetStemCollection()->GetBegin(); iter != get_lexicon()->GetStemCollection()->GetEnd(); ++iter)
+    QMapIterator<QString, CStem*> * iter;
+    iter = get_lexicon()->GetStemCollection()->get_map_iterator();
+    while (iter->hasNext())
     {
-        stem = iter.value();
+        stem = iter->next().value();
         QStandardItem *item = new QStandardItem(stem->get_key());
         QList<QStandardItem*> item_list;
         item_list.append(item);
@@ -172,11 +180,10 @@ void MainWindow::load_signature_model()
 
     CSignature* sig;
     get_lexicon()->get_signatures()->sort();
-    QList<CSignature*>* pSortedSignatures = get_lexicon()->get_signatures()->GetSortedSignatures();
-    QListIterator<CSignature*> iter(*pSortedSignatures );
-    while (iter.hasNext())
+    QListIterator<CSignature*> * iter = get_lexicon()->get_signatures()->get_sorted_list_iterator();
+    while (iter->hasNext())
     {
-        sig = iter.next();
+        sig = iter->next();
         QList<QStandardItem*> items;
         QStandardItem * item2 = new QStandardItem(QString::number(sig->get_number_of_stems()));
         QStandardItem * item3 = new QStandardItem(QString::number(sig->get_robustness()));
@@ -186,6 +193,113 @@ void MainWindow::load_signature_model()
         Signature_model->appendRow(items);
     }
 }
+void MainWindow::load_multiparse_model()
+{
+
+    CSignature* sig;
+    int multi_num;
+    for (multi_num = 0; multi_num < get_lexicon()->get_multiparses()->size(); multi_num++ )
+    {
+        five_tuple_sig_diffs * this_five_tuple  = get_lexicon()->get_multiparses()->at(multi_num);
+        QList<QStandardItem*> items;
+
+
+        QString difference = this_five_tuple->first;
+
+        QStandardItem * item1 = new QStandardItem (difference);
+        items.append(item1);
+
+        pair_of_stem_sig_pairs * this_pair_of_pairs = this_five_tuple->second;
+        stem_sig_pair * stem_sig_pair_1 = this_pair_of_pairs->first;
+        stem_sig_pair * stem_sig_pair_2 = this_pair_of_pairs->second;
+
+        QStandardItem * item2 = new QStandardItem(stem_sig_pair_1->first->get_key());
+        QStandardItem * item3 = new QStandardItem(stem_sig_pair_1->second->get_key());
+        QStandardItem * item4 = new QStandardItem(stem_sig_pair_2->first->get_key());
+        QStandardItem * item5 = new QStandardItem(stem_sig_pair_2->second->get_key());
+        items.append(item2);
+        items.append(item3);
+        items.append(item4);
+        items.append(item5);
+
+        Multiparse_model->appendRow(items);
+
+    }
+    qDebug() << "finished loading multiparse model.";
+}
+void MainWindow::load_multiparse_edge_model()
+{
+
+    CSignature* sig;
+    int edge_num;
+    for (edge_num = 0; edge_num < get_lexicon()->get_multiparses()->size(); edge_num++ )
+    {
+        five_tuple_sig_diffs * this_five_tuple  = get_lexicon()->get_multiparses()->at(edge_num);
+        QList<QStandardItem*> items;
+
+
+        QString difference = this_five_tuple->first;
+
+        QStandardItem * item1 = new QStandardItem (difference);
+        items.append(item1);
+
+        pair_of_stem_sig_pairs * this_pair_of_pairs = this_five_tuple->second;
+        stem_sig_pair * stem_sig_pair_1 = this_pair_of_pairs->first;
+        stem_sig_pair * stem_sig_pair_2 = this_pair_of_pairs->second;
+
+        QStandardItem * item2 = new QStandardItem(stem_sig_pair_1->first->get_key());
+        QStandardItem * item3 = new QStandardItem(stem_sig_pair_1->second->get_key());
+        QStandardItem * item4 = new QStandardItem(stem_sig_pair_2->first->get_key());
+        QStandardItem * item5 = new QStandardItem(stem_sig_pair_2->second->get_key());
+        items.append(item2);
+        items.append(item3);
+        items.append(item4);
+        items.append(item5);
+
+        Multiparse_model->appendRow(items);
+
+    }
+    qDebug() << "finished loading multiparse model.";
+}
+
+
+void MainWindow::load_raw_signature_model()
+{
+    QList<QStandardItem*> items;
+    int count = 0;
+    CSignature* sig;
+    QString affix;
+    int max_stem_count = 20;
+
+    get_lexicon()->get_raw_signatures()->sort();
+    QListIterator<CSignature*> * iter =get_lexicon()->get_raw_signatures()->get_sorted_list_iterator() ;
+
+    while (iter->hasNext())
+    {   count++;
+        if (count > 10000) {break;}
+        sig = iter->next();
+        if (sig->get_number_of_stems() > max_stem_count) {
+            continue;
+        }
+        //qDebug() << sig->display();
+        QList<QStandardItem*> items;
+        QStringList affixes = sig->display().split("=");
+        foreach (affix, affixes){
+            QStandardItem * item2 = new QStandardItem(affix);
+            items.append(item2);
+        }
+
+
+        //items.append(item2);
+        //items.append(item3);
+        Raw_Signature_model->appendRow(items);
+    }
+}
+
+
+
+
+
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
@@ -227,6 +341,10 @@ void MainWindow::do_crab()
     load_signature_model();
     load_affix_model();
     load_stem_model();
+
+    load_multiparse_model();
+
+    load_raw_signature_model();
     createTreeModel();
 
 }
@@ -259,16 +377,13 @@ void MainWindow::read_dx1_file()
     while (!in.atEnd())
     {
             QString line = in.readLine();
-            line.simplified(); // get rid of extra spaces
+            line = line.simplified(); // get rid of extra spaces
             QStringList words = line.split(" ");
             QString word = words[0];
             CWord* pWord = *Words << word;
             pWord->SetWordCount(words[1].toInt());
-
     }
     Words->sort_word_list();
-
-
     setCurrentFile(m_name_of_data_file);
     statusBar()->showMessage(tr("File loaded"), 2000);
 }
@@ -452,15 +567,30 @@ bool MainWindow::ask_to_save()
 void MainWindow::createTreeModel()
 {
     QStandardItem * parent = m_treeModel->invisibleRootItem();
+
     QStandardItem * word_item = new QStandardItem(QString("Words"));
     QStandardItem * word_count_item = new QStandardItem(QString::number(get_lexicon()->GetWordCollection()->get_count()));
+
     QStandardItem * stem_item = new QStandardItem(QString("Stems"));
     QStandardItem * stem_count_item = new QStandardItem(QString::number(get_lexicon()->GetStemCollection()->get_count()));
+
     QStandardItem * suffix_item = new QStandardItem(QString("Suffixes"));
     QStandardItem * suffix_count_item = new QStandardItem(QString::number(get_lexicon()->GetSuffixCollection()->get_count()));
+
     QStandardItem * sig_item = new QStandardItem(QString("Signatures"));
-    QStandardItem * sig_count_item = new QStandardItem(QString::number(get_lexicon()->GetSignatureCollection()->get_count()))
-    QStandardItem * prStemItem = new QStandardItem(QString("Protostems"));
+    QStandardItem * sig_count_item = new QStandardItem(QString::number(get_lexicon()->GetSignatureCollection()->get_count()));
+
+    QStandardItem * raw_sig_item = new QStandardItem(QString("Raw signatures"));
+    QStandardItem * raw_sig_count_item = new QStandardItem(QString::number(get_lexicon()->get_raw_signatures()->get_count()));
+
+    QStandardItem * proto_stem_item = new QStandardItem(QString("Protostems"));
+    QStandardItem * proto_stem_count_item = new QStandardItem(QString::number(get_lexicon()->get_protostems()->size() ));
+
+    QStandardItem * multiparse_item = new QStandardItem(QString("Multiparses"));
+    QStandardItem * multiparse_count_item = new QStandardItem(QString::number(get_lexicon()->get_multiparses()->size()));
+
+    QStandardItem * multiparse_edge_item = new QStandardItem(QString("Multiparse edges"));
+    QStandardItem * multiparse_edge_count_item = new QStandardItem(QString::number(get_lexicon()->get_multiparse_edges()->size()));
 
     QList<QStandardItem*> word_items;
     word_items.append(word_item);
@@ -478,11 +608,27 @@ void MainWindow::createTreeModel()
     sig_items.append(sig_item);
     sig_items.append(sig_count_item);
 
+    QList<QStandardItem*> raw_sig_items;
+    raw_sig_items.append(raw_sig_item);
+    raw_sig_items.append(raw_sig_count_item);
+
+
+    QList<QStandardItem*> multiparse_items;
+    multiparse_items.append(multiparse_item);
+    multiparse_items.append(multiparse_count_item);
+
+    QList<QStandardItem*> multiparse_edge_items;
+    multiparse_edge_items.append(multiparse_edge_item);
+    multiparse_edge_items.append(multiparse_edge_count_item);
+
     parent->appendRow(word_items);
     parent->appendRow(stem_items);
     parent->appendRow(suffix_items);
     parent->appendRow(sig_items);
-    parent->appendRow(prStemItem);
+    parent->appendRow(multiparse_items);
+    parent->appendRow(multiparse_edge_items);
+    parent->appendRow(raw_sig_items);
+
 }
 
 bool MainWindow::saveFile(const QString &fileName)
@@ -557,7 +703,7 @@ LowerTableView::LowerTableView(MainWindow * window)
      QString component = m_parent_window->m_tableView_upper->get_content();
      QString word, stem, prefix, suffix, signature;
 
-
+     qDebug() << "display this item";
 
      if (component == "words"){
          if (index.isValid()){
@@ -581,7 +727,39 @@ LowerTableView::LowerTableView(MainWindow * window)
 
      else if (component == "signatures"){
 
-         qDebug() << "line 555";
+         qDebug() << "line 555 show this signature";
+         if (index.isValid()){
+             signature = index.data().toString();
+             qDebug() << signature;
+         }
+
+        CSignature*           pSig = m_parent_window->get_lexicon()->get_signatures()->get_signature(signature);
+        CStem*                p_Stem;
+        QList<CStem*>*        sig_stems = pSig->get_stems();
+        QStandardItem*        p_item;
+        QList<QStandardItem*> item_list;
+
+        if (m_my_current_model) {
+            delete m_my_current_model;
+        }
+        m_my_current_model = new QStandardItemModel();
+         qDebug() << "line 569";
+        foreach (p_Stem, *sig_stems)  {
+            p_item = new QStandardItem(p_Stem->get_key() );
+            item_list.append(p_item);
+
+            if (item_list.length() >= m_number_of_columns){
+                m_my_current_model->appendRow(item_list);
+                item_list.clear();
+            }
+        }
+                 qDebug() << "line 579";
+        setModel( m_my_current_model);
+    }
+
+     else if (component == "Raw Signatures"){
+
+         qDebug() << "line 711";
          if (index.isValid()){
              signature = index.data().toString();
          }
@@ -611,6 +789,41 @@ LowerTableView::LowerTableView(MainWindow * window)
                  qDebug() << "line 579";
         setModel( m_my_current_model);
     }
+     else if (component == "multiparses"){
+
+         qDebug() << "line 641";
+         if (index.isValid()){
+             signature = index.data().toString();
+         }
+
+        CSignature*           pSig = m_parent_window->get_lexicon()->get_signatures()->get_signature(signature);
+        CStem*                p_Stem;
+        QList<CStem*>*        sig_stems = pSig->get_stems();
+        QStandardItem*        p_item;
+        QList<QStandardItem*> item_list;
+
+        qDebug() << sig_stems->size(); //at(0)->get_stem();
+                 qDebug() << "line 566";
+        if (m_my_current_model) {
+            delete m_my_current_model;
+        }
+                          qDebug() << "line 568";
+        m_my_current_model = new QStandardItemModel();
+         qDebug() << "line 569";
+        foreach (p_Stem, *sig_stems)  {
+            p_item = new QStandardItem(p_Stem->get_key() );
+            //qDebug() << p_Stem->get_key();
+            item_list.append(p_item);
+
+            if (item_list.length() >= m_number_of_columns){
+                m_my_current_model->appendRow(item_list);
+                item_list.clear();
+            }
+        }
+                 qDebug() << "line 579";
+        setModel( m_my_current_model);
+    }
+
 
 
 
@@ -653,5 +866,14 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         setModel(m_parent_window->Signature_model);
         set_content_type( "signatures");
     }
-
+    else     if (component == "Multiparses"){
+        setModel(m_parent_window->Multiparse_model);
+        set_content_type( "multiparses");
+        sortByColumn(1);
+    }
+    else     if (component == "Raw signatures"){
+        setModel(m_parent_window->Raw_Signature_model);
+        set_content_type( "rawsignatures");
+        sortByColumn(1);
+    }
 }

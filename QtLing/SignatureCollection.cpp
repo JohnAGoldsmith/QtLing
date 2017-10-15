@@ -12,6 +12,16 @@ CSignatureCollection::CSignatureCollection()
     m_SortStyle				= KEY;
 }
 
+QMapIterator<QString, CSignature*> * CSignatureCollection::get_map_iterator()
+{
+    QMapIterator<QString,CSignature*>  * sig_iter = new QMapIterator<QString,CSignature*> (m_SignatureMap);
+    return sig_iter ;
+}
+QListIterator<CSignature*> * CSignatureCollection::get_sorted_list_iterator()
+{
+    QListIterator<CSignature*>  * sig_iter = new QListIterator<CSignature*> (m_SortList);
+    return sig_iter ;
+}
 
 CSignatureCollection::~CSignatureCollection()
 {

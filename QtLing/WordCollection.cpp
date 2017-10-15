@@ -17,6 +17,11 @@ CWordCollection::~CWordCollection()
     if ( m_SortedStringArray.size() > 0 )         {  m_SortedStringArray.empty();  }
 }
 
+QMapIterator<QString,CWord*> *  CWordCollection::get_iterator(){
+    QMapIterator<QString, CWord*> * iter = new QMapIterator<QString,CWord*>(m_WordMap);
+    return iter;
+}
+
 CWord* CWordCollection::get_word(QString word){
     QMap<QString,CWord*>::const_iterator word_iter = m_WordMap.find(word);
     if (word_iter == m_WordMap.end()){

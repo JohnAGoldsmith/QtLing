@@ -49,9 +49,10 @@ public:
     //CWord* GetAt( uint itemno) {return m_WordList.at(itemno);}
     int get_count() const { return m_WordMap.size(); }
 
-    QMap<QString,CWord*>::iterator GetBegin()   { return m_WordMap.begin();  }
-    QMap<QString,CWord*>::iterator GetEnd()     { return m_WordMap.end();    }
-    QMap<QString,CWord*> *         GetList()    { return & m_WordMap;          }
+    QMapIterator<QString,CWord*> *  get_iterator();
+//    QMap<QString,CWord*>::iterator GetBegin()   { return m_WordMap.begin();  }
+//    QMap<QString,CWord*>::iterator GetEnd()     { return m_WordMap.end();    }
+//    QMap<QString,CWord*> *         GetList()    { return & m_WordMap;          }
 
     bool contains(QString string)  {return m_WordMap.contains(string);}
     void sort_word_list();

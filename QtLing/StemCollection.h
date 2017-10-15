@@ -18,7 +18,7 @@ protected:
     QMap<QString  , CStem*> m_StringToStemMap;
     int m_CorpusCount;
     QString m_MemberName;
-    //CStem**                 m_SortArray;
+    QList<CStem*>                 m_SortList;
     bool m_SortValidFlag;
     enum eSortStyle m_SortStyle;
 
@@ -48,9 +48,8 @@ public:
     void add_stem_pointer (CStem* pStem);
 
     
-    QMap<QString,CStem*>::iterator GetBegin()   { return m_StringToStemMap.begin();  }
-    QMap<QString,CStem*>::iterator GetEnd()     { return m_StringToStemMap.end();  }
-    
+    QMapIterator<QString,CStem*> * get_map_iterator();
+    QListIterator<CStem*> * get_sorted_list_iterator();
     
 };
 

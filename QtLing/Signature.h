@@ -15,9 +15,9 @@ class CSuffix;
 class CSignature
 {
 protected:
-    QString m_Signature;
-    QList<CSuffix*> m_Affixes;
-    QList<CStem*> m_Stems;
+    QString             m_Signature;
+    QList<CSuffix*>     m_Affixes;
+    QList<CStem*>       m_Stems;
 
 public:
    // CSignature(CStringSurrogate ssWord);

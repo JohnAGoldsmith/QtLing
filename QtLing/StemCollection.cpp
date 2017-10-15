@@ -1,5 +1,6 @@
 #include "StemCollection.h"
 #include <QDebug>
+#include <QMapIterator>
 #include "Parse.h"
 //#include "Stem.h"
 
@@ -40,6 +41,17 @@ CStem* CStemCollection::GetAtKey( QString stem)
     return m_StringToStemMap[stem];
 }
 
+QMapIterator<QString,CStem*> * CStemCollection::get_map_iterator()
+{
+   QMapIterator<QString,CStem*> * iter = new QMapIterator<QString,CStem*>(m_StringToStemMap);
+   return iter;
+}
+
+QListIterator<CStem*> * CStemCollection::get_sorted_list_iterator()
+{
+    QListIterator<CStem*> * iter = new QListIterator<CStem*>(m_SortList);
+    return iter;
+}
 CStem* CStemCollection::find_or_add(QString stem)
 {
     if (m_StringToStemMap.contains(stem)){
