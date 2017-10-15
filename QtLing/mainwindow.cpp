@@ -54,6 +54,8 @@ MainWindow::MainWindow()
     Raw_Signature_model = new QStandardItemModel();
     Affix_model     = new QStandardItemModel();
     Multiparse_model = new QStandardItemModel();
+    Multiparse_edge_model = new QStandardItemModel();
+
     qDebug() << "reach 1";
 
     // views
@@ -195,8 +197,6 @@ void MainWindow::load_signature_model()
 }
 void MainWindow::load_multiparse_model()
 {
-
-    CSignature* sig;
     int multi_num;
     for (multi_num = 0; multi_num < get_lexicon()->get_multiparses()->size(); multi_num++ )
     {
@@ -230,7 +230,6 @@ void MainWindow::load_multiparse_model()
 void MainWindow::load_multiparse_edge_model()
 {
 
-    CSignature* sig;
     int edge_num;
     for (edge_num = 0; edge_num < get_lexicon()->get_multiparses()->size(); edge_num++ )
     {
@@ -583,8 +582,8 @@ void MainWindow::createTreeModel()
     QStandardItem * raw_sig_item = new QStandardItem(QString("Raw signatures"));
     QStandardItem * raw_sig_count_item = new QStandardItem(QString::number(get_lexicon()->get_raw_signatures()->get_count()));
 
-    QStandardItem * proto_stem_item = new QStandardItem(QString("Protostems"));
-    QStandardItem * proto_stem_count_item = new QStandardItem(QString::number(get_lexicon()->get_protostems()->size() ));
+    //QStandardItem * proto_stem_item = new QStandardItem(QString("Protostems"));
+    //QStandardItem * proto_stem_count_item = new QStandardItem(QString::number(get_lexicon()->get_protostems()->size() ));
 
     QStandardItem * multiparse_item = new QStandardItem(QString("Multiparses"));
     QStandardItem * multiparse_count_item = new QStandardItem(QString::number(get_lexicon()->get_multiparses()->size()));
@@ -869,6 +868,11 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
     else     if (component == "Multiparses"){
         setModel(m_parent_window->Multiparse_model);
         set_content_type( "multiparses");
+        sortByColumn(1);
+    }
+    else     if (component == "Multiparse edges"){
+        setModel(m_parent_window->Multiparse_edge_model);
+        set_content_type( "multiparse_edges");
         sortByColumn(1);
     }
     else     if (component == "Raw signatures"){

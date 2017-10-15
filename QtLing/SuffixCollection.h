@@ -7,9 +7,9 @@
 #include "StringSurrogate.h"
 #include "Suffix.h"
 
-//class CSuffix;
+
 class CLexicon;
-class CParse;
+
 
 class CSuffixCollection
 {

@@ -1,7 +1,6 @@
 #include "SignatureCollection.h"
 #include <QDebug>
-#include "Parse.h"
-//#include "Signature.h"
+
 
 CSignatureCollection::CSignatureCollection()
 {

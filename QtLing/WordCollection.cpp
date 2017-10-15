@@ -1,7 +1,6 @@
 #include "WordCollection.h"
 
 #include <QDebug>
-#include "Parse.h"
 #include "Word.h"
 
 CWordCollection::CWordCollection()

@@ -1,8 +1,6 @@
 #include "StemCollection.h"
 #include <QDebug>
 #include <QMapIterator>
-#include "Parse.h"
-//#include "Stem.h"
 
 CStemCollection::CStemCollection()
 {

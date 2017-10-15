@@ -1,8 +1,6 @@
 #ifndef CWORD_H
 #define CWORD_H
 
-#include "Parse.h"
-//#include "StringSurrogate.h"
 #include <QString>
 #include <QChar>
 #include <QList>

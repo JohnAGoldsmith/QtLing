@@ -4,12 +4,9 @@
 #include <QList>
 #include <iterator>
 #include "generaldefinitions.h"
-//#include "StringSurrogate.h"
 #include "Signature.h"
 
-//class CSignature;
 class CLexicon;
-class CParse;
 
 class CSignatureCollection
 {
