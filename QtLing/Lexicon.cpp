@@ -24,9 +24,13 @@ QListIterator<sig_tree_edge*> * CLexicon::get_sig_tree_edge_list_iter()
 {
     QListIterator<sig_tree_edge*> * iter = new QListIterator<sig_tree_edge*>(m_SigTreeEdgeList);
     return iter;
-
 }
 
+QMapIterator<QString, sig_tree_edge*> * CLexicon::get_sig_tree_edge_map_iter()
+{
+    QMapIterator<QString, sig_tree_edge*> * iter = new QMapIterator<QString, sig_tree_edge*>(m_SigTreeEdgeMap);
+    return iter;
+}
 
 //linguistic methods
 

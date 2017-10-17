@@ -200,7 +200,8 @@ void MainWindow::load_signature_model()
         Signature_model->appendRow(items);
     }
 }
-void MainWindow::load_sig_tree_edge_model()
+/*
+void MainWindow::load_sig_tree_edge_model_deprecated()
 {
     QListIterator<sig_tree_edge*> * sig_tree_edge_iter =  get_lexicon()->get_sig_tree_edge_list_iter();
     while (sig_tree_edge_iter->hasNext())
@@ -223,8 +224,30 @@ void MainWindow::load_sig_tree_edge_model()
 
     qDebug() << "finished loading sig tree edge model.";
 }
+*/
+void MainWindow::load_sig_tree_edge_model()
+{
+    QMapIterator<word_t, sig_tree_edge*> * sig_tree_edge_iter =  get_lexicon()->get_sig_tree_edge_map_iter();
+    while (sig_tree_edge_iter->hasNext())
+     {
+        sig_tree_edge * p_sig_tree_edge = sig_tree_edge_iter->next().value();
+        QList<QStandardItem*> items;
+        QStandardItem * item1 = new QStandardItem (p_sig_tree_edge->morph);
+        items.append(item1);
 
+        QStandardItem * item2 = new QStandardItem(p_sig_tree_edge->sig_1->get_key());
+        QStandardItem * item3 = new QStandardItem(p_sig_tree_edge->sig_2->get_key());
+        QStandardItem * item4 = new QStandardItem(QString::number(p_sig_tree_edge->words.size()));
+        items.append(item2);
+        items.append(item3);
+        items.append(item4);
 
+        SigTreeEdge_model->appendRow(items);
+        qDebug() << p_sig_tree_edge->morph   ;
+    }
+
+    qDebug() << "finished loading sig tree edge model.";
+}
 
 
 void MainWindow::load_raw_signature_model()
@@ -245,17 +268,12 @@ void MainWindow::load_raw_signature_model()
         if (sig->get_number_of_stems() > max_stem_count) {
             continue;
         }
-        //qDebug() << sig->display();
         QList<QStandardItem*> items;
         QStringList affixes = sig->display().split("=");
         foreach (affix, affixes){
             QStandardItem * item2 = new QStandardItem(affix);
             items.append(item2);
         }
-
-
-        //items.append(item2);
-        //items.append(item3);
         Raw_Signature_model->appendRow(items);
     }
 }
@@ -665,18 +683,9 @@ LowerTableView::LowerTableView(MainWindow * window)
          if (index.isValid()){
              word = index.data().toString();
          }
-
-        //CWord*           pWord = m_parent_window->get_lexicon()->get_words()->get_word(word);
-        //CStem*                p_Stem;
-
-        //QStandardItem*        p_item;
         QList<QStandardItem*> item_list;
-
         delete m_my_current_model;
         m_my_current_model = new QStandardItemModel();
-
-
-        // fsetModel( m_my_current_model);
     }
 
 
@@ -726,23 +735,22 @@ LowerTableView::LowerTableView(MainWindow * window)
         QStandardItem*        p_item;
         QList<QStandardItem*> item_list;
 
-                 qDebug() << "line 566";
+        qDebug() << "line 566";
         if (m_my_current_model) {
             delete m_my_current_model;
         }
-                          qDebug() << "line 568";
+        qDebug() << "line 568";
         m_my_current_model = new QStandardItemModel();
          qDebug() << "line 569";
         foreach (p_Stem, *sig_stems)  {
             p_item = new QStandardItem(p_Stem->get_key() );
             item_list.append(p_item);
-
             if (item_list.length() >= m_number_of_columns){
                 m_my_current_model->appendRow(item_list);
                 item_list.clear();
             }
         }
-                 qDebug() << "line 579";
+        qDebug() << "line 579";
         setModel( m_my_current_model);
     }
      else if (UpperView_type == SIGNATURE_TREE_EDGES){

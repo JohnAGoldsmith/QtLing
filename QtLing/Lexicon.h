@@ -77,6 +77,7 @@ public:
     QList<sig_tree_edge*> *                     get_sig_tree_edges()        { return &m_SigTreeEdgeList;}
     QMap<QString, sig_tree_edge*>    *          get_sig_tree_edge_map()     { return & m_SigTreeEdgeMap;}
     QListIterator<sig_tree_edge*>    *          get_sig_tree_edge_list_iter();
+    QMapIterator<QString, sig_tree_edge*> *     get_sig_tree_edge_map_iter();
 
 public:
     // insert functions here
