@@ -84,6 +84,9 @@ MainWindow::MainWindow()
     readSettings();
     qDebug() << "reach 6";
 
+    resize(QDesktopWidget().availableGeometry(this).size() * 0.7);
+    m_mainSplitter->setSizes(QList<int>() << 1000 <<4000);
+
     // By default, we open the last dx1 file that was opened on the previous run. This is probably not a good idea long-term!
     read_dx1_file();
 
