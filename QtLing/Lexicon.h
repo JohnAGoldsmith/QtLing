@@ -13,10 +13,6 @@ class CWordCollection;
 class CStemCollection;
 class CSuffixCollection;
 
-typedef  QString                    sig_string;
-typedef  QPair<CStem*,CSignature*>  stem_sig_pair;
-typedef  QPair<stem_sig_pair*,  stem_sig_pair*> pair_of_stem_sig_pairs;
-typedef  QPair<sig_string, pair_of_stem_sig_pairs*> five_tuple_sig_diffs;
 
 //typedef  QPair<sig_string, CSignature*>                    sig_and_pointer;
 
@@ -56,10 +52,10 @@ protected:
     QList<QPair<QString,QString>> * m_Parses;
     QMap<QString,int>               m_Parse_map;
     QMap<QString, int>              m_Protostems;
-    CSignatureCollection*           m_RawSignatures; // the information we have about stems which we have not yet integrated into a morphological system.
+    CSignatureCollection*           m_RawSignatures;   /*!<  the information we have about stems which we have not yet integrated into a morphological system. */
     QMap<QString,int>               m_RawSuffixes;
-    QList<sig_tree_edge*>           m_SigTreeEdgeList; // the sig_tree_edges in here contain only one word associated with each.
-    QMap<QString, sig_tree_edge*>   m_SigTreeEdgeMap; // the sig_tree_edges in here contain lists of words associated with them
+    QList<sig_tree_edge*>           m_SigTreeEdgeList; /*!< the sig_tree_edges in here contain only one word associated with each. */
+    QMap<QString, sig_tree_edge*>   m_SigTreeEdgeMap;  /*!< the sig_tree_edges in here contain lists of words associated with them. */
 
 
 public:
@@ -68,18 +64,18 @@ public:
     // accessors and protostems
 
 
-    CWordCollection*                            GetWordCollection() { return m_Words; }
-    CStemCollection*                            GetStemCollection() { return m_Stems; }
-    CSuffixCollection*                          GetSuffixCollection() { return m_Suffixes; }
-    CWordCollection *                           get_words() {return m_Words;}
-    CSignatureCollection*                       get_signatures() { return m_Signatures;}
-    CSignatureCollection*                       GetSignatureCollection()     { return m_Signatures; }
-    CSignatureCollection *                      get_raw_signatures() { return m_RawSignatures;}
-    QList<QPair<QString,QString>>*              GetParses() {return m_Parses;}
-    QMap<QString,int>*                          get_protostems() {return &m_Protostems;}
+    CWordCollection*                            GetWordCollection()         { return m_Words; }
+    CStemCollection*                            GetStemCollection()         { return m_Stems; }
+    CSuffixCollection*                          GetSuffixCollection()       { return m_Suffixes; }
+    CWordCollection *                           get_words()                 { return m_Words;}
+    CSignatureCollection*                       get_signatures()            { return m_Signatures;}
+    CSignatureCollection*                       GetSignatureCollection()    { return m_Signatures; }
+    CSignatureCollection *                      get_raw_signatures()        { return m_RawSignatures;}
+    QList<QPair<QString,QString>>*              GetParses()                 { return m_Parses;}
+    QMap<QString,int>*                          get_protostems()            { return &m_Protostems;}
     void                                        compute_sig_tree_edges();
-    QList<sig_tree_edge*> *                     get_sig_tree_edges() { return &m_SigTreeEdgeList;}
-    QMap<QString, sig_tree_edge*>    *          get_sig_tree_edge_map() {return & m_SigTreeEdgeMap;}
+    QList<sig_tree_edge*> *                     get_sig_tree_edges()        { return &m_SigTreeEdgeList;}
+    QMap<QString, sig_tree_edge*>    *          get_sig_tree_edge_map()     { return & m_SigTreeEdgeMap;}
     QListIterator<sig_tree_edge*>    *          get_sig_tree_edge_list_iter();
 
 public:

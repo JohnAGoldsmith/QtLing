@@ -4,7 +4,6 @@
 #include <QList>
 #include <iterator>
 #include "generaldefinitions.h"
-#//include "StringSurrogate.h"
 #include <QMapIterator>
 
 class CWord;

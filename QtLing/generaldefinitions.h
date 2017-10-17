@@ -6,21 +6,6 @@
 class CSignature;
 
 
-//this replaces most of what follows:
-
-//typedef  QPair<CStem*,CSignature*>                  stem_sig_pair;
-//typedef  QPair<stem_sig_pair*,  stem_sig_pair*>     pair_of_stem_sig_pairs;
-//typedef  QPair<morph_t, pair_of_stem_sig_pairs*>    edge_between_signatures; // formerly called: five_tuple_sig_diffs;
-        // much like "labeled_multiparse"; but this one keeps the stems explicitly. The labeled_multiparse drops the specific stems.
-        // That information climbs back in in the "word_plus_labeled_multiparse".
-//typedef  QPair<CSignature*,CSignature*>             pair_of_sigs;
-//typedef  QPair<morph_t, pair_of_sigs*>              labeled_multiparse;
-// A labeled_multiparse begins with a label like "e" or "ing" which shows the edge between two signatures.
-
-//typedef  QPair<word_t,       labeled_multiparse*>   word_plus_labeled_multiparse;
-//typedef  QPair<QList<word_t>,labeled_multiparse*>   full_multiparse;
-// A multiparse contains a list of all the words that contribute to the labeled_multiparse. It contains a labeled_edge_label.
-// It is a collection of "word_plus_multiparse_edgeLabel"s that share a labeled_multiparse.
 
 enum eParseSortStyle
 {
@@ -88,6 +73,8 @@ enum eDocumentType  // for the Collection View
   ROOTS,
   MDL_TYPE,
   SIGNATURES,
+  SIGNATURE_TREE_EDGES,
+  SIGNATURE_RESIDUES,
   PREFIX_SIGNATURES,
   SUFFIX_SIGNATURES,
   PREFIX_SIGNATURE_SUBSET,

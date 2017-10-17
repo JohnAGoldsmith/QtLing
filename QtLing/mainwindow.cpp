@@ -652,12 +652,13 @@ LowerTableView::LowerTableView(MainWindow * window)
 
  void LowerTableView::display_this_item( const  QModelIndex & index )
  {
+     eDocumentType UpperView_type = m_parent_window->m_tableView_upper->get_document_type();
      QString component = m_parent_window->m_tableView_upper->get_content();
      QString word, stem, prefix, suffix, signature;
 
      qDebug() << "display this item";
 
-     if (component == "words"){
+     if (UpperView_type == WORDS){
          if (index.isValid()){
              word = index.data().toString();
          }
@@ -677,7 +678,7 @@ LowerTableView::LowerTableView(MainWindow * window)
 
 
 
-     else if (component == "signatures"){
+     else if (UpperView_type == SIGNATURES){
 
          qDebug() << "line 555 show this signature";
          if (index.isValid()){
@@ -709,7 +710,7 @@ LowerTableView::LowerTableView(MainWindow * window)
         setModel( m_my_current_model);
     }
 
-     else if (component == "Raw Signatures"){
+     else if (UpperView_type == SIGNATURE_RESIDUES){
 
          qDebug() << "line 711";
          if (index.isValid()){
@@ -741,7 +742,7 @@ LowerTableView::LowerTableView(MainWindow * window)
                  qDebug() << "line 579";
         setModel( m_my_current_model);
     }
-     else if (component == "multiparses"){
+     else if (UpperView_type == SIGNATURE_TREE_EDGES){
 
          qDebug() << "line 641";
          if (index.isValid()){
@@ -804,27 +805,33 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
     }
     if (component == "Words"){
         setModel(m_parent_window->Word_model);
+        set_document_type( WORDS );
         set_content_type( "words");
     }
     else     if (component == "Stems"){
         setModel(m_parent_window->Stem_model);
+        set_document_type( STEMS );
         set_content_type( "stems");
     }
     else     if (component == "Suffixes"){
         setModel(m_parent_window->Affix_model);
+        set_document_type( SUFFIXES );
         set_content_type( "suffixes");
     }
     else     if (component == "Signatures"){
         setModel(m_parent_window->Signature_model);
+        set_document_type( SIGNATURES );
         set_content_type( "signatures");
     }
     else     if (component == "Signature tree edges"){
         setModel(m_parent_window->SigTreeEdge_model);
+        set_document_type( SIGNATURE_TREE_EDGES );
         set_content_type( "sigtreeedges");
         sortByColumn(1);
     }
     else     if (component == "Raw signatures"){
         setModel(m_parent_window->Raw_Signature_model);
+        set_document_type( SIGNATURE_RESIDUES );
         set_content_type( "rawsignatures");
         sortByColumn(1);
     }

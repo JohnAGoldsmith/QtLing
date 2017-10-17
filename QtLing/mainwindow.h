@@ -33,16 +33,18 @@ class UpperTableView : public QTableView
 {
     Q_OBJECT
 
-    QString m_content;
-    MainWindow* m_parent_window;
+    QString         m_content;
+    MainWindow*     m_parent_window;
+    eDocumentType   m_document_type;
+
 public:
     UpperTableView ();
     UpperTableView (MainWindow*);
-    QString get_content() {return m_content;}
-    void    set_content_type(QString text) {m_content = text;}
-    MainWindow* get_parent_window() {return m_parent_window;}
-
-
+    QString         get_content()                   {return m_content;}
+    void            set_content_type(QString text)  {m_content = text;}
+    MainWindow*     get_parent_window()             {return m_parent_window;}
+    eDocumentType   get_document_type()             {return m_document_type;}
+    void            set_document_type(eDocumentType type) {m_document_type = type;}
 public slots:
 
     void ShowModelsUpperTableView(const QModelIndex& );

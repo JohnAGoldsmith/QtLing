@@ -13,15 +13,6 @@
 #include "WordCollection.h"
 #include "Word.h"
 
-//typedef  QPair<QString, CSignature*>                    sig_and_pointer;
-//typedef  QPair<CSignature*, CSignature*>                pair_of_sigs;
-//typedef  QPair<QString, pair_of_sigs*>                  multiparse_edge_label;
-//typedef  QPair<word_list, labeled_multiparse*>        multiparse;
-
-
-
-
-
 CLexicon::CLexicon() : m_Words(new CWordCollection), m_Stems(new CStemCollection), m_Suffixes(new CSuffixCollection), m_Signatures(new CSignatureCollection)
 {
     m_Parses = new QList<QPair<QString,QString>>();
@@ -65,7 +56,6 @@ void CLexicon::FindProtostems()
         }
         DifferenceFoundFlag = false;
         int end = qMin(word.length(), previous_word.length());
-        
         for (int i=0; i <end; i++){
             if (previous_word[i] != word[i]){
                 stem = previous_word.left(i);
@@ -77,8 +67,7 @@ void CLexicon::FindProtostems()
                 break;
             }
         }
-        if (DifferenceFoundFlag == true)
-        {
+        if (DifferenceFoundFlag == true){
             previous_word = word;
             continue;
         }
@@ -219,16 +208,19 @@ void CLexicon::replace_parse_pairs_from_current_signature_structure(bool FindSuf
 
 
 
-
+/*!
+ * We can build a graph whose nodes are the signatures, where an edge connects
+ * any pair of signatures if there exists a word that they both analyze.
+ * A sig_tree_edge has two flavors: this function uses the flavor that
+ * contains the two signatures, the word, and the string-difference between
+ * the stems of the word at the two signatures.
+ */
 void CLexicon::compute_sig_tree_edges()
 {
     CWord* pWord;
     map_string_to_word * WordMap = m_Words->GetMap();
     QMapIterator<QString,CWord*> word_iter(*WordMap);
-    //edge_between_signatures  *  this_edge;
     sig_tree_edge * p_SigTreeEdge;
-
-    int tempcount = 0;
 
     while (word_iter.hasNext())   {
         pWord = word_iter.next().value();
@@ -250,25 +242,18 @@ void CLexicon::compute_sig_tree_edges()
                         p_SigTreeEdge =  new sig_tree_edge (sig2,sig1,difference, pWord->get_key());
                     }
                     m_SigTreeEdgeList.append(p_SigTreeEdge);
-                    tempcount ++;
-                    qDebug() << p_SigTreeEdge->morph << p_SigTreeEdge->sig_1->get_key();
                 }
             }
         }
     }
-    qDebug() << "Sig tree edge count"<<tempcount;
 }
 
-
-
-
-
-
-
-
-
-
-
+/*!
+ * This function takes the SigTreeEdge list, and makes a smaller list composed of
+ * SigTreeEdges which share the same signature pair and string-difference. This
+ * flavor of sig_tree_edge contains a list of all the words that participate in
+ * this particular sig_tree_edge.
+ */
 void CLexicon::compute_sig_tree_edge_map() {
 
 morph_t         edge_label;

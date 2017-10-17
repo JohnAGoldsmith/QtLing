@@ -1,15 +1,13 @@
 #ifndef CSUFFIX_H
 #define CSUFFIX_H
 
-#include "Parse.h"
-//#include "StringSurrogate.h"
 #include <QString>
 #include <QChar>
 #include <QList>
 #include <QMap>
 #include "generaldefinitions.h"
 
-class CSuffix : public CParse
+class CSuffix
 {
 protected:
     QString m_key;
