@@ -13,18 +13,14 @@
 #include "WordCollection.h"
 #include "Word.h"
 
-typedef QSet<QString>             morph_set;
-typedef QSet<QString>             stem_set;
-typedef QMap<QString, morph_set*> map_sig_to_morph_set;
-typedef QMap<QString, CWord*>     map_string_to_word;
-typedef QMap<QString, CSignature*> map_string_to_sig;
-typedef QMapIterator<QString, CWord*> map_string_to_word_iter;
-typedef QList<QString>            word_list;
-
 //typedef  QPair<QString, CSignature*>                    sig_and_pointer;
-typedef  QPair<CSignature*, CSignature*>                pair_of_sigs;
-typedef  QPair<QString, pair_of_sigs*>                  multiparse_edge_label;
-typedef  QPair<word_list,multiparse_edge_label*>        multiparse;
+//typedef  QPair<CSignature*, CSignature*>                pair_of_sigs;
+//typedef  QPair<QString, pair_of_sigs*>                  multiparse_edge_label;
+//typedef  QPair<word_list, labeled_multiparse*>        multiparse;
+
+
+
+
 
 CLexicon::CLexicon() : m_Words(new CWordCollection), m_Stems(new CStemCollection), m_Suffixes(new CSuffixCollection), m_Signatures(new CSignatureCollection)
 {
@@ -32,6 +28,14 @@ CLexicon::CLexicon() : m_Words(new CWordCollection), m_Stems(new CStemCollection
     m_Protostems = QMap<QString, int>();
     m_RawSignatures =  new CSignatureCollection();
 }
+
+QListIterator<sig_tree_edge*> * CLexicon::get_sig_tree_edge_list_iter()
+{
+    QListIterator<sig_tree_edge*> * iter = new QListIterator<sig_tree_edge*>(m_SigTreeEdgeList);
+    return iter;
+
+}
+
 
 //linguistic methods
 
@@ -41,8 +45,8 @@ void CLexicon::Crab_1()
     CreateStemAffixPairs();
     AssignSuffixesToStems();
     qDebug() << "finished making signatures.";
-    ComputeMultiparses();
-    SortMultiparses(1);
+    compute_sig_tree_edges();
+    compute_sig_tree_edge_map();
     qDebug() << "finished sorting multiparses";
 }
 
@@ -211,18 +215,19 @@ void CLexicon::replace_parse_pairs_from_current_signature_structure(bool FindSuf
     }
 }
 
-//
-//          Compute Multiparses
 
-typedef  QPair<CStem*,CSignature*>  stem_sig_pair;
-typedef  QPair<stem_sig_pair*,  stem_sig_pair*> pair_of_stem_sig_pairs;
-typedef  QPair<QString, pair_of_stem_sig_pairs*> five_tuple_sig_diffs;
-void CLexicon::ComputeMultiparses()
+
+
+
+
+void CLexicon::compute_sig_tree_edges()
 {
     CWord* pWord;
     map_string_to_word * WordMap = m_Words->GetMap();
     QMapIterator<QString,CWord*> word_iter(*WordMap);
-    five_tuple_sig_diffs *  five_tuple;
+    //edge_between_signatures  *  this_edge;
+    sig_tree_edge * p_SigTreeEdge;
+
     int tempcount = 0;
 
     while (word_iter.hasNext())   {
@@ -238,67 +243,61 @@ void CLexicon::ComputeMultiparses()
                     CStem *  stem2       = pair2->first;
                     CSignature* sig2    = pair2->second;
                     if ( stem1->get_key().length() > stem2->get_key().length() ){
-                        QString difference = stem1->get_key().mid(stem2->get_key().length());
-                        pair_of_stem_sig_pairs * super_pair = new pair_of_stem_sig_pairs (pair1, pair2);
-                        five_tuple = new five_tuple_sig_diffs (difference, super_pair);
+                        morph_t difference = stem1->get_key().mid(stem2->get_key().length());
+                        p_SigTreeEdge = new sig_tree_edge (sig1,sig2,difference, pWord->get_key());
                     } else{
-                        QString difference = stem2->get_key().mid(stem1->get_key().length());
-                        pair_of_stem_sig_pairs * super_pair = new pair_of_stem_sig_pairs (pair2, pair1);
-                        five_tuple = new five_tuple_sig_diffs (difference, super_pair);
+                        morph_t difference = stem2->get_key().mid(stem1->get_key().length());
+                        p_SigTreeEdge =  new sig_tree_edge (sig2,sig1,difference, pWord->get_key());
                     }
-                    m_Multiparses.append( five_tuple);
+                    m_SigTreeEdgeList.append(p_SigTreeEdge);
                     tempcount ++;
+                    qDebug() << p_SigTreeEdge->morph << p_SigTreeEdge->sig_1->get_key();
                 }
             }
         }
     }
- //qDebug() << "multiparse count"<<tempcount;
+    qDebug() << "Sig tree edge count"<<tempcount;
 }
 
-void CLexicon::SortMultiparses(int styleno){
 
-    const five_tuple_sig_diffs * this_multiparse;
-    pair_of_stem_sig_pairs * this_pair_of_stem_sig_pairs;
-    stem_sig_pair * stem_sig_pair_1, * stem_sig_pair_2;
-    int mp_no;
-    QString difference;
-    QString stem1, stem2;
-    CSignature* sig1, *sig2;
-    QString sig_string1, sig_string2;
-    if (styleno == 1) {
 
-    for (mp_no = 0; mp_no < m_Multiparses.size(); mp_no++){
-        this_multiparse =  m_Multiparses.at(mp_no);
-        difference = this_multiparse->first;
-        this_pair_of_stem_sig_pairs = this_multiparse->second;
-        stem_sig_pair_1 = this_pair_of_stem_sig_pairs->first;
-        stem_sig_pair_2 = this_pair_of_stem_sig_pairs->second;
-        stem1 = stem_sig_pair_1->first->get_key();
-        sig1 = stem_sig_pair_1->second;
-        sig_string1 = sig1->get_key();
-        stem2 = stem_sig_pair_2->first->get_key();
-        sig2 = stem_sig_pair_2->second;
-        sig_string2 = sig2->get_key();
-        pair_of_sigs * this_pair_of_sigs = new pair_of_sigs(sig1,sig2);
-        multiparse_edge_label * this_multiparse_edge_label = new multiparse_edge_label (difference,this_pair_of_sigs);
-        QString abbreviation = difference + QString("/") + sig1->display() + QString( "/")  + sig2->display();
-        if (! m_Multiparse_edges.contains(abbreviation)) {
-            m_Multiparse_edges[abbreviation] = this_multiparse_edge_label;
-        }
-      }
+
+
+
+
+
+
+
+
+void CLexicon::compute_sig_tree_edge_map() {
+
+morph_t         edge_label;
+word_t          this_word;
+sig_tree_edge * p_sig_tree_edge,
+              * p_sig_tree_edge_2,
+              * p_sig_tree_edge_3;
+QMap<QString, sig_tree_edge*> * p_EdgeMap = & m_SigTreeEdgeMap;
+
+QListIterator<sig_tree_edge*> sig_tree_edge_iter (m_SigTreeEdgeList);
+while (sig_tree_edge_iter.hasNext())
+{
+    p_sig_tree_edge = sig_tree_edge_iter.next();
+    edge_label = p_sig_tree_edge->morph;
+    this_word  = p_sig_tree_edge->word;
+    if (p_EdgeMap->contains(edge_label)){
+        p_sig_tree_edge_3 = p_EdgeMap->value(edge_label);
+        p_sig_tree_edge_3->words.append(this_word);
+    } else {
+        sig_tree_edge * p_sig_tree_edge_2 = new sig_tree_edge(
+            p_sig_tree_edge->sig_1,
+            p_sig_tree_edge->sig_2,
+            p_sig_tree_edge->morph
+           );
+        p_sig_tree_edge_2->words.append(this_word);
+        p_EdgeMap->insert(edge_label, p_sig_tree_edge_2);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
+}
 
 
 

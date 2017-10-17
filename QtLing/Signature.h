@@ -1,7 +1,7 @@
 #ifndef CSIGNATURE_H
 #define CSIGNATURE_H
 
-#include "Parse.h"
+//#include "Parse.h"
 //#include "StringSurrogate.h"
 #include "Stem.h"
 #include <QString>
@@ -11,6 +11,8 @@
 #include "generaldefinitions.h"
 
 class CSuffix;
+class CStem;
+
 
 class CSignature
 {

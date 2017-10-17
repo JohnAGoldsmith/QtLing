@@ -4,7 +4,7 @@
 #include <QList>
 #include <iterator>
 #include "generaldefinitions.h"
-#include "StringSurrogate.h"
+//#include "StringSurrogate.h"
 #include "Suffix.h"
 
 

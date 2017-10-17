@@ -1,4 +1,4 @@
-#include "StringFunc.h"
+//#include "StringFunc.h"
 
 
 #include <QString>

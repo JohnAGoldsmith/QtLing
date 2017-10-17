@@ -32,11 +32,11 @@ private:
 
 public:
     friend class CLexicon;
-    CSignature*                 operator<< ( CParse* );
+//    CSignature*                 operator<< ( CParse* );
 //    CSignature*               operator<< ( CStringSurrogate );
     CSignature*                 operator<< ( QString );
     void                        operator<< ( CSignature* );
-    CSignature*                 operator^= ( CParse* );
+//    CSignature*                 operator^= ( CParse* );
  //   CSignature* operator^= ( CStringSurrogate );
     CSignature*                 operator^= ( QString );
     CSignature*                 find_or_add ( QString); // same as operatorˆ=

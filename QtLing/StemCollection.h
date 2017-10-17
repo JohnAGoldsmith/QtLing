@@ -9,7 +9,7 @@
 
 //class CStem;
 class CLexicon;
-class CParse;
+//class CParse;
 
 class CStemCollection
 {
@@ -33,10 +33,10 @@ private:
     CStemCollection& operator=(const CStemCollection& x);
 
 public:
-    CStem* operator<< ( CParse* );
+//    CStem* operator<< ( CParse* );
 //    CStem* operator<< ( CStringSurrogate );
     CStem* operator<< ( QString );
-    CStem* operator^= ( CParse* );
+//    CStem* operator^= ( CParse* );
 //    CStem* operator^= ( CStringSurrogate );
     CStem* operator^= ( QString );
     CStem* find_or_add (QString);  // same as ˆ=

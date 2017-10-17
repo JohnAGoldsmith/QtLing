@@ -39,6 +39,7 @@ public:
     int                     GetWordCount() const { return m_WordCount; }
     void                    SetWordCount(int count) { m_WordCount = count;}
     QString                 GetWord()      const { return m_Word; }
+    QString                 get_key() {return m_Word;}
 
     QList<Parse>                            GetParses()    const { return m_Parses; }
     QList<QPair<CStem*,CSignature*>*> *      GetSignatures ()   {return &m_Signatures;}

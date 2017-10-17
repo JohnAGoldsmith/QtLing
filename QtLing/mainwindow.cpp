@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "generaldefinitions.h"
 #include "ui_mainwindow.h"
 #include <QtWidgets>
 #include <QTreeView>
@@ -24,7 +25,7 @@
 #include <QString>
 #include <QDebug>
 #include <QPair>
-
+#include <QMapIterator>
 #include <QDir>
 
 #include <QSplitter>
@@ -32,7 +33,7 @@
 #include <QTreeView>
 #include <QStandardItemModel>
 #include <QStandardItem>
-#include <QMapIterator>
+
 
 typedef  QMap<QString,CWord*> StringToWordPtr;
 typedef  QPair<CStem*,CSignature*>  stem_sig_pair;
@@ -53,8 +54,9 @@ MainWindow::MainWindow()
     Signature_model = new QStandardItemModel();
     Raw_Signature_model = new QStandardItemModel();
     Affix_model     = new QStandardItemModel();
-    Multiparse_model = new QStandardItemModel();
-    Multiparse_edge_model = new QStandardItemModel();
+    //Multiparse_model = new QStandardItemModel();
+    //Multiparse_edge_model = new QStandardItemModel();
+    SigTreeEdge_model = new QStandardItemModel();
 
     qDebug() << "reach 1";
 
@@ -195,71 +197,31 @@ void MainWindow::load_signature_model()
         Signature_model->appendRow(items);
     }
 }
-void MainWindow::load_multiparse_model()
+void MainWindow::load_sig_tree_edge_model()
 {
-    int multi_num;
-    for (multi_num = 0; multi_num < get_lexicon()->get_multiparses()->size(); multi_num++ )
-    {
-        five_tuple_sig_diffs * this_five_tuple  = get_lexicon()->get_multiparses()->at(multi_num);
+    QListIterator<sig_tree_edge*> * sig_tree_edge_iter =  get_lexicon()->get_sig_tree_edge_list_iter();
+    while (sig_tree_edge_iter->hasNext())
+     {
+        sig_tree_edge * p_sig_tree_edge = sig_tree_edge_iter->next();
         QList<QStandardItem*> items;
-
-
-        QString difference = this_five_tuple->first;
-
-        QStandardItem * item1 = new QStandardItem (difference);
+        QStandardItem * item1 = new QStandardItem (p_sig_tree_edge->morph);
         items.append(item1);
 
-        pair_of_stem_sig_pairs * this_pair_of_pairs = this_five_tuple->second;
-        stem_sig_pair * stem_sig_pair_1 = this_pair_of_pairs->first;
-        stem_sig_pair * stem_sig_pair_2 = this_pair_of_pairs->second;
-
-        QStandardItem * item2 = new QStandardItem(stem_sig_pair_1->first->get_key());
-        QStandardItem * item3 = new QStandardItem(stem_sig_pair_1->second->get_key());
-        QStandardItem * item4 = new QStandardItem(stem_sig_pair_2->first->get_key());
-        QStandardItem * item5 = new QStandardItem(stem_sig_pair_2->second->get_key());
+        QStandardItem * item2 = new QStandardItem(p_sig_tree_edge->sig_1->get_key());
+        QStandardItem * item3 = new QStandardItem(p_sig_tree_edge->sig_2->get_key());
+        QStandardItem * item4 = new QStandardItem(p_sig_tree_edge->word);
         items.append(item2);
         items.append(item3);
         items.append(item4);
-        items.append(item5);
 
-        Multiparse_model->appendRow(items);
-
+        SigTreeEdge_model->appendRow(items);
+        qDebug() << p_sig_tree_edge->morph<<  p_sig_tree_edge->sig_1->get_key()  << p_sig_tree_edge->word;
     }
-    qDebug() << "finished loading multiparse model.";
+
+    qDebug() << "finished loading sig tree edge model.";
 }
-void MainWindow::load_multiparse_edge_model()
-{
-
-    int edge_num;
-    for (edge_num = 0; edge_num < get_lexicon()->get_multiparses()->size(); edge_num++ )
-    {
-        five_tuple_sig_diffs * this_five_tuple  = get_lexicon()->get_multiparses()->at(edge_num);
-        QList<QStandardItem*> items;
 
 
-        QString difference = this_five_tuple->first;
-
-        QStandardItem * item1 = new QStandardItem (difference);
-        items.append(item1);
-
-        pair_of_stem_sig_pairs * this_pair_of_pairs = this_five_tuple->second;
-        stem_sig_pair * stem_sig_pair_1 = this_pair_of_pairs->first;
-        stem_sig_pair * stem_sig_pair_2 = this_pair_of_pairs->second;
-
-        QStandardItem * item2 = new QStandardItem(stem_sig_pair_1->first->get_key());
-        QStandardItem * item3 = new QStandardItem(stem_sig_pair_1->second->get_key());
-        QStandardItem * item4 = new QStandardItem(stem_sig_pair_2->first->get_key());
-        QStandardItem * item5 = new QStandardItem(stem_sig_pair_2->second->get_key());
-        items.append(item2);
-        items.append(item3);
-        items.append(item4);
-        items.append(item5);
-
-        Multiparse_model->appendRow(items);
-
-    }
-    qDebug() << "finished loading multiparse model.";
-}
 
 
 void MainWindow::load_raw_signature_model()
@@ -340,9 +302,7 @@ void MainWindow::do_crab()
     load_signature_model();
     load_affix_model();
     load_stem_model();
-
-    load_multiparse_model();
-
+    load_sig_tree_edge_model();
     load_raw_signature_model();
     createTreeModel();
 
@@ -585,11 +545,9 @@ void MainWindow::createTreeModel()
     //QStandardItem * proto_stem_item = new QStandardItem(QString("Protostems"));
     //QStandardItem * proto_stem_count_item = new QStandardItem(QString::number(get_lexicon()->get_protostems()->size() ));
 
-    QStandardItem * multiparse_item = new QStandardItem(QString("Multiparses"));
-    QStandardItem * multiparse_count_item = new QStandardItem(QString::number(get_lexicon()->get_multiparses()->size()));
+    QStandardItem * sig_tree_edge_item = new QStandardItem(QString("Signature tree edges"));
+    QStandardItem * sig_tree_edge_count_item = new QStandardItem(QString::number(get_lexicon()->get_sig_tree_edge_map()->size()));
 
-    QStandardItem * multiparse_edge_item = new QStandardItem(QString("Multiparse edges"));
-    QStandardItem * multiparse_edge_count_item = new QStandardItem(QString::number(get_lexicon()->get_multiparse_edges()->size()));
 
     QList<QStandardItem*> word_items;
     word_items.append(word_item);
@@ -612,20 +570,15 @@ void MainWindow::createTreeModel()
     raw_sig_items.append(raw_sig_count_item);
 
 
-    QList<QStandardItem*> multiparse_items;
-    multiparse_items.append(multiparse_item);
-    multiparse_items.append(multiparse_count_item);
-
-    QList<QStandardItem*> multiparse_edge_items;
-    multiparse_edge_items.append(multiparse_edge_item);
-    multiparse_edge_items.append(multiparse_edge_count_item);
+    QList<QStandardItem*> sig_tree_edge_items;
+    sig_tree_edge_items.append(sig_tree_edge_item);
+    sig_tree_edge_items.append(sig_tree_edge_count_item);
 
     parent->appendRow(word_items);
     parent->appendRow(stem_items);
     parent->appendRow(suffix_items);
     parent->appendRow(sig_items);
-    parent->appendRow(multiparse_items);
-    parent->appendRow(multiparse_edge_items);
+    parent->appendRow(sig_tree_edge_items);
     parent->appendRow(raw_sig_items);
 
 }
@@ -709,10 +662,10 @@ LowerTableView::LowerTableView(MainWindow * window)
              word = index.data().toString();
          }
 
-        CWord*           pWord = m_parent_window->get_lexicon()->get_words()->get_word(word);
-        CStem*                p_Stem;
+        //CWord*           pWord = m_parent_window->get_lexicon()->get_words()->get_word(word);
+        //CStem*                p_Stem;
 
-        QStandardItem*        p_item;
+        //QStandardItem*        p_item;
         QList<QStandardItem*> item_list;
 
         delete m_my_current_model;
@@ -865,14 +818,9 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         setModel(m_parent_window->Signature_model);
         set_content_type( "signatures");
     }
-    else     if (component == "Multiparses"){
-        setModel(m_parent_window->Multiparse_model);
-        set_content_type( "multiparses");
-        sortByColumn(1);
-    }
-    else     if (component == "Multiparse edges"){
-        setModel(m_parent_window->Multiparse_edge_model);
-        set_content_type( "multiparse_edges");
+    else     if (component == "Signature tree edges"){
+        setModel(m_parent_window->SigTreeEdge_model);
+        set_content_type( "sigtreeedges");
         sortByColumn(1);
     }
     else     if (component == "Raw signatures"){

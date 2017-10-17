@@ -7,6 +7,7 @@
 #include <QList>
 #include <QPair>
 #include "SignatureCollection.h"
+#include "Typedefs.h"
 
 class CWordCollection;
 class CStemCollection;
@@ -18,9 +19,33 @@ typedef  QPair<stem_sig_pair*,  stem_sig_pair*> pair_of_stem_sig_pairs;
 typedef  QPair<sig_string, pair_of_stem_sig_pairs*> five_tuple_sig_diffs;
 
 //typedef  QPair<sig_string, CSignature*>                    sig_and_pointer;
-typedef  QPair<CSignature*,CSignature*>      pair_of_sigs;
-typedef  QPair<QString, pair_of_sigs*>                  multiparse_edge_label;
-typedef  QPair<QList<QString>,multiparse_edge_label*>   multiparse;
+
+
+class sig_tree_edge{
+public:
+    CSignature* sig_1;
+    CSignature* sig_2;
+    morph_t     morph;
+    word_t      word;
+    QList<word_t> words;
+    sig_tree_edge();
+    sig_tree_edge(CSignature* sig1, CSignature* sig2,morph_t m,word_t w)
+    {
+        sig_1 = sig1;
+        sig_2 = sig2;
+        morph = m;
+        word = w;
+    };
+    sig_tree_edge(CSignature* sig1, CSignature* sig2,morph_t m)
+    {
+        sig_1 = sig1;
+        sig_2 = sig2;
+        morph = m;
+    };
+    QString label() {return morph + "/" + sig_1->get_key() + "/" + sig_2->get_key(); }
+};
+
+
 class CLexicon
 {
 protected:
@@ -33,8 +58,9 @@ protected:
     QMap<QString, int>              m_Protostems;
     CSignatureCollection*           m_RawSignatures; // the information we have about stems which we have not yet integrated into a morphological system.
     QMap<QString,int>               m_RawSuffixes;
-    QList<five_tuple_sig_diffs*>     m_Multiparses;
-    QMap <QString, multiparse_edge_label*>    m_Multiparse_edges; // a map from an "abbreviatioN" of the sigs and edge to the multiparse itself.
+    QList<sig_tree_edge*>           m_SigTreeEdgeList; // the sig_tree_edges in here contain only one word associated with each.
+    QMap<QString, sig_tree_edge*>   m_SigTreeEdgeMap; // the sig_tree_edges in here contain lists of words associated with them
+
 
 public:
     CLexicon();
@@ -51,19 +77,20 @@ public:
     CSignatureCollection *                      get_raw_signatures() { return m_RawSignatures;}
     QList<QPair<QString,QString>>*              GetParses() {return m_Parses;}
     QMap<QString,int>*                          get_protostems() {return &m_Protostems;}
-    QList<five_tuple_sig_diffs*>*               get_multiparses() {return &m_Multiparses;}
-    QMap <QString, multiparse_edge_label*> *    get_multiparse_edges() {return & m_Multiparse_edges;}
-    void                                        add_multiparse_edges(multiparse*);
+    void                                        compute_sig_tree_edges();
+    QList<sig_tree_edge*> *                     get_sig_tree_edges() { return &m_SigTreeEdgeList;}
+    QMap<QString, sig_tree_edge*>    *          get_sig_tree_edge_map() {return & m_SigTreeEdgeMap;}
+    QListIterator<sig_tree_edge*>    *          get_sig_tree_edge_list_iter();
+
 public:
     // insert functions here
     void Crab_1();
     void FindProtostems();
     void CreateStemAffixPairs();
     void AssignSuffixesToStems();
-    void ComputeMultiparses();
+    void compute_sig_tree_edge_map();
     void find_good_signatures_inside_raw_signature(bool FindSuffixesFlag);
     void replace_parse_pairs_from_current_signature_structure(bool FindSuffixesFlag);
-    void SortMultiparses(int styleno);
 
 };
 

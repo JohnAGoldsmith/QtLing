@@ -1,7 +1,7 @@
 #ifndef CSTEM_H
 #define CSTEM_H
 
-#include "Parse.h"
+//#include "Parse.h"
 #include <QString>
 #include <QChar>
 #include <QList>
