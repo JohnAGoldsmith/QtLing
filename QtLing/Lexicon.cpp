@@ -271,7 +271,7 @@ QListIterator<sig_tree_edge*> sig_tree_edge_iter (m_SigTreeEdgeList);
 while (sig_tree_edge_iter.hasNext())
 {
     p_sig_tree_edge = sig_tree_edge_iter.next();
-    edge_label = p_sig_tree_edge->morph;
+    edge_label = p_sig_tree_edge->label();
     this_word  = p_sig_tree_edge->word;
     if (p_EdgeMap->contains(edge_label)){
         p_sig_tree_edge_3 = p_EdgeMap->value(edge_label);
@@ -282,8 +282,9 @@ while (sig_tree_edge_iter.hasNext())
             p_sig_tree_edge->sig_2,
             p_sig_tree_edge->morph
            );
+        //p_sig_tree_edge_2->label = edge_label;
         p_sig_tree_edge_2->words.append(this_word);
-        p_EdgeMap->insert(edge_label, p_sig_tree_edge_2);
+        p_EdgeMap->insert(p_sig_tree_edge_2->label(), p_sig_tree_edge_2);
     }
 }
 }

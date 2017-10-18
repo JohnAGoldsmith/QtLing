@@ -39,6 +39,7 @@ public:
         morph = m;
     };
     QString label() {return morph + "/" + sig_1->get_key() + "/" + sig_2->get_key(); }
+
 };
 
 
