@@ -40,6 +40,19 @@ typedef  QPair<CStem*,CSignature*>  stem_sig_pair;
 typedef  QPair<stem_sig_pair*,  stem_sig_pair*> pair_of_stem_sig_pairs;
 typedef  QPair<QString, pair_of_stem_sig_pairs*> five_tuple_sig_diffs;
 
+LxaStandardItemModel::LxaStandardItemModel()
+{
+
+};
+void LxaStandardItemModel::sort(int column_no, Qt::SortOrder order)
+{
+    if (column_no == 4){
+
+    }
+    else{
+        QStandardItemModel::sort(column_no);
+    }
+}
 
 
 MainWindow::MainWindow()
@@ -69,7 +82,7 @@ MainWindow::MainWindow()
 
     // set model for tree view
     m_leftTreeView->setModel(m_treeModel);
-    m_leftTreeView->resizeColumnsToContents();
+
 
     // layout
     m_mainSplitter = new QSplitter();
@@ -226,8 +239,14 @@ void MainWindow::load_sig_tree_edge_model_deprecated()
     qDebug() << "finished loading sig tree edge model.";
 }
 */
+struct{
+    bool operator ()(sig_tree_edge* a, sig_tree_edge* b) const {
+     return a->words.size() - b->words.size();
+    }
+}custom_compare;
 void MainWindow::load_sig_tree_edge_model()
 {
+
     QMapIterator<word_t, sig_tree_edge*> * sig_tree_edge_iter =  get_lexicon()->get_sig_tree_edge_map_iter();
     while (sig_tree_edge_iter->hasNext())
      {
@@ -244,8 +263,6 @@ void MainWindow::load_sig_tree_edge_model()
         items.append(item3);
         items.append(item4);
         items.append(item5);
-
-
 
         SigTreeEdge_model->appendRow(items);
         qDebug() << p_sig_tree_edge->morph   ;

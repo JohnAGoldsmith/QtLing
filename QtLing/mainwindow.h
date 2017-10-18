@@ -7,6 +7,8 @@
 #include <QList>
 #include <QObject>
 #include <QTreeView>
+#include <QStandardItemModel>
+#include <QAbstractItemModel>
 #include "Lexicon.h"
 
 QT_BEGIN_NAMESPACE
@@ -27,16 +29,23 @@ class QTreeView;
 class MainWindow;
 QT_END_NAMESPACE
 
+class LxaStandardItemModel: public QStandardItemModel
+{
+    Q_OBJECT
+public:
+    LxaStandardItemModel();
+    void sort(int column_no, Qt::SortOrder);
+};
+
+
 
 
 class UpperTableView : public QTableView
 {
     Q_OBJECT
-
     QString         m_content;
     MainWindow*     m_parent_window;
     eDocumentType   m_document_type;
-
 public:
     UpperTableView ();
     UpperTableView (MainWindow*);
@@ -46,20 +55,15 @@ public:
     eDocumentType   get_document_type()             {return m_document_type;}
     void            set_document_type(eDocumentType type) {m_document_type = type;}
 public slots:
-
     void ShowModelsUpperTableView(const QModelIndex& );
-
     signals:
     void please_display_this_signature(QString sig);
-
-
 };
 
 
 class LowerTableView : public QTableView
 {
     Q_OBJECT
-
     MainWindow* m_parent_window;
     int     m_number_of_columns;
     QStandardItemModel* m_my_current_model;
@@ -69,15 +73,8 @@ public:
     LowerTableView(MainWindow*);
     CLexicon * p_lexicon;
     MainWindow* get_parent_window() {return m_parent_window;}
-
-   // void set_parent(MainWindow* window) {m_parent_window = window;}
     void change_current_model(QStandardItemModel*);
-
-
 public slots:
-
-
-
         void display_this_item(const QModelIndex&);
         int  get_number_of_columns () {return m_number_of_columns;}
 signals:
@@ -167,7 +164,6 @@ private:
     UpperTableView *    m_tableView_upper;
     LowerTableView *    m_tableView_lower;
     LeftSideTreeView *  m_leftTreeView;
-//    QTreeView *         treeView;
 
     QStandardItemModel * m_treeModel;
     QStandardItemModel * Word_model;
@@ -176,14 +172,10 @@ private:
     QStandardItemModel * Raw_Signature_model;
     QStandardItemModel * Affix_model;
     QStandardItemModel * Protostem_model;
-    //QStandardItemModel * Multiparse_model;
-    //QStandardItemModel * Multiparse_edge_model;
     QStandardItemModel * SigTreeEdge_model;
 
     QGroupBox *horizontalGroupBox;
     QGroupBox *verticalGroupBox;
-    //QPlainTextEdit *textEdit;
-    //QPlainTextEdit *littleEditor;
     QString curFile;
 
 protected:
