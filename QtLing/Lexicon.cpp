@@ -156,7 +156,10 @@ void   CLexicon::AssignSuffixesToStems()
             QListIterator<QString> affix_iter(affixes_set);
             while(affix_iter.hasNext()){
                   affix = affix_iter.next();
-                  m_Suffixes->find_or_add(affix);                   
+                  qDebug() << "159"<< affix;
+                  CSuffix* pSuffix = m_Suffixes->find_or_add(affix);
+                  pSuffix->increment_count();
+                  qDebug() << "161"<< pSuffix->get_key() << pSuffix->get_count();
             }
             pSig = *m_Signatures<< signature_string;
             foreach (stem, *iter_sigstring_to_stems.value()){

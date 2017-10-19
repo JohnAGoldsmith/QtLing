@@ -15,6 +15,7 @@ class CStem
 protected:
     QString m_key;
     QList<QString> m_Signatures;
+    int             m_count;
 public:
     CStem (QString);
     CStem(CStem&);
@@ -30,6 +31,8 @@ public:
     QList<QString>::iterator GetEnd()     { return m_Signatures.end();  }
     
     QString display();
+    int                 get_count() {return m_count;}
+    void                set_count (int n) {m_count = n;}
 };
 
 #endif // CSTEM_H

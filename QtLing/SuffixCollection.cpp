@@ -20,11 +20,12 @@ CSuffix* CSuffixCollection::operator <<(QString suffix)
 CSuffix* CSuffixCollection::find_or_add(QString suffix)
 {
 
-    QMap<QString,CSuffix*>::const_iterator suffix_iter = m_SuffixMap.find(suffix);
+    QMap<QString,CSuffix*>::iterator suffix_iter = m_SuffixMap.find(suffix);
 
     if (suffix_iter == m_SuffixMap.end()){
       CSuffix* pSuffix = new CSuffix(suffix);
       m_SuffixMap.insert(suffix, pSuffix);
+      return pSuffix;
     }
     return suffix_iter.value();
 }

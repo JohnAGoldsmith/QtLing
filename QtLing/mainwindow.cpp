@@ -67,8 +67,6 @@ MainWindow::MainWindow()
     Signature_model = new QStandardItemModel();
     Raw_Signature_model = new QStandardItemModel();
     Affix_model     = new QStandardItemModel();
-    //Multiparse_model = new QStandardItemModel();
-    //Multiparse_edge_model = new QStandardItemModel();
     SigTreeEdge_model = new QStandardItemModel();
 
     qDebug() << "reach 1";
@@ -82,7 +80,8 @@ MainWindow::MainWindow()
 
     // set model for tree view
     m_leftTreeView->setModel(m_treeModel);
-
+    m_leftTreeView->setColumnWidth(1,100);
+    m_leftTreeView->setColumnWidth(0,500);
 
     // layout
     m_mainSplitter = new QSplitter();
@@ -190,8 +189,11 @@ void MainWindow::load_affix_model()
     {
         CSuffix* pSuffix = suffix_iter.next().value();
         QStandardItem *item = new QStandardItem(pSuffix->GetSuffix());
+        QStandardItem *item2 = new QStandardItem(QString::number(pSuffix->get_count()));
         QList<QStandardItem*> item_list;
         item_list.append(item);
+        item_list.append(item2);
+        qDebug() << "196"<< pSuffix->get_key()<< pSuffix->get_count();
         Affix_model->appendRow(item_list);
     }
 }
@@ -261,8 +263,6 @@ void MainWindow::load_sig_tree_edge_model()
         QList<QStandardItem*> items;
         QStandardItem * item1 = new QStandardItem (p_sig_tree_edge->morph);
         items.append(item1);
-        qDebug() << "266 " << p_sig_tree_edge->label() << p_sig_tree_edge->words.size();
-
 
         QStandardItem * item2 = new QStandardItem(p_sig_tree_edge->sig_1->get_key());
         QStandardItem * item3 = new QStandardItem(p_sig_tree_edge->sig_2->get_key());
@@ -708,7 +708,7 @@ LowerTableView::LowerTableView(MainWindow * window)
      QString component = m_parent_window->m_tableView_upper->get_content();
      QString word, stem, prefix, suffix, signature;
      CLexicon * this_lexicon = get_parent_window()->get_lexicon();
-
+     int row;
      qDebug() << "display this item";
 
      if (UpperView_type == WORDS){
@@ -761,8 +761,9 @@ LowerTableView::LowerTableView(MainWindow * window)
      //  ---------------------------------------------------//
         qDebug() << "line 711";
         if (index.isValid()){
-             signature = index.data().toString();
+             row = index.row();
         }
+
 
         CSignature*           pSig = this_lexicon->get_signatures()->get_signature(signature);
         CStem*                p_Stem;
@@ -770,7 +771,7 @@ LowerTableView::LowerTableView(MainWindow * window)
         QStandardItem*        p_item;
         QList<QStandardItem*> item_list;
 
-        qDebug() << "line 566";
+        qDebug() << "line 566; signature: " << signature;
         if (m_my_current_model) {
             delete m_my_current_model;
         }
@@ -791,18 +792,14 @@ LowerTableView::LowerTableView(MainWindow * window)
      //  ---------------------------------------------------//
      else if (UpperView_type == SIGNATURE_TREE_EDGES){
      //  ---------------------------------------------------//
-     int row;
+
      QList<QString> * word_list;
-         qDebug() << "line 641";
      if (index.isValid()){
          row = index.row();
-         qDebug() << "row" << row;
      } else{return;}
 
      QString label = index.sibling(row,4).data().toString();
      sig_tree_edge * p_sig_tree_edge =this_lexicon->get_sig_tree_edge_map()->value(label);
-     qDebug() <<label<<  p_sig_tree_edge->label();
-     qDebug() <<  p_sig_tree_edge->words.join("=") ;
      word_list = & p_sig_tree_edge->words;
 
      QList<QStandardItem*> item_list;
@@ -835,6 +832,7 @@ LowerTableView::LowerTableView(MainWindow * window)
  LeftSideTreeView::LeftSideTreeView(MainWindow* window)
  {
      m_parent_window = window;
+
 
 
  }
