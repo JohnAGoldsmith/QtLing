@@ -579,6 +579,9 @@ void MainWindow::createTreeModel()
 {
     QStandardItem * parent = m_treeModel->invisibleRootItem();
 
+    QStandardItem * lexicon_item = new QStandardItem(QString("Lexicon"));
+    QStandardItem * lexicon_count_item = new QStandardItem(QString("1"));
+
     QStandardItem * word_item = new QStandardItem(QString("Words"));
     QStandardItem * word_count_item = new QStandardItem(QString::number(get_lexicon()->GetWordCollection()->get_count()));
 
@@ -600,6 +603,10 @@ void MainWindow::createTreeModel()
     QStandardItem * sig_tree_edge_item = new QStandardItem(QString("Signature tree edges"));
     QStandardItem * sig_tree_edge_count_item = new QStandardItem(QString::number(get_lexicon()->get_sig_tree_edge_map()->size()));
 
+
+    QList<QStandardItem*> lexicon_items;
+    lexicon_items.append(lexicon_item);
+    lexicon_items.append(lexicon_count_item);
 
     QList<QStandardItem*> word_items;
     word_items.append(word_item);
@@ -626,12 +633,14 @@ void MainWindow::createTreeModel()
     sig_tree_edge_items.append(sig_tree_edge_item);
     sig_tree_edge_items.append(sig_tree_edge_count_item);
 
-    parent->appendRow(word_items);
-    parent->appendRow(stem_items);
-    parent->appendRow(suffix_items);
-    parent->appendRow(sig_items);
-    parent->appendRow(sig_tree_edge_items);
-    parent->appendRow(raw_sig_items);
+    parent->appendRow(lexicon_items);
+
+    lexicon_item->appendRow(word_items);
+    lexicon_item->appendRow(stem_items);
+    lexicon_item->appendRow(suffix_items);
+    lexicon_item->appendRow(sig_items);
+    lexicon_item->appendRow(sig_tree_edge_items);
+    lexicon_item->appendRow(raw_sig_items);
 
 }
 
