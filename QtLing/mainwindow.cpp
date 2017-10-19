@@ -233,7 +233,7 @@ void MainWindow::load_sig_tree_edge_model_deprecated()
         items.append(item4);
 
         SigTreeEdge_model->appendRow(items);
-        qDebug() << p_sig_tree_edge->morph<<  p_sig_tree_edge->sig_1->get_key()  << p_sig_tree_edge->word;
+        qDebug() << p_sig_tree_edge->morph<<  p_sig_tree_edge->sig_1->get_key()  << p_v->word;
     }
 
     qDebug() << "finished loading sig tree edge model.";
@@ -241,19 +241,28 @@ void MainWindow::load_sig_tree_edge_model_deprecated()
 */
 struct{
     bool operator ()(sig_tree_edge* a, sig_tree_edge* b) const {
-     return a->words.size() - b->words.size();
+    // qDebug() << a->words.size() << b->words.size();
+    //qDebug() << "244" << a->words.size() << a->words.first() << b->words.size() ;
+     return a->words.size() > b->words.size();
     }
 }custom_compare;
 void MainWindow::load_sig_tree_edge_model()
-{
-
-    QMapIterator<word_t, sig_tree_edge*> * sig_tree_edge_iter =  get_lexicon()->get_sig_tree_edge_map_iter();
-    while (sig_tree_edge_iter->hasNext())
+{   QList<sig_tree_edge*>               temp_list;
+    QMapIterator<word_t, sig_tree_edge*> * this_sig_tree_edge_iter = new QMapIterator<word_t, sig_tree_edge*>(* get_lexicon()->get_sig_tree_edge_map());
+    while (this_sig_tree_edge_iter->hasNext())    {
+        this_sig_tree_edge_iter->next();
+        temp_list.append(this_sig_tree_edge_iter->value());
+    }
+    std::sort( temp_list.begin(),  temp_list.end(), custom_compare);
+    QListIterator<sig_tree_edge*> temp_list_iter (temp_list);
+    while (temp_list_iter.hasNext())
      {
-        sig_tree_edge * p_sig_tree_edge = sig_tree_edge_iter->next().value();
+        sig_tree_edge * p_sig_tree_edge = temp_list_iter.next();
         QList<QStandardItem*> items;
         QStandardItem * item1 = new QStandardItem (p_sig_tree_edge->morph);
         items.append(item1);
+        qDebug() << "266 " << p_sig_tree_edge->label() << p_sig_tree_edge->words.size();
+
 
         QStandardItem * item2 = new QStandardItem(p_sig_tree_edge->sig_1->get_key());
         QStandardItem * item3 = new QStandardItem(p_sig_tree_edge->sig_2->get_key());
@@ -265,7 +274,7 @@ void MainWindow::load_sig_tree_edge_model()
         items.append(item5);
 
         SigTreeEdge_model->appendRow(items);
-        qDebug() << p_sig_tree_edge->morph   ;
+
     }
 
     qDebug() << "finished loading sig tree edge model.";
@@ -866,7 +875,8 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         setModel(m_parent_window->SigTreeEdge_model);
         set_document_type( SIGNATURE_TREE_EDGES );
         set_content_type( "sigtreeedges");
-        sortByColumn(1);
+        qDebug() << "line 876 we got here";
+        sortByColumn(-1);
     }
     else     if (component == "Raw signatures"){
         setModel(m_parent_window->Raw_Signature_model);

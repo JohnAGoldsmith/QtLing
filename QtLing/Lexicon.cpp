@@ -282,7 +282,6 @@ while (sig_tree_edge_iter.hasNext())
             p_sig_tree_edge->sig_2,
             p_sig_tree_edge->morph
            );
-        //p_sig_tree_edge_2->label = edge_label;
         p_sig_tree_edge_2->words.append(this_word);
         p_EdgeMap->insert(p_sig_tree_edge_2->label(), p_sig_tree_edge_2);
     }
