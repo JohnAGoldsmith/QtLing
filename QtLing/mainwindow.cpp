@@ -617,6 +617,7 @@ void MainWindow::createTreeModel()
     lexicon_item->appendRow(sig_tree_edge_items);
     lexicon_item->appendRow(residual_sig_items);
 
+
 }
 
 bool MainWindow::saveFile(const QString &fileName)
