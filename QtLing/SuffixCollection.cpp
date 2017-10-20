@@ -35,3 +35,7 @@ CSuffix* CSuffixCollection::operator ^=(QString suffix)
 {
     return this->find_or_add(suffix);
 }
+
+void CSuffixCollection::get_set_of_suffixes(QSet<QString> *p_string_set){
+    p_string_set->fromList(m_SuffixMap.uniqueKeys());
+}

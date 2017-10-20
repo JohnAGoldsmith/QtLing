@@ -193,7 +193,6 @@ void MainWindow::load_affix_model()
         QList<QStandardItem*> item_list;
         item_list.append(item);
         item_list.append(item2);
-        qDebug() << "196"<< pSuffix->get_key()<< pSuffix->get_count();
         Affix_model->appendRow(item_list);
     }
 }
@@ -216,35 +215,9 @@ void MainWindow::load_signature_model()
         Signature_model->appendRow(items);
     }
 }
-/*
-void MainWindow::load_sig_tree_edge_model_deprecated()
-{
-    QListIterator<sig_tree_edge*> * sig_tree_edge_iter =  get_lexicon()->get_sig_tree_edge_list_iter();
-    while (sig_tree_edge_iter->hasNext())
-     {
-        sig_tree_edge * p_sig_tree_edge = sig_tree_edge_iter->next();
-        QList<QStandardItem*> items;
-        QStandardItem * item1 = new QStandardItem (p_sig_tree_edge->morph);
-        items.append(item1);
 
-        QStandardItem * item2 = new QStandardItem(p_sig_tree_edge->sig_1->get_key());
-        QStandardItem * item3 = new QStandardItem(p_sig_tree_edge->sig_2->get_key());
-        QStandardItem * item4 = new QStandardItem(p_sig_tree_edge->word);
-        items.append(item2);
-        items.append(item3);
-        items.append(item4);
-
-        SigTreeEdge_model->appendRow(items);
-        qDebug() << p_sig_tree_edge->morph<<  p_sig_tree_edge->sig_1->get_key()  << p_v->word;
-    }
-
-    qDebug() << "finished loading sig tree edge model.";
-}
-*/
 struct{
     bool operator ()(sig_tree_edge* a, sig_tree_edge* b) const {
-    // qDebug() << a->words.size() << b->words.size();
-    //qDebug() << "244" << a->words.size() << a->words.first() << b->words.size() ;
      return a->words.size() > b->words.size();
     }
 }custom_compare;
@@ -289,8 +262,8 @@ void MainWindow::load_raw_signature_model()
     QString affix;
     int max_stem_count = 20;
 
-    get_lexicon()->get_raw_signatures()->sort();
-    QListIterator<CSignature*> * iter =get_lexicon()->get_raw_signatures()->get_sorted_list_iterator() ;
+    get_lexicon()->get_residual_signatures()->sort();
+    QListIterator<CSignature*> * iter =get_lexicon()->get_residual_signatures()->get_sorted_list_iterator() ;
 
     while (iter->hasNext())
     {   count++;
@@ -392,7 +365,9 @@ void MainWindow::read_dx1_file()
             QStringList words = line.split(" ");
             QString word = words[0];
             CWord* pWord = *Words << word;
+            if (words.size()> 1) {
             pWord->SetWordCount(words[1].toInt());
+            }
     }
     Words->sort_word_list();
     setCurrentFile(m_name_of_data_file);
@@ -579,6 +554,9 @@ void MainWindow::createTreeModel()
 {
     QStandardItem * parent = m_treeModel->invisibleRootItem();
 
+    QStandardItem * lexicon_item = new QStandardItem(QString("Lexicon"));
+    QStandardItem * lexicon_count_item = new QStandardItem(QString("1"));
+
     QStandardItem * word_item = new QStandardItem(QString("Words"));
     QStandardItem * word_count_item = new QStandardItem(QString::number(get_lexicon()->GetWordCollection()->get_count()));
 
@@ -591,8 +569,8 @@ void MainWindow::createTreeModel()
     QStandardItem * sig_item = new QStandardItem(QString("Signatures"));
     QStandardItem * sig_count_item = new QStandardItem(QString::number(get_lexicon()->GetSignatureCollection()->get_count()));
 
-    QStandardItem * raw_sig_item = new QStandardItem(QString("Raw signatures"));
-    QStandardItem * raw_sig_count_item = new QStandardItem(QString::number(get_lexicon()->get_raw_signatures()->get_count()));
+    QStandardItem * residual_sig_item = new QStandardItem(QString("Raw signatures"));
+    QStandardItem * residual_sig_count_item = new QStandardItem(QString::number(get_lexicon()->get_residual_signatures()->get_count()));
 
     //QStandardItem * proto_stem_item = new QStandardItem(QString("Protostems"));
     //QStandardItem * proto_stem_count_item = new QStandardItem(QString::number(get_lexicon()->get_protostems()->size() ));
@@ -600,6 +578,10 @@ void MainWindow::createTreeModel()
     QStandardItem * sig_tree_edge_item = new QStandardItem(QString("Signature tree edges"));
     QStandardItem * sig_tree_edge_count_item = new QStandardItem(QString::number(get_lexicon()->get_sig_tree_edge_map()->size()));
 
+
+    QList<QStandardItem*> lexicon_items;
+    lexicon_items.append(lexicon_item);
+    lexicon_items.append(lexicon_count_item);
 
     QList<QStandardItem*> word_items;
     word_items.append(word_item);
@@ -617,21 +599,23 @@ void MainWindow::createTreeModel()
     sig_items.append(sig_item);
     sig_items.append(sig_count_item);
 
-    QList<QStandardItem*> raw_sig_items;
-    raw_sig_items.append(raw_sig_item);
-    raw_sig_items.append(raw_sig_count_item);
+    QList<QStandardItem*> residual_sig_items;
+    residual_sig_items.append(residual_sig_item);
+    residual_sig_items.append(residual_sig_count_item);
 
 
     QList<QStandardItem*> sig_tree_edge_items;
     sig_tree_edge_items.append(sig_tree_edge_item);
     sig_tree_edge_items.append(sig_tree_edge_count_item);
 
-    parent->appendRow(word_items);
-    parent->appendRow(stem_items);
-    parent->appendRow(suffix_items);
-    parent->appendRow(sig_items);
-    parent->appendRow(sig_tree_edge_items);
-    parent->appendRow(raw_sig_items);
+    parent->appendRow(lexicon_items);
+
+    lexicon_item->appendRow(word_items);
+    lexicon_item->appendRow(stem_items);
+    lexicon_item->appendRow(suffix_items);
+    lexicon_item->appendRow(sig_items);
+    lexicon_item->appendRow(sig_tree_edge_items);
+    lexicon_item->appendRow(residual_sig_items);
 
 }
 
@@ -710,8 +694,9 @@ LowerTableView::LowerTableView(MainWindow * window)
      CLexicon * this_lexicon = get_parent_window()->get_lexicon();
      int row;
      qDebug() << "display this item";
-
+//  ---------------------------------------------------//
      if (UpperView_type == WORDS){
+//  ---------------------------------------------------//
          if (index.isValid()){
              word = index.data().toString();
          }
@@ -721,8 +706,9 @@ LowerTableView::LowerTableView(MainWindow * window)
     }
 
 
-
+     //  ---------------------------------------------------//
      else if (UpperView_type == SIGNATURES){
+     //  ---------------------------------------------------//
 
          qDebug() << "line 555 show this signature";
          if (index.isValid()){

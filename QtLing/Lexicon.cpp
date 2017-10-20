@@ -17,7 +17,8 @@ CLexicon::CLexicon() : m_Words(new CWordCollection), m_Stems(new CStemCollection
 {
     m_Parses = new QList<QPair<QString,QString>>();
     m_Protostems = QMap<QString, int>();
-    m_RawSignatures =  new CSignatureCollection();
+    m_ResidualSignatures =  new CSignatureCollection();
+    m_ResidualStems = new CStemCollection();
 }
 
 QListIterator<sig_tree_edge*> * CLexicon::get_sig_tree_edge_list_iter()
@@ -39,7 +40,9 @@ void CLexicon::Crab_1()
     FindProtostems();
     CreateStemAffixPairs();
     AssignSuffixesToStems();
+    PurifyResidualSignatures();
     qDebug() << "finished making signatures.";
+    //find_good_signatures_inside_raw_signature(true);
     compute_sig_tree_edges();
     compute_sig_tree_edge_map();
     qDebug() << "finished sorting multiparses";
@@ -105,16 +108,20 @@ void CLexicon::CreateStemAffixPairs()
         }
     }
 }
+
+/*!
+ * This is the third of the three initial parts of finding signatures.
+ * This creates signatures, which in turn creates stems and affixes.
+ */
 void   CLexicon::AssignSuffixesToStems()
-{
-    const int MINIMUM_NUMBER_OF_STEMS = 2;
+{   const int MINIMUM_NUMBER_OF_STEMS = 2;
+
     QPair<QString,QString> this_pair;
     CSignature* pSig;
     QString stem, affix, signature_string, word;;
     CStem* pStem;
     map_sig_to_morph_set  temp_stems_to_affixes;
     map_sig_to_morph_set  temp_signatures_to_stems;
-
     for (int parseno = 0; parseno < m_Parses->size(); parseno++){
         this_pair = m_Parses->at(parseno);
         stem = this_pair.first;
@@ -143,9 +150,7 @@ void   CLexicon::AssignSuffixesToStems()
          }
          temp_signatures_to_stems.value(sig_string)->insert(stem);
     }
-
     // create signatures, stems, affixes:
-
     QMapIterator<QString, morph_set*> iter_sigstring_to_stems ( temp_signatures_to_stems);
     while (iter_sigstring_to_stems.hasNext())
     {
@@ -156,10 +161,8 @@ void   CLexicon::AssignSuffixesToStems()
             QListIterator<QString> affix_iter(affixes_set);
             while(affix_iter.hasNext()){
                   affix = affix_iter.next();
-                  qDebug() << "159"<< affix;
                   CSuffix* pSuffix = m_Suffixes->find_or_add(affix);
                   pSuffix->increment_count();
-                  qDebug() << "161"<< pSuffix->get_key() << pSuffix->get_count();
             }
             pSig = *m_Signatures<< signature_string;
             foreach (stem, *iter_sigstring_to_stems.value()){
@@ -167,7 +170,6 @@ void   CLexicon::AssignSuffixesToStems()
                 pStem->add_signature (signature_string);
                 pSig->add_stem_pointer(pStem);
                 QStringList affixes = signature_string.split("=");
-
                 foreach (QString affix,  affixes){
                     if (affix == "NULL"){
                         word = stem;
@@ -180,14 +182,54 @@ void   CLexicon::AssignSuffixesToStems()
             }
         }else{
             signature_string =  iter_sigstring_to_stems.key();
-            *m_RawSignatures << signature_string;
-            // We have not done anything with the individual affixes or stems yet.
+            pSig =  *m_ResidualSignatures << signature_string;
+            pStem = *m_ResidualStems << stem;
+            pSig->add_stem_pointer(pStem);
         }
     }
 }
 
-void CLexicon::find_good_signatures_inside_raw_signature(bool FindSuffixesFlag){
 
+
+/*!
+ * We look inside the ResidualSignatures, and extract only the approved suffixes inside them.
+ */
+void   CLexicon::PurifyResidualSignatures()
+{
+    QSet<QString> true_suffix_set;
+    m_Suffixes->get_set_of_suffixes(& true_suffix_set);
+    QMapIterator<QString, CSignature*> * sig_iter =  m_ResidualSignatures->get_map_iterator();
+    while (sig_iter->hasNext()){
+        sig_iter->next();
+        CSignature* pSig = sig_iter->value();
+        QSet<QString> suffix_set;
+        pSig->get_string_set_of_suffixes(suffix_set);
+        suffix_set.intersect(true_suffix_set);
+        QList<QString> temp_suffix_list;
+        temp_suffix_list.fromSet(suffix_set);
+        qDebug() << temp_suffix_list.join("=");
+    }
+
+
+}
+
+
+/*!
+ *  This function looks at all the non-signatures that were rejected
+ *  because they were associated with only one stem. For each one, it
+ *  looks for the broadest signature that occurs inside it, and assigns
+ *  its stem to that signature.
+ */
+
+struct{
+    bool operator ()(CSignature* pSig_a, CSignature* pSig_b) const {
+    // qDebug() << a->words.size() << b->words.size();
+    //qDebug() << "244" << a->words.size() << a->words.first() << b->words.size() ;
+    // return pSig_a->number_of_true_suffixes() > pSig_b->number_of_true_suffixes();
+    }
+}custom_compare_residual_sig;
+
+void CLexicon::find_good_signatures_inside_raw_signature(bool FindSuffixesFlag){
 
 
 }
@@ -195,8 +237,12 @@ void CLexicon::find_good_signatures_inside_raw_signature(bool FindSuffixesFlag){
 
 
 
+/*!
+ * Replace parse pairs from current signature structure. This allows us to
+ * delete the old signature structure, and replace them with the set of
+ * parse-pairs that exactly describe the current signature structure.
+ */
 
-// Replace parse pairs from current signature structure. This allows us to delete the old signature structure, and replace them with the set of parse-pairs that exactly descreibe the current signature structure
 void CLexicon::replace_parse_pairs_from_current_signature_structure(bool FindSuffixesFlag) {
     m_Parses->clear();
     m_Parse_map.clear();

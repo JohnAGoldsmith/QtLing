@@ -51,3 +51,19 @@ int CSignature::get_robustness()
     robustness = stem_letters + suffix_letters;
     return robustness;
 }
+
+/*
+int CSignature::number_of_true_suffixes()
+{   CSuffixCollection* my_suffixes = get_signatures()->get_lexicon()->get_suffixes();
+    QListIterator<CSuffix*> suffix_iter_1(* get_suffixes(my_suffixes));
+    QMapIterator<QString,CSuffix*> suffix_iter_2();
+
+    int suffix_count = 0;
+    while (suffix_iter_1.hasNext()){
+        suffix_iter_1.next();
+        suffix_iter_2 = my_suffixes->contains(suffix_iter_1.get_key());
+
+    }
+
+}
+*/

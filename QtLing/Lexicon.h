@@ -53,7 +53,8 @@ protected:
     QList<QPair<QString,QString>> * m_Parses;
     QMap<QString,int>               m_Parse_map;
     QMap<QString, int>              m_Protostems;
-    CSignatureCollection*           m_RawSignatures;   /*!<  the information we have about stems which we have not yet integrated into a morphological system. */
+    CSignatureCollection*           m_ResidualSignatures;   /*!<  the information we have about stems which we have not yet integrated into a morphological system. */
+    CStemCollection *               m_ResidualStems;
     QMap<QString,int>               m_RawSuffixes;
     QList<sig_tree_edge*>           m_SigTreeEdgeList; /*!< the sig_tree_edges in here contain only one word associated with each. */
     QMap<QString, sig_tree_edge*>   m_SigTreeEdgeMap;  /*!< the sig_tree_edges in here contain lists of words associated with them. */
@@ -71,7 +72,7 @@ public:
     CWordCollection *                           get_words()                 { return m_Words;}
     CSignatureCollection*                       get_signatures()            { return m_Signatures;}
     CSignatureCollection*                       GetSignatureCollection()    { return m_Signatures; }
-    CSignatureCollection *                      get_raw_signatures()        { return m_RawSignatures;}
+    CSignatureCollection *                      get_residual_signatures()   { return m_ResidualSignatures;}
     QList<QPair<QString,QString>>*              GetParses()                 { return m_Parses;}
     QMap<QString,int>*                          get_protostems()            { return &m_Protostems;}
     void                                        compute_sig_tree_edges();
@@ -86,9 +87,10 @@ public:
     void FindProtostems();
     void CreateStemAffixPairs();
     void AssignSuffixesToStems();
+    void PurifyResidualSignatures();
     void compute_sig_tree_edge_map();
     void find_good_signatures_inside_raw_signature(bool FindSuffixesFlag);
-    void replace_parse_pairs_from_current_signature_structure(bool FindSuffixesFlag);
+    void replace_parse_pairs_from_current_signature_structure(bool FindSuffixesFlag=true);
 
 };
 

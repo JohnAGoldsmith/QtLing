@@ -27,13 +27,14 @@ public:
     CSignature( QString);
 public:
     //Accessors
-    QString        GetSignature()               const { return m_Signature; }
+    QString         GetSignature()              const { return m_Signature; }
     QString         get_key()                   const {return m_Signature;}
-    QList<CSuffix*> GetList()                          { return m_Affixes;   }
+    QList<CSuffix*> GetList()                         { return m_Affixes;   }
+    void            get_string_set_of_suffixes(QSet<QString> & this_StringSet) { this_StringSet.fromList( m_Signature.split("="));}
 
     QList<CSuffix*>::iterator GetBegin()   { return m_Affixes.begin();  }
     QList<CSuffix*>::iterator GetEnd()     { return m_Affixes.end();    }
-    QList<CStem*>*  get_stems() { return  & m_Stems;}
+    QList<CStem*>*                  get_stems() { return  & m_Stems;}
     
     void add_stem_pointer(CStem*);
     
