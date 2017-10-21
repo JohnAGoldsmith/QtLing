@@ -90,7 +90,7 @@ public:
     void AssignSuffixesToStems();
     void PurifyResidualSignatures();
     void compute_sig_tree_edge_map();
-    void find_good_signatures_inside_raw_signature(bool FindSuffixesFlag);
+    void find_good_signatures_inside_residual_signatures(bool FindSuffixesFlag);
     void replace_parse_pairs_from_current_signature_structure(bool FindSuffixesFlag=true);
 
 };

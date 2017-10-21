@@ -42,12 +42,17 @@ void CLexicon::Crab_1()
     AssignSuffixesToStems();
     PurifyResidualSignatures();
     qDebug() << "finished making signatures.";
-    //find_good_signatures_inside_raw_signature(true);
+    find_good_signatures_inside_residual_signatures(true);
     compute_sig_tree_edges();
     compute_sig_tree_edge_map();
     qDebug() << "finished sorting multiparses";
 }
 
+/*!
+ * This is the first of the three initial parts of finding signatures.
+ * This makes a cut at every point in a word where the successor frequency
+ * is greater than 1.
+ */
 void CLexicon::FindProtostems()
 {  QString word, previous_word;
     QStringList * Words =  GetWordCollection()->GetSortedStringArray();
@@ -88,6 +93,10 @@ void CLexicon::FindProtostems()
     return;
 }
 
+/*!
+ * This is the second of the three initial parts of finding signatures.
+ * This creates stem/affix pairs, which are put in a long list of "Parses".
+ */
 void CLexicon::CreateStemAffixPairs()
 {
     QString stem, suffix, word;
@@ -196,7 +205,10 @@ void   CLexicon::AssignSuffixesToStems()
  */
 void   CLexicon::PurifyResidualSignatures()
 {   stem_t this_stem;
+    CStem* pStem;
+    word_t this_word;
     sig_string this_signature_string;
+    int suffix_no;
     int count_of_new_stems = 0;
     int count_of_new_words = 0;
     QList<QString> true_suffix_list;
@@ -217,11 +229,27 @@ void   CLexicon::PurifyResidualSignatures()
         }
         temp_suffix_list.sort();
         this_signature_string = temp_suffix_list.join("=");
-
         if (m_Signatures->contains(this_signature_string)){
+            pSig = m_Signatures->get_signature(this_signature_string);
+        } else {pSig = NULL;}
+        if (pSig){
             qDebug()<< this_stem << this_signature_string;
             count_of_new_stems += 1;
             count_of_new_words += temp_suffix_list.size();
+            break; //--> Each stem only gets its longest signature given to it. <---//
+            for ( suffix_no = 0; suffix_no < temp_suffix_list.size(); suffix_no++){
+                if (temp_suffix_list[suffix_no] == "NULL"){
+                    this_word = this_stem;
+                } else{
+                    this_word = this_stem + temp_suffix_list[suffix_no];
+                }
+                CWord* pWord = m_Words->get_word(this_word);
+                if (pWord){
+                    pWord->add_stem_and_signature(pStem, pSig );
+                    pWord->add_to_autobiography("analysed in purified residues.");
+                    qDebug() << pWord->get_key();
+                }
+            }
         }
     }   qDebug() << "How many new stems? "<<count_of_new_stems << "Wods? " << count_of_new_words;
 
@@ -244,7 +272,7 @@ struct{
     }
 }custom_compare_residual_sig;
 
-void CLexicon::find_good_signatures_inside_raw_signature(bool FindSuffixesFlag){
+void CLexicon::find_good_signatures_inside_residual_signatures(bool FindSuffixesFlag){
 
 
 }
