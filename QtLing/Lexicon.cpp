@@ -118,72 +118,72 @@ void   CLexicon::AssignSuffixesToStems()
 
     QPair<QString,QString> this_pair;
     CSignature* pSig;
-    QString stem, affix, signature_string, word;;
+    QString this_stem, this_suffix, this_signature_string, this_word;;
     CStem* pStem;
     map_sig_to_morph_set  temp_stems_to_affixes;
-    map_sig_to_morph_set  temp_signatures_to_stems;
+    map_sig_to_stem_list  temp_signatures_to_stems;
     for (int parseno = 0; parseno < m_Parses->size(); parseno++){
         this_pair = m_Parses->at(parseno);
-        stem = this_pair.first;
-        affix = this_pair.second;
-        if (! temp_stems_to_affixes.contains(stem)){
+        this_stem = this_pair.first;
+        this_suffix = this_pair.second;
+        if (! temp_stems_to_affixes.contains(this_stem)){
             morph_set * pSet = new QSet<QString>;
-            temp_stems_to_affixes.insert(stem,pSet);
+            temp_stems_to_affixes.insert(this_stem,pSet);
         }
-        temp_stems_to_affixes.value(stem)->insert(affix);
+        temp_stems_to_affixes.value(this_stem)->insert(this_suffix);
     }
-    // Do we need to delete the QSets, or is their memory taken care of? Probably need to delete them...and below.
 
     QMapIterator<QString, morph_set*>   stem_iter(temp_stems_to_affixes);
     while (stem_iter.hasNext())
-    {
-         stem = stem_iter.next().key();
+    {    stem_iter.next();
+         this_stem = stem_iter.key();
          QStringList temp_presignature;
-         foreach (affix, *temp_stems_to_affixes.value(stem)){
-            temp_presignature.append(affix);           
+         foreach (this_suffix, *temp_stems_to_affixes.value(this_stem)){
+            temp_presignature.append(this_suffix);
          }
          temp_presignature.sort();
-         QString sig_string = temp_presignature.join("=");
-         if ( ! temp_signatures_to_stems.contains(sig_string)){
-            morph_set * pStemSet = new QSet<QString>;
-            temp_signatures_to_stems.insert(sig_string,pStemSet);
+         QString this_signature_string = temp_presignature.join("=");
+         if ( ! temp_signatures_to_stems.contains(this_signature_string)){
+            stem_list * pStemSet = new stem_list;
+            temp_signatures_to_stems[this_signature_string] = pStemSet;
          }
-         temp_signatures_to_stems.value(sig_string)->insert(stem);
+         temp_signatures_to_stems.value(this_signature_string)->append(this_stem);
     }
-    // create signatures, stems, affixes:
-    QMapIterator<QString, morph_set*> iter_sigstring_to_stems ( temp_signatures_to_stems);
+    //-->  create signatures, stems, affixes:  <--//
+    QMapIterator<sigstring_t, stem_list*> iter_sigstring_to_stems ( temp_signatures_to_stems);
     while (iter_sigstring_to_stems.hasNext())
-    {
-        signature_string = iter_sigstring_to_stems.next().key();
-        QStringList affixes_set = signature_string.split("=");
+    {   iter_sigstring_to_stems.next();
+        this_signature_string = iter_sigstring_to_stems.key();
+        this_stem = iter_sigstring_to_stems.value()->first();
+        suffix_set this_suffix_set = QSet<QString>::fromList( this_signature_string.split("="));
         if (iter_sigstring_to_stems.value()->size() >= MINIMUM_NUMBER_OF_STEMS)
         {
-            QListIterator<QString> affix_iter(affixes_set);
-            while(affix_iter.hasNext()){
-                  affix = affix_iter.next();
-                  CSuffix* pSuffix = m_Suffixes->find_or_add(affix);
+            QSetIterator<suffix_t> suffix_iter(this_suffix_set);
+            while(suffix_iter.hasNext()){
+                  this_suffix = suffix_iter.next();
+                  CSuffix* pSuffix = m_Suffixes->find_or_add(this_suffix);
                   pSuffix->increment_count();
             }
-            pSig = *m_Signatures<< signature_string;
-            foreach (stem, *iter_sigstring_to_stems.value()){
-                pStem = m_Stems->find_or_add(stem);
-                pStem->add_signature (signature_string);
+            pSig = *m_Signatures<< this_signature_string;
+            foreach (this_stem, *iter_sigstring_to_stems.value()){
+                pStem = m_Stems->find_or_add(this_stem);
+                pStem->add_signature (this_signature_string);
                 pSig->add_stem_pointer(pStem);
-                QStringList affixes = signature_string.split("=");
-                foreach (QString affix,  affixes){
-                    if (affix == "NULL"){
-                        word = stem;
+                QStringList affixes = this_signature_string.split("=");
+                foreach (suffix_t this_suffix,  affixes){
+                    if (this_suffix == "NULL"){
+                        this_word = this_stem;
                     } else{
-                        word = stem + affix;
+                        this_word = this_stem + this_suffix;
                     }
-                    CWord* pWord = m_Words->get_word(word);
+                    CWord* pWord = m_Words->get_word(this_word);
                     pWord->add_stem_and_signature(pStem,pSig);
                 }
             }
         }else{
-            signature_string =  iter_sigstring_to_stems.key();
-            pSig =  *m_ResidualSignatures << signature_string;
-            pStem = *m_ResidualStems << stem;
+            this_signature_string =  iter_sigstring_to_stems.key();
+            pSig =  *m_ResidualSignatures << this_signature_string;
+            pStem = *m_ResidualStems << this_stem;
             pSig->add_stem_pointer(pStem);
         }
     }
@@ -195,19 +195,30 @@ void   CLexicon::AssignSuffixesToStems()
  * We look inside the ResidualSignatures, and extract only the approved suffixes inside them.
  */
 void   CLexicon::PurifyResidualSignatures()
-{
-    QSet<QString> true_suffix_set;
-    m_Suffixes->get_set_of_suffixes(& true_suffix_set);
+{   stem_t this_stem;
+    sig_string this_signature_string;
+    QList<QString> true_suffix_list;
+    get_suffixes(&true_suffix_list);
+    QSet<QString> true_suffix_set = QSet<QString>::fromList(true_suffix_list);
     QMapIterator<QString, CSignature*> * sig_iter =  m_ResidualSignatures->get_map_iterator();
     while (sig_iter->hasNext()){
         sig_iter->next();
         CSignature* pSig = sig_iter->value();
-        QSet<QString> suffix_set;
-        pSig->get_string_set_of_suffixes(suffix_set);
-        suffix_set.intersect(true_suffix_set);
-        QList<QString> temp_suffix_list;
-        temp_suffix_list.fromSet(suffix_set);
-        qDebug() << temp_suffix_list.join("=");
+        QSet<QString> these_suffixes = QSet<QString>::fromList( pSig->get_key().split("="));
+        these_suffixes.intersect(true_suffix_set);
+        if (these_suffixes.size() < 1) { continue; }
+        QList<QString> temp_suffix_list = QList<QString>::fromSet(these_suffixes);
+
+        this_stem = pSig->get_stems()->first()->get_key(); // there is only 1 stem in these signatures, by construction.
+        if (m_Words->contains(this_stem)){
+            temp_suffix_list.append("NULL");
+        }
+        temp_suffix_list.sort();
+        this_signature_string = temp_suffix_list.join("=");
+
+        if (m_Signatures->contains(this_signature_string)){
+            qDebug()<< this_stem << this_signature_string;
+        }
     }
 
 
@@ -338,6 +349,10 @@ while (sig_tree_edge_iter.hasNext())
 }
 
 
+void CLexicon::get_suffixes(QList<QString> * pList)
+{
+    return m_Suffixes->get_suffixes(pList);
+}
 
 
 

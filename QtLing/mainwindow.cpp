@@ -77,7 +77,6 @@ MainWindow::MainWindow()
     m_tableView_lower   = new LowerTableView (this);
     m_tableView_upper->setSortingEnabled(true);
 
-
     // set model for tree view
     m_leftTreeView->setModel(m_treeModel);
     m_leftTreeView->setColumnWidth(1,100);
@@ -91,6 +90,11 @@ MainWindow::MainWindow()
     m_mainSplitter->addWidget(m_leftTreeView);
     m_mainSplitter->addWidget(m_rightSplitter);
     setCentralWidget(m_mainSplitter);
+
+    QProgressBar * progress = new QProgressBar(this);
+    progress->setVisible(false);
+    statusBar()->addPermanentWidget(progress);
+
 
     createActions();
     createStatusBar();
@@ -273,6 +277,8 @@ void MainWindow::load_raw_signature_model()
             continue;
         }
         QList<QStandardItem*> items;
+        QStandardItem * stem_item = new QStandardItem(sig->get_stems()->first()->get_key());
+        items.append(stem_item);
         QStringList affixes = sig->display().split("=");
         foreach (affix, affixes){
             QStandardItem * item2 = new QStandardItem(affix);
@@ -330,12 +336,14 @@ void MainWindow::do_crab()
     load_sig_tree_edge_model();
     load_raw_signature_model();
     createTreeModel();
+    m_leftTreeView->expandAll();
 
 }
 
 void MainWindow::read_file_do_crab()
 {
         read_dx1_file();
+        statusBar()->showMessage(tr("Ready"));
         do_crab();
 
 }
@@ -371,7 +379,7 @@ void MainWindow::read_dx1_file()
     }
     Words->sort_word_list();
     setCurrentFile(m_name_of_data_file);
-    statusBar()->showMessage(tr("File loaded"), 2000);
+    statusBar()->showMessage(tr("File loaded"), 5000);
 }
 
 
@@ -557,6 +565,7 @@ void MainWindow::createTreeModel()
     QStandardItem * lexicon_item = new QStandardItem(QString("Lexicon"));
     QStandardItem * lexicon_count_item = new QStandardItem(QString("1"));
 
+
     QStandardItem * word_item = new QStandardItem(QString("Words"));
     QStandardItem * word_count_item = new QStandardItem(QString::number(get_lexicon()->GetWordCollection()->get_count()));
 
@@ -616,6 +625,7 @@ void MainWindow::createTreeModel()
     lexicon_item->appendRow(sig_items);
     lexicon_item->appendRow(sig_tree_edge_items);
     lexicon_item->appendRow(residual_sig_items);
+
 
 }
 

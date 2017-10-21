@@ -30,6 +30,7 @@ protected:
     int                                 m_WordCount;
     QList<Parse>                        m_Parses;
     QList<ptr_to_stem_sig_pair>         m_Signatures;
+    QList<QString>                      m_Autobiography;
 public:
     CWord(QString  Word);
     CWord(CWord&);
@@ -46,7 +47,7 @@ public:
     void                                    AddParse(CStem* stem, CSuffix* suffix, CSignature* signature);
     void                                    add_stem_and_signature(CStem*, CSignature*);
     void                                    IncrementWordCount(int n = 1);
-
+    void                                    add_to_autobiography(QString line) {m_Autobiography.append(line);};
 };
 
 #endif // CWORD_H

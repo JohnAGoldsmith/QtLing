@@ -39,3 +39,11 @@ CSuffix* CSuffixCollection::operator ^=(QString suffix)
 void CSuffixCollection::get_set_of_suffixes(QSet<QString> *p_string_set){
     p_string_set->fromList(m_SuffixMap.uniqueKeys());
 }
+
+void  CSuffixCollection::get_suffixes(QList<QString>* pList)
+{   QMapIterator<QString,CSuffix*> iter (m_SuffixMap);
+    while (iter.hasNext()){
+        iter.next();
+        pList->append(iter.value()->get_key());
+    }
+}

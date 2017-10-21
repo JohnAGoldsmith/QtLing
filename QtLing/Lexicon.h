@@ -69,6 +69,7 @@ public:
     CWordCollection*                            GetWordCollection()         { return m_Words; }
     CStemCollection*                            GetStemCollection()         { return m_Stems; }
     CSuffixCollection*                          GetSuffixCollection()       { return m_Suffixes; }
+    void                                        get_suffixes(QList<QString>*);
     CWordCollection *                           get_words()                 { return m_Words;}
     CSignatureCollection*                       get_signatures()            { return m_Signatures;}
     CSignatureCollection*                       GetSignatureCollection()    { return m_Signatures; }

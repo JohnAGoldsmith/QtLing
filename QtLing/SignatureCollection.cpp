@@ -27,6 +27,9 @@ CSignatureCollection::~CSignatureCollection()
 
 }
 
+bool CSignatureCollection::contains(sigstring_t this_sigstring){
+    return m_SignatureMap.contains(this_sigstring);
+}
 CSignature* CSignatureCollection::operator <<(QString szSignature)
 {
     CSignature* pSig = new CSignature(szSignature);

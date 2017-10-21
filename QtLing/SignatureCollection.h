@@ -5,6 +5,7 @@
 #include <iterator>
 #include "generaldefinitions.h"
 #include "Signature.h"
+#include "Typedefs.h"
 
 class CLexicon;
 
@@ -40,6 +41,7 @@ public:
     CSignature*                             get_signature(QString sig) {return m_SignatureMap.value(sig); }
     QMapIterator<QString,CSignature*> *     get_map_iterator() ;
     QListIterator<CSignature*>        *     get_sorted_list_iterator();
+    bool                                    contains (sigstring_t);
     void sort();
 
 

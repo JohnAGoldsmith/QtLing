@@ -35,6 +35,7 @@ public:
     QMap<QString,CSuffix*>::iterator GetBegin()   { return m_SuffixMap.begin(); }
     QMap<QString,CSuffix*>::iterator GetEnd()     { return m_SuffixMap.end();   }
     QMap<QString,CSuffix*> GetMap()              { return m_SuffixMap;         }
+    void                    get_suffixes(QList<QString>*);
 };
 
 #endif // CSUFFIXCOLLECTION_H

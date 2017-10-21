@@ -22,10 +22,13 @@ typedef  QPair<stem_sig_pair*,                      stem_sig_pair*> pair_of_stem
 //typedef  QPair<sig_string, pair_of_stem_sig_pairs*> five_tuple_sig_diffs;
 
 // Home-style type-specifications. "_t" stands for "type".
-typedef QString word_t;
-typedef QString morph_t;
-typedef QString stem_t;
-typedef QString sigstring_t;
+typedef QString         word_t;
+typedef QString         morph_t;
+typedef QString         stem_t;
+typedef QString         sigstring_t;
+typedef QString         suffix_t;
+typedef QList<stem_t>   stem_list;
+typedef QList<stem_t>   suffix_list;
 
 typedef QMap<class QString, class CStem>    StringToStem;
 typedef QMap<unsigned int, enum eLxaClass>  PtrToClass;
@@ -39,7 +42,9 @@ typedef class CStringSurrogate              CSS;
 
 typedef QSet<morph_t>                       morph_set;
 typedef QSet<stem_t>                        stem_set;
+typedef QSet<suffix_t>                      suffix_set;
 typedef QMap<sigstring_t, morph_set*>       map_sig_to_morph_set;
+typedef QMap<sigstring_t, stem_list*>       map_sig_to_stem_list;
 typedef QMap<QString, CWord*>               map_string_to_word;
 typedef QMap<QString, CSignature*>          map_string_to_sig;
 typedef QMapIterator<QString, CWord*>       map_string_to_word_iter;
