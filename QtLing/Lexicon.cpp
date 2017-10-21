@@ -197,6 +197,8 @@ void   CLexicon::AssignSuffixesToStems()
 void   CLexicon::PurifyResidualSignatures()
 {   stem_t this_stem;
     sig_string this_signature_string;
+    int count_of_new_stems = 0;
+    int count_of_new_words = 0;
     QList<QString> true_suffix_list;
     get_suffixes(&true_suffix_list);
     QSet<QString> true_suffix_set = QSet<QString>::fromList(true_suffix_list);
@@ -218,8 +220,10 @@ void   CLexicon::PurifyResidualSignatures()
 
         if (m_Signatures->contains(this_signature_string)){
             qDebug()<< this_stem << this_signature_string;
+            count_of_new_stems += 1;
+            count_of_new_words += temp_suffix_list.size();
         }
-    }
+    }   qDebug() << "How many new stems? "<<count_of_new_stems << "Wods? " << count_of_new_words;
 
 
 }
