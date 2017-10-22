@@ -15,10 +15,10 @@
 
 CLexicon::CLexicon() : m_Words(new CWordCollection), m_Stems(new CStemCollection), m_Suffixes(new CSuffixCollection), m_Signatures(new CSignatureCollection)
 {
-    m_Parses = new QList<QPair<QString,QString>>();
-    m_Protostems = QMap<QString, int>();
-    m_ResidualSignatures =  new CSignatureCollection();
-    m_ResidualStems = new CStemCollection();
+    m_Parses                = new QList<QPair<QString,QString>>();
+    m_Protostems            = QMap<QString, int>();
+    m_ResidualSignatures    =  new CSignatureCollection();
+    m_ResidualStems         = new CStemCollection();
 }
 
 QListIterator<sig_tree_edge*> * CLexicon::get_sig_tree_edge_list_iter()
@@ -54,11 +54,11 @@ void CLexicon::Crab_1()
  * is greater than 1.
  */
 void CLexicon::FindProtostems()
-{  QString word, previous_word;
-    QStringList * Words =  GetWordCollection()->GetSortedStringArray();
-    bool StartFlag = true;
-    bool DifferenceFoundFlag = false;
-    QString stem;
+{   word_t          word, previous_word;
+    QStringList *   Words =  GetWordCollection()->GetSortedStringArray();
+    bool            StartFlag = true;
+    bool            DifferenceFoundFlag = false;
+    stem_t          stem;
     for (int wordno=0; wordno<Words->size(); wordno ++){
         word = Words->at(wordno);
         if (StartFlag){
@@ -72,8 +72,7 @@ void CLexicon::FindProtostems()
             if (previous_word[i] != word[i]){
                 stem = previous_word.left(i);
                 DifferenceFoundFlag = true;
-                if (!m_Protostems.contains(stem))
-                {
+                if (!m_Protostems.contains(stem))                {
                     m_Protostems[stem] = 1;
                 }
                 break;
@@ -99,9 +98,9 @@ void CLexicon::FindProtostems()
  */
 void CLexicon::CreateStemAffixPairs()
 {
-    QString stem, suffix, word;
-    int suffix_length;
-    map_string_to_word_iter * word_iter = m_Words->get_iterator();
+    QString                     stem, suffix, word;
+    int                         suffix_length;
+    map_string_to_word_iter *   word_iter = m_Words->get_iterator();
     while (word_iter->hasNext())   {
         word = word_iter->next().value()->GetWord();
         for (int letterno = 1; letterno < word.length(); letterno++){
@@ -125,12 +124,12 @@ void CLexicon::CreateStemAffixPairs()
 void   CLexicon::AssignSuffixesToStems()
 {   const int MINIMUM_NUMBER_OF_STEMS = 2;
 
-    QPair<QString,QString> this_pair;
-    CSignature* pSig;
-    QString this_stem, this_suffix, this_signature_string, this_word;;
-    CStem* pStem;
-    map_sig_to_morph_set  temp_stems_to_affixes;
-    map_sig_to_stem_list  temp_signatures_to_stems;
+    QPair<QString,QString>      this_pair;
+    CSignature*                 pSig;
+    QString                     this_stem, this_suffix, this_signature_string, this_word;;
+    CStem*                      pStem;
+    map_sig_to_morph_set        temp_stems_to_affixes;
+    map_sig_to_stem_list        temp_signatures_to_stems;
     for (int parseno = 0; parseno < m_Parses->size(); parseno++){
         this_pair = m_Parses->at(parseno);
         this_stem = this_pair.first;
@@ -151,7 +150,7 @@ void   CLexicon::AssignSuffixesToStems()
             temp_presignature.append(this_suffix);
          }
          temp_presignature.sort();
-         QString this_signature_string = temp_presignature.join("=");
+         sigstring_t this_signature_string = temp_presignature.join("=");
          if ( ! temp_signatures_to_stems.contains(this_signature_string)){
             stem_list * pStemSet = new stem_list;
             temp_signatures_to_stems[this_signature_string] = pStemSet;
@@ -204,34 +203,46 @@ void   CLexicon::AssignSuffixesToStems()
  * We look inside the ResidualSignatures, and extract only the approved suffixes inside them.
  */
 void   CLexicon::PurifyResidualSignatures()
-{   stem_t this_stem;
-    CStem* pStem;
-    word_t this_word;
-    sig_string this_signature_string;
-    int suffix_no;
-    int count_of_new_stems = 0;
-    int count_of_new_words = 0;
-    QList<QString> true_suffix_list;
-    get_suffixes(&true_suffix_list);
-    QSet<QString> true_suffix_set = QSet<QString>::fromList(true_suffix_list);
-    m_Signatures->sort_signatures_by_affix_count();
+{   stem_t                      this_stem;
+    CStem*                      pStem;
+    word_t                      this_word;
+    sig_string                  this_signature_string;
+    CSignature*                 pSig;
+    int                         suffix_no;
+    int                         count_of_new_stems = 0;
+    int                         count_of_new_words = 0;
+    QList<suffix_t>             true_suffix_list;
 
+    get_suffixes(&true_suffix_list);
+    QSet<QString>               true_suffix_set = QSet<QString>::fromList(true_suffix_list);
+                                m_Signatures->sort_signatures_by_affix_count();
 
     //---->   We iterate through the list of Residual Signatures <-------//
+
     QMapIterator<QString, CSignature*> * sig_iter =  m_ResidualSignatures->get_map_iterator();
+
     while (sig_iter->hasNext()){
         sig_iter->next();
-        CSignature* pResidualSig = sig_iter->value();
-        QSet<QString> these_residual_suffixes_set = QSet<QString>::fromList( pResidualSig->get_key().split("="));
-        these_residual_suffixes_set.intersect(true_suffix_set);
-        //qDebug() << pSig->get_key() << "223";
-        if (these_residual_suffixes_set.size() < 1) { continue; }
-        this_stem = pResidualSig->get_stems()->first()->get_key(); // there is only 1 stem in these signatures, by construction.
-        if (m_Words->contains(this_stem)){
-            these_residual_suffixes_set.insert("NULL");
-        }
+        CSignature*         pResidualSig        = sig_iter->value();
+        QSet<sig_string>    these_residual_suffixes_set = QSet<QString>::fromList( pResidualSig->get_key().split("="));
+                            these_residual_suffixes_set.intersect(true_suffix_set);
+                            if (these_residual_suffixes_set.size() < 1) { continue; }
+                            this_stem           = pResidualSig->get_stems()->first()->get_key(); // there is only 1 stem in these signatures, by construction.
+                            if (m_Words->contains(this_stem)){
+                                these_residual_suffixes_set.insert("NULL");
+                            }
+                            for (int sig_no=0; sig_no < get_signatures()->get_count(); sig_no++){
+                                pSig = m_Signatures->get_at_sorted(sig_no);
+                                pSig->get_string_set_of_suffixes(these_residual_suffixes_set);
+                                if (true_suffix_set.contains(these_residual_suffixes_set )){
 
-  // not finished.
+                                    *m_ResidualSignatures << pSig;
+
+
+                                    break;
+                                }
+                            }
+
 
     }   qDebug() << "How many new stems? "<<count_of_new_stems << "Words? " << count_of_new_words;
 
@@ -271,11 +282,12 @@ void CLexicon::find_good_signatures_inside_residual_signatures(bool FindSuffixes
 void CLexicon::replace_parse_pairs_from_current_signature_structure(bool FindSuffixesFlag) {
     m_Parses->clear();
     m_Parse_map.clear();
-    QString         sig_string;
-    CSignature*     pSig;
-    CStem*          pStem;
-    QList<CStem*> * stem_list;
-    QMapIterator<QString,CSignature*>  * sig_iter =  get_signatures()->get_map_iterator();
+    QString                         sig_string;
+    CSignature*                     pSig;
+    CStem*                          pStem;
+    QList<CStem*> *                 stem_list;
+    map_sigstring_to_sigptr_iter  * sig_iter =  get_signatures()->get_map_iterator();
+
     while (sig_iter->hasNext()){
         pSig = sig_iter->next().value();
         stem_list =  pSig->get_stems();
@@ -295,10 +307,10 @@ void CLexicon::replace_parse_pairs_from_current_signature_structure(bool FindSuf
  */
 void CLexicon::compute_sig_tree_edges()
 {
-    CWord* pWord;
-    map_string_to_word * WordMap = m_Words->GetMap();
-    QMapIterator<QString,CWord*> word_iter(*WordMap);
-    sig_tree_edge * p_SigTreeEdge;
+    CWord*                          pWord;
+    map_string_to_word *            WordMap = m_Words->GetMap();
+    map_string_to_word_iter         word_iter(*WordMap);
+    sig_tree_edge *                 p_SigTreeEdge;
 
     while (word_iter.hasNext())   {
         pWord = word_iter.next().value();

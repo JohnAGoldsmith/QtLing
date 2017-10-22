@@ -15,8 +15,7 @@ class CLexicon;
 class CSignatureCollection
 {
 protected:
-    //map_string_to_sig           m_SignatureMap;
-    QMap<QString, CSignature*>  m_SignatureMap;
+    map_string_to_sig           m_SignatureMap;
     int                         m_CorpusCount;
     QString                     m_MemberName;
     QList<CSignature*>          m_SortList;
@@ -40,11 +39,11 @@ public:
     CSignature*                             operator^= ( QString );
     CSignature*                             operator[] (int n) { return m_SortList[n];}
     CSignature*                             find_or_add ( QString); // same as operatorˆ=
-    CSignature*                             GetAt( uint );
+    CSignature*                             get_at_sorted( uint n ) { return m_SortList[n];}
     int                                     get_count() const       { return m_SignatureMap.size(); }
     CSignature*                             get_signature(QString sig) {return m_SignatureMap.value(sig); }
-    QMapIterator<QString,CSignature*> *     get_map_iterator() ;
-    QListIterator<CSignature*>        *     get_sorted_list_iterator();
+    map_sigstring_to_sigptr_iter *          get_map_iterator() ;
+    QListIterator<CSignature*>   *          get_sorted_list_iterator();
     void                                    make_sorted_list_iterator(map_string_to_word_iter&);
     bool                                    contains (sigstring_t);
     void                                    sort();

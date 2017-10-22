@@ -73,6 +73,7 @@ public:
     CWordCollection *                           get_words()                 { return m_Words;}
     CSignatureCollection*                       get_signatures()            { return m_Signatures;}
     CSignatureCollection*                       GetSignatureCollection()    { return m_Signatures; }
+    //CSignature*                                 get_sig_from_sort_list (int n) { return m_SortedList[n];}
     CSignatureCollection *                      get_residual_signatures()   { return m_ResidualSignatures;}
     QList<QPair<QString,QString>>*              GetParses()                 { return m_Parses;}
     QMap<QString,int>*                          get_protostems()            { return &m_Protostems;}
