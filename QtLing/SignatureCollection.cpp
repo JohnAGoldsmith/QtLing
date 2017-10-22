@@ -13,7 +13,7 @@ CSignatureCollection::CSignatureCollection()
 
 QMapIterator<QString, CSignature*> * CSignatureCollection::get_map_iterator()
 {
-    QMapIterator<QString,CSignature*>  * sig_iter = new QMapIterator<QString,CSignature*> (m_SignatureMap);
+    map_sigstring_to_sigptr_iter * sig_iter = new map_sigstring_to_sigptr_iter (m_SignatureMap);
     return sig_iter ;
 }
 QListIterator<CSignature*> * CSignatureCollection::get_sorted_list_iterator()
@@ -61,10 +61,29 @@ bool compare_stem_count(const CSignature* pSig1, const CSignature* pSig2)
 }
 void CSignatureCollection::sort()
 {   qDebug() << "sorting signatures.";
-    QMap<QString,CSignature*>::iterator sig_iter;
-    foreach (CSignature* pSig, m_SignatureMap){
-        m_SortList.append(pSig);
-        //qDebug() << pSig->GetSignature();
+    //QMap<QString,CSignature*>::iterator sig_iter;
+
+    map_sigstring_to_sigptr_iter sig_iter (m_SignatureMap);
+    while (sig_iter.hasNext())
+    {
+        sig_iter.next();
+        m_SortList.append(sig_iter.value());
     }
     qSort(m_SortList.begin(), m_SortList.end(),  compare_stem_count);
+}
+
+// ------->                                   <---------------------//
+bool compare_affix_count(const CSignature* pSig1, const CSignature* pSig2)
+{
+ return  pSig1->get_number_of_affixes() > pSig2->get_number_of_affixes();
+}
+void CSignatureCollection::sort_signatures_by_affix_count()
+{
+    map_sigstring_to_sigptr_iter sig_iter (m_SignatureMap);
+    while (sig_iter.hasNext())
+    {
+        sig_iter.next();
+        m_SortList.append(sig_iter.value());
+    }
+    qSort(m_SortList.begin(), m_SortList.end(),  compare_affix_count);
 }

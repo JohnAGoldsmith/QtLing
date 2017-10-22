@@ -3,7 +3,7 @@
 
 #include <QList>
 #include <iterator>
-#include "generaldefinitions.h"
+//#include "generaldefinitions.h"
 #include "Suffix.h"
 
 

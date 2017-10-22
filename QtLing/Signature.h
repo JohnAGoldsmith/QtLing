@@ -8,7 +8,7 @@
 #include <QChar>
 #include <QList>
 #include <QMap>
-#include "generaldefinitions.h"
+//#include "generaldefinitions.h"
 
 class CSuffix;
 class CStem;
@@ -41,6 +41,7 @@ public:
     QString display();
     QString display_stems() ;
     int get_number_of_stems() const {return m_Stems.count();}
+    int get_number_of_affixes() const ;
     int get_robustness();
 
 };

@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-#include "generaldefinitions.h"
+//#include "generaldefinitions.h"
 #include "ui_mainwindow.h"
 #include <QtWidgets>
 #include <QTreeView>

@@ -5,7 +5,7 @@
 #include <QChar>
 #include <QList>
 #include <QMap>
-#include "generaldefinitions.h"
+//#include "generaldefinitions.h"
 
 class CSuffix
 {

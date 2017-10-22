@@ -214,44 +214,26 @@ void   CLexicon::PurifyResidualSignatures()
     QList<QString> true_suffix_list;
     get_suffixes(&true_suffix_list);
     QSet<QString> true_suffix_set = QSet<QString>::fromList(true_suffix_list);
+    m_Signatures->sort_signatures_by_affix_count();
+
+
+    //---->   We iterate through the list of Residual Signatures <-------//
     QMapIterator<QString, CSignature*> * sig_iter =  m_ResidualSignatures->get_map_iterator();
     while (sig_iter->hasNext()){
         sig_iter->next();
-        CSignature* pSig = sig_iter->value();
-        QSet<QString> these_suffixes = QSet<QString>::fromList( pSig->get_key().split("="));
-        these_suffixes.intersect(true_suffix_set);
-        if (these_suffixes.size() < 1) { continue; }
-        QList<QString> temp_suffix_list = QList<QString>::fromSet(these_suffixes);
-
-        this_stem = pSig->get_stems()->first()->get_key(); // there is only 1 stem in these signatures, by construction.
+        CSignature* pResidualSig = sig_iter->value();
+        QSet<QString> these_residual_suffixes_set = QSet<QString>::fromList( pResidualSig->get_key().split("="));
+        these_residual_suffixes_set.intersect(true_suffix_set);
+        //qDebug() << pSig->get_key() << "223";
+        if (these_residual_suffixes_set.size() < 1) { continue; }
+        this_stem = pResidualSig->get_stems()->first()->get_key(); // there is only 1 stem in these signatures, by construction.
         if (m_Words->contains(this_stem)){
-            temp_suffix_list.append("NULL");
+            these_residual_suffixes_set.insert("NULL");
         }
-        temp_suffix_list.sort();
-        this_signature_string = temp_suffix_list.join("=");
-        if (m_Signatures->contains(this_signature_string)){
-            pSig = m_Signatures->get_signature(this_signature_string);
-        } else {pSig = NULL;}
-        if (pSig){
-            qDebug()<< this_stem << this_signature_string;
-            count_of_new_stems += 1;
-            count_of_new_words += temp_suffix_list.size();
-            break; //--> Each stem only gets its longest signature given to it. <---//
-            for ( suffix_no = 0; suffix_no < temp_suffix_list.size(); suffix_no++){
-                if (temp_suffix_list[suffix_no] == "NULL"){
-                    this_word = this_stem;
-                } else{
-                    this_word = this_stem + temp_suffix_list[suffix_no];
-                }
-                CWord* pWord = m_Words->get_word(this_word);
-                if (pWord){
-                    pWord->add_stem_and_signature(pStem, pSig );
-                    pWord->add_to_autobiography("analysed in purified residues.");
-                    qDebug() << pWord->get_key();
-                }
-            }
-        }
-    }   qDebug() << "How many new stems? "<<count_of_new_stems << "Wods? " << count_of_new_words;
+
+  // not finished.
+
+    }   qDebug() << "How many new stems? "<<count_of_new_stems << "Words? " << count_of_new_words;
 
 
 }

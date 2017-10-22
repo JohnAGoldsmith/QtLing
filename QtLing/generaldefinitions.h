@@ -2,61 +2,8 @@
 #define GENERALDEFINITIONS_H
 #include "Signature.h"
 
- class CStem;
-class CSignature;
-
-
-
-enum eParseSortStyle
-{
-    eNotSorted,
-    eAlphabetized,
-    eAlphabetizedFromEnd,
-    eSortByPieceLength
-};
-
-enum eCurrentDisplay
-{
-    eGraphics,
-    eCollection
-};
-
-
-enum eWhichTree
-{
-  Upper,
-  Lower
-};
-
-
-enum eLxaClass // For preserialization, serialization, deserialization
-{
-    LINGUISTICA_MAIN_WINDOW,
-    LEXICON_CLASS,
-    MINI_LEXICON_CLASS,
-    WORD_COLLECTION_CLASS,
-    STEM_COLLECTION_CLASS,
-    COMPOUND_COLLECTION_CLASS,
-    LINKER_COLLECTION_CLASS,
-    SUFFIX_COLLECTION_CLASS,
-    PREFIX_COLLECTION_CLASS,
-    SIGNATURE_COLLECTION_CLASS,
-    CORPUS_WORD_CLASS,
-    STEM_CLASS,
-    COMPOUND_CLASS,
-    LINKER_CLASS,
-    SUFFIX_CLASS,
-    PREFIX_CLASS,
-    SIGNATURE_CLASS,
-    AFFIX_CLASS,
-    LPARSE_CLASS,
-    PARSE_CLASS,
-    TRIE_CLASS,
-    TRIE_NODE_CLASS,
-    DLHISTORY_CLASS,
-    COLLECTION_TEMPLATE,
-    NOTHING
-};
+//class CStem;
+//class CSignature;
 
 
 enum eDocumentType  // for the Collection View
@@ -175,6 +122,60 @@ enum eSortStyle
   TEMPLATE_SORT,
   TEMPLATE_SORT_COLUMN
 };
+
+
+enum eLxaClass // For preserialization, serialization, deserialization
+{
+    LINGUISTICA_MAIN_WINDOW,
+    LEXICON_CLASS,
+    MINI_LEXICON_CLASS,
+    WORD_COLLECTION_CLASS,
+    STEM_COLLECTION_CLASS,
+    COMPOUND_COLLECTION_CLASS,
+    LINKER_COLLECTION_CLASS,
+    SUFFIX_COLLECTION_CLASS,
+    PREFIX_COLLECTION_CLASS,
+    SIGNATURE_COLLECTION_CLASS,
+    CORPUS_WORD_CLASS,
+    STEM_CLASS,
+    COMPOUND_CLASS,
+    LINKER_CLASS,
+    SUFFIX_CLASS,
+    PREFIX_CLASS,
+    SIGNATURE_CLASS,
+    AFFIX_CLASS,
+    LPARSE_CLASS,
+    PARSE_CLASS,
+    TRIE_CLASS,
+    TRIE_NODE_CLASS,
+    DLHISTORY_CLASS,
+    COLLECTION_TEMPLATE,
+    NOTHING
+};
+
+
+enum eParseSortStyle
+{
+    eNotSorted,
+    eAlphabetized,
+    eAlphabetizedFromEnd,
+    eSortByPieceLength
+};
+/*
+enum eCurrentDisplay
+{
+    eGraphics,
+    eCollection
+};
+
+
+enum eWhichTree
+{
+  Upper,
+  Lower
+};
+
+
 
 
 enum eBiphoneSortStyle
@@ -412,5 +413,5 @@ enum eStateType
     AcceptState,
     NormalState
 };
-
+*/
 #endif // GENERALDEFINITIONS_H

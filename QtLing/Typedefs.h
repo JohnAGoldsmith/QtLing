@@ -1,8 +1,9 @@
 #ifndef TYPEDEFS_H
 #define TYPEDEFS_H
 
-class CStem;
+//class CStem;
 class CWord;
+//class CSignature;
 
 // These typedefs make it easier to write types with long names.
 // Linguistica is optimized for reading, not writing, though, so
@@ -30,14 +31,13 @@ typedef QString         suffix_t;
 typedef QList<stem_t>   stem_list;
 typedef QList<stem_t>   suffix_list;
 
-typedef QMap<class QString, class CStem>    StringToStem;
+typedef QMap< QString, CStem>    StringToStem;
 typedef QMap<unsigned int, enum eLxaClass>  PtrToClass;
 typedef QMap<unsigned int, unsigned int>    PtrToPtr;
-typedef QList<class CSignature*>            SignatureList;
-typedef QList<class CSuffix*>               SuffixList;
-typedef QMap<class QString, int>            StringToInt;
+typedef QList<CSignature*>            SignatureList;
+typedef QList<CSuffix*>               SuffixList;
+typedef QMap<QString, int>            StringToInt;
 typedef QMap<int, QString>                  IntToString;
-typedef class CStringSurrogate              CSS;
 
 
 typedef QSet<morph_t>                       morph_set;
@@ -47,9 +47,9 @@ typedef QMap<sigstring_t, morph_set*>       map_sig_to_morph_set;
 typedef QMap<sigstring_t, stem_list*>       map_sig_to_stem_list;
 typedef QMap<QString, CWord*>               map_string_to_word;
 typedef QMap<QString, CSignature*>          map_string_to_sig;
-typedef QMapIterator<QString, CWord*>       map_string_to_word_iter;
 typedef QList<QString>                      word_list;
-
+typedef QMapIterator<QString,CSignature*>   map_sigstring_to_sigptr_iter;
+typedef QMapIterator<QString, CWord*>       map_string_to_word_iter;
 
 
 

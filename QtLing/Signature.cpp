@@ -51,8 +51,13 @@ int CSignature::get_robustness()
     robustness = stem_letters + suffix_letters;
     return robustness;
 }
+ int CSignature::get_number_of_affixes() const
+{   if (m_Affixes.size() > 0)
+     {return m_Affixes.size();}
+     else {return m_Signature.count("="); }
+}
 
-/*
+     /*
 int CSignature::number_of_true_suffixes()
 {   CSuffixCollection* my_suffixes = get_signatures()->get_lexicon()->get_suffixes();
     QListIterator<CSuffix*> suffix_iter_1(* get_suffixes(my_suffixes));
