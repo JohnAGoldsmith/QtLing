@@ -70,8 +70,6 @@ MainWindow::MainWindow()
     Affix_model     = new QStandardItemModel();
     SigTreeEdge_model = new QStandardItemModel();
 
-    qDebug() << "reach 1";
-
     // views
     m_leftTreeView      = new LeftSideTreeView(this);
     m_tableView_upper   = new UpperTableView (this);
@@ -100,14 +98,15 @@ MainWindow::MainWindow()
     createActions();
     createStatusBar();
     readSettings();
-    qDebug() << "reach 6";
+
 
     resize(QDesktopWidget().availableGeometry(this).size() * 0.7);
     m_mainSplitter->setSizes(QList<int>() << 1000 <<4000);
 
     // By default, we open the last dx1 file that was opened on the previous run. This is probably not a good idea long-term!
+    statusBar()->showMessage("Reading dx1 file.");
     read_dx1_file();
-
+    statusBar()->showMessage("Finished reading dx1 file.");
 
 #ifndef QT_NO_SESSIONMANAGER
     QGuiApplication::setFallbackSessionManagementEnabled(false);
@@ -346,17 +345,21 @@ void MainWindow::ask_for_filename()
 }
 
 void MainWindow::do_crab()
-{
+{   statusBar()->showMessage("Entering the Crab Nebula.");
     get_lexicon()->Crab_1();
+    statusBar()->showMessage("We have returned from the Crab Nebular.");
     load_word_model();
     load_signature_model();
     load_affix_model();
     load_stem_model();
     load_sig_tree_edge_model();
+    statusBar()->showMessage("Loading the residual signatures.");
     load_residual_signature_model();
+    statusBar()->showMessage("Loading the singleton siganatures.");
     load_singleton_signature_model();
     createTreeModel();
     m_leftTreeView->expandAll();
+    statusBar()->showMessage("All models are loaded.");
 
 }
 
