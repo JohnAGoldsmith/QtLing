@@ -179,7 +179,7 @@ void MainWindow::load_stem_model()
         item_list.append(item);
         QListIterator<QString> sig_iter(*stem->GetSignatures());
         while (sig_iter.hasNext()){
-           QString sig = sig_iter.next();
+           sigstring_t sig = sig_iter.next();
            QStandardItem *item = new QStandardItem(sig);
            item_list.append(item);
         }
@@ -188,7 +188,7 @@ void MainWindow::load_stem_model()
 }
 void MainWindow::load_affix_model()
 {
-     QMapIterator<QString, CSuffix*> suffix_iter(get_lexicon()->GetSuffixCollection()->GetMap());
+    map_string_to_suffix_iter suffix_iter(get_lexicon()->GetSuffixCollection()->GetMap());
     while (suffix_iter.hasNext())
     {
         CSuffix* pSuffix = suffix_iter.next().value();
@@ -607,9 +607,6 @@ void MainWindow::createTreeModel()
     QStandardItem * singleton_sig_item = new QStandardItem(QString("Singleton signatures"));
     QStandardItem * singleton_sig_count_item = new QStandardItem(QString::number(get_lexicon()->get_singleton_signatures()->get_count()));
 
-    //QStandardItem * proto_stem_item = new QStandardItem(QString("Protostems"));
-    //QStandardItem * proto_stem_count_item = new QStandardItem(QString::number(get_lexicon()->get_protostems()->size() ));
-
     QStandardItem * sig_tree_edge_item = new QStandardItem(QString("Signature tree edges"));
     QStandardItem * sig_tree_edge_count_item = new QStandardItem(QString::number(get_lexicon()->get_sig_tree_edge_map()->size()));
 
@@ -717,7 +714,6 @@ LowerTableView::LowerTableView()
 {
    m_my_current_model =new  QStandardItemModel();
    m_number_of_columns = 6;
-
 }
 
 LowerTableView::LowerTableView(MainWindow * window)
@@ -726,7 +722,6 @@ LowerTableView::LowerTableView(MainWindow * window)
    m_parent_window = window;
    m_number_of_columns = 6;
 }
-
 
  void LowerTableView::display_this_item( const  QModelIndex & index )
  {
@@ -760,7 +755,7 @@ LowerTableView::LowerTableView(MainWindow * window)
 
         CSignature*           pSig = this_lexicon->get_signatures()->get_signature(signature);
         CStem*                p_Stem;
-        QList<CStem*>*        sig_stems = pSig->get_stems();
+        StemList    *        sig_stems = pSig->get_stems();
         QStandardItem*        p_item;
         QList<QStandardItem*> item_list;
 
@@ -792,7 +787,7 @@ LowerTableView::LowerTableView(MainWindow * window)
         }
         CSignature*           pSig = this_lexicon->get_signatures()->get_signature(signature);
         CStem*                p_Stem;
-        QList<CStem*>*        sig_stems = pSig->get_stems();
+        StemList     *        sig_stems = pSig->get_stems();
         QStandardItem*        p_item;
         QList<QStandardItem*> item_list;
 
@@ -822,7 +817,7 @@ LowerTableView::LowerTableView(MainWindow * window)
         }
         CSignature*           pSig = this_lexicon->get_signatures()->get_signature(signature);
         CStem*                p_Stem;
-        QList<CStem*>*        sig_stems = pSig->get_stems();
+        StemList     *        sig_stems = pSig->get_stems();
         QStandardItem*        p_item;
         QList<QStandardItem*> item_list;
 

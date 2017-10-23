@@ -37,6 +37,7 @@ typedef QMap<unsigned int, unsigned int>    PtrToPtr;
 typedef QList<CSignature*>            SignatureList;
 typedef QList<CSuffix*>               SuffixList;
 typedef QMap<QString, int>            StringToInt;
+typedef QList<CStem*>                       StemList;
 typedef QMap<int, QString>                  IntToString;
 
 
@@ -50,7 +51,7 @@ typedef QMap<QString, CSignature*>          map_string_to_sig;
 typedef QList<QString>                      word_list;
 typedef QMapIterator<QString,CSignature*>   map_sigstring_to_sigptr_iter;
 typedef QMapIterator<QString, CWord*>       map_string_to_word_iter;
-
+typedef QMapIterator<QString, CSuffix*>     map_string_to_suffix_iter;
 
 
 #endif // TYPEDEFS_H
