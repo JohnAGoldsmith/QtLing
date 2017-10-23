@@ -4,6 +4,7 @@
 CSignature::CSignature(QString signature_string)
 {
   m_Signature = signature_string;
+
 }
 
 CSignature::CSignature(CSignature& signature) {
@@ -17,6 +18,16 @@ void CSignature::add_stem_pointer(CStem* pStem)
 {
     m_Stems.append(pStem);
     
+}
+
+void CSignature::dump_string_set_of_suffixes(QSet<QString> & this_StringSet)
+{   QString affix;
+    QStringList affixlist = m_Signature.split("=");
+    foreach (affix, affixlist){
+        this_StringSet.insert(affix);
+    }
+
+
 }
 
 QString CSignature::display()

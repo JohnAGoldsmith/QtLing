@@ -192,8 +192,8 @@ void   CLexicon::AssignSuffixesToStems()
             }
         }else{
             this_signature_string =  iter_sigstring_to_stems.key();
-            pSig =  *m_SingletonSignatures << this_signature_string;
-            pStem = *m_SingletonStems << this_stem;
+            pSig =  *m_ResidualSignatures << this_signature_string;
+            pStem = *m_ResidualStems << this_stem;
             pSig->add_stem_pointer(pStem);
         }
     }
@@ -214,8 +214,9 @@ void   CLexicon::PurifyResidualSignatures()
     int                         count_of_new_stems = 0;
     int                         count_of_new_words = 0;
     QList<suffix_t>             true_suffix_list;
+    suffix_set                  suffix_set2;
 
-    get_suffixes(&true_suffix_list);
+    dump_suffixes(&true_suffix_list);
     QSet<QString>               true_suffix_set = QSet<QString>::fromList(true_suffix_list);
                                 m_Signatures->sort_signatures_by_affix_count();
 
@@ -226,29 +227,31 @@ void   CLexicon::PurifyResidualSignatures()
     while (sig_iter->hasNext()){
         sig_iter->next();
         CSignature*         pResidualSig        = sig_iter->value();
-        QSet<sig_string>    these_residual_suffixes_set = QSet<QString>::fromList( pResidualSig->get_key().split("="));
-                            these_residual_suffixes_set.intersect(true_suffix_set);
-                            if (these_residual_suffixes_set.size() < 1) { continue; }
+        suffix_set          this_residual_suffix_set = QSet<suffix_t>::fromList( pResidualSig->get_key().split("="));
+                            //--> The next line filters out all except true suffixes. <--//
+                            this_residual_suffix_set.intersect(true_suffix_set);
+                            if (this_residual_suffix_set.size() < 1) { continue; }
                             this_stem           = pResidualSig->get_stems()->first()->get_key(); // there is only 1 stem in these signatures, by construction.
                             if (m_Words->contains(this_stem)){
-                                these_residual_suffixes_set.insert("NULL");
+                                this_residual_suffix_set.insert("NULL");
                             }
+                            QStringList templist = this_residual_suffix_set.toList();
+                            //qDebug() << templist.join("=") << "239";
+                            //--> Now we look for largest true signature inside this list of suffixes. <--//
                             for (int sig_no=0; sig_no < get_signatures()->get_count(); sig_no++){
                                 pSig = m_Signatures->get_at_sorted(sig_no);
-                                pSig->get_string_set_of_suffixes(these_residual_suffixes_set);
-                                if (true_suffix_set.contains(these_residual_suffixes_set )){
-
-                                    *m_ResidualSignatures << pSig;
-
-
+                                pSig->dump_string_set_of_suffixes(suffix_set2);
+                                //qDebug() <<  pSig->get_key() << "244";
+                                if (this_residual_suffix_set.contains(suffix_set2)){
+                                    QList<QString> this_suffix_list = suffix_set2.toList();
+                                    this_suffix_list.sort();
+                                    qDebug() << this_stem <<  this_suffix_list.join("=") << "240";
+                                    sigstring_t signature_string_1 = this_suffix_list.join ("=");
+                                    *m_SingletonSignatures << signature_string_1;
                                     break;
                                 }
                             }
-
-
-    }   qDebug() << "How many new stems? "<<count_of_new_stems << "Words? " << count_of_new_words;
-
-
+    }
 }
 
 
@@ -377,7 +380,7 @@ while (sig_tree_edge_iter.hasNext())
 }
 
 
-void CLexicon::get_suffixes(QList<QString> * pList)
+void CLexicon::dump_suffixes(QList<QString> * pList)
 {
     return m_Suffixes->get_suffixes(pList);
 }

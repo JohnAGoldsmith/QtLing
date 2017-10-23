@@ -30,7 +30,7 @@ public:
     QString         GetSignature()              const { return m_Signature; }
     QString         get_key()                   const {return m_Signature;}
     QList<CSuffix*> GetList()                         { return m_Affixes;   }
-    void            get_string_set_of_suffixes(QSet<QString> & this_StringSet) { this_StringSet.fromList( m_Signature.split("="));}
+    void            dump_string_set_of_suffixes(QSet<QString> & this_StringSet);
 
     QList<CSuffix*>::iterator GetBegin()   { return m_Affixes.begin();  }
     QList<CSuffix*>::iterator GetEnd()     { return m_Affixes.end();    }

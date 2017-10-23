@@ -601,7 +601,7 @@ void MainWindow::createTreeModel()
     QStandardItem * sig_item = new QStandardItem(QString("Signatures"));
     QStandardItem * sig_count_item = new QStandardItem(QString::number(get_lexicon()->GetSignatureCollection()->get_count()));
 
-    QStandardItem * residual_sig_item = new QStandardItem(QString("Residual signatures"));
+    QStandardItem * residual_sig_item = new QStandardItem(QString("Residual parasignatures"));
     QStandardItem * residual_sig_count_item = new QStandardItem(QString::number(get_lexicon()->get_residual_signatures()->get_count()));
 
     QStandardItem * singleton_sig_item = new QStandardItem(QString("Singleton signatures"));
@@ -785,14 +785,41 @@ LowerTableView::LowerTableView(MainWindow * window)
         setModel( m_my_current_model);
     }
      //  ---------------------------------------------------//
-     else if (UpperView_type == SIGNATURE_RESIDUES){
+     else if (UpperView_type == RESIDUAL_PARASIGNATURES){
      //  ---------------------------------------------------//
-        qDebug() << "line 711";
         if (index.isValid()){
              row = index.row();
         }
+        CSignature*           pSig = this_lexicon->get_signatures()->get_signature(signature);
+        CStem*                p_Stem;
+        QList<CStem*>*        sig_stems = pSig->get_stems();
+        QStandardItem*        p_item;
+        QList<QStandardItem*> item_list;
 
 
+        if (m_my_current_model) {
+            delete m_my_current_model;
+        }
+        qDebug() << "line 568";
+        m_my_current_model = new QStandardItemModel();
+         qDebug() << "line 569";
+        foreach (p_Stem, *sig_stems)  {
+            p_item = new QStandardItem(p_Stem->get_key() );
+            item_list.append(p_item);
+            if (item_list.length() >= m_number_of_columns){
+                m_my_current_model->appendRow(item_list);
+                item_list.clear();
+            }
+        }
+        qDebug() << "line 579";
+        setModel( m_my_current_model);
+    }
+     //  ---------------------------------------------------//
+     else if (UpperView_type == SINGLETON_SIGNATURES){
+     //  ---------------------------------------------------//
+        if (index.isValid()){
+             row = index.row();
+        }
         CSignature*           pSig = this_lexicon->get_signatures()->get_signature(signature);
         CStem*                p_Stem;
         QList<CStem*>*        sig_stems = pSig->get_stems();
@@ -904,7 +931,7 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         qDebug() << "line 876 we got here";
         sortByColumn(-1);
     }
-    else     if (component == "Residual signatures"){
+    else     if (component == "Residual parasignatures"){
         setModel(m_parent_window->ResidualSignature_model);
         set_document_type( SIGNATURE_RESIDUES );
         //set_content_type( "rawsignatures");
