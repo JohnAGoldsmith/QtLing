@@ -148,7 +148,9 @@ private:
     void load_multiparse_model();
     void load_raw_signature_model();
     void load_sig_tree_edge_model();
-
+    void load_residual_signature_model();
+    void load_singleton_signature_model();
+    void load_singleton_stem_model();
 
     void createActions();
     void createStatusBar();
@@ -169,10 +171,11 @@ private:
     QStandardItemModel * Word_model;
     QStandardItemModel * Stem_model;
     QStandardItemModel * Signature_model;
-    QStandardItemModel * Raw_Signature_model;
     QStandardItemModel * Affix_model;
     QStandardItemModel * Protostem_model;
     QStandardItemModel * SigTreeEdge_model;
+    QStandardItemModel * ResidualSignature_model;
+    QStandardItemModel * SingletonSignature_model;
 
     QGroupBox *horizontalGroupBox;
     QGroupBox *verticalGroupBox;

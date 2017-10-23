@@ -65,7 +65,8 @@ MainWindow::MainWindow()
     Word_model      = new QStandardItemModel(1,3);
     Stem_model      = new QStandardItemModel();
     Signature_model = new QStandardItemModel();
-    Raw_Signature_model = new QStandardItemModel();
+    SingletonSignature_model = new QStandardItemModel();
+    ResidualSignature_model = new QStandardItemModel();
     Affix_model     = new QStandardItemModel();
     SigTreeEdge_model = new QStandardItemModel();
 
@@ -257,8 +258,26 @@ void MainWindow::load_sig_tree_edge_model()
     qDebug() << "finished loading sig tree edge model.";
 }
 
+void MainWindow::load_singleton_signature_model()
+{
+    CSignature* sig;
+    get_lexicon()->get_singleton_signatures()->sort();
+    QListIterator<CSignature*> * iter = get_lexicon()->get_singleton_signatures()->get_sorted_list_iterator();
+    while (iter->hasNext())
+    {
+        sig = iter->next();
+        QList<QStandardItem*> items;
+        QStandardItem * item2 = new QStandardItem(QString::number(sig->get_number_of_stems()));
+        QStandardItem * item3 = new QStandardItem(QString::number(sig->get_robustness()));
+        items.append(new QStandardItem(sig->GetSignature()));
+        items.append(item2);
+        items.append(item3);
+        SingletonSignature_model->appendRow(items);
+    }
+}
 
-void MainWindow::load_raw_signature_model()
+// Signatures with only one stem.
+void MainWindow::load_residual_signature_model()
 {
     QList<QStandardItem*> items;
     int count = 0;
@@ -284,7 +303,7 @@ void MainWindow::load_raw_signature_model()
             QStandardItem * item2 = new QStandardItem(affix);
             items.append(item2);
         }
-        Raw_Signature_model->appendRow(items);
+        ResidualSignature_model->appendRow(items);
     }
 }
 
@@ -334,7 +353,8 @@ void MainWindow::do_crab()
     load_affix_model();
     load_stem_model();
     load_sig_tree_edge_model();
-    load_raw_signature_model();
+    load_residual_signature_model();
+    load_singleton_signature_model();
     createTreeModel();
     m_leftTreeView->expandAll();
 
@@ -578,8 +598,11 @@ void MainWindow::createTreeModel()
     QStandardItem * sig_item = new QStandardItem(QString("Signatures"));
     QStandardItem * sig_count_item = new QStandardItem(QString::number(get_lexicon()->GetSignatureCollection()->get_count()));
 
-    QStandardItem * residual_sig_item = new QStandardItem(QString("Raw signatures"));
+    QStandardItem * residual_sig_item = new QStandardItem(QString("Residual signatures"));
     QStandardItem * residual_sig_count_item = new QStandardItem(QString::number(get_lexicon()->get_residual_signatures()->get_count()));
+
+    QStandardItem * singleton_sig_item = new QStandardItem(QString("Singleton signatures"));
+    QStandardItem * singleton_sig_count_item = new QStandardItem(QString::number(get_lexicon()->get_singleton_signatures()->get_count()));
 
     //QStandardItem * proto_stem_item = new QStandardItem(QString("Protostems"));
     //QStandardItem * proto_stem_count_item = new QStandardItem(QString::number(get_lexicon()->get_protostems()->size() ));
@@ -608,6 +631,11 @@ void MainWindow::createTreeModel()
     sig_items.append(sig_item);
     sig_items.append(sig_count_item);
 
+    QList<QStandardItem*> singleton_sig_items;
+    singleton_sig_items.append(singleton_sig_item);
+    singleton_sig_items.append(singleton_sig_count_item);
+
+
     QList<QStandardItem*> residual_sig_items;
     residual_sig_items.append(residual_sig_item);
     residual_sig_items.append(residual_sig_count_item);
@@ -624,6 +652,7 @@ void MainWindow::createTreeModel()
     lexicon_item->appendRow(suffix_items);
     lexicon_item->appendRow(sig_items);
     lexicon_item->appendRow(sig_tree_edge_items);
+    lexicon_item->appendRow(singleton_sig_items);
     lexicon_item->appendRow(residual_sig_items);
 
 
@@ -872,10 +901,16 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         qDebug() << "line 876 we got here";
         sortByColumn(-1);
     }
-    else     if (component == "Raw signatures"){
-        setModel(m_parent_window->Raw_Signature_model);
+    else     if (component == "Residual signatures"){
+        setModel(m_parent_window->ResidualSignature_model);
         set_document_type( SIGNATURE_RESIDUES );
-        set_content_type( "rawsignatures");
+        //set_content_type( "rawsignatures");
+        sortByColumn(1);
+    }
+    else     if (component == "Singleton signatures"){
+        setModel(m_parent_window->SingletonSignature_model);
+        set_document_type( SINGLETON_SIGNATURES );
+        //set_content_type( "rawsignatures");
         sortByColumn(1);
     }
     resizeColumnsToContents();

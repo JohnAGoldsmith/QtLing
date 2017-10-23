@@ -19,6 +19,8 @@ CLexicon::CLexicon() : m_Words(new CWordCollection), m_Stems(new CStemCollection
     m_Protostems            = QMap<QString, int>();
     m_ResidualSignatures    =  new CSignatureCollection();
     m_ResidualStems         = new CStemCollection();
+    m_SingletonSignatures   = new CSignatureCollection();
+    m_SingletonStems        = new CStemCollection();
 }
 
 QListIterator<sig_tree_edge*> * CLexicon::get_sig_tree_edge_list_iter()
@@ -190,8 +192,8 @@ void   CLexicon::AssignSuffixesToStems()
             }
         }else{
             this_signature_string =  iter_sigstring_to_stems.key();
-            pSig =  *m_ResidualSignatures << this_signature_string;
-            pStem = *m_ResidualStems << this_stem;
+            pSig =  *m_SingletonSignatures << this_signature_string;
+            pStem = *m_SingletonStems << this_stem;
             pSig->add_stem_pointer(pStem);
         }
     }

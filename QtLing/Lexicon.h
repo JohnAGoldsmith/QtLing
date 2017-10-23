@@ -53,6 +53,8 @@ protected:
     QList<QPair<QString,QString>> * m_Parses;
     QMap<QString,int>               m_Parse_map;
     QMap<QString, int>              m_Protostems;
+    CSignatureCollection*           m_SingletonSignatures;
+    CStemCollection*                m_SingletonStems;
     CSignatureCollection*           m_ResidualSignatures;   /*!<  the information we have about stems which we have not yet integrated into a morphological system. */
     CStemCollection *               m_ResidualStems;
     QMap<QString,int>               m_RawSuffixes;
@@ -72,6 +74,8 @@ public:
     void                                        get_suffixes(QList<QString>*);
     CWordCollection *                           get_words()                 { return m_Words;}
     CSignatureCollection*                       get_signatures()            { return m_Signatures;}
+    CSignatureCollection*                       get_singleton_signatures()  { return m_SingletonSignatures;}
+    CStemCollection*                            get_singleton_stems ()      { return m_SingletonStems;}
     CSignatureCollection*                       GetSignatureCollection()    { return m_Signatures; }
     //CSignature*                                 get_sig_from_sort_list (int n) { return m_SortedList[n];}
     CSignatureCollection *                      get_residual_signatures()   { return m_ResidualSignatures;}
@@ -82,6 +86,7 @@ public:
     QMap<QString, sig_tree_edge*>    *          get_sig_tree_edge_map()     { return & m_SigTreeEdgeMap;}
     QListIterator<sig_tree_edge*>    *          get_sig_tree_edge_list_iter();
     QMapIterator<QString, sig_tree_edge*> *     get_sig_tree_edge_map_iter();
+
 
 public:
     // insert functions here
