@@ -5,6 +5,9 @@
 #include <QMultiMap>
 #include <QSet>
 #include <QtDebug>
+#include <QProgressBar>
+#include <QApplication>
+
 #include "Lexicon.h"
 
 #include "SignatureCollection.h"
@@ -214,9 +217,13 @@ void   CLexicon::PurifyResidualSignatures()
     int                         suffix_no;
     int                         count_of_new_stems = 0;
     int                         count_of_new_words = 0;
+    int                         signature_count (0);
     QList<suffix_t>             true_suffix_list;
     suffix_set                  suffix_set2;
 
+    m_ProgressBar->reset();
+    m_ProgressBar->setMinimum(0);
+    m_ProgressBar->setMaximum(m_ResidualSignatures->get_count());
     dump_suffixes(&true_suffix_list);
     QSet<QString>               true_suffix_set = QSet<QString>::fromList(true_suffix_list);
                                 m_Signatures->sort_signatures_by_affix_count();
@@ -227,6 +234,9 @@ void   CLexicon::PurifyResidualSignatures()
 
     while (sig_iter->hasNext()){
         sig_iter->next();
+        signature_count++;
+        m_ProgressBar->setValue(signature_count);
+        qApp->processEvents();
         CSignature*         pResidualSig        = sig_iter->value();
         suffix_set          this_residual_suffix_set = QSet<suffix_t>::fromList( pResidualSig->get_key().split("="));
                             //--> The next line filters out all except true suffixes. <--//

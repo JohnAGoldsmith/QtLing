@@ -104,7 +104,7 @@ class MainWindow : public QMainWindow
     friend class LowerTableView;
     QList<CLexicon*>    m_lexicon_list;
     QString             m_name_of_data_file;
-     
+    QProgressBar *      m_ProgressBar;
 
 public:
     MainWindow();

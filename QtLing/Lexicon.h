@@ -12,7 +12,7 @@
 class CWordCollection;
 class CStemCollection;
 class CSuffixCollection;
-
+class QProgressBar;
 
 //typedef  QPair<sig_string, CSignature*>                    sig_and_pointer;
 
@@ -60,7 +60,7 @@ protected:
     QMap<QString,int>               m_RawSuffixes;
     QList<sig_tree_edge*>           m_SigTreeEdgeList; /*!< the sig_tree_edges in here contain only one word associated with each. */
     QMap<QString, sig_tree_edge*>   m_SigTreeEdgeMap;  /*!< the sig_tree_edges in here contain lists of words associated with them. */
-
+    QProgressBar*                   m_ProgressBar;
 
 public:
     CLexicon();
@@ -86,6 +86,7 @@ public:
     QMap<QString, sig_tree_edge*>    *          get_sig_tree_edge_map()     { return & m_SigTreeEdgeMap;}
     QListIterator<sig_tree_edge*>    *          get_sig_tree_edge_list_iter();
     QMapIterator<QString, sig_tree_edge*> *     get_sig_tree_edge_map_iter();
+    void                                        set_progress_bar (QProgressBar * pPB) { m_ProgressBar = pPB;}
 
 
 public:

@@ -90,10 +90,10 @@ MainWindow::MainWindow()
     m_mainSplitter->addWidget(m_rightSplitter);
     setCentralWidget(m_mainSplitter);
 
-    QProgressBar * progress = new QProgressBar(this);
-    progress->setVisible(true);
-    statusBar()->addPermanentWidget(progress);
-
+    m_ProgressBar  = new QProgressBar(this);
+    m_ProgressBar->setVisible(true);
+    statusBar()->addPermanentWidget(m_ProgressBar);
+    get_lexicon()->set_progress_bar (m_ProgressBar);
 
     createActions();
     createStatusBar();
@@ -288,13 +288,19 @@ void MainWindow::load_residual_signature_model()
     CSignature* sig;
     QString affix;
     int max_stem_count = 20;
+    int sig_count (0);
 
     get_lexicon()->get_residual_signatures()->sort();
     QListIterator<CSignature*> * iter =get_lexicon()->get_residual_signatures()->get_sorted_list_iterator() ;
-
+    m_ProgressBar->reset();
+    m_ProgressBar->setMinimum(0);
+    m_ProgressBar->setMaximum(get_lexicon()->get_residual_signatures()->get_count());
     while (iter->hasNext())
-    {   count++;
-        if (count > 10000) {break;}
+    {   //count++;
+        //if (count > 10000) {break;}
+        sig_count++;
+        m_ProgressBar->setValue(sig_count);
+        qApp->processEvents();
         sig = iter->next();
         if (sig->get_number_of_stems() > max_stem_count) {
             continue;
