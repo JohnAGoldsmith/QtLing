@@ -130,6 +130,9 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     if (ke->key() == Qt::Key_S){
         do_crab();
     }
+    if (ke->key() == Qt::Key_D){
+        read_dx1_file();
+    }
     QMainWindow::keyPressEvent(ke);
 }
 
@@ -368,11 +371,9 @@ void MainWindow::do_crab()
 }
 
 void MainWindow::read_file_do_crab()
-{
-        read_dx1_file();
+{       read_dx1_file();
         statusBar()->showMessage(tr("Ready"));
         do_crab();
-
 }
 
 
@@ -397,12 +398,11 @@ void MainWindow::read_dx1_file()
     {
             QString line = in.readLine();
             line = line.simplified(); // get rid of extra spaces
-            //qDebug() << line;
             QStringList words = line.split(" ");
             QString word = words[0];
             CWord* pWord = *Words << word;
             if (words.size()> 1) {
-            pWord->SetWordCount(words[1].toInt());
+                pWord->SetWordCount(words[1].toInt());
             }
     }
     Words->sort_word_list();
@@ -730,28 +730,26 @@ LowerTableView::LowerTableView(MainWindow * window)
 
  void LowerTableView::display_this_item( const  QModelIndex & index )
  {
-     eDocumentType UpperView_type = m_parent_window->m_tableView_upper->get_document_type();
-     QString component = m_parent_window->m_tableView_upper->get_content();
-     QString word, stem, prefix, suffix, signature;
-     CLexicon * this_lexicon = get_parent_window()->get_lexicon();
+     eDocumentType              UpperView_type = m_parent_window->m_tableView_upper->get_document_type();
+     QString                    component = m_parent_window->m_tableView_upper->get_content();
+     QString                    word, stem, prefix, suffix, signature;
+     CLexicon *                 this_lexicon = get_parent_window()->get_lexicon();
      int                        row;
      QStandardItem*             p_item;
      QList<QStandardItem*>      item_list;
 
-//  ---------------------------------------------------//
+    //  ---------------------------------------------------//
      if (UpperView_type == WORDS){
-//  ---------------------------------------------------//
+    //  ---------------------------------------------------//
         if (index.isValid()){
              word = index.data().toString();
         }
-        qDebug() << "Display lower table for word: "<< word;
         if (m_my_current_model){
             delete m_my_current_model;
         }
         CWord* pWord = this_lexicon->get_words()->get_word(word);
         m_my_current_model = new QStandardItemModel();
         QListIterator<QString> line_iter(*pWord->get_autobiography());
-        qDebug() << "Number of lines in autobiography" << pWord->get_autobiography()->size();
         while (line_iter.hasNext()){
             p_item = new QStandardItem(line_iter.next());
             m_my_current_model->appendRow(p_item);
@@ -763,15 +761,13 @@ LowerTableView::LowerTableView(MainWindow * window)
      else if (UpperView_type == SIGNATURES){
      //  ---------------------------------------------------//
         item_list.clear();
-         qDebug() << "line 555 show this signature";
-         if (index.isValid()){
+        if (index.isValid()){
              signature = index.data().toString();
-             //qDebug() << signature;
          }
 
         CSignature*           pSig = this_lexicon->get_signatures()->get_signature(signature);
         CStem*                p_Stem;
-        StemList    *        sig_stems = pSig->get_stems();
+        StemList    *         sig_stems = pSig->get_stems();
 
 
         if (m_my_current_model) {
@@ -807,9 +803,7 @@ LowerTableView::LowerTableView(MainWindow * window)
         if (m_my_current_model) {
             delete m_my_current_model;
         }
-//        /qDebug() << "line 568";
         m_my_current_model = new QStandardItemModel();
-         //qDebug() << "line 569";
         foreach (p_Stem, *sig_stems)  {
             p_item = new QStandardItem(p_Stem->get_key() );
             item_list.append(p_item);
@@ -818,7 +812,6 @@ LowerTableView::LowerTableView(MainWindow * window)
                 item_list.clear();
             }
         }
-        //qDebug() << "line 579";
         setModel( m_my_current_model);
     }
      //  ---------------------------------------------------//
@@ -833,13 +826,10 @@ LowerTableView::LowerTableView(MainWindow * window)
         StemList     *        sig_stems = pSig->get_stems();
         QStandardItem*        p_item;
 
-        //qDebug() << "line 566; signature: " << signature;
         if (m_my_current_model) {
             delete m_my_current_model;
         }
-        //qDebug() << "line 568";
         m_my_current_model = new QStandardItemModel();
-         //qDebug() << "line 569";
         foreach (p_Stem, *sig_stems)  {
             p_item = new QStandardItem(p_Stem->get_key() );
             item_list.append(p_item);
@@ -848,7 +838,6 @@ LowerTableView::LowerTableView(MainWindow * window)
                 item_list.clear();
             }
         }
-        //qDebug() << "line 579";
         setModel( m_my_current_model);
     }
      //  ---------------------------------------------------//
