@@ -188,6 +188,7 @@ void   CLexicon::AssignSuffixesToStems()
                     }
                     CWord* pWord = m_Words->get_word(this_word);
                     pWord->add_stem_and_signature(pStem,pSig);
+                    pWord->add_to_autobiography("First pass stem; " + this_signature_string);
                 }
             }
         }else{
@@ -231,23 +232,26 @@ void   CLexicon::PurifyResidualSignatures()
                             //--> The next line filters out all except true suffixes. <--//
                             this_residual_suffix_set.intersect(true_suffix_set);
                             if (this_residual_suffix_set.size() < 1) { continue; }
-                            this_stem           = pResidualSig->get_stems()->first()->get_key(); // there is only 1 stem in these signatures, by construction.
+                            this_stem = pResidualSig->get_stems()->first()->get_key(); // there is only 1 stem in these signatures, by construction.
                             if (m_Words->contains(this_stem)){
                                 this_residual_suffix_set.insert("NULL");
                             }
                             QStringList templist = this_residual_suffix_set.toList();
-                            //qDebug() << templist.join("=") << "239";
                             //--> Now we look for largest true signature inside this list of suffixes. <--//
                             for (int sig_no=0; sig_no < get_signatures()->get_count(); sig_no++){
+                                suffix_set2.clear();
                                 pSig = m_Signatures->get_at_sorted(sig_no);
                                 pSig->dump_string_set_of_suffixes(suffix_set2);
-                                //qDebug() <<  pSig->get_key() << "244";
+                                QStringList stringlist1 = suffix_set2.toList();
+                                QString string1 = stringlist1.join("=");
                                 if (this_residual_suffix_set.contains(suffix_set2)){
                                     QList<QString> this_suffix_list = suffix_set2.toList();
                                     this_suffix_list.sort();
-                                    qDebug() << this_stem <<  this_suffix_list.join("=") << "240";
+
                                     sigstring_t signature_string_1 = this_suffix_list.join ("=");
-                                    *m_SingletonSignatures << signature_string_1;
+                                    pSig =  *m_SingletonSignatures << signature_string_1;
+                                    pStem = *m_SingletonStems << this_stem;
+                                    pSig->add_stem_pointer(pStem);
                                     break;
                                 }
                             }

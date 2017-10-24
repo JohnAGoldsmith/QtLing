@@ -31,12 +31,14 @@ public:
     QString         get_key()                   const {return m_Signature;}
     QList<CSuffix*> GetList()                         { return m_Affixes;   }
     void            dump_string_set_of_suffixes(QSet<QString> & this_StringSet);
+    void            add_stem (QString);
+    void            add_stem_pointer(CStem*);
 
     QList<CSuffix*>::iterator GetBegin()   { return m_Affixes.begin();  }
     QList<CSuffix*>::iterator GetEnd()     { return m_Affixes.end();    }
     QList<CStem*>*                  get_stems() { return  & m_Stems;}
     
-    void add_stem_pointer(CStem*);
+
     
     QString display();
     QString display_stems() ;

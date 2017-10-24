@@ -91,7 +91,7 @@ MainWindow::MainWindow()
     setCentralWidget(m_mainSplitter);
 
     QProgressBar * progress = new QProgressBar(this);
-    progress->setVisible(false);
+    progress->setVisible(true);
     statusBar()->addPermanentWidget(progress);
 
 
@@ -104,9 +104,9 @@ MainWindow::MainWindow()
     m_mainSplitter->setSizes(QList<int>() << 1000 <<4000);
 
     // By default, we open the last dx1 file that was opened on the previous run. This is probably not a good idea long-term!
-    statusBar()->showMessage("Reading dx1 file.");
-    read_dx1_file();
-    statusBar()->showMessage("Finished reading dx1 file.");
+//    statusBar()->showMessage("Reading dx1 file.");
+//    read_dx1_file();
+//    statusBar()->showMessage("Finished reading dx1 file.");
 
 #ifndef QT_NO_SESSIONMANAGER
     QGuiApplication::setFallbackSessionManagementEnabled(false);
@@ -266,8 +266,10 @@ void MainWindow::load_singleton_signature_model()
     {
         sig = iter->next();
         QList<QStandardItem*> items;
+        QStandardItem * item1 = new QStandardItem(sig->get_stems()->first()->get_key());
         QStandardItem * item2 = new QStandardItem(QString::number(sig->get_number_of_stems()));
         QStandardItem * item3 = new QStandardItem(QString::number(sig->get_robustness()));
+        items.append(item1);
         items.append(new QStandardItem(sig->GetSignature()));
         items.append(item2);
         items.append(item3);
@@ -342,6 +344,8 @@ void MainWindow::ask_for_filename()
 {
     qDebug() << " ask for filename" ;
     m_name_of_data_file = QFileDialog::getOpenFileName(this);
+    qDebug() << m_name_of_data_file;
+    read_dx1_file();
 }
 
 void MainWindow::do_crab()
@@ -393,6 +397,7 @@ void MainWindow::read_dx1_file()
     {
             QString line = in.readLine();
             line = line.simplified(); // get rid of extra spaces
+            //qDebug() << line;
             QStringList words = line.split(" ");
             QString word = words[0];
             CWord* pWord = *Words << word;
@@ -729,45 +734,53 @@ LowerTableView::LowerTableView(MainWindow * window)
      QString component = m_parent_window->m_tableView_upper->get_content();
      QString word, stem, prefix, suffix, signature;
      CLexicon * this_lexicon = get_parent_window()->get_lexicon();
-     int row;
-     qDebug() << "display this item";
+     int                        row;
+     QStandardItem*             p_item;
+     QList<QStandardItem*>      item_list;
+
 //  ---------------------------------------------------//
      if (UpperView_type == WORDS){
 //  ---------------------------------------------------//
-         if (index.isValid()){
+        if (index.isValid()){
              word = index.data().toString();
-         }
-        QList<QStandardItem*> item_list;
-        delete m_my_current_model;
+        }
+        qDebug() << "Display lower table for word: "<< word;
+        if (m_my_current_model){
+            delete m_my_current_model;
+        }
+        CWord* pWord = this_lexicon->get_words()->get_word(word);
         m_my_current_model = new QStandardItemModel();
+        QListIterator<QString> line_iter(*pWord->get_autobiography());
+        qDebug() << "Number of lines in autobiography" << pWord->get_autobiography()->size();
+        while (line_iter.hasNext()){
+            p_item = new QStandardItem(line_iter.next());
+            m_my_current_model->appendRow(p_item);
+        }
+        setModel( m_my_current_model);
     }
-
 
      //  ---------------------------------------------------//
      else if (UpperView_type == SIGNATURES){
      //  ---------------------------------------------------//
-
+        item_list.clear();
          qDebug() << "line 555 show this signature";
          if (index.isValid()){
              signature = index.data().toString();
-             qDebug() << signature;
+             //qDebug() << signature;
          }
 
         CSignature*           pSig = this_lexicon->get_signatures()->get_signature(signature);
         CStem*                p_Stem;
         StemList    *        sig_stems = pSig->get_stems();
-        QStandardItem*        p_item;
-        QList<QStandardItem*> item_list;
+
 
         if (m_my_current_model) {
             delete m_my_current_model;
         }
         m_my_current_model = new QStandardItemModel();
-         qDebug() << "line 569";
         foreach (p_Stem, *sig_stems)  {
             p_item = new QStandardItem(p_Stem->get_key() );
             item_list.append(p_item);
-
             if (item_list.length() >= m_number_of_columns){
                 m_my_current_model->appendRow(item_list);
                 item_list.clear();
@@ -776,7 +789,6 @@ LowerTableView::LowerTableView(MainWindow * window)
         if (item_list.size() > 0){
             m_my_current_model->appendRow(item_list);
         }
-                 qDebug() << "line 579";
         setModel( m_my_current_model);
     }
      //  ---------------------------------------------------//
@@ -785,19 +797,19 @@ LowerTableView::LowerTableView(MainWindow * window)
         if (index.isValid()){
              row = index.row();
         }
+        item_list.clear();
         CSignature*           pSig = this_lexicon->get_signatures()->get_signature(signature);
         CStem*                p_Stem;
         StemList     *        sig_stems = pSig->get_stems();
         QStandardItem*        p_item;
-        QList<QStandardItem*> item_list;
 
 
         if (m_my_current_model) {
             delete m_my_current_model;
         }
-        qDebug() << "line 568";
+//        /qDebug() << "line 568";
         m_my_current_model = new QStandardItemModel();
-         qDebug() << "line 569";
+         //qDebug() << "line 569";
         foreach (p_Stem, *sig_stems)  {
             p_item = new QStandardItem(p_Stem->get_key() );
             item_list.append(p_item);
@@ -806,12 +818,13 @@ LowerTableView::LowerTableView(MainWindow * window)
                 item_list.clear();
             }
         }
-        qDebug() << "line 579";
+        //qDebug() << "line 579";
         setModel( m_my_current_model);
     }
      //  ---------------------------------------------------//
      else if (UpperView_type == SINGLETON_SIGNATURES){
      //  ---------------------------------------------------//
+        item_list.clear();
         if (index.isValid()){
              row = index.row();
         }
@@ -819,15 +832,14 @@ LowerTableView::LowerTableView(MainWindow * window)
         CStem*                p_Stem;
         StemList     *        sig_stems = pSig->get_stems();
         QStandardItem*        p_item;
-        QList<QStandardItem*> item_list;
 
-        qDebug() << "line 566; signature: " << signature;
+        //qDebug() << "line 566; signature: " << signature;
         if (m_my_current_model) {
             delete m_my_current_model;
         }
-        qDebug() << "line 568";
+        //qDebug() << "line 568";
         m_my_current_model = new QStandardItemModel();
-         qDebug() << "line 569";
+         //qDebug() << "line 569";
         foreach (p_Stem, *sig_stems)  {
             p_item = new QStandardItem(p_Stem->get_key() );
             item_list.append(p_item);
@@ -836,13 +848,13 @@ LowerTableView::LowerTableView(MainWindow * window)
                 item_list.clear();
             }
         }
-        qDebug() << "line 579";
+        //qDebug() << "line 579";
         setModel( m_my_current_model);
     }
      //  ---------------------------------------------------//
      else if (UpperView_type == SIGNATURE_TREE_EDGES){
      //  ---------------------------------------------------//
-
+     item_list.clear();
      QList<QString> * word_list;
      if (index.isValid()){
          row = index.row();
@@ -852,7 +864,6 @@ LowerTableView::LowerTableView(MainWindow * window)
      sig_tree_edge * p_sig_tree_edge =this_lexicon->get_sig_tree_edge_map()->value(label);
      word_list = & p_sig_tree_edge->words;
 
-     QList<QStandardItem*> item_list;
      if (m_my_current_model) {
          delete m_my_current_model;
      }
@@ -868,7 +879,7 @@ LowerTableView::LowerTableView(MainWindow * window)
      if (item_list.size() > 0){
         m_my_current_model->appendRow(item_list);
      }
-     qDebug() << "line 579";
+     //qDebug() << "line 579";
      setModel( m_my_current_model);
     }
 

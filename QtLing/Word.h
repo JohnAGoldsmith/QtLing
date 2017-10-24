@@ -48,6 +48,7 @@ public:
     void                                    add_stem_and_signature(CStem*, CSignature*);
     void                                    IncrementWordCount(int n = 1);
     void                                    add_to_autobiography(QString line) {m_Autobiography.append(line);};
+    QList<QString>*                         get_autobiography() {return & m_Autobiography;}
 };
 
 #endif // CWORD_H
