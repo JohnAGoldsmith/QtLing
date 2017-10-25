@@ -764,6 +764,8 @@ LowerTableView::LowerTableView(MainWindow * window)
                 p_item = new QStandardItem(report_line_items[i]);
                 if (i == 0 && report_line_items[i][0] == "*"){
                     p_item->setBackground(Qt::red);
+                } else{
+                    p_item->setBackground(Qt::white);
                 }
                 item_list.append(p_item);
             }
