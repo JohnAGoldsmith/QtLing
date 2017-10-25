@@ -128,7 +128,7 @@ void CLexicon::CreateStemAffixPairs()
  */
 void   CLexicon::AssignSuffixesToStems()
 {   const int MINIMUM_NUMBER_OF_STEMS = 2;
-
+    CWord *                     pWord;
     QPair<QString,QString>      this_pair;
     CSignature*                 pSig;
     QString                     this_stem, this_suffix, this_signature_string, this_word;;
@@ -191,7 +191,7 @@ void   CLexicon::AssignSuffixesToStems()
                     }
                     CWord* pWord = m_Words->get_word(this_word);
                     pWord->add_stem_and_signature(pStem,pSig);
-                    pWord->add_to_autobiography("First pass stem; " + this_signature_string);
+                    pWord->add_to_autobiography(this_stem + "=" + this_signature_string);
                 }
             }
         }else{
@@ -199,6 +199,15 @@ void   CLexicon::AssignSuffixesToStems()
             pSig =  *m_ResidualSignatures << this_signature_string;
             pStem = *m_ResidualStems << this_stem;
             pSig->add_stem_pointer(pStem);
+            foreach (this_suffix, this_suffix_set){
+                if (this_suffix == "NULL"){
+                    this_word = this_stem;
+                } else{
+                    this_word = this_stem + this_suffix;
+                }
+                pWord = m_Words->find_or_null(this_word);
+                pWord->add_to_autobiography("*" + this_stem + "=" + this_signature_string);
+            }
         }
     }
 }

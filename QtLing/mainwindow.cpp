@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 //#include "generaldefinitions.h"
 #include "ui_mainwindow.h"
+#include <QBrush>
+#include <QColor>
 #include <QtWidgets>
 #include <QTreeView>
 #include <QKeyEvent>
@@ -296,9 +298,7 @@ void MainWindow::load_residual_signature_model()
     m_ProgressBar->setMinimum(0);
     m_ProgressBar->setMaximum(get_lexicon()->get_residual_signatures()->get_count());
     while (iter->hasNext())
-    {   //count++;
-        //if (count > 10000) {break;}
-        sig_count++;
+    {   sig_count++;
         m_ProgressBar->setValue(sig_count);
         qApp->processEvents();
         sig = iter->next();
@@ -757,8 +757,17 @@ LowerTableView::LowerTableView(MainWindow * window)
         m_my_current_model = new QStandardItemModel();
         QListIterator<QString> line_iter(*pWord->get_autobiography());
         while (line_iter.hasNext()){
-            p_item = new QStandardItem(line_iter.next());
-            m_my_current_model->appendRow(p_item);
+            QString report_line = line_iter.next();
+            item_list.clear();
+            QStringList report_line_items = report_line.split("=");
+            for (int i = 0; i < report_line_items.size(); i++){
+                p_item = new QStandardItem(report_line_items[i]);
+                if (i == 0 && report_line_items[i][0] == "*"){
+                    p_item->setBackground(Qt::red);
+                }
+                item_list.append(p_item);
+            }
+            m_my_current_model->appendRow(item_list);
         }
         setModel( m_my_current_model);
     }

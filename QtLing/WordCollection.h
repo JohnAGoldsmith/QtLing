@@ -34,14 +34,11 @@ private:
 
 public:
     friend class CLexicon;
-    CWord* operator<< ( CParse* );
-//    CWord* operator<< ( CStringSurrogate );
     CWord* operator<< ( QString );
-    CWord* operator^= ( CParse* );
-//    CWord* operator^= ( CStringSurrogate );
     CWord* operator^= ( QString );
 
     CWord* find_or_add (QString);
+    CWord* find_or_null (QString);
     CWord* add (QString);
     CWord* get_word (QString); // returns false if the string is not in the word collection
 
@@ -49,14 +46,11 @@ public:
     int get_count() const { return m_WordMap.size(); }
 
     QMapIterator<QString,CWord*> *  get_iterator();
-//    QMap<QString,CWord*>::iterator GetBegin()   { return m_WordMap.begin();  }
-//    QMap<QString,CWord*>::iterator GetEnd()     { return m_WordMap.end();    }
-//    QMap<QString,CWord*> *         GetList()    { return & m_WordMap;          }
 
-    bool contains(QString string)  {return m_WordMap.contains(string);}
-    void sort_word_list();
-    QStringList* GetSortedStringArray() {return & m_SortedStringArray;}
-    QMap<QString, CWord*>* GetMap() { return & m_WordMap; }
+    bool                    contains(QString string)  {return m_WordMap.contains(string);}
+    void                    sort_word_list();
+    QStringList*            GetSortedStringArray() {return & m_SortedStringArray;}
+    QMap<QString, CWord*>*  GetMap() { return & m_WordMap; }
 
 
 };
