@@ -14,16 +14,15 @@ class CStemCollection
 {
 protected:
 
-    QMap<QString  , CStem*> m_StringToStemMap;
-    int m_CorpusCount;
-    QString m_MemberName;
-    QList<CStem*>                 m_SortList;
-    bool m_SortValidFlag;
-    enum eSortStyle m_SortStyle;
+    map_string_to_stem *        m_StringToStemMap;
+    int                         m_CorpusCount;
+    QString                     m_MemberName;
+    QList<CStem*>               m_SortList;
+    bool                        m_SortValidFlag;
+    enum   eSortStyle           m_SortStyle;
 
 public:
     CStemCollection();
-//    CStemCollection(CLexicon* Lex, QString MemberName = QString());
     ~CStemCollection();
 
 // disable copy
@@ -32,24 +31,18 @@ private:
     CStemCollection& operator=(const CStemCollection& x);
 
 public:
-//    CStem* operator<< ( CParse* );
-//    CStem* operator<< ( CStringSurrogate );
-    CStem* operator<< ( QString );
-//    CStem* operator^= ( CParse* );
-//    CStem* operator^= ( CStringSurrogate );
-    CStem* operator^= ( QString );
-    CStem* find_or_add (QString);  // same as ˆ=
-    CStem* find (QString);
-    CStem* add (QString);
 
-    CStem* GetAtKey( QString);
-    int get_count() const { return m_StringToStemMap.size(); }
-    void add_stem_pointer (CStem* pStem);
-
-    
-    QMapIterator<QString,CStem*> * get_map_iterator();
-    QListIterator<CStem*> * get_sorted_list_iterator();
-    
+    CStem*                          operator<< ( QString );
+    CStem*                          operator^= ( QString );
+    CStem*                          find_or_add (QString);  // same as <<
+    CStem*                          find_or_fail (QString); // same as ^=
+    CStem*                          add (QString);  // deprecated
+    CStem*                          GetAtKey( QString);
+    int                             get_count() const { return m_StringToStemMap->size(); }
+    void                            add_stem_pointer (CStem* pStem);
+ //   QMapIterator<QString,CStem*> *  get_map_iterator();
+    QListIterator<CStem*> *         get_sorted_list_iterator();
+    map_string_to_stem *            get_map() { return m_StringToStemMap;}         //       FIX THIS< DO IT RIGHT;
 };
 
 #endif // CSTEMCOLLECTION_H

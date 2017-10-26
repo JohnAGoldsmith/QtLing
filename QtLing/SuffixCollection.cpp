@@ -7,16 +7,26 @@ CSuffixCollection::CSuffixCollection()
 {
     m_SuffixMap = QMap<QString, CSuffix*>();
 }
-CSuffixCollection::~CSuffixCollection() {}
+CSuffixCollection::~CSuffixCollection() {
 
-
-CSuffix* CSuffixCollection::operator <<(QString suffix)
-{ 
-    CSuffix* pSuffix = new CSuffix(suffix);
-    m_SuffixMap.insert(suffix, pSuffix);
-    return pSuffix;
 }
 
+
+CSuffix* CSuffixCollection::operator ^=(QString suffix)
+{ 
+      return this->find_or_fail ( suffix );
+}
+CSuffix* CSuffixCollection::find_or_fail(QString suffix)
+{
+    QMap<QString,CSuffix*>::iterator suffix_iter = m_SuffixMap.find(suffix);
+    //map_string_to_suffix_iter suffix_iter = m_SuffixMap.find(suffix);
+    if (suffix_iter == m_SuffixMap.end()){
+        return NULL;
+    } else{
+        return suffix_iter.value();
+    }
+
+}
 CSuffix* CSuffixCollection::find_or_add(QString suffix)
 {
 
@@ -31,7 +41,7 @@ CSuffix* CSuffixCollection::find_or_add(QString suffix)
 }
 
 
-CSuffix* CSuffixCollection::operator ^=(QString suffix)
+CSuffix* CSuffixCollection::operator << (QString suffix)
 {
     return this->find_or_add(suffix);
 }

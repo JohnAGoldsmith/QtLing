@@ -47,6 +47,7 @@ public:
 
     QMapIterator<QString,CWord*> *  get_iterator();
 
+    CWord*                  find_or_fail(QString word_t);
     bool                    contains(QString string)  {return m_WordMap.contains(string);}
     void                    sort_word_list();
     QStringList*            GetSortedStringArray() {return & m_SortedStringArray;}

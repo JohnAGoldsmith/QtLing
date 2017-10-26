@@ -38,7 +38,7 @@ CWord* CWordCollection::find_or_add(QString word_string){
         return word_iter.value();
     }
 }
-CWord* CWordCollection::find_or_null(QString word_string){
+CWord* CWordCollection::find_or_fail(QString word_string){
     QMap<QString,CWord*>::const_iterator word_iter = m_WordMap.find(word_string);
     if (word_iter == m_WordMap.end()){
          return NULL;

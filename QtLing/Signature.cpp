@@ -4,20 +4,26 @@
 CSignature::CSignature(QString signature_string)
 {
   m_Signature = signature_string;
-
+  m_Stems = new QList<CStem*>();
+  m_Affixes = new CSuffixList;
 }
 
 CSignature::CSignature(CSignature& signature) {
     m_Signature = signature.GetSignature();
     m_Affixes = signature.GetList();
+    m_Stems = new CStemList();
+}
+CSignature::~CSignature()
+{
+  delete m_Stems;
+  delete m_Affixes;
 }
 
 
 
 void CSignature::add_stem_pointer(CStem* pStem)
 {
-    m_Stems.append(pStem);
-    
+    m_Stems->append(pStem);
 }
 
 void  add_stem (QString);
@@ -41,8 +47,8 @@ QString CSignature::display_stems()
 {
     QString outstring;
     CStem *qStem;
-    foreach (qStem, m_Stems){
-        outstring += " " + qStem->display();
+    for (int stem_no = 0; stem_no < m_Stems->size(); stem_no ++ ){
+        outstring += m_Stems->at(stem_no)->display();
     }
     return outstring;
 }
@@ -51,22 +57,22 @@ int CSignature::get_robustness()
     int robustness = 0;
     int stem_letters = 0;
     int suffix_letters = 0;
-    foreach (const CSuffix* suffix, m_Affixes){
-        if (suffix->get_key() == "NULL"){
+    for (int suffix_no=0; suffix_no < m_Affixes->size(); suffix_no++){
+        if (m_Affixes->at(suffix_no)->get_key() == "NULL"){
             suffix_letters += 1;
         } else{
-            suffix_letters += suffix->get_key().length();
+            suffix_letters += m_Affixes->at(suffix_no)->get_key().length();
         }
     }
-    foreach (const CStem* stem, m_Stems){
-        stem_letters += stem->get_key().length();
+    for (int stem_no=0;stem_no<m_Stems->size();stem_no++){
+        stem_letters += m_Stems->at(stem_no)->get_key().length();
     }
     robustness = stem_letters + suffix_letters;
     return robustness;
 }
  int CSignature::get_number_of_affixes() const
-{   if (m_Affixes.size() > 0)
-     {return m_Affixes.size();}
+{   if (m_Affixes->count() > 0)
+     {return m_Affixes->count();}
      else {return m_Signature.count("="); }
 }
 

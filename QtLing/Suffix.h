@@ -23,7 +23,7 @@ public:
     int     GetFrequency()    { return m_frequency; }
     void    SetFrequency(int frequency) { m_frequency = frequency; }
     int     get_count() const {return m_count;}
-    int     increment_count() {m_count+= 1;}
+    int     increment_count() {m_count+= 1; return m_count;}
 };
 
 #endif // CSUFFIX_H

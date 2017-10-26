@@ -16,8 +16,8 @@
 #include "WordCollection.h"
 #include "Word.h"
 
-CLexicon::CLexicon() : m_Words(new CWordCollection), m_Stems(new CStemCollection), m_Suffixes(new CSuffixCollection), m_Signatures(new CSignatureCollection)
-{
+CLexicon::CLexicon() : m_Words(new CWordCollection), m_Suffixes(new CSuffixCollection), m_Signatures(new CSignatureCollection)
+{   m_Stems                 = new CStemCollection();
     m_Parses                = new QList<QPair<QString,QString>>();
     m_Protostems            = QMap<QString, int>();
     m_ResidualSignatures    =  new CSignatureCollection();
@@ -205,7 +205,7 @@ void   CLexicon::AssignSuffixesToStems()
                 } else{
                     this_word = this_stem + this_suffix;
                 }
-                pWord = m_Words->find_or_null(this_word);
+                pWord = m_Words->find_or_fail(this_word);
                 pWord->add_to_autobiography("*" + this_stem + "=" + this_signature_string);
             }
         }
@@ -219,59 +219,96 @@ void   CLexicon::AssignSuffixesToStems()
  */
 void   CLexicon::PurifyResidualSignatures()
 {   stem_t                      this_stem;
-    CStem*                      pStem;
     word_t                      this_word;
+    suffix_t                    this_suffix;
     sig_string                  this_signature_string;
-    CSignature*                 pSig;
+    CStem*                      pStem;
+    CSuffix*                    pSuffix;
+    CWord*                      pWord;
+    CSignature*                 pSig, *p_proven_sig;
+    CSuffix*                    pSuffix1;
     int                         suffix_no;
     int                         count_of_new_stems = 0;
     int                         count_of_new_words = 0;
     int                         signature_count (0);
-    QList<suffix_t>             true_suffix_list;
-    suffix_set                  suffix_set2;
+    //suffix_list                 true_suffix_list;
+    suffix_list                 suffixes_of_residual_sig;
+    CSuffix_ptr_list  *          list_of_CSuffixes_of_proven_sig;
+    CSuffix_ptr_list             this_residual_sig_suffix_pointer_list;
+    bool                        success_flag;
+
+    suffix_t                    Null_string ("NULL");
+    CSuffix*                    pNullSuffix = *m_Suffixes << Null_string;
 
     m_ProgressBar->reset();
     m_ProgressBar->setMinimum(0);
     m_ProgressBar->setMaximum(m_ResidualSignatures->get_count());
-    dump_suffixes(&true_suffix_list);
-    QSet<QString>               true_suffix_set = QSet<QString>::fromList(true_suffix_list);
+    //dump_suffixes(&true_suffix_list);
+    //QSet<QString>               true_suffix_set = QSet<QString>::fromList(true_suffix_list);
+
+
+
                                 m_Signatures->sort_signatures_by_affix_count();
 
     //---->   We iterate through the list of Residual Signatures <-------//
 
     QMapIterator<QString, CSignature*> * sig_iter =  m_ResidualSignatures->get_map_iterator();
 
+    //--> Outer loop, over all Residual Signatures. <--//
     while (sig_iter->hasNext()){
         sig_iter->next();
         signature_count++;
         m_ProgressBar->setValue(signature_count);
         qApp->processEvents();
-        CSignature*         pResidualSig        = sig_iter->value();
-        suffix_set          this_residual_suffix_set = QSet<suffix_t>::fromList( pResidualSig->get_key().split("="));
-                            //--> The next line filters out all except true suffixes. <--//
-                            this_residual_suffix_set.intersect(true_suffix_set);
-                            if (this_residual_suffix_set.size() < 1) { continue; }
+        CSignature*         pResidualSig              = sig_iter->value();
+                            suffixes_of_residual_sig  = pResidualSig->get_key().split("=");
+                            foreach (suffix_t this_suffix, suffixes_of_residual_sig){
+                                pSuffix = m_Suffixes->find_or_fail(this_suffix);
+                                if (pSuffix){
+                                    this_residual_sig_suffix_pointer_list.append(pSuffix);
+                                }
+                            }
+                            if (this_residual_sig_suffix_pointer_list.size() < 1) { continue; }
                             this_stem = pResidualSig->get_stems()->first()->get_key(); // there is only 1 stem in these signatures, by construction.
                             if (m_Words->contains(this_stem)){
-                                this_residual_suffix_set.insert("NULL");
+                                this_residual_sig_suffix_pointer_list.append(pNullSuffix);
                             }
-                            QStringList templist = this_residual_suffix_set.toList();
                             //--> Now we look for largest true signature inside this list of suffixes. <--//
+                            //--> Inner loop, over all good signatures. <--//
                             for (int sig_no=0; sig_no < get_signatures()->get_count(); sig_no++){
-                                suffix_set2.clear();
-                                pSig = m_Signatures->get_at_sorted(sig_no);
-                                pSig->dump_string_set_of_suffixes(suffix_set2);
-                                QStringList stringlist1 = suffix_set2.toList();
-                                QString string1 = stringlist1.join("=");
-                                if (this_residual_suffix_set.contains(suffix_set2)){
-                                    QList<QString> this_suffix_list = suffix_set2.toList();
-                                    this_suffix_list.sort();
-
-                                    sigstring_t signature_string_1 = this_suffix_list.join ("=");
-                                    pSig =  *m_SingletonSignatures << signature_string_1;
-                                    pStem = *m_SingletonStems << this_stem;
-                                    pSig->add_stem_pointer(pStem);
+                                p_proven_sig = m_Signatures->get_at_sorted(sig_no);
+                                list_of_CSuffixes_of_proven_sig = p_proven_sig->get_CSuffixes();
+                                success_flag                 = true;
+                                CSuffix_ptr_list_iterator suffix_iter (*list_of_CSuffixes_of_proven_sig);
+                                while (suffix_iter.hasNext())  {
+                                    pSuffix = suffix_iter.next();
+                                    if (false == this_residual_sig_suffix_pointer_list.contains(pSuffix1)){
+                                        success_flag = false;
+                                        break;
+                                    }
+                                }
+                                if (success_flag == true){
+                                    // We have found the longest signature contained in this_residual_suffix_set
+                                    pStem = m_Stems->find_or_add(this_stem);
+                                    qDebug() << this_stem << pStem->get_key();
+                                    p_proven_sig->add_stem(pStem);
+                                    //--> add to autobiographies <--//
+                                    CSuffix_ptr_list_iterator suffix_ptr_iter (*list_of_CSuffixes_of_proven_sig);
+                                    while (suffix_ptr_iter.hasNext()){
+                                        pSuffix = suffix_ptr_iter.next();
+                                        if (pSuffix->get_key() == "NULL"){
+                                            this_word= this_stem;
+                                        }else{
+                                            this_word = this_stem + pSuffix->get_key();
+                                        }
+                                        pWord = m_Words->find_or_fail(this_word);
+                                        if (pWord){
+                                            pWord->add_to_autobiography("singleton="  + this_stem  + "=" +  p_proven_sig->get_key());
+                                        }
+                                    }
                                     break;
+                                } else{
+                                    //?
                                 }
                             }
     }
@@ -292,7 +329,6 @@ struct{
     // return pSig_a->number_of_true_suffixes() > pSig_b->number_of_true_suffixes();
     }
 }custom_compare_residual_sig;
-
 void CLexicon::find_good_signatures_inside_residual_signatures(bool FindSuffixesFlag){
 
 
