@@ -192,7 +192,7 @@ void MainWindow::load_stem_model()
 }
 void MainWindow::load_affix_model()
 {
-    map_string_to_suffix_iter suffix_iter(get_lexicon()->GetSuffixCollection()->GetMap());
+    map_string_to_suffix_ptr_iter suffix_iter(get_lexicon()->GetSuffixCollection()->GetMap());
     while (suffix_iter.hasNext())
     {
         CSuffix* pSuffix = suffix_iter.next().value();
@@ -783,7 +783,7 @@ LowerTableView::LowerTableView(MainWindow * window)
 
         CSignature*           pSig = this_lexicon->get_signatures()->get_signature(signature);
         CStem*                p_Stem;
-        CStemList    *         sig_stems = pSig->get_stems();
+        CStem_ptr_list    *   sig_stems = pSig->get_stems();
 
 
         if (m_my_current_model) {
@@ -812,7 +812,7 @@ LowerTableView::LowerTableView(MainWindow * window)
         item_list.clear();
         CSignature*           pSig = this_lexicon->get_signatures()->get_signature(signature);
         CStem*                p_Stem;
-        CStemList     *        sig_stems = pSig->get_stems();
+        CStem_ptr_list     *  sig_stems = pSig->get_stems();
         QStandardItem*        p_item;
 
 
@@ -839,7 +839,7 @@ LowerTableView::LowerTableView(MainWindow * window)
         }
         CSignature*           pSig = this_lexicon->get_signatures()->get_signature(signature);
         CStem*                p_Stem;
-        CStemList     *        sig_stems = pSig->get_stems();
+        CStem_ptr_list  *      sig_stems = pSig->get_stems();
         QStandardItem*        p_item;
 
         if (m_my_current_model) {

@@ -14,12 +14,12 @@ class CWordCollection
 {
 protected:
     //QList<CWord*> m_WordList;
-    QMap<QString, CWord*> m_WordMap;
-    int m_CorpusCount;
-    QString m_MemberName;
-    QStringList m_SortedStringArray;
-    bool m_SortValidFlag;
-    enum eSortStyle m_SortStyle;
+    QMap<QString, CWord*>   m_WordMap;
+    int                     m_CorpusCount;
+    QString                 m_MemberName;
+    QStringList             m_SortedStringArray;
+    bool                    m_SortValidFlag;
+    enum                    eSortStyle m_SortStyle;
 
     public:
     // construction/destruction.
@@ -52,8 +52,8 @@ public:
     void                    sort_word_list();
     QStringList*            GetSortedStringArray() {return & m_SortedStringArray;}
     QMap<QString, CWord*>*  GetMap() { return & m_WordMap; }
-
-
+    QMap<word_t, CWord*>::iterator  begin()                    { return m_WordMap.begin();}
+    QMap<word_t, CWord*>::iterator  end()                      { return m_WordMap.end();}
 };
 
 #endif // CWORDCOLLECTION_H

@@ -1,6 +1,6 @@
 #include "SignatureCollection.h"
 #include <QDebug>
-
+#include "Typedefs.h"
 
 CSignatureCollection::CSignatureCollection()
 {
@@ -9,12 +9,19 @@ CSignatureCollection::CSignatureCollection()
     m_MemberName			= QString::null;
     m_SortValidFlag			= 0;
     m_SortStyle				= KEY;
+    m_MapIterator           = new map_sigstring_to_sig_ptr_iter (m_SignatureMap);
 }
 
-QMapIterator<QString, CSignature*> * CSignatureCollection::get_map_iterator()
+CSignatureCollection::~CSignatureCollection()
 {
-    map_sigstring_to_sigptr_iter * sig_iter = new map_sigstring_to_sigptr_iter (m_SignatureMap);
-    return sig_iter ;
+    delete m_MapIterator;
+}
+
+
+map_sigstring_to_sig_ptr_iter * CSignatureCollection::get_map_iterator()
+{
+    m_MapIterator->toFront();
+    return m_MapIterator ;
 }
 QListIterator<CSignature*> * CSignatureCollection::get_sorted_list_iterator()
 {
@@ -22,10 +29,6 @@ QListIterator<CSignature*> * CSignatureCollection::get_sorted_list_iterator()
     return sig_iter ;
 }
 
-CSignatureCollection::~CSignatureCollection()
-{
-
-}
 
 bool CSignatureCollection::contains(sigstring_t this_sigstring){
     return m_SignatureMap.contains(this_sigstring);
@@ -61,9 +64,8 @@ bool compare_stem_count(const CSignature* pSig1, const CSignature* pSig2)
 }
 void CSignatureCollection::sort()
 {   qDebug() << "sorting signatures.";
-    //QMap<QString,CSignature*>::iterator sig_iter;
 
-    map_sigstring_to_sigptr_iter sig_iter (m_SignatureMap);
+    map_sigstring_to_sig_ptr_iter sig_iter (m_SignatureMap);
     while (sig_iter.hasNext())
     {
         sig_iter.next();
@@ -79,7 +81,7 @@ bool compare_affix_count(const CSignature* pSig1, const CSignature* pSig2)
 }
 void CSignatureCollection::sort_signatures_by_affix_count()
 {
-    map_sigstring_to_sigptr_iter sig_iter (m_SignatureMap);
+    map_sigstring_to_sig_ptr_iter sig_iter (m_SignatureMap);
     while (sig_iter.hasNext())
     {
         sig_iter.next();
