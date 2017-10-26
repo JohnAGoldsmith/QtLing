@@ -290,7 +290,6 @@ void MainWindow::load_residual_signature_model()
     QString affix;
     int max_stem_count = 20;
     int sig_count (0);
-
     get_lexicon()->get_residual_signatures()->sort();
     QListIterator<CSignature*> * iter =get_lexicon()->get_residual_signatures()->get_sorted_list_iterator() ;
     m_ProgressBar->reset();
@@ -304,13 +303,14 @@ void MainWindow::load_residual_signature_model()
         if (sig->get_number_of_stems() > max_stem_count) {
             continue;
         }
-        QList<QStandardItem*> items;
+        items.clear();
         QStandardItem * stem_item = new QStandardItem(sig->get_stems()->first()->get_key());
         items.append(stem_item);
         QStringList affixes = sig->display().split("=");
-        foreach (affix, affixes){
-            QStandardItem * item2 = new QStandardItem(affix);
+        for (int affix_no = 0; affix_no < affixes.count(); affix_no++ ){
+            QStandardItem * item2 = new QStandardItem(affixes.at(affix_no));
             items.append(item2);
+            if (affix_no > 10){break;}
         }
         ResidualSignature_model->appendRow(items);
     }
