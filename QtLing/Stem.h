@@ -17,6 +17,7 @@ protected:
     QList<QString>      m_Signatures;
     QList<CSuffix*>     m_parasignature; // a parasignature is made up of approved affixes, but the parasignature has not yet been approved.
     int                 m_count;
+    QStringList         m_Autobiography;
 public:
     CStem (QString);
     CStem(CStem&);
@@ -30,6 +31,7 @@ public:
     int                 get_count() {return m_count;}
     void                set_count (int n) {m_count = n;}
     void                add_suffix_to_parasignature(CSuffix* pSuffix) { m_parasignature.append(pSuffix);}
+    void                add_memo (QString memo) {m_Autobiography.append(memo);}
 };
 
 #endif // CSTEM_H

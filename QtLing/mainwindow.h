@@ -29,6 +29,26 @@ class QTreeView;
 class MainWindow;
 QT_END_NAMESPACE
 
+class LxaModel : public QStandardItemModel
+{
+    Q_OBJECT
+public:
+
+    LxaModel(QString shortname);
+    ~LxaModel();
+
+private:
+    QString     m_ShortName;
+    QString     m_Description;
+
+public:
+    void        load_words(CWordCollection*);
+    void        load_stems(CStemCollection * p_stems);
+    void        load_suffixes(CSuffixCollection * p_suffixes);
+    void        load_signatures(CSignatureCollection * p_signatures);
+    void        load_sig_tree_edges(QMap<QString, sig_tree_edge*> *);
+};
+
 class LxaStandardItemModel: public QStandardItemModel
 {
     Q_OBJECT
@@ -105,6 +125,7 @@ class MainWindow : public QMainWindow
     QList<CLexicon*>    m_lexicon_list;
     QString             m_name_of_data_file;
     QProgressBar *      m_ProgressBar;
+    QMap<QString, LxaModel*>   m_Models;
 
 public:
     MainWindow();
@@ -151,6 +172,8 @@ private:
     void load_residual_signature_model();
     void load_singleton_signature_model();
     void load_singleton_stem_model();
+    void load_StemSet2_model();
+    void load_subsignature_model();
 
     void createActions();
     void createStatusBar();
@@ -168,14 +191,7 @@ private:
     LeftSideTreeView *  m_leftTreeView;
 
     QStandardItemModel * m_treeModel;
-    QStandardItemModel * Word_model;
-    QStandardItemModel * Stem_model;
-    QStandardItemModel * Signature_model;
-    QStandardItemModel * Affix_model;
-    QStandardItemModel * Protostem_model;
-    QStandardItemModel * SigTreeEdge_model;
-    QStandardItemModel * ResidualSignature_model;
-    QStandardItemModel * SingletonSignature_model;
+
 
     QGroupBox *horizontalGroupBox;
     QGroupBox *verticalGroupBox;

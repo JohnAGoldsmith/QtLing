@@ -15,16 +15,19 @@ class CLexicon;
 class CSignatureCollection
 {
 protected:
-    map_string_to_sig           m_SignatureMap;
-    int                         m_CorpusCount;
-    QString                     m_MemberName;
-    QList<CSignature*>          m_SortList;
-    bool                        m_SortValidFlag;
-    enum  eSortStyle            m_SortStyle;
+    map_string_to_sig               m_SignatureMap;
+    int                             m_CorpusCount;
+    QString                         m_MemberName;
+    QList<CSignature*>              m_SortList;
+    bool                            m_SortValidFlag;
+    enum  eSortStyle                m_SortStyle;
     map_sigstring_to_sig_ptr_iter * m_MapIterator;
+    QListIterator<CSignature*>  *   m_SortedListIterator;
+
+
+
 public:
     CSignatureCollection();
-//    CSignatureCollection(CLexicon* Lex, QString MemberName = QString());
     ~CSignatureCollection();
 
 // disable copy
@@ -44,7 +47,7 @@ public:
     CSignature*                             get_signature(QString sig) {return m_SignatureMap.value(sig); }
     map_sigstring_to_sig_ptr_iter *         get_map_iterator() ;
     QListIterator<CSignature*>   *          get_sorted_list_iterator();
-    void                                    make_sorted_list_iterator(map_string_to_word_ptr_iter&);
+    //void                                    make_sorted_list_iterator(map_string_to_word_ptr_iter&);
     bool                                    contains (sigstring_t);
     void                                    sort();
     void                                    sort_signatures_by_affix_count();

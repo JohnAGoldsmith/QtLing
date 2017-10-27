@@ -8,7 +8,7 @@
 
 class CWord;
 class CLexicon;
-class CParse;
+
 
 class CWordCollection
 {
@@ -52,6 +52,7 @@ public:
     void                    sort_word_list();
     QStringList*            GetSortedStringArray() {return & m_SortedStringArray;}
     QMap<QString, CWord*>*  GetMap() { return & m_WordMap; }
+    QMap<QString, CWord*>*  get_map() { return & m_WordMap; }
     QMap<word_t, CWord*>::iterator  begin()                    { return m_WordMap.begin();}
     QMap<word_t, CWord*>::iterator  end()                      { return m_WordMap.end();}
 };

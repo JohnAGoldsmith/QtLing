@@ -4,14 +4,14 @@
 CSignature::CSignature(QString signature_string)
 {
   m_Signature = signature_string;
-  m_Stems = new QList<CStem*>();
-  m_Affixes = new CSuffixList;
+  m_Stems = new CStem_ptr_list();
+  m_Affixes = new CSuffix_ptr_list;
 }
 
 CSignature::CSignature(CSignature& signature) {
     m_Signature = signature.GetSignature();
     m_Affixes = signature.GetList();
-    m_Stems = new CStemList();
+    m_Stems = new CStem_ptr_list();
 }
 CSignature::~CSignature()
 {

@@ -10,24 +10,31 @@ CSignatureCollection::CSignatureCollection()
     m_SortValidFlag			= 0;
     m_SortStyle				= KEY;
     m_MapIterator           = new map_sigstring_to_sig_ptr_iter (m_SignatureMap);
+    m_SortedListIterator    = new     QListIterator<CSignature*> (m_SortList);
 }
 
 CSignatureCollection::~CSignatureCollection()
 {
     delete m_MapIterator;
+    delete m_SortedListIterator;
 }
 
 
 map_sigstring_to_sig_ptr_iter * CSignatureCollection::get_map_iterator()
-{
+{   qDebug() << "In signature collection, getting the map iterator.";
     m_MapIterator->toFront();
     return m_MapIterator ;
 }
 QListIterator<CSignature*> * CSignatureCollection::get_sorted_list_iterator()
 {
-    QListIterator<CSignature*>  * sig_iter = new QListIterator<CSignature*> (m_SortList);
-    return sig_iter ;
+
+    m_SortedListIterator->toFront();
+    return m_SortedListIterator;
 }
+
+
+// -->   Accssing  <--     //
+
 
 
 bool CSignatureCollection::contains(sigstring_t this_sigstring){
@@ -58,20 +65,22 @@ CSignature* CSignatureCollection::find_or_add (QString szSignature)
  
 }
 
+// -->   Sorting  <--     //
+
 bool compare_stem_count(const CSignature* pSig1, const CSignature* pSig2)
 {
  return  pSig1->get_number_of_stems() > pSig2->get_number_of_stems();
 }
 void CSignatureCollection::sort()
-{   qDebug() << "sorting signatures.";
-
+{
+    m_SortList.clear();
     map_sigstring_to_sig_ptr_iter sig_iter (m_SignatureMap);
     while (sig_iter.hasNext())
     {
         sig_iter.next();
         m_SortList.append(sig_iter.value());
     }
-    qSort(m_SortList.begin(), m_SortList.end(),  compare_stem_count);
+   qSort(m_SortList.begin(), m_SortList.end(),  compare_stem_count);
 }
 
 // ------->                                   <---------------------//
@@ -80,7 +89,7 @@ bool compare_affix_count(const CSignature* pSig1, const CSignature* pSig2)
  return  pSig1->get_number_of_affixes() > pSig2->get_number_of_affixes();
 }
 void CSignatureCollection::sort_signatures_by_affix_count()
-{
+{   m_SortList.clear();
     map_sigstring_to_sig_ptr_iter sig_iter (m_SignatureMap);
     while (sig_iter.hasNext())
     {

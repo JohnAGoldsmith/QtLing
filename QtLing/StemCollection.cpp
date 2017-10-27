@@ -38,11 +38,6 @@ CStem* CStemCollection::GetAtKey( QString stem)
     return m_StringToStemMap->value(stem);
 }
 
-//QMapIterator<QString,CStem*> * CStemCollection::get_map_iterator()
-//{
-//   QMapIterator<QString,CStem*> * iter = new QMapIterator<QString,CStem*>(m_StringToStemMap);
-//   return iter;/
-//}
 
 QListIterator<CStem*> * CStemCollection::get_sorted_list_iterator()
 {

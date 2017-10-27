@@ -21,9 +21,10 @@ protected:
     QString               m_Signature;
     QList<CSuffix*> *     m_Affixes;
     QList<CStem*>   *     m_Stems;
+    QStringList           m_Autobiography;
 
 public:
-   // CSignature(CStringSurrogate ssWord);
+
     CSignature(CSignature&);
     CSignature( QString);
     ~CSignature();
@@ -38,7 +39,7 @@ public:
     void                        add_stem_pointer(CStem*);
     CSuffix_ptr_list  *         get_CSuffixes ()              const { return m_Affixes;}
     QList<CStem*>*              get_stems()                         { return   m_Stems;}
-    
+    void                        add_memo (QString memo)             {m_Autobiography.append(memo);}
 
     
     QString                     display();

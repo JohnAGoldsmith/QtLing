@@ -42,6 +42,8 @@ typedef  QPair<CStem*,CSignature*>  stem_sig_pair;
 typedef  QPair<stem_sig_pair*,  stem_sig_pair*> pair_of_stem_sig_pairs;
 typedef  QPair<QString, pair_of_stem_sig_pairs*> five_tuple_sig_diffs;
 
+class LxaStandardItemModel;
+
 LxaStandardItemModel::LxaStandardItemModel()
 {
 
@@ -49,7 +51,6 @@ LxaStandardItemModel::LxaStandardItemModel()
 void LxaStandardItemModel::sort(int column_no, Qt::SortOrder order)
 {
     if (column_no == 4){
-
     }
     else{
         QStandardItemModel::sort(column_no);
@@ -61,16 +62,15 @@ MainWindow::MainWindow()
 {
 
     m_lexicon_list.append ( new CLexicon() );
-
     // models
+    m_Models["Words"]                   = new LxaModel("Words");
+    m_Models["Stems"]                   = new LxaModel("Stems");
+    m_Models["Suffixes"]                = new LxaModel("Suffixes");
+    m_Models["Signatures"]              = new LxaModel("Signatures");
+    m_Models["Residual parasignatures"] = new LxaModel("Residual parasignatures");
+    m_Models["SigTreeEdges"]            = new LxaModel("SigTreeEdges");
+
     m_treeModel     = new QStandardItemModel();
-    Word_model      = new QStandardItemModel(1,3);
-    Stem_model      = new QStandardItemModel();
-    Signature_model = new QStandardItemModel();
-    SingletonSignature_model = new QStandardItemModel();
-    ResidualSignature_model = new QStandardItemModel();
-    Affix_model     = new QStandardItemModel();
-    SigTreeEdge_model = new QStandardItemModel();
 
     // views
     m_leftTreeView      = new LeftSideTreeView(this);
@@ -81,7 +81,7 @@ MainWindow::MainWindow()
     // set model for tree view
     m_leftTreeView->setModel(m_treeModel);
     m_leftTreeView->setColumnWidth(1,100);
-    m_leftTreeView->setColumnWidth(0,500);
+    m_leftTreeView->setColumnWidth(0,1500);
 
     // layout
     m_mainSplitter = new QSplitter();
@@ -105,10 +105,6 @@ MainWindow::MainWindow()
     resize(QDesktopWidget().availableGeometry(this).size() * 0.7);
     m_mainSplitter->setSizes(QList<int>() << 1000 <<4000);
 
-    // By default, we open the last dx1 file that was opened on the previous run. This is probably not a good idea long-term!
-//    statusBar()->showMessage("Reading dx1 file.");
-//    read_dx1_file();
-//    statusBar()->showMessage("Finished reading dx1 file.");
 
 #ifndef QT_NO_SESSIONMANAGER
     QGuiApplication::setFallbackSessionManagementEnabled(false);
@@ -140,201 +136,6 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
 
 
 
-
-
-
-///////////////////////////////////////
-
-//         load various models
-
-void MainWindow::load_word_model()
-{
-
-    StringToWordPtr * WordMap = get_lexicon()->GetWordCollection()->GetMap();
-    QMapIterator<QString,CWord*> word_iter(*WordMap);
-    while (word_iter.hasNext())
-    {   CWord* pWord = word_iter.next().value();
-        QList<QStandardItem*> item_list;
-
-        QStandardItem* pItem = new QStandardItem(pWord->GetWord());
-        item_list.append(pItem);
-
-        QStandardItem* pItem2 = new QStandardItem(QString::number(pWord->GetWordCount()));
-        item_list.append(pItem2);
-
-        QListIterator<QPair<CStem*,CSignature*>*> sig_iter(*pWord->GetSignatures());
-        while (sig_iter.hasNext()){
-            QStandardItem* pItem3 = new QStandardItem(sig_iter.next()->second->GetSignature());
-            item_list.append(pItem3);
-        }
-
-        Word_model->appendRow(item_list);
-    }
-}
-void MainWindow::load_stem_model()
-{
-    CStem* stem;
-    QMapIterator<QString, CStem*>  iter ( *get_lexicon()->GetStemCollection()->get_map() ) ;
-    while (iter.hasNext())
-    {
-        stem = iter.next().value();
-        QStandardItem *item = new QStandardItem(stem->get_key());
-        QList<QStandardItem*> item_list;
-        item_list.append(item);
-        QListIterator<QString> sig_iter(*stem->GetSignatures());
-        while (sig_iter.hasNext()){
-           sigstring_t sig = sig_iter.next();
-           QStandardItem *item = new QStandardItem(sig);
-           item_list.append(item);
-        }
-        Stem_model->appendRow(item_list);
-    }
-}
-void MainWindow::load_affix_model()
-{
-    map_string_to_suffix_ptr_iter suffix_iter(get_lexicon()->GetSuffixCollection()->GetMap());
-    while (suffix_iter.hasNext())
-    {
-        CSuffix* pSuffix = suffix_iter.next().value();
-        QStandardItem *item = new QStandardItem(pSuffix->GetSuffix());
-        QStandardItem *item2 = new QStandardItem(QString::number(pSuffix->get_count()));
-        QList<QStandardItem*> item_list;
-        item_list.append(item);
-        item_list.append(item2);
-        Affix_model->appendRow(item_list);
-    }
-}
-
-void MainWindow::load_signature_model()
-{
-
-    CSignature* sig;
-    get_lexicon()->get_signatures()->sort();
-    QListIterator<CSignature*> * iter = get_lexicon()->get_signatures()->get_sorted_list_iterator();
-    while (iter->hasNext())
-    {
-        sig = iter->next();
-        QList<QStandardItem*> items;
-        QStandardItem * item2 = new QStandardItem(QString::number(sig->get_number_of_stems()));
-        QStandardItem * item3 = new QStandardItem(QString::number(sig->get_robustness()));
-        items.append(new QStandardItem(sig->GetSignature()));
-        items.append(item2);
-        items.append(item3);
-        Signature_model->appendRow(items);
-    }
-}
-
-struct{
-    bool operator ()(sig_tree_edge* a, sig_tree_edge* b) const {
-     return a->words.size() > b->words.size();
-    }
-}custom_compare;
-void MainWindow::load_sig_tree_edge_model()
-{   QList<sig_tree_edge*>               temp_list;
-    QMapIterator<word_t, sig_tree_edge*> * this_sig_tree_edge_iter = new QMapIterator<word_t, sig_tree_edge*>(* get_lexicon()->get_sig_tree_edge_map());
-    while (this_sig_tree_edge_iter->hasNext())    {
-        this_sig_tree_edge_iter->next();
-        temp_list.append(this_sig_tree_edge_iter->value());
-    }
-    std::sort( temp_list.begin(),  temp_list.end(), custom_compare);
-    QListIterator<sig_tree_edge*> temp_list_iter (temp_list);
-    while (temp_list_iter.hasNext())
-     {
-        sig_tree_edge * p_sig_tree_edge = temp_list_iter.next();
-        QList<QStandardItem*> items;
-        QStandardItem * item1 = new QStandardItem (p_sig_tree_edge->morph);
-        items.append(item1);
-
-        QStandardItem * item2 = new QStandardItem(p_sig_tree_edge->sig_1->get_key());
-        QStandardItem * item3 = new QStandardItem(p_sig_tree_edge->sig_2->get_key());
-        QStandardItem * item4 = new QStandardItem(QString::number(p_sig_tree_edge->words.size()));
-        QStandardItem * item5 = new QStandardItem(p_sig_tree_edge->label());
-        items.append(item2);
-        items.append(item3);
-        items.append(item4);
-        items.append(item5);
-
-        SigTreeEdge_model->appendRow(items);
-
-    }
-
-    qDebug() << "finished loading sig tree edge model.";
-}
-
-void MainWindow::load_singleton_signature_model()
-{
-    CSignature* sig;
-    get_lexicon()->get_singleton_signatures()->sort();
-    QListIterator<CSignature*> * iter = get_lexicon()->get_singleton_signatures()->get_sorted_list_iterator();
-    while (iter->hasNext())
-    {
-        sig = iter->next();
-        QList<QStandardItem*> items;
-        QStandardItem * item1 = new QStandardItem(sig->get_stems()->first()->get_key());
-        QStandardItem * item2 = new QStandardItem(QString::number(sig->get_number_of_stems()));
-        QStandardItem * item3 = new QStandardItem(QString::number(sig->get_robustness()));
-        items.append(item1);
-        items.append(new QStandardItem(sig->GetSignature()));
-        items.append(item2);
-        items.append(item3);
-        SingletonSignature_model->appendRow(items);
-    }
-}
-
-// Signatures with only one stem.
-void MainWindow::load_residual_signature_model()
-{
-    QList<QStandardItem*> items;
-    int count = 0;
-    CSignature* sig;
-    QString affix;
-    int max_stem_count = 20;
-    int sig_count (0);
-    get_lexicon()->get_residual_signatures()->sort();
-    QListIterator<CSignature*> * iter =get_lexicon()->get_residual_signatures()->get_sorted_list_iterator() ;
-    m_ProgressBar->reset();
-    m_ProgressBar->setMinimum(0);
-    m_ProgressBar->setMaximum(get_lexicon()->get_residual_signatures()->get_count());
-    while (iter->hasNext())
-    {   sig_count++;
-        m_ProgressBar->setValue(sig_count);
-        qApp->processEvents();
-        sig = iter->next();
-        if (sig->get_number_of_stems() > max_stem_count) {
-            continue;
-        }
-        items.clear();
-        QStandardItem * stem_item = new QStandardItem(sig->get_stems()->first()->get_key());
-        items.append(stem_item);
-        QStringList affixes = sig->display().split("=");
-        for (int affix_no = 0; affix_no < affixes.count(); affix_no++ ){
-            QStandardItem * item2 = new QStandardItem(affixes.at(affix_no));
-            items.append(item2);
-            if (affix_no > 10){break;}
-        }
-        ResidualSignature_model->appendRow(items);
-    }
-}
-
-
-
-
-
-
-void MainWindow::closeEvent(QCloseEvent *event)
-{
-    event->accept();
-
-/*    if (ask_to_save()) {
-        writeSettings();
-        event->accept();
-        qDebug() << " closing 1";
-    } else {
-        event->ignore();
-        qDebug() << "   closing 2" ;
-    }
-*/
-}
 void MainWindow::newFile()
 {
     if (ask_to_save()) {
@@ -360,16 +161,15 @@ void MainWindow::do_crab()
 {   statusBar()->showMessage("Entering the Crab Nebula.");
     get_lexicon()->Crab_1();
     statusBar()->showMessage("We have returned from the Crab Nebular.");
-    load_word_model();
-    load_signature_model();
-    load_affix_model();
-    load_stem_model();
-    load_sig_tree_edge_model();
-    statusBar()->showMessage("Loading the residual signatures.");
-    load_residual_signature_model();
-    statusBar()->showMessage("Loading the singleton siganatures.");
-    load_singleton_signature_model();
+    m_Models["Words"]       ->load_words(get_lexicon()->get_words());
+    m_Models["Stems"]       ->load_stems(get_lexicon()->get_stems());
+    m_Models["Suffixes"]    ->load_suffixes(get_lexicon()->get_suffixes());
+    m_Models["Signatures"]  ->load_signatures(get_lexicon()->get_signatures());
+    m_Models["SigTreeEdges"]->load_sig_tree_edges(get_lexicon()->get_sig_tree_edge_map());
+    m_Models["Residual parasignatures"]->load_signatures(get_lexicon()->get_residual_signatures());
+
     createTreeModel();
+
     m_leftTreeView->expandAll();
     statusBar()->showMessage("All models are loaded.");
 
@@ -452,16 +252,6 @@ void MainWindow::createActions()
     QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
     QToolBar *fileToolBar = addToolBar(tr("File"));
 
-    /*
-    // No action associated with this.
-    const QIcon newIcon = QIcon::fromTheme("document-new", QIcon("../../../../QtLing/images/new.png"));
-    QAction *newAct = new QAction(newIcon, tr("&New"), this);
-    newAct->setShortcuts(QKeySequence::New);
-    newAct->setStatusTip(tr("Create a new file"));
-    connect(newAct, &QAction::triggered, this, &MainWindow::newFile);
-    fileMenu->addAction(newAct);
-    fileToolBar->addAction(newAct);
-*/
 
 
     // Give a data file name, store the name, and read the file.
@@ -472,16 +262,6 @@ void MainWindow::createActions()
     connect(openAct, &QAction::triggered, this, &MainWindow::ask_for_filename);
     fileMenu->addAction(openAct);
     fileToolBar->addAction(openAct);
-/*
-    // No action associated with this yet.
-    const QIcon saveIcon = QIcon::fromTheme("document-save", QIcon("../../../../QtLing/images/save.png"));
-    QAction *saveAct = new QAction(saveIcon, tr("&Save"), this);
-    saveAct->setShortcuts(QKeySequence::Save);
-    saveAct->setStatusTip(tr("Save the document to disk"));
-    connect(saveAct, &QAction::triggered, this, &MainWindow::save);
-    fileMenu->addAction(saveAct);
-    fileToolBar->addAction(saveAct);
-*/
 
     // No action associated with this yet.
     const QIcon saveAsIcon = QIcon::fromTheme("document-save-as");
@@ -614,8 +394,8 @@ void MainWindow::createTreeModel()
     QStandardItem * residual_sig_item = new QStandardItem(QString("Residual parasignatures"));
     QStandardItem * residual_sig_count_item = new QStandardItem(QString::number(get_lexicon()->get_residual_signatures()->get_count()));
 
-    QStandardItem * singleton_sig_item = new QStandardItem(QString("Singleton signatures"));
-    QStandardItem * singleton_sig_count_item = new QStandardItem(QString::number(get_lexicon()->get_singleton_signatures()->get_count()));
+//    QStandardItem * singleton_sig_item = new QStandardItem(QString("Singleton signatures"));
+//    QStandardItem * singleton_sig_count_item = new QStandardItem(QString::number(get_lexicon()->get_singleton_signatures()->get_count()));
 
     QStandardItem * sig_tree_edge_item = new QStandardItem(QString("Signature tree edges"));
     QStandardItem * sig_tree_edge_count_item = new QStandardItem(QString::number(get_lexicon()->get_sig_tree_edge_map()->size()));
@@ -641,10 +421,6 @@ void MainWindow::createTreeModel()
     sig_items.append(sig_item);
     sig_items.append(sig_count_item);
 
-    QList<QStandardItem*> singleton_sig_items;
-    singleton_sig_items.append(singleton_sig_item);
-    singleton_sig_items.append(singleton_sig_count_item);
-
 
     QList<QStandardItem*> residual_sig_items;
     residual_sig_items.append(residual_sig_item);
@@ -662,7 +438,6 @@ void MainWindow::createTreeModel()
     lexicon_item->appendRow(suffix_items);
     lexicon_item->appendRow(sig_items);
     lexicon_item->appendRow(sig_tree_edge_items);
-    lexicon_item->appendRow(singleton_sig_items);
     lexicon_item->appendRow(residual_sig_items);
 
 
@@ -887,26 +662,17 @@ LowerTableView::LowerTableView(MainWindow * window)
      //qDebug() << "line 579";
      setModel( m_my_current_model);
     }
-
-
-
-
    resizeColumnsToContents();
-
  }
 
  LeftSideTreeView::LeftSideTreeView(MainWindow* window)
  {
      m_parent_window = window;
-
-
-
  }
 
 UpperTableView::UpperTableView (MainWindow* window)
 {
         m_parent_window = window;
-
 }
 void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
 {
@@ -916,43 +682,50 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         component = index.data().toString();
     }
     if (component == "Words"){
-        setModel(m_parent_window->Word_model);
+        setModel(m_parent_window->m_Models["Words"]);
         set_document_type( WORDS );
         set_content_type( "words");
     }
     else     if (component == "Stems"){
-        setModel(m_parent_window->Stem_model);
+        setModel(m_parent_window->m_Models["Stems"]);
         set_document_type( STEMS );
         set_content_type( "stems");
     }
     else     if (component == "Suffixes"){
-        setModel(m_parent_window->Affix_model);
+        setModel(m_parent_window->m_Models["Suffixes"]);
         set_document_type( SUFFIXES );
         set_content_type( "suffixes");
     }
     else     if (component == "Signatures"){
-        setModel(m_parent_window->Signature_model);
+        setModel(m_parent_window->m_Models["Signatures"]);
         set_document_type( SIGNATURES );
         set_content_type( "signatures");
     }
     else     if (component == "Signature tree edges"){
-        setModel(m_parent_window->SigTreeEdge_model);
+        setModel(m_parent_window->m_Models["SigTreeEdges"]);
         set_document_type( SIGNATURE_TREE_EDGES );
         set_content_type( "sigtreeedges");
         qDebug() << "line 876 we got here";
         sortByColumn(-1);
     }
     else     if (component == "Residual parasignatures"){
-        setModel(m_parent_window->ResidualSignature_model);
+        setModel(m_parent_window->m_Models["Residual parasignatures"]);
         set_document_type( SIGNATURE_RESIDUES );
         //set_content_type( "rawsignatures");
         sortByColumn(1);
     }
     else     if (component == "Singleton signatures"){
-        setModel(m_parent_window->SingletonSignature_model);
+        //setModel(m_parent_window->SingletonSignature_model);
         set_document_type( SINGLETON_SIGNATURES );
         //set_content_type( "rawsignatures");
         sortByColumn(1);
     }
     resizeColumnsToContents();
+}
+
+
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    event->accept();
 }

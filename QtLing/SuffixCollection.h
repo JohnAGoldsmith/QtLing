@@ -33,7 +33,8 @@ public:
     CSuffix*                GetAt( uint );
     int                     get_count() const { return m_SuffixMap.size(); }
     void                    get_set_of_suffixes (QSet<QString> * p_string_set);
-    QMap<QString,CSuffix*>  GetMap()              { return m_SuffixMap;         }
+    QMap<QString,CSuffix*>* GetMap()               { return & m_SuffixMap;         }
+    QMap<QString,CSuffix*>* get_map()              { return & m_SuffixMap;         }
     void                    get_suffixes(QList<QString>*);
     bool                    contains(suffix_t this_suffix) {return m_SuffixMap.contains(this_suffix);}
 };
