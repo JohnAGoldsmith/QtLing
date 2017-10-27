@@ -238,9 +238,8 @@ bool MainWindow::saveAs()
 void MainWindow::about()
 {
    QMessageBox::about(this, tr("About Application"),
-            tr("The <b>Application</b> example demonstrates how to "
-               "write modern GUI applications using Qt, with a menu bar, "
-               "toolbars, and a status bar."));
+            tr("Linguistica 2017: Crab Nebula. "
+                ));
 }
 void MainWindow::documentWasModified()
 {
