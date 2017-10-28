@@ -307,7 +307,7 @@ void   CLexicon::FindGoodSignaturesInsideResidualSignatures()
                                     p_proven_sig->add_stem(pStem);
                                     pStem->add_memo("singleton=");
                                     //--> add to autobiographies <--//
-                                    qDebug() << this_stem << p_proven_sigstring;
+                                    //qDebug() << this_stem << p_proven_sigstring;
                                     for (int affixno = 0; affixno < proven_sig_list.length(); affixno++){
                                         this_suffix = proven_sig_list[affixno];
                                         if (this_suffix == "NULL"){
