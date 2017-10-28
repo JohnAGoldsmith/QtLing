@@ -297,7 +297,8 @@ void   CLexicon::FindGoodSignaturesInsideResidualSignatures()
 
                             for (int sig_no=0; sig_no < get_signatures()->get_count(); sig_no++){
                                 p_proven_sig = m_Signatures->get_at_sorted(sig_no);
-                                QList<QString> proven_sig_list = p_proven_sig->get_key().split("=");
+                                QString p_proven_sigstring  = p_proven_sig->get_key();
+                                QList<QString> proven_sig_list = p_proven_sigstring.split("=");
                                 if ( contains(&suffixes_of_residual_sig, &proven_sig_list) ){
 
                                     // We have found the longest signature contained in this_residual_suffix_set
@@ -306,7 +307,7 @@ void   CLexicon::FindGoodSignaturesInsideResidualSignatures()
                                     p_proven_sig->add_stem(pStem);
                                     pStem->add_memo("singleton=");
                                     //--> add to autobiographies <--//
-                                    qDebug() << this_stem << p_proven_sig->get_key();
+                                    qDebug() << this_stem << p_proven_sigstring;
                                     for (int affixno = 0; affixno < proven_sig_list.length(); affixno++){
                                         this_suffix = proven_sig_list[affixno];
                                         if (this_suffix == "NULL"){
@@ -316,7 +317,8 @@ void   CLexicon::FindGoodSignaturesInsideResidualSignatures()
                                         }
                                         pWord = m_Words->find_or_fail(this_word);
                                         if (pWord){
-                                            pWord->add_to_autobiography("singleton="  + this_stem  + "=" +  p_proven_sig->get_key());
+                                            pWord->add_stem_and_signature(pStem, p_proven_sig);
+                                            pWord->add_to_autobiography("singleton="  + this_stem  + "=" +  p_proven_sigstring);
                                         }
                                     }
                                     break;

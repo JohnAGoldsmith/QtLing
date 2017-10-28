@@ -56,13 +56,14 @@ CSignature* CSignatureCollection::operator ^=(QString szSignature)
 {
     return this->find_or_add(szSignature);
 }
-CSignature* CSignatureCollection::find_or_add (QString szSignature)
-{    if (! m_SignatureMap.contains(szSignature) ) {
-    CSignature* pSig = new CSignature(szSignature);
-    return pSig;
+CSignature* CSignatureCollection::find_or_add (QString sigstring )
+{   if (m_SignatureMap.contains(sigstring)){
+        return m_SignatureMap[sigstring];
     }
-    return m_SignatureMap.value(szSignature);
- 
+    CSignature* pSig = new CSignature(sigstring);
+    m_SignatureMap[sigstring] = pSig;
+    return pSig;
+
 }
 
 // -->   Sorting  <--     //
