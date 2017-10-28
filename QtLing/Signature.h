@@ -39,8 +39,8 @@ public:
     void                        add_stem_pointer(CStem*);
     CSuffix_ptr_list  *         get_CSuffixes ()              const { return m_Affixes;}
     QList<CStem*>*              get_stems()                         { return   m_Stems;}
-    void                        add_memo (QString memo)             {m_Autobiography.append(memo);}
-
+    void                        add_memo (QString memo)             { m_Autobiography.append(memo);}
+    void                        add_suffix_ptr (CSuffix* pSuffix)   { m_Affixes->append(pSuffix);  }
     
     QString                     display();
     QString                     display_stems() ;

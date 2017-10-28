@@ -181,14 +181,16 @@ void   CLexicon::AssignSuffixesToStems()
         suffix_set this_suffix_set = QSet<QString>::fromList( this_signature_string.split("="));
         if (p_this_stem_list->size() >= MINIMUM_NUMBER_OF_STEMS)
         {
+            pSig = *m_Signatures<< this_signature_string;
+            pSig->add_memo("Pass 1");
             QSetIterator<suffix_t> suffix_iter(this_suffix_set);
             while(suffix_iter.hasNext()){
                   this_suffix = suffix_iter.next();
                   CSuffix* pSuffix = m_Suffixes->find_or_add(this_suffix);
                   pSuffix->increment_count();
+                  pSig->add_suffix_ptr(pSuffix);
             }
-            pSig = *m_Signatures<< this_signature_string;
-            pSig->add_memo("Pass 1");
+
             // --> We go through this sig's stems and reconstitute its words. <--//
             stem_list_iterator stem_iter(*p_this_stem_list);
             while (stem_iter.hasNext()){
@@ -196,7 +198,7 @@ void   CLexicon::AssignSuffixesToStems()
                 pStem = m_Stems->find_or_add(this_stem_t);
                 pStem->add_signature (this_signature_string);
                 pSig->add_stem_pointer(pStem);
-                pStem->add_memo ("Pass1 ");
+                pStem->add_memo ("Pass1= ");
                 QStringList affixes = this_signature_string.split("=");
                 foreach (suffix_t this_suffix,  affixes){
                     if (this_suffix == "NULL"){
@@ -206,9 +208,10 @@ void   CLexicon::AssignSuffixesToStems()
                     }
                     CWord* pWord = m_Words->get_word(this_word);
                     pWord->add_stem_and_signature(pStem,pSig);
-                    pWord->add_to_autobiography("Pass1 " + this_stem_t + "=" + this_signature_string);
+                    pWord->add_to_autobiography("Pass1= " + this_stem_t + "=" + this_signature_string);
                 }
             }
+
         }else{
             this_signature_string =  iter_sigstring_to_stems.key();
             pSig =  *m_ResidualSignatures << this_signature_string;
@@ -227,6 +230,20 @@ void   CLexicon::AssignSuffixesToStems()
     }
 }
 
+bool contains(QList<QString> * list2, QList<QString> * list1){
+    for (int i=0; i < list1->length();i++){
+        bool success = false;
+        for (int j = 0; j < list2->length();j++){
+            if (list1->at(i) == list2->at(j)){
+                success = true;
+            }
+        }
+        if (success == false){
+            return false;
+        }
+    }
+    return true;
+}
 
 
 /*!
@@ -258,62 +275,44 @@ void   CLexicon::FindGoodSignaturesInsideResidualSignatures()
                                 m_ProgressBar->reset();
                                 m_ProgressBar->setMinimum(0);
                                 m_ProgressBar->setMaximum(m_ResidualSignatures->get_count());
-
                                 m_Signatures->sort_signatures_by_affix_count();
-    qDebug() << "line 265" << m_ResidualSignatures->get_count();
     //---->   We iterate through the list of Residual Signatures <-------//
 
-    QMapIterator<QString, CSignature*> * sig_iter =  m_ResidualSignatures->get_map_iterator();
+    map_sigstring_to_sig_ptr_iter   sig_iter(*  m_ResidualSignatures->get_map());
 
     //--> Outer loop, over all Residual Signatures. <--//
-    while (sig_iter->hasNext()){
-        sig_iter->next();
+    while (sig_iter.hasNext()){
+        sig_iter.next();
         signature_count++;
-        qDebug() << signature_count;
         m_ProgressBar->setValue(signature_count);
         qApp->processEvents();
-        CSignature*         pResidualSig              = sig_iter->value();
-                            qDebug() << pResidualSig->get_key();
+        CSignature*         pResidualSig              = sig_iter.value();
                             suffixes_of_residual_sig  = pResidualSig->get_key().split("=");
-                            foreach (suffix_t this_suffix, suffixes_of_residual_sig){
-                                pSuffix = m_Suffixes->find_or_fail(this_suffix);
-                                if (pSuffix){
-                                    this_residual_sig_suffix_pointer_list.append(pSuffix);
-                                }
-                            }
-                            if (this_residual_sig_suffix_pointer_list.size() < 1) { continue; }
                             this_stem = pResidualSig->get_stems()->first()->get_key(); // there is only 1 stem in these signatures, by construction.
                             if (m_Words->contains(this_stem)){
-                                this_residual_sig_suffix_pointer_list.append(pNullSuffix);
+                              suffixes_of_residual_sig.append ("NULL");
                             }
                             //--> Now we look for largest true signature inside this list of suffixes. <--//
                             //--> Inner loop, over all good signatures. <--//
+
                             for (int sig_no=0; sig_no < get_signatures()->get_count(); sig_no++){
                                 p_proven_sig = m_Signatures->get_at_sorted(sig_no);
-                                list_of_CSuffixes_of_proven_sig = p_proven_sig->get_CSuffixes();
-                                success_flag                 = true;
-                                CSuffix_ptr_list_iterator suffix_iter (*list_of_CSuffixes_of_proven_sig);
-                                while (suffix_iter.hasNext())  {
-                                    pSuffix = suffix_iter.next();
-                                    if (false == this_residual_sig_suffix_pointer_list.contains(pSuffix1)){
-                                        success_flag = false;
-                                        break;
-                                    }
-                                }
-                                if (success_flag == true){
+                                QList<QString> proven_sig_list = p_proven_sig->get_key().split("=");
+                                if ( contains(&suffixes_of_residual_sig, &proven_sig_list) ){
+
                                     // We have found the longest signature contained in this_residual_suffix_set
+
                                     pStem = m_Stems->find_or_add(this_stem);
-                                    //qStem = m_StemSet2->find_or_add(this_stem);
-                                    qDebug() << this_stem << pStem->get_key() << p_proven_sig->get_key();
                                     p_proven_sig->add_stem(pStem);
+                                    pStem->add_memo("singleton=");
                                     //--> add to autobiographies <--//
-                                    CSuffix_ptr_list_iterator suffix_ptr_iter (*list_of_CSuffixes_of_proven_sig);
-                                    while (suffix_ptr_iter.hasNext()){
-                                        pSuffix = suffix_ptr_iter.next();
-                                        if (pSuffix->get_key() == "NULL"){
+                                    qDebug() << this_stem << p_proven_sig->get_key();
+                                    for (int affixno = 0; affixno < proven_sig_list.length(); affixno++){
+                                        this_suffix = proven_sig_list[affixno];
+                                        if (this_suffix == "NULL"){
                                             this_word= this_stem;
                                         }else{
-                                            this_word = this_stem + pSuffix->get_key();
+                                            this_word = this_stem + this_suffix;
                                         }
                                         pWord = m_Words->find_or_fail(this_word);
                                         if (pWord){
@@ -322,9 +321,10 @@ void   CLexicon::FindGoodSignaturesInsideResidualSignatures()
                                     }
                                     break;
                                 } else{
-                                    //?
+
                                 }
-                            }
+                            } // loop over proven signatures;
+
     }
 }
 

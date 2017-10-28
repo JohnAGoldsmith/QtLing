@@ -46,6 +46,7 @@ public:
     int                                     get_count() const       { return m_SignatureMap.size(); }
     CSignature*                             get_signature(QString sig) {return m_SignatureMap.value(sig); }
     map_sigstring_to_sig_ptr_iter *         get_map_iterator() ;
+    map_string_to_sig*                      get_map()                   { return & m_SignatureMap;}
     QListIterator<CSignature*>   *          get_sorted_list_iterator();
     //void                                    make_sorted_list_iterator(map_string_to_word_ptr_iter&);
     bool                                    contains (sigstring_t);
