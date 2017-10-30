@@ -12,6 +12,7 @@
 class CWordCollection;
 class CStemCollection;
 class CSuffixCollection;
+class CPrefixCollection;
 class QProgressBar;
 
 //typedef  QPair<sig_string, CSignature*>                    sig_and_pointer;
@@ -49,8 +50,9 @@ protected:
     CWordCollection *               m_Words;
     CStemCollection *               m_Stems;
     CSuffixCollection *             m_Suffixes;
-//  CPrefixCollection *             m_Prefixes;
+    CPrefixCollection *             m_Prefixes;
     CSignatureCollection *          m_Signatures;
+    CSignatureCollection *          m_PrefixSignatures;
     QList<QPair<QString,QString>> * m_Parses;
     QMap<QString,int>               m_Parse_map;
     QMap<QString, int>              m_Protostems;
@@ -62,9 +64,11 @@ protected:
     CStemCollection *               m_StemsFromGoodSubsignaturesInsideResidualSignatures;
     CSignatureCollection*           m_ResidualSignatures;   /*!<  the information we have about stems which we have not yet integrated into a morphological system. */
     CStemCollection *               m_ResidualStems;
+    CSignatureCollection *          m_ResidualPrefixSignatures;
     CStemCollection *               m_StemsFromSubsignatures;
     CSignatureCollection*           m_Subsignatures;
     QMap<QString,int>               m_RawSuffixes;
+    QMap<QString,int>               m_RawPrefixSuffixes;
     QList<sig_tree_edge*>           m_SigTreeEdgeList; /*!< the sig_tree_edges in here contain only one word associated with each. */
     QMap<QString, sig_tree_edge*>   m_SigTreeEdgeMap;  /*!< the sig_tree_edges in here contain lists of words associated with them. */
     QProgressBar*                   m_ProgressBar;

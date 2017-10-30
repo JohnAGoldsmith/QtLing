@@ -39,4 +39,33 @@ public:
     bool                    contains(suffix_t this_suffix) {return m_SuffixMap.contains(this_suffix);}
 };
 
+class CPrefixCollection
+{
+protected:
+    QMap<QString, CPrefix*> m_PrefixMap;
+
+public:
+    //construction/destruction
+    CPrefixCollection();
+    ~CPrefixCollection();
+
+// disable copy
+private:
+    CPrefixCollection(const CPrefixCollection& x);
+    CPrefixCollection& operator=(const CPrefixCollection& x);
+public:
+
+    CPrefix*                operator<< ( QString );
+    CPrefix*                operator^= ( QString );
+    CPrefix*                find_or_add        ( QString ); //same as << (find if it is there, else add)
+    CPrefix*                find_or_fail        ( QString ); //same as ˆ= (find if it is there, else void)
+    CPrefix*                GetAt( uint );
+    int                     get_count() const { return m_PrefixMap.size(); }
+    void                    get_set_of_prefixes (QSet<QString> * p_string_set);
+    QMap<QString,CPrefix*>* GetMap()               { return & m_PrefixMap;         }
+    QMap<QString,CPrefix*>* get_map()              { return & m_PrefixMap;         }
+    void                    get_prefixes(QList<QString>*);
+    bool                    contains(suffix_t this_prefix) {return m_PrefixMap.contains(this_prefix);}
+};
+
 #endif // CSUFFIXCOLLECTION_H

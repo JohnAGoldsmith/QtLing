@@ -144,10 +144,6 @@ void CLexicon::FindProtostems()
     }
 
 }
-/*!
- * This is the third of the three initial parts of finding signatures.
- * This creates signatures, which in turn creates stems and affixes.
- */
 
 
 /*!
@@ -156,26 +152,41 @@ void CLexicon::FindProtostems()
  */
 void CLexicon::CreateStemAffixPairs()
 {
-    QString                     stem, suffix, word;
-    int                         suffix_length;
+    QString                     stem, suffix, word, prefix;
+    int                         suffix_length, prefix_length;
     map_string_to_word_ptr_iter *   word_iter = m_Words->get_iterator();
     while (word_iter->hasNext())   {
         word = word_iter->next().value()->GetWord();
         for (int letterno = 1; letterno < word.length(); letterno++){
-            stem = word.left(letterno);
-            if (m_Protostems.contains(stem)){
-                suffix_length = word.length() - letterno;
-                suffix = word.right(suffix_length);
-                m_Parses->append(QPair<QString,QString>(stem,suffix));
-                if (m_Words->contains(stem)){
-                    m_Parses->append(QPair<QString,QString>(stem,QString("NULL")));
+            if (m_SuffixesFlag){
+                stem = word.left(letterno);
+                if (m_Protostems.contains(stem)){
+                    suffix_length = word.length() - letterno;
+                    suffix = word.right(suffix_length);
+                    m_Parses->append(QPair<QString,QString>(stem,suffix));
+                    if (m_Words->contains(stem)){
+                        m_Parses->append(QPair<QString,QString>(stem,QString("NULL")));
+                    }
                 }
-            }
+            }else{
+                stem = word.right(letterno);
+                if (m_Protostems.contains(stem)){
+                    prefix_length = word.length() - letterno;
+                    prefix = word.left(prefix_length);
+                    m_Parses->append(QPair<QString,QString>(prefix,stem));
+                    if (m_Words->contains(stem)){
+                        m_Parses->append(QPair<QString,QString>(QString("NULL"),stem));
+                    }
+                }
+            } // end of prefixes.
         }
     }
 }
 
-
+/*!
+ * This is the third of the three initial parts of finding signatures.
+ * This creates signatures, which in turn creates stems and affixes.
+ */
 void   CLexicon::AssignSuffixesToStems()
 {   const int MINIMUM_NUMBER_OF_STEMS = 2;
     CWord *                     pWord;
