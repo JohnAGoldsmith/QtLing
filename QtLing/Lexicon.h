@@ -55,6 +55,8 @@ protected:
     QMap<QString,int>               m_Parse_map;
     QMap<QString, int>              m_Protostems;
 
+    bool                            m_SuffixesFlag;
+
 
     CSignatureCollection  *         m_GoodSubsignaturesInsideResidualSignatures;
     CStemCollection *               m_StemsFromGoodSubsignaturesInsideResidualSignatures;
@@ -103,7 +105,7 @@ public:
     QListIterator<sig_tree_edge*>    *          get_sig_tree_edge_list_iter();
     QMapIterator<QString, sig_tree_edge*> *     get_sig_tree_edge_map_iter();
     void                                        set_progress_bar (QProgressBar * pPB) { m_ProgressBar = pPB;}
-
+    void                                        set_prefixes_flag()         { m_SuffixesFlag = false;}
 
 public:
     // insert functions here

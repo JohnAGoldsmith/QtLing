@@ -7,7 +7,8 @@
 #include <QtDebug>
 #include <QProgressBar>
 #include <QApplication>
-
+#include <algorithm>
+#include <QChar>
 #include "Lexicon.h"
 
 #include "SignatureCollection.h"
@@ -22,6 +23,8 @@ CLexicon::CLexicon() : m_Words(new CWordCollection), m_Suffixes(new CSuffixColle
     m_Protostems            = QMap<QString, int>();
     m_ResidualSignatures    =  new CSignatureCollection();
     m_ResidualStems         = new CStemCollection();
+
+    m_SuffixesFlag = true;
 }
 
 QListIterator<sig_tree_edge*> * CLexicon::get_sig_tree_edge_list_iter()
@@ -37,6 +40,31 @@ QMapIterator<QString, sig_tree_edge*> * CLexicon::get_sig_tree_edge_map_iter()
 }
 
 //linguistic methods
+
+//-->  Reverse string sorting comparator <--//
+
+// -->  returns true if string1 precedes string2 in reverse alphabetical order  <-- //
+bool reverse_string_compare(QString string1, QString string2){    if (string1.length() == 0) {return true;}
+    if (string2.length() == 0) {return false;}
+    int len1 = string1.length();
+    int len2 = string2.length();
+    int limit = std::min(len1,len2);
+    for (int i = 0; i < limit; i++){
+        if (string1[len1-i]== string2[len2-i]){
+            continue;
+        }
+        return string1[len1-i] < string2[len2-i];
+    }
+    // i now equals limit
+    if (len1 == len2){
+        return false ; //the two words are identical, however.
+    }
+    if (len1 < len2){
+        return true;
+    }
+    return false;
+}
+
 
 void CLexicon::Crab_1()
 {
@@ -63,6 +91,8 @@ void CLexicon::FindProtostems()
     bool            StartFlag = true;
     bool            DifferenceFoundFlag = false;
     stem_t          stem;
+
+    if (m_SuffixesFlag) {
     for (int wordno=0; wordno<Words->size(); wordno ++){
         word = Words->at(wordno);
         if (StartFlag){
@@ -71,15 +101,18 @@ void CLexicon::FindProtostems()
             continue;
         }
         DifferenceFoundFlag = false;
-        int end = qMin(word.length(), previous_word.length());
-        for (int i=0; i <end; i++){
-            if (previous_word[i] != word[i]){
-                stem = previous_word.left(i);
-                DifferenceFoundFlag = true;
-                if (!m_Protostems.contains(stem))                {
-                    m_Protostems[stem] = 1;
+
+        if (m_SuffixesFlag ){
+            int end = qMin(word.length(), previous_word.length());
+            for (int i=0; i <end; i++){
+                if (previous_word[i] != word[i]){
+                    stem = previous_word.left(i);
+                    DifferenceFoundFlag = true;
+                    if (!m_Protostems.contains(stem))                {
+                        m_Protostems[stem] = 1;
+                    }
+                    break;
                 }
-                break;
             }
         }
         if (DifferenceFoundFlag == true){
@@ -92,9 +125,30 @@ void CLexicon::FindProtostems()
             }
         }
         previous_word = word;
+      }
+   }
+   // end of suffixes search
+   else
+   // -->  Prefix search  <-- //
+    {  for (int wordno=0; wordno<Words->size(); wordno ++)
+        {
+            QString this_word = Words->at(wordno);
+            m_Words->get_reverse_sort_list()->append (this_word);
+        }
+        std::sort(m_Words->get_reverse_sort_list()->begin(),
+                  m_Words->get_reverse_sort_list()->end(),
+                  reverse_string_compare );
     }
-    return;
+    for (int i = 0; i < m_Words->get_reverse_sort_list()->length(); i++){
+        qDebug() << m_Words->get_reverse_sort_list()->at(i);
+    }
+
 }
+/*!
+ * This is the third of the three initial parts of finding signatures.
+ * This creates signatures, which in turn creates stems and affixes.
+ */
+
 
 /*!
  * This is the second of the three initial parts of finding signatures.
@@ -121,10 +175,7 @@ void CLexicon::CreateStemAffixPairs()
     }
 }
 
-/*!
- * This is the third of the three initial parts of finding signatures.
- * This creates signatures, which in turn creates stems and affixes.
- */
+
 void   CLexicon::AssignSuffixesToStems()
 {   const int MINIMUM_NUMBER_OF_STEMS = 2;
     CWord *                     pWord;

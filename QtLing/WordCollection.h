@@ -18,6 +18,7 @@ protected:
     int                     m_CorpusCount;
     QString                 m_MemberName;
     QStringList             m_SortedStringArray;
+    QStringList             m_reverse_sort_list;
     bool                    m_SortValidFlag;
     enum                    eSortStyle m_SortStyle;
 
@@ -50,6 +51,7 @@ public:
     CWord*                  find_or_fail(QString word_t);
     bool                    contains(QString string)  {return m_WordMap.contains(string);}
     void                    sort_word_list();
+    QStringList*              get_reverse_sort_list() {return & m_reverse_sort_list;}
     QStringList*            GetSortedStringArray() {return & m_SortedStringArray;}
     QMap<QString, CWord*>*  GetMap() { return & m_WordMap; }
     QMap<QString, CWord*>*  get_map() { return & m_WordMap; }

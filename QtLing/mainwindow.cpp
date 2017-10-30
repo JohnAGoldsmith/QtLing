@@ -131,6 +131,10 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     if (ke->key() == Qt::Key_D){
         read_dx1_file();
     }
+    if (ke->key() == Qt::Key_P){
+        get_lexicon()->set_prefixes_flag();
+    }
+
     QMainWindow::keyPressEvent(ke);
 }
 
