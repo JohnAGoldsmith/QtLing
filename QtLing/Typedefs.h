@@ -3,6 +3,7 @@
 
 //class CStem;
 class CWord;
+class CPrefix;
 //class CSignature;
 
 // These typedefs make it easier to write types with long names.
@@ -28,6 +29,8 @@ typedef QString                             morph_t;
 typedef QString                             stem_t;
 typedef QString                             sigstring_t;
 typedef QString                             suffix_t;
+typedef QString                             prefix_t;
+typedef QString                             affix_t;
 
 typedef QList<stem_t>                       stem_list;
 typedef QList<suffix_t>                     suffix_list;
@@ -36,16 +39,22 @@ typedef QList<CSignature*>                  SignatureList;
 typedef QList<CSuffix*>                     CSuffix_ptr_list;
 typedef QList<CStem*>                       CStem_ptr_list;
 typedef QList<CSuffix*>                     CSuffix_ptr_list;
+typedef QList<CPrefix*>                     CPrefix_ptr_list;
 typedef QListIterator<suffix_t>             suffix_list_iterator;
 typedef QListIterator<stem_t>               stem_list_iterator;
 typedef QListIterator<CSuffix*>             CSuffix_ptr_list_iterator;
+typedef QListIterator<CPrefix*>             CPrefix_ptr_list_iterator;
 typedef QListIterator<CStem*>               CStem_ptr_list_iterator;
 
 typedef QSet<morph_t>                       morph_set;
 typedef QSet<stem_t>                        stem_set;
 typedef QSet<suffix_t>                      suffix_set;
+typedef QSet<affix_t>                       affix_set;
 typedef QSetIterator<suffix_t>              suffix_set_iter;
-
+typedef QSet<prefix_t>                      prefix_set;
+typedef QSetIterator<prefix_t>              prefix_set_iter;
+typedef QSet<affix_t>                       affix_set;
+typedef QSetIterator<affix_t>              affix_set_iter;
 
 typedef QMap<suffix_t, int>                 map_suffix_to_int;
 typedef QMap<stem_t,suffix_set>             map_stem_t_to_suffix_set;

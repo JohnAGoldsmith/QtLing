@@ -65,11 +65,43 @@ CWord* CWordCollection::operator ^=(QString word)
 
 }
 
+
+
+//-->  Reverse string sorting comparator <--//
+// -->  returns true if string1 precedes string2 in reverse alphabetical order  <-- //
+bool reverse_string_compare(QString string1, QString string2){    if (string1.length() == 0) {return true;}
+    if (string2.length() == 0) {return false;}
+    int len1 = string1.length();
+    int len2 = string2.length();
+    int limit = std::min(len1,len2);
+    for (int i = 0; i < limit; i++){
+        if (string1[len1-i]== string2[len2-i]){
+            continue;
+        }
+        return string1[len1-i] < string2[len2-i];
+    }
+    // i now equals limit
+    if (len1 == len2){
+        return false ; //the two words are identical, however.
+    }
+    if (len1 < len2){
+        return true;
+    }
+    return false;
+}
+
+
+
 void CWordCollection::sort_word_list()
 {
     foreach(QString word, m_WordMap.keys()){
         m_SortedStringArray.append(word);
     }
     m_SortedStringArray.sort();
+    m_reverse_sort_list.reserve(m_WordMap.size());
+    foreach(QString word, m_WordMap.keys()){
+        m_reverse_sort_list.append(word);
+    }
+    std::sort(m_reverse_sort_list.begin(),m_reverse_sort_list.end(), reverse_string_compare);
 
 }

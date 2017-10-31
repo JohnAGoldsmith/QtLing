@@ -41,30 +41,6 @@ QMapIterator<QString, sig_tree_edge*> * CLexicon::get_sig_tree_edge_map_iter()
 
 //linguistic methods
 
-//-->  Reverse string sorting comparator <--//
-
-// -->  returns true if string1 precedes string2 in reverse alphabetical order  <-- //
-bool reverse_string_compare(QString string1, QString string2){    if (string1.length() == 0) {return true;}
-    if (string2.length() == 0) {return false;}
-    int len1 = string1.length();
-    int len2 = string2.length();
-    int limit = std::min(len1,len2);
-    for (int i = 0; i < limit; i++){
-        if (string1[len1-i]== string2[len2-i]){
-            continue;
-        }
-        return string1[len1-i] < string2[len2-i];
-    }
-    // i now equals limit
-    if (len1 == len2){
-        return false ; //the two words are identical, however.
-    }
-    if (len1 < len2){
-        return true;
-    }
-    return false;
-}
-
 
 void CLexicon::Crab_1()
 {
@@ -86,26 +62,31 @@ void CLexicon::Crab_1()
  * is greater than 1.
  */
 void CLexicon::FindProtostems()
-{   word_t          word, previous_word;
+{   word_t          this_word, previous_word;
     QStringList *   Words =  GetWordCollection()->GetSortedStringArray();
     bool            StartFlag = true;
     bool            DifferenceFoundFlag = false;
     stem_t          stem;
-
-    if (m_SuffixesFlag) {
+    int             this_word_length(0), previous_word_length(0);
     for (int wordno=0; wordno<Words->size(); wordno ++){
-        word = Words->at(wordno);
+        if (m_SuffixesFlag){
+            this_word = Words->at(wordno);
+        } else{
+            this_word = get_words()->get_reverse_sort_list()->at(wordno);
+            //qDebug() << this_word << "76";
+        }
+        this_word_length = this_word.length();
         if (StartFlag){
             StartFlag = false;
-            previous_word = word;
+            previous_word = this_word;
+            previous_word_length = this_word_length;
             continue;
         }
         DifferenceFoundFlag = false;
-
-        if (m_SuffixesFlag ){
-            int end = qMin(word.length(), previous_word.length());
+        if (m_SuffixesFlag){
+            int end = qMin(this_word_length, previous_word_length);
             for (int i=0; i <end; i++){
-                if (previous_word[i] != word[i]){
+                if (previous_word[i] != this_word[i]){
                     stem = previous_word.left(i);
                     DifferenceFoundFlag = true;
                     if (!m_Protostems.contains(stem))                {
@@ -114,37 +95,39 @@ void CLexicon::FindProtostems()
                     break;
                 }
             }
+        }  // end of suffix case.
+        else
+        {       // -->   Prefix case   <-- //
+            this_word_length = this_word.length();
+            previous_word_length = previous_word.length();
+            int end = qMin(this_word_length, previous_word_length);
+            for (int i=0; i <end; i++){
+                if (previous_word[previous_word_length - i] != this_word[ this_word_length - i]){
+                    stem = previous_word.right(i-1);
+                    DifferenceFoundFlag = true;
+
+                    if (!m_Protostems.contains(stem))                {
+                        m_Protostems[stem] = 1;
+                        //qDebug() << stem << "111";
+                    }
+                    break;
+                }
+            }
         }
         if (DifferenceFoundFlag == true){
-            previous_word = word;
+            previous_word = this_word;
             continue;
         }
         else {
-            if (previous_word.length() < word.length()) {
+            if (previous_word.length() < this_word.length()) {
                 m_Protostems[previous_word] = 1;
             }
         }
-        previous_word = word;
-      }
-   }
-   // end of suffixes search
-   else
-   // -->  Prefix search  <-- //
-    {  for (int wordno=0; wordno<Words->size(); wordno ++)
-        {
-            QString this_word = Words->at(wordno);
-            m_Words->get_reverse_sort_list()->append (this_word);
-        }
-        std::sort(m_Words->get_reverse_sort_list()->begin(),
-                  m_Words->get_reverse_sort_list()->end(),
-                  reverse_string_compare );
+        previous_word = this_word;
+        previous_word_length = this_word_length;
     }
-//    for (int i = 0; i < m_Words->get_reverse_sort_list()->length(); i++){
-//        qDebug() << m_Words->get_reverse_sort_list()->at(i);
-//    }
-
+    return;
 }
-
 
 /*!
  * This is the second of the three initial parts of finding signatures.
@@ -173,9 +156,11 @@ void CLexicon::CreateStemAffixPairs()
                 if (m_Protostems.contains(stem)){
                     prefix_length = word.length() - letterno;
                     prefix = word.left(prefix_length);
+                    qDebug() << prefix << stem << "175";
                     m_Parses->append(QPair<QString,QString>(prefix,stem));
                     if (m_Words->contains(stem)){
                         m_Parses->append(QPair<QString,QString>(QString("NULL"),stem));
+
                     }
                 }
             } // end of prefixes.
