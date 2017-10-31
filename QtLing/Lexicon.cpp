@@ -21,7 +21,8 @@ CLexicon::CLexicon() : m_Words(new CWordCollection), m_Suffixes(new CSuffixColle
 {   m_Stems                 = new CStemCollection();
     m_Parses                = new QList<QPair<QString,QString>>();
     m_Protostems            = QMap<QString, int>();
-    m_ResidualSignatures    =  new CSignatureCollection();
+    m_ParaSignatures    =  new CSignatureCollection();
+    m_ParaSuffixes          = new CSuffixCollection();
     m_ResidualStems         = new CStemCollection();
     m_PrefixSignatures      = new CSignatureCollection();
     m_SuffixesFlag = true;
@@ -47,7 +48,8 @@ void CLexicon::Crab_1()
     FindProtostems();
     CreateStemAffixPairs();
     AssignSuffixesToStems();
-    FindGoodSignaturesInsideResidualSignatures();
+    collect_parasuffixes();
+    FindGoodSignaturesInsideParaSignatures();
 
     qDebug() << "finished making signatures.";
 
@@ -287,7 +289,7 @@ void   CLexicon::AssignSuffixesToStems()
 
         }else{
             this_signature_string =  iter_sigstring_to_stems.key();
-            pSig =  *m_ResidualSignatures << this_signature_string;
+            pSig =  *m_ParaSignatures << this_signature_string;
             pStem = *m_ResidualStems << this_stem_t;
             pSig->add_stem_pointer(pStem);
             foreach (this_affix, this_affix_set){
@@ -323,9 +325,9 @@ bool contains(QList<QString> * list2, QList<QString> * list1){
 
 
 /*!
- * We look inside the ResidualSignatures, and extract only the approved suffixes inside them.
+ * We look inside the ParaSignatures, and extract only the approved suffixes inside them.
  */
-void   CLexicon::FindGoodSignaturesInsideResidualSignatures()
+void   CLexicon::FindGoodSignaturesInsideParaSignatures()
 {   stem_t                      this_stem;
     word_t                      this_word;
     suffix_t                    this_suffix;
@@ -350,11 +352,11 @@ void   CLexicon::FindGoodSignaturesInsideResidualSignatures()
 
                                 m_ProgressBar->reset();
                                 m_ProgressBar->setMinimum(0);
-                                m_ProgressBar->setMaximum(m_ResidualSignatures->get_count());
+                                m_ProgressBar->setMaximum(m_ParaSignatures->get_count());
                                 m_Signatures->sort_signatures_by_affix_count();
     //---->   We iterate through the list of Residual Signatures <-------//
 
-    map_sigstring_to_sig_ptr_iter   sig_iter(*  m_ResidualSignatures->get_map());
+    map_sigstring_to_sig_ptr_iter   sig_iter(*  m_ParaSignatures->get_map());
 
     //--> Outer loop, over all Residual Signatures. <--//
     while (sig_iter.hasNext()){
@@ -531,7 +533,24 @@ void CLexicon::dump_suffixes(QList<QString> * pList)
     return m_Suffixes->get_suffixes(pList);
 }
 
+void CLexicon::collect_parasuffixes()
+{   sigstring_t     sigstring;
+    suffix_t        suffix;
+    CSignature*     pSig;
+    CSuffix *       pSuffix;
+    QStringList     suffixes;
+    map_sigstring_to_sig_ptr_iter sig_iter (* m_ParaSignatures->get_map());
+    while (sig_iter.hasNext())
+    { pSig = sig_iter.next().value();
+        sigstring = pSig->get_key();
+        suffixes = sigstring.split("=");
+        foreach (suffix, suffixes){
+            pSuffix = *m_ParaSuffixes <<  suffix;
+            pSuffix->increment_count();
+        }
+    }
 
+}
 
 
 

@@ -70,6 +70,7 @@ MainWindow::MainWindow()
     m_Models["Prefix signatures"]       = new LxaModel("Prefix signatures");
     m_Models["Residual parasignatures"] = new LxaModel("Residual parasignatures");
     m_Models["SigTreeEdges"]            = new LxaModel("SigTreeEdges");
+    m_Models["Parasuffixes"]            = new LxaModel("Parasuffixes");
 
     m_treeModel     = new QStandardItemModel();
 
@@ -173,7 +174,7 @@ void MainWindow::do_crab()
     m_Models["Prefix signatures"]->load_signatures(get_lexicon()->get_prefix_signatures());
     m_Models["SigTreeEdges"]->load_sig_tree_edges(get_lexicon()->get_sig_tree_edge_map());
     m_Models["Residual parasignatures"]->load_signatures(get_lexicon()->get_residual_signatures());
-
+    m_Models["Parasuffixes"]->load_suffixes(get_lexicon()->get_parasuffixes());
     createTreeModel();
 
     m_leftTreeView->expandAll();
@@ -402,6 +403,10 @@ void MainWindow::createTreeModel()
     QStandardItem * residual_sig_item = new QStandardItem(QString("Residual parasignatures"));
     QStandardItem * residual_sig_count_item = new QStandardItem(QString::number(get_lexicon()->get_residual_signatures()->get_count()));
 
+    QStandardItem * parasuffix_item = new QStandardItem(QString("Parasuffixes"));
+    QStandardItem * parasuffix_count_item = new QStandardItem(QString::number(get_lexicon()->get_parasuffixes()->get_count()));
+
+
 //    QStandardItem * singleton_sig_item = new QStandardItem(QString("Singleton signatures"));
 //    QStandardItem * singleton_sig_count_item = new QStandardItem(QString::number(get_lexicon()->get_singleton_signatures()->get_count()));
 
@@ -437,6 +442,9 @@ void MainWindow::createTreeModel()
     residual_sig_items.append(residual_sig_item);
     residual_sig_items.append(residual_sig_count_item);
 
+    QList<QStandardItem*> parasuffix_items;
+    parasuffix_items.append(parasuffix_item);
+    parasuffix_items.append(parasuffix_count_item);
 
     QList<QStandardItem*> sig_tree_edge_items;
     sig_tree_edge_items.append(sig_tree_edge_item);
@@ -451,6 +459,7 @@ void MainWindow::createTreeModel()
     lexicon_item->appendRow(prefix_sig_items);
     lexicon_item->appendRow(sig_tree_edge_items);
     lexicon_item->appendRow(residual_sig_items);
+    lexicon_item->appendRow(parasuffix_items);
 
 
 }
@@ -729,6 +738,12 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         setModel(m_parent_window->m_Models["Residual parasignatures"]);
         set_document_type( SIGNATURE_RESIDUES );
         //set_content_type( "rawsignatures");
+        sortByColumn(1);
+    }
+    else     if (component == "Parasuffixes"){
+        setModel(m_parent_window->m_Models["Parasuffixes"]);
+        set_document_type( PARASUFFIXES );
+        //set_content_type( "parasuffixes");
         sortByColumn(1);
     }
     else     if (component == "Singleton signatures"){

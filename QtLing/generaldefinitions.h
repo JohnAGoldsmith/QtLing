@@ -8,6 +8,8 @@
 
 enum eDocumentType  // for the Collection View
 { SINGLETON_SIGNATURES,
+  PARASIGNATURES,
+  PARASUFFIXES,
   RESIDUAL_PARASIGNATURES,
   NO_DOC,
   CORPUS_DOC,
