@@ -17,13 +17,13 @@
 #include "WordCollection.h"
 #include "Word.h"
 
-CLexicon::CLexicon() : m_Words(new CWordCollection), m_Suffixes(new CSuffixCollection), m_Signatures(new CSignatureCollection)
+CLexicon::CLexicon() : m_Words(new CWordCollection), m_Suffixes(new CSuffixCollection), m_Prefixes(new CPrefixCollection), m_Signatures(new CSignatureCollection)
 {   m_Stems                 = new CStemCollection();
     m_Parses                = new QList<QPair<QString,QString>>();
     m_Protostems            = QMap<QString, int>();
     m_ResidualSignatures    =  new CSignatureCollection();
     m_ResidualStems         = new CStemCollection();
-
+    m_PrefixSignatures      = new CSignatureCollection();
     m_SuffixesFlag = true;
 }
 
@@ -205,9 +205,8 @@ void   CLexicon::AssignSuffixesToStems()
             temp_stems_to_affix_set.insert(this_stem_t,pSet);
         }
         temp_stems_to_affix_set.value(this_stem_t)->insert(this_suffix);
-        //qDebug() << this_stem_t << this_suffix << "223";
-    }
-    qDebug() << "completed 225 ";
+            }
+
     //--> We iterate through these stems and for each stem, create QStringLists of their affixes. <--//
     //--> then we create a "pre-signature" in a map that points to lists of stems. <--//
     QMapIterator<QString, morph_set*>   stem_iter(temp_stems_to_affix_set);                       // part 1
@@ -242,8 +241,9 @@ void   CLexicon::AssignSuffixesToStems()
         this_stem_t =  p_this_stem_list->first();
         affix_set this_affix_set = QSet<QString>::fromList( this_signature_string.split("="));
         if (p_this_stem_list->size() >= MINIMUM_NUMBER_OF_STEMS)
-        {
-            pSig = *m_Signatures<< this_signature_string;
+        {   m_SuffixesFlag ?
+                pSig = *m_Signatures       << this_signature_string :
+                pSig = *m_PrefixSignatures << this_signature_string;
             pSig->add_memo("Pass 1");
             QSetIterator<suffix_t> affix_iter(this_affix_set);
             while(affix_iter.hasNext()){
@@ -253,6 +253,7 @@ void   CLexicon::AssignSuffixesToStems()
                       pSuffix->increment_count();
                       pSig->add_affix_ptr(pSuffix);
                   }else{
+                      qDebug() << this_affix << "256";
                       CPrefix* pPrefix = m_Prefixes->find_or_add(this_affix);
                       pPrefix->increment_count();
                       pSig->add_affix_ptr(pPrefix);

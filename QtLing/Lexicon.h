@@ -90,6 +90,7 @@ public:
     void                                        dump_suffixes(QList<QString>*);
     CWordCollection *                           get_words()                 { return m_Words;}
     CSignatureCollection*                       get_signatures()            { return m_Signatures;}
+    CSignatureCollection*                       get_prefix_signatures()     { return m_PrefixSignatures;}
 //    CSignatureCollection*                       get_singleton_signatures()  { return m_SingletonSignatures;}
 //    CStemCollection*                            get_singleton_stems ()      { return m_SingletonStems;}
 //    CStemCollection*                            get_stemset2_collection()   { return m_StemSet2;}
