@@ -35,7 +35,8 @@
 #include <QTreeView>
 #include <QStandardItemModel>
 #include <QStandardItem>
-
+#include <QSortFilterProxyModel>
+#include "mainwindow.h"
 
 typedef  QMap<QString,CWord*> StringToWordPtr;
 typedef  QPair<CStem*,CSignature*>  stem_sig_pair;
@@ -43,18 +44,28 @@ typedef  QPair<stem_sig_pair*,  stem_sig_pair*> pair_of_stem_sig_pairs;
 typedef  QPair<QString, pair_of_stem_sig_pairs*> five_tuple_sig_diffs;
 
 class LxaStandardItemModel;
+class LxaStandardItemModel;
 
-LxaStandardItemModel::LxaStandardItemModel()
+lxaWindow::lxaWindow()
 {
 
-};
-void LxaStandardItemModel::sort(int column_no, Qt::SortOrder order)
+}
+void lxaWindow::paintEvent(QPaintEvent *){
+    QPainter painter(this);
+     painter.setPen(Qt::blue);
+     painter.setFont(QFont("Arial", 30));
+     painter.drawText(rect(), Qt::AlignCenter, "Qt");
+}
+
+LxaStandardItemModel::LxaStandardItemModel(QString shortname)
 {
-    if (column_no == 4){
-    }
-    else{
-        QStandardItemModel::sort(column_no);
-    }
+    m_ShortName = shortname;
+}
+
+
+LxaStandardItemModel::LxaStandardItemModel(){
+    //m_proxy->setModel(this);
+
 }
 
 
@@ -63,14 +74,14 @@ MainWindow::MainWindow()
 
     m_lexicon_list.append ( new CLexicon() );
     // models
-    m_Models["Words"]                   = new LxaModel("Words");
-    m_Models["Stems"]                   = new LxaModel("Stems");
-    m_Models["Suffixes"]                = new LxaModel("Suffixes");
-    m_Models["Signatures"]              = new LxaModel("Signatures");
-    m_Models["Prefix signatures"]       = new LxaModel("Prefix signatures");
-    m_Models["Residual parasignatures"] = new LxaModel("Residual parasignatures");
-    m_Models["SigTreeEdges"]            = new LxaModel("SigTreeEdges");
-    m_Models["Parasuffixes"]            = new LxaModel("Parasuffixes");
+    m_Models["Words"]                   = new LxaStandardItemModel("Words");
+    m_Models["Stems"]                   = new LxaStandardItemModel("Stems");
+    m_Models["Suffixes"]                = new LxaStandardItemModel("Suffixes");
+    m_Models["Signatures"]              = new LxaStandardItemModel("Signatures");
+    m_Models["Prefix signatures"]       = new LxaStandardItemModel("Prefix signatures");
+    m_Models["Residual parasignatures"] = new LxaStandardItemModel("Residual parasignatures");
+    m_Models["SigTreeEdges"]            = new LxaStandardItemModel("SigTreeEdges");
+    m_Models["Parasuffixes"]            = new LxaStandardItemModel("Parasuffixes");
 
     m_treeModel     = new QStandardItemModel();
 
@@ -79,6 +90,10 @@ MainWindow::MainWindow()
     m_tableView_upper   = new UpperTableView (this);
     m_tableView_lower   = new LowerTableView (this);
     m_tableView_upper->setSortingEnabled(true);
+
+    m_canvas  = new lxaWindow();
+    m_graphic_display_flag = false;
+    m_tableView_lower->paintEvent(NULL);
 
     // set model for tree view
     m_leftTreeView->setModel(m_treeModel);
@@ -136,6 +151,17 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     if (ke->key() == Qt::Key_P){
         get_lexicon()->set_prefixes_flag();
     }
+    if (ke->key() == Qt::Key_G)
+    {
+        if (m_graphic_display_flag==false){
+            m_rightSplitter->replaceWidget(1,m_canvas);
+            m_graphic_display_flag = true;
+        } else{
+            m_rightSplitter->replaceWidget(1,m_tableView_lower);
+            m_graphic_display_flag = false;
+        }
+
+    }
 
     QMainWindow::keyPressEvent(ke);
 }
@@ -167,14 +193,14 @@ void MainWindow::do_crab()
 {   statusBar()->showMessage("Entering the Crab Nebula.");
     get_lexicon()->Crab_1();
     statusBar()->showMessage("We have returned from the Crab Nebular.");
-    m_Models["Words"]       ->load_words(get_lexicon()->get_words());
-    m_Models["Stems"]       ->load_stems(get_lexicon()->get_stems());
-    m_Models["Suffixes"]    ->load_suffixes(get_lexicon()->get_suffixes());
-    m_Models["Signatures"]  ->load_signatures(get_lexicon()->get_signatures());
-    m_Models["Prefix signatures"]->load_signatures(get_lexicon()->get_prefix_signatures());
-    m_Models["SigTreeEdges"]->load_sig_tree_edges(get_lexicon()->get_sig_tree_edge_map());
+    m_Models["Words"]               ->load_words(get_lexicon()->get_words());
+    m_Models["Stems"]               ->load_stems(get_lexicon()->get_stems());
+    m_Models["Suffixes"]            ->load_suffixes(get_lexicon()->get_suffixes());
+    m_Models["Signatures"]          ->load_signatures(get_lexicon()->get_signatures());
+    m_Models["Prefix signatures"]   ->load_signatures(get_lexicon()->get_prefix_signatures());
+    m_Models["SigTreeEdges"]        ->load_sig_tree_edges(get_lexicon()->get_sig_tree_edge_map());
     m_Models["Residual parasignatures"]->load_signatures(get_lexicon()->get_residual_signatures());
-    m_Models["Parasuffixes"]->load_suffixes(get_lexicon()->get_parasuffixes());
+    m_Models["Parasuffixes"]        ->load_suffixes(get_lexicon()->get_parasuffixes());
     createTreeModel();
 
     m_leftTreeView->expandAll();
@@ -760,4 +786,13 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     event->accept();
+}
+
+void LowerTableView::paintEvent(QPaintEvent * )
+{
+
+    QPainter painter(this);
+    painter.setPen(Qt::blue);
+    painter.setFont(QFont("Arial", 30));
+    painter.drawText(rect(), Qt::AlignCenter,"Qt");
 }

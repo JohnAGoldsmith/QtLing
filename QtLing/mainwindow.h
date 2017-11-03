@@ -9,6 +9,8 @@
 #include <QTreeView>
 #include <QStandardItemModel>
 #include <QAbstractItemModel>
+#include <QSortFilterProxyModel>
+#include <QListView>
 #include "Lexicon.h"
 
 QT_BEGIN_NAMESPACE
@@ -29,35 +31,36 @@ class QTreeView;
 class MainWindow;
 QT_END_NAMESPACE
 
-class LxaModel : public QStandardItemModel
+class lxaWindow : public QWidget
+{
+
+public:
+    lxaWindow( );
+    virtual void paintEvent(QPaintEvent * );
+};
+
+class LxaStandardItemModel : public QStandardItemModel
 {
     Q_OBJECT
 public:
-
-    LxaModel(QString shortname);
-    ~LxaModel();
+    LxaStandardItemModel();
+    LxaStandardItemModel(QString shortname);
+    ~LxaStandardItemModel();
 
 private:
-    QString     m_ShortName;
-    QString     m_Description;
+    QString                 m_ShortName;
+    QString                 m_Description;
 
 public:
+
+    //QSortFilterProxyModel*          get_proxy() {return m_proxy;}
+    void        sort(int column_no, Qt::SortOrder order);
     void        load_words(CWordCollection*);
     void        load_stems(CStemCollection * p_stems);
     void        load_suffixes(CSuffixCollection * p_suffixes);
     void        load_signatures(CSignatureCollection * p_signatures);
     void        load_sig_tree_edges(QMap<QString, sig_tree_edge*> *);
 };
-
-class LxaStandardItemModel: public QStandardItemModel
-{
-    Q_OBJECT
-public:
-    LxaStandardItemModel();
-    void sort(int column_no, Qt::SortOrder);
-};
-
-
 
 
 class UpperTableView : public QTableView
@@ -97,9 +100,8 @@ public:
 public slots:
         void display_this_item(const QModelIndex&);
         int  get_number_of_columns () {return m_number_of_columns;}
+        void paintEvent(QPaintEvent*);
 signals:
-
-
 };
 
 
@@ -122,10 +124,11 @@ class MainWindow : public QMainWindow
     friend class LeftSideTreeView;
     friend class UpperTableView;
     friend class LowerTableView;
+    friend class lxaWindow;
     QList<CLexicon*>    m_lexicon_list;
     QString             m_name_of_data_file;
     QProgressBar *      m_ProgressBar;
-    QMap<QString, LxaModel*>   m_Models;
+    QMap<QString, LxaStandardItemModel*>   m_Models;
 
 public:
     MainWindow();
@@ -189,7 +192,8 @@ private:
     UpperTableView *    m_tableView_upper;
     LowerTableView *    m_tableView_lower;
     LeftSideTreeView *  m_leftTreeView;
-
+    lxaWindow *         m_canvas;
+    bool                m_graphic_display_flag;
     QStandardItemModel * m_treeModel;
 
 

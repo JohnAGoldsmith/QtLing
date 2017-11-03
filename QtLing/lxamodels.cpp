@@ -4,17 +4,25 @@
 #include "StemCollection.h"
 #include "SuffixCollection.h"
 
-LxaModel::LxaModel (QString shortname)
-{
-    m_ShortName = shortname;
-}
-LxaModel::~LxaModel ()
+LxaStandardItemModel::~LxaStandardItemModel()
 {
 
 }
 
 
-void LxaModel::load_words(CWordCollection* p_words)
+void LxaStandardItemModel::sort(int column_no, Qt::SortOrder order)
+{
+    if (column_no ==0  ){
+        QStandardItemModel::sort(column_no);
+    }
+    else{
+
+    }
+}
+
+
+
+void LxaStandardItemModel::load_words(CWordCollection* p_words)
 {
     m_Description = QString (" ");
     QMapIterator<word_t, CWord*> word_iter ( * p_words->get_map() );
@@ -40,7 +48,7 @@ void LxaModel::load_words(CWordCollection* p_words)
 }
 
 
-void LxaModel::load_stems(CStemCollection * p_stems)
+void LxaStandardItemModel::load_stems(CStemCollection * p_stems)
 {
     CStem*                          stem;
     QMapIterator<QString, CStem*>  iter ( * p_stems->get_map() ) ;
@@ -61,7 +69,7 @@ void LxaModel::load_stems(CStemCollection * p_stems)
 }
 
 
-void LxaModel::load_suffixes(CSuffixCollection * p_suffixes)
+void LxaStandardItemModel::load_suffixes(CSuffixCollection * p_suffixes)
 {
     map_string_to_suffix_ptr_iter suffix_iter(*p_suffixes->get_map());
     while (suffix_iter.hasNext())
@@ -76,7 +84,7 @@ void LxaModel::load_suffixes(CSuffixCollection * p_suffixes)
     }
 }
 
-void LxaModel::load_signatures(CSignatureCollection* p_signatures)
+void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures)
 {
     m_Description = " ";
     CSignature*         sig;
@@ -100,7 +108,7 @@ struct{
      return a->words.size() > b->words.size();
     }
 }custom_compare;
-void LxaModel::load_sig_tree_edges( QMap<QString, sig_tree_edge*> * this_sig_tree_edge_map )
+void LxaStandardItemModel::load_sig_tree_edges( QMap<QString, sig_tree_edge*> * this_sig_tree_edge_map )
 {   QList<sig_tree_edge*>               temp_list;
     QMapIterator<word_t, sig_tree_edge*> * this_sig_tree_edge_iter = new QMapIterator<word_t, sig_tree_edge*>( * this_sig_tree_edge_map );
     while (this_sig_tree_edge_iter->hasNext())    {
