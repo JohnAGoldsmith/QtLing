@@ -44,6 +44,7 @@ public:
     CSignature*                             find_or_add ( QString); // same as operatorˆ=
     CSignature*                             get_at_sorted( uint n ) { return m_SortList[n];}
     int                                     get_count() const       { return m_SignatureMap.size(); }
+    void                                    clear();
     CSignature*                             get_signature(QString sig) {return m_SignatureMap.value(sig); }
     map_sigstring_to_sig_ptr_iter *         get_map_iterator() ;
     map_string_to_sig*                      get_map()                   { return & m_SignatureMap;}

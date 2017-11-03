@@ -19,7 +19,11 @@ CSignatureCollection::~CSignatureCollection()
     delete m_SortedListIterator;
 }
 
+void CSignatureCollection::clear(){
+    m_SignatureMap.clear();
+    m_SortList.clear();
 
+}
 map_sigstring_to_sig_ptr_iter * CSignatureCollection::get_map_iterator()
 {   qDebug() << "In signature collection, getting the map iterator.";
     m_MapIterator->toFront();

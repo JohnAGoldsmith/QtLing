@@ -17,6 +17,10 @@ CStemCollection::~CStemCollection()
     delete m_StringToStemMap;
 }
 
+void CStemCollection::clear(){
+    m_StringToStemMap->clear();
+    m_CorpusCount = 0;
+}
 CStem* CStemCollection::add(QString stem)
 {
     CStem* pStem = new CStem(stem);

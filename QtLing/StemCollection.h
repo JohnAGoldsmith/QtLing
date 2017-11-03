@@ -37,6 +37,7 @@ public:
     CStem*                          find_or_add (QString);  // same as <<
     CStem*                          find_or_fail (QString); // same as ^=
     CStem*                          add (QString);  // deprecated
+    void                            clear();
     CStem*                          GetAtKey( QString);
     int                             get_count() const { return m_StringToStemMap->size(); }
     void                            add_stem_pointer (CStem* pStem);

@@ -24,6 +24,7 @@ void LxaStandardItemModel::sort(int column_no, Qt::SortOrder order)
 
 void LxaStandardItemModel::load_words(CWordCollection* p_words)
 {
+    this->clear();
     m_Description = QString (" ");
     QMapIterator<word_t, CWord*> word_iter ( * p_words->get_map() );
     while (word_iter.hasNext())
@@ -52,6 +53,8 @@ void LxaStandardItemModel::load_stems(CStemCollection * p_stems)
 {
     CStem*                          stem;
     QMapIterator<QString, CStem*>  iter ( * p_stems->get_map() ) ;
+
+    this->clear();
     while (iter.hasNext())
     {
         stem = iter.next().value();
@@ -71,6 +74,7 @@ void LxaStandardItemModel::load_stems(CStemCollection * p_stems)
 
 void LxaStandardItemModel::load_suffixes(CSuffixCollection * p_suffixes)
 {
+    this->clear();
     map_string_to_suffix_ptr_iter suffix_iter(*p_suffixes->get_map());
     while (suffix_iter.hasNext())
     {
@@ -86,6 +90,7 @@ void LxaStandardItemModel::load_suffixes(CSuffixCollection * p_suffixes)
 
 void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures)
 {
+    this->clear();
     m_Description = " ";
     CSignature*         sig;
     p_signatures->sort();

@@ -100,7 +100,7 @@ public:
 public slots:
         void display_this_item(const QModelIndex&);
         int  get_number_of_columns () {return m_number_of_columns;}
-        void paintEvent(QPaintEvent*);
+
 signals:
 };
 
@@ -144,6 +144,7 @@ protected:
 private slots:
     void newFile();
     void read_file_do_crab();
+    void do_crab2();
     void do_crab();
     bool save();
     bool saveAs();

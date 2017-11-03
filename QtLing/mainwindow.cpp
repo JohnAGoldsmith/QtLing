@@ -93,7 +93,7 @@ MainWindow::MainWindow()
 
     m_canvas  = new lxaWindow();
     m_graphic_display_flag = false;
-    m_tableView_lower->paintEvent(NULL);
+
 
     // set model for tree view
     m_leftTreeView->setModel(m_treeModel);
@@ -162,8 +162,8 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
             m_graphic_display_flag = false;
         }
     }
-    if (ke->key() == Qt::Key_J){
-
+    if (ke->key() == Qt::Key_2){
+        do_crab2();
     }
     QMainWindow::keyPressEvent(ke);
 }
@@ -200,6 +200,23 @@ void MainWindow::do_crab()
     m_Models["Suffixes"]            ->load_suffixes(get_lexicon()->get_suffixes());
     m_Models["Signatures"]          ->load_signatures(get_lexicon()->get_signatures());
     m_Models["Prefix signatures"]   ->load_signatures(get_lexicon()->get_prefix_signatures());
+    m_Models["Residual parasignatures"]->load_signatures(get_lexicon()->get_residual_signatures());
+    m_Models["Parasuffixes"]        ->load_suffixes(get_lexicon()->get_parasuffixes());
+    createTreeModel();
+
+    m_leftTreeView->expandAll();
+    statusBar()->showMessage("All models are loaded.");
+
+}
+void MainWindow::do_crab2()
+{   statusBar()->showMessage("Entering the Crab Nebula.");
+    get_lexicon()->Crab_2();
+    statusBar()->showMessage("We have returned from the Crab Nebular again.");
+    m_Models["Words"]               ->load_words(get_lexicon()->get_words());
+    m_Models["Stems"]               ->load_stems(get_lexicon()->get_stems());
+    m_Models["Suffixes"]            ->load_suffixes(get_lexicon()->get_suffixes());
+    m_Models["Signatures"]          ->load_signatures(get_lexicon()->get_signatures());
+    m_Models["Prefix signatures"]   ->load_signatures(get_lexicon()->get_prefix_signatures());
     m_Models["SigTreeEdges"]        ->load_sig_tree_edges(get_lexicon()->get_sig_tree_edge_map());
     m_Models["Residual parasignatures"]->load_signatures(get_lexicon()->get_residual_signatures());
     m_Models["Parasuffixes"]        ->load_suffixes(get_lexicon()->get_parasuffixes());
@@ -209,7 +226,6 @@ void MainWindow::do_crab()
     statusBar()->showMessage("All models are loaded.");
 
 }
-
 void MainWindow::read_file_do_crab()
 {       read_dx1_file();
         statusBar()->showMessage(tr("Ready"));
@@ -571,11 +587,13 @@ LowerTableView::LowerTableView(MainWindow * window)
      if (UpperView_type == WORDS){
     //  ---------------------------------------------------//
         if (index.isValid()){
-             word = index.data().toString();
+             //word = index.data().toString();
+             row = index.row();
         }
         if (m_my_current_model){
             delete m_my_current_model;
         }
+        QString word = index.sibling(row,0).data().toString();
         CWord* pWord = this_lexicon->get_words()->get_word(word);
         m_my_current_model = new QStandardItemModel();
         QListIterator<QString> line_iter(*pWord->get_autobiography());
@@ -602,8 +620,10 @@ LowerTableView::LowerTableView(MainWindow * window)
      //  ---------------------------------------------------//
         item_list.clear();
         if (index.isValid()){
-             signature = index.data().toString();
+             //signature = index.data().toString();
+             row = index.row();
          }
+        signature = index.sibling(row,0).data().toString();
 
         CSignature*           pSig = this_lexicon->get_signatures()->get_signature(signature);
         CStem*                p_Stem;
@@ -634,6 +654,7 @@ LowerTableView::LowerTableView(MainWindow * window)
              row = index.row();
         }
         item_list.clear();
+        signature = index.sibling(row,0).data().toString();
         CSignature*           pSig = this_lexicon->get_signatures()->get_signature(signature);
         CStem*                p_Stem;
         CStem_ptr_list     *  sig_stems = pSig->get_stems();
@@ -661,6 +682,8 @@ LowerTableView::LowerTableView(MainWindow * window)
         if (index.isValid()){
              row = index.row();
         }
+        signature = index.sibling(row,0).data().toString();
+
         CSignature*           pSig = this_lexicon->get_signatures()->get_signature(signature);
         CStem*                p_Stem;
         CStem_ptr_list  *      sig_stems = pSig->get_stems();
@@ -790,11 +813,3 @@ void MainWindow::closeEvent(QCloseEvent *event)
     event->accept();
 }
 
-void LowerTableView::paintEvent(QPaintEvent * )
-{
-
-    QPainter painter(this);
-    painter.setPen(Qt::blue);
-    painter.setFont(QFont("Arial", 30));
-    painter.drawText(rect(), Qt::AlignCenter,"Qt");
-}

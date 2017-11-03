@@ -53,6 +53,7 @@ protected:
     CPrefixCollection *             m_Prefixes;
     CSignatureCollection *          m_Signatures;
     CSignatureCollection *          m_PrefixSignatures;
+    CWordCollection *               m_Compounds;
     QList<QPair<QString,QString>> * m_Parses;
     QMap<QString,int>               m_Parse_map;
     QMap<QString, int>              m_Protostems;
@@ -117,9 +118,11 @@ public:
 public:
     // insert functions here
     void Crab_1();
+    void Crab_2();
     void FindProtostems();
     void CreateStemAffixPairs();
     void AssignSuffixesToStems();
+    void ReSignaturizeWithKnownAffixes();
     void FindGoodSignaturesInsideParaSignatures();
     void compute_sig_tree_edge_map();
 //    void find_good_signatures_inside_residual_signatures(bool FindSuffixesFlag);
