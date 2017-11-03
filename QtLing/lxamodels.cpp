@@ -3,6 +3,7 @@
 #include "mainwindow.h"
 #include "StemCollection.h"
 #include "SuffixCollection.h"
+#include "QDebug"
 
 LxaStandardItemModel::~LxaStandardItemModel()
 {

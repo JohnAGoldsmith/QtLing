@@ -599,6 +599,7 @@ LowerTableView::LowerTableView(MainWindow * window)
         QListIterator<QString> line_iter(*pWord->get_autobiography());
         while (line_iter.hasNext()){
             QString report_line = line_iter.next();
+            qDebug() << report_line << "584";
             item_list.clear();
             QStringList report_line_items = report_line.split("=");
             for (int i = 0; i < report_line_items.size(); i++){

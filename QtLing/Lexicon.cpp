@@ -292,6 +292,7 @@ void   CLexicon::AssignSuffixesToStems()
                     CWord* pWord = m_Words->get_word(this_word);
                     pWord->add_stem_and_signature(pStem,pSig);
                     pWord->add_to_autobiography("Pass1= " + this_stem_t + "=" + this_signature_string);
+
                 }
             }
 
