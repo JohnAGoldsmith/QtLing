@@ -150,6 +150,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     }
     if (ke->key() == Qt::Key_P){
         get_lexicon()->set_prefixes_flag();
+        do_crab();
     }
     if (ke->key() == Qt::Key_G)
     {
@@ -160,9 +161,10 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
             m_rightSplitter->replaceWidget(1,m_tableView_lower);
             m_graphic_display_flag = false;
         }
+    }
+    if (ke->key() == Qt::Key_J){
 
     }
-
     QMainWindow::keyPressEvent(ke);
 }
 
