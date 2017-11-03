@@ -450,10 +450,6 @@ void MainWindow::createTreeModel()
     QStandardItem * parasuffix_item = new QStandardItem(QString("Parasuffixes"));
     QStandardItem * parasuffix_count_item = new QStandardItem(QString::number(get_lexicon()->get_parasuffixes()->get_count()));
 
-
-//    QStandardItem * singleton_sig_item = new QStandardItem(QString("Singleton signatures"));
-//    QStandardItem * singleton_sig_count_item = new QStandardItem(QString::number(get_lexicon()->get_singleton_signatures()->get_count()));
-
     QStandardItem * sig_tree_edge_item = new QStandardItem(QString("Signature tree edges"));
     QStandardItem * sig_tree_edge_count_item = new QStandardItem(QString::number(get_lexicon()->get_sig_tree_edge_map()->size()));
 
@@ -599,7 +595,6 @@ LowerTableView::LowerTableView(MainWindow * window)
         QListIterator<QString> line_iter(*pWord->get_autobiography());
         while (line_iter.hasNext()){
             QString report_line = line_iter.next();
-            qDebug() << report_line << "584";
             item_list.clear();
             QStringList report_line_items = report_line.split("=");
             for (int i = 0; i < report_line_items.size(); i++){
@@ -732,7 +727,6 @@ LowerTableView::LowerTableView(MainWindow * window)
      if (item_list.size() > 0){
         m_my_current_model->appendRow(item_list);
      }
-     //qDebug() << "line 579";
      setModel( m_my_current_model);
     }
    resizeColumnsToContents();
@@ -783,25 +777,20 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         setModel(m_parent_window->m_Models["SigTreeEdges"]);
         set_document_type( SIGNATURE_TREE_EDGES );
         set_content_type( "sigtreeedges");
-        qDebug() << "line 876 we got here";
         sortByColumn(-1);
     }
     else     if (component == "Residual parasignatures"){
         setModel(m_parent_window->m_Models["Residual parasignatures"]);
         set_document_type( SIGNATURE_RESIDUES );
-        //set_content_type( "rawsignatures");
         sortByColumn(1);
     }
     else     if (component == "Parasuffixes"){
         setModel(m_parent_window->m_Models["Parasuffixes"]);
         set_document_type( PARASUFFIXES );
-        //set_content_type( "parasuffixes");
         sortByColumn(1);
     }
     else     if (component == "Singleton signatures"){
-        //setModel(m_parent_window->SingletonSignature_model);
         set_document_type( SINGLETON_SIGNATURES );
-        //set_content_type( "rawsignatures");
         sortByColumn(1);
     }
     resizeColumnsToContents();
