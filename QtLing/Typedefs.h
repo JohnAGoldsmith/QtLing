@@ -45,6 +45,7 @@ typedef QListIterator<stem_t>               stem_list_iterator;
 typedef QListIterator<CSuffix*>             CSuffix_ptr_list_iterator;
 typedef QListIterator<CPrefix*>             CPrefix_ptr_list_iterator;
 typedef QListIterator<CStem*>               CStem_ptr_list_iterator;
+typedef QListIterator<CSignature*>          CSignature_ptr_list_iterator;
 
 typedef QSet<morph_t>                       morph_set;
 typedef QSet<stem_t>                        stem_set;

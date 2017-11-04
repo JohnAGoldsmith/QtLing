@@ -263,7 +263,7 @@ void   CLexicon::AssignSuffixesToStems()
                       pSuffix->increment_count();
                       pSig->add_affix_ptr(pSuffix);
                   }else{
-                      qDebug() << this_affix << "256";
+                      //qDebug() << this_affix << "256";
                       CPrefix* pPrefix = m_Prefixes->find_or_add(this_affix);
                       pPrefix->increment_count();
                       pSig->add_affix_ptr(pPrefix);
@@ -471,27 +471,39 @@ void CLexicon::compute_sig_tree_edges()
     map_string_to_word *            WordMap = m_Words->GetMap();
     map_string_to_word_ptr_iter         word_iter(*WordMap);
     sig_tree_edge *                 p_SigTreeEdge;
-
+    int                             number_of_signatures;
+    CSignatureCollection*           pSignatures;
+    morph_t                         difference;
     while (word_iter.hasNext())   {
         pWord = word_iter.next().value();
-        int number_of_signatures = pWord->GetSignatures()->size();
+        number_of_signatures = pWord->GetSignatures()->size();
         if ( number_of_signatures > 2){
             for (int signo1=0; signo1 < number_of_signatures; signo1++){
                 stem_sig_pair* pair1 =  pWord->GetSignatures()->value(signo1);
                 CStem * stem1       = pair1->first;
+                int stem1length = stem1->get_key().length();
                 CSignature* sig1    = pair1->second;
                 for (int signo2=signo1 + 1; signo2 < number_of_signatures; signo2++){
                     stem_sig_pair * pair2 = pWord->GetSignatures()->value(signo2);
-                    CStem *  stem2       = pair2->first;
-                    CSignature* sig2    = pair2->second;
-                    if ( stem1->get_key().length() > stem2->get_key().length() ){
-                        morph_t difference = stem1->get_key().mid(stem2->get_key().length());
+                    CStem *  stem2   = pair2->first;
+                    CSignature* sig2 = pair2->second;
+                    int stem2length = stem2->get_key().length();
+                    if (stem1length > stem2length){
+                        int length_of_difference = stem1length - stem2length;
+                        m_SuffixesFlag?
+                            difference = stem1->get_key().mid(stem2->get_key().length()):
+                            difference = stem1->get_key().left(length_of_difference);
                         p_SigTreeEdge = new sig_tree_edge (sig1,sig2,difference, pWord->get_key());
+                        //qDebug() << pWord->get_key() << stem1->get_key() << stem2->get_key();
                     } else{
-                        morph_t difference = stem2->get_key().mid(stem1->get_key().length());
+                        int length_of_difference = stem2length - stem1length;
+                        m_SuffixesFlag?
+                            difference = stem2->get_key().mid(stem1->get_key().length()):
+                            difference = stem2->get_key().left(length_of_difference);
                         p_SigTreeEdge =  new sig_tree_edge (sig2,sig1,difference, pWord->get_key());
                     }
                     m_SigTreeEdgeList.append(p_SigTreeEdge);
+                    qDebug() << sig1->get_key() << sig2->get_key() << difference << pWord->get_key();
                 }
             }
         }
@@ -505,7 +517,6 @@ void CLexicon::compute_sig_tree_edges()
  * this particular sig_tree_edge.
  */
 void CLexicon::compute_sig_tree_edge_map() {
-
 morph_t         edge_label;
 word_t          this_word;
 sig_tree_edge * p_sig_tree_edge,
@@ -586,6 +597,11 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
     map_sigstring_to_stem_list        temp_signatures_to_stems;
     morph_set *                 pSet;
 
+    map_string_to_word_ptr_iter word_iter (*m_Words->get_map());
+    while(word_iter.hasNext()){
+        pWord = word_iter.next().value();
+        pWord->clear_signatures();
+    }
     //--> We establish a temporary map from stems to sets of affixes as we iterate through parses. <--//
     for (int parseno = 0; parseno < m_Parses->size(); parseno++){
         this_pair = m_Parses->at(parseno);

@@ -209,7 +209,7 @@ void MainWindow::do_crab()
 
 }
 void MainWindow::do_crab2()
-{   statusBar()->showMessage("Entering the Crab Nebula.");
+{   statusBar()->showMessage("Entering the Crab Nebula, phase 2");
     get_lexicon()->Crab_2();
     statusBar()->showMessage("We have returned from the Crab Nebular again.");
     m_Models["Words"]               ->load_words(get_lexicon()->get_words());
@@ -643,6 +643,41 @@ LowerTableView::LowerTableView(MainWindow * window)
         }
         setModel( m_my_current_model);
     }
+
+
+     //  ---------------------------------------------------//
+     else if (UpperView_type == PREFIX_SIGNATURES){
+     //  ---------------------------------------------------//
+        item_list.clear();
+        if (index.isValid()){
+             //signature = index.data().toString();
+             row = index.row();
+         }
+        signature = index.sibling(row,0).data().toString();
+
+        CSignature*           pSig = this_lexicon->get_prefix_signatures()->get_signature(signature);
+        CStem*                p_Stem;
+        CStem_ptr_list    *   sig_stems = pSig->get_stems();
+
+
+        if (m_my_current_model) {
+            delete m_my_current_model;
+        }
+        m_my_current_model = new QStandardItemModel();
+        foreach (p_Stem, *sig_stems)  {
+            p_item = new QStandardItem(p_Stem->get_key() );
+            item_list.append(p_item);
+            if (item_list.length() >= m_number_of_columns){
+                m_my_current_model->appendRow(item_list);
+                item_list.clear();
+            }
+        }
+        if (item_list.size() > 0){
+            m_my_current_model->appendRow(item_list);
+        }
+        setModel( m_my_current_model);
+    }
+
      //  ---------------------------------------------------//
      else if (UpperView_type == RESIDUAL_PARASIGNATURES){
      //  ---------------------------------------------------//
