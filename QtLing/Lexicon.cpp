@@ -314,6 +314,7 @@ void   CLexicon::AssignSuffixesToStems()
             }
         }
     }
+    m_Suffixes->sort_by_count();
 }
 
 bool contains(QList<QString> * list2, QList<QString> * list1){
@@ -555,7 +556,7 @@ void CLexicon::collect_parasuffixes()
             pSuffix->increment_count();
         }
     }
-
+    m_ParaSuffixes->sort_by_count();
 }
 
 

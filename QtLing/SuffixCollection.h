@@ -13,7 +13,8 @@ class CLexicon;
 class CSuffixCollection
 {
 protected:
-    QMap<QString, CSuffix*> m_SuffixMap;
+    QMap<QString, CSuffix*>  m_SuffixMap;
+    CSuffix_ptr_list         m_SortedList;
 
 public:
     //construction/destruction
@@ -37,6 +38,8 @@ public:
     QMap<QString,CSuffix*>* get_map()              { return & m_SuffixMap;         }
     void                    get_suffixes(QList<QString>*);
     bool                    contains(suffix_t this_suffix) {return m_SuffixMap.contains(this_suffix);}
+    void                    sort_by_count();
+    CSuffix_ptr_list*       get_sorted_list() {return & m_SortedList;}
 };
 
 class CPrefixCollection
@@ -66,6 +69,7 @@ public:
     QMap<QString,CPrefix*>* get_map()              { return & m_PrefixMap;         }
     void                    get_prefixes(QList<QString>*);
     bool                    contains(suffix_t this_prefix) {return m_PrefixMap.contains(this_prefix);}
+
 };
 
 #endif // CSUFFIXCOLLECTION_H

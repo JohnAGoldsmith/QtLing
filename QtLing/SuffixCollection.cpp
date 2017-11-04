@@ -58,7 +58,21 @@ void  CSuffixCollection::get_suffixes(QList<QString>* pList)
     }
 }
 
+bool count_compare(CSuffix* pSuff1, CSuffix* pSuff2){
+    if (pSuff1->get_count() > pSuff2->get_count()) return true;
+    return false;
+}
 
+void CSuffixCollection::sort_by_count()
+{
+    QMapIterator<QString, CSuffix*> suffix_iter (m_SuffixMap);
+    while (suffix_iter.hasNext()){
+        suffix_iter.next();
+        m_SortedList.append(suffix_iter.value());
+    }
+    std::sort(m_SortedList.begin(), m_SortedList.end(), count_compare);
+
+}
 
 
 

@@ -76,10 +76,11 @@ void LxaStandardItemModel::load_stems(CStemCollection * p_stems)
 void LxaStandardItemModel::load_suffixes(CSuffixCollection * p_suffixes)
 {
     this->clear();
-    map_string_to_suffix_ptr_iter suffix_iter(*p_suffixes->get_map());
+    //map_string_to_suffix_ptr_iter suffix_iter(*p_suffixes->get_map());
+    CSuffix_ptr_list_iterator suffix_iter(*p_suffixes->get_sorted_list());
     while (suffix_iter.hasNext())
     {
-        CSuffix* pSuffix = suffix_iter.next().value();
+        CSuffix* pSuffix = suffix_iter.next();
         QStandardItem *item = new QStandardItem(pSuffix->GetSuffix());
         QStandardItem *item2 = new QStandardItem(QString::number(pSuffix->get_count()));
         QList<QStandardItem*> item_list;
