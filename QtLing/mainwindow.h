@@ -38,7 +38,7 @@ class lxaWindow : public QWidget
 public:
     lxaWindow( MainWindow * );
     virtual void    paintEvent(QPaintEvent * );
-    void            drawSignatures(QPainter& painter, QString sigstring, int row, int col);
+    void            drawSignatures(QPainter& painter);
     void            ingest_signatures(CSignatureCollection* );
 };
 

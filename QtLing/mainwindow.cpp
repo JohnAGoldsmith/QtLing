@@ -51,6 +51,7 @@ lxaWindow::lxaWindow(MainWindow* window)
  m_main_window = window;
 }
 void lxaWindow::ingest_signatures(CSignatureCollection* signatures){
+    qDebug() << "Ingesting signatures.";
     int max_size = 0;
     int sig_size;
     CSignature * pSig;
@@ -68,21 +69,25 @@ void lxaWindow::ingest_signatures(CSignatureCollection* signatures){
         pSig = sig_iter.next().value();
         sig_size = pSig->get_number_of_affixes();
         m_signature_lattice[sig_size]->append(pSig);
+        //qDebug() << pSig->get_key();
     }
 }
-void lxaWindow::drawSignatures(QPainter& painter, QString sigstring, int row, int col)
+void lxaWindow::drawSignatures(QPainter& painter)
 {
-    int row_delta = 100;
-    int col_delta = 100;
+    int row_delta = 60;
+    int col_delta = 30;
     int bottom_row = 800;
-    painter.drawEllipse(800- row_delta * (row-2), col*col_delta,40,40);
+    //painter.drawEllipse(800- row_delta * (row-2), col*col_delta,40,40);
     for (int row = 2; row <m_signature_lattice.size(); row++){
         CSignature_ptr_list_iterator sig_iter(*m_signature_lattice[row]);
         int col = 0;
         while (sig_iter.hasNext()){
             CSignature* pSig = sig_iter.next();
-            painter.drawEllipse(bottom_row - (row-2)*row_delta, col*col_delta, 40,40   );
+            int x = col * col_delta;
+            int y = bottom_row - (row-2) * row_delta;
+            painter.drawEllipse(x, y, 4, 4);
             col++;
+            //qDebug() << pSig->get_key() <<row<<col;
         }
 
     }
@@ -91,14 +96,18 @@ void lxaWindow::drawSignatures(QPainter& painter, QString sigstring, int row, in
 }
 void lxaWindow::paintEvent(QPaintEvent *){
 
-    ingest_signatures(m_main_window->get_lexicon()->get_prefix_signatures());
-    QPainter painter(this);
+    if (m_signature_lattice.size() == 0){
+        if (m_main_window->get_lexicon()->get_signatures()->get_count() > 0) {
+            ingest_signatures(m_main_window->get_lexicon()->get_signatures());}
+        else if (m_main_window->get_lexicon()->get_prefix_signatures()->get_count() > 0){
+            ingest_signatures(m_main_window->get_lexicon()->get_prefix_signatures());
+        }
+    }
+     QPainter painter(this);
      painter.setPen(Qt::blue);
      painter.setFont(QFont("Arial", 30));
      painter.drawText(rect(), Qt::AlignCenter, "Qt");
-     drawSignature(painter,"NULL.ing", 2,2);
-     drawSignature(painter,"NULL.ing", 1,2);
-     //painter.drawEllipse(100,50,40,40);
+     drawSignatures(painter);
 }
 
 LxaStandardItemModel::LxaStandardItemModel(QString shortname)
