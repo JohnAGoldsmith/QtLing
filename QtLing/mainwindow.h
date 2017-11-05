@@ -34,12 +34,20 @@ QT_END_NAMESPACE
 class lxaWindow : public QWidget
 {   QList<QList<CSignature*>*>  m_signature_lattice;
     MainWindow *    m_main_window;
+    double          m_scale;
+    double          m_xshift;
+    double          m_yshift;
 
 public:
     lxaWindow( MainWindow * );
     virtual void    paintEvent(QPaintEvent * );
     void            drawSignatures(QPainter& painter);
     void            ingest_signatures(CSignatureCollection* );
+    void            expand();
+    void            contract();
+    void            move_down();
+    void            move_up();
+    void            reset_scale_and_translation();
 };
 
 class LxaStandardItemModel : public QStandardItemModel
@@ -191,6 +199,8 @@ private:
     bool saveFile(const QString &fileName);
     void setCurrentFile(const QString &fileName);
     QString strippedName(const QString &fullFileName);
+    lxaWindow*      get_canvas() {return  m_canvas;}
+
 
     QSplitter *         m_mainSplitter;
     QSplitter *         m_rightSplitter;

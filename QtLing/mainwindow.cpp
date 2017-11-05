@@ -48,7 +48,32 @@ class LxaStandardItemModel;
 
 lxaWindow::lxaWindow(MainWindow* window)
 {
+    m_scale = 1.0;
  m_main_window = window;
+ update();
+}
+void lxaWindow::expand(){
+    m_scale += m_scale * .10;
+    update();
+
+}
+void lxaWindow::contract(){
+    m_scale -= m_scale * .10;
+    update();
+}
+void lxaWindow::move_down(){
+    m_yshift += 40;
+    update();
+}
+void lxaWindow::move_up(){
+    m_yshift -= 40;
+    update();
+}
+void lxaWindow::reset_scale_and_translation(){
+    m_xshift = 0;
+    m_yshift = 0;
+    m_scale = 1.0;
+    update();
 }
 void lxaWindow::ingest_signatures(CSignatureCollection* signatures){
     qDebug() << "Ingesting signatures.";
@@ -76,7 +101,8 @@ void lxaWindow::drawSignatures(QPainter& painter)
 {
     int row_delta = 60;
     int col_delta = 30;
-    int bottom_row = 800;
+    int number_of_rows = m_signature_lattice.size();
+    int bottom_row = row_delta * number_of_rows;
     //painter.drawEllipse(800- row_delta * (row-2), col*col_delta,40,40);
     for (int row = 2; row <m_signature_lattice.size(); row++){
         CSignature_ptr_list_iterator sig_iter(*m_signature_lattice[row]);
@@ -89,11 +115,9 @@ void lxaWindow::drawSignatures(QPainter& painter)
             col++;
             //qDebug() << pSig->get_key() <<row<<col;
         }
-
     }
-
-
 }
+
 void lxaWindow::paintEvent(QPaintEvent *){
 
     if (m_signature_lattice.size() == 0){
@@ -104,6 +128,8 @@ void lxaWindow::paintEvent(QPaintEvent *){
         }
     }
      QPainter painter(this);
+     painter.scale (m_scale,m_scale);
+     painter.translate(m_xshift, m_yshift);
      painter.setPen(Qt::blue);
      painter.setFont(QFont("Arial", 30));
      painter.drawText(rect(), Qt::AlignCenter, "Qt");
@@ -217,6 +243,21 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     }
     if (ke->key() == Qt::Key_2){
         do_crab2();
+    }
+    if (ke->key() == Qt::Key_J){
+       m_canvas->expand();
+    }
+    if (ke->key() == Qt::Key_K){
+        m_canvas->contract();
+    }
+    if (ke->key() == Qt::Key_L){
+        m_canvas->move_down();
+    }
+    if (ke->key() == Qt::Key_Semicolon){
+        m_canvas->move_up();
+    }
+    if (ke->key() == Qt::Key_Period){
+        m_canvas->reset_scale_and_translation();
     }
     QMainWindow::keyPressEvent(ke);
 }
