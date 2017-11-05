@@ -32,11 +32,14 @@ class MainWindow;
 QT_END_NAMESPACE
 
 class lxaWindow : public QWidget
-{
+{   QList<QList<CSignature*>*>  m_signature_lattice;
+    MainWindow *    m_main_window;
 
 public:
-    lxaWindow( );
-    virtual void paintEvent(QPaintEvent * );
+    lxaWindow( MainWindow * );
+    virtual void    paintEvent(QPaintEvent * );
+    void            drawSignatures(QPainter& painter, QString sigstring, int row, int col);
+    void            ingest_signatures(CSignatureCollection* );
 };
 
 class LxaStandardItemModel : public QStandardItemModel
@@ -121,10 +124,10 @@ public:
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-    friend class LeftSideTreeView;
-    friend class UpperTableView;
-    friend class LowerTableView;
-    friend class lxaWindow;
+    friend class        LeftSideTreeView;
+    friend class        UpperTableView;
+    friend class        LowerTableView;
+    friend class        lxaWindow;
     QList<CLexicon*>    m_lexicon_list;
     QString             m_name_of_data_file;
     QProgressBar *      m_ProgressBar;
@@ -150,6 +153,7 @@ private slots:
     bool saveAs();
     void about();
     void documentWasModified();
+    void print_prefix_signatures();
 //    void rowClicked(const QModelIndex& index);
 
 #ifndef QT_NO_SESSIONMANAGER

@@ -46,15 +46,59 @@ typedef  QPair<QString, pair_of_stem_sig_pairs*> five_tuple_sig_diffs;
 class LxaStandardItemModel;
 class LxaStandardItemModel;
 
-lxaWindow::lxaWindow()
+lxaWindow::lxaWindow(MainWindow* window)
 {
+ m_main_window = window;
+}
+void lxaWindow::ingest_signatures(CSignatureCollection* signatures){
+    int max_size = 0;
+    int sig_size;
+    CSignature * pSig;
+    map_sigstring_to_sig_ptr_iter sig_iter(*signatures->get_map());
+    while(sig_iter.hasNext()){
+        int this_size = sig_iter.next().value()->get_number_of_affixes();
+        if (this_size > max_size){ max_size = this_size;}
+    }
+    for (int size = 0; size <= max_size; size++){
+        QList<CSignature*> * signature_list = new QList<CSignature*>;
+        m_signature_lattice.append(signature_list);
+    }
+    sig_iter.toFront();
+    while(sig_iter.hasNext()){
+        pSig = sig_iter.next().value();
+        sig_size = pSig->get_number_of_affixes();
+        m_signature_lattice[sig_size]->append(pSig);
+    }
+}
+void lxaWindow::drawSignatures(QPainter& painter, QString sigstring, int row, int col)
+{
+    int row_delta = 100;
+    int col_delta = 100;
+    int bottom_row = 800;
+    painter.drawEllipse(800- row_delta * (row-2), col*col_delta,40,40);
+    for (int row = 2; row <m_signature_lattice.size(); row++){
+        CSignature_ptr_list_iterator sig_iter(*m_signature_lattice[row]);
+        int col = 0;
+        while (sig_iter.hasNext()){
+            CSignature* pSig = sig_iter.next();
+            painter.drawEllipse(bottom_row - (row-2)*row_delta, col*col_delta, 40,40   );
+            col++;
+        }
+
+    }
+
 
 }
 void lxaWindow::paintEvent(QPaintEvent *){
+
+    ingest_signatures(m_main_window->get_lexicon()->get_prefix_signatures());
     QPainter painter(this);
      painter.setPen(Qt::blue);
      painter.setFont(QFont("Arial", 30));
      painter.drawText(rect(), Qt::AlignCenter, "Qt");
+     drawSignature(painter,"NULL.ing", 2,2);
+     drawSignature(painter,"NULL.ing", 1,2);
+     //painter.drawEllipse(100,50,40,40);
 }
 
 LxaStandardItemModel::LxaStandardItemModel(QString shortname)
@@ -91,7 +135,7 @@ MainWindow::MainWindow()
     m_tableView_lower   = new LowerTableView (this);
     m_tableView_upper->setSortingEnabled(true);
 
-    m_canvas  = new lxaWindow();
+    m_canvas  = new lxaWindow(this);
     m_graphic_display_flag = false;
 
 
@@ -221,6 +265,8 @@ void MainWindow::do_crab2()
     m_Models["Residual parasignatures"]->load_signatures(get_lexicon()->get_residual_signatures());
     m_Models["Parasuffixes"]        ->load_suffixes(get_lexicon()->get_parasuffixes());
     createTreeModel();
+
+    print_prefix_signatures();
 
     m_leftTreeView->expandAll();
     statusBar()->showMessage("All models are loaded.");
@@ -838,3 +884,38 @@ void MainWindow::closeEvent(QCloseEvent *event)
     event->accept();
 }
 
+void MainWindow::print_prefix_signatures()
+{
+    CSignature* pSig;
+    int count = 0;
+    CStem *  pStem;
+
+    QString filename = "signatures.txt";
+    QFile file (filename);
+    if (file.open(QIODevice::ReadWrite)){
+
+        QTextStream stream( &file);
+
+
+    map_sigstring_to_sig_ptr_iter sig_iter (*get_lexicon()->get_prefix_signatures()->get_map());
+    while (sig_iter.hasNext()){
+       pSig = sig_iter.next().value();
+       stream << pSig->get_key()<< endl;
+       CStem_ptr_list_iterator stem_iter (*pSig->get_stems());
+       while (stem_iter.hasNext()){
+           pStem = stem_iter.next();
+           stream << pStem->get_key() << "\t";
+           count++;
+           if (count ==5){
+               count = 0;
+               stream << endl;
+           }
+       }
+       stream << endl << endl;
+       count = 0;
+    }
+    stream << endl;
+
+    }
+    file.close();
+}
