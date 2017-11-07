@@ -164,8 +164,8 @@ MainWindow::MainWindow()
     m_tableView_lower   = new LowerTableView (this);
     m_tableView_upper->setSortingEnabled(true);
 
-    m_scene = new lxa_graphics_scene (this);
-    m_canvas = new lxa_graphics_view(this,  m_scene);
+    m_graphics_scene = new lxa_graphics_scene (this);
+    m_graphics_view  = new lxa_graphics_view(this,  m_graphics_scene);
     m_graphic_display_flag = false;             // toggle with Ctrl-G
 
 
@@ -229,12 +229,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     if (ke->key() == Qt::Key_G)
     {
         if (m_graphic_display_flag==false){
-            m_rightSplitter->replaceWidget(1,m_canvas);
-
-            // -->  This is probably not the best place for this function call:
-
-            m_scene->ingest_signatures(get_lexicon()->get_signatures());
-            m_scene->place_signatures();
+            m_rightSplitter->replaceWidget(1,m_graphics_view);
             m_graphic_display_flag = true;
         } else{
             m_rightSplitter->replaceWidget(1,m_tableView_lower);
@@ -297,6 +292,12 @@ void MainWindow::do_crab()
     m_Models["Residual parasignatures"]->load_signatures(get_lexicon()->get_residual_signatures());
     m_Models["Parasuffixes"]        ->load_suffixes(get_lexicon()->get_parasuffixes());
     createTreeModel();
+
+    delete m_graphics_scene;
+    m_graphics_scene = new lxa_graphics_scene(this);
+    m_graphics_scene->ingest_signatures(get_lexicon()->get_signatures());
+    m_graphics_scene->place_signatures();
+    m_graphics_view->setScene(m_graphics_scene);
 
     m_leftTreeView->expandAll();
     statusBar()->showMessage("All models are loaded.");

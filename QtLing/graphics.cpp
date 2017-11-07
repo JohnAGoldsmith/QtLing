@@ -17,9 +17,16 @@ lxa_graphics_scene::lxa_graphics_scene (MainWindow * window)
 {
     m_main_window = window;
 
-    //setBackgroundBrush(Qt::yellow);
 };
+lxa_graphics_scene::~lxa_graphics_scene ()
+{
 
+    for (int itemno = 0; itemno < m_signature_lattice.size(); itemno ++ ){
+        delete m_signature_lattice[itemno];
+    }
+    m_signature_lattice.clear();
+
+};
 void lxa_graphics_scene::set_graphics_view(lxa_graphics_view * this_graphics_view)
 {
     m_graphics_view  = this_graphics_view;

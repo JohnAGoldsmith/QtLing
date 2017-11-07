@@ -12,10 +12,12 @@ class lxa_graphics_view : public QGraphicsView
 {
     QList<QList<CSignature*>*>  m_signature_lattice;
     MainWindow *                m_main_window;
-    QGraphicsScene*              m_graphics_scene;
+    lxa_graphics_scene*         m_graphics_scene;
 public:
     lxa_graphics_view( MainWindow * , lxa_graphics_scene * my_scene);
     void draw_signatures();
+    lxa_graphics_scene*             get_graphics_scene() {return m_graphics_scene;}
+
 
 };
 
@@ -27,6 +29,7 @@ class lxa_graphics_scene : public QGraphicsScene
 
 public:
                     lxa_graphics_scene( MainWindow * );
+                    ~lxa_graphics_scene();
     void            set_graphics_view (lxa_graphics_view* );
     void            ingest_signatures(CSignatureCollection*);
     void            place_signatures();

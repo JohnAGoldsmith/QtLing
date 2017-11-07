@@ -212,16 +212,16 @@ private:
     bool saveFile(const QString &fileName);
     void setCurrentFile(const QString &fileName);
     QString strippedName(const QString &fullFileName);
-    lxa_graphics_view*      get_canvas() {return  m_canvas;}
-
+    lxa_graphics_view*      get_graphics_view() {return  m_graphics_view;}
+    lxa_graphics_scene*     get_graphics_scene() {return m_graphics_scene;}
 
     QSplitter *         m_mainSplitter;
     QSplitter *         m_rightSplitter;
     UpperTableView *    m_tableView_upper;
     LowerTableView *    m_tableView_lower;
     LeftSideTreeView *  m_leftTreeView;
-    lxa_graphics_scene * m_scene;
-    lxa_graphics_view * m_canvas;
+    lxa_graphics_scene * m_graphics_scene;
+    lxa_graphics_view * m_graphics_view;
     bool                m_graphic_display_flag;
     QStandardItemModel * m_treeModel;
 
