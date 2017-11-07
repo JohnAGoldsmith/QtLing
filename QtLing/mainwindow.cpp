@@ -37,6 +37,7 @@
 #include <QStandardItem>
 #include <QSortFilterProxyModel>
 #include "mainwindow.h"
+#include "graphics.h"
 
 typedef  QMap<QString,CWord*> StringToWordPtr;
 typedef  QPair<CStem*,CSignature*>  stem_sig_pair;
@@ -44,14 +45,7 @@ typedef  QPair<stem_sig_pair*,  stem_sig_pair*> pair_of_stem_sig_pairs;
 typedef  QPair<QString, pair_of_stem_sig_pairs*> five_tuple_sig_diffs;
 
 class LxaStandardItemModel;
-class LxaStandardItemModel;
 
-lxaWindow::lxaWindow(MainWindow* window)
-{
-    m_scale = 1.0;
- m_main_window = window;
- update();
-}
 void lxaWindow::expand(){
     m_scale += m_scale * .10;
     update();
@@ -170,8 +164,9 @@ MainWindow::MainWindow()
     m_tableView_lower   = new LowerTableView (this);
     m_tableView_upper->setSortingEnabled(true);
 
-    m_canvas  = new lxaWindow(this);
-    m_graphic_display_flag = false;
+    m_scene = new lxa_graphics_scene (this);
+    m_canvas = new lxa_graphics_view(this,  m_scene);
+    m_graphic_display_flag = false;             // toggle with Ctrl-G
 
 
     // set model for tree view
@@ -235,6 +230,11 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     {
         if (m_graphic_display_flag==false){
             m_rightSplitter->replaceWidget(1,m_canvas);
+
+            // -->  This is probably not the best place for this function call:
+
+            m_scene->ingest_signatures(get_lexicon()->get_signatures());
+            m_scene->place_signatures();
             m_graphic_display_flag = true;
         } else{
             m_rightSplitter->replaceWidget(1,m_tableView_lower);
@@ -245,19 +245,19 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         do_crab2();
     }
     if (ke->key() == Qt::Key_J){
-       m_canvas->expand();
+//       m_canvas->expand();
     }
     if (ke->key() == Qt::Key_K){
-        m_canvas->contract();
+//        m_canvas->contract();
     }
     if (ke->key() == Qt::Key_L){
-        m_canvas->move_down();
+//        m_canvas->move_down();
     }
     if (ke->key() == Qt::Key_Semicolon){
-        m_canvas->move_up();
+//        m_canvas->move_up();
     }
     if (ke->key() == Qt::Key_Period){
-        m_canvas->reset_scale_and_translation();
+//        m_canvas->reset_scale_and_translation();
     }
     QMainWindow::keyPressEvent(ke);
 }

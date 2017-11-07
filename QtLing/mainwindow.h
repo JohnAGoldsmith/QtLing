@@ -11,6 +11,7 @@
 #include <QAbstractItemModel>
 #include <QSortFilterProxyModel>
 #include <QListView>
+#include <QGraphicsView>
 #include "Lexicon.h"
 
 QT_BEGIN_NAMESPACE
@@ -29,7 +30,19 @@ class QStandardItemModel;
 class QTextEdit;
 class QTreeView;
 class MainWindow;
+class lxa_graphics_view;
+class lxa_graphics_scene;
 QT_END_NAMESPACE
+
+class lxaWindow2 : public QGraphicsView
+{
+    QList<QList<CSignature*>*>  m_signature_lattice;
+    MainWindow *    m_main_window;
+    QGraphicsScene  m_graphics_scene;
+
+public:
+    lxaWindow2( MainWindow * );
+};
 
 class lxaWindow : public QWidget
 {   QList<QList<CSignature*>*>  m_signature_lattice;
@@ -199,7 +212,7 @@ private:
     bool saveFile(const QString &fileName);
     void setCurrentFile(const QString &fileName);
     QString strippedName(const QString &fullFileName);
-    lxaWindow*      get_canvas() {return  m_canvas;}
+    lxa_graphics_view*      get_canvas() {return  m_canvas;}
 
 
     QSplitter *         m_mainSplitter;
@@ -207,7 +220,8 @@ private:
     UpperTableView *    m_tableView_upper;
     LowerTableView *    m_tableView_lower;
     LeftSideTreeView *  m_leftTreeView;
-    lxaWindow *         m_canvas;
+    lxa_graphics_scene * m_scene;
+    lxa_graphics_view * m_canvas;
     bool                m_graphic_display_flag;
     QStandardItemModel * m_treeModel;
 
