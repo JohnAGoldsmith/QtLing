@@ -23,7 +23,7 @@ protected:
     enum  eSortStyle                m_SortStyle;
     map_sigstring_to_sig_ptr_iter * m_MapIterator;
     QListIterator<CSignature*>  *   m_SortedListIterator;
-
+    QMap<CSignature*,QList<CSignature*>*>  m_ContainmentMap;
 
 
 public:
@@ -53,6 +53,7 @@ public:
     bool                                    contains (sigstring_t);
     void                                    sort();
     void                                    sort_signatures_by_affix_count();
+    void                                    compute_containment_list(); //this gives   for each signature the largest signatures it contains.
 
 };
 #endif // CSIGNATURECOLLECTION_H

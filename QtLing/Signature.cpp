@@ -90,18 +90,22 @@ int CSignature::get_robustness()
      }
 }
 
-     /*
-int CSignature::number_of_true_suffixes()
-{   CSuffixCollection* my_suffixes = get_signatures()->get_lexicon()->get_suffixes();
-    QListIterator<CSuffix*> suffix_iter_1(* get_suffixes(my_suffixes));
-    QMapIterator<QString,CSuffix*> suffix_iter_2();
-b
-    int suffix_count = 0;
-    while (suffix_iter_1.hasNext()){
-        suffix_iter_1.next();
-        suffix_iter_2 = my_suffixes->contains(suffix_iter_1.get_key());
-
+ bool CSignature::contains(CSignature *other) {
+    if (m_SuffixFlag){
+     for (int i  = 0; i < other->get_number_of_affixes(); i++){
+         CSuffix* pSuffix = other->get_suffix_list()->at(i);
+         if (! get_suffix_list()->contains (pSuffix)){
+             return false;
+         }
+     }
+    return true;
+    } else {
+    for (int i  = 0; i < other->get_number_of_affixes(); i++){
+            CPrefix* pPrefix = other->get_prefix_list()->at(i);
+            if (! get_prefix_list()->contains (pPrefix)){
+                return false;
+            }
     }
-
+    return true;
+    }
 }
-*/

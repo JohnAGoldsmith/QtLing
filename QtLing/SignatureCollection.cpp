@@ -103,3 +103,19 @@ void CSignatureCollection::sort_signatures_by_affix_count()
     }
     qSort(m_SortList.begin(), m_SortList.end(),  compare_affix_count);
 }
+
+
+void CSignatureCollection::compute_containment_list()
+{   CSignature* pSig, *qSig;
+    sort_signatures_by_affix_count();
+    for (int i = 0; i < m_SortList.size(); i++){
+        pSig = m_SortList[i];
+        for (int j = i+1; j < m_SortList.size(); j++){
+            qSig = m_SortList[j];
+            m_ContainmentMap[pSig] = new QList<CSignature*>;
+            if (pSig->contains(qSig)){
+                m_ContainmentMap[pSig]->append(qSig);
+            }
+        }
+    }
+}

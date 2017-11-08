@@ -50,7 +50,7 @@ void lxa_graphics_scene::ingest_signatures(CSignatureCollection* signatures){
         pSig = sig_iter.next().value();
         sig_size = pSig->get_number_of_affixes();
         m_signature_lattice[sig_size]->append(pSig);
-        //qDebug() << pSig->get_key();
+        m_map_from_sig_to_column_no[pSig] = m_signature_lattice[sig_size]->size()-1;
     }
 }
 void lxa_graphics_scene::place_signatures()
@@ -71,5 +71,10 @@ void lxa_graphics_scene::place_signatures()
             addEllipse(x,y,sig_radius,sig_radius,QPen(),QBrush(Qt::red));
             col++;
         }
+    }
+}
+void lxa_graphics_scene::place_containment_edges(CSignatureCollection* pSignatures){
+    for (int i= 0; i < m_signature_containment_edges.size(); i++){
+
     }
 }

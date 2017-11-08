@@ -53,7 +53,7 @@ public:
     int                         get_number_of_affixes() const ;
     int                         get_robustness();
     bool                        get_suffix_flag()               {return m_SuffixFlag;}
-
+    bool                        contains (CSignature* other);
 };
 
 #endif // CSIGNATURE_H

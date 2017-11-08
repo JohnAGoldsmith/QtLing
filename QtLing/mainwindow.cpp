@@ -46,89 +46,7 @@ typedef  QPair<QString, pair_of_stem_sig_pairs*> five_tuple_sig_diffs;
 
 class LxaStandardItemModel;
 
-void lxaWindow::expand(){
-    m_scale += m_scale * .10;
-    update();
 
-}
-void lxaWindow::contract(){
-    m_scale -= m_scale * .10;
-    update();
-}
-void lxaWindow::move_down(){
-    m_yshift += 40;
-    update();
-}
-void lxaWindow::move_up(){
-    m_yshift -= 40;
-    update();
-}
-void lxaWindow::reset_scale_and_translation(){
-    m_xshift = 0;
-    m_yshift = 0;
-    m_scale = 1.0;
-    update();
-}
-void lxaWindow::ingest_signatures(CSignatureCollection* signatures){
-    qDebug() << "Ingesting signatures.";
-    int max_size = 0;
-    int sig_size;
-    CSignature * pSig;
-    map_sigstring_to_sig_ptr_iter sig_iter(*signatures->get_map());
-    while(sig_iter.hasNext()){
-        int this_size = sig_iter.next().value()->get_number_of_affixes();
-        if (this_size > max_size){ max_size = this_size;}
-    }
-    for (int size = 0; size <= max_size; size++){
-        QList<CSignature*> * signature_list = new QList<CSignature*>;
-        m_signature_lattice.append(signature_list);
-    }
-    sig_iter.toFront();
-    while(sig_iter.hasNext()){
-        pSig = sig_iter.next().value();
-        sig_size = pSig->get_number_of_affixes();
-        m_signature_lattice[sig_size]->append(pSig);
-        //qDebug() << pSig->get_key();
-    }
-}
-void lxaWindow::drawSignatures(QPainter& painter)
-{
-    int row_delta = 60;
-    int col_delta = 30;
-    int number_of_rows = m_signature_lattice.size();
-    int bottom_row = row_delta * number_of_rows;
-    //painter.drawEllipse(800- row_delta * (row-2), col*col_delta,40,40);
-    for (int row = 2; row <m_signature_lattice.size(); row++){
-        CSignature_ptr_list_iterator sig_iter(*m_signature_lattice[row]);
-        int col = 0;
-        while (sig_iter.hasNext()){
-            CSignature* pSig = sig_iter.next();
-            int x = col * col_delta;
-            int y = bottom_row - (row-2) * row_delta;
-            painter.drawEllipse(x, y, 4, 4);
-            col++;
-            //qDebug() << pSig->get_key() <<row<<col;
-        }
-    }
-}
-
-void lxaWindow::paintEvent(QPaintEvent *){
-
-    if (m_signature_lattice.size() == 0){
-        if (m_main_window->get_lexicon()->get_signatures()->get_count() > 0) {
-            ingest_signatures(m_main_window->get_lexicon()->get_signatures());}
-        else if (m_main_window->get_lexicon()->get_prefix_signatures()->get_count() > 0){
-            ingest_signatures(m_main_window->get_lexicon()->get_prefix_signatures());
-        }
-    }
-     QPainter painter(this);
-     painter.scale (m_scale,m_scale);
-     painter.translate(m_xshift, m_yshift);
-     painter.setPen(Qt::blue);
-     painter.setFont(QFont("Arial", 30));
-     painter.drawText(rect(), Qt::AlignCenter, "Qt");
-     drawSignatures(painter);
-}
 
 LxaStandardItemModel::LxaStandardItemModel(QString shortname)
 {
@@ -318,6 +236,14 @@ void MainWindow::do_crab2()
     createTreeModel();
 
     print_prefix_signatures();
+
+
+    delete m_graphics_scene;
+    m_graphics_scene = new lxa_graphics_scene(this);
+    m_graphics_scene->ingest_signatures(get_lexicon()->get_signatures());
+    m_graphics_scene->place_signatures();
+    m_graphics_view->setScene(m_graphics_scene);
+
 
     m_leftTreeView->expandAll();
     statusBar()->showMessage("All models are loaded.");
