@@ -310,9 +310,11 @@ void   CLexicon::AssignSuffixesToStems()
                        this_word = this_affix + this_stem_t;
                 }
                 pWord = m_Words->find_or_fail(this_word);
+                if (pWord){  // *** why does this sometimes fail?
                 pWord->add_to_autobiography("*" + this_stem_t + "=" + this_signature_string);
+                }
             }
-        }
+         }
     }
     m_Suffixes->sort_by_count();
 }

@@ -214,6 +214,7 @@ void MainWindow::do_crab()
 
     delete m_graphics_scene;
     m_graphics_scene = new lxa_graphics_scene(this);
+
     m_graphics_scene->ingest_signatures(get_lexicon()->get_signatures());
     m_graphics_scene->place_signatures();
     m_graphics_scene->place_containment_edges(get_lexicon()->get_signatures());
