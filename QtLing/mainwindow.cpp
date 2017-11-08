@@ -83,7 +83,8 @@ MainWindow::MainWindow()
     m_tableView_upper->setSortingEnabled(true);
 
     m_graphics_scene = new lxa_graphics_scene (this);
-    m_graphics_view  = new lxa_graphics_view(this,  m_graphics_scene);
+    m_graphics_view  = new lxa_graphics_view(this);
+    m_graphics_view->set_graphics_scene(m_graphics_scene);
     m_graphic_display_flag = false;             // toggle with Ctrl-G
 
 
@@ -215,6 +216,7 @@ void MainWindow::do_crab()
     m_graphics_scene = new lxa_graphics_scene(this);
     m_graphics_scene->ingest_signatures(get_lexicon()->get_signatures());
     m_graphics_scene->place_signatures();
+    m_graphics_scene->place_containment_edges(get_lexicon()->get_signatures());
     m_graphics_view->setScene(m_graphics_scene);
 
     m_leftTreeView->expandAll();
