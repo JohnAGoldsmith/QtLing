@@ -148,10 +148,13 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     if (ke->key() == Qt::Key_G)
     {
         if (m_graphic_display_flag==false){
-            m_rightSplitter->replaceWidget(1,m_graphics_view);
+            m_rightSplitter->insertWidget(1,m_graphics_view);
+//            m_rightSplitter->replaceWidget(1,m_graphics_view);
             m_graphic_display_flag = true;
         } else{
-            m_rightSplitter->replaceWidget(1,m_tableView_lower);
+            m_rightSplitter->insertWidget(1,m_tableView_lower);
+
+//            m_rightSplitter->replaceWidget(1,m_tableView_lower);
             m_graphic_display_flag = false;
         }
     }
@@ -624,7 +627,7 @@ LowerTableView::LowerTableView(MainWindow * window)
             QStringList report_line_items = report_line.split("=");
             for (int i = 0; i < report_line_items.size(); i++){
                 p_item = new QStandardItem(report_line_items[i]);
-                if (i == 0 && report_line_items[i][0] == "*"){
+                if (i == 0 && report_line_items[i][0] == QChar('*')){
                     p_item->setBackground(Qt::red);
                 } else{
                     p_item->setBackground(Qt::white);

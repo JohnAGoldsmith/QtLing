@@ -1,6 +1,6 @@
 #ifndef TYPEDEFS_H
 #define TYPEDEFS_H
-
+#include <QSetIterator>
 //class CStem;
 class CWord;
 class CPrefix;
