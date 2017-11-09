@@ -53,6 +53,10 @@ void CLexicon::Crab_1()
     CreateStemAffixPairs();
     AssignSuffixesToStems();
     collect_parasuffixes();
+    m_SuffixesFlag?
+        m_Signatures->compute_containment_list():
+        m_PrefixSignatures->compute_containment_list();
+
     qDebug() << "finished making signatures.";
  }
 void CLexicon::Crab_2()
@@ -262,6 +266,7 @@ void   CLexicon::AssignSuffixesToStems()
                       CSuffix* pSuffix = m_Suffixes->find_or_add(this_affix);
                       pSuffix->increment_count();
                       pSig->add_affix_ptr(pSuffix);
+                      //qDebug() << pSig->get_key() << pSig << pSuffix->get_key()<< "269 in lexicon.cpp";
                   }else{
                       //qDebug() << this_affix << "256";
                       CPrefix* pPrefix = m_Prefixes->find_or_add(this_affix);

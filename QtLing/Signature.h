@@ -35,14 +35,14 @@ public:
     //Accessors
     QString                     GetSignature()              const   { return m_Signature; }
     QString                     get_key()                   const   { return m_Signature;}
-    //QList<CSuffix*>*            GetList() ;                      //    { return m_Affixes;   }
+//    CSuffix_ptr_list  *         get_CSuffixes ()              const { return m_Suffixes;}
     QList<CSuffix*>*            get_suffix_list()                         {return m_Suffixes;}
     QList<CPrefix*>*            get_prefix_list()                         {return m_Prefixes;}
     void                        dump_string_set_of_suffixes(QSet<QString> & this_StringSet);
     void                        add_stem (QString);
     void                        add_stem (CStem* pStem)             { m_Stems->append(pStem);}
     void                        add_stem_pointer(CStem*);
-    CSuffix_ptr_list  *         get_CSuffixes ()              const { return m_Suffixes;}
+
     QList<CStem*>*              get_stems()                         { return   m_Stems;}
     void                        add_memo (QString memo)             { m_Autobiography.append(memo);}
     void                        add_affix_ptr (CSuffix* pSuffix)   { m_Suffixes->append(pSuffix);  }

@@ -217,9 +217,8 @@ void MainWindow::do_crab()
 
     m_graphics_scene->ingest_signatures(get_lexicon()->get_signatures());
     m_graphics_scene->place_signatures();
-    m_graphics_scene->place_containment_edges(get_lexicon()->get_signatures());
+    m_graphics_scene->place_containment_edges();
     m_graphics_view->setScene(m_graphics_scene);
-
     m_leftTreeView->expandAll();
     statusBar()->showMessage("All models are loaded.");
 

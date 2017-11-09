@@ -27,7 +27,7 @@ class lxa_graphics_scene : public QGraphicsScene
     MainWindow*                             m_main_window;
     lxa_graphics_view*                      m_graphics_view;
     QList<QList<CSignature*>*>              m_signature_lattice;
-    QList<QPair<CSignature*,CSignature*> >  m_signature_containment_edges;
+    QList<QPair<CSignature*,CSignature*>*>  m_signature_containment_edges;
     QMap<CSignature*, int>                  m_map_from_sig_to_column_no;
     int                                     m_row_delta;
     int                                     m_column_delta;
@@ -38,8 +38,10 @@ public:
                     ~lxa_graphics_scene();
     void            set_graphics_view (lxa_graphics_view* );
     void            ingest_signatures(CSignatureCollection*);
+    void            add_signature_containment_edge (QPair<CSignature*, CSignature*>* pPair)
+                            {m_signature_containment_edges.append (pPair); }
     void            place_signatures();
-    void            place_containment_edges(CSignatureCollection*);
+    void            place_containment_edges();
 };
 
 class signature_node : public QGraphicsItem

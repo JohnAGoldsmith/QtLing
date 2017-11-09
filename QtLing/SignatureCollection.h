@@ -54,6 +54,6 @@ public:
     void                                    sort();
     void                                    sort_signatures_by_affix_count();
     void                                    compute_containment_list(); //this gives   for each signature the largest signatures it contains.
-
+    QMap<CSignature*,QList<CSignature*>*> * get_containment_map() {return & m_ContainmentMap;}
 };
 #endif // CSIGNATURECOLLECTION_H

@@ -1,7 +1,7 @@
 #include <QDebug>
 #include "graphics.h"
 #include "generaldefinitions.h"
-#include "SignatureCollection.h";
+#include "SignatureCollection.h"
 #include "mainwindow.h"
 
 lxa_graphics_view::lxa_graphics_view(MainWindow* this_window)
@@ -39,7 +39,8 @@ void lxa_graphics_scene::ingest_signatures(CSignatureCollection* signatures){
     qDebug() << "Ingesting signatures.";
     int max_size = 0;
     int sig_size;
-    CSignature * pSig;
+    int MAXIMUM_NUMBER_OF_CONTAINMENT_EDGES = 2;
+    CSignature * pSig, *qSig;
     map_sigstring_to_sig_ptr_iter sig_iter(*signatures->get_map());
     while(sig_iter.hasNext()){
         int this_size = sig_iter.next().value()->get_number_of_affixes();
@@ -55,6 +56,26 @@ void lxa_graphics_scene::ingest_signatures(CSignatureCollection* signatures){
         sig_size = pSig->get_number_of_affixes();
         m_signature_lattice[sig_size]->append(pSig);
         m_map_from_sig_to_column_no[pSig] = m_signature_lattice[sig_size]->size()-1;
+    }
+    // -->    containment relations between signatures   <-- //
+    QMapIterator<CSignature*,QList<CSignature*>*> sig_iter_2 (*signatures->get_containment_map());
+    while(sig_iter_2.hasNext()){
+        pSig = sig_iter_2.next().key();
+        int pSig_row = pSig->get_number_of_affixes();
+        SignatureList * pSigList = sig_iter_2.value();
+        int count =0;
+        for (int signo = 0; signo < pSigList->size(); signo++ ){
+            qSig = pSigList->at(signo);
+            int qSig_row = qSig->get_number_of_affixes();
+            QPair<CSignature*,CSignature*>* pPair = new QPair<CSignature*,CSignature*> (pSig,qSig);
+            add_signature_containment_edge(pPair);
+            count++;
+            if (count > MAXIMUM_NUMBER_OF_CONTAINMENT_EDGES){
+                break;
+                qDebug() << "break at " << count;
+            }
+            qDebug() << "count "<< count;
+        }
     }
 }
 void lxa_graphics_scene::place_signatures()
@@ -78,12 +99,12 @@ void lxa_graphics_scene::place_signatures()
         }
     }
 }
-void lxa_graphics_scene::place_containment_edges(CSignatureCollection* pSignatures){
+void lxa_graphics_scene::place_containment_edges(){
     QPair<CSignature*, CSignature*> * pPair;
     qDebug() << "Placing containment edges";
     CSignature* sig1, *sig2;
     for (int i= 0; i < m_signature_containment_edges.size(); i++){
-        pPair = &m_signature_containment_edges[i];
+        pPair = m_signature_containment_edges[i];
         sig1 = pPair->first;
         sig2 = pPair->second;
         int row1 = sig1->get_number_of_affixes();
