@@ -57,7 +57,7 @@ QString CSignature::display_stems()
     }
     return outstring;
 }
-int CSignature::get_robustness()
+int CSignature::get_robustness() const
 {
     int robustness = 0;
     int stem_letters = 0;

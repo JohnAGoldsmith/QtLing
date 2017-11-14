@@ -51,7 +51,7 @@ public:
     QString                     display_stems() ;
     int                         get_number_of_stems() const {return m_Stems->count();}
     int                         get_number_of_affixes() const ;
-    int                         get_robustness();
+    int                         get_robustness() const;
     bool                        get_suffix_flag()               {return m_SuffixFlag;}
     bool                        contains (CSignature* other);
 };

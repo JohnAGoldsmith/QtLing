@@ -110,17 +110,17 @@ void CSignatureCollection::compute_containment_list()
     sort_signatures_by_affix_count();
     for (int i = 0; i < m_SortList.size(); i++){
         pSig = m_SortList[i];
+        if (pSig->get_number_of_affixes() < 3) {break;}
         m_ContainmentMap[pSig] = new QList<CSignature*>;
-        //qDebug() << pSig->get_key() << pSig->get_suffix_list()->size() <<  "113";
         for (int j = i+1; j < m_SortList.size(); j++){
             qSig = m_SortList[j];
-            //qDebug() << qSig->get_key();
-
+            if (qSig->get_number_of_affixes() < 2) {break;}
             if (pSig->contains(qSig)){
-                //qDebug() << "Contained!" << pSig->get_key() << qSig->get_key() << "119 sig coll";
                 m_ContainmentMap[pSig]->append(qSig);
-                //qDebug() << m_ContainmentMap[pSig]->size() << "121";
+                //qDebug() << pSig->get_key() << qSig->get_key();
             }
         }
     }
+    // Sort each row of signatures by stem-count or robustness.
+
 }

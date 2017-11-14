@@ -12,6 +12,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QDebug>
+#include <QString>
 #include <algorithm>
 #include <stdio.h>
 #include "WordCollection.h"
@@ -82,7 +83,7 @@ MainWindow::MainWindow()
     m_tableView_lower   = new LowerTableView (this);
     m_tableView_upper->setSortingEnabled(true);
 
-    m_graphics_scene = new lxa_graphics_scene (this);
+    m_graphics_scene = new lxa_graphics_scene (this, get_lexicon()->get_signatures());
     m_graphics_view  = new lxa_graphics_view(this);
     m_graphics_view->set_graphics_scene(m_graphics_scene);
     m_graphic_display_flag = false;             // toggle with Ctrl-G
@@ -148,13 +149,11 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     if (ke->key() == Qt::Key_G)
     {
         if (m_graphic_display_flag==false){
-            m_rightSplitter->insertWidget(1,m_graphics_view);
-//            m_rightSplitter->replaceWidget(1,m_graphics_view);
+            m_rightSplitter->replaceWidget(1,m_graphics_view);
             m_graphic_display_flag = true;
+            m_rightSplitter->setFocus();
         } else{
-            m_rightSplitter->insertWidget(1,m_tableView_lower);
-
-//            m_rightSplitter->replaceWidget(1,m_tableView_lower);
+            m_rightSplitter->replaceWidget(1,m_tableView_lower);
             m_graphic_display_flag = false;
         }
     }
@@ -162,19 +161,26 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         do_crab2();
     }
     if (ke->key() == Qt::Key_J){
-//       m_canvas->expand();
+        get_graphics_view()->expand();
     }
     if (ke->key() == Qt::Key_K){
-//        m_canvas->contract();
+        get_graphics_view()->contract();
     }
     if (ke->key() == Qt::Key_L){
-//        m_canvas->move_down();
+        get_graphics_view()->move_down();
     }
     if (ke->key() == Qt::Key_Semicolon){
-//        m_canvas->move_up();
+        qDebug() << "semicolon";
+        get_graphics_view()->move_up();
+    }
+    if (ke->key() == Qt::Key_U){
+        get_graphics_scene()->widen_columns();
+    }
+    if (ke->key() == Qt::Key_I){
+        get_graphics_scene()->narrow_columns();
     }
     if (ke->key() == Qt::Key_Period){
-//        m_canvas->reset_scale_and_translation();
+//        get_graphics_view->reset_scale_and_translation();
     }
     QMainWindow::keyPressEvent(ke);
 }
@@ -216,12 +222,13 @@ void MainWindow::do_crab()
     createTreeModel();
 
     delete m_graphics_scene;
-    m_graphics_scene = new lxa_graphics_scene(this);
-
-    m_graphics_scene->ingest_signatures(get_lexicon()->get_signatures());
-    m_graphics_scene->place_signatures();
-    m_graphics_scene->place_containment_edges();
+    m_graphics_scene = new lxa_graphics_scene(this, get_lexicon()->get_signatures());
     m_graphics_view->setScene(m_graphics_scene);
+    m_graphics_scene->set_graphics_view(m_graphics_view);
+   // m_graphics_scene->ingest_signatures(get_lexicon()->get_signatures());
+   // m_graphics_scene->place_signatures();
+   // m_graphics_scene->place_containment_edges();
+
     m_leftTreeView->expandAll();
     statusBar()->showMessage("All models are loaded.");
 
@@ -244,7 +251,7 @@ void MainWindow::do_crab2()
 
 
     delete m_graphics_scene;
-    m_graphics_scene = new lxa_graphics_scene(this);
+    m_graphics_scene = new lxa_graphics_scene(this, get_lexicon()->get_signatures());
     m_graphics_scene->ingest_signatures(get_lexicon()->get_signatures());
     m_graphics_scene->place_signatures();
     m_graphics_view->setScene(m_graphics_scene);
@@ -262,7 +269,8 @@ void MainWindow::read_file_do_crab()
 
 
 void MainWindow::read_dx1_file()
-    {
+    {   int max_count (10000);
+        int count (0);
             QFile file(m_name_of_data_file);
             if (!file.open(QFile::ReadOnly | QFile::Text)) {
             QMessageBox::warning(this, tr("Application"),
@@ -279,12 +287,14 @@ void MainWindow::read_dx1_file()
             CWordCollection * Words = get_lexicon()->GetWordCollection();
 
     while (!in.atEnd())
-    {
+    {       //count++;
+            //if (count > max_count)break;
             QString line = in.readLine();
             line = line.simplified(); // get rid of extra spaces
             QStringList words = line.split(" ");
             QString word = words[0];
-            CWord* pWord = *Words << word;
+            //QString str_temp = QString::fromUtf8(str_temp);
+            CWord* pWord = *Words <<  word;
             if (words.size()> 1) {
                 pWord->SetWordCount(words[1].toInt());
             }
@@ -627,7 +637,7 @@ LowerTableView::LowerTableView(MainWindow * window)
             QStringList report_line_items = report_line.split("=");
             for (int i = 0; i < report_line_items.size(); i++){
                 p_item = new QStandardItem(report_line_items[i]);
-                if (i == 0 && report_line_items[i][0] == QChar('*')){
+                if (i == 0 && report_line_items[i][0] == "*"){
                     p_item->setBackground(Qt::red);
                 } else{
                     p_item->setBackground(Qt::white);
