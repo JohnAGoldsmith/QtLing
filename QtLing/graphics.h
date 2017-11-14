@@ -3,10 +3,19 @@
 #include<QGraphicsItem>
 #include <QGraphicsView>
 #include <QMouseEvent>
+#include <QGraphicsScene>
+#include <QPoint>
+
 class CSignature;
 class CSignatureCollection;
 class MainWindow;
 class lxa_graphics_scene;
+
+class graphic_signature : public QGraphicsEllipseItem
+{
+    graphic_signature();
+    void mousePressEvent (QMouseEvent*);
+};
 
 class lxa_graphics_view : public QGraphicsView
 { friend:: lxa_graphics_scene;
@@ -14,6 +23,8 @@ class lxa_graphics_view : public QGraphicsView
     MainWindow *                    m_main_window;
     lxa_graphics_scene*             m_graphics_scene;
     double                          m_scale;
+
+    void                            mousePressEvent(QMouseEvent*);
 public:
     lxa_graphics_view( MainWindow * );
     void                            draw_signatures();
@@ -40,6 +51,9 @@ class lxa_graphics_scene : public QGraphicsScene
     int                                     m_column_delta;
     int                                     m_location_of_bottom_row;
     int                                     m_signature_radius;
+
+private:
+    void                                    mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent);
 public:
                     lxa_graphics_scene( MainWindow * , CSignatureCollection* );
                     ~lxa_graphics_scene();

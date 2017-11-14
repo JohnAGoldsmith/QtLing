@@ -2,18 +2,36 @@
 #include <QToolTip>
 #include <QGraphicsScene>
 #include <QScrollBar>
+#include <QMouseEvent>
+#include <QGraphicsSceneEvent>
+#include <QGraphicsItem>
 #include "graphics.h"
 #include "generaldefinitions.h"
 #include "SignatureCollection.h"
 #include "mainwindow.h"
+
+
+graphic_signature::graphic_signature()
+{
+    QGraphicsItem::setAcceptHoverEvents(true);
+};
 
 lxa_graphics_view::lxa_graphics_view(MainWindow* this_window)
 {
     m_main_window = this_window;
     m_scale =1;
     setDragMode(QGraphicsView::ScrollHandDrag);
+    setMouseTracking(true);
 
 };
+
+void lxa_graphics_view::mousePressEvent(QMouseEvent* event)
+{
+    // ADD STUFF HERE.
+
+
+    QGraphicsView::mousePressEvent(event);
+}
 
 lxa_graphics_scene::lxa_graphics_scene (MainWindow * window, CSignatureCollection* p_signatures)
 {   qDebug() << "scene constructor";
@@ -129,10 +147,15 @@ void lxa_graphics_scene::place_signatures()
             int y = m_location_of_bottom_row - (row-2) * m_row_delta;
             QGraphicsEllipseItem * pEllipse = addEllipse(x,y,m_signature_radius,m_signature_radius,QPen(),QBrush(Qt::red));
             pEllipse->acceptHoverEvents();
+            pEllipse->grabMouse();
             QGraphicsTextItem * p_text_item = new QGraphicsTextItem;
             p_text_item->setPlainText(pSig->get_key());
+            QGraphicsTextItem * q_text_item = new QGraphicsTextItem;
+            q_text_item->setPlainText(QString::number(pSig->get_number_of_stems()));
             p_text_item->setPos (x - 0.5 * p_text_item->textWidth(),y + 0.3* m_row_delta);
+            q_text_item->setPos (x - 0.5 * p_text_item->textWidth(),y + 0.3* m_row_delta + 10);
             addItem(p_text_item);
+            addItem(q_text_item);
             col++;
         }
     }
@@ -163,9 +186,17 @@ void lxa_graphics_scene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 //   QToolTip::showText(event->screenPos().toPoint(), "x");
 //   QGraphicsScene::mouseMoveEvent();
 //    qDebug() << "mouse over";
-
-
 }
+
+void lxa_graphics_scene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
+{
+    if (mouseEvent->button() == Qt::LeftButton)
+    {
+        //QGraphicsItem *item = QGraphicsScene::itemAt(mouseEvent->scenePos());
+        qDebug() << "mouse move"<<178;
+    }
+}
+
 void lxa_graphics_scene::widen_columns()
 {
     m_column_delta *= 1.25;
