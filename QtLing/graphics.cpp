@@ -11,10 +11,34 @@
 #include "mainwindow.h"
 
 
-graphic_signature::graphic_signature()
+graphic_signature::graphic_signature(int x, int y, CSignature* pSig, lxa_graphics_scene * scene, int radius, int row_delta)
 {
+    m_graphics_scene = scene;
+    m_signature = pSig;
     QGraphicsItem::setAcceptHoverEvents(true);
+    QGraphicsItem::ItemIsSelectable;
+    QGraphicsItem::ItemIsMovable;
+    scene->addEllipse(x,y,radius ,radius,QPen(),QBrush(Qt::red));
+
+    QGraphicsTextItem * p_text_item = new QGraphicsTextItem;
+    p_text_item->setPlainText(pSig->get_key());
+    int text_width = p_text_item->textWidth();
+    p_text_item->setPos (x - 0.5 * text_width,y + 0.3* row_delta);
+
+    QGraphicsTextItem * q_text_item = new QGraphicsTextItem;
+    q_text_item->setPlainText(QString::number(pSig->get_number_of_stems()));
+    q_text_item->setPos (x - 0.5 * text_width,y + 0.3* row_delta + 10);
+
+    scene->addItem(p_text_item);
+    scene->addItem(q_text_item);
 };
+
+void graphic_signature::mousePressEvent(QGraphicsSceneMouseEvent * event){
+    if (event->button()== Qt::LeftButton){
+        qDebug() << "change color";
+        setSelected(true);
+    }
+}
 
 lxa_graphics_view::lxa_graphics_view(MainWindow* this_window)
 {
@@ -89,8 +113,6 @@ void lxa_graphics_scene::ingest_signatures(CSignatureCollection* signatures){
         if (pSig->get_number_of_stems() < MINIMUM_NUMBER_OF_STEMS) {continue;}
         sig_size = pSig->get_number_of_affixes();
         m_signature_lattice[sig_size]->append(pSig);
-        //qDebug() << pSig->get_key() << pSig->get_number_of_stems() ;
-        //if (pSig->get_number_of_affixes() == 2) { qDebug() << pSig->get_key() << pSig->get_number_of_stems();}
     }
     // -->  Sort each row of the m_signature_lattice by stem frequency
     for (int rowno = 0; rowno < m_signature_lattice.size(); rowno ++){
@@ -98,7 +120,7 @@ void lxa_graphics_scene::ingest_signatures(CSignatureCollection* signatures){
         for (int colno = 0; colno < m_signature_lattice[rowno]->size(); colno++){
             pSig = m_signature_lattice[rowno]->at(colno);
             m_map_from_sig_to_column_no[pSig] = colno;
-            qDebug() << pSig->get_key() << 83;
+            //qDebug() << pSig->get_key() << 83;
         }
        }
 
@@ -119,14 +141,11 @@ void lxa_graphics_scene::ingest_signatures(CSignatureCollection* signatures){
             if (qSig->get_number_of_stems() < MINIMUM_NUMBER_OF_STEMS){continue;}
             int qSig_row = qSig->get_number_of_affixes();
             QPair<CSignature*,CSignature*>* pPair = new QPair<CSignature*,CSignature*> (pSig,qSig);
-            //qDebug() << pSig->get_key() << qSig->get_key() << 87;
             add_signature_containment_edge(pPair);
             count++;
             if (count > MAXIMUM_NUMBER_OF_CONTAINMENT_EDGES){
                 break;
-                //qDebug() << "break at " << count;
             }
-            //qDebug() << "count "<< count;
         }
     }
 }
@@ -145,17 +164,8 @@ void lxa_graphics_scene::place_signatures()
             CSignature* pSig = sig_iter.next();
             int x = col * m_column_delta;
             int y = m_location_of_bottom_row - (row-2) * m_row_delta;
-            QGraphicsEllipseItem * pEllipse = addEllipse(x,y,m_signature_radius,m_signature_radius,QPen(),QBrush(Qt::red));
-            pEllipse->acceptHoverEvents();
-            pEllipse->grabMouse();
-            QGraphicsTextItem * p_text_item = new QGraphicsTextItem;
-            p_text_item->setPlainText(pSig->get_key());
-            QGraphicsTextItem * q_text_item = new QGraphicsTextItem;
-            q_text_item->setPlainText(QString::number(pSig->get_number_of_stems()));
-            p_text_item->setPos (x - 0.5 * p_text_item->textWidth(),y + 0.3* m_row_delta);
-            q_text_item->setPos (x - 0.5 * p_text_item->textWidth(),y + 0.3* m_row_delta + 10);
-            addItem(p_text_item);
-            addItem(q_text_item);
+            graphic_signature * p_graph_sig = new graphic_signature (x,y, pSig, this, m_signature_radius, m_row_delta);
+            addItem(p_graph_sig);
             col++;
         }
     }
@@ -192,7 +202,7 @@ void lxa_graphics_scene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
     if (mouseEvent->button() == Qt::LeftButton)
     {
-        //QGraphicsItem *item = QGraphicsScene::itemAt(mouseEvent->scenePos());
+        //QGraphicsItem *item = itemAt(mouseEvent->scenePos());
         qDebug() << "mouse move"<<178;
     }
 }

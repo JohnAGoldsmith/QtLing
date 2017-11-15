@@ -13,8 +13,11 @@ class lxa_graphics_scene;
 
 class graphic_signature : public QGraphicsEllipseItem
 {
-    graphic_signature();
-    void mousePressEvent (QMouseEvent*);
+    lxa_graphics_scene * m_graphics_scene;
+    CSignature *         m_signature;
+    public:
+    graphic_signature(int x, int y, CSignature*, lxa_graphics_scene* scene, int radius, int row_delta);
+    void mousePressEvent (QGraphicsSceneMouseEvent*);
 };
 
 class lxa_graphics_view : public QGraphicsView
