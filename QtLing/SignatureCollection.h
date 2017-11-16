@@ -24,10 +24,10 @@ protected:
     map_sigstring_to_sig_ptr_iter * m_MapIterator;
     QListIterator<CSignature*>  *   m_SortedListIterator;
     QMap<CSignature*,QList<CSignature*>*>  m_ContainmentMap;
-
+    bool                            m_suffix_flag;
 
 public:
-    CSignatureCollection();
+    CSignatureCollection(bool suffix_flag = true);
     ~CSignatureCollection();
 
 // disable copy

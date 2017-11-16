@@ -211,6 +211,7 @@ void MainWindow::ask_for_filename()
 void MainWindow::do_crab()
 {   statusBar()->showMessage("Entering the Crab Nebula.");
     get_lexicon()->Crab_1();
+
     statusBar()->showMessage("We have returned from the Crab Nebular.");
     m_Models["Words"]               ->load_words(get_lexicon()->get_words());
     m_Models["Stems"]               ->load_stems(get_lexicon()->get_stems());
@@ -222,12 +223,14 @@ void MainWindow::do_crab()
     createTreeModel();
 
     delete m_graphics_scene;
-    m_graphics_scene = new lxa_graphics_scene(this, get_lexicon()->get_signatures());
+    if (get_lexicon()->get_suffix_flag()){
+        m_graphics_scene = new lxa_graphics_scene(this, get_lexicon()->get_signatures());
+    }else{
+        m_graphics_scene = new lxa_graphics_scene(this, get_lexicon()->get_prefix_signatures());
+    }
     m_graphics_view->setScene(m_graphics_scene);
     m_graphics_scene->set_graphics_view(m_graphics_view);
-   // m_graphics_scene->ingest_signatures(get_lexicon()->get_signatures());
-   // m_graphics_scene->place_signatures();
-   // m_graphics_scene->place_containment_edges();
+
 
     m_leftTreeView->expandAll();
     statusBar()->showMessage("All models are loaded.");
@@ -249,10 +252,16 @@ void MainWindow::do_crab2()
 
     print_prefix_signatures();
 
-
     delete m_graphics_scene;
-    m_graphics_scene = new lxa_graphics_scene(this, get_lexicon()->get_signatures());
-    m_graphics_scene->ingest_signatures(get_lexicon()->get_signatures());
+    if (get_lexicon()->get_suffix_flag()) {
+        qDebug() << "suffix scheme";
+        m_graphics_scene = new lxa_graphics_scene(this, get_lexicon()->get_signatures());
+        m_graphics_scene->ingest_signatures(get_lexicon()->get_signatures());
+    }else {
+        qDebug() << "prefix scheme";
+        m_graphics_scene = new lxa_graphics_scene(this, get_lexicon()->get_prefix_signatures());
+        m_graphics_scene->ingest_signatures(get_lexicon()->get_prefix_signatures());
+    }
     m_graphics_scene->place_signatures();
     m_graphics_view->setScene(m_graphics_scene);
 

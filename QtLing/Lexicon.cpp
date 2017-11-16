@@ -17,7 +17,8 @@
 #include "WordCollection.h"
 #include "Word.h"
 
-CLexicon::CLexicon() : m_Words(new CWordCollection), m_Suffixes(new CSuffixCollection), m_Prefixes(new CPrefixCollection), m_Signatures(new CSignatureCollection)
+CLexicon::CLexicon(bool suffix_flag) : m_Words(new CWordCollection), m_Suffixes(new CSuffixCollection), m_Prefixes(new CPrefixCollection),
+    m_Signatures(new CSignatureCollection)
 {   m_Stems                 = new CStemCollection();
     m_Compounds             = new CWordCollection();
     m_Parses                = new QList<QPair<QString,QString>>();
@@ -51,7 +52,9 @@ void CLexicon::Crab_1()
 {
     FindProtostems();
     CreateStemAffixPairs();
+
     AssignSuffixesToStems();
+
     collect_parasuffixes();
     m_SuffixesFlag?
         m_Signatures->compute_containment_list():
@@ -239,13 +242,13 @@ void   CLexicon::AssignSuffixesToStems()
 
          temp_presignature.sort();
          sigstring_t this_signature_string = temp_presignature.join("=");
+         //qDebug() << this_signature_string;ok to here
          if ( ! temp_signatures_to_stems.contains(this_signature_string)){
             stem_list * pStemSet = new stem_list;
             temp_signatures_to_stems[this_signature_string] = pStemSet;
          }
          temp_signatures_to_stems.value(this_signature_string)->append(this_stem_t);
     }
-
     //-->  create signatures, stems, affixes:  <--//
     QMapIterator<sigstring_t, stem_list*> iter_sigstring_to_stems ( temp_signatures_to_stems);
     while (iter_sigstring_to_stems.hasNext())
@@ -253,12 +256,17 @@ void   CLexicon::AssignSuffixesToStems()
         this_signature_string    = iter_sigstring_to_stems.key();
         p_this_stem_list         = iter_sigstring_to_stems.value();
         this_stem_t =  p_this_stem_list->first();
+        //qDebug() << this_stem_t << this_signature_string << 260;
         affix_set this_affix_set = QSet<QString>::fromList( this_signature_string.split("="));
         if (p_this_stem_list->size() >= MINIMUM_NUMBER_OF_STEMS)
-        {   m_SuffixesFlag ?
-                pSig = *m_Signatures       << this_signature_string :
+        {  if( m_SuffixesFlag) {
+                pSig = *m_Signatures       << this_signature_string;
+            } else {
                 pSig = *m_PrefixSignatures << this_signature_string;
+                pSig->set_suffix_flag(false);
+            }
             pSig->add_memo("Pass 1");
+            //qDebug() << this_signature_string << 265 ;
             QSetIterator<suffix_t> affix_iter(this_affix_set);
             while(affix_iter.hasNext()){
                   this_affix = affix_iter.next();
@@ -268,7 +276,7 @@ void   CLexicon::AssignSuffixesToStems()
                       pSig->add_affix_ptr(pSuffix);
                       //qDebug() << pSig->get_key() << pSig << pSuffix->get_key()<< "269 in lexicon.cpp";
                   }else{
-                      //qDebug() << this_affix << "256";
+                      //qDebug() << this_affix << "274";
                       CPrefix* pPrefix = m_Prefixes->find_or_add(this_affix);
                       pPrefix->increment_count();
                       pSig->add_affix_ptr(pPrefix);
@@ -276,7 +284,7 @@ void   CLexicon::AssignSuffixesToStems()
                   }
 
             }
-
+            //qDebug() << 281;
             // --> We go through this sig's stems and reconstitute its words. <--//
             stem_list_iterator stem_iter(*p_this_stem_list);
             while (stem_iter.hasNext()){
@@ -510,7 +518,7 @@ void CLexicon::compute_sig_tree_edges()
                         p_SigTreeEdge =  new sig_tree_edge (sig2,sig1,difference, pWord->get_key());
                     }
                     m_SigTreeEdgeList.append(p_SigTreeEdge);
-                    qDebug() << sig1->get_key() << sig2->get_key() << difference << pWord->get_key();
+                    //qDebug() << sig1->get_key() << sig2->get_key() << difference << pWord->get_key();
                 }
             }
         }

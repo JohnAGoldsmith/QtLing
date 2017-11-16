@@ -1,13 +1,13 @@
 #include "Signature.h"
 #include "Suffix.h"
 #include <QDebug>
-CSignature::CSignature(QString signature_string)
+CSignature::CSignature(QString signature_string, bool suffix_flag)
 {
   m_Signature = signature_string;
   m_Stems = new CStem_ptr_list();
   m_Suffixes = new CSuffix_ptr_list;
   m_Prefixes = new CPrefix_ptr_list;
-  m_SuffixFlag = true;
+  m_SuffixFlag = suffix_flag;
 }
 
 CSignature::CSignature(CSignature& signature) {
@@ -92,14 +92,15 @@ int CSignature::get_robustness() const
 
  bool CSignature::contains(CSignature *other) {
     if (m_SuffixFlag){
-     for (int i  = 0; i < other->get_number_of_affixes(); i++){
-         CSuffix* pSuffix = other->get_suffix_list()->at(i);
-         if (! get_suffix_list()->contains (pSuffix)){
-             return false;
-         }
-     }
+        for (int i  = 0; i < other->get_number_of_affixes(); i++){
+            CSuffix* pSuffix = other->get_suffix_list()->at(i);
+            if (! get_suffix_list()->contains (pSuffix)){
+                return false;
+            }
+        }
+
     return true;
-    } else {
+    } else {            // -->  prefixes <-- //
     for (int i  = 0; i < other->get_number_of_affixes(); i++){
             CPrefix* pPrefix = other->get_prefix_list()->at(i);
             if (! get_prefix_list()->contains (pPrefix)){

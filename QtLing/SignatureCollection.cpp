@@ -2,7 +2,7 @@
 #include <QDebug>
 #include "Typedefs.h"
 
-CSignatureCollection::CSignatureCollection()
+CSignatureCollection::CSignatureCollection(bool suffix_flag)
 {
     //m_SignatureList         = QList<CSignature*>();
     m_CorpusCount			= 0;
@@ -11,6 +11,7 @@ CSignatureCollection::CSignatureCollection()
     m_SortStyle				= KEY;
     m_MapIterator           = new map_sigstring_to_sig_ptr_iter (m_SignatureMap);
     m_SortedListIterator    = new     QListIterator<CSignature*> (m_SortList);
+    m_suffix_flag = suffix_flag;
 }
 
 CSignatureCollection::~CSignatureCollection()
@@ -48,6 +49,9 @@ CSignature* CSignatureCollection::operator <<(QString szSignature)
 {
     CSignature* pSig = new CSignature(szSignature);
     m_SignatureMap.insert(szSignature, pSig);
+    m_suffix_flag?
+        pSig->set_suffix_flag(true):
+        pSig->set_suffix_flag(false);
     return pSig;
 }
 
@@ -67,7 +71,6 @@ CSignature* CSignatureCollection::find_or_add (QString sigstring )
     CSignature* pSig = new CSignature(sigstring);
     m_SignatureMap[sigstring] = pSig;
     return pSig;
-
 }
 
 // -->   Sorting  <--     //

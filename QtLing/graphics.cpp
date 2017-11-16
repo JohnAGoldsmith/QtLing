@@ -27,7 +27,7 @@ graphic_signature::graphic_signature(int x, int y, CSignature* pSig, lxa_graphic
 
     QGraphicsTextItem * q_text_item = new QGraphicsTextItem;
     q_text_item->setPlainText(QString::number(pSig->get_number_of_stems()));
-    q_text_item->setPos (x - 0.5 * text_width,y + 0.3* row_delta + 10);
+    q_text_item->setPos (x - 0.5 * text_width,y + 0.3* row_delta + 20);
 
     scene->addItem(p_text_item);
     scene->addItem(q_text_item);
@@ -63,10 +63,10 @@ lxa_graphics_scene::lxa_graphics_scene (MainWindow * window, CSignatureCollectio
     m_main_window = window;
     m_location_of_bottom_row = 0;
     m_row_delta = 80;
-    m_column_delta = 30;
+    m_column_delta = 150;
     ingest_signatures(p_signatures);
     place_signatures();
-    place_containment_edges();
+    //place_containment_edges();
 };
 lxa_graphics_scene::~lxa_graphics_scene ()
 {
@@ -120,7 +120,6 @@ void lxa_graphics_scene::ingest_signatures(CSignatureCollection* signatures){
         for (int colno = 0; colno < m_signature_lattice[rowno]->size(); colno++){
             pSig = m_signature_lattice[rowno]->at(colno);
             m_map_from_sig_to_column_no[pSig] = colno;
-            //qDebug() << pSig->get_key() << 83;
         }
        }
 
@@ -151,12 +150,9 @@ void lxa_graphics_scene::ingest_signatures(CSignatureCollection* signatures){
 }
 void lxa_graphics_scene::place_signatures()
 {
-
     m_signature_radius = 20;
     int number_of_rows = m_signature_lattice.size();
     m_location_of_bottom_row = m_row_delta * number_of_rows;
-
-
     for (int row = 2; row <m_signature_lattice.size(); row++){
         CSignature_ptr_list_iterator sig_iter(*m_signature_lattice[row]);
         int col = 0;
@@ -172,7 +168,6 @@ void lxa_graphics_scene::place_signatures()
 }
 void lxa_graphics_scene::place_containment_edges(){
     QPair<CSignature*, CSignature*> * pPair;
-    //qDebug() << "Placing containment edges";
     CSignature* sig1, *sig2;
     for (int i= 0; i < m_signature_containment_edges.size(); i++){
         pPair = m_signature_containment_edges[i];
@@ -187,7 +182,6 @@ void lxa_graphics_scene::place_containment_edges(){
         int y1 = m_location_of_bottom_row - (row1-2) * m_row_delta + m_signature_radius/2;
         int y2 = m_location_of_bottom_row - (row2-2) * m_row_delta + m_signature_radius/2;
         addLine(x1,y1,x2,y2,QPen());
-        //qDebug() << x1 << y1 << x2 << y2;
     }
 }
 
@@ -202,7 +196,6 @@ void lxa_graphics_scene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
     if (mouseEvent->button() == Qt::LeftButton)
     {
-        //QGraphicsItem *item = itemAt(mouseEvent->scenePos());
         qDebug() << "mouse move"<<178;
     }
 }
@@ -212,19 +205,16 @@ void lxa_graphics_scene::widen_columns()
     m_column_delta *= 1.25;
     clear();
     place_signatures();
-    place_containment_edges();
-  // QGraphicsScene::update();
-
+    //place_containment_edges();
 }
 void lxa_graphics_scene::narrow_columns()
 {
     m_column_delta *= 0.8;
     clear();
     place_signatures();
-    place_containment_edges();
-  // QGraphicsScene::update();
-
+    //place_containment_edges();
 }
+
 void lxa_graphics_view::move_up()
 {//   int min  = horizontalScrollBar()->minimum;
  //   horizontalScrollBar()->setvalue(0);

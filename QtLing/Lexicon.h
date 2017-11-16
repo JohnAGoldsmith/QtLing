@@ -15,9 +15,6 @@ class CSuffixCollection;
 class CPrefixCollection;
 class QProgressBar;
 
-//typedef  QPair<sig_string, CSignature*>                    sig_and_pointer;
-
-
 class sig_tree_edge{
 public:
     CSignature* sig_1;
@@ -61,11 +58,8 @@ protected:
     bool                            m_SuffixesFlag;
 
 
-//    CSignatureCollection  *         m_GoodSubsignaturesInsideParaSignatures;
-//    CStemCollection *               m_StemsFromGoodSubsignaturesInsideParaSignatures;
     CSignatureCollection*           m_ParaSignatures;   /*!<  the information we have about stems which we have not yet integrated into a morphological system. */
     CSuffixCollection *             m_ParaSuffixes;
-
     CStemCollection *               m_ResidualStems;
     CSignatureCollection *          m_ResidualPrefixSignatures;
     CStemCollection *               m_StemsFromSubsignatures;
@@ -78,7 +72,7 @@ protected:
 
 
 public:
-    CLexicon();
+    CLexicon(bool suffix_flag = true);
 public:
     // accessors and protostems
 
@@ -92,18 +86,11 @@ public:
     CWordCollection *                           get_words()                 { return m_Words;}
     CSignatureCollection*                       get_signatures()            { return m_Signatures;}
     CSignatureCollection*                       get_prefix_signatures()     { return m_PrefixSignatures;}
-//    CSignatureCollection*                       get_singleton_signatures()  { return m_SingletonSignatures;}
-//    CStemCollection*                            get_singleton_stems ()      { return m_SingletonStems;}
-//    CStemCollection*                            get_stemset2_collection()   { return m_StemSet2;}
     CSignatureCollection*                       GetSignatureCollection()    { return m_Signatures; }
-    //CSignature*                                 get_sig_from_sort_list (int n) { return m_SortedList[n];}
     CSignatureCollection *                      get_residual_signatures()   { return m_ParaSignatures;}
     CSuffixCollection*                          get_parasuffixes()          { return m_ParaSuffixes;}
     void                                        collect_parasuffixes();
-    //    CSignatureCollection *                      get_subsignatures()
-//                                                    {return m_GoodSubsignaturesInsideParaSignatures;}
-//    CStemCollection *                           get_stems_from_subsignatures()
-//                                                    {return m_StemsFromGoodSubsignaturesInsideParaSignatures;}
+
 
     QList<QPair<QString,QString>>*              GetParses()                 { return m_Parses;}
     QMap<QString,int>*                          get_protostems()            { return &m_Protostems;}
@@ -114,7 +101,7 @@ public:
     QMapIterator<QString, sig_tree_edge*> *     get_sig_tree_edge_map_iter();
     void                                        set_progress_bar (QProgressBar * pPB) { m_ProgressBar = pPB;}
     void                                        set_prefixes_flag()         { m_SuffixesFlag = false;}
-
+    bool                                        get_suffix_flag()         { return m_SuffixesFlag; }
 public:
     // insert functions here
     void Crab_1();
@@ -125,7 +112,6 @@ public:
     void ReSignaturizeWithKnownAffixes();
     void FindGoodSignaturesInsideParaSignatures();
     void compute_sig_tree_edge_map();
-//    void find_good_signatures_inside_residual_signatures(bool FindSuffixesFlag);
     void replace_parse_pairs_from_current_signature_structure(bool FindSuffixesFlag=true);
 
 };

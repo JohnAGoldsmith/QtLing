@@ -29,7 +29,7 @@ protected:
 public:
 
     CSignature(CSignature&);
-    CSignature( QString);
+    CSignature( QString, bool suffix_flag = true);
     ~CSignature();
 public:
     //Accessors
@@ -53,6 +53,7 @@ public:
     int                         get_number_of_affixes() const ;
     int                         get_robustness() const;
     bool                        get_suffix_flag()               {return m_SuffixFlag;}
+    void                        set_suffix_flag(bool flag)      {m_SuffixFlag = flag;}
     bool                        contains (CSignature* other);
 };
 
