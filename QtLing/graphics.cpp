@@ -230,8 +230,10 @@ void lxa_graphics_scene::display_focus_signature(){
         graphic_signature * p_graphic_sig = dynamic_cast<graphic_signature *>( p_item );
         if (p_graphic_sig){
             p_graphic_sig->set_color(Qt::white);
+            qDebug() << p_graphic_sig->get_signature()->get_key();
         }
     }
-
-
+    update();
+    qDebug() << "236";
+    qDebug() << m_focus_signature->get_key();
 }

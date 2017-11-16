@@ -20,7 +20,8 @@ class graphic_signature : public QGraphicsEllipseItem
     public:
     graphic_signature(int x, int y, CSignature*, lxa_graphics_scene* scene, int radius, int row_delta);
     void mousePressEvent (QGraphicsSceneMouseEvent*);
-    void                set_color(QColor) { m_color = Qt::white;}
+    void                set_color(Qt::GlobalColor this_color) { m_color = this_color;}
+    CSignature*         get_signature() {return m_signature;}
 };
 
 class lxa_graphics_view : public QGraphicsView

@@ -667,7 +667,7 @@ LowerTableView::LowerTableView(MainWindow * window)
 
          // We will split this into two parts: one if the graphics window is showing, and one if it is not.
 
-        // -->  If Graphics is not showing, we display the information about the signature <-- //
+        // -->  If Graphics is NOT showing, we display the information about the signature <-- //
         if (m_parent_window->m_graphic_display_flag == false){
             item_list.clear();
             CStem*                p_Stem;
@@ -686,10 +686,11 @@ LowerTableView::LowerTableView(MainWindow * window)
                 m_my_current_model->appendRow(item_list);
             }
             setModel( m_my_current_model);
-        } // -->   Now, graphics display <-- //
+        } // -->   Now, graphics display IS showing<-- //
         {
-
-
+            qDebug() << "trying to display a focus signature";
+            m_parent_window->get_graphics_scene()->set_focus_signature(pSig);
+            m_parent_window->get_graphics_scene()->display_focus_signature();
         }
     }
 
