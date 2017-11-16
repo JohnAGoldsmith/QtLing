@@ -661,36 +661,37 @@ LowerTableView::LowerTableView(MainWindow * window)
      //  ---------------------------------------------------//
      else if (UpperView_type == SIGNATURES){
      //  ---------------------------------------------------//
-        item_list.clear();
-        if (index.isValid()){
-             //signature = index.data().toString();
-             row = index.row();
-         }
-        signature = index.sibling(row,0).data().toString();
+         if (index.isValid()) {row = index.row();}
+         signature = index.sibling(row,0).data().toString();
+         CSignature*  pSig = this_lexicon->get_signatures()->get_signature(signature);
 
-        CSignature*           pSig = this_lexicon->get_signatures()->get_signature(signature);
-        CStem*                p_Stem;
-        CStem_ptr_list    *   sig_stems = pSig->get_stems();
+         // We will split this into two parts: one if the graphics window is showing, and one if it is not.
 
-
-        if (m_my_current_model) {
-            delete m_my_current_model;
-        }
-        m_my_current_model = new QStandardItemModel();
-        foreach (p_Stem, *sig_stems)  {
-            p_item = new QStandardItem(p_Stem->get_key() );
-            item_list.append(p_item);
-            if (item_list.length() >= m_number_of_columns){
-                m_my_current_model->appendRow(item_list);
-                item_list.clear();
+        // -->  If Graphics is not showing, we display the information about the signature <-- //
+        if (m_parent_window->m_graphic_display_flag == false){
+            item_list.clear();
+            CStem*                p_Stem;
+            CStem_ptr_list    *   sig_stems = pSig->get_stems();
+            if (m_my_current_model) { delete m_my_current_model;}
+            m_my_current_model = new QStandardItemModel();
+            foreach (p_Stem, *sig_stems)  {
+                p_item = new QStandardItem(p_Stem->get_key() );
+                item_list.append(p_item);
+                if (item_list.length() >= m_number_of_columns){
+                    m_my_current_model->appendRow(item_list);
+                    item_list.clear();
+                }
             }
-        }
-        if (item_list.size() > 0){
-            m_my_current_model->appendRow(item_list);
-        }
-        setModel( m_my_current_model);
-    }
+            if (item_list.size() > 0){
+                m_my_current_model->appendRow(item_list);
+            }
+            setModel( m_my_current_model);
+        } // -->   Now, graphics display <-- //
+        {
 
+
+        }
+    }
 
      //  ---------------------------------------------------//
      else if (UpperView_type == PREFIX_SIGNATURES){

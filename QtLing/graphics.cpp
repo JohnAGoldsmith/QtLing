@@ -15,10 +15,11 @@ graphic_signature::graphic_signature(int x, int y, CSignature* pSig, lxa_graphic
 {
     m_graphics_scene = scene;
     m_signature = pSig;
+    m_color = Qt::red;
     QGraphicsItem::setAcceptHoverEvents(true);
     QGraphicsItem::ItemIsSelectable;
     QGraphicsItem::ItemIsMovable;
-    scene->addEllipse(x,y,radius ,radius,QPen(),QBrush(Qt::red));
+    scene->addEllipse(x,y,radius ,radius,QPen(),QBrush(m_color));
 
     QGraphicsTextItem * p_text_item = new QGraphicsTextItem;
     p_text_item->setPlainText(pSig->get_key());
@@ -220,4 +221,17 @@ void lxa_graphics_view::move_up()
  //   horizontalScrollBar()->setvalue(0);
  //   update;
  //  qDebug() << "translate";
+}
+
+void lxa_graphics_scene::display_focus_signature(){
+    QList<QGraphicsItem*> item_list = QGraphicsScene::items();
+    for (int i = 0; i < item_list.size(); i++){
+        QGraphicsItem* p_item = item_list[i];
+        graphic_signature * p_graphic_sig = dynamic_cast<graphic_signature *>( p_item );
+        if (p_graphic_sig){
+            p_graphic_sig->set_color(Qt::white);
+        }
+    }
+
+
 }
