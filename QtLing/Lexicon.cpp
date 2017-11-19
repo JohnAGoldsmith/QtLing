@@ -502,6 +502,7 @@ void CLexicon::compute_sig_tree_edges()
                     stem_sig_pair * pair2 = pWord->GetSignatures()->value(signo2);
                     CStem *  stem2   = pair2->first;
                     CSignature* sig2 = pair2->second;
+                    if (sig1 == sig2){continue;}
                     int stem2length = stem2->get_key().length();
                     if (stem1length > stem2length){
                         int length_of_difference = stem1length - stem2length;
