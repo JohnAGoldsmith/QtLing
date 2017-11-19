@@ -756,24 +756,36 @@ LowerTableView::LowerTableView(MainWindow * window)
         setModel( m_my_current_model);
     }
      //  ---------------------------------------------------//
-     else if (UpperView_type == SINGLETON_SIGNATURES){
+     else if (UpperView_type == SIGNATURE_TREE_EDGES){
      //  ---------------------------------------------------//
         item_list.clear();
         if (index.isValid()){
              row = index.row();
         }
-        signature = index.sibling(row,0).data().toString();
+        sigstring_t signature1 = index.sibling(row,1).data().toString();
+        sigstring_t signature2 = index.sibling(row,2).data().toString();
 
-        CSignature*           pSig = this_lexicon->get_signatures()->get_signature(signature);
+        CSignature*           pSig1 = this_lexicon->get_signatures()->get_signature(signature1);
+        CSignature*           pSig2 = this_lexicon->get_signatures()->get_signature(signature2);
         CStem*                p_Stem;
-        CStem_ptr_list  *      sig_stems = pSig->get_stems();
+        CStem_ptr_list  *     sig1_stems = pSig1->get_stems();
+        CStem_ptr_list  *     sig2_stems = pSig2->get_stems();
+        if (sig1_stems->size() > sig2_stems->size()){
+            CSignature* temp = pSig1;
+            pSig1 = pSig2;
+            pSig1 = temp;
+            sig1_stems = pSig1->get_stems();
+            sig2_stems = pSig2->get_stems();
+        }
+
         QStandardItem*        p_item;
 
         if (m_my_current_model) {
             delete m_my_current_model;
         }
+
         m_my_current_model = new QStandardItemModel();
-        foreach (p_Stem, *sig_stems)  {
+        foreach (p_Stem, *sig1_stems)  {
             p_item = new QStandardItem(p_Stem->get_key() );
             item_list.append(p_item);
             if (item_list.length() >= m_number_of_columns){
@@ -781,39 +793,29 @@ LowerTableView::LowerTableView(MainWindow * window)
                 item_list.clear();
             }
         }
+        if (item_list.size() > 0 ){
+            m_my_current_model->appendRow(item_list);
+            item_list.clear();
+        }
+        m_my_current_model->appendRow(item_list);    // blank row in table.
+
+        m_my_current_model = new QStandardItemModel();
+        foreach (p_Stem, *sig2_stems)  {
+            p_item = new QStandardItem(p_Stem->get_key() );
+            item_list.append(p_item);
+            if (item_list.length() >= m_number_of_columns){
+                m_my_current_model->appendRow(item_list);
+                item_list.clear();
+            }
+        }
+        if (item_list.size() > 0 ){
+            m_my_current_model->appendRow(item_list);
+            item_list.clear();
+        }
         setModel( m_my_current_model);
+        resizeColumnsToContents();
     }
-     //  ---------------------------------------------------//
-     else if (UpperView_type == SIGNATURE_TREE_EDGES){
-     //  ---------------------------------------------------//
-     item_list.clear();
-     QList<QString> * word_list;
-     if (index.isValid()){
-         row = index.row();
-     } else{return;}
 
-     QString label = index.sibling(row,4).data().toString();
-     sig_tree_edge * p_sig_tree_edge =this_lexicon->get_sig_tree_edge_map()->value(label);
-     word_list = & p_sig_tree_edge->words;
-
-     if (m_my_current_model) {
-         delete m_my_current_model;
-     }
-     m_my_current_model = new QStandardItemModel();
-     foreach (word, *word_list)  {
-         QStandardItem* p_item = new QStandardItem(word);
-         item_list.append(p_item);
-         if (item_list.length() >= m_number_of_columns){
-             m_my_current_model->appendRow(item_list);
-             item_list.clear();
-         }
-     }
-     if (item_list.size() > 0){
-        m_my_current_model->appendRow(item_list);
-     }
-     setModel( m_my_current_model);
-    }
-   resizeColumnsToContents();
  }
 
  LeftSideTreeView::LeftSideTreeView(MainWindow* window)
