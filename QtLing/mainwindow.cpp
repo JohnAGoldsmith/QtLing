@@ -794,8 +794,14 @@ LowerTableView::LowerTableView(MainWindow * window)
         item_list.clear();
 
         foreach (p_Stem, *sig1_stems)  {
-            p_item = new QStandardItem(p_Stem->get_key() );
+            stem_t stem = p_Stem->get_key();
+            qDebug() << stem << 798;
+            p_item = new QStandardItem(stem);
             item_list.append(p_item);
+            if (this_edge->sig1_stems.contains(stem)) {
+                p_item->setBackground(Qt::red);
+                qDebug() << "red!" ;
+            }
 
             if (item_list.length() >= m_number_of_columns){
                 m_my_current_model->appendRow(item_list);
@@ -816,8 +822,13 @@ LowerTableView::LowerTableView(MainWindow * window)
 
 
         foreach (p_Stem, *sig2_stems)  {
-            p_item = new QStandardItem(p_Stem->get_key() );
+            stem_t stem2 = p_Stem->get_key();
+            p_item = new QStandardItem(stem2);
             item_list.append(p_item);
+            if (this_edge->sig2_stems.contains(stem2)) {
+                p_item->setBackground(Qt::red);
+            }
+
             if (item_list.length() >= m_number_of_columns){
                 m_my_current_model->appendRow(item_list);
                 item_list.clear();

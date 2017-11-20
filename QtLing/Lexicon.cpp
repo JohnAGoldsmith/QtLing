@@ -547,6 +547,8 @@ while (sig_tree_edge_iter.hasNext())
     if (p_EdgeMap->contains(edge_label)){
         p_sig_tree_edge_3 = p_EdgeMap->value(edge_label);
         p_sig_tree_edge_3->words.append(this_word);
+        p_sig_tree_edge_3->sig1_stems.append(p_sig_tree_edge->sig1_stems.first());
+        p_sig_tree_edge_3->sig2_stems.append(p_sig_tree_edge->sig2_stems.first());
     } else {
         sig_tree_edge * p_sig_tree_edge_2 = new sig_tree_edge(
             p_sig_tree_edge->sig_1,

@@ -22,7 +22,7 @@ public:
     morph_t     morph;
     word_t      word;
     QList<word_t> words;
-    QList<stem_t> sig1_stems; // are these really used?
+    QList<stem_t> sig1_stems;
     QList<stem_t> sig2_stems;
     sig_tree_edge();
     sig_tree_edge(CSignature* sig1, CSignature* sig2,morph_t m,word_t w, stem_t stem1, stem_t stem2)

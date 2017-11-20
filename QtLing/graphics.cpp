@@ -74,7 +74,6 @@ lxa_graphics_scene::~lxa_graphics_scene ()
 
     for (int itemno = 0; itemno < m_signature_lattice.size(); itemno ++ ){
         delete m_signature_lattice[itemno];
-        qDebug() << "graphics scene ";
     }
     m_signature_lattice.clear();
 
