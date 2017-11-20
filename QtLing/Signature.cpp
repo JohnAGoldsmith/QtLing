@@ -28,10 +28,23 @@ CSignature::~CSignature()
 
 void CSignature::add_stem_pointer(CStem* pStem)
 {
+    if (m_Stems->contains(pStem)){
+        return;
+    }
     m_Stems->append(pStem);
 }
 
+bool compare_stems_of_sig(const CStem* pStem1, const CStem* pStem2)
+{
+ return  pStem1->get_key() < pStem2->get_key();
+}
+void CSignature::sort_stems(){
+    qSort(m_Stems->begin(), m_Stems->end(), compare_stems_of_sig);
+}
+
 void  add_stem (QString);
+
+
 
 void CSignature::dump_string_set_of_suffixes(QSet<QString> & this_StringSet)
 {   QString affix;

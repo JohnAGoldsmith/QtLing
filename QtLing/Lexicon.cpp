@@ -242,7 +242,6 @@ void   CLexicon::AssignSuffixesToStems()
 
          temp_presignature.sort();
          sigstring_t this_signature_string = temp_presignature.join("=");
-         //qDebug() << this_signature_string;ok to here
          if ( ! temp_signatures_to_stems.contains(this_signature_string)){
             stem_list * pStemSet = new stem_list;
             temp_signatures_to_stems[this_signature_string] = pStemSet;
@@ -256,7 +255,6 @@ void   CLexicon::AssignSuffixesToStems()
         this_signature_string    = iter_sigstring_to_stems.key();
         p_this_stem_list         = iter_sigstring_to_stems.value();
         this_stem_t =  p_this_stem_list->first();
-        //qDebug() << this_stem_t << this_signature_string << 260;
         affix_set this_affix_set = QSet<QString>::fromList( this_signature_string.split("="));
         if (p_this_stem_list->size() >= MINIMUM_NUMBER_OF_STEMS)
         {  if( m_SuffixesFlag) {
@@ -266,7 +264,7 @@ void   CLexicon::AssignSuffixesToStems()
                 pSig->set_suffix_flag(false);
             }
             pSig->add_memo("Pass 1");
-            //qDebug() << this_signature_string << 265 ;
+            //Debug() << this_signature_string << 265 ;
             QSetIterator<suffix_t> affix_iter(this_affix_set);
             while(affix_iter.hasNext()){
                   this_affix = affix_iter.next();
@@ -274,9 +272,7 @@ void   CLexicon::AssignSuffixesToStems()
                       CSuffix* pSuffix = m_Suffixes->find_or_add(this_affix);
                       pSuffix->increment_count();
                       pSig->add_affix_ptr(pSuffix);
-                      //qDebug() << pSig->get_key() << pSig << pSuffix->get_key()<< "269 in lexicon.cpp";
                   }else{
-                      //qDebug() << this_affix << "274";
                       CPrefix* pPrefix = m_Prefixes->find_or_add(this_affix);
                       pPrefix->increment_count();
                       pSig->add_affix_ptr(pPrefix);
@@ -284,7 +280,6 @@ void   CLexicon::AssignSuffixesToStems()
                   }
 
             }
-            //qDebug() << 281;
             // --> We go through this sig's stems and reconstitute its words. <--//
             stem_list_iterator stem_iter(*p_this_stem_list);
             while (stem_iter.hasNext()){
@@ -406,10 +401,10 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
                                     // We have found the longest signature contained in this_residual_suffix_set
 
                                     pStem = m_Stems->find_or_add(this_stem);
-                                    p_proven_sig->add_stem(pStem);
-                                    pStem->add_memo("singleton=");
+                                    p_proven_sig->add_stem_pointer(pStem);
+                                    // pStem->add_memo("singleton=");
                                     //--> add to autobiographies <--//
-                                    //qDebug() << this_stem << p_proven_sigstring;
+
                                     for (int affixno = 0; affixno < proven_sig_list.length(); affixno++){
                                         this_suffix = proven_sig_list[affixno];
                                         if (this_suffix == "NULL"){
@@ -420,7 +415,7 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
                                         pWord = m_Words->find_or_fail(this_word);
                                         if (pWord){
                                             pWord->add_stem_and_signature(pStem, p_proven_sig);
-                                            pWord->add_to_autobiography("singleton="  + this_stem  + "=" +  p_proven_sigstring);
+                                            pWord->add_to_autobiography("from within parasigs "  + this_stem  + "=" +  p_proven_sigstring);
                                         }
                                     }
                                     break;
@@ -430,6 +425,7 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
                             } // loop over proven signatures;
 
     }
+    m_Signatures->sort_each_signatures_stems_alphabetically();
 }
 
 
@@ -546,16 +542,36 @@ while (sig_tree_edge_iter.hasNext())
     this_word  = p_sig_tree_edge->word;
     if (p_EdgeMap->contains(edge_label)){
         p_sig_tree_edge_3 = p_EdgeMap->value(edge_label);
-        p_sig_tree_edge_3->words.append(this_word);
-        p_sig_tree_edge_3->sig1_stems.append(p_sig_tree_edge->sig1_stems.first());
-        p_sig_tree_edge_3->sig2_stems.append(p_sig_tree_edge->sig2_stems.first());
+        if (! p_sig_tree_edge_3->words.contains(this_word)){
+            p_sig_tree_edge_3->words.append(this_word);
+        } else{
+        }
+        //_sig_tree_edge_3->words.append(this_word);
+        stem_t sig1_stem = p_sig_tree_edge->sig1_stems.first();
+        stem_t sig2_stem = p_sig_tree_edge->sig2_stems.first();
+
+        if (! p_sig_tree_edge_3->sig1_stems.contains(sig1_stem)){
+            p_sig_tree_edge_3->sig1_stems.append(sig1_stem);
+        }
+
+
+        if (! p_sig_tree_edge_3->sig2_stems.contains(sig2_stem)){
+            p_sig_tree_edge_3->sig2_stems.append(sig2_stem);
+        }
+
     } else {
         sig_tree_edge * p_sig_tree_edge_2 = new sig_tree_edge(
             p_sig_tree_edge->sig_1,
             p_sig_tree_edge->sig_2,
             p_sig_tree_edge->morph
            );
-        p_sig_tree_edge_2->words.append(this_word);
+        if (! p_sig_tree_edge_2->words.contains(this_word)) {
+            p_sig_tree_edge_2->words.append(this_word);
+        }
+        stem_t sig1_stem = p_sig_tree_edge->sig1_stems.first();
+        stem_t sig2_stem = p_sig_tree_edge->sig2_stems.first();
+        p_sig_tree_edge_2->sig1_stems.append(sig1_stem);
+        p_sig_tree_edge_2->sig2_stems.append(sig2_stem);
         p_EdgeMap->insert(p_sig_tree_edge_2->label(), p_sig_tree_edge_2);
     }
 }
@@ -745,4 +761,5 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
             }
         }
     }
+    m_Signatures->sort_each_signatures_stems_alphabetically();
 }

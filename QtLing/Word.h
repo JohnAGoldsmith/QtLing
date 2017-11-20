@@ -50,6 +50,7 @@ public:
     void                                    add_to_autobiography(QString line) {m_Autobiography.append(line);};
     QList<QString>*                         get_autobiography() {return & m_Autobiography;}
     void                                    clear_signatures() { m_Signatures.clear();}
+
 };
 
 #endif // CWORD_H

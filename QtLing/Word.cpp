@@ -1,5 +1,5 @@
 #include "Word.h"
-
+#include <QDebug>
 CWord::CWord(QString word) : m_WordCount(0), m_Word(word)
 {
      m_WordCount = 0;
@@ -35,7 +35,13 @@ void CWord::AddParse(CStem* stem, CSuffix* suffix, CSignature* signature)
 }
 
 void CWord::add_stem_and_signature(CStem* pStem, CSignature * pSig)
-{
+{   //Debug() << "word 38" << get_key() << "size"<<m_Signatures.size();
+    for (int i =0; i< m_Signatures.size(); i++){
+        ptr_to_stem_sig_pair stem_ptr = m_Signatures.at(i);
+        if (stem_ptr->first->get_key() == pStem->get_key()){
+            return;
+        }
+    }
     QPair<CStem*,CSignature*>* pPair = new QPair<CStem*,CSignature*>(pStem,pSig);
     m_Signatures.append(pPair);
 

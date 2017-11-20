@@ -127,3 +127,12 @@ void CSignatureCollection::compute_containment_list()
     // Sort each row of signatures by stem-count or robustness.
 
 }
+void CSignatureCollection::sort_each_signatures_stems_alphabetically()
+{
+    map_sigstring_to_sig_ptr_iter sig_iter (m_SignatureMap);
+    while (sig_iter.hasNext())
+    {
+        sig_iter.next();
+        sig_iter.value()->sort_stems();
+    }
+}

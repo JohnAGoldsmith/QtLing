@@ -40,7 +40,7 @@ public:
     QList<CPrefix*>*            get_prefix_list()                         {return m_Prefixes;}
     void                        dump_string_set_of_suffixes(QSet<QString> & this_StringSet);
     void                        add_stem (QString);
-    void                        add_stem (CStem* pStem)             { m_Stems->append(pStem);}
+//    void                        add_stem (CStem* pStem);
     void                        add_stem_pointer(CStem*);
 
     QList<CStem*>*              get_stems()                         { return   m_Stems;}
@@ -55,6 +55,7 @@ public:
     bool                        get_suffix_flag()               {return m_SuffixFlag;}
     void                        set_suffix_flag(bool flag)      {m_SuffixFlag = flag;}
     bool                        contains (CSignature* other);
+    void                        sort_stems();
 };
 
 #endif // CSIGNATURE_H

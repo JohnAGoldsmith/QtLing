@@ -795,12 +795,11 @@ LowerTableView::LowerTableView(MainWindow * window)
 
         foreach (p_Stem, *sig1_stems)  {
             stem_t stem = p_Stem->get_key();
-            qDebug() << stem << 798;
+            //qDebug() << stem << 798;
             p_item = new QStandardItem(stem);
             item_list.append(p_item);
             if (this_edge->sig1_stems.contains(stem)) {
                 p_item->setBackground(Qt::red);
-                qDebug() << "red!" ;
             }
 
             if (item_list.length() >= m_number_of_columns){
