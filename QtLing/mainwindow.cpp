@@ -606,14 +606,14 @@ void MainWindow::commitData(QSessionManager &manager)
 LowerTableView::LowerTableView()
 {
    m_my_current_model =new  QStandardItemModel();
-   m_number_of_columns = 6;
+   m_number_of_columns = 20;
 }
 
 LowerTableView::LowerTableView(MainWindow * window)
 {
    m_my_current_model =new  QStandardItemModel();
    m_parent_window = window;
-   m_number_of_columns = 6;
+   m_number_of_columns = 20;
 }
 
  void LowerTableView::display_this_item( const  QModelIndex & index )
@@ -762,11 +762,13 @@ LowerTableView::LowerTableView(MainWindow * window)
         if (index.isValid()){
              row = index.row();
         }
-        sigstring_t signature1 = index.sibling(row,1).data().toString();
-        sigstring_t signature2 = index.sibling(row,2).data().toString();
+        QString edge_key = index.sibling(row,4).data().toString();
+        sig_tree_edge* this_edge = this_lexicon->get_sig_tree_edge_map()->value(edge_key);
+        qDebug() << edge_key << 767;
 
-        CSignature*           pSig1 = this_lexicon->get_signatures()->get_signature(signature1);
-        CSignature*           pSig2 = this_lexicon->get_signatures()->get_signature(signature2);
+        CSignature*           pSig1 = this_edge->sig_1;
+        CSignature*           pSig2 = this_edge->sig_2;
+
         CStem*                p_Stem;
         CStem_ptr_list  *     sig1_stems = pSig1->get_stems();
         CStem_ptr_list  *     sig2_stems = pSig2->get_stems();
@@ -783,11 +785,18 @@ LowerTableView::LowerTableView(MainWindow * window)
         if (m_my_current_model) {
             delete m_my_current_model;
         }
-
         m_my_current_model = new QStandardItemModel();
+
+
+        p_item = new QStandardItem(pSig1->get_key());
+        item_list.append(p_item);
+        m_my_current_model->appendRow(item_list);
+        item_list.clear();
+
         foreach (p_Stem, *sig1_stems)  {
             p_item = new QStandardItem(p_Stem->get_key() );
             item_list.append(p_item);
+
             if (item_list.length() >= m_number_of_columns){
                 m_my_current_model->appendRow(item_list);
                 item_list.clear();
@@ -797,9 +806,15 @@ LowerTableView::LowerTableView(MainWindow * window)
             m_my_current_model->appendRow(item_list);
             item_list.clear();
         }
-        m_my_current_model->appendRow(item_list);    // blank row in table.
 
-        m_my_current_model = new QStandardItemModel();
+        m_my_current_model->appendRow(item_list);    // blank row in table.
+        item_list.clear();
+        p_item = new QStandardItem(pSig2->get_key());
+        item_list.append(p_item);
+        m_my_current_model->appendRow(item_list);
+        item_list.clear();
+
+
         foreach (p_Stem, *sig2_stems)  {
             p_item = new QStandardItem(p_Stem->get_key() );
             item_list.append(p_item);
@@ -814,6 +829,8 @@ LowerTableView::LowerTableView(MainWindow * window)
         }
         setModel( m_my_current_model);
         resizeColumnsToContents();
+
+
     }
 
  }

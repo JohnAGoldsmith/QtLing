@@ -509,17 +509,15 @@ void CLexicon::compute_sig_tree_edges()
                         m_SuffixesFlag?
                             difference = stem1->get_key().mid(stem2->get_key().length()):
                             difference = stem1->get_key().left(length_of_difference);
-                        p_SigTreeEdge = new sig_tree_edge (sig1,sig2,difference, pWord->get_key());
-                        //qDebug() << pWord->get_key() << stem1->get_key() << stem2->get_key();
+                        p_SigTreeEdge = new sig_tree_edge (sig1,sig2,difference, pWord->get_key(), stem1->get_key(), stem2->get_key());
                     } else{
                         int length_of_difference = stem2length - stem1length;
                         m_SuffixesFlag?
                             difference = stem2->get_key().mid(stem1->get_key().length()):
                             difference = stem2->get_key().left(length_of_difference);
-                        p_SigTreeEdge =  new sig_tree_edge (sig2,sig1,difference, pWord->get_key());
+                        p_SigTreeEdge =  new sig_tree_edge (sig2,sig1,difference, pWord->get_key(), stem1->get_key(), stem2->get_key());
                     }
                     m_SigTreeEdgeList.append(p_SigTreeEdge);
-                    //qDebug() << sig1->get_key() << sig2->get_key() << difference << pWord->get_key();
                 }
             }
         }
