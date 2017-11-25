@@ -151,6 +151,7 @@ void lxa_graphics_scene::ingest_signatures(CSignatureCollection* signatures){
 void lxa_graphics_scene::place_signatures()
 {
     m_signature_radius = 20;
+    int radius;
     int number_of_rows = m_signature_lattice.size();
     m_location_of_bottom_row = m_row_delta * number_of_rows;
     for (int row = 2; row <m_signature_lattice.size(); row++){
@@ -158,9 +159,21 @@ void lxa_graphics_scene::place_signatures()
         int col = 0;
         while (sig_iter.hasNext()){
             CSignature* pSig = sig_iter.next();
+            int stem_count = pSig->get_number_of_stems();
+            if (stem_count<5)
+            {
+                radius = 1;
+            } else if (stem_count< 105){
+                radius = 5 + (stem_count - 5) * .5;
+            } else if (stem_count < 205){
+                radius = 55  + (stem_count -105) *.2;
+            }   else {
+                radius = 75  + .2 * log(stem_count -205);
+            }
+
             int x = col * m_column_delta;
             int y = m_location_of_bottom_row - (row-2) * m_row_delta;
-            graphic_signature * p_graph_sig = new graphic_signature (x,y, pSig, this, m_signature_radius, m_row_delta);
+            graphic_signature * p_graph_sig = new graphic_signature (x,y, pSig, this, radius, m_row_delta);
             addItem(p_graph_sig);
             col++;
         }

@@ -18,9 +18,6 @@ template<class V> class Q3PtrList;
 template<class V> class Q3Dict;
 
 
-typedef  QString                                    sig_string;
-typedef  QPair<CStem*,CSignature*>                  stem_sig_pair;
-typedef  QPair<stem_sig_pair*,                      stem_sig_pair*> pair_of_stem_sig_pairs;
 //typedef  QPair<sig_string, pair_of_stem_sig_pairs*> five_tuple_sig_diffs;
 
 // Home-style type-specifications. "_t" stands for "type".
@@ -31,6 +28,12 @@ typedef QString                             sigstring_t;
 typedef QString                             suffix_t;
 typedef QString                             prefix_t;
 typedef QString                             affix_t;
+
+typedef  QString                                    sig_string;
+typedef  QPair<CStem*,CSignature*>                  stem_sig_pair;
+typedef  QPair<stem_sig_pair*,                      stem_sig_pair*> pair_of_stem_sig_pairs;
+typedef  QPair<stem_t,stem_t>                       stem_string_pair;
+typedef  QPair<word_t, stem_string_pair*>            word_stem_pair_pair;
 
 typedef QList<stem_t>                       stem_list;
 typedef QList<suffix_t>                     suffix_list;
@@ -74,5 +77,14 @@ typedef QMapIterator<QString,CSignature*>   map_sigstring_to_sig_ptr_iter;
 typedef QMapIterator<QString, CWord*>       map_string_to_word_ptr_iter;
 typedef QMapIterator<QString, CSuffix*>     map_string_to_suffix_ptr_iter;
 typedef QMapIterator<QString, CStem*>       map_string_to_stem_ptr_iter;
+
+
+struct word_stem_struct
+{
+    word_t word;
+    stem_t stem_1;
+    stem_t stem_2;
+};
+
 
 #endif // TYPEDEFS_H

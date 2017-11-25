@@ -15,33 +15,63 @@ class CSuffixCollection;
 class CPrefixCollection;
 class QProgressBar;
 
-class sig_tree_edge{
+
+class simple_sig_tree_edge{
 public:
-    CSignature* sig_1;
-    CSignature* sig_2;
-    morph_t     morph;
-    word_t      word;
-    QList<word_t> words;
-    QList<stem_t> sig1_stems;
-    QList<stem_t> sig2_stems;
-    sig_tree_edge();
-    sig_tree_edge(CSignature* sig1, CSignature* sig2,morph_t m,word_t w, stem_t stem1, stem_t stem2)
+    CSignature*         sig_1;
+    CSignature*         sig_2;
+    morph_t             morph;
+    word_t              word; // get rid of word, stem_1, stem_2, replayed by word_stems;
+    stem_t              stem_1;
+    stem_t              stem_2;
+    simple_sig_tree_edge();
+    simple_sig_tree_edge(CSignature* sig1, CSignature* sig2,morph_t m,word_t w, stem_t stem1, stem_t stem2)
     {
         sig_1 = sig1;
         sig_2 = sig2;
         morph = m;
         word = w;
-        sig1_stems.append(stem1);
-        sig2_stems.append(stem2);
+        stem_1 = stem1;
+        stem_2 = stem2;
     };
-    sig_tree_edge(CSignature* sig1, CSignature* sig2,morph_t m)
+    QString label() {return morph + "/" + sig_1->get_key() + "/" + sig_2->get_key(); }
+};
+
+
+
+class sig_tree_edge{
+public:
+    CSignature* sig_1;
+    CSignature* sig_2;
+    morph_t     morph;
+    QList<word_t> words;  // will be removed?
+    QList<QPair<stem_t, stem_t>* > stem_pairs; // will be removed?
+    QList< word_stem_pair_pair * >  shared_items;  // will be removed
+    QList<word_stem_struct*>         shared_word_stems;
+
+    sig_tree_edge();
+    sig_tree_edge(CSignature* sig1, CSignature* sig2,morph_t m,word_t this_word, stem_t stem1, stem_t stem2)
     {
         sig_1 = sig1;
         sig_2 = sig2;
         morph = m;
-    };
-    QString label() {return morph + "/" + sig_1->get_key() + "/" + sig_2->get_key(); }
+        //delete the next 6 lines:
+        stem_string_pair * this_stem_pair = new stem_string_pair;
+        this_stem_pair->first  = stem1;
+        this_stem_pair->second = stem2;
+        stem_pairs.append(this_stem_pair);
+        word_stem_pair_pair  * this_word_stem_item = new word_stem_pair_pair (this_word, this_stem_pair);
+        shared_items.append(this_word_stem_item);
 
+        word_stem_struct * this_word_stems = new word_stem_struct;
+        this_word_stems->word = this_word;
+        this_word_stems->stem_1 = stem1;
+        this_word_stems->stem_2 = stem2;
+        shared_word_stems.append(this_word_stems);
+    };
+    //QList<QPair<stem_t, stem_t>* >* get_stem_pairs() {return & stem_pairs;}
+    QString label() {return morph + "/" + sig_1->get_key() + "/" + sig_2->get_key(); }
+    //QList<word_t>* get_words() {return & words;}
 };
 
 
@@ -68,7 +98,7 @@ protected:
     CSignatureCollection *          m_ResidualPrefixSignatures;
     CStemCollection *               m_StemsFromSubsignatures;
     CSignatureCollection*           m_Subsignatures;
-    QList<sig_tree_edge*>           m_SigTreeEdgeList; /*!< the sig_tree_edges in here contain only one word associated with each. */
+    QList<simple_sig_tree_edge*>    m_SigTreeEdgeList; /*!< the sig_tree_edges in here contain only one word associated with each. */
     QMap<QString, sig_tree_edge*>   m_SigTreeEdgeMap;  /*!< the sig_tree_edges in here contain lists of words associated with them. */
     QProgressBar*                   m_ProgressBar;
 
@@ -99,9 +129,9 @@ public:
     QList<QPair<QString,QString>>*              GetParses()                 { return m_Parses;}
     QMap<QString,int>*                          get_protostems()            { return &m_Protostems;}
     void                                        compute_sig_tree_edges();
-    QList<sig_tree_edge*> *                     get_sig_tree_edges()        { return &m_SigTreeEdgeList;}
+    QList<simple_sig_tree_edge*> *              get_sig_tree_edges()        { return &m_SigTreeEdgeList;}
     QMap<QString, sig_tree_edge*>    *          get_sig_tree_edge_map()     { return & m_SigTreeEdgeMap;}
-    QListIterator<sig_tree_edge*>    *          get_sig_tree_edge_list_iter();
+    QListIterator<simple_sig_tree_edge*>    *          get_sig_tree_edge_list_iter();
     QMapIterator<QString, sig_tree_edge*> *     get_sig_tree_edge_map_iter();
     void                                        set_progress_bar (QProgressBar * pPB) { m_ProgressBar = pPB;}
     void                                        set_prefixes_flag()         { m_SuffixesFlag = false;}

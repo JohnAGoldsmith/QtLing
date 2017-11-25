@@ -133,7 +133,7 @@ void LxaStandardItemModel::load_sig_tree_edges( QMap<QString, sig_tree_edge*> * 
 
         QStandardItem * item2 = new QStandardItem(p_sig_tree_edge->sig_1->get_key());
         QStandardItem * item3 = new QStandardItem(p_sig_tree_edge->sig_2->get_key());
-        QStandardItem * item4 = new QStandardItem(QString::number(p_sig_tree_edge->words.size()));
+        QStandardItem * item4 = new QStandardItem(QString::number(p_sig_tree_edge->shared_word_stems.size()));
         QStandardItem * item5 = new QStandardItem(p_sig_tree_edge->label());
         items.append(item2);
         items.append(item3);
