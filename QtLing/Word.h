@@ -37,7 +37,7 @@ public:
 
 public:
     //Accessors
-    int                                 GetWordCount() const { return m_WordCount; }
+    int                                 get_word_count() const { return m_WordCount; }
     void                                SetWordCount(int count) { m_WordCount = count;}
     QString                             GetWord()      const { return m_Word; }
     QString                             get_key() {return m_Word;}

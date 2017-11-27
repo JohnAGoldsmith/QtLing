@@ -17,6 +17,8 @@ template<class V> class Q3PtrVector;
 template<class V> class Q3PtrList;
 template<class V> class Q3Dict;
 
+typedef  QPair<QString, int>        word_and_count;
+typedef  QList<word_and_count*>     word_and_count_list;
 
 //typedef  QPair<sig_string, pair_of_stem_sig_pairs*> five_tuple_sig_diffs;
 

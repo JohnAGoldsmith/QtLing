@@ -55,23 +55,14 @@ public:
         sig_1 = sig1;
         sig_2 = sig2;
         morph = m;
-        //delete the next 6 lines:
-        stem_string_pair * this_stem_pair = new stem_string_pair;
-        this_stem_pair->first  = stem1;
-        this_stem_pair->second = stem2;
-        stem_pairs.append(this_stem_pair);
-        word_stem_pair_pair  * this_word_stem_item = new word_stem_pair_pair (this_word, this_stem_pair);
-        shared_items.append(this_word_stem_item);
-
         word_stem_struct * this_word_stems = new word_stem_struct;
         this_word_stems->word = this_word;
         this_word_stems->stem_1 = stem1;
         this_word_stems->stem_2 = stem2;
         shared_word_stems.append(this_word_stems);
     };
-    //QList<QPair<stem_t, stem_t>* >* get_stem_pairs() {return & stem_pairs;}
+
     QString label() {return morph + "/" + sig_1->get_key() + "/" + sig_2->get_key(); }
-    //QList<word_t>* get_words() {return & words;}
 };
 
 
@@ -111,7 +102,7 @@ public:
     // accessors and protostems
 
 
-    CWordCollection*                            GetWordCollection()         { return m_Words; }
+    CWordCollection*                            get_word_collection()       { return m_Words; }
     CStemCollection*                            GetStemCollection()         { return m_Stems; }
     CSuffixCollection*                          GetSuffixCollection()       { return m_Suffixes; }
     CSuffixCollection*                          get_suffixes()              {return m_Suffixes;}

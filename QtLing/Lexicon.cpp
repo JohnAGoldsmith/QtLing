@@ -79,7 +79,7 @@ void CLexicon::Crab_2()
  */
 void CLexicon::FindProtostems()
 {   word_t          this_word, previous_word;
-    QStringList *   Words =  GetWordCollection()->GetSortedStringArray();
+    QStringList *   Words = get_word_collection()->GetSortedStringArray();
     bool            StartFlag = true;
     bool            DifferenceFoundFlag = false;
     stem_t          stem;
@@ -205,7 +205,9 @@ void   CLexicon::AssignSuffixesToStems()
     map_sigstring_to_suffix_set      temp_stems_to_affix_set;
     map_sigstring_to_stem_list        temp_signatures_to_stems;
     morph_set *                 pSet;
-
+    m_ProgressBar->reset();
+    m_ProgressBar->setMinimum(0);
+    m_ProgressBar->setMaximum(m_ParaSignatures->get_count());
     //--> We establish a temporary map from stems to sets of affixes as we iterate through parses. <--//
     for (int parseno = 0; parseno < m_Parses->size(); parseno++){
         this_pair = m_Parses->at(parseno);
@@ -231,7 +233,8 @@ void   CLexicon::AssignSuffixesToStems()
     //--> then we create a "pre-signature" in a map that points to lists of stems. <--//
     QMapIterator<QString, morph_set*>   stem_iter(temp_stems_to_affix_set);                       // part 1
     while (stem_iter.hasNext())                                                                  // make a presignature for each stem.
-    {    stem_iter.next();
+    {    qApp->processEvents();
+         stem_iter.next();
          this_stem_t            = stem_iter.key();
          this_ptr_to_affix_set  = stem_iter.value();
          QStringList temp_presignature;
@@ -254,12 +257,13 @@ void   CLexicon::AssignSuffixesToStems()
     //-->  create signatures, stems, affixes:  <--//
     QMapIterator<sigstring_t, stem_list*> iter_sigstring_to_stems ( temp_signatures_to_stems);
     while (iter_sigstring_to_stems.hasNext())
-    {   iter_sigstring_to_stems.next();
+    {
+        qApp->processEvents();
+        iter_sigstring_to_stems.next();
         this_signature_string    = iter_sigstring_to_stems.key();
         p_this_stem_list         = iter_sigstring_to_stems.value();
         this_stem_t =  p_this_stem_list->first();
         affix_set this_affix_set = QSet<QString>::fromList( this_signature_string.split("="));
-        //qDebug() << this_signature_string << 262;
         if (p_this_stem_list->size() >= MINIMUM_NUMBER_OF_STEMS)
         {  if( m_SuffixesFlag) {
                 pSig = *m_Signatures       << this_signature_string;
@@ -268,7 +272,6 @@ void   CLexicon::AssignSuffixesToStems()
                 pSig->set_suffix_flag(false);
             }
             pSig->add_memo("Pass 1");
-            //qDebug() << this_signature_string << 265 ;
             QSetIterator<suffix_t> affix_iter(this_affix_set);
             while(affix_iter.hasNext()){
                   this_affix = affix_iter.next();
@@ -284,7 +287,6 @@ void   CLexicon::AssignSuffixesToStems()
                   }
 
             }
-            //qDebug() << "Step 2.1";
             // --> We go through this sig's stems and reconstitute its words. <--//
             stem_list_iterator stem_iter(*p_this_stem_list);
             while (stem_iter.hasNext()){
@@ -302,22 +304,17 @@ void   CLexicon::AssignSuffixesToStems()
                             this_word = this_stem_t + this_affix :
                             this_word = this_affix + this_stem_t ;
                     }
-                    //qDebug() << this_word;
                     CWord* pWord = m_Words->get_word(this_word);
                     pWord->add_stem_and_signature(pStem,pSig);
                     pWord->add_to_autobiography("Pass1= " + this_stem_t + "=" + this_signature_string);
-                    //qDebug() << pWord->get_key();
                 }
 
             }
-            //qDebug() << 312;
         }else{
-            //qDebug() << 315;
             this_signature_string =  iter_sigstring_to_stems.key();
             pSig =  *m_ParaSignatures << this_signature_string;
             pStem = *m_ResidualStems << this_stem_t;
             pSig->add_stem_pointer(pStem);
-            //qDebug() << 320;
             foreach (this_affix, this_affix_set){
                 if (this_affix == "NULL"){
                     this_word = this_stem_t;
@@ -326,13 +323,9 @@ void   CLexicon::AssignSuffixesToStems()
                        this_word = this_stem_t + this_affix :
                        this_word = this_affix + this_stem_t;
                 }
-                //qDebug() << 329;
                 pWord = m_Words->find_or_fail(this_word);
-               // qDebug() << 331;
                 if (pWord){  // *** why does this sometimes fail?
-                    //qDebug()  <<333;
                     pWord->add_to_autobiography("*" + this_stem_t + "=" + this_signature_string);
-                    //qDebug() << 334;
                 }
             }
          }
@@ -432,7 +425,7 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
                                             if (this_word == "Poisons"){qDebug() << " found word entry."<< 432;}
                                             pWord->add_stem_and_signature(pStem, p_proven_sig);
                                             pWord->add_to_autobiography("from within parasigs "  + this_stem  + "=" +  p_proven_sigstring);
-                                        }
+                                        } else{qDebug() << "Poisons not found " << 423;}
                                     }
                                     break;
                                 } else{
@@ -527,9 +520,8 @@ void CLexicon::compute_sig_tree_edges()
                         m_SuffixesFlag?
                             difference = stem2->get_key().mid(stem1->get_key().length()):
                             difference = stem2->get_key().left(length_of_difference);
-                        p_SigTreeEdge =  new simple_sig_tree_edge (sig2,sig1,difference, pWord->get_key(), stem1->get_key(), stem2->get_key());
+                        p_SigTreeEdge =  new simple_sig_tree_edge (sig2,sig1,difference, pWord->get_key(), stem2->get_key(), stem1->get_key());
                     }
-                    //qDebug() << sig1->get_key()<<sig2->get_key() << difference << pWord->get_key() << stem1->get_key() << 530;
                     m_SigTreeEdgeList.append(p_SigTreeEdge);
                 }
             }
@@ -557,11 +549,9 @@ while (this_simple_sig_tree_edge_iter.hasNext())
     p_sig_tree_edge = this_simple_sig_tree_edge_iter.next();
     edge_label = p_sig_tree_edge->label();
     this_word  = p_sig_tree_edge->word;
-    //qDebug() << this_word << 558;
     // --> We iterate through the simple Edges contained in the TreeEdge List            <-- //
     // --> We build a map of larger TreeEdges, each containing multiple stems and words. <-- //
     if (p_EdgeMap->contains(edge_label)){
-        //qDebug() << "we found an edge that will be reused "<< this_word;
         p_sig_tree_edge_3 = p_EdgeMap->value(edge_label);
         word_stem_struct * this_word_stem_struct = new word_stem_struct;
         this_word_stem_struct->word = this_word;
@@ -574,7 +564,6 @@ while (this_simple_sig_tree_edge_iter.hasNext())
 
     } else {  // --> start a new sig_tree_edge with multiple stems <-- //
         // change this to a constructor that takes a simple-tree-edge as its argument
-        //qDebug() << this_word << 575 << "new big edge";
         sig_tree_edge * p_sig_tree_edge_2 = new sig_tree_edge(
             p_sig_tree_edge->sig_1,
             p_sig_tree_edge->sig_2,

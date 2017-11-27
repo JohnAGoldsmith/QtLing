@@ -12,6 +12,7 @@ CSignatureCollection::CSignatureCollection(bool suffix_flag)
     m_MapIterator           = new map_sigstring_to_sig_ptr_iter (m_SignatureMap);
     m_SortedListIterator    = new     QListIterator<CSignature*> (m_SortList);
     m_suffix_flag = suffix_flag;
+    m_Lexicon               = NULL;
 }
 
 CSignatureCollection::~CSignatureCollection()
@@ -23,8 +24,8 @@ CSignatureCollection::~CSignatureCollection()
 void CSignatureCollection::clear(){
     m_SignatureMap.clear();
     m_SortList.clear();
-
 }
+
 map_sigstring_to_sig_ptr_iter * CSignatureCollection::get_map_iterator()
 {   qDebug() << "In signature collection, getting the map iterator.";
     m_MapIterator->toFront();
@@ -41,13 +42,12 @@ QListIterator<CSignature*> * CSignatureCollection::get_sorted_list_iterator()
 // -->   Accssing  <--     //
 
 
-
 bool CSignatureCollection::contains(sigstring_t this_sigstring){
     return m_SignatureMap.contains(this_sigstring);
 }
 CSignature* CSignatureCollection::operator <<(QString szSignature)
 {
-    CSignature* pSig = new CSignature(szSignature);
+    CSignature* pSig = new CSignature(szSignature,this);
     m_SignatureMap.insert(szSignature, pSig);
     m_suffix_flag?
         pSig->set_suffix_flag(true):
@@ -135,4 +135,15 @@ void CSignatureCollection::sort_each_signatures_stems_alphabetically()
         sig_iter.next();
         sig_iter.value()->sort_stems();
     }
+}
+
+QList<word_and_count_list*> *   CSignatureCollection::get_count_vectors(QList<word_and_count_list*> * count_vectors){
+    count_vectors->clear();
+    for (int signo = 0; signo<m_SortList.size(); signo++)
+    {
+        CSignature* pSig = m_SortList[signo];
+        word_and_count_list * pVector = new word_and_count_list;
+        count_vectors->append(pSig->get_word_and_count_vectors(pVector));
+    }
+    return count_vectors;
 }

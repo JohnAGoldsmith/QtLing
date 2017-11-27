@@ -14,25 +14,27 @@
 class CSuffix;
 class CPrefix;
 class CStem;
-
+class CSignatureCollection;
 
 class CSignature
 {
 protected:
-    QString               m_Signature;
-    QList<CSuffix*> *     m_Suffixes;
-    QList<CPrefix*> *     m_Prefixes;
-    QList<CStem*>   *     m_Stems;
-    QStringList           m_Autobiography;
-    bool                  m_SuffixFlag;
+    QString                         m_Signature;
+    QList<CSuffix*> *               m_Suffixes;
+    QList<CPrefix*> *               m_Prefixes;
+    QList<CStem*>   *               m_Stems;
+    QStringList                     m_Autobiography;
+    bool                            m_SuffixFlag;
+    CSignatureCollection*           m_SignatureCollection;
 
 public:
 
     CSignature(CSignature&);
-    CSignature( QString, bool suffix_flag = true);
+    CSignature( QString, bool suffix_flag = true, CSignatureCollection* m_SignatureCollection = NULL);
     ~CSignature();
 public:
     //Accessors
+    CSignatureCollection*       get_signatures()            const  {return m_SignatureCollection;}
     QString                     GetSignature()              const   { return m_Signature; }
     QString                     get_key()                   const   { return m_Signature;}
 //    CSuffix_ptr_list  *         get_CSuffixes ()              const { return m_Suffixes;}
@@ -56,6 +58,7 @@ public:
     void                        set_suffix_flag(bool flag)      {m_SuffixFlag = flag;}
     bool                        contains (CSignature* other);
     void                        sort_stems();
+    word_and_count_list *       get_word_and_count_vectors(word_and_count_list* );
 };
 
 #endif // CSIGNATURE_H

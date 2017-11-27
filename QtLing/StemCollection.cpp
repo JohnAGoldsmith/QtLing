@@ -14,6 +14,7 @@ CStemCollection::CStemCollection()
 
 CStemCollection::~CStemCollection()
 {
+    // delete each stem individually, and then...
     delete m_StringToStemMap;
 }
 

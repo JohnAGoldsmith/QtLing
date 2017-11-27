@@ -1,13 +1,19 @@
 #include "Signature.h"
+#include "SignatureCollection.h"
 #include "Suffix.h"
 #include <QDebug>
-CSignature::CSignature(QString signature_string, bool suffix_flag)
+#include "Lexicon.h"
+#include "WordCollection.h"
+#include "Word.h"
+
+CSignature::CSignature(QString signature_string, bool suffix_flag, CSignatureCollection* Signatures)
 {
   m_Signature = signature_string;
   m_Stems = new CStem_ptr_list();
   m_Suffixes = new CSuffix_ptr_list;
   m_Prefixes = new CPrefix_ptr_list;
   m_SuffixFlag = suffix_flag;
+  m_SignatureCollection = Signatures;
 }
 
 CSignature::CSignature(CSignature& signature) {
@@ -122,4 +128,31 @@ int CSignature::get_robustness() const
     }
     return true;
     }
+}
+
+word_and_count_list * CSignature::get_word_and_count_vectors(word_and_count_list * this_vector)
+// this produces a list of word_and_count's: each is a word and its corpus count, one for each affix in the signature.
+{   QString this_word;
+    int word_count =0;
+    if (m_SuffixFlag){
+        for (int stem_no = 0; stem_no < m_Stems->size(); stem_no++){
+            stem_t this_stem = m_Stems->at(stem_no)->get_key();
+            for (int suff_no = 0; suff_no < m_Suffixes->size();suff_no++){
+                suffix_t this_suffix = m_Suffixes->at(suff_no)->get_key();
+                if (this_suffix == "NULL"){
+                    this_word = this_stem;
+                } else{
+                    this_word = this_stem + this_suffix;
+                }
+                CWord* pWord = get_signatures()->get_lexicon()->get_word_collection()->find_or_fail(this_word);
+                if (pWord) {
+                    word_and_count* pWord_and_count = new word_and_count(pWord->get_key(),pWord->get_word_count());
+                    this_vector->append(pWord_and_count);
+                }else{
+                    //  FAILURE --
+                }
+            }
+        }
+    }
+    return this_vector;
 }

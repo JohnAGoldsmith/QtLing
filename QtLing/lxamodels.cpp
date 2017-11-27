@@ -37,7 +37,7 @@ void LxaStandardItemModel::load_words(CWordCollection* p_words)
         QStandardItem* pItem = new QStandardItem(this_word);
         item_list.append(pItem);
 
-        QStandardItem* pItem2 = new QStandardItem(QString::number(pWord->GetWordCount()));
+        QStandardItem* pItem2 = new QStandardItem(QString::number(pWord->get_word_count()));
         item_list.append(pItem2);
 
         QListIterator<QPair<CStem*,CSignature*>*> sig_iter(*pWord->GetSignatures());

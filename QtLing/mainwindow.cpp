@@ -256,11 +256,11 @@ void MainWindow::do_crab2()
     if (get_lexicon()->get_suffix_flag()) {
         qDebug() << "suffix scheme";
         m_graphics_scene = new lxa_graphics_scene(this, get_lexicon()->get_signatures());
-        m_graphics_scene->ingest_signatures(get_lexicon()->get_signatures());
+        //m_graphics_scene->ingest_signatures(get_lexicon()->get_signatures());
     }else {
         qDebug() << "prefix scheme";
         m_graphics_scene = new lxa_graphics_scene(this, get_lexicon()->get_prefix_signatures());
-        m_graphics_scene->ingest_signatures(get_lexicon()->get_prefix_signatures());
+        //m_graphics_scene->ingest_signatures(get_lexicon()->get_prefix_signatures());
     }
     m_graphics_scene->place_signatures();
     m_graphics_view->setScene(m_graphics_scene);
@@ -293,7 +293,7 @@ void MainWindow::read_dx1_file()
             qDebug() << m_name_of_data_file << "Filename saved 2.";
 
             QTextStream in(&file);
-            CWordCollection * Words = get_lexicon()->GetWordCollection();
+            CWordCollection * Words = get_lexicon()->get_word_collection();
 
     while (!in.atEnd())
     {       //count++;
@@ -477,7 +477,7 @@ void MainWindow::createTreeModel()
 
 
     QStandardItem * word_item = new QStandardItem(QString("Words"));
-    QStandardItem * word_count_item = new QStandardItem(QString::number(get_lexicon()->GetWordCollection()->get_count()));
+    QStandardItem * word_count_item = new QStandardItem(QString::number(get_lexicon()->get_word_collection()->get_count()));
 
     QStandardItem * stem_item = new QStandardItem(QString("Stems"));
     QStandardItem * stem_count_item = new QStandardItem(QString::number(get_lexicon()->GetStemCollection()->get_count()));
@@ -773,7 +773,7 @@ LowerTableView::LowerTableView(MainWindow * window)
         QStringList           sig2_stems;
         QStringList           words;
 
-        qDebug() << pSig1->get_key();
+        //qDebug() << pSig1->get_key();
 
         word_stem_struct * this_word_stem_item;
         for (int i = 0; i < this_edge->shared_word_stems.size();i++){
@@ -802,9 +802,12 @@ LowerTableView::LowerTableView(MainWindow * window)
             qDebug() << this_stem_t;
             p_item = new QStandardItem(this_stem_t);
             if (sig1_stems.contains(this_stem_t)){
+                if (this_stem_t == "slip" || this_stem_t == "slipp"){
+                    qDebug() << 806 << this_stem_t;
+                }
                 p_item->setBackground(Qt::red);
                 qDebug() << "found in sig1stems.";
-            }
+            } else{qDebug() << 807 << "not found "<< this_stem_t;}
             item_list.append(p_item);
             if (item_list.length() >= m_number_of_columns){
                 m_my_current_model->appendRow(item_list);
