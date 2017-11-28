@@ -83,11 +83,11 @@ MainWindow::MainWindow()
     m_tableView_lower   = new LowerTableView (this);
     m_tableView_upper->setSortingEnabled(true);
 
-    m_graphics_scene = new lxa_graphics_scene (this, get_lexicon()->get_signatures());
+    m_graphics_scene_1 = new lxa_graphics_scene (this, get_lexicon()->get_signatures());
     m_graphics_view  = new lxa_graphics_view(this);
-    m_graphics_view->set_graphics_scene(m_graphics_scene);
+    m_graphics_view->set_graphics_scene(m_graphics_scene_1);
     m_graphic_display_flag = false;             // toggle with Ctrl-G
-
+    m_current_graphics_scene = m_graphics_scene_1;
 
     // set model for tree view
     m_leftTreeView->setModel(m_treeModel);
@@ -136,6 +136,7 @@ MainWindow::MainWindow()
 
 void MainWindow::keyPressEvent(QKeyEvent* ke)
 {
+
     if (ke->key() == Qt::Key_S){
         do_crab();
     }
@@ -174,10 +175,10 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         get_graphics_view()->move_up();
     }
     if (ke->key() == Qt::Key_U){
-        get_graphics_scene()->widen_columns();
+        m_current_graphics_scene->widen_columns();
     }
     if (ke->key() == Qt::Key_I){
-        get_graphics_scene()->narrow_columns();
+        m_current_graphics_scene->narrow_columns();
     }
     if (ke->key() == Qt::Key_Period){
 //        get_graphics_view->reset_scale_and_translation();
@@ -222,14 +223,14 @@ void MainWindow::do_crab()
     m_Models["Parasuffixes"]        ->load_suffixes(get_lexicon()->get_parasuffixes());
     createTreeModel();
 
-    delete m_graphics_scene;
+    delete m_graphics_scene_1;
     if (get_lexicon()->get_suffix_flag()){
-        m_graphics_scene = new lxa_graphics_scene(this, get_lexicon()->get_signatures());
+        m_graphics_scene_1 = new lxa_graphics_scene(this, get_lexicon()->get_signatures());
     }else{
-        m_graphics_scene = new lxa_graphics_scene(this, get_lexicon()->get_prefix_signatures());
+        m_graphics_scene_1 = new lxa_graphics_scene(this, get_lexicon()->get_prefix_signatures());
     }
-    m_graphics_view->setScene(m_graphics_scene);
-    m_graphics_scene->set_graphics_view(m_graphics_view);
+    m_graphics_view->setScene(m_graphics_scene_1);
+    m_graphics_scene_1->set_graphics_view(m_graphics_view);
 
 
     m_leftTreeView->expandAll();
@@ -252,18 +253,18 @@ void MainWindow::do_crab2()
 
     print_prefix_signatures();
 
-    delete m_graphics_scene;
+    delete m_graphics_scene_1;
     if (get_lexicon()->get_suffix_flag()) {
         qDebug() << "suffix scheme";
-        m_graphics_scene = new lxa_graphics_scene(this, get_lexicon()->get_signatures());
+        m_graphics_scene_1 = new lxa_graphics_scene(this, get_lexicon()->get_signatures());
         //m_graphics_scene->ingest_signatures(get_lexicon()->get_signatures());
     }else {
         qDebug() << "prefix scheme";
-        m_graphics_scene = new lxa_graphics_scene(this, get_lexicon()->get_prefix_signatures());
+        m_graphics_scene_1 = new lxa_graphics_scene(this, get_lexicon()->get_prefix_signatures());
         //m_graphics_scene->ingest_signatures(get_lexicon()->get_prefix_signatures());
     }
-    m_graphics_scene->place_signatures();
-    m_graphics_view->setScene(m_graphics_scene);
+    m_graphics_scene_1->place_signatures();
+    m_graphics_view->setScene(m_graphics_scene_1);
 
 
     m_leftTreeView->expandAll();
@@ -689,8 +690,8 @@ LowerTableView::LowerTableView(MainWindow * window)
         } // -->   Now, graphics display IS showing<-- //
         {
             qDebug() << "trying to display a focus signature";
-            m_parent_window->get_graphics_scene()->set_focus_signature(pSig);
-            m_parent_window->get_graphics_scene()->display_focus_signature();
+            m_parent_window->get_graphics_scene_1()->set_focus_signature(pSig);
+            m_parent_window->get_graphics_scene_1()->display_focus_signature();
         }
     }
 
@@ -776,12 +777,10 @@ LowerTableView::LowerTableView(MainWindow * window)
         word_stem_struct * this_word_stem_item;
 
         if (m_parent_window->m_graphic_display_flag){
-            qDebug() << "graphics"<<779;
             //-->  Graphic display in lower right window <--//
             if (column == 1){
                 pSig = pSig1;
             } else { pSig = pSig2;}
-            qDebug() << pSig->get_key()<<784;
            // "Signatures" is what should be sent to the Model in the mainwindow.
            CSignatureCollection Signatures;
            Signatures << pSig;
@@ -789,14 +788,16 @@ LowerTableView::LowerTableView(MainWindow * window)
            QMap<QString,sig_tree_edge*>::iterator edge_iter = this_lexicon->get_sig_tree_edge_map()->begin();
            while (edge_iter !=  this_lexicon->get_sig_tree_edge_map()->constEnd()){
                 pSig_tree_edge = edge_iter.value();
-                //qDebug() << pSig_tree_edge->sig_1->get_key() << pSig_tree_edge->sig_2->get_key() << 791;
                 if (pSig_tree_edge->sig_1 == pSig){
                     Signatures << pSig_tree_edge->sig_2;
                     qDebug() << pSig->get_key() << pSig_tree_edge->sig_2->get_key()<<794;
                 }
                 ++edge_iter;
-           }
-
+            }
+           qDebug() << "hello" << 797;
+           m_parent_window->m_graphics_scene_1 = new lxa_graphics_scene(m_parent_window, &Signatures);
+           m_parent_window->m_graphics_scene_1->place_signatures();
+           m_parent_window->m_graphics_view->setScene(m_parent_window->m_graphics_scene_1);
 
 
             // -->   End of graphical display <--//

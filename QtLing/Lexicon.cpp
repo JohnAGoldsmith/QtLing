@@ -563,15 +563,7 @@ while (this_simple_sig_tree_edge_iter.hasNext())
         }
 
     } else {  // --> start a new sig_tree_edge with multiple stems <-- //
-        // change this to a constructor that takes a simple-tree-edge as its argument
-        sig_tree_edge * p_sig_tree_edge_2 = new sig_tree_edge(
-            p_sig_tree_edge->sig_1,
-            p_sig_tree_edge->sig_2,
-            p_sig_tree_edge->morph,
-            p_sig_tree_edge->word,
-            p_sig_tree_edge->stem_1,
-            p_sig_tree_edge->stem_2
-           );
+        sig_tree_edge * p_sig_tree_edge_2 = new sig_tree_edge(*p_sig_tree_edge);
         m_SigTreeEdgeMap.insert(p_sig_tree_edge_2->label(),p_sig_tree_edge_2);
     }
 }

@@ -5,6 +5,7 @@
 #include <QMouseEvent>
 #include <QGraphicsSceneEvent>
 #include <QGraphicsItem>
+#include <QtMath>
 #include "graphics.h"
 #include "generaldefinitions.h"
 #include "SignatureCollection.h"
