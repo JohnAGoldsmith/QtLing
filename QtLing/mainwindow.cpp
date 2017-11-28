@@ -622,7 +622,7 @@ LowerTableView::LowerTableView(MainWindow * window)
      QString                    component = m_parent_window->m_tableView_upper->get_content();
      QString                    word, stem, prefix, suffix, signature;
      CLexicon *                 this_lexicon = get_parent_window()->get_lexicon();
-     int                        row;
+     int                        row, column;
      QStandardItem*             p_item;
      QList<QStandardItem*>      item_list;
 
@@ -740,7 +740,6 @@ LowerTableView::LowerTableView(MainWindow * window)
         CStem_ptr_list     *  sig_stems = pSig->get_stems();
         QStandardItem*        p_item;
 
-
         if (m_my_current_model) {
             delete m_my_current_model;
         }
@@ -761,10 +760,12 @@ LowerTableView::LowerTableView(MainWindow * window)
         item_list.clear();
         if (index.isValid()){
              row = index.row();
+             column = index.column();
         }
-        QString edge_key = index.sibling(row,4).data().toString();
-        sig_tree_edge* this_edge = this_lexicon->get_sig_tree_edge_map()->value(edge_key);
-
+        QString               edge_key = index.sibling(row,4).data().toString();
+        sig_tree_edge*        this_edge = this_lexicon->get_sig_tree_edge_map()->value(edge_key);
+        sig_tree_edge *       pSig_tree_edge;
+        CSignature*           pSig;
         CSignature*           pSig1 = this_edge->sig_1;
         CSignature*           pSig2 = this_edge->sig_2;
         QStandardItem*        p_item;
@@ -772,103 +773,128 @@ LowerTableView::LowerTableView(MainWindow * window)
         QStringList           sig1_stems;
         QStringList           sig2_stems;
         QStringList           words;
-
-        //qDebug() << pSig1->get_key();
-
         word_stem_struct * this_word_stem_item;
-        for (int i = 0; i < this_edge->shared_word_stems.size();i++){
-            this_word_stem_item = this_edge->shared_word_stems[i];
-            words.append(     this_word_stem_item->word);
-            sig1_stems.append(this_word_stem_item->stem_1);
-            sig2_stems.append(this_word_stem_item->stem_2);
 
-            qDebug() << this_word_stem_item->word << this_word_stem_item->stem_1 << this_word_stem_item->stem_2<< 783;
-
-        }
-
-        if (m_my_current_model) {
-            delete m_my_current_model;
-        }
-        m_my_current_model = new QStandardItemModel();
-
-        // --> first signature <-- //
-
-        p_item = new QStandardItem(pSig1->get_key());
-        item_list.append(p_item);
-        m_my_current_model->appendRow(item_list);
-        item_list.clear();
-        foreach(p_Stem, *pSig1->get_stems()){
-            stem_t this_stem_t = p_Stem->get_key();
-            qDebug() << this_stem_t;
-            p_item = new QStandardItem(this_stem_t);
-            if (sig1_stems.contains(this_stem_t)){
-                if (this_stem_t == "slip" || this_stem_t == "slipp"){
-                    qDebug() << 806 << this_stem_t;
+        if (m_parent_window->m_graphic_display_flag){
+            qDebug() << "graphics"<<779;
+            //-->  Graphic display in lower right window <--//
+            if (column == 1){
+                pSig = pSig1;
+            } else { pSig = pSig2;}
+            qDebug() << pSig->get_key()<<784;
+           // "Signatures" is what should be sent to the Model in the mainwindow.
+           CSignatureCollection Signatures;
+           Signatures << pSig;
+           // We iterate through the SigTreeEdges in the SigTreeEdgeMap. If its Sig1 is pSig, then we enter it into Signatures;
+           QMap<QString,sig_tree_edge*>::iterator edge_iter = this_lexicon->get_sig_tree_edge_map()->begin();
+           while (edge_iter !=  this_lexicon->get_sig_tree_edge_map()->constEnd()){
+                pSig_tree_edge = edge_iter.value();
+                //qDebug() << pSig_tree_edge->sig_1->get_key() << pSig_tree_edge->sig_2->get_key() << 791;
+                if (pSig_tree_edge->sig_1 == pSig){
+                    Signatures << pSig_tree_edge->sig_2;
+                    qDebug() << pSig->get_key() << pSig_tree_edge->sig_2->get_key()<<794;
                 }
-                p_item->setBackground(Qt::red);
-                qDebug() << "found in sig1stems.";
-            } else{qDebug() << 807 << "not found "<< this_stem_t;}
+                ++edge_iter;
+           }
+
+
+
+            // -->   End of graphical display <--//
+
+        } else
+         // -->   Tabular display in lower right window <--//
+        {
+            for (int i = 0; i < this_edge->shared_word_stems.size();i++){
+                this_word_stem_item = this_edge->shared_word_stems[i];
+                words.append(     this_word_stem_item->word);
+                sig1_stems.append(this_word_stem_item->stem_1);
+                sig2_stems.append(this_word_stem_item->stem_2);
+
+                //qDebug() << this_word_stem_item->word << this_word_stem_item->stem_1 << this_word_stem_item->stem_2<< 783;
+            }
+            if (m_my_current_model) {
+                delete m_my_current_model;
+            }
+            m_my_current_model = new QStandardItemModel();
+
+            // --> first signature <-- //
+
+            p_item = new QStandardItem(pSig1->get_key());
             item_list.append(p_item);
-            if (item_list.length() >= m_number_of_columns){
+            m_my_current_model->appendRow(item_list);
+            item_list.clear();
+            foreach(p_Stem, *pSig1->get_stems()){
+                stem_t this_stem_t = p_Stem->get_key();
+                //qDebug() << this_stem_t;
+                p_item = new QStandardItem(this_stem_t);
+                if (sig1_stems.contains(this_stem_t)){
+                    if (this_stem_t == "slip" || this_stem_t == "slipp"){
+                        qDebug() << 806 << this_stem_t;
+                    }
+                    p_item->setBackground(Qt::red);
+                    qDebug() << "found in sig1stems.";
+                } //else{qDebug() << 807 << "not found "<< this_stem_t;}
+                item_list.append(p_item);
+                if (item_list.length() >= m_number_of_columns){
+                    m_my_current_model->appendRow(item_list);
+                    item_list.clear();
+                }
+            }
+            if (item_list.size() > 0 ){
                 m_my_current_model->appendRow(item_list);
                 item_list.clear();
             }
-        }
-        if (item_list.size() > 0 ){
+            // --> second signature <-- //
+
+            m_my_current_model->appendRow(item_list);    // blank row in table.
+            item_list.clear();
+            p_item = new QStandardItem(pSig2->get_key());
+            item_list.append(p_item);
             m_my_current_model->appendRow(item_list);
             item_list.clear();
-        }
-        // --> second signature <-- //
-
-        m_my_current_model->appendRow(item_list);    // blank row in table.
-        item_list.clear();
-        p_item = new QStandardItem(pSig2->get_key());
-        item_list.append(p_item);
-        m_my_current_model->appendRow(item_list);
-        item_list.clear();
-        foreach (p_Stem, *pSig2->get_stems())  {
-            stem_t this_stem_t = p_Stem->get_key();
-            p_item = new QStandardItem(this_stem_t);
-            if (sig2_stems.contains(this_stem_t)){
-                p_item->setBackground(Qt::red);
+            foreach (p_Stem, *pSig2->get_stems())  {
+                stem_t this_stem_t = p_Stem->get_key();
+                p_item = new QStandardItem(this_stem_t);
+                if (sig2_stems.contains(this_stem_t)){
+                    p_item->setBackground(Qt::red);
+                }
+                item_list.append(p_item);
+                if (item_list.length() >= m_number_of_columns){
+                    m_my_current_model->appendRow(item_list);
+                    item_list.clear();
+                }
             }
-            item_list.append(p_item);
-            if (item_list.length() >= m_number_of_columns){
+            if (item_list.size() > 0 ){
                 m_my_current_model->appendRow(item_list);
                 item_list.clear();
             }
-        }
-        if (item_list.size() > 0 ){
+            // --> end of second signature <-- //
+
+            // --> words <-- //
+
+            m_my_current_model->appendRow(item_list);    // blank row in table.
+            item_list.clear();
             m_my_current_model->appendRow(item_list);
             item_list.clear();
-        }
-        // --> end of second signature <-- //
 
-        // --> words <-- //
+            for (int wordno= 0; wordno< words.size();wordno++)  {
+                p_item = new QStandardItem(words[wordno]);
+                item_list.append(p_item);
+                if (item_list.length() >= m_number_of_columns){
+                    m_my_current_model->appendRow(item_list);
+                    item_list.clear();
+                }
+            }
 
-        m_my_current_model->appendRow(item_list);    // blank row in table.
-        item_list.clear();
-        m_my_current_model->appendRow(item_list);
-        item_list.clear();
-
-        for (int wordno= 0; wordno< words.size();wordno++)  {
-            p_item = new QStandardItem(words[wordno]);
-            item_list.append(p_item);
-            if (item_list.length() >= m_number_of_columns){
+            if (item_list.size() > 0 ){
                 m_my_current_model->appendRow(item_list);
                 item_list.clear();
             }
+            // --> end of words <-- //
+
+            setModel( m_my_current_model);
+            resizeColumnsToContents();
         }
-
-        if (item_list.size() > 0 ){
-            m_my_current_model->appendRow(item_list);
-            item_list.clear();
-        }
-        // --> end of words <-- //
-
-        setModel( m_my_current_model);
-        resizeColumnsToContents();
-
 
     }
 
