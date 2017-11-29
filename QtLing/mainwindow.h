@@ -123,6 +123,10 @@ public:
     void change_current_model(QStandardItemModel*);
 public slots:
         void display_this_item(const QModelIndex&);
+        void table_signature(CSignature*) ;
+        void table_word (CWord*);
+        void table_one_signature(CSignature*, QStringList stem_list);
+        void graphics_sig_tree_edges(CSignature* , CLexicon*);
         int  get_number_of_columns () {return m_number_of_columns;}
 
 signals:
@@ -224,6 +228,7 @@ private:
     lxa_graphics_scene *    m_graphics_scene_1;
     lxa_graphics_scene *    m_graphics_scene_2;
     lxa_graphics_scene *    m_current_graphics_scene ;
+    void                    set_current_graphics_scene (lxa_graphics_scene* pLGS) {m_current_graphics_scene = pLGS;}
     lxa_graphics_view *     m_graphics_view;
     lxa_graphics_view *     m_graphics_view_2;
     bool                    m_graphic_display_flag;
