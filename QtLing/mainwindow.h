@@ -34,16 +34,6 @@ class lxa_graphics_view;
 class lxa_graphics_scene;
 QT_END_NAMESPACE
 
-class lxaWindow2 : public QGraphicsView
-{
-    QList<QList<CSignature*>*>  m_signature_lattice;
-    MainWindow *    m_main_window;
-    QGraphicsScene  m_graphics_scene;
-
-public:
-    lxaWindow2( MainWindow * );
-};
-
 class lxaWindow : public QWidget
 {   QList<QList<CSignature*>*>  m_signature_lattice;
     MainWindow *    m_main_window;
@@ -77,7 +67,6 @@ private:
 
 public:
 
-    //QSortFilterProxyModel*          get_proxy() {return m_proxy;}
     void        sort(int column_no, Qt::SortOrder order);
     void        load_words(CWordCollection*);
     void        load_stems(CStemCollection * p_stems);
@@ -166,9 +155,7 @@ public:
 
 protected:
     void closeEvent(QCloseEvent *event) override;
-//    void FindProtostems();
-//    void CreateStemAffixPairs();
-//    void AssignSuffixesToStems();
+
 private slots:
     void newFile();
     void read_file_do_crab();

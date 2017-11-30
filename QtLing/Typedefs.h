@@ -86,6 +86,7 @@ struct word_stem_struct
     word_t word;
     stem_t stem_1;
     stem_t stem_2;
+    QString get_label() { return word + "=" + stem_1 + "=" + stem_2;}
 };
 
 

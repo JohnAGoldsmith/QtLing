@@ -44,34 +44,10 @@ public:
     CSignature* sig_1;
     CSignature* sig_2;
     morph_t     morph;
-    QList<word_t> words;  // will be removed?
-    QList<QPair<stem_t, stem_t>* > stem_pairs; // will be removed?
-    QList< word_stem_pair_pair * >  shared_items;  // will be removed
-    QList<word_stem_struct*>         shared_word_stems;
-
+    QMap<QString, word_stem_struct*>         shared_word_stems;
     sig_tree_edge();
 
-//    sig_tree_edge(CSignature* sig1, CSignature* sig2,morph_t m,word_t this_word, stem_t stem1, stem_t stem2)
-//    {
-//        sig_1 = sig1;
-//        sig_2 = sig2;
-//        morph = m;
-//        word_stem_struct * this_word_stems = new word_stem_struct;
-//        this_word_stems->word = this_word;
-//        this_word_stems->stem_1 = stem1;
-//        this_word_stems->stem_2 = stem2;
-//        shared_word_stems.append(this_word_stems);
-//    };
-    //sig_tree_edge * p_sig_tree_edge_2 = new sig_tree_edge(
-    //    p_sig_tree_edge->sig_1,
-    //    p_sig_tree_edge->sig_2,
-    //    p_sig_tree_edge->morph,
-    //    p_sig_tree_edge->word,
-    //    p_sig_tree_edge->stem_1,
-    //    p_sig_tree_edge->stem_2
-    //   );
-     //sig_tree_edge * p_sig_tree_edge_2 = new sig_tree_edge(p_sig_tree_edge);
-     sig_tree_edge(simple_sig_tree_edge this_edge){
+    sig_tree_edge(simple_sig_tree_edge this_edge){
              sig_1 = this_edge.sig_1;
              sig_2 = this_edge.sig_2;
              morph = this_edge.morph;
@@ -79,9 +55,9 @@ public:
              this_word_stems->word = this_edge.word;
              this_word_stems->stem_1 = this_edge.stem_1;
              this_word_stems->stem_2 = this_edge.stem_2;
-             shared_word_stems.append(this_word_stems);
+             //shared_word_stems.append(this_word_stems);
+             shared_word_stems[this_word_stems->get_label()] = this_word_stems;
          }
-
     QString label() {return morph + "/" + sig_1->get_key() + "/" + sig_2->get_key(); }
 };
 

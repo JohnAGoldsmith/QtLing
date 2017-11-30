@@ -119,7 +119,7 @@ LowerTableView::LowerTableView(MainWindow * window)
         QStringList           sig1_stems;
         QStringList           sig2_stems;
         QStringList           words;
-        word_stem_struct * this_word_stem_item;
+        word_stem_struct *    this_word_stem_item;
 
         if (m_parent_window->m_graphic_display_flag){
             //-->  Graphic display in lower right window <--//
@@ -129,9 +129,7 @@ LowerTableView::LowerTableView(MainWindow * window)
             graphics_sig_tree_edges(pSig, this_lexicon );
         } else
          // -->   Tabular display in lower right window <--//
-        {
-            for (int i = 0; i < this_edge->shared_word_stems.size();i++){
-                this_word_stem_item = this_edge->shared_word_stems[i];
+        {   foreach (this_word_stem_item, this_edge->shared_word_stems){
                 words.append(     this_word_stem_item->word);
                 sig1_stems.append(this_word_stem_item->stem_1);
                 sig2_stems.append(this_word_stem_item->stem_2);

@@ -406,10 +406,11 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
                                 if ( contains(&suffixes_of_residual_sig, &proven_sig_list) ){
 
                                     // We have found the longest signature contained in this_residual_suffix_set
-
+                                    qDebug() << this_stem << 409 <<  "lexicon.cpp";
                                     pStem = m_Stems->find_or_add(this_stem);
+                                    pStem->add_signature(p_proven_sigstring);
                                     p_proven_sig->add_stem_pointer(pStem);
-                                    // pStem->add_memo("singleton=");
+
                                     //--> add to autobiographies <--//
 
                                     for (int affixno = 0; affixno < proven_sig_list.length(); affixno++){
@@ -420,12 +421,10 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
                                             this_word = this_stem + this_suffix;
                                         }
                                         pWord = m_Words->find_or_fail(this_word);
-                                        if (this_word=="Poisons"){qDebug()<< "Poisons"<< 430;}
                                         if (pWord){
-                                            if (this_word == "Poisons"){qDebug() << " found word entry."<< 432;}
                                             pWord->add_stem_and_signature(pStem, p_proven_sig);
                                             pWord->add_to_autobiography("from within parasigs "  + this_stem  + "=" +  p_proven_sigstring);
-                                        } else{qDebug() << "Poisons not found " << 423;}
+                                        }
                                     }
                                     break;
                                 } else{
@@ -523,6 +522,7 @@ void CLexicon::compute_sig_tree_edges()
                         p_SigTreeEdge =  new simple_sig_tree_edge (sig2,sig1,difference, pWord->get_key(), stem2->get_key(), stem1->get_key());
                     }
                     m_SigTreeEdgeList.append(p_SigTreeEdge);
+                    qDebug() << p_SigTreeEdge->label() << p_SigTreeEdge->word;
                 }
             }
         }
@@ -557,9 +557,10 @@ while (this_simple_sig_tree_edge_iter.hasNext())
         this_word_stem_struct->word = this_word;
         this_word_stem_struct->stem_1 = p_sig_tree_edge->stem_1;
         this_word_stem_struct->stem_2 = p_sig_tree_edge->stem_2;
-
-        if ( ! p_sig_tree_edge_3->shared_word_stems.contains(this_word_stem_struct)){
-            p_sig_tree_edge_3->shared_word_stems.append(this_word_stem_struct);
+        QString this_label = this_word_stem_struct->get_label();
+        if ( ! p_sig_tree_edge_3->shared_word_stems.contains(this_label)){
+            p_sig_tree_edge_3->shared_word_stems[this_label] = this_word_stem_struct;
+            //qDebug() << this_label << this_word_stem_struct->get_label() << 563 << "lexicon.cpp";
         }
 
     } else {  // --> start a new sig_tree_edge with multiple stems <-- //

@@ -112,7 +112,8 @@ void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures)
 
 struct{
     bool operator ()(sig_tree_edge* a, sig_tree_edge* b) const {
-     return a->words.size() > b->words.size();
+     //   qDebug() << a->label()<< a->words.size() << b->label() << b->words.size();
+     return a->shared_word_stems.size() > b->shared_word_stems.size();
     }
 }custom_compare;
 void LxaStandardItemModel::load_sig_tree_edges( QMap<QString, sig_tree_edge*> * this_sig_tree_edge_map )
@@ -120,6 +121,7 @@ void LxaStandardItemModel::load_sig_tree_edges( QMap<QString, sig_tree_edge*> * 
     QMapIterator<word_t, sig_tree_edge*> * this_sig_tree_edge_iter = new QMapIterator<word_t, sig_tree_edge*>( * this_sig_tree_edge_map );
     while (this_sig_tree_edge_iter->hasNext())    {
         this_sig_tree_edge_iter->next();
+       //qDebug() << this_sig_tree_edge_iter->value()->words.size();
         temp_list.append(this_sig_tree_edge_iter->value());
     }
     std::sort( temp_list.begin(),  temp_list.end(), custom_compare);
@@ -141,8 +143,7 @@ void LxaStandardItemModel::load_sig_tree_edges( QMap<QString, sig_tree_edge*> * 
         items.append(item5);
 
         appendRow(items);
-
-    }
+     }
 
 
 }

@@ -40,10 +40,10 @@
 #include "mainwindow.h"
 #include "graphics.h"
 
-typedef  QMap<QString,CWord*> StringToWordPtr;
-typedef  QPair<CStem*,CSignature*>  stem_sig_pair;
-typedef  QPair<stem_sig_pair*,  stem_sig_pair*> pair_of_stem_sig_pairs;
-typedef  QPair<QString, pair_of_stem_sig_pairs*> five_tuple_sig_diffs;
+//typedef  QMap<QString,CWord*>                       StringToWordPtr;
+//typedef  QPair<CStem*,CSignature*>                  stem_sig_pair;
+//typedef  QPair<stem_sig_pair*,                      stem_sig_pair*> pair_of_stem_sig_pairs;
+//typedef  QPair<QString, pair_of_stem_sig_pairs*>    five_tuple_sig_diffs;
 
 class LxaStandardItemModel;
 
@@ -407,12 +407,6 @@ void MainWindow::createActions()
 
     QAction *aboutQtAct = helpMenu->addAction(tr("About &Qt"), qApp, &QApplication::aboutQt);
     aboutQtAct->setStatusTip(tr("Show the Qt library's About box"));
-#ifndef QT_NO_CLIPBOARD
-    cutAct->setEnabled(false);
-
-    copyAct->setEnabled(false);
-
-#endif // !QT_NO_CLIPBOARD
 }
 void MainWindow::createStatusBar()
 {
@@ -553,14 +547,6 @@ bool MainWindow::saveFile(const QString &fileName)
     }
 
     QTextStream out(&file);
-#ifndef QT_NO_CURSOR
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-#endif
-    //out << textEdit->toPlainText();
-#ifndef QT_NO_CURSOR
-    QApplication::restoreOverrideCursor();
-#endif
-
     setCurrentFile(fileName);
     statusBar()->showMessage(tr("File saved"), 2000);
     return true;
