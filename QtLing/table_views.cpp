@@ -51,7 +51,7 @@ LowerTableView::LowerTableView(MainWindow * window)
         if (m_parent_window->m_graphic_display_flag == false){
             table_signature(pSig);
             setModel( m_my_current_model);
-        } // -->   Now, graphics display IS showing<-- //
+        } else // -->   Now, graphics display IS showing<-- //
         {   qDebug() << "trying to display a focus signature";
             m_parent_window->get_graphics_scene_1()->set_focus_signature(pSig);
             m_parent_window->get_graphics_scene_1()->display_focus_signature();

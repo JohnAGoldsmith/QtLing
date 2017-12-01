@@ -6,6 +6,7 @@
 #include <QString>
 #include <QList>
 #include <QPair>
+#include <QStatusBar>
 #include "SignatureCollection.h"
 #include "Typedefs.h"
 
@@ -88,7 +89,7 @@ protected:
     QList<simple_sig_tree_edge*>    m_SigTreeEdgeList; /*!< the sig_tree_edges in here contain only one word associated with each. */
     QMap<QString, sig_tree_edge*>   m_SigTreeEdgeMap;  /*!< the sig_tree_edges in here contain lists of words associated with them. */
     QProgressBar*                   m_ProgressBar;
-
+    QStatusBar *                      m_StatusBar;
 
 
 
@@ -121,6 +122,7 @@ public:
     QListIterator<simple_sig_tree_edge*>    *          get_sig_tree_edge_list_iter();
     QMapIterator<QString, sig_tree_edge*> *     get_sig_tree_edge_map_iter();
     void                                        set_progress_bar (QProgressBar * pPB) { m_ProgressBar = pPB;}
+    void                                        set_status_bar(QStatusBar* pBar) {m_StatusBar = pBar;}
     void                                        set_prefixes_flag()         { m_SuffixesFlag = false;}
     bool                                        get_suffix_flag()         { return m_SuffixesFlag; }
 public:

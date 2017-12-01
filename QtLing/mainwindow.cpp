@@ -76,6 +76,8 @@ MainWindow::MainWindow()
 
     m_treeModel     = new QStandardItemModel();
 
+    get_lexicon()->set_status_bar(statusBar());
+
     // views
     m_leftTreeView      = new LeftSideTreeView(this);
     m_tableView_upper   = new UpperTableView (this);
