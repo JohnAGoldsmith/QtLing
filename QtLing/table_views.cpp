@@ -53,8 +53,8 @@ LowerTableView::LowerTableView(MainWindow * window)
             setModel( m_my_current_model);
         } else // -->   Now, graphics display IS showing<-- //
         {   qDebug() << "trying to display a focus signature";
-            m_parent_window->get_graphics_scene()->set_focus_signature(pSig);
-            m_parent_window->get_graphics_scene()->display_focus_signature();
+            //m_parent_window->get_graphics_scene()->set_focus_signature(pSig);
+            //m_parent_window->get_graphics_scene()->display_focus_signature();
         }
     }
      //  ---------------------------------------------------//
@@ -71,7 +71,7 @@ LowerTableView::LowerTableView(MainWindow * window)
        } // -->   Now, graphics display IS showing<-- //
        {
            qDebug() << "trying to display a focus signature";
-           m_parent_window->get_graphics_scene()->set_focus_signature(pSig);
+           m_parent_window->get_graphics_scene()->set_focus_signature_1(pSig);
            m_parent_window->get_graphics_scene()->display_focus_signature();
        }
     }
@@ -254,7 +254,7 @@ void LowerTableView::graphics_sig_tree_edges(CSignature* pSig, CLexicon* p_lexic
         ++edge_iter;
     }
 
-    m_parent_window->m_graphics_scene = new lxa_graphics_scene(m_parent_window, &Signatures);
+    m_parent_window->m_graphics_scene = new lxa_graphics_scene(m_parent_window, &Signatures,pSig_tree_edge->sig_1, pSig_tree_edge->sig_2);
     m_parent_window->m_graphics_scene->place_signatures();
     m_parent_window->m_graphics_view->setScene(m_parent_window->m_graphics_scene);
 }

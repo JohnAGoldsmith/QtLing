@@ -110,27 +110,16 @@ MainWindow::MainWindow()
     resize(QDesktopWidget().availableGeometry(this).size() * 0.7);
     m_mainSplitter->setSizes(QList<int>() << 1000 <<4000);
 
-
-#ifndef QT_NO_SESSIONMANAGER
-    QGuiApplication::setFallbackSessionManagementEnabled(false);
-    connect(qApp, &QGuiApplication::commitDataRequest,
-            this, &MainWindow::commitData);
-#endif
-
     setCurrentFile(QString());
     setUnifiedTitleAndToolBarOnMac(true);
 
-
     connect(m_leftTreeView, SIGNAL(clicked(const QModelIndex&)), m_tableView_upper, SLOT(ShowModelsUpperTableView(const QModelIndex&)));
     connect(m_tableView_upper,SIGNAL(clicked(const QModelIndex & )), m_tableView_lower,SLOT(display_this_item(const QModelIndex &  )));
-
- }
-
+}
 
 
 void MainWindow::keyPressEvent(QKeyEvent* ke)
 {
-
     if (ke->key() == Qt::Key_S){
         do_crab();
     }
@@ -156,10 +145,10 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         do_crab2();
     }
     if (ke->key() == Qt::Key_J){
-        get_graphics_view()->expand();
+        m_graphics_scene->move_rows_apart();
     }
     if (ke->key() == Qt::Key_K){
-        get_graphics_view()->contract();
+        m_graphics_scene->move_rows_closer();
     }
     if (ke->key() == Qt::Key_L){
         get_graphics_view()->move_down();
@@ -173,9 +162,6 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     }
     if (ke->key() == Qt::Key_I){
         m_graphics_scene->narrow_columns();
-    }
-    if (ke->key() == Qt::Key_Period){
-//        get_graphics_view->reset_scale_and_translation();
     }
     QMainWindow::keyPressEvent(ke);
 }

@@ -54,7 +54,8 @@ class lxa_graphics_scene : public QGraphicsScene
     QList<QList<CSignature*>*>              m_signature_lattice;
     QList<QPair<CSignature*,CSignature*>*>  m_signature_containment_edges;
     QMap<CSignature*, int>                  m_map_from_sig_to_column_no;
-    CSignature*                             m_focus_signature;
+    CSignature*                             m_focus_signature_1;
+    CSignature*                             m_focus_signature_2;
     int                                     m_row_delta;
     int                                     m_column_delta;
     int                                     m_location_of_bottom_row;
@@ -63,7 +64,7 @@ class lxa_graphics_scene : public QGraphicsScene
 private:
     void                                    mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent);
 public:
-                    lxa_graphics_scene( MainWindow * , CSignatureCollection* );
+                    lxa_graphics_scene( MainWindow * , CSignatureCollection*, CSignature* pSig1 = NULL, CSignature* pSig2 = NULL );
                     ~lxa_graphics_scene();
     void            set_graphics_view (lxa_graphics_view* );
     void            ingest_signatures(CSignatureCollection*);
@@ -73,8 +74,11 @@ public:
     void            place_containment_edges();
     void            widen_columns();
     void            narrow_columns();
+    void            move_rows_apart();
+    void            move_rows_closer();
     void            mouseMoveEvent(QGraphicsSceneMouseEvent * event);
-    void            set_focus_signature(CSignature* pSig)       {m_focus_signature = pSig;}
+    void            set_focus_signature_1(CSignature* pSig)       {m_focus_signature_1 = pSig;}
+    void            set_focus_signature_2(CSignature* pSig)       {m_focus_signature_2 = pSig;}
     void            display_focus_signature();
 };
 

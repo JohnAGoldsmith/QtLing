@@ -59,7 +59,7 @@ void lxa_graphics_view::mousePressEvent(QMouseEvent* event)
     QGraphicsView::mousePressEvent(event);
 }
 
-lxa_graphics_scene::lxa_graphics_scene (MainWindow * window, CSignatureCollection* p_signatures)
+lxa_graphics_scene::lxa_graphics_scene (MainWindow * window, CSignatureCollection* p_signatures, CSignature* pSig1, CSignature * pSig2)
 {   qDebug() << "scene constructor";
 
     m_main_window = window;
@@ -67,6 +67,8 @@ lxa_graphics_scene::lxa_graphics_scene (MainWindow * window, CSignatureCollectio
     m_row_delta = 80;
     m_column_delta = 150;
     ingest_signatures(p_signatures);
+    set_focus_signature_1 (pSig1);
+    set_focus_signature_2 (pSig2);
     place_signatures();
     //place_containment_edges();
 };
@@ -229,6 +231,19 @@ void lxa_graphics_scene::narrow_columns()
     place_signatures();
     //place_containment_edges();
 }
+void  lxa_graphics_scene::move_rows_apart()
+{
+    m_row_delta *= 1.2;
+    clear();
+    place_signatures();
+}
+
+void lxa_graphics_scene::move_rows_closer()
+{
+    m_row_delta *= 0.8;
+    clear();
+    place_signatures();
+}
 
 void lxa_graphics_view::move_up()
 {//   int min  = horizontalScrollBar()->minimum;
@@ -249,5 +264,5 @@ void lxa_graphics_scene::display_focus_signature(){
     }
     update();
     qDebug() << "236";
-    qDebug() << m_focus_signature->get_key();
+
 }

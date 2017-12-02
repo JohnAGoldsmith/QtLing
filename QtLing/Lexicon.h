@@ -22,7 +22,7 @@ public:
     CSignature*         sig_1;
     CSignature*         sig_2;
     morph_t             morph;
-    word_t              word; // get rid of word, stem_1, stem_2, replayed by word_stems;
+    word_t              word;
     stem_t              stem_1;
     stem_t              stem_2;
     simple_sig_tree_edge();

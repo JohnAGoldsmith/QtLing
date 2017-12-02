@@ -605,11 +605,10 @@ while (this_simple_sig_tree_edge_iter.hasNext())
             p_sig_tree_edge_3->shared_word_stems[this_label] = this_word_stem_struct;
             //qDebug() << this_label << this_word_stem_struct->get_label() << 563 << "lexicon.cpp";
         }
-
-    } else {  // --> start a new sig_tree_edge with multiple stems <-- //
+     } else {  // --> start a new sig_tree_edge with multiple stems <-- //
         sig_tree_edge * p_sig_tree_edge_2 = new sig_tree_edge(*p_sig_tree_edge);
         m_SigTreeEdgeMap.insert(p_sig_tree_edge_2->label(),p_sig_tree_edge_2);
-    }
+     }
 }
 }
 
