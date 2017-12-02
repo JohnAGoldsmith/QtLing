@@ -64,6 +64,7 @@ public:
 private:
     QString                 m_ShortName;
     QString                 m_Description;
+    eSortStyle              m_sort_style;
 
 public:
 
@@ -72,6 +73,7 @@ public:
     void        load_stems(CStemCollection * p_stems);
     void        load_suffixes(CSuffixCollection * p_suffixes);
     void        load_signatures(CSignatureCollection * p_signatures);
+    void        sort_signatures(eSortStyle);
     void        load_sig_tree_edges(QMap<QString, sig_tree_edge*> *);
 };
 
@@ -82,6 +84,7 @@ class UpperTableView : public QTableView
     QString         m_content;
     MainWindow*     m_parent_window;
     eDocumentType   m_document_type;
+    eSortStyle      m_signature_sort_style;
 public:
     UpperTableView ();
     UpperTableView (MainWindow*);

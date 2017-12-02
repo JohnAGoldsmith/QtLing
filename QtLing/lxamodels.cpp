@@ -5,9 +5,18 @@
 #include "SuffixCollection.h"
 #include "QDebug"
 
+LxaStandardItemModel::LxaStandardItemModel()
+{
+    m_sort_style = UNSPECIFIED;
+}
+LxaStandardItemModel::LxaStandardItemModel(QString shortname)
+{
+    m_ShortName = shortname;
+    m_sort_style = UNSPECIFIED;
+}
+
 LxaStandardItemModel::~LxaStandardItemModel()
 {
-
 }
 
 
@@ -95,7 +104,8 @@ void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures)
     this->clear();
     m_Description = " ";
     CSignature*         sig;
-    p_signatures->sort();
+    p_signatures->sort(SIG_BY_STEM_COUNT);
+    m_sort_style = SIG_BY_STEM_COUNT;
 
     for (int signo = 0; signo<p_signatures->get_count(); signo++)
     {   sig = p_signatures->get_at_sorted(signo);
@@ -108,6 +118,17 @@ void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures)
         appendRow(items);
     }
 }
+
+void LxaStandardItemModel::sort_signatures(eSortStyle sort_style)
+{
+    if (sort_style==SIG_BY_STEM_COUNT){
+
+    } else if (sort_style==SIG_BY_AFFIX_COUNT){
+
+    }
+
+}
+
 
 
 struct{

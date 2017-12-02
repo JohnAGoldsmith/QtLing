@@ -51,7 +51,7 @@ public:
     map_string_to_sig*                      get_map()                       { return & m_SignatureMap;}
     QListIterator<CSignature*>   *          get_sorted_list_iterator();
     bool                                    contains (sigstring_t);
-    void                                    sort();
+    void                                    sort(eSortStyle);
     void                                    sort_signatures_by_affix_count();
     void                                    compute_containment_list(); //this gives   for each signature the largest signatures it contains.
     QMap<CSignature*,QList<CSignature*>*> * get_containment_map()           {return & m_ContainmentMap;}

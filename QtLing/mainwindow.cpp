@@ -49,15 +49,8 @@ class LxaStandardItemModel;
 
 
 
-LxaStandardItemModel::LxaStandardItemModel(QString shortname)
-{
-    m_ShortName = shortname;
-}
 
 
-LxaStandardItemModel::LxaStandardItemModel(){
-
-}
 
 
 MainWindow::MainWindow()
@@ -241,13 +234,22 @@ void MainWindow::do_crab()
 void MainWindow::do_crab2()
 {   statusBar()->showMessage("Entering the Crab Nebula, phase 2");
     get_lexicon()->Crab_2();
+    qApp->processEvents();
     statusBar()->showMessage("We have returned from the Crab Nebular again.");
     m_Models["Words"]               ->load_words(get_lexicon()->get_words());
+    statusBar()->showMessage("Loading stems.");
+    qApp->processEvents();
     m_Models["Stems"]               ->load_stems(get_lexicon()->get_stems());
     m_Models["Suffixes"]            ->load_suffixes(get_lexicon()->get_suffixes());
+        statusBar()->showMessage("Loading signatures.");
+        qApp->processEvents();
     m_Models["Signatures"]          ->load_signatures(get_lexicon()->get_signatures());
     m_Models["Prefix signatures"]   ->load_signatures(get_lexicon()->get_prefix_signatures());
+        statusBar()->showMessage("Loading signature-tree edges.");
+        qApp->processEvents();
     m_Models["SigTreeEdges"]        ->load_sig_tree_edges(get_lexicon()->get_sig_tree_edge_map());
+        statusBar()->showMessage("Loading residual signatures.");
+        qApp->processEvents();
     m_Models["Residual parasignatures"]->load_signatures(get_lexicon()->get_residual_signatures());
     m_Models["Parasuffixes"]        ->load_suffixes(get_lexicon()->get_parasuffixes());
     createTreeModel();
@@ -409,6 +411,9 @@ void MainWindow::createActions()
 
     QAction *aboutQtAct = helpMenu->addAction(tr("About &Qt"), qApp, &QApplication::aboutQt);
     aboutQtAct->setStatusTip(tr("Show the Qt library's About box"));
+
+
+    fileToolBar->addAction("Sort");
 }
 void MainWindow::createStatusBar()
 {

@@ -178,6 +178,7 @@ LowerTableView::LowerTableView(MainWindow * window)
 UpperTableView::UpperTableView (MainWindow* window)
 {
         m_parent_window = window;
+        m_signature_sort_style = UNSPECIFIED;
 }
 void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
 {

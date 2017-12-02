@@ -76,10 +76,16 @@ CSignature* CSignatureCollection::find_or_add (QString sigstring )
 // -->   Sorting  <--     //
 
 bool compare_stem_count(const CSignature* pSig1, const CSignature* pSig2)
-{
- return  pSig1->get_number_of_stems() > pSig2->get_number_of_stems();
+{ return  pSig1->get_number_of_stems() > pSig2->get_number_of_stems();}
+
+bool compare_affix_count(const CSignature* pSig1, const CSignature* pSig2)
+{   if (pSig1->get_number_of_stems() == pSig2->get_number_of_stems())
+     {    return  pSig1->get_number_of_stems() > pSig2->get_number_of_stems(); }
+     return pSig1->get_number_of_affixes() > pSig2->get_number_of_affixes();
 }
-void CSignatureCollection::sort()
+
+
+void CSignatureCollection::sort(eSortStyle sort_style)
 {
     m_SortList.clear();
     map_sigstring_to_sig_ptr_iter sig_iter (m_SignatureMap);
@@ -88,10 +94,16 @@ void CSignatureCollection::sort()
         sig_iter.next();
         m_SortList.append(sig_iter.value());
     }
-   qSort(m_SortList.begin(), m_SortList.end(),  compare_stem_count);
+    if (sort_style == SIG_BY_AFFIX_COUNT) {
+          qSort(m_SortList.begin(), m_SortList.end(),  compare_affix_count);
+    } else{
+          qSort(m_SortList.begin(), m_SortList.end(),  compare_stem_count);
+    }
+
 }
 
 // ------->                                   <---------------------//
+/*
 bool compare_affix_count(const CSignature* pSig1, const CSignature* pSig2)
 {
  return  pSig1->get_number_of_affixes() > pSig2->get_number_of_affixes();
@@ -106,11 +118,11 @@ void CSignatureCollection::sort_signatures_by_affix_count()
     }
     qSort(m_SortList.begin(), m_SortList.end(),  compare_affix_count);
 }
-
+*/
 
 void CSignatureCollection::compute_containment_list()
 {   CSignature* pSig, *qSig;
-    sort_signatures_by_affix_count();
+    sort(SIG_BY_AFFIX_COUNT);
     for (int i = 0; i < m_SortList.size(); i++){
         pSig = m_SortList[i];
         if (pSig->get_number_of_affixes() < 3) {break;}
