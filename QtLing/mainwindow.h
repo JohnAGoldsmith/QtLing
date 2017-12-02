@@ -207,20 +207,20 @@ private:
     void setCurrentFile(const QString &fileName);
     QString strippedName(const QString &fullFileName);
     lxa_graphics_view*      get_graphics_view() {return  m_graphics_view;}
-    lxa_graphics_view*      get_graphics_view_2() {return  m_graphics_view_2;}
-    lxa_graphics_scene*     get_graphics_scene_1()  {return m_graphics_scene_1;}
-    lxa_graphics_scene*     get_graphics_scene_2() {return m_graphics_scene_2;}
+    //lxa_graphics_view*      get_graphics_view_2() {return  m_graphics_view_2;}
+    lxa_graphics_scene*     get_graphics_scene()  {return m_graphics_scene;}
+    //lxa_graphics_scene*     get_graphics_scene_2() {return m_graphics_scene_2;}
     QSplitter *             m_mainSplitter;
     QSplitter *             m_rightSplitter;
     UpperTableView *        m_tableView_upper;
     LowerTableView *        m_tableView_lower;
     LeftSideTreeView *      m_leftTreeView;
-    lxa_graphics_scene *    m_graphics_scene_1;
-    lxa_graphics_scene *    m_graphics_scene_2;
-    lxa_graphics_scene *    m_current_graphics_scene ;
-    void                    set_current_graphics_scene (lxa_graphics_scene* pLGS) {m_current_graphics_scene = pLGS;}
+    lxa_graphics_scene *    m_graphics_scene;
+    //lxa_graphics_scene *    m_graphics_scene_2;
+    //lxa_graphics_scene *    m_current_graphics_scene ;
+    //void                    set_current_graphics_scene (lxa_graphics_scene* pLGS) {m_current_graphics_scene = pLGS;}
     lxa_graphics_view *     m_graphics_view;
-    lxa_graphics_view *     m_graphics_view_2;
+    //lxa_graphics_view *     m_graphics_view_2;
     bool                    m_graphic_display_flag;
     QStandardItemModel *    m_treeModel;
 

@@ -53,8 +53,8 @@ LowerTableView::LowerTableView(MainWindow * window)
             setModel( m_my_current_model);
         } else // -->   Now, graphics display IS showing<-- //
         {   qDebug() << "trying to display a focus signature";
-            m_parent_window->get_graphics_scene_1()->set_focus_signature(pSig);
-            m_parent_window->get_graphics_scene_1()->display_focus_signature();
+            m_parent_window->get_graphics_scene()->set_focus_signature(pSig);
+            m_parent_window->get_graphics_scene()->display_focus_signature();
         }
     }
      //  ---------------------------------------------------//
@@ -71,8 +71,8 @@ LowerTableView::LowerTableView(MainWindow * window)
        } // -->   Now, graphics display IS showing<-- //
        {
            qDebug() << "trying to display a focus signature";
-           m_parent_window->get_graphics_scene_1()->set_focus_signature(pSig);
-           m_parent_window->get_graphics_scene_1()->display_focus_signature();
+           m_parent_window->get_graphics_scene()->set_focus_signature(pSig);
+           m_parent_window->get_graphics_scene()->display_focus_signature();
        }
     }
      //  ---------------------------------------------------//
@@ -205,7 +205,7 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
     else     if (component == "Signatures"){
         setModel(m_parent_window->m_Models["Signatures"]);
         set_document_type( SIGNATURES );
-        m_parent_window->set_current_graphics_scene ( m_parent_window->m_graphics_scene_1 );
+        //m_parent_window->set_current_graphics_scene ( m_parent_window->m_graphics_scene_1 );
         set_content_type( "signatures");
     }
     else     if (component == "Prefix signatures"){
@@ -216,7 +216,7 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
     else     if (component == "Signature tree edges"){
         setModel(m_parent_window->m_Models["SigTreeEdges"]);
         set_document_type( SIGNATURE_TREE_EDGES );
-        m_parent_window->set_current_graphics_scene ( m_parent_window->m_graphics_scene_2 );
+        //m_parent_window->set_current_graphics_scene ( m_parent_window->m_graphics_scene_2 );
         //set_content_type( "sigtreeedges");
         sortByColumn(-1);
     }
@@ -254,9 +254,9 @@ void LowerTableView::graphics_sig_tree_edges(CSignature* pSig, CLexicon* p_lexic
         ++edge_iter;
     }
 
-    m_parent_window->m_graphics_scene_2 = new lxa_graphics_scene(m_parent_window, &Signatures);
-    m_parent_window->m_graphics_scene_2->place_signatures();
-    m_parent_window->m_graphics_view->setScene(m_parent_window->m_graphics_scene_2);
+    m_parent_window->m_graphics_scene = new lxa_graphics_scene(m_parent_window, &Signatures);
+    m_parent_window->m_graphics_scene->place_signatures();
+    m_parent_window->m_graphics_view->setScene(m_parent_window->m_graphics_scene);
 }
 
 void LowerTableView::table_word(CWord* pWord ){

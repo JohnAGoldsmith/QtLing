@@ -77,11 +77,11 @@ MainWindow::MainWindow()
     m_tableView_lower   = new LowerTableView (this);
     m_tableView_upper->setSortingEnabled(true);
 
-    m_graphics_scene_1 = new lxa_graphics_scene (this, get_lexicon()->get_signatures());
+    m_graphics_scene = new lxa_graphics_scene (this, get_lexicon()->get_signatures());
     m_graphics_view  = new lxa_graphics_view(this);
-    m_graphics_view->set_graphics_scene(m_graphics_scene_1);
+    m_graphics_view->set_graphics_scene(m_graphics_scene);
     m_graphic_display_flag = false;             // toggle with Ctrl-G
-    m_current_graphics_scene = m_graphics_scene_1;
+    //m_current_graphics_scene = m_graphics_scene_1;
 
     // set model for tree view
     m_leftTreeView->setModel(m_treeModel);
@@ -169,10 +169,10 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         get_graphics_view()->move_up();
     }
     if (ke->key() == Qt::Key_U){
-        m_current_graphics_scene->widen_columns();
+        m_graphics_scene->widen_columns();
     }
     if (ke->key() == Qt::Key_I){
-        m_current_graphics_scene->narrow_columns();
+        m_graphics_scene->narrow_columns();
     }
     if (ke->key() == Qt::Key_Period){
 //        get_graphics_view->reset_scale_and_translation();
@@ -217,14 +217,14 @@ void MainWindow::do_crab()
     m_Models["Parasuffixes"]        ->load_suffixes(get_lexicon()->get_parasuffixes());
     createTreeModel();
 
-    delete m_graphics_scene_1;
+    delete m_graphics_scene;
     if (get_lexicon()->get_suffix_flag()){
-        m_graphics_scene_1 = new lxa_graphics_scene(this, get_lexicon()->get_signatures());
+        m_graphics_scene = new lxa_graphics_scene(this, get_lexicon()->get_signatures());
     }else{
-        m_graphics_scene_1 = new lxa_graphics_scene(this, get_lexicon()->get_prefix_signatures());
+        m_graphics_scene = new lxa_graphics_scene(this, get_lexicon()->get_prefix_signatures());
     }
-    m_graphics_view->setScene(m_graphics_scene_1);
-    m_graphics_scene_1->set_graphics_view(m_graphics_view);
+    m_graphics_view->setScene(m_graphics_scene);
+    m_graphics_scene->set_graphics_view(m_graphics_view);
 
 
     m_leftTreeView->expandAll();
@@ -256,14 +256,14 @@ void MainWindow::do_crab2()
 
     print_prefix_signatures();
 
-    delete m_graphics_scene_1;
+    delete m_graphics_scene;
     if (get_lexicon()->get_suffix_flag()) {
-        m_graphics_scene_1 = new lxa_graphics_scene(this, get_lexicon()->get_signatures());
+        m_graphics_scene = new lxa_graphics_scene(this, get_lexicon()->get_signatures());
     }else {
-        m_graphics_scene_1 = new lxa_graphics_scene(this, get_lexicon()->get_prefix_signatures());
+        m_graphics_scene = new lxa_graphics_scene(this, get_lexicon()->get_prefix_signatures());
     }
-    m_graphics_scene_1->place_signatures();
-    m_graphics_view->setScene(m_graphics_scene_1);
+    m_graphics_scene->place_signatures();
+    m_graphics_view->setScene(m_graphics_scene);
     m_leftTreeView->expandAll();
     statusBar()->showMessage("All models are loaded.");
 
