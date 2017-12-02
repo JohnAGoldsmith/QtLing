@@ -73,6 +73,7 @@ public:
     void        load_stems(CStemCollection * p_stems);
     void        load_suffixes(CSuffixCollection * p_suffixes);
     void        load_signatures(CSignatureCollection * p_signatures);
+    void        load_parasignatures(CSignatureCollection * p_signatures);
     void        sort_signatures(eSortStyle);
     void        load_sig_tree_edges(QMap<QString, sig_tree_edge*> *);
 };

@@ -171,7 +171,8 @@ void CLexicon::CreateStemAffixPairs()
         }
         wordno++;
         m_ProgressBar->setValue(wordno);
-        for (int letterno = 1; letterno < word.length(); letterno++){
+        int MinimumStemLength = 3;
+        for (int letterno = MinimumStemLength; letterno < word.length(); letterno++){
             if (m_SuffixesFlag){
                 stem = word.left(letterno);
                 if (m_Protostems.contains(stem)){

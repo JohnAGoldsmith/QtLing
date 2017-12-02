@@ -245,12 +245,12 @@ void MainWindow::do_crab2()
         qApp->processEvents();
     m_Models["Signatures"]          ->load_signatures(get_lexicon()->get_signatures());
     m_Models["Prefix signatures"]   ->load_signatures(get_lexicon()->get_prefix_signatures());
-        statusBar()->showMessage("Loading signature-tree edges.");
-        qApp->processEvents();
+    statusBar()->showMessage("Loading signature-tree edges.");
+    qApp->processEvents();
     m_Models["SigTreeEdges"]        ->load_sig_tree_edges(get_lexicon()->get_sig_tree_edge_map());
-        statusBar()->showMessage("Loading residual signatures.");
-        qApp->processEvents();
-    m_Models["Residual parasignatures"]->load_signatures(get_lexicon()->get_residual_signatures());
+    statusBar()->showMessage("Loading residual signatures.");
+    qApp->processEvents();
+    m_Models["Residual parasignatures"]->load_parasignatures(get_lexicon()->get_residual_signatures());
     m_Models["Parasuffixes"]        ->load_suffixes(get_lexicon()->get_parasuffixes());
     createTreeModel();
 
