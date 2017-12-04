@@ -55,10 +55,10 @@ void CLexicon::Crab_1()
 
     AssignSuffixesToStems();
 
- //   collect_parasuffixes();
-  //  m_SuffixesFlag?
- //       m_Signatures->compute_containment_list():
- //       m_PrefixSignatures->compute_containment_list();
+    collect_parasuffixes();
+    m_SuffixesFlag?
+        m_Signatures->compute_containment_list():
+        m_PrefixSignatures->compute_containment_list();
 
     qDebug() << "finished making signatures.";
  }
@@ -68,6 +68,7 @@ void CLexicon::Crab_2()
     FindGoodSignaturesInsideParaSignatures();
     compute_sig_tree_edges();
     compute_sig_tree_edge_map();
+    test_for_phonological_relations_between_signatures();
     qDebug() << "finished crab 2.";
 }
 
@@ -565,7 +566,7 @@ void CLexicon::compute_sig_tree_edges()
                         p_SigTreeEdge =  new simple_sig_tree_edge (sig2,sig1,difference, pWord->get_key(), stem2->get_key(), stem1->get_key());
                     }
                     m_SigTreeEdgeList.append(p_SigTreeEdge);
-                    qDebug() << p_SigTreeEdge->label() << p_SigTreeEdge->word;
+                    //qDebug() << p_SigTreeEdge->label() << p_SigTreeEdge->word;
                 }
             }
         }
@@ -603,7 +604,6 @@ while (this_simple_sig_tree_edge_iter.hasNext())
         QString this_label = this_word_stem_struct->get_label();
         if ( ! p_sig_tree_edge_3->shared_word_stems.contains(this_label)){
             p_sig_tree_edge_3->shared_word_stems[this_label] = this_word_stem_struct;
-            //qDebug() << this_label << this_word_stem_struct->get_label() << 563 << "lexicon.cpp";
         }
      } else {  // --> start a new sig_tree_edge with multiple stems <-- //
         sig_tree_edge * p_sig_tree_edge_2 = new sig_tree_edge(*p_sig_tree_edge);
@@ -611,6 +611,73 @@ while (this_simple_sig_tree_edge_iter.hasNext())
      }
 }
 }
+
+/*!
+ * This function looks at pairs of signatures joined by a sig-tree-edge, where
+ * the morpheme that separates them is a single letter. We look to see  how tight
+ * the fit is between these two sets of signatures.
+ */
+void CLexicon::test_for_phonological_relations_between_signatures()
+{
+   QMapIterator<QString, sig_tree_edge*> sig_iter (m_SigTreeEdgeMap);
+   QString difference;
+   QSet<QString> differences_1_letter, differences_longer;
+   while (sig_iter.hasNext()){
+       sig_iter.next();
+       QString morph = sig_iter.value()->morph;
+       if (morph.length() == 1){
+        differences_1_letter.insert(sig_iter.value()->morph);
+       } else{
+        differences_longer.insert(sig_iter.value()->morph);
+       }
+   }
+
+   QStringList differences = differences_1_letter.toList();
+   differences.sort();
+   QSet<CSignature*> SignatureSet_1, SignatureSet_2;
+
+   for (int i = 0; i < differences.size(); i++){
+       difference = differences[i];
+       //qDebug() << difference << 641;
+       //--> Pull out the sig_tree_edges with each particular difference (morpheme).
+       sig_iter.toFront();
+       while (sig_iter.hasNext()){
+             sig_iter.next();
+             if (sig_iter.value()->morph == difference){
+                 SignatureSet_1.insert(sig_iter.value()->sig_1);
+                 SignatureSet_2.insert(sig_iter.value()->sig_2);
+                 //qDebug() << sig_iter.value()->sig_1->get_key() << sig_iter.value()->morph <<  649;
+             }
+       }
+
+       //--> Now these two sets have signatures which are from opposite sides of the phonological rule. <---//
+       compare_opposite_sets_of_signatures(&SignatureSet_1, &SignatureSet_2, difference);
+
+   }
+}
+
+/*!
+ * This function takes two sets of signatures, each taken from the opposing signatures
+ * in a sig-tree-edge, where the morph separating them is a specific morph of length = 1 letter.
+ */
+void CLexicon::compare_opposite_sets_of_signatures(QSet<CSignature*>* sig_set_1, QSet<CSignature*>* sig_set_2, QString morph)
+{   sig_tree_edge * p_edge;
+    CSignature* pSig_1, *pSig_2;
+    QHash<QString,int> Counts;
+    foreach(p_edge,  m_SigTreeEdgeMap){
+        //qDebug() << morph << p_edge->morph << 668;
+        if (p_edge->morph == morph){
+            //qDebug() << p_edge->label() << 670;
+            pSig_1 = p_edge->sig_1;
+            pSig_2 = p_edge->sig_2;
+            QString code = pSig_1->get_key() + "@" + pSig_2->get_key();
+            Counts[code] = p_edge->get_number_of_stems();
+            qDebug() << morph<<  code << Counts[code] << 671;
+        }
+    }
+}
+
+
 
 
 void CLexicon::dump_suffixes(QList<QString> * pList)

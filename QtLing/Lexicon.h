@@ -6,6 +6,7 @@
 #include <QString>
 #include <QList>
 #include <QPair>
+#include <QSet>
 #include <QStatusBar>
 #include "SignatureCollection.h"
 #include "Typedefs.h"
@@ -60,6 +61,7 @@ public:
              shared_word_stems[this_word_stems->get_label()] = this_word_stems;
          }
     QString label() {return morph + "/" + sig_1->get_key() + "/" + sig_2->get_key(); }
+    int     get_number_of_stems() {return shared_word_stems.size();}
 };
 
 
@@ -122,7 +124,7 @@ public:
     void                                        compute_sig_tree_edges();
     QList<simple_sig_tree_edge*> *              get_sig_tree_edges()        { return &m_SigTreeEdgeList;}
     QMap<QString, sig_tree_edge*>    *          get_sig_tree_edge_map()     { return & m_SigTreeEdgeMap;}
-    QListIterator<simple_sig_tree_edge*>    *          get_sig_tree_edge_list_iter();
+    QListIterator<simple_sig_tree_edge*>    *   get_sig_tree_edge_list_iter();
     QMapIterator<QString, sig_tree_edge*> *     get_sig_tree_edge_map_iter();
     void                                        set_progress_bar (QProgressBar * pPB) { m_ProgressBar = pPB;}
     void                                        set_status_bar(QStatusBar* pBar) {m_StatusBar = pBar;}
@@ -138,6 +140,8 @@ public:
     void ReSignaturizeWithKnownAffixes();
     void FindGoodSignaturesInsideParaSignatures();
     void compute_sig_tree_edge_map();
+    void test_for_phonological_relations_between_signatures();
+    void compare_opposite_sets_of_signatures(QSet<CSignature*>* sig_set_1, QSet<CSignature*>* sig_set_2,QString letter);
     void replace_parse_pairs_from_current_signature_structure(bool FindSuffixesFlag=true);
 
 };
