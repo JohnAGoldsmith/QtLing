@@ -31,10 +31,7 @@ LowerTableView::LowerTableView(MainWindow * window)
     //  ---------------------------------------------------//
      if (UpperView_type == WORDS){
     //  ---------------------------------------------------//
-        if (index.isValid()){
-             //word = index.data().toString();
-             row = index.row();
-        }
+        if (index.isValid()) {row = index.row();}
         QString word = index.sibling(row,0).data().toString();
         CWord* pWord = this_lexicon->get_words()->get_word(word);
         table_word(pWord);
@@ -52,10 +49,7 @@ LowerTableView::LowerTableView(MainWindow * window)
             table_signature(pSig);
             setModel( m_my_current_model);
         } else // -->   Now, graphics display IS showing<-- //
-        {   qDebug() << "trying to display a focus signature";
-            //m_parent_window->get_graphics_scene()->set_focus_signature(pSig);
-            //m_parent_window->get_graphics_scene()->display_focus_signature();
-        }
+        {   qDebug() << "trying to display a focus signature";}
     }
      //  ---------------------------------------------------//
      else if (UpperView_type == PREFIX_SIGNATURES){
@@ -190,17 +184,17 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
     if (component == "Words"){
         setModel(m_parent_window->m_Models["Words"]);
         set_document_type( WORDS );
-        set_content_type( "words");
+        //set_content_type( "words");
     }
     else     if (component == "Stems"){
         setModel(m_parent_window->m_Models["Stems"]);
         set_document_type( STEMS );
-        set_content_type( "stems");
+        //set_content_type( "stems");
     }
     else     if (component == "Suffixes"){
         setModel(m_parent_window->m_Models["Suffixes"]);
         set_document_type( SUFFIXES );
-        set_content_type( "suffixes");
+        //set_content_type( "suffixes");
     }
     else     if (component == "Signatures"){
         setModel(m_parent_window->m_Models["Signatures"]);

@@ -65,6 +65,7 @@ private:
     QString                 m_ShortName;
     QString                 m_Description;
     eSortStyle              m_sort_style;
+    CSignatureCollection*   m_Signatures;
 
 public:
 
@@ -96,6 +97,9 @@ public:
     void            set_document_type(eDocumentType type) {m_document_type = type;}
 public slots:
     void ShowModelsUpperTableView(const QModelIndex& );
+    eSortStyle      get_signature_sort_style () { return m_signature_sort_style;}
+    void            set_signature_sort_style (eSortStyle style) {m_signature_sort_style = style;}
+
     signals:
     void please_display_this_signature(QString sig);
 };
@@ -198,7 +202,7 @@ private:
     void load_singleton_stem_model();
     void load_StemSet2_model();
     void load_subsignature_model();
-
+    void sort_upper_table();
     void createActions();
     void createStatusBar();
     void readSettings();

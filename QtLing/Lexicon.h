@@ -88,6 +88,9 @@ protected:
     CSignatureCollection*           m_Subsignatures;
     QList<simple_sig_tree_edge*>    m_SigTreeEdgeList; /*!< the sig_tree_edges in here contain only one word associated with each. */
     QMap<QString, sig_tree_edge*>   m_SigTreeEdgeMap;  /*!< the sig_tree_edges in here contain lists of words associated with them. */
+
+
+
     QProgressBar*                   m_ProgressBar;
     QStatusBar *                      m_StatusBar;
 

@@ -6,23 +6,39 @@
 #include <QGraphicsScene>
 #include <QPoint>
 #include <QColor>
+#include "supersignature.h"
 
 class CSignature;
 class CSignatureCollection;
 class MainWindow;
 class lxa_graphics_scene;
+class CSupersignature;
 
 class graphic_signature : public QGraphicsEllipseItem
 {
     lxa_graphics_scene * m_graphics_scene;
     CSignature *         m_signature;
-    Qt::GlobalColor            m_color;
+    Qt::GlobalColor      m_color;
     public:
-    graphic_signature(int x, int y, CSignature*, lxa_graphics_scene* scene, int radius, int row_delta);
-    void mousePressEvent (QGraphicsSceneMouseEvent*);
+    graphic_signature   (int x, int y, CSignature*, lxa_graphics_scene* scene, int radius, int row_delta);
+    void                mousePressEvent (QGraphicsSceneMouseEvent*);
     void                set_color(Qt::GlobalColor this_color) { m_color = this_color;}
     CSignature*         get_signature() {return m_signature;}
 };
+
+class graphic_super_signature : public QRect
+{
+    lxa_graphics_scene *    m_graphics_scene;
+    CSupersignature *       m_super_signature;
+    Qt::GlobalColor         m_color;
+    public:
+    graphic_super_signature(int x, int y, CSupersignature*, lxa_graphics_scene* scene);
+    void                    mousePressEvent (QGraphicsSceneMouseEvent*);
+    void                    set_color(Qt::GlobalColor this_color) { m_color = this_color;}
+    CSupersignature*        get_super_signature() {return m_super_signature;}
+};
+
+
 
 class lxa_graphics_view : public QGraphicsView
 { friend:: lxa_graphics_scene;

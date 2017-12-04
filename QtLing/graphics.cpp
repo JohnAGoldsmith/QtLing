@@ -5,6 +5,7 @@
 #include <QMouseEvent>
 #include <QGraphicsSceneEvent>
 #include <QGraphicsItem>
+#include <QRect>
 #include <QtMath>
 #include "graphics.h"
 #include "generaldefinitions.h"
@@ -41,6 +42,37 @@ void graphic_signature::mousePressEvent(QGraphicsSceneMouseEvent * event){
         setSelected(true);
     }
 }
+
+
+graphic_super_signature::graphic_super_signature(int x, int y, CSupersignature* pSig, lxa_graphics_scene * scene)
+{
+    m_graphics_scene = scene;
+    m_super_signature = pSig;
+    m_color = Qt::red;
+    int row_delta = 40;
+
+    //QGraphicsItem::setAcceptHoverEvents(true);
+    //QGraphicsItem::ItemIsSelectable;
+    //QGraphicsItem::ItemIsMovable;
+    int my_x = 100;
+    int my_y = 100;
+    int my_width= 20;
+    int my_height = 30;
+    scene->addRect(my_x,my_y,my_width, my_height ,QPen(),QBrush(m_color));
+
+    QGraphicsTextItem * p_text_item = new QGraphicsTextItem;
+    //p_text_item->setPlainText(pSig->get_key());
+    int text_width = p_text_item->textWidth();
+    p_text_item->setPos (x - 0.5 * text_width,y + 0.3* row_delta);
+
+    QGraphicsTextItem * q_text_item = new QGraphicsTextItem;
+    //q_text_item->setPlainText(QString::number(pSig->get_number_of_stems()));
+    q_text_item->setPos (x - 0.5 * text_width,y + 0.3* row_delta + 20);
+
+    scene->addItem(p_text_item);
+    scene->addItem(q_text_item);
+};
+
 
 lxa_graphics_view::lxa_graphics_view(MainWindow* this_window)
 {

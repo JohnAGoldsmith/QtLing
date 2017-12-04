@@ -81,7 +81,6 @@ MainWindow::MainWindow()
     m_graphics_view  = new lxa_graphics_view(this);
     m_graphics_view->set_graphics_scene(m_graphics_scene);
     m_graphic_display_flag = false;             // toggle with Ctrl-G
-    //m_current_graphics_scene = m_graphics_scene_1;
 
     // set model for tree view
     m_leftTreeView->setModel(m_treeModel);
@@ -115,6 +114,7 @@ MainWindow::MainWindow()
 
     connect(m_leftTreeView, SIGNAL(clicked(const QModelIndex&)), m_tableView_upper, SLOT(ShowModelsUpperTableView(const QModelIndex&)));
     connect(m_tableView_upper,SIGNAL(clicked(const QModelIndex & )), m_tableView_lower,SLOT(display_this_item(const QModelIndex &  )));
+
 }
 
 
@@ -223,21 +223,30 @@ void MainWindow::do_crab2()
     qApp->processEvents();
     statusBar()->showMessage("We have returned from the Crab Nebular again.");
     m_Models["Words"]               ->load_words(get_lexicon()->get_words());
+
     statusBar()->showMessage("Loading stems.");
     qApp->processEvents();
+
     m_Models["Stems"]               ->load_stems(get_lexicon()->get_stems());
     m_Models["Suffixes"]            ->load_suffixes(get_lexicon()->get_suffixes());
-        statusBar()->showMessage("Loading signatures.");
-        qApp->processEvents();
+
+    statusBar()->showMessage("Loading signatures.");
+    qApp->processEvents();
+
     m_Models["Signatures"]          ->load_signatures(get_lexicon()->get_signatures());
     m_Models["Prefix signatures"]   ->load_signatures(get_lexicon()->get_prefix_signatures());
+
     statusBar()->showMessage("Loading signature-tree edges.");
     qApp->processEvents();
+
     m_Models["SigTreeEdges"]        ->load_sig_tree_edges(get_lexicon()->get_sig_tree_edge_map());
+
     statusBar()->showMessage("Loading residual signatures.");
     qApp->processEvents();
+
     m_Models["Residual parasignatures"]->load_parasignatures(get_lexicon()->get_residual_signatures());
     m_Models["Parasuffixes"]        ->load_suffixes(get_lexicon()->get_parasuffixes());
+
     createTreeModel();
 
     print_prefix_signatures();
@@ -399,7 +408,7 @@ void MainWindow::createActions()
     aboutQtAct->setStatusTip(tr("Show the Qt library's About box"));
 
 
-    fileToolBar->addAction("Sort");
+    //fileToolBar->addButton("Sort");
 }
 void MainWindow::createStatusBar()
 {
@@ -611,4 +620,17 @@ void MainWindow::print_prefix_signatures()
 
     }
     file.close();
+}
+
+void MainWindow::sort_upper_table()
+{
+    // a signal comes to sort the contents of the upper table.
+    if (m_tableView_upper->get_document_type()== SIGNATURES){
+        if (m_tableView_upper->get_signature_sort_style()==SIG_BY_STEM_COUNT){
+            m_tableView_upper->set_signature_sort_style(SIG_BY_AFFIX_COUNT);
+        } else{
+            m_tableView_upper->set_signature_sort_style(SIG_BY_STEM_COUNT);
+        }
+    }
+
 }

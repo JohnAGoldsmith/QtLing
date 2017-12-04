@@ -102,7 +102,8 @@ void LxaStandardItemModel::load_suffixes(CSuffixCollection * p_suffixes)
 void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures)
 {
     this->clear();
-    m_Description = " ";
+    m_Signatures = p_signatures;
+    m_Description = "suffix signatures";
     CSignature*         sig;
     p_signatures->sort(SIG_BY_STEM_COUNT);
     m_sort_style = SIG_BY_STEM_COUNT;
@@ -170,11 +171,11 @@ void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures)
 void LxaStandardItemModel::sort_signatures(eSortStyle sort_style)
 {
     if (sort_style==SIG_BY_STEM_COUNT){
-
+        m_Signatures->sort(SIG_BY_AFFIX_COUNT);
     } else if (sort_style==SIG_BY_AFFIX_COUNT){
-
+        m_Signatures->sort(SIG_BY_AFFIX_COUNT);
     }
-
+    qDebug() << "sort_signatures" << 178;
 }
 
 
