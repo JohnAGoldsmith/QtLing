@@ -355,7 +355,6 @@ void   CLexicon::AssignSuffixesToStems()
             pStem = *m_ResidualStems << this_stem_t;
             m_StatusBar->showMessage("Form signatures: 3d Parasignatures." + this_stem_t);
             pSig->add_stem_pointer(pStem);
-            //qDebug() <<"Bad signature"<< pSig->get_key() << this_signature_string << 358;
             foreach (this_affix, this_affix_set){
                 if (this_affix == "NULL"){
                     this_word = this_stem_t;
@@ -364,14 +363,10 @@ void   CLexicon::AssignSuffixesToStems()
                        this_word = this_stem_t + this_affix :
                        this_word = this_affix + this_stem_t;
                 }
-                //qDebug() <<this_stem_t <<  this_word << 369;
                 pWord = m_Words->find_or_fail(this_word);
-                if (pWord){  // *** why does this sometimes fail?
-                    //qDebug() << this_word << this_stem_t << this_signature_string << 368;
-                    pWord->add_to_autobiography("**" + this_word + "=" + this_stem_t + "=" + this_signature_string);
-                } //else{
-                  //  qDebug() <<  this_word  << "Word not found"<<374;
-               // }
+                if (pWord){
+                    pWord->add_to_autobiography("*singleton signature=" + this_stem_t + "=" + this_signature_string);
+                }
             }
          }
     }
@@ -469,7 +464,7 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
                                         pWord = m_Words->find_or_fail(this_word);
                                         if (pWord){
                                             pWord->add_stem_and_signature(pStem, p_proven_sig);
-                                            pWord->add_to_autobiography("from within parasigs "  + this_stem  + "=" +  p_proven_sigstring);
+                                            pWord->add_to_autobiography("from within parasigs="  + this_stem  + "=" +  p_proven_sigstring);
                                         }
                                     }
                                     break;
@@ -567,6 +562,7 @@ void CLexicon::compute_sig_tree_edges()
                     }
                     m_SigTreeEdgeList.append(p_SigTreeEdge);
                     //qDebug() << p_SigTreeEdge->label() << p_SigTreeEdge->word;
+                    pWord->add_to_autobiography("multiple parse=" + stem1->get_key() + "=" +  sig1->get_key() + "=" + stem2->get_key() + "=" + sig2->get_key());
                 }
             }
         }

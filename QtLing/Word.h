@@ -14,6 +14,7 @@
 #include "Suffix.h"
 #include "Signature.h"
 
+class LowerTableView;
 
 typedef  QPair<CStem*,CSignature*>* ptr_to_stem_sig_pair;
 struct Parse {
@@ -24,7 +25,7 @@ struct Parse {
 };
 
 class CWord
-{
+{ friend LowerTableView;
 protected:
     QString                             m_Word;
     int                                 m_WordCount;

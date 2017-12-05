@@ -255,7 +255,7 @@ void LowerTableView::graphics_sig_tree_edges(CSignature* pSig, CLexicon* p_lexic
 
 void LowerTableView::table_word(CWord* pWord ){
     QList<QStandardItem*>      item_list;
-    QStandardItem *            p_item;
+    QStandardItem *            p_item, *q_item;
 
     if (m_my_current_model){
         delete m_my_current_model;
@@ -277,6 +277,18 @@ void LowerTableView::table_word(CWord* pWord ){
         }
         m_my_current_model->appendRow(item_list);
     }
+    // Display the signatures this word bears:
+    for (int signo = 0; signo < pWord->m_Signatures.size(); signo++){
+        QString sig = pWord->GetSignatures()->at(signo)->second->get_key();
+        QString stem = pWord->GetSignatures()->at(signo)->first->get_key();
+        item_list.clear();
+        p_item = new QStandardItem(stem);
+        item_list.append(p_item);
+        q_item = new QStandardItem(sig);
+        item_list.append(q_item);
+        m_my_current_model->appendRow(item_list);
+    }
+
 }
 void LowerTableView::table_signature(CSignature* pSig ){
 
