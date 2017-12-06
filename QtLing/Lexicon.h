@@ -90,7 +90,7 @@ protected:
     CSignatureCollection*           m_Subsignatures;
     QList<simple_sig_tree_edge*>    m_SigTreeEdgeList; /*!< the sig_tree_edges in here contain only one word associated with each. */
     QMap<QString, sig_tree_edge*>   m_SigTreeEdgeMap;  /*!< the sig_tree_edges in here contain lists of words associated with them. */
-
+    CSignatureCollection *          m_PassiveSignatures;  /*!< these signatures have stems one letter off from another signature. */
 
 
     QProgressBar*                   m_ProgressBar;
@@ -116,6 +116,7 @@ public:
     CSignatureCollection*                       GetSignatureCollection()    { return m_Signatures; }
     CSignatureCollection *                      get_residual_signatures()   { return m_ParaSignatures;}
     CSuffixCollection*                          get_parasuffixes()          { return m_ParaSuffixes;}
+    CSignatureCollection*                       get_passive_signatures()    { return m_PassiveSignatures;}
     void                                        collect_parasuffixes();
 
 

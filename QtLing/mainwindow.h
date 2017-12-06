@@ -77,6 +77,7 @@ public:
     void        load_parasignatures(CSignatureCollection * p_signatures);
     void        sort_signatures(eSortStyle);
     void        load_sig_tree_edges(QMap<QString, sig_tree_edge*> *);
+    void        load_passive_signatures (CSignatureCollection* p_passive_signatures);
 };
 
 

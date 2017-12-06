@@ -27,6 +27,7 @@ CLexicon::CLexicon(bool suffix_flag) : m_Words(new CWordCollection), m_Suffixes(
     m_ParaSuffixes          = new CSuffixCollection();
     m_ResidualStems         = new CStemCollection();
     m_PrefixSignatures      = new CSignatureCollection();
+    m_PassiveSignatures     = new CSignatureCollection();
     m_SuffixesFlag = true;
 }
 
@@ -640,9 +641,12 @@ void CLexicon::test_for_phonological_relations_between_signatures()
        while (sig_iter.hasNext()){
              sig_iter.next();
              if (sig_iter.value()->morph == difference){
-                 SignatureSet_1.insert(sig_iter.value()->sig_1);
-                 SignatureSet_2.insert(sig_iter.value()->sig_2);
-                 //qDebug() << sig_iter.value()->sig_1->get_key() << sig_iter.value()->morph <<  649;
+                 CSignature* pSig1 = sig_iter.value()->sig_1;
+                 CSignature* pSig2 = sig_iter.value()->sig_2;
+                 SignatureSet_1.insert(pSig1);
+                 SignatureSet_2.insert(pSig2);
+                 *m_PassiveSignatures << pSig1;
+                 qDebug() << pSig1->get_key() << pSig2->get_key() <<  649;
              }
        }
 

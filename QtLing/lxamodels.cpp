@@ -98,7 +98,6 @@ void LxaStandardItemModel::load_suffixes(CSuffixCollection * p_suffixes)
         appendRow(item_list);
     }
 }
-
 void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures)
 {
     this->clear();
@@ -119,6 +118,7 @@ void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures)
         appendRow(items);
     }
 }
+
 void LxaStandardItemModel::load_parasignatures(CSignatureCollection* p_signatures)
 {
     this->clear();

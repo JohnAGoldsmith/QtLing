@@ -184,34 +184,27 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
     if (component == "Words"){
         setModel(m_parent_window->m_Models["Words"]);
         set_document_type( WORDS );
-        //set_content_type( "words");
     }
     else     if (component == "Stems"){
         setModel(m_parent_window->m_Models["Stems"]);
         set_document_type( STEMS );
-        //set_content_type( "stems");
     }
     else     if (component == "Suffixes"){
         setModel(m_parent_window->m_Models["Suffixes"]);
         set_document_type( SUFFIXES );
-        //set_content_type( "suffixes");
     }
     else     if (component == "Signatures"){
         setModel(m_parent_window->m_Models["Signatures"]);
         set_document_type( SIGNATURES );
-        //m_parent_window->set_current_graphics_scene ( m_parent_window->m_graphics_scene_1 );
         set_content_type( "signatures");
     }
     else     if (component == "Prefix signatures"){
         setModel(m_parent_window->m_Models["Prefix signatures"]);
         set_document_type( PREFIX_SIGNATURES );
-        set_content_type( "prefix signatures");
     }
     else     if (component == "Signature tree edges"){
         setModel(m_parent_window->m_Models["SigTreeEdges"]);
         set_document_type( SIGNATURE_TREE_EDGES );
-        //m_parent_window->set_current_graphics_scene ( m_parent_window->m_graphics_scene_2 );
-        //set_content_type( "sigtreeedges");
         sortByColumn(-1);
     }
     else     if (component == "Residual parasignatures"){
@@ -227,6 +220,12 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
     else     if (component == "Singleton signatures"){
         set_document_type( SINGLETON_SIGNATURES );
         sortByColumn(1);
+    }
+    else     if (component == "Passive signatures"){
+        setModel(m_parent_window->m_Models["Passive signatures"]);
+        set_document_type( PASSIVE_SIGNATURES );
+        sortByColumn(1);
+        qDebug() << "line 234 in table views.";
     }
     resizeColumnsToContents();
 }
