@@ -535,7 +535,7 @@ void CLexicon::compute_sig_tree_edges()
     while (word_iter.hasNext())   {
         pWord = word_iter.next().value();
         number_of_signatures = pWord->GetSignatures()->size();
-        if ( number_of_signatures > 2){
+        if ( number_of_signatures > 1){
             for (int signo1=0; signo1 < number_of_signatures; signo1++){
                 stem_sig_pair* pair1 =  pWord->GetSignatures()->value(signo1);
                 CStem * stem1        = pair1->first;
@@ -561,7 +561,7 @@ void CLexicon::compute_sig_tree_edges()
                         p_SigTreeEdge =  new simple_sig_tree_edge (sig2,sig1,difference, pWord->get_key(), stem2->get_key(), stem1->get_key());
                     }
                     m_SigTreeEdgeList.append(p_SigTreeEdge);
-                    //qDebug() << p_SigTreeEdge->label() << p_SigTreeEdge->word;
+                    qDebug() << p_SigTreeEdge->word << p_SigTreeEdge->label() ;
                     pWord->add_to_autobiography("multiple parse=" + stem1->get_key() + "=" +  sig1->get_key() + "=" + stem2->get_key() + "=" + sig2->get_key());
                 }
             }
