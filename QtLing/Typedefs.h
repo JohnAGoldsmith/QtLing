@@ -35,7 +35,7 @@ typedef  QString                                    sig_string;
 typedef  QPair<CStem*,CSignature*>                  stem_sig_pair;
 typedef  QPair<stem_sig_pair*,                      stem_sig_pair*> pair_of_stem_sig_pairs;
 typedef  QPair<stem_t,stem_t>                       stem_string_pair;
-typedef  QPair<word_t, stem_string_pair*>            word_stem_pair_pair;
+typedef  QPair<word_t, stem_string_pair*>           word_stem_pair_pair;
 
 typedef QList<stem_t>                       stem_list;
 typedef QList<suffix_t>                     suffix_list;
@@ -60,7 +60,7 @@ typedef QSetIterator<suffix_t>              suffix_set_iter;
 typedef QSet<prefix_t>                      prefix_set;
 typedef QSetIterator<prefix_t>              prefix_set_iter;
 typedef QSet<affix_t>                       affix_set;
-typedef QSetIterator<affix_t>              affix_set_iter;
+typedef QSetIterator<affix_t>               affix_set_iter;
 
 typedef QMap<suffix_t, int>                 map_suffix_to_int;
 typedef QMap<stem_t,suffix_set>             map_stem_t_to_suffix_set;

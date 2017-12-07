@@ -2,6 +2,8 @@
 #include "SignatureCollection.h"
 #include "Suffix.h"
 #include <QDebug>
+#include <QChar>
+#include <QtMath>
 #include "Lexicon.h"
 #include "WordCollection.h"
 #include "Word.h"
@@ -155,4 +157,40 @@ word_and_count_list * CSignature::get_word_and_count_vectors(word_and_count_list
         }
     }
     return this_vector;
+}
+
+double log_base_2(double x)
+{   qDebug() << x << qLn(x)/qLn(2) << "signature.cpp 162";
+    return qLn(x) / qLn(2);
+
+}
+
+double CSignature::get_stem_entropy()
+{
+    QMap<QChar,double> counts;
+    int     total_count (0);
+    CStem* pStem;
+    QChar  letter;
+    double entropy;
+    foreach (pStem, *m_Stems){
+        stem_t this_stem = pStem->get_key();
+        letter = this_stem.at(this_stem.length()-1);
+        qDebug() << pStem->get_key() << letter;
+        if (counts.contains(letter)){
+                counts[letter]++;
+        } else{
+            counts[letter] = 1;
+        }
+        total_count++;
+    }
+    if (counts.size() == 1){
+        return 0.0;
+    }
+    QMapIterator<QChar,double> this_iter (counts);
+    while (this_iter.hasNext()){
+        letter = this_iter.next().key();
+        double freq = counts[letter]/total_count;
+        entropy += -1.0 * freq * log_base_2 (freq);
+    }
+    return entropy;
 }

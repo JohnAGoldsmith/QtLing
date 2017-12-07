@@ -562,7 +562,7 @@ void CLexicon::compute_sig_tree_edges()
                         p_SigTreeEdge =  new simple_sig_tree_edge (sig2,sig1,difference, pWord->get_key(), stem2->get_key(), stem1->get_key());
                     }
                     m_SigTreeEdgeList.append(p_SigTreeEdge);
-                    qDebug() << p_SigTreeEdge->word << p_SigTreeEdge->label() ;
+                    qDebug() << p_SigTreeEdge->word << p_SigTreeEdge->label() << 565 ;
                     pWord->add_to_autobiography("multiple parse=" + stem1->get_key() + "=" +  sig1->get_key() + "=" + stem2->get_key() + "=" + sig2->get_key());
                 }
             }
@@ -635,7 +635,6 @@ void CLexicon::test_for_phonological_relations_between_signatures()
 
    for (int i = 0; i < differences.size(); i++){
        difference = differences[i];
-       //qDebug() << difference << 641;
        //--> Pull out the sig_tree_edges with each particular difference (morpheme).
        sig_iter.toFront();
        while (sig_iter.hasNext()){
@@ -646,7 +645,7 @@ void CLexicon::test_for_phonological_relations_between_signatures()
                  SignatureSet_1.insert(pSig1);
                  SignatureSet_2.insert(pSig2);
                  *m_PassiveSignatures << pSig1;
-                 qDebug() << pSig1->get_key() << pSig2->get_key() <<  649;
+                 qDebug() << difference << pSig1->get_key() << pSig2->get_key() <<  649;
              }
        }
 

@@ -1,10 +1,11 @@
 #include <QDebug>
+#include <QMap>
 #include "Lexicon.h"
 #include "mainwindow.h"
 #include "Word.h"
 #include "WordCollection.h"
 #include "graphics.h"
-
+class sig_tree_edge;
 LowerTableView::LowerTableView()
 {
    m_my_current_model =new  QStandardItemModel();
@@ -16,6 +17,7 @@ LowerTableView::LowerTableView(MainWindow * window)
    m_my_current_model =new  QStandardItemModel();
    m_parent_window = window;
    m_number_of_columns = 20;
+   m_lexicon = window->get_lexicon();
 }
 
  void LowerTableView::display_this_item( const  QModelIndex & index )
@@ -93,6 +95,19 @@ LowerTableView::LowerTableView(MainWindow * window)
             }
         }
         setModel( m_my_current_model);
+    }
+     //  ---------------------------------------------------//
+     else if (UpperView_type == PASSIVE_SIGNATURES){
+     //  ---------------------------------------------------//
+        item_list.clear();
+        if (index.isValid()){
+             row = index.row();
+             column = index.column();
+        }
+     sig_string sig = index.sibling(row,0).data().toString();
+     CSignature* pSig = this_lexicon->get_signatures()->get_signature(sig);
+     table_passive_signature(pSig);
+     setModel( m_my_current_model);
     }
      //  ---------------------------------------------------//
      else if (UpperView_type == SIGNATURE_TREE_EDGES){
@@ -299,6 +314,16 @@ void LowerTableView::table_signature(CSignature* pSig ){
     CStem_ptr_list    *   sig_stems = pSig->get_stems();
     if (m_my_current_model) { delete m_my_current_model;}
     m_my_current_model = new QStandardItemModel();
+
+    p_item = new QStandardItem("Stem final letter entropy");
+
+    m_my_current_model->appendRow(item_list);
+    item_list.append(p_item);
+    p_item = new QStandardItem(QString::number(pSig->get_stem_entropy()));
+    item_list.append(p_item);
+    m_my_current_model->appendRow(item_list);
+
+    item_list.clear();
     foreach (p_Stem, *sig_stems)  {
         p_item = new QStandardItem(p_Stem->get_key() );
         item_list.append(p_item);
@@ -338,4 +363,29 @@ void LowerTableView::table_one_signature(CSignature* pSig, QStringList stems)
         m_my_current_model->appendRow(item_list);
         item_list.clear();
     }
+}
+void LowerTableView::table_passive_signature(CSignature *p_this_sig)
+{
+    QStandardItem*             p_item;
+    QList<QStandardItem*>      item_list;
+
+    if (m_my_current_model) { delete m_my_current_model;}
+    m_my_current_model = new QStandardItemModel();
+
+    QMap<QString, sig_tree_edge*> * pMap = get_lexicon()->get_sig_tree_edge_map();
+    QMapIterator<QString, sig_tree_edge*> this_sig_tree_edge_iter (*pMap);
+    while (this_sig_tree_edge_iter.hasNext()){
+        this_sig_tree_edge_iter.next();
+        CSignature* pSig1 = this_sig_tree_edge_iter.value()->sig_1;
+        CSignature* pSig2 = this_sig_tree_edge_iter.value()->sig_2;
+        if (p_this_sig == pSig1){
+            item_list.clear();
+            p_item = new QStandardItem(pSig2->get_key());
+            item_list.append(p_item);
+            m_my_current_model->appendRow(item_list);
+        }
+
+    }
+
+
 }

@@ -59,6 +59,7 @@ public:
     bool                        contains (CSignature* other);
     void                        sort_stems();
     word_and_count_list *       get_word_and_count_vectors(word_and_count_list* );
+    double                      get_stem_entropy();
 };
 
 #endif // CSIGNATURE_H

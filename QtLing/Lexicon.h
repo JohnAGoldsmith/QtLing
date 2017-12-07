@@ -62,6 +62,7 @@ public:
          }
     QString label() {return morph + "/" + sig_1->get_key() + "/" + sig_2->get_key(); }
     int     get_number_of_stems() {return shared_word_stems.size();}
+
 };
 
 
@@ -125,12 +126,13 @@ public:
     void                                        compute_sig_tree_edges();
     QList<simple_sig_tree_edge*> *              get_sig_tree_edges()        { return &m_SigTreeEdgeList;}
     QMap<QString, sig_tree_edge*>    *          get_sig_tree_edge_map()     { return & m_SigTreeEdgeMap;}
+    sig_tree_edge*                              get_sig_tree_edge(QString label) {return m_SigTreeEdgeMap[label];}
     QListIterator<simple_sig_tree_edge*>    *   get_sig_tree_edge_list_iter();
     QMapIterator<QString, sig_tree_edge*> *     get_sig_tree_edge_map_iter();
     void                                        set_progress_bar (QProgressBar * pPB) { m_ProgressBar = pPB;}
     void                                        set_status_bar(QStatusBar* pBar) {m_StatusBar = pBar;}
     void                                        set_prefixes_flag()         { m_SuffixesFlag = false;}
-    bool                                        get_suffix_flag()         { return m_SuffixesFlag; }
+    bool                                        get_suffix_flag()           { return m_SuffixesFlag; }
 public:
     // insert functions here
     void Crab_1();
