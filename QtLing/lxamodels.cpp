@@ -190,7 +190,7 @@ struct{
     {
         if (a->morph == b->morph){
             if (a->sig_1 == b->sig_1){
-                return b->sig_2 < b->sig_2;
+                return a->sig_2 < b->sig_2;
             }else
             {
                 return a->sig_1 < b->sig_1;
@@ -207,7 +207,10 @@ void LxaStandardItemModel::load_sig_tree_edges( QMap<QString, sig_tree_edge*> * 
     QMapIterator<word_t, sig_tree_edge*> * this_sig_tree_edge_iter = new QMapIterator<word_t, sig_tree_edge*>( * this_sig_tree_edge_map );
     while (this_sig_tree_edge_iter->hasNext())    {
         this_sig_tree_edge_iter->next();
-        temp_list.append(this_sig_tree_edge_iter->value());
+
+        if (this_sig_tree_edge_iter->value()->shared_word_stems.count() > 3) {
+            temp_list.append(this_sig_tree_edge_iter->value());
+        }
     }
     std::sort( temp_list.begin(),  temp_list.end(), custom_compare_2);
     QListIterator<sig_tree_edge*> temp_list_iter (temp_list);
