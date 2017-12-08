@@ -182,19 +182,34 @@ void LxaStandardItemModel::sort_signatures(eSortStyle sort_style)
 
 struct{
     bool operator ()(sig_tree_edge* a, sig_tree_edge* b) const {
-     //   qDebug() << a->label()<< a->words.size() << b->label() << b->words.size();
      return a->shared_word_stems.size() > b->shared_word_stems.size();
     }
 }custom_compare;
+struct{
+    bool operator ()(sig_tree_edge* a, sig_tree_edge* b) const
+    {
+        if (a->morph == b->morph){
+            if (a->sig_1 == b->sig_1){
+                return b->sig_2 < b->sig_2;
+            }else
+            {
+                return a->sig_1 < b->sig_1;
+            }
+        }  else
+        {
+            return a->morph < b->morph;
+        }
+    }
+}custom_compare_2;
+
 void LxaStandardItemModel::load_sig_tree_edges( QMap<QString, sig_tree_edge*> * this_sig_tree_edge_map )
 {   QList<sig_tree_edge*>               temp_list;
     QMapIterator<word_t, sig_tree_edge*> * this_sig_tree_edge_iter = new QMapIterator<word_t, sig_tree_edge*>( * this_sig_tree_edge_map );
     while (this_sig_tree_edge_iter->hasNext())    {
         this_sig_tree_edge_iter->next();
-       //qDebug() << this_sig_tree_edge_iter->value()->words.size();
         temp_list.append(this_sig_tree_edge_iter->value());
     }
-    std::sort( temp_list.begin(),  temp_list.end(), custom_compare);
+    std::sort( temp_list.begin(),  temp_list.end(), custom_compare_2);
     QListIterator<sig_tree_edge*> temp_list_iter (temp_list);
     while (temp_list_iter.hasNext())
      {
@@ -216,5 +231,5 @@ void LxaStandardItemModel::load_sig_tree_edges( QMap<QString, sig_tree_edge*> * 
      }
 
 
-}
+};
 

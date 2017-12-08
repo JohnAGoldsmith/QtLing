@@ -600,7 +600,7 @@ while (this_simple_sig_tree_edge_iter.hasNext())
         this_word_stem_struct->stem_2 = p_sig_tree_edge->stem_2;
         QString this_label = this_word_stem_struct->get_label();
         if ( ! p_sig_tree_edge_3->shared_word_stems.contains(this_label)){
-            p_sig_tree_edge_3->shared_word_stems[this_label] = this_word_stem_struct;
+               p_sig_tree_edge_3->shared_word_stems[this_label] = this_word_stem_struct;
         }
      } else {  // --> start a new sig_tree_edge with multiple stems <-- //
         sig_tree_edge * p_sig_tree_edge_2 = new sig_tree_edge(*p_sig_tree_edge);
@@ -645,7 +645,6 @@ void CLexicon::test_for_phonological_relations_between_signatures()
                  SignatureSet_1.insert(pSig1);
                  SignatureSet_2.insert(pSig2);
                  *m_PassiveSignatures << pSig1;
-                 //qDebug() << difference << pSig1->get_key() << pSig2->get_key() <<  649;
              }
        }
 

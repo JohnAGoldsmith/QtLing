@@ -192,7 +192,7 @@ UpperTableView::UpperTableView (MainWindow* window)
 void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
 {
     QString component;
-    qDebug() << "show model upper table" << index.data().toString();
+    //Debug() << "show model upper table" << index.data().toString();
     if (index.isValid()){
         component = index.data().toString();
     }
@@ -293,6 +293,7 @@ void LowerTableView::table_word(CWord* pWord ){
     }
     // Display the signatures this word bears:
     for (int signo = 0; signo < pWord->m_Signatures.size(); signo++){
+        qDebug() << signo;
         QString sig = pWord->GetSignatures()->at(signo)->second->get_key();
         QString stem = pWord->GetSignatures()->at(signo)->first->get_key();
         item_list.clear();
@@ -364,28 +365,49 @@ void LowerTableView::table_one_signature(CSignature* pSig, QStringList stems)
         item_list.clear();
     }
 }
+
 void LowerTableView::table_passive_signature(CSignature *p_this_sig)
 {
     QStandardItem*             p_item;
     QList<QStandardItem*>      item_list;
-
+    sig_tree_edge *            p_edge;
+    QMap<CSignature*, int>     stem_counter; // key is signature, value is number of stems shared with p_this_sig;
+    QList<CSignature*>         sig_list;
     if (m_my_current_model) { delete m_my_current_model;}
     m_my_current_model = new QStandardItemModel();
+    QString                       morph;
 
+    // put signatures in a Map, values are numbers of stems shared
     QMap<QString, sig_tree_edge*> * pMap = get_lexicon()->get_sig_tree_edge_map();
     QMapIterator<QString, sig_tree_edge*> this_sig_tree_edge_iter (*pMap);
     while (this_sig_tree_edge_iter.hasNext()){
-        this_sig_tree_edge_iter.next();
-        CSignature* pSig1 = this_sig_tree_edge_iter.value()->sig_1;
-        CSignature* pSig2 = this_sig_tree_edge_iter.value()->sig_2;
-        if (p_this_sig == pSig1){
-            item_list.clear();
-            p_item = new QStandardItem(pSig2->get_key());
-            item_list.append(p_item);
-            m_my_current_model->appendRow(item_list);
+        sig_tree_edge * p_edge  = this_sig_tree_edge_iter.next().value();
+        if (p_this_sig == p_edge->sig_1){
+            stem_counter[p_edge->sig_2] = p_edge->get_number_of_stems();
         }
-
     }
-
+    QStringList         temp_signatures;
+    QList<CSignature*>  sorted_signatures;
+    QList<int>          counts = stem_counter.values();
+    std::sort(counts.begin(), counts.end());
+    foreach (int count, counts){
+        QList<CSignature*> signatures =stem_counter.keys(count);
+        std::sort(signatures.begin(), signatures.end());
+        foreach (CSignature* pSig, signatures){
+            sorted_signatures.append(pSig);
+           // qDebug()<< pSig->get_key() << 398;
+        }
+    }
+    //qDebug() << sorted_signatures.count()<< 400;
+    for (int signo = sorted_signatures.count()-1; signo >= 0 ;signo-- ){
+        CSignature* pSig2 = sorted_signatures[signo];
+        sig_string sig2 = pSig2->get_key();
+        item_list.clear();
+        p_item = new QStandardItem(sig2);
+        item_list.append(p_item);
+        p_item = new QStandardItem(QString::number(stem_counter[pSig2]) );
+        item_list.append(p_item);
+        m_my_current_model->appendRow(item_list);
+        }
 
 }
