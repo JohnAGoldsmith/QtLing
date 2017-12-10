@@ -79,7 +79,7 @@ bool compare_stem_count(const CSignature* pSig1, const CSignature* pSig2)
 { return  pSig1->get_number_of_stems() > pSig2->get_number_of_stems();}
 
 bool compare_affix_count(const CSignature* pSig1, const CSignature* pSig2)
-{   if (pSig1->get_number_of_stems() == pSig2->get_number_of_stems())
+{   if (pSig1->get_number_of_affixes() == pSig2->get_number_of_affixes())
      {    return  pSig1->get_number_of_stems() > pSig2->get_number_of_stems(); }
      return pSig1->get_number_of_affixes() > pSig2->get_number_of_affixes();
 }
@@ -158,4 +158,13 @@ QList<word_and_count_list*> *   CSignatureCollection::get_count_vectors(QList<wo
         count_vectors->append(pSig->get_word_and_count_vectors(pVector));
     }
     return count_vectors;
+}
+void CSignatureCollection::calculate_stem_entropy()
+{
+    map_sigstring_to_sig_ptr_iter sig_iter (m_SignatureMap);
+    while (sig_iter.hasNext())
+    {
+        sig_iter.next();
+        sig_iter.value()->calculate_stem_entropy();
+    }
 }

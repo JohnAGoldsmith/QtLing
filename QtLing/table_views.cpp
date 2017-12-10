@@ -18,6 +18,7 @@ LowerTableView::LowerTableView(MainWindow * window)
    m_parent_window = window;
    m_number_of_columns = 20;
    m_lexicon = window->get_lexicon();
+   m_current_sortstyle = 0;
 }
 
  void LowerTableView::display_this_item( const  QModelIndex & index )
@@ -104,8 +105,16 @@ LowerTableView::LowerTableView(MainWindow * window)
              row = index.row();
              column = index.column();
         }
+     if (m_my_current_model) {
+         delete m_my_current_model;
+     }
+     m_my_current_model = new QStandardItemModel();
      sig_string sig = index.sibling(row,0).data().toString();
-     CSignature* pSig = this_lexicon->get_signatures()->get_signature(sig);
+     CSignature* pSig;
+     this_lexicon->get_suffix_flag()?
+            pSig = this_lexicon->get_signatures()->get_signature(sig):
+            pSig = this_lexicon->get_prefix_signatures()->get_signature(sig);
+     qDebug() << 110 << pSig->get_key();
      table_passive_signature(pSig);
      setModel( m_my_current_model);
     }
@@ -192,7 +201,7 @@ UpperTableView::UpperTableView (MainWindow* window)
 void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
 {
     QString component;
-    //Debug() << "show model upper table" << index.data().toString();
+    qDebug() << "show model upper table" << index.data().toString();
     if (index.isValid()){
         component = index.data().toString();
     }
@@ -226,6 +235,7 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         setModel(m_parent_window->m_Models["Residual parasignatures"]);
         set_document_type( SIGNATURE_RESIDUES );
         sortByColumn(1);
+        qDebug() << 238 << "table views";
     }
     else     if (component == "Parasuffixes"){
         setModel(m_parent_window->m_Models["Parasuffixes"]);
@@ -368,14 +378,14 @@ void LowerTableView::table_one_signature(CSignature* pSig, QStringList stems)
 
 void LowerTableView::table_passive_signature(CSignature *p_this_sig)
 {
-    QStandardItem*             p_item;
-    QList<QStandardItem*>      item_list;
-    sig_tree_edge *            p_edge;
-    QMap<CSignature*, int>     stem_counter; // key is signature, value is number of stems shared with p_this_sig;
-    QList<CSignature*>         sig_list;
-    if (m_my_current_model) { delete m_my_current_model;}
-    m_my_current_model = new QStandardItemModel();
-    QString                       morph;
+    QStandardItem*              p_item;
+    QList<QStandardItem*>       item_list;
+    sig_tree_edge *             p_edge;
+    QMap<CSignature*, int>      stem_counter; // key is signature, value is number of stems shared with p_this_sig;
+    QList<CSignature*>          sig_list;
+    m_my_current_model =        new QStandardItemModel();
+    QString                     morph;
+    QMap<CSignature*, QString>  Morphs;
 
     // put signatures in a Map, values are numbers of stems shared
     QMap<QString, sig_tree_edge*> * pMap = get_lexicon()->get_sig_tree_edge_map();
@@ -384,25 +394,47 @@ void LowerTableView::table_passive_signature(CSignature *p_this_sig)
         sig_tree_edge * p_edge  = this_sig_tree_edge_iter.next().value();
         if (p_this_sig == p_edge->sig_1){
             stem_counter[p_edge->sig_2] = p_edge->get_number_of_stems();
+            Morphs[p_edge->sig_2] = p_edge->morph;
         }
     }
+
     QStringList         temp_signatures;
     QList<CSignature*>  sorted_signatures;
     QList<int>          counts = stem_counter.values();
     std::sort(counts.begin(), counts.end());
-    foreach (int count, counts){
-        QList<CSignature*> signatures =stem_counter.keys(count);
-        std::sort(signatures.begin(), signatures.end());
-        foreach (CSignature* pSig, signatures){
-            sorted_signatures.append(pSig);
-           // qDebug()<< pSig->get_key() << 398;
-        }
-    }
-    //qDebug() << sorted_signatures.count()<< 400;
+    int                 count;
+
+    for (int i = 0; i < counts.size(); i++){
+            qDebug() << i <<404;
+            count = counts[i];
+            QList<CSignature*> signatures =stem_counter.keys(count);
+            std::sort(signatures.begin(), signatures.end());
+            foreach (CSignature* pSig, signatures){
+                sorted_signatures.append(pSig);
+            }
+     }
+
+
+
+
+
+
+ //        // --> this sorts by morph, then sig in column 2 <-- //
+//        foreach (int count, counts){
+//            QList<CSignature*> signatures =stem_counter.keys(count);
+//            std::sort(signatures.begin(), signatures.end());
+//            foreach (CSignature* pSig, signatures){
+//                sorted_signatures.append(pSig);
+//            }
+//        }
+//    }
+
     for (int signo = sorted_signatures.count()-1; signo >= 0 ;signo-- ){
         CSignature* pSig2 = sorted_signatures[signo];
         sig_string sig2 = pSig2->get_key();
         item_list.clear();
+        p_item = new QStandardItem(Morphs[pSig2]);
+        item_list.append(p_item);
         p_item = new QStandardItem(sig2);
         item_list.append(p_item);
         p_item = new QStandardItem(QString::number(stem_counter[pSig2]) );

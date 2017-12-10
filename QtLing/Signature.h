@@ -26,6 +26,7 @@ protected:
     QStringList                     m_Autobiography;
     bool                            m_SuffixFlag;
     CSignatureCollection*           m_SignatureCollection;
+    double                          m_stem_entropy;
 
 public:
 
@@ -59,7 +60,8 @@ public:
     bool                        contains (CSignature* other);
     void                        sort_stems();
     word_and_count_list *       get_word_and_count_vectors(word_and_count_list* );
-    double                      get_stem_entropy();
+    double                      get_stem_entropy()              {return m_stem_entropy;};
+    double                      calculate_stem_entropy();
 };
 
 #endif // CSIGNATURE_H

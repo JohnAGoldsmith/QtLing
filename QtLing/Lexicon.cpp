@@ -67,6 +67,9 @@ void CLexicon::Crab_2()
 {
     ReSignaturizeWithKnownAffixes();
     FindGoodSignaturesInsideParaSignatures();
+    m_SuffixesFlag ?
+        m_Signatures->calculate_stem_entropy():
+        m_PrefixSignatures->calculate_stem_entropy();
     compute_sig_tree_edges();
     compute_sig_tree_edge_map();
     test_for_phonological_relations_between_signatures();
@@ -354,7 +357,9 @@ void   CLexicon::AssignSuffixesToStems()
             pSig =  *m_ParaSignatures << this_signature_string;
             this_stem_t = p_this_stem_list->first();
             pStem = *m_ResidualStems << this_stem_t;
-            m_StatusBar->showMessage("Form signatures: 3d Parasignatures." + this_stem_t);
+            //if ( (int (count)/100) == int(count/100) ) {
+            //    m_StatusBar->showMessage("Form signatures: 3d Parasignatures." + this_stem_t);
+            //}
             pSig->add_stem_pointer(pStem);
             foreach (this_affix, this_affix_set){
                 if (this_affix == "NULL"){
@@ -372,6 +377,9 @@ void   CLexicon::AssignSuffixesToStems()
          }
     }
     m_Suffixes->sort_by_count();
+    m_SuffixesFlag ?
+        m_Signatures->calculate_stem_entropy():
+        m_PrefixSignatures->calculate_stem_entropy();
     qDebug() << "step 4 Finished finding signatures.";
     m_StatusBar->showMessage("Computation of Crab 1 completed.");
 }

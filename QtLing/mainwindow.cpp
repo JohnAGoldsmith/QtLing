@@ -200,7 +200,7 @@ void MainWindow::do_crab()
     m_Models["Suffixes"]            ->load_suffixes(get_lexicon()->get_suffixes());
     m_Models["Signatures"]          ->load_signatures(get_lexicon()->get_signatures());
     m_Models["Prefix signatures"]   ->load_signatures(get_lexicon()->get_prefix_signatures());
-    m_Models["Residual parasignatures"]->load_signatures(get_lexicon()->get_residual_signatures());
+    m_Models["Residual parasignatures"]->load_parasignatures(get_lexicon()->get_residual_signatures());
     m_Models["Parasuffixes"]        ->load_suffixes(get_lexicon()->get_parasuffixes());
     m_Models["Passive signatures"]  ->load_signatures(get_lexicon()->get_passive_signatures());
     createTreeModel();

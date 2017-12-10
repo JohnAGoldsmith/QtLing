@@ -160,22 +160,22 @@ word_and_count_list * CSignature::get_word_and_count_vectors(word_and_count_list
 }
 
 double log_base_2(double x)
-{   qDebug() << x << qLn(x)/qLn(2) << "signature.cpp 162";
-    return qLn(x) / qLn(2);
-
+{   //qDebug() << x << qLn(x)/qLn(2) << "signature.cpp 162";
+    return qLn(x) / qLn(2.0);
 }
 
-double CSignature::get_stem_entropy()
+double CSignature::calculate_stem_entropy()
 {
     QMap<QChar,double> counts;
-    int     total_count (0);
+    double     total_count (0);
     CStem* pStem;
     QChar  letter;
     double entropy;
     foreach (pStem, *m_Stems){
         stem_t this_stem = pStem->get_key();
-        letter = this_stem.at(this_stem.length()-1);
-        qDebug() << pStem->get_key() << letter;
+        m_SuffixFlag?
+            letter = this_stem.at(this_stem.length()-1):
+            letter = this_stem.at(0);
         if (counts.contains(letter)){
                 counts[letter]++;
         } else{
@@ -184,6 +184,8 @@ double CSignature::get_stem_entropy()
         total_count++;
     }
     if (counts.size() == 1){
+        m_stem_entropy = 0.0;
+        //qDebug() << "zero entropy" << this->get_key();
         return 0.0;
     }
     QMapIterator<QChar,double> this_iter (counts);
@@ -192,5 +194,7 @@ double CSignature::get_stem_entropy()
         double freq = counts[letter]/total_count;
         entropy += -1.0 * freq * log_base_2 (freq);
     }
+    m_stem_entropy = entropy;
+    //qDebug() << "Stem entropy of signature"<<entropy << 195;
     return entropy;
 }

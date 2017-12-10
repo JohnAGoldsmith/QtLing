@@ -129,7 +129,7 @@ void lxa_graphics_scene::ingest_signatures(CSignatureCollection* signatures){
     int max_size = 0;
     int sig_size;
     int MAXIMUM_NUMBER_OF_CONTAINMENT_EDGES = 2;
-    int MINIMUM_NUMBER_OF_STEMS = 5;
+    int MINIMUM_NUMBER_OF_STEMS = 2;
     CSignature * pSig, *qSig;
     map_sigstring_to_sig_ptr_iter sig_iter(*signatures->get_map());
     while(sig_iter.hasNext()){

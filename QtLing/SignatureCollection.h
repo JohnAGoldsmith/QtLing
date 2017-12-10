@@ -57,5 +57,6 @@ public:
     QMap<CSignature*,QList<CSignature*>*> * get_containment_map()           {return & m_ContainmentMap;}
     void                                    sort_each_signatures_stems_alphabetically();
     QList<word_and_count_list*> *           get_count_vectors(QList<word_and_count_list*> * count_vectors);
+    void                                    calculate_stem_entropy();
 };
 #endif // CSIGNATURECOLLECTION_H

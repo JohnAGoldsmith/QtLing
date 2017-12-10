@@ -113,6 +113,8 @@ class LowerTableView : public QTableView
     int                     m_number_of_columns;
     QStandardItemModel*     m_my_current_model;
     CLexicon *              m_lexicon;
+    int                     m_current_sortstyle;
+    int                     m_number_of_sortstyles;
 public:
     LowerTableView();
     LowerTableView(MainWindow*);
@@ -128,6 +130,7 @@ public slots:
         void graphics_sig_tree_edges(CSignature* , CLexicon*);
         int  get_number_of_columns () {return m_number_of_columns;}
         CLexicon* get_lexicon() {return m_lexicon;}
+        //void    advance_sortstyle() {m_sort}
 
 signals:
 };
