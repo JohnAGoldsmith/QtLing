@@ -11,7 +11,7 @@ CSignatureCollection::CSignatureCollection(bool suffix_flag)
     m_SortStyle				= KEY;
     m_MapIterator           = new map_sigstring_to_sig_ptr_iter (m_SignatureMap);
     m_SortedListIterator    = new     QListIterator<CSignature*> (m_SortList);
-    m_suffix_flag = suffix_flag;
+    m_suffix_flag           = suffix_flag;
     m_Lexicon               = NULL;
 }
 

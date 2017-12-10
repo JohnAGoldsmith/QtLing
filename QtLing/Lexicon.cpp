@@ -26,7 +26,7 @@ CLexicon::CLexicon(bool suffix_flag) : m_Words(new CWordCollection), m_Suffixes(
     m_ParaSignatures    =  new CSignatureCollection();
     m_ParaSuffixes          = new CSuffixCollection();
     m_ResidualStems         = new CStemCollection();
-    m_PrefixSignatures      = new CSignatureCollection();
+    m_PrefixSignatures      = new CSignatureCollection(false);
     m_PassiveSignatures     = new CSignatureCollection();
     m_SuffixesFlag = true;
 }

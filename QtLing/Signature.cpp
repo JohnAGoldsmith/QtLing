@@ -173,6 +173,9 @@ double CSignature::calculate_stem_entropy()
     double entropy;
     foreach (pStem, *m_Stems){
         stem_t this_stem = pStem->get_key();
+        if (m_SuffixFlag ){
+            qDebug() << "this is a suffix signature."<< 177 << "signature.cpp";
+        }
         m_SuffixFlag?
             letter = this_stem.at(this_stem.length()-1):
             letter = this_stem.at(0);
