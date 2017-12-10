@@ -58,5 +58,6 @@ public:
     void                                    sort_each_signatures_stems_alphabetically();
     QList<word_and_count_list*> *           get_count_vectors(QList<word_and_count_list*> * count_vectors);
     void                                    calculate_stem_entropy();
+    int                                     get_number_of_epositive_signatures();
 };
 #endif // CSIGNATURECOLLECTION_H

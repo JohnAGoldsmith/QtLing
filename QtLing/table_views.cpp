@@ -222,6 +222,11 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         set_document_type( SIGNATURES );
         set_content_type( "signatures");
     }
+    else     if (component == "EPositive Signatures"){
+        setModel(m_parent_window->m_Models["EPositive Signatures"]);
+        set_document_type( EPOSITIVE_SIGNATURES );
+        set_content_type( "signatures");
+    }
     else     if (component == "Prefix signatures"){
         setModel(m_parent_window->m_Models["Prefix signatures"]);
         set_document_type( PREFIX_SIGNATURES );

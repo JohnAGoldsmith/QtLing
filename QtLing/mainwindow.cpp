@@ -62,6 +62,7 @@ MainWindow::MainWindow()
     m_Models["Stems"]                   = new LxaStandardItemModel("Stems");
     m_Models["Suffixes"]                = new LxaStandardItemModel("Suffixes");
     m_Models["Signatures"]              = new LxaStandardItemModel("Signatures");
+    m_Models["EPositive Signatures"]    = new LxaStandardItemModel("EPositive Signatures");
     m_Models["Prefix signatures"]       = new LxaStandardItemModel("Prefix signatures");
     m_Models["Residual parasignatures"] = new LxaStandardItemModel("Residual parasignatures");
     m_Models["SigTreeEdges"]            = new LxaStandardItemModel("SigTreeEdges");
@@ -199,6 +200,8 @@ void MainWindow::do_crab()
     m_Models["Stems"]               ->load_stems(get_lexicon()->get_stems());
     m_Models["Suffixes"]            ->load_suffixes(get_lexicon()->get_suffixes());
     m_Models["Signatures"]          ->load_signatures(get_lexicon()->get_signatures());
+    m_Models["EPositive Signatures"]->load_positive_signatures(get_lexicon()->get_signatures());
+
     m_Models["Prefix signatures"]   ->load_signatures(get_lexicon()->get_prefix_signatures());
     m_Models["Residual parasignatures"]->load_parasignatures(get_lexicon()->get_residual_signatures());
     m_Models["Parasuffixes"]        ->load_suffixes(get_lexicon()->get_parasuffixes());
@@ -236,6 +239,7 @@ void MainWindow::do_crab2()
     qApp->processEvents();
 
     m_Models["Signatures"]          ->load_signatures(get_lexicon()->get_signatures());
+    m_Models["EPositive Signatures"]    ->load_positive_signatures(get_lexicon()->get_signatures());
     m_Models["Prefix signatures"]   ->load_signatures(get_lexicon()->get_prefix_signatures());
 
     statusBar()->showMessage("Loading signature-tree edges.");
@@ -477,6 +481,9 @@ void MainWindow::createTreeModel()
     QStandardItem * sig_item = new QStandardItem(QString("Signatures"));
     QStandardItem * sig_count_item = new QStandardItem(QString::number(get_lexicon()->GetSignatureCollection()->get_count()));
 
+    QStandardItem * pos_sig_item = new QStandardItem(QString("EPositive Signatures"));
+    QStandardItem * pos_sig_count_item = new QStandardItem(QString::number(get_lexicon()->GetSignatureCollection()->get_number_of_epositive_signatures()));
+
     QStandardItem * prefix_sig_item = new QStandardItem(QString("Prefix signatures"));
     QStandardItem * prefix_sig_count_item = new QStandardItem(QString::number(get_lexicon()->get_prefix_signatures()->get_count()));
 
@@ -514,6 +521,10 @@ void MainWindow::createTreeModel()
     sig_items.append(sig_item);
     sig_items.append(sig_count_item);
 
+    QList<QStandardItem*> pos_sig_items;
+    pos_sig_items.append(pos_sig_item);
+    pos_sig_items.append(pos_sig_count_item);
+
     QList<QStandardItem*> prefix_sig_items;
     prefix_sig_items.append(prefix_sig_item);
     prefix_sig_items.append(prefix_sig_count_item);
@@ -536,11 +547,11 @@ void MainWindow::createTreeModel()
 
 
     parent->appendRow(lexicon_items);
-
     lexicon_item->appendRow(word_items);
     lexicon_item->appendRow(stem_items);
     lexicon_item->appendRow(suffix_items);
     lexicon_item->appendRow(sig_items);
+    lexicon_item->appendRow(pos_sig_items);
     lexicon_item->appendRow(prefix_sig_items);
     lexicon_item->appendRow(sig_tree_edge_items);
     lexicon_item->appendRow(residual_sig_items);

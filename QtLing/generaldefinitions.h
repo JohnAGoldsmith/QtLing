@@ -12,6 +12,7 @@ enum eDocumentType  // for the Collection View
   PARASUFFIXES,
   PASSIVE_SIGNATURES,
   RESIDUAL_PARASIGNATURES,
+  EPOSITIVE_SIGNATURES, // positi
   NO_DOC,
   CORPUS_DOC,
   WORDS,

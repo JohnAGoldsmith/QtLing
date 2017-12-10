@@ -300,7 +300,7 @@ void   CLexicon::AssignSuffixesToStems()
         p_this_stem_list         = iter_sigstring_to_stems.value();
         affix_set this_affix_set = QSet<QString>::fromList( this_signature_string.split("="));
         //qDebug () << this_signature_string << this_affix_set <<  302;
-
+        qDebug () << this_signature_string<<  "signature."<< p_this_stem_list->size()<<  303;
         if (p_this_stem_list->size() >= MINIMUM_NUMBER_OF_STEMS)
         {  if( m_SuffixesFlag) {
                 pSig = *m_Signatures       << this_signature_string;
@@ -308,7 +308,7 @@ void   CLexicon::AssignSuffixesToStems()
                 pSig = *m_PrefixSignatures << this_signature_string;
                 pSig->set_suffix_flag(false);
             }
-            //qDebug () << this_signature_string<<  "Good signature."<< p_this_stem_list->size()<<  311;
+            qDebug() << this_signature_string << 311;
             pSig->add_memo("Pass 1");
             QSetIterator<suffix_t> affix_iter(this_affix_set);
             while(affix_iter.hasNext()){
@@ -357,6 +357,7 @@ void   CLexicon::AssignSuffixesToStems()
             pSig =  *m_ParaSignatures << this_signature_string;
             this_stem_t = p_this_stem_list->first();
             pStem = *m_ResidualStems << this_stem_t;
+            qDebug() << this_stem_t << 360;
             //if ( (int (count)/100) == int(count/100) ) {
             //    m_StatusBar->showMessage("Form signatures: 3d Parasignatures." + this_stem_t);
             //}
@@ -369,9 +370,12 @@ void   CLexicon::AssignSuffixesToStems()
                        this_word = this_stem_t + this_affix :
                        this_word = this_affix + this_stem_t;
                 }
+                qDebug() << this_word << 373;
                 pWord = m_Words->find_or_fail(this_word);
                 if (pWord){
-                    pWord->add_to_autobiography("*singleton signature=" + this_stem_t + "=" + this_signature_string);
+                    qDebug() << "word found "<< pWord->get_key() << 376;
+                    //pWord->add_to_autobiography("*singleton signature=" + this_stem_t + "=" + this_signature_string);
+                    qDebug() << 378;
                 }
             }
          }

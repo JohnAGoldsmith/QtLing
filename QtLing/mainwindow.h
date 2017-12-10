@@ -78,6 +78,8 @@ public:
     void        sort_signatures(eSortStyle);
     void        load_sig_tree_edges(QMap<QString, sig_tree_edge*> *);
     void        load_passive_signatures (CSignatureCollection* p_passive_signatures);
+    void        load_positive_signatures(CSignatureCollection* p_positive_signatures);
+    void        load_positive_prefix_signatures(CSignatureCollection* p_positive_prefix_signatures);
 };
 
 

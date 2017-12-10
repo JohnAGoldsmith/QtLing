@@ -168,3 +168,16 @@ void CSignatureCollection::calculate_stem_entropy()
         sig_iter.value()->calculate_stem_entropy();
     }
 }
+
+int CSignatureCollection::get_number_of_epositive_signatures()
+{   int count = 0;
+    map_sigstring_to_sig_ptr_iter sig_iter (m_SignatureMap);
+    while (sig_iter.hasNext())
+    {
+        sig_iter.next();
+        if (sig_iter.value()->get_stem_entropy() > 0.01){
+            count++;
+        }
+    }
+    return count;
+}

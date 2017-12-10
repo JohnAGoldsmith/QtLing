@@ -121,6 +121,31 @@ void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures)
     }
 }
 
+void LxaStandardItemModel::load_positive_signatures(CSignatureCollection* p_signatures)
+{
+    this->clear();
+    m_Signatures = p_signatures;
+    m_Description = "positive suffix signatures";
+    CSignature*         sig;
+    p_signatures->sort(SIG_BY_STEM_COUNT);
+    m_sort_style = SIG_BY_STEM_COUNT;
+    qDebug() << "load positive signatures"<<109;
+    for (int signo = 0; signo<p_signatures->get_count(); signo++)
+    {   sig = p_signatures->get_at_sorted(signo);
+        if (sig->get_stem_entropy() < 0.01)
+        {  qDebug() << 136 << sig->get_key();
+           continue;};
+        QList<QStandardItem*> items;
+        QStandardItem * item2 = new QStandardItem(QString::number(sig->get_number_of_stems()));
+        QStandardItem * item3 = new QStandardItem(QString::number(sig->get_robustness()));
+        QStandardItem * item4 = new QStandardItem(QString::number(sig->get_stem_entropy()));
+        items.append(new QStandardItem(sig->GetSignature()));
+        items.append(item2);
+        items.append(item3);
+        items.append(item4);
+        appendRow(items);
+    }
+}
 void LxaStandardItemModel::load_parasignatures(CSignatureCollection* p_signatures)
 {
     this->clear();
