@@ -175,7 +175,7 @@ int CSignatureCollection::get_number_of_epositive_signatures()
     while (sig_iter.hasNext())
     {
         sig_iter.next();
-        if (sig_iter.value()->get_stem_entropy() > 0.01){
+        if (sig_iter.value()->get_stem_entropy() > 0.1){
             count++;
         }
     }

@@ -201,7 +201,7 @@ UpperTableView::UpperTableView (MainWindow* window)
 void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
 {
     QString component;
-    qDebug() << "show model upper table" << index.data().toString();
+    qDebug() << "show model upper table" << index.data().toString() << "table views" << 204;
     if (index.isValid()){
         component = index.data().toString();
     }
@@ -226,10 +226,16 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         setModel(m_parent_window->m_Models["EPositive Signatures"]);
         set_document_type( EPOSITIVE_SIGNATURES );
         set_content_type( "signatures");
+        qDebug() << "epositive sigs"<< 229;
     }
     else     if (component == "Prefix signatures"){
         setModel(m_parent_window->m_Models["Prefix signatures"]);
         set_document_type( PREFIX_SIGNATURES );
+    }
+    else     if (component == "EPositive Prefix Signatures"){
+        setModel(m_parent_window->m_Models["EPositive Prefix Signatures"]);
+        set_document_type( EPOSITIVE_PREFIX_SIGNATURES );
+        set_content_type( "signatures");
     }
     else     if (component == "Signature tree edges"){
         setModel(m_parent_window->m_Models["SigTreeEdges"]);

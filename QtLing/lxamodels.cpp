@@ -106,9 +106,12 @@ void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures)
     CSignature*         sig;
     p_signatures->sort(SIG_BY_STEM_COUNT);
     m_sort_style = SIG_BY_STEM_COUNT;
-    qDebug() << "load signatures"<<109;
+    //qDebug() << "load signatures"<<109;
+    qDebug() << "load  signatures"<<110 << "number of them: " << p_signatures->get_count();
+
     for (int signo = 0; signo<p_signatures->get_count(); signo++)
     {   sig = p_signatures->get_at_sorted(signo);
+        qDebug() << 112 << sig->get_key() << signo;
         QList<QStandardItem*> items;
         QStandardItem * item2 = new QStandardItem(QString::number(sig->get_number_of_stems()));
         QStandardItem * item3 = new QStandardItem(QString::number(sig->get_robustness()));
@@ -129,11 +132,11 @@ void LxaStandardItemModel::load_positive_signatures(CSignatureCollection* p_sign
     CSignature*         sig;
     p_signatures->sort(SIG_BY_STEM_COUNT);
     m_sort_style = SIG_BY_STEM_COUNT;
-    qDebug() << "load positive signatures"<<109;
+    qDebug() << "load positive signatures"<<133 << "number of them: " << p_signatures->get_count();
     for (int signo = 0; signo<p_signatures->get_count(); signo++)
     {   sig = p_signatures->get_at_sorted(signo);
-        if (sig->get_stem_entropy() < 0.01)
-        {  qDebug() << 136 << sig->get_key();
+        if (sig->get_stem_entropy() < 0.1)
+        { qDebug() <<"lxamodels 136" << sig->get_key();
            continue;};
         QList<QStandardItem*> items;
         QStandardItem * item2 = new QStandardItem(QString::number(sig->get_number_of_stems()));
@@ -144,7 +147,9 @@ void LxaStandardItemModel::load_positive_signatures(CSignatureCollection* p_sign
         items.append(item3);
         items.append(item4);
         appendRow(items);
+        qDebug() << "appended a positive sig" << 148;
     }
+    qDebug() << "appended a positive sig" << 150;
 }
 void LxaStandardItemModel::load_parasignatures(CSignatureCollection* p_signatures)
 {
