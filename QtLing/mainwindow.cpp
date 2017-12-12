@@ -89,10 +89,7 @@ MainWindow::MainWindow()
 
     // set model for tree view
     m_leftTreeView->setModel(m_treeModel);
-    m_leftTreeView->setColumnWidth(1,100);
-    m_leftTreeView->setColumnWidth(0,1500);
 
-    // layout
     m_mainSplitter = new QSplitter();
     m_rightSplitter = new QSplitter(Qt::Vertical);   
     m_rightSplitter->addWidget(m_tableView_upper);
@@ -225,6 +222,7 @@ void MainWindow::do_crab()
 
 
     m_leftTreeView->expandAll();
+    m_leftTreeView->resizeColumnToContents(0);
     statusBar()->showMessage("All models are loaded.");
 
 }
