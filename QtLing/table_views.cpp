@@ -41,7 +41,7 @@ LowerTableView::LowerTableView(MainWindow * window)
         setModel( m_my_current_model);
     }
      //  ---------------------------------------------------//
-     else if (UpperView_type == SIGNATURES){
+     else if (UpperView_type == SIGNATURES || UpperView_type == EPOSITIVE_SIGNATURES ){
      //  ---------------------------------------------------//
          if (index.isValid()) {row = index.row();}
          signature = index.sibling(row,0).data().toString();
@@ -119,7 +119,7 @@ LowerTableView::LowerTableView(MainWindow * window)
      setModel( m_my_current_model);
     }
      //  ---------------------------------------------------//
-     else if (UpperView_type == SIGNATURE_TREE_EDGES){
+     else if (UpperView_type == SIGNATURE_TREE_EDGES) {
      //  ---------------------------------------------------//
         item_list.clear();
         if (index.isValid()){
@@ -186,6 +186,11 @@ LowerTableView::LowerTableView(MainWindow * window)
             resizeColumnsToContents();
         }
     }
+     //  ---------------------------------------------------//
+     else if (UpperView_type == SIGNATURE_TREE_EDGES) {
+     //  ---------------------------------------------------//
+    }
+     // add component 9
  }
 
  LeftSideTreeView::LeftSideTreeView(MainWindow* window)
@@ -263,6 +268,13 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         sortByColumn(1);
         qDebug() << "line 234 in table views.";
     }
+    else     if (component == "Hypotheses"){
+        setModel(m_parent_window->m_Models["Hypotheses"]);
+        set_document_type( HYPOTHESES );
+        sortByColumn(1);
+        qDebug() << "line 234 in table views.";
+    }
+// add component 10
     resizeColumnsToContents();
 }
 

@@ -4,6 +4,7 @@
 #include "StemCollection.h"
 #include "SuffixCollection.h"
 #include "QDebug"
+#include "hypothesis.h"
 
 LxaStandardItemModel::LxaStandardItemModel()
 {
@@ -206,6 +207,25 @@ void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures)
 }
 
 */
+void LxaStandardItemModel::load_hypotheses(QList<CHypothesis*>* p_hypotheses)
+{
+    this->clear();
+    m_Description = " ";
+    CHypothesis*         hypothesis;
+
+    for (int hypno = 0; hypno<p_hypotheses->count(); hypno++)
+    {   hypothesis = p_hypotheses->at(hypno);
+        QList<QStandardItem*> items;
+        QStandardItem * item1 = new QStandardItem(hypothesis->get_key());
+        items.append(item1);
+        appendRow(items);
+    }
+}
+
+
+
+
+// add component 12
 
 
 

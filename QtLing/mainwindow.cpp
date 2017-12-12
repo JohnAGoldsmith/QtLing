@@ -69,6 +69,8 @@ MainWindow::MainWindow()
     m_Models["SigTreeEdges"]            = new LxaStandardItemModel("SigTreeEdges");
     m_Models["Parasuffixes"]            = new LxaStandardItemModel("Parasuffixes");
     m_Models["Passive signatures"]      = new LxaStandardItemModel("Passive signatures");
+    m_Models["Hypotheses"]              = new LxaStandardItemModel("Hypotheses");
+// add component 3
 
     m_treeModel     = new QStandardItemModel();
 
@@ -207,7 +209,10 @@ void MainWindow::do_crab()
     m_Models["Residual parasignatures"]->load_parasignatures(get_lexicon()->get_residual_signatures());
     m_Models["Parasuffixes"]        ->load_suffixes(get_lexicon()->get_parasuffixes());
     m_Models["Passive signatures"]  ->load_signatures(get_lexicon()->get_passive_signatures());
+    m_Models["Hypotheses"]          ->load_hypotheses(get_lexicon()->get_hypotheses());
     createTreeModel();
+// add component 4
+
 
     delete m_graphics_scene;
     if (get_lexicon()->get_suffix_flag()){
@@ -255,7 +260,10 @@ void MainWindow::do_crab2()
     m_Models["Residual parasignatures"]->load_parasignatures(get_lexicon()->get_residual_signatures());
     m_Models["Parasuffixes"]        ->load_suffixes(get_lexicon()->get_parasuffixes());
     m_Models["Passive signatures"]  ->load_signatures(get_lexicon()->get_passive_signatures());
+    m_Models["Hypotheses"]          ->load_hypotheses(get_lexicon()->get_hypotheses());
     createTreeModel();
+
+// add component 5
 
     print_prefix_signatures();
 
@@ -504,7 +512,11 @@ void MainWindow::createTreeModel()
     QStandardItem * passive_signature_item = new QStandardItem(QString("Passive signatures"));
     QStandardItem * passive_signature_count_item = new QStandardItem(QString::number(get_lexicon()->get_passive_signatures()->get_count()));
 
+    QStandardItem * hypothesis_item = new QStandardItem(QString("Hypotheses"));
+    QStandardItem * hypothesis_count_item = new QStandardItem(QString::number(get_lexicon()->get_hypotheses()->count()));
 
+
+// add component 6
 
     QList<QStandardItem*> lexicon_items;
     lexicon_items.append(lexicon_item);
@@ -554,6 +566,11 @@ void MainWindow::createTreeModel()
     passive_signature_items.append(passive_signature_item);
     passive_signature_items.append(passive_signature_count_item);
 
+    QList<QStandardItem*> hypothesis_items;
+    hypothesis_items.append(hypothesis_item);
+    hypothesis_items.append(hypothesis_count_item);
+
+// add component 7
 
     parent->appendRow(lexicon_items);
     lexicon_item->appendRow(word_items);
@@ -567,7 +584,8 @@ void MainWindow::createTreeModel()
     lexicon_item->appendRow(residual_sig_items);
     lexicon_item->appendRow(parasuffix_items);
     lexicon_item->appendRow(passive_signature_items);
-
+    lexicon_item->appendRow(hypothesis_items);
+// add component 8
 }
 
 bool MainWindow::saveFile(const QString &fileName)

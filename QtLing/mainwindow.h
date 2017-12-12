@@ -80,6 +80,8 @@ public:
     void        load_passive_signatures (CSignatureCollection* p_passive_signatures);
     void        load_positive_signatures(CSignatureCollection* p_positive_signatures);
     void        load_positive_prefix_signatures(CSignatureCollection* p_positive_prefix_signatures);
+    void        load_hypotheses(QList<CHypothesis*>*);
+// add component 11
 };
 
 

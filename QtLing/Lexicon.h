@@ -16,7 +16,7 @@ class CStemCollection;
 class CSuffixCollection;
 class CPrefixCollection;
 class QProgressBar;
-
+class CHypothesis;
 
 class simple_sig_tree_edge{
 public:
@@ -93,6 +93,8 @@ protected:
     QMap<QString, sig_tree_edge*>   m_SigTreeEdgeMap;  /*!< the sig_tree_edges in here contain lists of words associated with them. */
     CSignatureCollection *          m_PassiveSignatures;  /*!< these signatures have stems one letter off from another signature. */
     CSignatureCollection *          m_SequentialSignatures; /*! signatures where one affix leads to another signature. */
+    QList<CHypothesis*> *            m_Hypotheses;
+// add component 1
 
     QProgressBar*                   m_ProgressBar;
     QStatusBar *                      m_StatusBar;
@@ -119,6 +121,7 @@ public:
     CSuffixCollection*                          get_parasuffixes()          { return m_ParaSuffixes;}
     CSignatureCollection*                       get_passive_signatures()    { return m_PassiveSignatures;}
     CSignatureCollection *                      get_sequential_signatures() { return m_SequentialSignatures;}
+    QList<CHypothesis*>*                        get_hypotheses ()           {return m_Hypotheses;}
     void                                        collect_parasuffixes();
 
 

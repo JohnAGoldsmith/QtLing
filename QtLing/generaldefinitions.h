@@ -14,6 +14,7 @@ enum eDocumentType  // for the Collection View
   RESIDUAL_PARASIGNATURES,
   EPOSITIVE_SIGNATURES, // positi
   EPOSITIVE_PREFIX_SIGNATURES,
+  HYPOTHESES,
   NO_DOC,
   CORPUS_DOC,
   WORDS,

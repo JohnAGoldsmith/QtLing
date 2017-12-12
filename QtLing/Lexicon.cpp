@@ -29,6 +29,8 @@ CLexicon::CLexicon(bool suffix_flag) : m_Words(new CWordCollection), m_Suffixes(
     m_ResidualStems         = new CStemCollection();
     m_PassiveSignatures     = new CSignatureCollection();
     m_SuffixesFlag = true;
+    m_Hypotheses            = new QList<CHypothesis*>;
+// add component 2
 }
 
 QListIterator<simple_sig_tree_edge*> * CLexicon::get_sig_tree_edge_list_iter()
@@ -433,6 +435,8 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
                                 m_ProgressBar->setMinimum(0);
                                 m_ProgressBar->setMaximum(m_ParaSignatures->get_count());
                                 m_Signatures->sort(SIG_BY_AFFIX_COUNT);
+                                m_StatusBar->showMessage("Resignaturize with known affixes");
+
     //---->   We iterate through the list of Residual Signatures <-------//
 
     map_sigstring_to_sig_ptr_iter   sig_iter(*  m_ParaSignatures->get_map());
@@ -731,7 +735,7 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
     CWord *                     pWord;
     QPair<QString,QString>      this_pair;
     CSignature*                 pSig;
-    QString                     this_stem_t, this_suffix, this_prefix, this_affix, this_signature_string, this_word;
+    QString                     this_stem_t, this_suffix_t, this_prefix, this_affix, this_signature_string, this_word;
     stem_list       *           p_this_stem_list;
     suffix_set *                this_ptr_to_suffix_set;
     affix_set *                 this_ptr_to_affix_set;
@@ -739,6 +743,8 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
     map_sigstring_to_suffix_set      temp_stems_to_affix_set;
     map_sigstring_to_stem_list        temp_signatures_to_stems;
     morph_set *                 pSet;
+
+    m_StatusBar->showMessage("Resignaturize with known affixes");
 
     map_string_to_word_ptr_iter word_iter (*m_Words->get_map());
     while(word_iter.hasNext()){
@@ -750,14 +756,14 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
         this_pair = m_Parses->at(parseno);
         if (m_SuffixesFlag){
             this_stem_t = this_pair.first;
-            this_suffix = this_pair.second;
-            if (! m_Suffixes->contains(this_suffix)){
+            this_suffix_t = this_pair.second;
+            if (! m_Suffixes->contains(this_suffix_t)){
                 continue;
             }
         } else{
             this_stem_t = this_pair.second;
-            this_suffix = this_pair.first;
-            if (! m_Prefixes->contains(this_suffix)){
+            this_suffix_t = this_pair.first;
+            if (! m_Prefixes->contains(this_suffix_t)){
                 continue;
             }
         }
@@ -770,7 +776,7 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
             }
             temp_stems_to_affix_set.insert(this_stem_t,pSet);
         }
-        temp_stems_to_affix_set.value(this_stem_t)->insert(this_suffix);
+        temp_stems_to_affix_set.value(this_stem_t)->insert(this_suffix_t);
             }
 
     //--> We iterate through these stems and for each stem, create QStringLists of their affixes. <--//
