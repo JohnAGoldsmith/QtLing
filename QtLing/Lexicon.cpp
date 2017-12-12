@@ -30,6 +30,7 @@ CLexicon::CLexicon(bool suffix_flag) : m_Words(new CWordCollection), m_Suffixes(
     m_PassiveSignatures     = new CSignatureCollection();
     m_SuffixesFlag = true;
     m_Hypotheses            = new QList<CHypothesis*>;
+    m_entropy_threshold_for_stems = 1.2;
 // add component 2
 }
 
@@ -597,7 +598,7 @@ word_t          this_word;
 simple_sig_tree_edge * p_sig_tree_edge;
 sig_tree_edge        * p_sig_tree_edge_2,
                      * p_sig_tree_edge_3;
-QMap<QString, sig_tree_edge*> * p_EdgeMap = & m_SigTreeEdgeMap;
+lxa_sig_tree_edge_map* p_EdgeMap = & m_SigTreeEdgeMap;
 
 QListIterator<simple_sig_tree_edge*> this_simple_sig_tree_edge_iter (m_SigTreeEdgeList);
 while (this_simple_sig_tree_edge_iter.hasNext())
@@ -631,7 +632,7 @@ while (this_simple_sig_tree_edge_iter.hasNext())
  */
 void CLexicon::test_for_phonological_relations_between_signatures()
 {
-   QMapIterator<QString, sig_tree_edge*> sig_iter (m_SigTreeEdgeMap);
+   lxa_sig_tree_edge_map_iter  sig_iter (m_SigTreeEdgeMap);
    QString difference;
    QSet<QString> differences_1_letter, differences_longer;
    while (sig_iter.hasNext()){
@@ -736,7 +737,7 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
     QPair<QString,QString>      this_pair;
     CSignature*                 pSig;
     QString                     this_stem_t, this_suffix_t, this_prefix, this_affix, this_signature_string, this_word;
-    stem_list       *           p_this_stem_list;
+    stem_list *                 p_this_stem_list;
     suffix_set *                this_ptr_to_suffix_set;
     affix_set *                 this_ptr_to_affix_set;
     CStem*                      pStem;

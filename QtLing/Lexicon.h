@@ -62,6 +62,10 @@ public:
          }
     QString label() {return morph + "/" + sig_1->get_key() + "/" + sig_2->get_key(); }
     int     get_number_of_stems() {return shared_word_stems.size();}
+    CSignature*     get_sig_1() {return sig_1;}
+    CSignature*     get_sig_2() {return sig_2;}
+    morph_t         get_morph() {return morph;}
+
 
 };
 
@@ -90,7 +94,7 @@ protected:
     CStemCollection *               m_StemsFromSubsignatures;
     CSignatureCollection*           m_Subsignatures;
     QList<simple_sig_tree_edge*>    m_SigTreeEdgeList; /*!< the sig_tree_edges in here contain only one word associated with each. */
-    QMap<QString, sig_tree_edge*>   m_SigTreeEdgeMap;  /*!< the sig_tree_edges in here contain lists of words associated with them. */
+    lxa_sig_tree_edge_map           m_SigTreeEdgeMap;  /*!< the sig_tree_edges in here contain lists of words associated with them. */
     CSignatureCollection *          m_PassiveSignatures;  /*!< these signatures have stems one letter off from another signature. */
     CSignatureCollection *          m_SequentialSignatures; /*! signatures where one affix leads to another signature. */
     QList<CHypothesis*> *            m_Hypotheses;
@@ -99,7 +103,7 @@ protected:
     QProgressBar*                   m_ProgressBar;
     QStatusBar *                      m_StatusBar;
 
-
+    double                          m_entropy_threshold_for_stems;
 
 public:
     CLexicon(bool suffix_flag = true);
@@ -123,16 +127,17 @@ public:
     CSignatureCollection *                      get_sequential_signatures() { return m_SequentialSignatures;}
     QList<CHypothesis*>*                        get_hypotheses ()           {return m_Hypotheses;}
     void                                        collect_parasuffixes();
+    void                                        generate_hypotheses();
 
 
     QList<QPair<QString,QString>>*              GetParses()                 { return m_Parses;}
     QMap<QString,int>*                          get_protostems()            { return &m_Protostems;}
     void                                        compute_sig_tree_edges();
     QList<simple_sig_tree_edge*> *              get_sig_tree_edges()        { return &m_SigTreeEdgeList;}
-    QMap<QString, sig_tree_edge*>    *          get_sig_tree_edge_map()     { return & m_SigTreeEdgeMap;}
+    lxa_sig_tree_edge_map *                     get_sig_tree_edge_map()     { return & m_SigTreeEdgeMap;}
     sig_tree_edge*                              get_sig_tree_edge(QString label) {return m_SigTreeEdgeMap[label];}
     QListIterator<simple_sig_tree_edge*>    *   get_sig_tree_edge_list_iter();
-    QMapIterator<QString, sig_tree_edge*> *     get_sig_tree_edge_map_iter();
+    lxa_sig_tree_edge_map_iter *                get_sig_tree_edge_map_iter();
     void                                        set_progress_bar (QProgressBar * pPB) { m_ProgressBar = pPB;}
     void                                        set_status_bar(QStatusBar* pBar) {m_StatusBar = pBar;}
     void                                        set_prefixes_flag()         { m_SuffixesFlag = false;}

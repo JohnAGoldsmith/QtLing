@@ -4,6 +4,7 @@
 //class CStem;
 class CWord;
 class CPrefix;
+class sig_tree_edge;
 //class CSignature;
 
 // These typedefs make it easier to write types with long names.
@@ -80,6 +81,8 @@ typedef QMapIterator<QString, CWord*>       map_string_to_word_ptr_iter;
 typedef QMapIterator<QString, CSuffix*>     map_string_to_suffix_ptr_iter;
 typedef QMapIterator<QString, CStem*>       map_string_to_stem_ptr_iter;
 
+typedef QMap<QString,sig_tree_edge*>        lxa_sig_tree_edge_map;
+typedef QMapIterator<QString,sig_tree_edge*>        lxa_sig_tree_edge_map_iter;
 
 struct word_stem_struct
 {

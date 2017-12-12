@@ -1,6 +1,7 @@
 #ifndef HYPOTHESIS_H
 #define HYPOTHESIS_H
 
+#include "QString"
 
 class CHypothesis
 {
