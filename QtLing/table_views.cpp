@@ -311,6 +311,8 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
     resizeColumnsToContents();
 }
 
+
+
 /**
  * @brief LowerTableView::graphics_sig_tree_edges
  * @param pSig
@@ -340,14 +342,22 @@ void LowerTableView::graphics_sig_tree_edges(CSignature* pSig, CLexicon* p_lexic
     m_parent_window->m_graphics_view->setScene(m_parent_window->m_graphics_scene);
 }
 
+/**
+ * @brief LowerTableView::table_word
+ * @param pWord
+ * What follows is a set of functions that display different kinds of user-requested information on the Lower Table View.
+ */
 void LowerTableView::table_word(CWord* pWord ){
     QList<QStandardItem*>      item_list;
     QStandardItem *            p_item, *q_item;
 
+    // Create a clean model.
     if (m_my_current_model){
         delete m_my_current_model;
     }
     m_my_current_model = new QStandardItemModel();
+
+    // Find the word's autobiography and set it, line by line, in the lower TableView.
     QListIterator<QString> line_iter(*pWord->get_autobiography());
     while (line_iter.hasNext()){
         QString report_line = line_iter.next();
@@ -411,6 +421,13 @@ void LowerTableView::table_signature(CSignature* pSig ){
     }
 }
 
+/**
+ * @brief LowerTableView::table_one_signature
+ * @param pSig
+ * @param stems
+ *
+ * This displays information about a single signature.
+ */
 void LowerTableView::table_one_signature(CSignature* pSig, QStringList stems)
 {
     QStandardItem*             p_item;
@@ -438,7 +455,12 @@ void LowerTableView::table_one_signature(CSignature* pSig, QStringList stems)
         item_list.clear();
     }
 }
-
+/**
+ * @brief LowerTableView::table_passive_signature
+ * @param p_this_sig
+ * A passive signature is a signature in which the set of stems all end (in the case of a suffixal system) with the same letter, or nearly so.
+ * Such signatures are unhealthy but sometimes very useful.
+ */
 void LowerTableView::table_passive_signature(CSignature *p_this_sig)
 {
     QStandardItem*              p_item;
