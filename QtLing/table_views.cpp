@@ -6,12 +6,17 @@
 #include "WordCollection.h"
 #include "graphics.h"
 class sig_tree_edge;
+
+/**
+ * @brief LowerTableView::LowerTableView
+ * This is the view on the lower right part of the screen.
+ * It usually gives additional information when the user clicks on the Upper Table View.
+ */
 LowerTableView::LowerTableView()
 {
    m_my_current_model =new  QStandardItemModel();
    m_number_of_columns = 20;
 }
-
 LowerTableView::LowerTableView(MainWindow * window)
 {
    m_my_current_model =new  QStandardItemModel();
@@ -20,7 +25,16 @@ LowerTableView::LowerTableView(MainWindow * window)
    m_lexicon = window->get_lexicon();
    m_current_sortstyle = 0;
 }
-
+/**
+  * @brief LowerTableView::display_this_item
+  * @param index
+  * This is the normal way to display something in this view. It starts with information
+  * from the user clicking the upper TableView. The UpperTable may be display many different
+  * kinds of things, so this function is broken up into pieces, each depending on what
+  * the Upper TableView is currently displaying.
+  * NB: This View can either by a Table or a Graphical View.
+  * The choice of these two options is controlled by keypress: Ctrl-G (for Graphics).
+  */
  void LowerTableView::display_this_item( const  QModelIndex & index )
  {
      eDocumentType              UpperView_type = m_parent_window->m_tableView_upper->get_document_type();
@@ -193,16 +207,35 @@ LowerTableView::LowerTableView(MainWindow * window)
      // add component 9
  }
 
+ /**
+  * @brief LeftSideTreeView::LeftSideTreeView
+  * @param window
+  *
+  */
  LeftSideTreeView::LeftSideTreeView(MainWindow* window)
  {
      m_parent_window = window;
  }
-
+ /**
+ * @brief UpperTableView::UpperTableView
+ * @param window
+ * This TableView responds to the User's click on the LeftSideTreeView.
+ */
 UpperTableView::UpperTableView (MainWindow* window)
 {
         m_parent_window = window;
         m_signature_sort_style = UNSPECIFIED;
 }
+
+/**
+ * @brief UpperTableView::ShowModelsUpperTableView
+ * @param index
+ * What is displayed in the UpperTableView is the direct result
+ * of what item the user clicks on the LeftTree; that is the
+ * input to this function.
+ * This function chooses one of the many Qt models that
+ * Crab generated when it had finished its work.
+ */
 void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
 {
     QString component;
@@ -278,6 +311,13 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
     resizeColumnsToContents();
 }
 
+/**
+ * @brief LowerTableView::graphics_sig_tree_edges
+ * @param pSig
+ * @param p_lexicon
+ *
+ *
+ */
 void LowerTableView::graphics_sig_tree_edges(CSignature* pSig, CLexicon* p_lexicon)
 {
     sig_tree_edge *       pSig_tree_edge;
