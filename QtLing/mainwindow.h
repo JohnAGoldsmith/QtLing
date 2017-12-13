@@ -73,7 +73,7 @@ public:
     void        load_words(CWordCollection*);
     void        load_stems(CStemCollection * p_stems);
     void        load_suffixes(CSuffixCollection * p_suffixes);
-    void        load_signatures(CSignatureCollection * p_signatures);
+    void        load_signatures(CSignatureCollection * p_signatures, eSortStyle = SIG_BY_STEM_COUNT);
     void        load_parasignatures(CSignatureCollection * p_signatures);
     void        sort_signatures(eSortStyle);
     void        load_sig_tree_edges(QMap<QString, sig_tree_edge*> *);
@@ -94,7 +94,7 @@ class UpperTableView : public QTableView
     eSortStyle      m_signature_sort_style;
 public:
     UpperTableView ();
-    UpperTableView (MainWindow*);
+    UpperTableView (MainWindow*, eSortStyle = DEFAULT);
     QString         get_content()                   {return m_content;}
     void            set_content_type(QString text)  {m_content = text;}
     MainWindow*     get_parent_window()             {return m_parent_window;}
@@ -227,7 +227,10 @@ private:
     //lxa_graphics_scene*     get_graphics_scene_2() {return m_graphics_scene_2;}
     QSplitter *             m_mainSplitter;
     QSplitter *             m_rightSplitter;
-    UpperTableView *        m_tableView_upper;
+    //UpperTableView *        m_tableView_upper;
+    UpperTableView *        m_tableView_upper_left;
+    UpperTableView *        m_tableView_upper_right;
+
     LowerTableView *        m_tableView_lower;
     LeftSideTreeView *      m_leftTreeView;
     lxa_graphics_scene *    m_graphics_scene;
@@ -238,6 +241,9 @@ private:
     //lxa_graphics_view *     m_graphics_view_2;
     bool                    m_graphic_display_flag;
     QStandardItemModel *    m_treeModel;
+
+    // new stuff:
+    QSplitter *             m_top_rightSplitter;
 
 
     QGroupBox *horizontalGroupBox;

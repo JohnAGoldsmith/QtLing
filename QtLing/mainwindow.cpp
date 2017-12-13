@@ -39,6 +39,7 @@
 #include <QSortFilterProxyModel>
 #include "mainwindow.h"
 #include "graphics.h"
+#include "generaldefinitions.h"
 
 //typedef  QMap<QString,CWord*>                       StringToWordPtr;
 //typedef  QPair<CStem*,CSignature*>                  stem_sig_pair;
@@ -78,24 +79,45 @@ MainWindow::MainWindow()
 
     // views
     m_leftTreeView      = new LeftSideTreeView(this);
-    m_tableView_upper   = new UpperTableView (this);
+//    m_tableView_upper_left   = new UpperTableView (this);
+    m_tableView_upper_left   = new UpperTableView (this);
+    m_tableView_upper_right  = new UpperTableView (this,  SIG_BY_AFFIX_COUNT);
     m_tableView_lower   = new LowerTableView (this);
-    m_tableView_upper->setSortingEnabled(true);
-
+//    m_tableView_upper->setSortingEnabled(true);
+    m_tableView_upper_left->setSortingEnabled(true);
+    m_tableView_upper_right->setSortingEnabled(true);
     m_graphics_scene = new lxa_graphics_scene (this, get_lexicon()->get_signatures());
     m_graphics_view  = new lxa_graphics_view(this);
     m_graphics_view->set_graphics_scene(m_graphics_scene);
     m_graphic_display_flag = false;             // toggle with Ctrl-G
 
+
+
     // set model for tree view
     m_leftTreeView->setModel(m_treeModel);
-
+    // whole window
     m_mainSplitter = new QSplitter();
-    m_rightSplitter = new QSplitter(Qt::Vertical);   
-    m_rightSplitter->addWidget(m_tableView_upper);
+    // on right side:
+    m_rightSplitter = new QSplitter(Qt::Vertical);
+
+    // new stuff:
+    m_top_rightSplitter = new QSplitter(Qt::Horizontal);
+    m_top_rightSplitter->addWidget(m_tableView_upper_left);
+    m_top_rightSplitter->addWidget(m_tableView_upper_right );
+
+
+//    m_rightSplitter->addWidget(m_tableView_upper); // this was here before i split upper right.
+
+    // entire right side:
+    m_rightSplitter->addWidget(m_top_rightSplitter);
     m_rightSplitter->addWidget(m_tableView_lower);
+
+    // top level (whole window)
+    // on left side:
     m_mainSplitter->addWidget(m_leftTreeView);
+    //m_mainSplitter->addWidget(m_rightSplitter); replaced by:
     m_mainSplitter->addWidget(m_rightSplitter);
+
     setCentralWidget(m_mainSplitter);
 
     m_ProgressBar  = new QProgressBar(this);
@@ -114,9 +136,12 @@ MainWindow::MainWindow()
     setCurrentFile(QString());
     setUnifiedTitleAndToolBarOnMac(true);
 
-    connect(m_leftTreeView, SIGNAL(clicked(const QModelIndex&)), m_tableView_upper, SLOT(ShowModelsUpperTableView(const QModelIndex&)));
-    connect(m_tableView_upper,SIGNAL(clicked(const QModelIndex & )), m_tableView_lower,SLOT(display_this_item(const QModelIndex &  )));
-
+  //connect(m_leftTreeView, SIGNAL(clicked(const QModelIndex&)), m_tableView_upper, SLOT(ShowModelsUpperTableView(const QModelIndex&)));
+    connect(m_leftTreeView, SIGNAL(clicked(const QModelIndex&)), m_tableView_upper_left, SLOT(ShowModelsUpperTableView(const QModelIndex&)));
+    connect(m_leftTreeView, SIGNAL(clicked(const QModelIndex&)), m_tableView_upper_right, SLOT(ShowModelsUpperTableView(const QModelIndex&)));
+//  connect(m_tableView_upper,SIGNAL(clicked(const QModelIndex & )), m_tableView_lower,SLOT(display_this_item(const QModelIndex &  )));
+    connect(m_tableView_upper_left,SIGNAL(clicked(const QModelIndex & )), m_tableView_lower,SLOT(display_this_item(const QModelIndex &  )));
+    connect(m_tableView_upper_right,SIGNAL(clicked(const QModelIndex & )), m_tableView_lower,SLOT(display_this_item(const QModelIndex &  )));
 }
 
 
@@ -197,24 +222,17 @@ void MainWindow::do_crab()
 qDebug() << 197;
     statusBar()->showMessage("We have returned from the Crab Nebula.");
     m_Models["Words"]               ->load_words(get_lexicon()->get_words());
-    qDebug() << 200;
     m_Models["Stems"]               ->load_stems(get_lexicon()->get_stems());
     m_Models["Suffixes"]            ->load_suffixes(get_lexicon()->get_suffixes());
     m_Models["Signatures"]          ->load_signatures(get_lexicon()->get_signatures());
-    qDebug() << 204;
     m_Models["EPositive Signatures"]->load_positive_signatures(get_lexicon()->get_signatures());
-    qDebug() << 206;
     m_Models["Prefix signatures"]   ->load_signatures(get_lexicon()->get_prefix_signatures());
-qDebug() << 205;
     m_Models["EPositive Prefix Signatures"]->load_positive_signatures(get_lexicon()->get_prefix_signatures());
     m_Models["Residual parasignatures"]->load_parasignatures(get_lexicon()->get_residual_signatures());
     m_Models["Parasuffixes"]        ->load_suffixes(get_lexicon()->get_parasuffixes());
- qDebug() << 208;
     m_Models["Passive signatures"]  ->load_signatures(get_lexicon()->get_passive_signatures());
- qDebug() << 210;
     m_Models["Hypotheses"]          ->load_hypotheses(get_lexicon()->get_hypotheses());
     createTreeModel();
-// add component 4
 qDebug() << 212;
 
     delete m_graphics_scene;
@@ -680,11 +698,11 @@ void MainWindow::print_prefix_signatures()
 void MainWindow::sort_upper_table()
 {
     // a signal comes to sort the contents of the upper table.
-    if (m_tableView_upper->get_document_type()== SIGNATURES){
-        if (m_tableView_upper->get_signature_sort_style()==SIG_BY_STEM_COUNT){
-            m_tableView_upper->set_signature_sort_style(SIG_BY_AFFIX_COUNT);
+    if (m_tableView_upper_left->get_document_type()== SIGNATURES){
+        if (m_tableView_upper_left->get_signature_sort_style()==SIG_BY_STEM_COUNT){
+            m_tableView_upper_left->set_signature_sort_style(SIG_BY_AFFIX_COUNT);
         } else{
-            m_tableView_upper->set_signature_sort_style(SIG_BY_STEM_COUNT);
+            m_tableView_upper_left->set_signature_sort_style(SIG_BY_STEM_COUNT);
         }
     }
 

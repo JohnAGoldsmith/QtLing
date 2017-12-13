@@ -37,8 +37,10 @@ LowerTableView::LowerTableView(MainWindow * window)
   */
  void LowerTableView::display_this_item( const  QModelIndex & index )
  {
-     eDocumentType              UpperView_type = m_parent_window->m_tableView_upper->get_document_type();
-     QString                    component = m_parent_window->m_tableView_upper->get_content();
+//     eDocumentType              UpperView_type = m_parent_window->m_tableView_upper->get_document_type();
+     eDocumentType              UpperView_type = m_parent_window->m_tableView_upper_left->get_document_type();
+//     QString                    component = m_parent_window->m_tableView_upper->get_content();
+     QString                    component = m_parent_window->m_tableView_upper_left->get_content();
      QString                    word, stem, prefix, suffix, signature;
      CLexicon *                 this_lexicon = get_parent_window()->get_lexicon();
      int                        row, column;
@@ -216,15 +218,20 @@ LowerTableView::LowerTableView(MainWindow * window)
  {
      m_parent_window = window;
  }
+
+
+
+
+
  /**
  * @brief UpperTableView::UpperTableView
  * @param window
  * This TableView responds to the User's click on the LeftSideTreeView.
  */
-UpperTableView::UpperTableView (MainWindow* window)
+UpperTableView::UpperTableView (MainWindow* window, eSortStyle this_sort_style)
 {
         m_parent_window = window;
-        m_signature_sort_style = UNSPECIFIED;
+        m_signature_sort_style = this_sort_style;
 }
 
 /**
@@ -235,9 +242,19 @@ UpperTableView::UpperTableView (MainWindow* window)
  * input to this function.
  * This function chooses one of the many Qt models that
  * Crab generated when it had finished its work.
+ *
+ * I have set up two knds of UpperTableViews, so that they can be seen
+ * side by side. They differ by sorting style. Signatures can be
+ * sorted by the number of stems or the number of affixes, for example.
+ *
+ * TODO: Make the different sortings be done by a Surrogate QView sorter.
+ * Right now I have created two different models for different sorts
+ * of the Signatures, which isn't the right way to do things in principle. Dec 2017.
+ * And I have had to do this several times.
  */
 void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
 {
+
     QString component;
     qDebug() << "show model upper table" << index.data().toString() << "table views" << 204;
     if (index.isValid()){
@@ -256,7 +273,11 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         set_document_type( SUFFIXES );
     }
     else     if (component == "Signatures"){
-        setModel(m_parent_window->m_Models["Signatures"]);
+        if (m_signature_sort_style==SIG_BY_AFFIX_COUNT){
+            setModel(m_parent_window->m_Models["Signatures"]);
+        } else{
+            setModel(m_parent_window->m_Models["Signatures by affix count"]);
+        }
         set_document_type( SIGNATURES );
         set_content_type( "signatures");
     }

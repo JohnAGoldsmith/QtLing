@@ -99,14 +99,17 @@ void LxaStandardItemModel::load_suffixes(CSuffixCollection * p_suffixes)
         appendRow(item_list);
     }
 }
-void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures)
+void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures, eSortStyle this_sort_style)
 {
     this->clear();
     m_Signatures = p_signatures;
     m_Description = "suffix signatures";
     CSignature*         sig;
-    p_signatures->sort(SIG_BY_STEM_COUNT);
-    m_sort_style = SIG_BY_STEM_COUNT;
+//    p_signatures->sort(SIG_BY_STEM_COUNT);
+//    m_sort_style = SIG_BY_STEM_COUNT;
+    p_signatures->sort(this_sort_style);
+    m_sort_style = this_sort_style;
+
     //qDebug() << "load signatures"<<109;
     qDebug() << "load  signatures"<<110 << "number of them: " << p_signatures->get_count();
 
@@ -124,6 +127,9 @@ void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures)
         appendRow(items);
     }
 }
+
+
+
 
 void LxaStandardItemModel::load_positive_signatures(CSignatureCollection* p_signatures)
 {

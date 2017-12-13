@@ -61,11 +61,13 @@ QMapIterator<QString, sig_tree_edge*> * CLexicon::get_sig_tree_edge_map_iter()
 void CLexicon::Crab_1()
 {
     FindProtostems();
+
     CreateStemAffixPairs();
 
     AssignSuffixesToStems();
 
     collect_parasuffixes();
+
     m_SuffixesFlag?
         m_Signatures->compute_containment_list():
         m_PrefixSignatures->compute_containment_list();
@@ -80,13 +82,19 @@ void CLexicon::Crab_1()
 void CLexicon::Crab_2()
 {
     ReSignaturizeWithKnownAffixes();
+
     FindGoodSignaturesInsideParaSignatures();
+
     m_SuffixesFlag ?
         m_Signatures->calculate_stem_entropy():
         m_PrefixSignatures->calculate_stem_entropy();
+
     compute_sig_tree_edges();
+
     compute_sig_tree_edge_map();
+
     test_for_phonological_relations_between_signatures();
+
     qDebug() << "finished crab 2.";
 }
 
@@ -394,12 +402,9 @@ void   CLexicon::AssignSuffixesToStems()
                        this_word = this_stem_t + this_affix :
                        this_word = this_affix + this_stem_t;
                 }
-                //qDebug() << this_word << 373;
                 pWord = m_Words->find_or_fail(this_word);
                 if (pWord){
-                    //qDebug() << "word found "<< pWord->get_key() << 376;
                     pWord->add_to_autobiography("*singleton signature=" + this_stem_t + "=" + this_signature_string);
-                    //qDebug() << 378;
                 }
             }
          }
@@ -430,8 +435,187 @@ bool contains(QList<QString> * list2, QList<QString> * list1){
 //      End of Crab 1
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+
+
 /*!
- * We look inside the ParaSignatures, and extract only the approved suffixes inside them.
+* This is lke AssignSuffixesToStems, but crucially: with Suffixes known ahead of time.
+* This creates signatures and stems: signatures that only have approved affixes.
+* First function of Crab_2.
+* I need to refactorize this function.
+*/
+void CLexicon::ReSignaturizeWithKnownAffixes()
+
+{   const int MINIMUM_NUMBER_OF_STEMS = 2;
+   CWord *                     pWord;
+   QPair<QString,QString>      this_pair;
+   CSignature*                 pSig;
+   QString                     this_stem_t, this_suffix_t, this_prefix, this_affix, this_signature_string, this_word;
+   stem_list *                 p_this_stem_list;
+   suffix_set *                this_ptr_to_suffix_set;
+   affix_set *                 this_ptr_to_affix_set;
+   CStem*                      pStem;
+   map_sigstring_to_suffix_set      temp_stems_to_affix_set;
+   map_sigstring_to_stem_list        temp_signatures_to_stems;
+   morph_set *                 pSet;
+
+   m_StatusBar->showMessage("Resignaturize with known affixes");
+   m_ProgressBar->reset();
+   m_ProgressBar->setMinimum(0);
+   m_ProgressBar->setMaximum(m_Parses->size());
+
+   map_string_to_word_ptr_iter word_iter (*m_Words->get_map());
+   while(word_iter.hasNext()){
+       pWord = word_iter.next().value();
+       pWord->clear_signatures();
+   }
+   //--> We establish a temporary map from stems to sets of affixes as we iterate through parses. <--//
+   for (int parseno = 0; parseno < m_Parses->size(); parseno++){
+       this_pair = m_Parses->at(parseno);
+       m_ProgressBar->setValue(parseno);
+       if (m_SuffixesFlag){
+           this_stem_t = this_pair.first;
+           this_suffix_t = this_pair.second;
+           if (! m_Suffixes->contains(this_suffix_t)){
+               continue;
+           }
+       } else{
+           this_stem_t = this_pair.second;
+           this_suffix_t = this_pair.first;
+           if (! m_Prefixes->contains(this_suffix_t)){
+               continue;
+           }
+       }
+
+       if (! temp_stems_to_affix_set.contains(this_stem_t)){
+           if (m_SuffixesFlag){
+               pSet = new suffix_set();
+           } else{
+               pSet = new prefix_set();
+           }
+           temp_stems_to_affix_set.insert(this_stem_t,pSet);
+       }
+       temp_stems_to_affix_set.value(this_stem_t)->insert(this_suffix_t);
+           }
+
+   //--> We iterate through these stems and for each stem, create QStringLists of their affixes. <--//
+   //--> then we create a "pre-signature" in a map that points to lists of stems. <--//
+   QMapIterator<QString, morph_set*>   stem_iter(temp_stems_to_affix_set);                       // part 1
+   m_ProgressBar->reset();
+   m_ProgressBar->setMinimum(0);
+   m_ProgressBar->setMaximum(temp_stems_to_affix_set.size());
+   int stem_count = 0;
+   while (stem_iter.hasNext())                                                                  // make a presignature for each stem.
+   {    stem_iter.next();
+       m_ProgressBar->setValue(stem_count++);
+        this_stem_t            = stem_iter.key();
+        //qDebug() <<789 << this_stem_t;
+        this_ptr_to_affix_set  = stem_iter.value();
+        if (this_ptr_to_affix_set->size() < 2){continue;}
+        QStringList temp_presignature;
+
+
+        affix_set_iter affix_iter (*this_ptr_to_affix_set);
+        while (affix_iter.hasNext()){
+                temp_presignature.append ( affix_iter.next() );
+        }
+
+        temp_presignature.sort();
+        sigstring_t this_signature_string = temp_presignature.join("=");
+        if ( ! temp_signatures_to_stems.contains(this_signature_string)){
+           stem_list * pStemSet = new stem_list;
+           temp_signatures_to_stems[this_signature_string] = pStemSet;
+        }
+        temp_signatures_to_stems.value(this_signature_string)->append(this_stem_t);
+   }
+
+   //-->  create signatures, stems, affixes:  <--//
+   m_Stems->clear();
+   if (m_SuffixesFlag){
+       m_Signatures->clear();
+   }else {
+       m_PrefixSignatures->clear();
+   }
+   QMapIterator<sigstring_t, stem_list*> iter_sigstring_to_stems ( temp_signatures_to_stems);
+   while (iter_sigstring_to_stems.hasNext())
+   {   iter_sigstring_to_stems.next();
+       this_signature_string    = iter_sigstring_to_stems.key();
+       p_this_stem_list         = iter_sigstring_to_stems.value();
+       this_stem_t =  p_this_stem_list->first();
+       affix_set this_affix_set = QSet<QString>::fromList( this_signature_string.split("="));
+       if (p_this_stem_list->size() >= MINIMUM_NUMBER_OF_STEMS)
+       {   m_SuffixesFlag ?
+               pSig = *m_Signatures       << this_signature_string :
+               pSig = *m_PrefixSignatures << this_signature_string;
+           pSig->add_memo("Pass 2");
+           QSetIterator<suffix_t> affix_iter(this_affix_set);
+           while(affix_iter.hasNext()){
+                 this_affix = affix_iter.next();
+                 if (m_SuffixesFlag){
+                     CSuffix* pSuffix = m_Suffixes->find_or_add(this_affix);
+                     pSuffix->increment_count();
+                     pSig->add_affix_ptr(pSuffix);
+                 }else{
+                     CPrefix* pPrefix = m_Prefixes->find_or_add(this_affix);
+                     pPrefix->increment_count();
+                     pSig->add_affix_ptr(pPrefix);
+                 }
+           }
+
+           // --> We go through this sig's stems and reconstitute its words. <--//
+           stem_list_iterator stem_iter(*p_this_stem_list);
+           while (stem_iter.hasNext()){
+               this_stem_t = stem_iter.next();
+               pStem = m_Stems->find_or_add(this_stem_t);
+               pStem->add_signature (this_signature_string);
+               pSig->add_stem_pointer(pStem);
+               pStem->add_memo ("Pass1= ");
+               QStringList affixes = this_signature_string.split("=");
+               foreach (affix_t this_affix,  affixes){
+                   if (this_affix == "NULL"){
+                       this_word = this_stem_t;
+                   } else{
+                       m_SuffixesFlag ?
+                           this_word = this_stem_t + this_affix :
+                           this_word = this_affix + this_stem_t ;
+                   }
+                   CWord* pWord = m_Words->get_word(this_word);
+                   pWord->add_stem_and_signature(pStem,pSig);
+                   pWord->add_to_autobiography("Pass2= " + this_stem_t + "=" + this_signature_string);
+               }
+           }
+
+       }else{
+           this_signature_string =  iter_sigstring_to_stems.key();
+           pSig =  *m_ParaSignatures << this_signature_string;
+           pStem = *m_ResidualStems << this_stem_t;
+           pSig->add_stem_pointer(pStem);
+           foreach (this_affix, this_affix_set){
+               if (this_affix == "NULL"){
+                   this_word = this_stem_t;
+               } else{
+                   m_SuffixesFlag ?
+                      this_word = this_stem_t + this_affix :
+                      this_word = this_affix + this_stem_t;
+               }
+               pWord = m_Words->find_or_fail(this_word);
+               if ( this_word != pWord->get_key()){
+                   qDebug() << this_word << pWord->get_key() << 795;
+               }
+               pWord->add_to_autobiography("*" + this_word + "=" + this_stem_t + "=" + this_signature_string);
+           }
+       }
+   }
+   m_Signatures->sort_each_signatures_stems_alphabetically();
+}
+
+
+
+
+/*!
+ * We look inside the ParaSignatures, and  find the longest approved signature inside each.
+ *
+ * 2nd function of Crab 2.
  */
 void   CLexicon::FindGoodSignaturesInsideParaSignatures()
 {   stem_t                      this_stem;
@@ -564,6 +748,8 @@ void CLexicon::replace_parse_pairs_from_current_signature_structure(bool FindSuf
  * contains the two signatures, the word, and the string-difference between
  * the stems of the word at the two signatures.
  * The edge has: signature1, signature2, a morph, and a pair of stems.
+ *
+ * This is Part 1 of the 3rd major function of Crab 2.
  */
 void CLexicon::compute_sig_tree_edges()
 {
@@ -617,6 +803,8 @@ void CLexicon::compute_sig_tree_edges()
  * SigTreeEdges which share the same signature pair and string-difference. This
  * flavor of sig_tree_edge contains a list of all the words that participate in
  * this particular sig_tree_edge.
+ *
+ * This is Part 2 of the 3rd major function of Crab 2.
  */
 void CLexicon::compute_sig_tree_edge_map() {
 morph_t         edge_label;
@@ -655,8 +843,6 @@ while (this_simple_sig_tree_edge_iter.hasNext())
  * This function looks at pairs of signatures joined by a sig-tree-edge, where
  * the morpheme that separates them is a single letter. We look to see  how tight
  * the fit is between these two sets of signatures.
- *
- * I do not think this function is currently being used.
  */
 void CLexicon::test_for_phonological_relations_between_signatures()
 {
@@ -733,6 +919,8 @@ void CLexicon::dump_suffixes(QList<QString> * pList)
  * @brief CLexicon::collect_parasuffixes
  * Parasignatures are signatures with only a single stem, hence are not used directly.
  * Parasuffixes are affixes found in a parasignature.
+ *
+ * Not currently in use.
  */
 void CLexicon::collect_parasuffixes()
 {   sigstring_t     sigstring;
@@ -757,176 +945,3 @@ void CLexicon::collect_parasuffixes()
 
 
 
-
-
-
- /*!
- * This is lke AssignSuffixesToStems, but with Stems known ahead of time.
- * This creates signatures and stems.
- * I need to refactorize this function.
- */
-void CLexicon::ReSignaturizeWithKnownAffixes()
-
-{   const int MINIMUM_NUMBER_OF_STEMS = 2;
-    CWord *                     pWord;
-    QPair<QString,QString>      this_pair;
-    CSignature*                 pSig;
-    QString                     this_stem_t, this_suffix_t, this_prefix, this_affix, this_signature_string, this_word;
-    stem_list *                 p_this_stem_list;
-    suffix_set *                this_ptr_to_suffix_set;
-    affix_set *                 this_ptr_to_affix_set;
-    CStem*                      pStem;
-    map_sigstring_to_suffix_set      temp_stems_to_affix_set;
-    map_sigstring_to_stem_list        temp_signatures_to_stems;
-    morph_set *                 pSet;
-
-    m_StatusBar->showMessage("Resignaturize with known affixes");
-
-    m_ProgressBar->reset();
-    m_ProgressBar->setMinimum(0);
-    m_ProgressBar->setMaximum(m_Parses->size());
-
-    map_string_to_word_ptr_iter word_iter (*m_Words->get_map());
-    while(word_iter.hasNext()){
-        pWord = word_iter.next().value();
-        pWord->clear_signatures();
-    }
-    //--> We establish a temporary map from stems to sets of affixes as we iterate through parses. <--//
-    for (int parseno = 0; parseno < m_Parses->size(); parseno++){
-        this_pair = m_Parses->at(parseno);
-        m_ProgressBar->setValue(parseno);
-        if (m_SuffixesFlag){
-            this_stem_t = this_pair.first;
-            this_suffix_t = this_pair.second;
-            if (! m_Suffixes->contains(this_suffix_t)){
-                continue;
-            }
-        } else{
-            this_stem_t = this_pair.second;
-            this_suffix_t = this_pair.first;
-            if (! m_Prefixes->contains(this_suffix_t)){
-                continue;
-            }
-        }
-
-        if (! temp_stems_to_affix_set.contains(this_stem_t)){
-            if (m_SuffixesFlag){
-                pSet = new suffix_set();
-            } else{
-                pSet = new prefix_set();
-            }
-            temp_stems_to_affix_set.insert(this_stem_t,pSet);
-        }
-        temp_stems_to_affix_set.value(this_stem_t)->insert(this_suffix_t);
-            }
-
-    //--> We iterate through these stems and for each stem, create QStringLists of their affixes. <--//
-    //--> then we create a "pre-signature" in a map that points to lists of stems. <--//
-    QMapIterator<QString, morph_set*>   stem_iter(temp_stems_to_affix_set);                       // part 1
-    m_ProgressBar->reset();
-    m_ProgressBar->setMinimum(0);
-    m_ProgressBar->setMaximum(temp_stems_to_affix_set.size());
-    int stem_count = 0;
-    while (stem_iter.hasNext())                                                                  // make a presignature for each stem.
-    {    stem_iter.next();
-        m_ProgressBar->setValue(stem_count++);
-         this_stem_t            = stem_iter.key();
-         //qDebug() <<789 << this_stem_t;
-         this_ptr_to_affix_set  = stem_iter.value();
-         if (this_ptr_to_affix_set->size() < 2){continue;}
-         QStringList temp_presignature;
-
-
-         affix_set_iter affix_iter (*this_ptr_to_affix_set);
-         while (affix_iter.hasNext()){
-                 temp_presignature.append ( affix_iter.next() );
-         }
-
-         temp_presignature.sort();
-         sigstring_t this_signature_string = temp_presignature.join("=");
-         if ( ! temp_signatures_to_stems.contains(this_signature_string)){
-            stem_list * pStemSet = new stem_list;
-            temp_signatures_to_stems[this_signature_string] = pStemSet;
-         }
-         temp_signatures_to_stems.value(this_signature_string)->append(this_stem_t);
-    }
-
-    //-->  create signatures, stems, affixes:  <--//
-    m_Stems->clear();
-    if (m_SuffixesFlag){
-        m_Signatures->clear();
-    }else {
-        m_PrefixSignatures->clear();
-    }
-    QMapIterator<sigstring_t, stem_list*> iter_sigstring_to_stems ( temp_signatures_to_stems);
-    while (iter_sigstring_to_stems.hasNext())
-    {   iter_sigstring_to_stems.next();
-        this_signature_string    = iter_sigstring_to_stems.key();
-        p_this_stem_list         = iter_sigstring_to_stems.value();
-        this_stem_t =  p_this_stem_list->first();
-        affix_set this_affix_set = QSet<QString>::fromList( this_signature_string.split("="));
-        if (p_this_stem_list->size() >= MINIMUM_NUMBER_OF_STEMS)
-        {   m_SuffixesFlag ?
-                pSig = *m_Signatures       << this_signature_string :
-                pSig = *m_PrefixSignatures << this_signature_string;
-            pSig->add_memo("Pass 2");
-            QSetIterator<suffix_t> affix_iter(this_affix_set);
-            while(affix_iter.hasNext()){
-                  this_affix = affix_iter.next();
-                  if (m_SuffixesFlag){
-                      CSuffix* pSuffix = m_Suffixes->find_or_add(this_affix);
-                      pSuffix->increment_count();
-                      pSig->add_affix_ptr(pSuffix);
-                  }else{
-                      CPrefix* pPrefix = m_Prefixes->find_or_add(this_affix);
-                      pPrefix->increment_count();
-                      pSig->add_affix_ptr(pPrefix);
-                  }
-            }
-
-            // --> We go through this sig's stems and reconstitute its words. <--//
-            stem_list_iterator stem_iter(*p_this_stem_list);
-            while (stem_iter.hasNext()){
-                this_stem_t = stem_iter.next();
-                pStem = m_Stems->find_or_add(this_stem_t);
-                pStem->add_signature (this_signature_string);
-                pSig->add_stem_pointer(pStem);
-                pStem->add_memo ("Pass1= ");
-                QStringList affixes = this_signature_string.split("=");
-                foreach (affix_t this_affix,  affixes){
-                    if (this_affix == "NULL"){
-                        this_word = this_stem_t;
-                    } else{
-                        m_SuffixesFlag ?
-                            this_word = this_stem_t + this_affix :
-                            this_word = this_affix + this_stem_t ;
-                    }
-                    CWord* pWord = m_Words->get_word(this_word);
-                    pWord->add_stem_and_signature(pStem,pSig);
-                    pWord->add_to_autobiography("Pass2= " + this_stem_t + "=" + this_signature_string);
-                }
-            }
-
-        }else{
-            this_signature_string =  iter_sigstring_to_stems.key();
-            pSig =  *m_ParaSignatures << this_signature_string;
-            pStem = *m_ResidualStems << this_stem_t;
-            pSig->add_stem_pointer(pStem);
-            foreach (this_affix, this_affix_set){
-                if (this_affix == "NULL"){
-                    this_word = this_stem_t;
-                } else{
-                    m_SuffixesFlag ?
-                       this_word = this_stem_t + this_affix :
-                       this_word = this_affix + this_stem_t;
-                }
-                pWord = m_Words->find_or_fail(this_word);
-                if ( this_word != pWord->get_key()){
-                    qDebug() << this_word << pWord->get_key() << 795;
-                }
-                pWord->add_to_autobiography("*" + this_word + "=" + this_stem_t + "=" + this_signature_string);
-            }
-        }
-    }
-    m_Signatures->sort_each_signatures_stems_alphabetically();
-}

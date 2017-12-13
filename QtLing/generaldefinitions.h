@@ -108,6 +108,7 @@ enum eDocumentType  // for the Collection View
 
 enum eSortStyle
 { UNSPECIFIED,
+  DEFAULT,
   KEY,
   REVERSE_KEY,
   CORPUSCOUNT,
