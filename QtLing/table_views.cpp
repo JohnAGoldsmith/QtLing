@@ -273,11 +273,11 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         set_document_type( SUFFIXES );
     }
     else     if (component == "Signatures"){
-        if (m_signature_sort_style==SIG_BY_AFFIX_COUNT){
+//        if (m_signature_sort_style==SIG_BY_AFFIX_COUNT){
             setModel(m_parent_window->m_Models["Signatures"]);
-        } else{
-            setModel(m_parent_window->m_Models["Signatures by affix count"]);
-        }
+//        } else{
+//            setModel(m_parent_window->m_Models["Signatures by affix count"]);
+//        }
         set_document_type( SIGNATURES );
         set_content_type( "signatures");
     }
