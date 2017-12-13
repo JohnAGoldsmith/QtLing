@@ -563,16 +563,18 @@ void CLexicon::replace_parse_pairs_from_current_signature_structure(bool FindSuf
  * A sig_tree_edge has two flavors: this function uses the flavor that
  * contains the two signatures, the word, and the string-difference between
  * the stems of the word at the two signatures.
+ * The edge has: signature1, signature2, a morph, and a pair of stems.
  */
 void CLexicon::compute_sig_tree_edges()
 {
-    CWord*                          pWord;
     map_string_to_word *            WordMap = m_Words->GetMap();
-    map_string_to_word_ptr_iter         word_iter(*WordMap);
-    simple_sig_tree_edge *                 p_SigTreeEdge;
-    int                             number_of_signatures;
+    map_string_to_word_ptr_iter     word_iter(*WordMap);
+    simple_sig_tree_edge *          p_SigTreeEdge;
     CSignatureCollection*           pSignatures;
+    CWord*                          pWord;
     morph_t                         difference;
+    int                             number_of_signatures;
+
     while (word_iter.hasNext())   {
         pWord = word_iter.next().value();
         number_of_signatures = pWord->GetSignatures()->size();
@@ -588,6 +590,7 @@ void CLexicon::compute_sig_tree_edges()
                     CSignature* sig2 = pair2->second;
                     if (sig1 == sig2){continue;}
                     int stem2length = stem2->get_key().length();
+                    // the following "if" is there so that the "difference" can be simply defined.
                     if (stem1length > stem2length){
                         int length_of_difference = stem1length - stem2length;
                         m_SuffixesFlag?
@@ -602,7 +605,6 @@ void CLexicon::compute_sig_tree_edges()
                         p_SigTreeEdge =  new simple_sig_tree_edge (sig2,sig1,difference, pWord->get_key(), stem2->get_key(), stem1->get_key());
                     }
                     m_SigTreeEdgeList.append(p_SigTreeEdge);
-                    //qDebug() << p_SigTreeEdge->word << p_SigTreeEdge->label() << 565 ;
                     pWord->add_to_autobiography("multiple parse=" + stem1->get_key() + "=" +  sig1->get_key() + "=" + stem2->get_key() + "=" + sig2->get_key());
                 }
             }
@@ -653,6 +655,8 @@ while (this_simple_sig_tree_edge_iter.hasNext())
  * This function looks at pairs of signatures joined by a sig-tree-edge, where
  * the morpheme that separates them is a single letter. We look to see  how tight
  * the fit is between these two sets of signatures.
+ *
+ * I do not think this function is currently being used.
  */
 void CLexicon::test_for_phonological_relations_between_signatures()
 {
@@ -697,6 +701,8 @@ void CLexicon::test_for_phonological_relations_between_signatures()
 /*!
  * This function takes two sets of signatures, each taken from the opposing signatures
  * in a sig-tree-edge, where the morph separating them is a specific morph of length = 1 letter.
+ *
+ * This is not currently being used.
  */
 void CLexicon::compare_opposite_sets_of_signatures(QSet<CSignature*>* sig_set_1, QSet<CSignature*>* sig_set_2, QString morph)
 {   sig_tree_edge * p_edge;
@@ -723,6 +729,11 @@ void CLexicon::dump_suffixes(QList<QString> * pList)
     return m_Suffixes->get_suffixes(pList);
 }
 
+/**
+ * @brief CLexicon::collect_parasuffixes
+ * Parasignatures are signatures with only a single stem, hence are not used directly.
+ * Parasuffixes are affixes found in a parasignature.
+ */
 void CLexicon::collect_parasuffixes()
 {   sigstring_t     sigstring;
     suffix_t        suffix;
@@ -752,6 +763,7 @@ void CLexicon::collect_parasuffixes()
  /*!
  * This is lke AssignSuffixesToStems, but with Stems known ahead of time.
  * This creates signatures and stems.
+ * I need to refactorize this function.
  */
 void CLexicon::ReSignaturizeWithKnownAffixes()
 
