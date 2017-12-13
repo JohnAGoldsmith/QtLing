@@ -34,6 +34,7 @@ CLexicon::CLexicon(bool suffix_flag) : m_Words(new CWordCollection), m_Suffixes(
 // add component 2
 }
 
+
 QListIterator<simple_sig_tree_edge*> * CLexicon::get_sig_tree_edge_list_iter()
 {
     QListIterator<simple_sig_tree_edge*> * iter = new QListIterator<simple_sig_tree_edge*>(m_SigTreeEdgeList);
@@ -50,7 +51,12 @@ QMapIterator<QString, sig_tree_edge*> * CLexicon::get_sig_tree_edge_map_iter()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //linguistic methods
-
+/**
+ * @brief CLexicon::Crab_1
+ * The division of the Crab algorithm into two parts (as I have done here) is only temporary.
+ * I have done it so that I can do code development more quickly; sometimes I only need to
+ * get part of the algorithm going to test what I am doing.
+ */
 
 void CLexicon::Crab_1()
 {
@@ -66,6 +72,11 @@ void CLexicon::Crab_1()
 
     qDebug() << "finished making signatures.";
  }
+
+/**
+ * @brief CLexicon::Crab_2
+ * Crab_2 is a bit slower than Crab_1.
+ */
 void CLexicon::Crab_2()
 {
     ReSignaturizeWithKnownAffixes();
@@ -415,7 +426,9 @@ bool contains(QList<QString> * list2, QList<QString> * list1){
     }
     return true;
 }
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//      End of Crab 1
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /*!
  * We look inside the ParaSignatures, and extract only the approved suffixes inside them.
