@@ -55,7 +55,7 @@ LowerTableView::LowerTableView(MainWindow * window)
         {   qDebug() << "trying to display a focus signature";}
     }
      //  ---------------------------------------------------//
-     else if (UpperView_type == PREFIX_SIGNATURES){
+     else if (UpperView_type == PREFIX_SIGNATURES || UpperView_type == EPOSITIVE_PREFIX_SIGNATURES) {
      //  ---------------------------------------------------//
         item_list.clear();
         if (index.isValid()) {row = index.row();}

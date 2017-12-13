@@ -194,22 +194,28 @@ void MainWindow::ask_for_filename()
 void MainWindow::do_crab()
 {   statusBar()->showMessage("Entering the Crab Nebula.");
     get_lexicon()->Crab_1();
-
-    statusBar()->showMessage("We have returned from the Crab Nebular.");
+qDebug() << 197;
+    statusBar()->showMessage("We have returned from the Crab Nebula.");
     m_Models["Words"]               ->load_words(get_lexicon()->get_words());
+    qDebug() << 200;
     m_Models["Stems"]               ->load_stems(get_lexicon()->get_stems());
     m_Models["Suffixes"]            ->load_suffixes(get_lexicon()->get_suffixes());
     m_Models["Signatures"]          ->load_signatures(get_lexicon()->get_signatures());
+    qDebug() << 204;
     m_Models["EPositive Signatures"]->load_positive_signatures(get_lexicon()->get_signatures());
+    qDebug() << 206;
     m_Models["Prefix signatures"]   ->load_signatures(get_lexicon()->get_prefix_signatures());
+qDebug() << 205;
     m_Models["EPositive Prefix Signatures"]->load_positive_signatures(get_lexicon()->get_prefix_signatures());
     m_Models["Residual parasignatures"]->load_parasignatures(get_lexicon()->get_residual_signatures());
     m_Models["Parasuffixes"]        ->load_suffixes(get_lexicon()->get_parasuffixes());
+ qDebug() << 208;
     m_Models["Passive signatures"]  ->load_signatures(get_lexicon()->get_passive_signatures());
+ qDebug() << 210;
     m_Models["Hypotheses"]          ->load_hypotheses(get_lexicon()->get_hypotheses());
     createTreeModel();
 // add component 4
-
+qDebug() << 212;
 
     delete m_graphics_scene;
     if (get_lexicon()->get_suffix_flag()){

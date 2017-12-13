@@ -112,7 +112,7 @@ void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures)
 
     for (int signo = 0; signo<p_signatures->get_count(); signo++)
     {   sig = p_signatures->get_at_sorted(signo);
-        qDebug() << 112 << sig->get_key() << signo;
+        //qDebug() << 112 << sig->get_key() << signo;
         QList<QStandardItem*> items;
         QStandardItem * item2 = new QStandardItem(QString::number(sig->get_number_of_stems()));
         QStandardItem * item3 = new QStandardItem(QString::number(sig->get_robustness()));
