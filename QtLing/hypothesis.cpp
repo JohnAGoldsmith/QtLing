@@ -18,6 +18,11 @@ void CLexicon::generate_hypotheses()
         }
         double minimal_savings = 0;
         double maximal_savings = 0;
+        word_stem_struct this_word_stems;
+        {
+             //this_word_stems = new word_stem_struct;
+
+        }
 
     }
 }

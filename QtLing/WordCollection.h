@@ -5,9 +5,9 @@
 #include <iterator>
 #include "generaldefinitions.h"
 #include <QMapIterator>
-
+#include "Lexicon.h"
 class CWord;
-class CLexicon;
+
 
 
 class CWordCollection
@@ -19,18 +19,19 @@ protected:
     QString                 m_MemberName;
     QStringList             m_SortedStringArray;
     QStringList             m_reverse_sort_list;
+    CLexicon *               m_Lexicon;
     bool                    m_SortValidFlag;
     enum                    eSortStyle m_SortStyle;
 
     public:
     // construction/destruction.
-    CWordCollection();
+    CWordCollection(CLexicon*);
 //    CWordCollection(CLexicon* Lex, QString MemberName = QString());
     ~CWordCollection();
 
 // disable copy
 private:
-    CWordCollection(const CWordCollection& x);
+//    CWordCollection(const CWordCollection& x);
     CWordCollection& operator=(const CWordCollection& x);
 
 public:

@@ -3,12 +3,13 @@
 #include <QDebug>
 #include "Word.h"
 
-CWordCollection::CWordCollection()
+CWordCollection::CWordCollection(CLexicon * lexicon)
 {
     m_CorpusCount			= 0;
     m_MemberName			= QString::null;
     m_SortValidFlag			= 0;
     m_SortStyle				= KEY;
+    m_Lexicon               = lexicon;
 }
 
 CWordCollection::~CWordCollection()

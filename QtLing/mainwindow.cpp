@@ -219,7 +219,7 @@ void MainWindow::ask_for_filename()
 void MainWindow::do_crab()
 {   statusBar()->showMessage("Entering the Crab Nebula.");
     get_lexicon()->Crab_1();
-qDebug() << 197;
+
     statusBar()->showMessage("We have returned from the Crab Nebula.");
     m_Models["Words"]               ->load_words(get_lexicon()->get_words());
     m_Models["Stems"]               ->load_stems(get_lexicon()->get_stems());

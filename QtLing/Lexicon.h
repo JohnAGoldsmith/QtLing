@@ -128,7 +128,7 @@ public:
     QList<CHypothesis*>*                        get_hypotheses ()           {return m_Hypotheses;}
     void                                        collect_parasuffixes();
     void                                        generate_hypotheses();
-
+    double                                      get_entropy_threshold_for_positive_signatures() {return m_entropy_threshold_for_stems;}
 
     QList<QPair<QString,QString>>*              GetParses()                 { return m_Parses;}
     QMap<QString,int>*                          get_protostems()            { return &m_Protostems;}
@@ -155,6 +155,7 @@ public:
     void test_for_phonological_relations_between_signatures();
     void compare_opposite_sets_of_signatures(QSet<CSignature*>* sig_set_1, QSet<CSignature*>* sig_set_2,QString letter);
     void replace_parse_pairs_from_current_signature_structure(bool FindSuffixesFlag=true);
+    void create_temporary_map_from_stems_to_affix_sets(map_sigstring_to_morph_set   &, map_sigstring_to_stem_list &);
 
 };
 

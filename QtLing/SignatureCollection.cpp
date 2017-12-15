@@ -1,8 +1,9 @@
 #include "SignatureCollection.h"
 #include <QDebug>
 #include "Typedefs.h"
+#include "Lexicon.h"
 
-CSignatureCollection::CSignatureCollection(bool suffix_flag)
+CSignatureCollection::CSignatureCollection(CLexicon* p_lexicon, bool suffix_flag)
 {
     //m_SignatureList         = QList<CSignature*>();
     m_CorpusCount			= 0;
@@ -12,7 +13,7 @@ CSignatureCollection::CSignatureCollection(bool suffix_flag)
     m_MapIterator           = new map_sigstring_to_sig_ptr_iter (m_SignatureMap);
     m_SortedListIterator    = new     QListIterator<CSignature*> (m_SortList);
     m_suffix_flag           = suffix_flag;
-    m_Lexicon               = NULL;
+    m_Lexicon               = p_lexicon;
 }
 
 CSignatureCollection::~CSignatureCollection()
@@ -175,7 +176,7 @@ int CSignatureCollection::get_number_of_epositive_signatures()
     while (sig_iter.hasNext())
     {
         sig_iter.next();
-        if (sig_iter.value()->get_stem_entropy() > 0.1){
+        if (sig_iter.value()->get_stem_entropy() > get_lexicon()->get_entropy_threshold_for_positive_signatures()){
             count++;
         }
     }

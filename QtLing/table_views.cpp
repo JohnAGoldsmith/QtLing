@@ -142,7 +142,7 @@ LowerTableView::LowerTableView(MainWindow * window)
              row = index.row();
              column = index.column();
         }
-        QString               edge_key = index.sibling(row,4).data().toString();
+        QString               edge_key = index.sibling(row,5).data().toString();
         sig_tree_edge*        this_edge = this_lexicon->get_sig_tree_edge_map()->value(edge_key);
         sig_tree_edge *       pSig_tree_edge;
         CSignature*           pSig;
@@ -346,7 +346,7 @@ void LowerTableView::graphics_sig_tree_edges(CSignature* pSig, CLexicon* p_lexic
     sig_tree_edge *       pSig_tree_edge;
     //-->  Graphic display in lower right window <--//
     // "Signatures" is what should be sent to the Model in the mainwindow.
-    CSignatureCollection Signatures;
+    CSignatureCollection Signatures(p_lexicon);
     Signatures << pSig;
     // We iterate through the SigTreeEdges in the SigTreeEdgeMap. If its Sig1 is pSig, then we enter it into Signatures;
     QMap<QString,sig_tree_edge*>::iterator edge_iter = p_lexicon->get_sig_tree_edge_map()->begin();

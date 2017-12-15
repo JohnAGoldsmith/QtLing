@@ -20,9 +20,9 @@ protected:
     QList<CStem*>               m_SortList;
     bool                        m_SortValidFlag;
     enum   eSortStyle           m_SortStyle;
-
+    CLexicon*                   m_Lexicon;
 public:
-    CStemCollection();
+    CStemCollection(CLexicon*);
     ~CStemCollection();
 
 // disable copy

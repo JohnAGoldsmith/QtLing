@@ -27,12 +27,12 @@ protected:
     bool                                    m_suffix_flag;
     CLexicon*                               m_Lexicon;
 public:
-    CSignatureCollection(bool suffix_flag = true);
+    CSignatureCollection(CLexicon*, bool suffix_flag = true);
     ~CSignatureCollection();
 
 // disable copy
 private:
-    CSignatureCollection(const CSignatureCollection& x);
+//    CSignatureCollection(const CSignatureCollection& x);
     CSignatureCollection& operator=(const CSignatureCollection& x);
 
 public:

@@ -16,6 +16,7 @@ CSignature::CSignature(QString signature_string, bool suffix_flag, CSignatureCol
   m_Prefixes = new CPrefix_ptr_list;
   m_SuffixFlag = suffix_flag;
   m_SignatureCollection = Signatures;
+  m_stem_entropy = 0;
 }
 
 CSignature::CSignature(CSignature& signature) {
@@ -24,6 +25,7 @@ CSignature::CSignature(CSignature& signature) {
     m_Suffixes = signature.get_suffix_list();
     m_Stems = new CStem_ptr_list();
     m_SuffixFlag = signature.get_suffix_flag();
+    m_stem_entropy = 0;
 }
 CSignature::~CSignature()
 {
@@ -170,7 +172,7 @@ double CSignature::calculate_stem_entropy()
     double     total_count (0);
     CStem* pStem;
     QChar  letter;
-    double entropy;
+    double entropy =0;
     foreach (pStem, *m_Stems){
         stem_t this_stem = pStem->get_key();
         if (m_SuffixFlag ){
@@ -198,6 +200,6 @@ double CSignature::calculate_stem_entropy()
         entropy += -1.0 * freq * log_base_2 (freq);
     }
     m_stem_entropy = entropy;
-    //qDebug() << "Stem entropy of signature"<<entropy << 195;
+    qDebug() << "Stem entropy of signature"<<entropy << 195;
     return entropy;
 }

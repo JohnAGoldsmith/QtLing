@@ -17,18 +17,20 @@
 #include "WordCollection.h"
 #include "Word.h"
 
-CLexicon::CLexicon(bool suffix_flag) : m_Words(new CWordCollection), m_Suffixes(new CSuffixCollection), m_Prefixes(new CPrefixCollection)
-{   m_Signatures            = new CSignatureCollection();
-    m_PrefixSignatures      = new CSignatureCollection(false);
-    m_Stems                 = new CStemCollection();
-    m_Compounds             = new CWordCollection();
+CLexicon::CLexicon( bool suffix_flag) :  m_Suffixes(new CSuffixCollection), m_Prefixes(new CPrefixCollection)
+{
+    m_Signatures            = new CSignatureCollection(this, true);
+    m_PrefixSignatures      = new CSignatureCollection(this,false);
+    m_Words                 = new CWordCollection(this);
+    m_Stems                 = new CStemCollection(this);
+    m_Compounds             = new CWordCollection(this);
     m_Parses                = new QList<QPair<QString,QString>>();
     m_Protostems            = QMap<QString, int>();
-    m_ParaSignatures        =  new CSignatureCollection();
+    m_ParaSignatures        =  new CSignatureCollection(this, true);
     m_ParaSuffixes          = new CSuffixCollection();
-    m_ResidualStems         = new CStemCollection();
-    m_PassiveSignatures     = new CSignatureCollection();
-    m_SuffixesFlag = true;
+    m_ResidualStems         = new CStemCollection(this);
+    m_PassiveSignatures     = new CSignatureCollection(this, true);
+    m_SuffixesFlag          = true;
     m_Hypotheses            = new QList<CHypothesis*>;
     m_entropy_threshold_for_stems = 1.2;
 // add component 2
@@ -376,7 +378,7 @@ void   CLexicon::AssignSuffixesToStems()
                     CWord* pWord = m_Words->get_word(this_word);
                     pWord->add_stem_and_signature(pStem,pSig);
                     pWord->add_to_autobiography("Pass1= " + this_stem_t + "=" + this_signature_string);
-                    qDebug() << pWord->get_key() << 348;
+                    //qDebug() << pWord->get_key() << 348;
                 }
             }
         }
@@ -448,16 +450,17 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
 
 {   const int MINIMUM_NUMBER_OF_STEMS = 2;
    CWord *                     pWord;
-   QPair<QString,QString>      this_pair;
    CSignature*                 pSig;
    QString                     this_stem_t, this_suffix_t, this_prefix, this_affix, this_signature_string, this_word;
    stem_list *                 p_this_stem_list;
    suffix_set *                this_ptr_to_suffix_set;
    affix_set *                 this_ptr_to_affix_set;
    CStem*                      pStem;
-   map_sigstring_to_suffix_set      temp_stems_to_affix_set;
-   map_sigstring_to_stem_list        temp_signatures_to_stems;
-   morph_set *                 pSet;
+   map_sigstring_to_suffix_set temp_stems_to_affix_set;
+   map_sigstring_to_morph_set& ref_stems_to_affix_set (temp_stems_to_affix_set);
+   map_sigstring_to_stem_list  temp_signatures_to_stems;
+   map_sigstring_to_stem_list& ref_temp_signatures_to_stems(temp_signatures_to_stems);
+//   morph_set *                 pSet;
 
    m_StatusBar->showMessage("Resignaturize with known affixes");
    m_ProgressBar->reset();
@@ -470,33 +473,8 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
        pWord->clear_signatures();
    }
    //--> We establish a temporary map from stems to sets of affixes as we iterate through parses. <--//
-   for (int parseno = 0; parseno < m_Parses->size(); parseno++){
-       this_pair = m_Parses->at(parseno);
-       m_ProgressBar->setValue(parseno);
-       if (m_SuffixesFlag){
-           this_stem_t = this_pair.first;
-           this_suffix_t = this_pair.second;
-           if (! m_Suffixes->contains(this_suffix_t)){
-               continue;
-           }
-       } else{
-           this_stem_t = this_pair.second;
-           this_suffix_t = this_pair.first;
-           if (! m_Prefixes->contains(this_suffix_t)){
-               continue;
-           }
-       }
 
-       if (! temp_stems_to_affix_set.contains(this_stem_t)){
-           if (m_SuffixesFlag){
-               pSet = new suffix_set();
-           } else{
-               pSet = new prefix_set();
-           }
-           temp_stems_to_affix_set.insert(this_stem_t,pSet);
-       }
-       temp_stems_to_affix_set.value(this_stem_t)->insert(this_suffix_t);
-           }
+   create_temporary_map_from_stems_to_affix_sets( ref_stems_to_affix_set, ref_temp_signatures_to_stems);
 
    //--> We iterate through these stems and for each stem, create QStringLists of their affixes. <--//
    //--> then we create a "pre-signature" in a map that points to lists of stems. <--//
@@ -609,7 +587,45 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
    m_Signatures->sort_each_signatures_stems_alphabetically();
 }
 
+/**
+ * helper function for preceeding function.
+ *
+ */
+void CLexicon::create_temporary_map_from_stems_to_affix_sets(map_sigstring_to_morph_set & ref_stems_to_affix_set,
+                                                             map_sigstring_to_stem_list & ref_temp_signatures_to_stems){
+    QPair<QString,QString>      this_pair;
+    QString                     this_stem_t, this_suffix_t;
+    morph_set *                 pSet;
 
+    // iterate through parselist, and assign to stem cand affix collections;
+    for (int parseno = 0; parseno < m_Parses->size(); parseno++){
+        this_pair = m_Parses->at(parseno);
+        m_ProgressBar->setValue(parseno);
+        if (m_SuffixesFlag){
+            this_stem_t = this_pair.first;
+            this_suffix_t = this_pair.second;
+            if (! m_Suffixes->contains(this_suffix_t)){
+                continue;
+            }
+        } else{
+            this_stem_t = this_pair.second;
+            this_suffix_t = this_pair.first;
+            if (! m_Prefixes->contains(this_suffix_t)){
+                continue;
+            }
+        }
+
+        if (! ref_stems_to_affix_set.contains(this_stem_t)){
+            if (m_SuffixesFlag){
+                pSet = new suffix_set();
+            } else{
+                pSet = new prefix_set();
+            }
+            ref_stems_to_affix_set.insert(this_stem_t,pSet);
+        }
+        ref_stems_to_affix_set.value(this_stem_t)->insert(this_suffix_t);
+        }
+}
 
 
 /*!
@@ -777,6 +793,7 @@ void CLexicon::compute_sig_tree_edges()
                     if (sig1 == sig2){continue;}
                     int stem2length = stem2->get_key().length();
                     // the following "if" is there so that the "difference" can be simply defined.
+                    //
                     if (stem1length > stem2length){
                         int length_of_difference = stem1length - stem2length;
                         m_SuffixesFlag?
@@ -835,6 +852,7 @@ while (this_simple_sig_tree_edge_iter.hasNext())
      } else {  // --> start a new sig_tree_edge with multiple stems <-- //
         sig_tree_edge * p_sig_tree_edge_2 = new sig_tree_edge(*p_sig_tree_edge);
         m_SigTreeEdgeMap.insert(p_sig_tree_edge_2->label(),p_sig_tree_edge_2);
+        qDebug() << 839 << "lexicon.cpp pSig 1 entropy"<< p_sig_tree_edge->sig_1->get_key() << p_sig_tree_edge->sig_1->get_stem_entropy();
      }
 }
 }

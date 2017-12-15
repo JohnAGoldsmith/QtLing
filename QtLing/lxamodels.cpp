@@ -139,11 +139,12 @@ void LxaStandardItemModel::load_positive_signatures(CSignatureCollection* p_sign
     CSignature*         sig;
     p_signatures->sort(SIG_BY_STEM_COUNT);
     m_sort_style = SIG_BY_STEM_COUNT;
-    qDebug() << "load positive signatures"<<133 << "number of them: " << p_signatures->get_count();
+    double threshold = p_signatures->get_lexicon()->get_entropy_threshold_for_positive_signatures();
+    //qDebug() << "load positive signatures"<<133 << "number of them: " << p_signatures->get_count();
     for (int signo = 0; signo<p_signatures->get_count(); signo++)
     {   sig = p_signatures->get_at_sorted(signo);
-        if (sig->get_stem_entropy() < 0.1)
-        { qDebug() <<"lxamodels 136" << sig->get_key();
+        if (sig->get_stem_entropy() < threshold)
+        { //qDebug() <<"lxamodels 136" << sig->get_key();
            continue;};
         QList<QStandardItem*> items;
         QStandardItem * item2 = new QStandardItem(QString::number(sig->get_number_of_stems()));
@@ -154,9 +155,9 @@ void LxaStandardItemModel::load_positive_signatures(CSignatureCollection* p_sign
         items.append(item3);
         items.append(item4);
         appendRow(items);
-        qDebug() << "appended a positive sig" << 148;
+        //qDebug() << "appended a positive sig" << 148;
     }
-    qDebug() << "appended a positive sig" << 150;
+    //qDebug() << "appended a positive sig" << 150;
 }
 void LxaStandardItemModel::load_parasignatures(CSignatureCollection* p_signatures)
 {
@@ -289,14 +290,15 @@ void LxaStandardItemModel::load_sig_tree_edges( QMap<QString, sig_tree_edge*> * 
         items.append(item1);
 
         QStandardItem * item2 = new QStandardItem(p_sig_tree_edge->sig_1->get_key());
-        QStandardItem * item3 = new QStandardItem(p_sig_tree_edge->sig_2->get_key());
-        QStandardItem * item4 = new QStandardItem(QString::number(p_sig_tree_edge->shared_word_stems.size()));
-        QStandardItem * item5 = new QStandardItem(p_sig_tree_edge->label());
+        QStandardItem * item3 = new QStandardItem(QString::number(p_sig_tree_edge->sig_1->get_stem_entropy()));
+        QStandardItem * item4 = new QStandardItem(p_sig_tree_edge->sig_2->get_key());
+        QStandardItem * item5 = new QStandardItem(QString::number(p_sig_tree_edge->shared_word_stems.size()));
+        QStandardItem * item6 = new QStandardItem(p_sig_tree_edge->label());
         items.append(item2);
         items.append(item3);
         items.append(item4);
         items.append(item5);
-
+        items.append(item6);
         appendRow(items);
      }
 
