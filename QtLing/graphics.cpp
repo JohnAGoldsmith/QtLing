@@ -18,10 +18,31 @@ graphic_signature::graphic_signature(int x, int y, CSignature* pSig, lxa_graphic
     m_graphics_scene = scene;
     m_signature = pSig;
     m_color = Qt::red;
+    //scene->setForegroundBrush(m_color);
     QGraphicsItem::setAcceptHoverEvents(true);
     QGraphicsItem::ItemIsSelectable;
     QGraphicsItem::ItemIsMovable;
-    scene->addEllipse(x,y,radius ,radius,QPen(),QBrush(m_color));
+    switch(pSig->get_number_of_affixes()){
+    case 3:{
+        QPolygon triangle;
+        triangle.append(QPoint(x,y+27));
+        triangle.append(QPoint(x+40,y+27));
+        triangle.append(QPoint(x+20,y-13));
+        triangle.append(QPoint(x,y+25));
+        QGraphicsPolygonItem * pTriangleItem = scene->addPolygon(triangle,QPen(), QBrush(m_color));
+        break;}
+    case 4:{
+        QPolygon square;
+        square.append(QPoint(x,y+27));
+        square.append(QPoint(x+40,y+27));
+        square.append(QPoint(x+40,y-13));
+        square.append(QPoint(x,y-13));
+        square.append(QPoint(x,y+27));
+        QGraphicsPolygonItem * p_square_item = scene->addPolygon(square,QPen(), QBrush(m_color));
+        break;}
+    default:
+        scene->addEllipse(x,y,radius ,radius,QPen(),QBrush(m_color));
+    }
 
     QGraphicsTextItem * p_text_item = new QGraphicsTextItem;
     p_text_item->setPlainText(pSig->get_key());
@@ -96,8 +117,8 @@ lxa_graphics_scene::lxa_graphics_scene (MainWindow * window, CSignatureCollectio
 
     m_main_window = window;
     m_location_of_bottom_row = 0;
-    m_row_delta = 80;
-    m_column_delta = 150;
+    m_row_delta = 100;
+    m_column_delta = 200;
     ingest_signatures(p_signatures);
     set_focus_signature_1 (pSig1);
     set_focus_signature_2 (pSig2);
