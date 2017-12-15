@@ -15,10 +15,11 @@ class CSuffixCollection
 protected:
     QMap<QString, CSuffix*>  m_SuffixMap;
     CSuffix_ptr_list         m_SortedList;
+    CLexicon*              m_Lexicon;
 
 public:
     //construction/destruction
-    CSuffixCollection();
+    CSuffixCollection(CLexicon*);
     ~CSuffixCollection();
 
 // disable copy
@@ -46,10 +47,11 @@ class CPrefixCollection
 {
 protected:
     QMap<QString, CPrefix*> m_PrefixMap;
+    CLexicon*               m_Lexicon;
 
 public:
     //construction/destruction
-    CPrefixCollection();
+    CPrefixCollection(CLexicon* );
     ~CPrefixCollection();
 
 // disable copy

@@ -1,11 +1,12 @@
 #include "SuffixCollection.h"
 #include <QDebug>
-//#include "Parse.h"
-//#include "Suffix.h"
 
-CSuffixCollection::CSuffixCollection()
+class CLexicon;
+
+CSuffixCollection::CSuffixCollection(CLexicon* lexicon)
 {
     m_SuffixMap = QMap<QString, CSuffix*>();
+    m_Lexicon  = lexicon;
 }
 CSuffixCollection::~CSuffixCollection() {
 
@@ -84,9 +85,10 @@ void CSuffixCollection::sort_by_count()
 
 
 
-CPrefixCollection::CPrefixCollection()
+CPrefixCollection::CPrefixCollection(CLexicon* lexicon)
 {
     m_PrefixMap = QMap<QString, CPrefix*>();
+    m_Lexicon   = lexicon;
 }
 CPrefixCollection::~CPrefixCollection() {
 

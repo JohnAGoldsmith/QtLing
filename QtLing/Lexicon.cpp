@@ -17,17 +17,19 @@
 #include "WordCollection.h"
 #include "Word.h"
 
-CLexicon::CLexicon( bool suffix_flag) :  m_Suffixes(new CSuffixCollection), m_Prefixes(new CPrefixCollection)
+CLexicon::CLexicon( bool suffix_flag)
 {
     m_Signatures            = new CSignatureCollection(this, true);
     m_PrefixSignatures      = new CSignatureCollection(this,false);
     m_Words                 = new CWordCollection(this);
     m_Stems                 = new CStemCollection(this);
+    m_Suffixes              = new CSuffixCollection(this);
+    m_Prefixes              = new CPrefixCollection(this);
     m_Compounds             = new CWordCollection(this);
     m_Parses                = new QList<QPair<QString,QString>>();
     m_Protostems            = QMap<QString, int>();
     m_ParaSignatures        =  new CSignatureCollection(this, true);
-    m_ParaSuffixes          = new CSuffixCollection();
+    m_ParaSuffixes          = new CSuffixCollection(this);
     m_ResidualStems         = new CStemCollection(this);
     m_PassiveSignatures     = new CSignatureCollection(this, true);
     m_SuffixesFlag          = true;
