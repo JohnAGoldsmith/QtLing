@@ -85,8 +85,7 @@ MainWindow::MainWindow()
     m_tableView_upper_left->setSortingEnabled(true);
     m_tableView_upper_right->setSortingEnabled(true);
 
-    // this next line should be removed; we don't need to do this here.
-    m_graphics_scene            = new lxa_graphics_scene (this, get_lexicon()->get_signatures(),DT_All_Suffix_Signatures);
+    m_graphics_scene            = new lxa_graphics_scene (this);
     m_graphics_view             = new lxa_graphics_view(this);
     m_graphics_view->set_graphics_scene(m_graphics_scene);
     m_graphic_display_flag      = false;             // toggle with Ctrl-G
@@ -236,7 +235,6 @@ void MainWindow::do_crab()
     m_Models["Passive signatures"]  ->load_signatures(get_lexicon()->get_passive_signatures());
     m_Models["Hypotheses"]          ->load_hypotheses(get_lexicon()->get_hypotheses());
     createTreeModel();
-qDebug() << 212;
 
     delete m_graphics_scene;
     if (get_lexicon()->get_suffix_flag()){
@@ -290,7 +288,10 @@ void MainWindow::do_crab2()
 
     print_prefix_signatures();
 
-    delete m_graphics_scene;
+    m_graphics_scene->clear();
+
+
+
     if (get_lexicon()->get_suffix_flag()) {
         m_graphics_scene = new lxa_graphics_scene(this, get_lexicon()->get_signatures(),DT_All_Suffix_Signatures);
     }else {

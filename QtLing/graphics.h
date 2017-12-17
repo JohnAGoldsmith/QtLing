@@ -73,6 +73,7 @@ class lxa_graphics_scene : public QGraphicsScene
     QMap<CSignature*, int>                  m_map_from_sig_to_column_no;
     CSignature*                             m_focus_signature_1;
     CSignature*                             m_focus_signature_2;
+    CSignatureCollection *                  m_signature_collection;
     int                                     m_row_delta;
     int                                     m_column_delta;
     int                                     m_location_of_bottom_row;
@@ -83,8 +84,10 @@ private:
 public:
                     lxa_graphics_scene( MainWindow * , CSignatureCollection*, eDisplayType this_display_type, CSignature* pSig1 = NULL, CSignature* pSig2 = NULL );
                     ~lxa_graphics_scene();
+                    lxa_graphics_scene(MainWindow *);
     void            set_graphics_view (lxa_graphics_view* );
-    void            ingest_signatures(CSignatureCollection* );
+    void            set_parameters (CSignatureCollection*, eDisplayType);
+    void            ingest_signatures(CSignatureCollection*, eDisplayType );
     void            add_signature_containment_edge (QPair<CSignature*, CSignature*>* pPair)
                             {m_signature_containment_edges.append (pPair); }
     void            place_signatures();

@@ -122,17 +122,31 @@ void lxa_graphics_view::mousePressEvent(QMouseEvent* event)
 
 
     QGraphicsView::mousePressEvent(event);
+};
+lxa_graphics_scene::lxa_graphics_scene(MainWindow * window){
+    m_main_window = window;
+    m_location_of_bottom_row = 0;
+    m_row_delta = 100;
+    m_column_delta = 200;
+
+};
+
+void lxa_graphics_scene::set_parameters(CSignatureCollection* p_signatures, eDisplayType this_display_type)
+{
+    m_signature_collection  = p_signatures;
+    m_display_type          = this_display_type;
 }
 
-lxa_graphics_scene::lxa_graphics_scene (MainWindow * window, CSignatureCollection* p_signatures, eDisplayType display_type, CSignature* pSig1, CSignature * pSig2)
-{   qDebug() << "scene constructor" << 128 << display_type;
+//  deprecated:
+lxa_graphics_scene::lxa_graphics_scene (MainWindow * window, CSignatureCollection* p_signatures, eDisplayType this_display_type, CSignature* pSig1, CSignature * pSig2)
+{   qDebug() << "scene constructor" << 128 << this_display_type;
 
     m_main_window = window;
     m_location_of_bottom_row = 0;
     m_row_delta = 100;
     m_column_delta = 200;
-    m_display_type = display_type;
-    ingest_signatures(p_signatures);
+    m_display_type = this_display_type;
+    ingest_signatures(p_signatures, this_display_type);
     set_focus_signature_1 (pSig1);
     set_focus_signature_2 (pSig2);
     place_signatures();
@@ -158,8 +172,9 @@ const  bool compare_robustness(const CSignature* pSig1, const CSignature* pSig2)
 {
  return  pSig1->get_robustness() > pSig2->get_robustness();
 }
-void lxa_graphics_scene::ingest_signatures(CSignatureCollection* signatures){
+void lxa_graphics_scene::ingest_signatures(CSignatureCollection* signatures, eDisplayType this_display_type){
     qDebug() << "Ingesting signatures.";
+    m_display_type = this_display_type;
     CLexicon* lexicon = m_main_window->get_lexicon();
     double entropy_threshold = lexicon->get_entropy_threshold_for_positive_signatures();
     int max_size = 0;
@@ -229,6 +244,10 @@ void lxa_graphics_scene::ingest_signatures(CSignatureCollection* signatures){
             }
         }
     }
+
+
+    // --->   and we place them. <---   //
+    place_signatures();
 }
 void lxa_graphics_scene::place_signatures()
 {
