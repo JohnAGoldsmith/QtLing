@@ -152,19 +152,39 @@ public:
     void rowClicked(const QModelIndex& index);
 };
 
-
+//-----------------------------------------------------------------//
 class MainWindow : public QMainWindow
+//-----------------------------------------------------------------//
 {
     Q_OBJECT
-    friend class        LeftSideTreeView;
-    friend class        UpperTableView;
-    friend class        LowerTableView;
-    friend class        lxaWindow;
-    QList<CLexicon*>    m_lexicon_list;
-    QString             m_name_of_data_file;
-    QProgressBar *      m_ProgressBar;
-    QMap<QString, LxaStandardItemModel*>   m_Models;
-    eDisplayType        m_graphic_display_type;
+    friend class                            LeftSideTreeView;
+    friend class                            UpperTableView;
+    friend class                            LowerTableView;
+    friend class                            lxaWindow;
+
+    QList<CLexicon*>                        m_lexicon_list;
+    QString                                 m_name_of_data_file;
+    QProgressBar *                          m_ProgressBar;
+    QMap<QString, LxaStandardItemModel*>    m_Models;
+    eDisplayType                            m_graphic_display_type;
+
+    QSplitter *                             m_mainSplitter;
+    QSplitter *                             m_rightSplitter;
+    QSplitter *                             m_top_rightSplitter;
+    UpperTableView *                        m_tableView_upper_left;
+    UpperTableView *                        m_tableView_upper_right;
+    LowerTableView *                        m_tableView_lower;
+    LeftSideTreeView *                      m_leftTreeView;
+    lxa_graphics_scene *                    m_graphics_scene;
+    lxa_graphics_view *                     m_graphics_view;
+    bool                                    m_graphic_display_flag;
+    QStandardItemModel *                    m_treeModel;
+
+    QGroupBox *                             horizontalGroupBox;
+    QGroupBox *                             verticalGroupBox;
+    QString                                 curFile;
+
+
 
 public:
     MainWindow();
@@ -185,73 +205,54 @@ private slots:
     void about();
     void documentWasModified();
     void print_prefix_signatures();
-//    void rowClicked(const QModelIndex& index);
 
 #ifndef QT_NO_SESSIONMANAGER
-    void commitData(QSessionManager &);
+    void                    commitData(QSessionManager &);
 #endif
 
 private:
 
-
     void createHorizontalGroupBox();
     void createSplitter();
-    void createTreeModel();
     void ask_for_filename();
-    void load_word_model();
     void read_dx1_file();
     void read_text_file();
-    void load_stem_model();
-    void load_affix_model();
-    void load_signature_model();
-    void load_protostem_model();
-    void load_multiparse_model();
-    void load_raw_signature_model();
-    void load_sig_tree_edge_model();
-    void load_residual_signature_model();
-    void load_singleton_signature_model();
-    void load_singleton_stem_model();
-    void load_StemSet2_model();
-    void load_subsignature_model();
-    void sort_upper_table();
-    void createActions();
-    void createStatusBar();
-    void readSettings();
-    void writeSettings();
-    bool ask_to_save();
-    bool saveFile(const QString &fileName);
-    void setCurrentFile(const QString &fileName);
-    QString strippedName(const QString &fullFileName);
-    void cycle_through_graphic_displays();
 
-    lxa_graphics_view*      get_graphics_view() {return  m_graphics_view;}
-    //lxa_graphics_view*      get_graphics_view_2() {return  m_graphics_view_2;}
-    lxa_graphics_scene*     get_graphics_scene()  {return m_graphics_scene;}
-    //lxa_graphics_scene*     get_graphics_scene_2() {return m_graphics_scene_2;}
-    QSplitter *             m_mainSplitter;
-    QSplitter *             m_rightSplitter;
-    //UpperTableView *        m_tableView_upper;
-    UpperTableView *        m_tableView_upper_left;
-    UpperTableView *        m_tableView_upper_right;
+//          Qt-style modesl
+    void                    load_stem_model();
+    void                    load_affix_model();
+    void                    load_signature_model();
+    void                    load_protostem_model();
+    void                    load_multiparse_model();
+    void                    load_raw_signature_model();
+    void                    load_sig_tree_edge_model();
+    void                    load_residual_signature_model();
+    void                    load_singleton_signature_model();
+    void                    load_singleton_stem_model();
+    void                    load_StemSet2_model();
+    void                    load_subsignature_model();
+    void                    load_word_model();
+    void                    createTreeModel();
 
-    LowerTableView *        m_tableView_lower;
-    LeftSideTreeView *      m_leftTreeView;
-    lxa_graphics_scene *    m_graphics_scene;
-    //lxa_graphics_scene *    m_graphics_scene_2;
-    //lxa_graphics_scene *    m_current_graphics_scene ;
-    //void                    set_current_graphics_scene (lxa_graphics_scene* pLGS) {m_current_graphics_scene = pLGS;}
-    lxa_graphics_view *     m_graphics_view;
-    //lxa_graphics_view *     m_graphics_view_2;
-    bool                    m_graphic_display_flag;
-    QStandardItemModel *    m_treeModel;
+    void                    sort_upper_table();
 
-    // new stuff:
-    QSplitter *             m_top_rightSplitter;
+//          windows
+    void                    createActions();
+    void                    createStatusBar();
 
+//          settings
+    void                    readSettings();
+    void                    writeSettings();
 
-    QGroupBox *horizontalGroupBox;
-    QGroupBox *verticalGroupBox;
-    QString curFile;
+//          working with files
+    bool                    ask_to_save();
+    bool                    saveFile(const QString &fileName);
+    void                    setCurrentFile(const QString &fileName);
+    QString                 strippedName(const QString &fullFileName);
+    void                    cycle_through_graphic_displays();
+
+    lxa_graphics_view*      get_graphics_view()     {return  m_graphics_view;}
+    lxa_graphics_scene*     get_graphics_scene()    {return m_graphics_scene;}
 
 protected:
    void keyPressEvent(QKeyEvent *e);
