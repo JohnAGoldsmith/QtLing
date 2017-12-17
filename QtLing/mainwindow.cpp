@@ -78,18 +78,18 @@ MainWindow::MainWindow()
     get_lexicon()->set_status_bar(statusBar());
 
     // views
-    m_leftTreeView      = new LeftSideTreeView(this);
-//    m_tableView_upper_left   = new UpperTableView (this);
-    m_tableView_upper_left   = new UpperTableView (this);
-    m_tableView_upper_right  = new UpperTableView (this,  SIG_BY_AFFIX_COUNT);
-    m_tableView_lower   = new LowerTableView (this);
-//    m_tableView_upper->setSortingEnabled(true);
+    m_leftTreeView              = new LeftSideTreeView(this);
+    m_tableView_upper_left      = new UpperTableView (this);
+    m_tableView_upper_right     = new UpperTableView (this,  SIG_BY_AFFIX_COUNT);
+    m_tableView_lower           = new LowerTableView (this);
     m_tableView_upper_left->setSortingEnabled(true);
     m_tableView_upper_right->setSortingEnabled(true);
-    m_graphics_scene = new lxa_graphics_scene (this, get_lexicon()->get_signatures());
-    m_graphics_view  = new lxa_graphics_view(this);
+
+    // this next line should be removed; we don't need to do this here.
+    m_graphics_scene            = new lxa_graphics_scene (this, get_lexicon()->get_signatures(),DT_All_Suffix_Signatures);
+    m_graphics_view             = new lxa_graphics_view(this);
     m_graphics_view->set_graphics_scene(m_graphics_scene);
-    m_graphic_display_flag = false;             // toggle with Ctrl-G
+    m_graphic_display_flag      = false;             // toggle with Ctrl-G
 
 
 
@@ -105,9 +105,6 @@ MainWindow::MainWindow()
     m_top_rightSplitter->addWidget(m_tableView_upper_left);
     m_top_rightSplitter->addWidget(m_tableView_upper_right );
 
-
-//    m_rightSplitter->addWidget(m_tableView_upper); // this was here before i split upper right.
-
     // entire right side:
     m_rightSplitter->addWidget(m_top_rightSplitter);
     m_rightSplitter->addWidget(m_tableView_lower);
@@ -115,7 +112,6 @@ MainWindow::MainWindow()
     // top level (whole window)
     // on left side:
     m_mainSplitter->addWidget(m_leftTreeView);
-    //m_mainSplitter->addWidget(m_rightSplitter); replaced by:
     m_mainSplitter->addWidget(m_rightSplitter);
 
     setCentralWidget(m_mainSplitter);
@@ -136,14 +132,23 @@ MainWindow::MainWindow()
     setCurrentFile(QString());
     setUnifiedTitleAndToolBarOnMac(true);
 
-  //connect(m_leftTreeView, SIGNAL(clicked(const QModelIndex&)), m_tableView_upper, SLOT(ShowModelsUpperTableView(const QModelIndex&)));
     connect(m_leftTreeView, SIGNAL(clicked(const QModelIndex&)), m_tableView_upper_left, SLOT(ShowModelsUpperTableView(const QModelIndex&)));
     connect(m_leftTreeView, SIGNAL(clicked(const QModelIndex&)), m_tableView_upper_right, SLOT(ShowModelsUpperTableView(const QModelIndex&)));
-//  connect(m_tableView_upper,SIGNAL(clicked(const QModelIndex & )), m_tableView_lower,SLOT(display_this_item(const QModelIndex &  )));
     connect(m_tableView_upper_left,SIGNAL(clicked(const QModelIndex & )), m_tableView_lower,SLOT(display_this_item(const QModelIndex &  )));
     connect(m_tableView_upper_right,SIGNAL(clicked(const QModelIndex & )), m_tableView_lower,SLOT(display_this_item(const QModelIndex &  )));
 }
-
+void MainWindow::cycle_through_graphic_displays()
+{
+    switch (m_graphic_display_type)
+    {   qDebug() << "trying to cycle graphic display"<< 141;
+        case DT_All_Suffix_Signatures:
+            m_graphic_display_type = DT_Positive_Suffix_Signatures;
+        case DT_Positive_Suffix_Signatures:
+            m_graphic_display_type = DT_All_Prefix_Signatures;
+        default:
+            m_graphic_display_type = DT_All_Prefix_Signatures;
+    }
+}
 
 void MainWindow::keyPressEvent(QKeyEvent* ke)
 {
@@ -161,6 +166,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     {
         if (m_graphic_display_flag==false){
             m_rightSplitter->replaceWidget(1,m_graphics_view);
+            m_graphics_view->centerOn(0,1000);// this should be fixed so that the initial showing of the graphic is done right.
             m_graphic_display_flag = true;
             m_rightSplitter->setFocus();
         } else{
@@ -170,6 +176,9 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     }
     if (ke->key() == Qt::Key_2){
         do_crab2();
+    }
+    if (ke->key() == Qt::Key_V){
+        cycle_through_graphic_displays();
     }
     if (ke->key() == Qt::Key_J){
         m_graphics_scene->move_rows_apart();
@@ -237,14 +246,12 @@ qDebug() << 212;
 
     delete m_graphics_scene;
     if (get_lexicon()->get_suffix_flag()){
-        m_graphics_scene = new lxa_graphics_scene(this, get_lexicon()->get_signatures());
+        m_graphics_scene = new lxa_graphics_scene(this, get_lexicon()->get_signatures(),DT_All_Suffix_Signatures);
     }else{
-        m_graphics_scene = new lxa_graphics_scene(this, get_lexicon()->get_prefix_signatures());
+        m_graphics_scene = new lxa_graphics_scene(this, get_lexicon()->get_prefix_signatures(),DT_All_Prefix_Signatures);
     }
     m_graphics_view->setScene(m_graphics_scene);
     m_graphics_scene->set_graphics_view(m_graphics_view);
-
-
     m_leftTreeView->expandAll();
     m_leftTreeView->resizeColumnToContents(0);
     statusBar()->showMessage("All models are loaded.");
@@ -291,9 +298,9 @@ void MainWindow::do_crab2()
 
     delete m_graphics_scene;
     if (get_lexicon()->get_suffix_flag()) {
-        m_graphics_scene = new lxa_graphics_scene(this, get_lexicon()->get_signatures());
+        m_graphics_scene = new lxa_graphics_scene(this, get_lexicon()->get_signatures(),DT_All_Suffix_Signatures);
     }else {
-        m_graphics_scene = new lxa_graphics_scene(this, get_lexicon()->get_prefix_signatures());
+        m_graphics_scene = new lxa_graphics_scene(this, get_lexicon()->get_prefix_signatures(),DT_All_Prefix_Signatures);
     }
     m_graphics_scene->place_signatures();
     m_graphics_view->setScene(m_graphics_scene);

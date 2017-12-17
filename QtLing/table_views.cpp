@@ -37,9 +37,7 @@ LowerTableView::LowerTableView(MainWindow * window)
   */
  void LowerTableView::display_this_item( const  QModelIndex & index )
  {
-//     eDocumentType              UpperView_type = m_parent_window->m_tableView_upper->get_document_type();
      eDocumentType              UpperView_type = m_parent_window->m_tableView_upper_left->get_document_type();
-//     QString                    component = m_parent_window->m_tableView_upper->get_content();
      QString                    component = m_parent_window->m_tableView_upper_left->get_content();
      QString                    word, stem, prefix, suffix, signature;
      CLexicon *                 this_lexicon = get_parent_window()->get_lexicon();
@@ -68,7 +66,9 @@ LowerTableView::LowerTableView(MainWindow * window)
             table_signature(pSig);
             setModel( m_my_current_model);
         } else // -->   Now, graphics display IS showing<-- //
-        {   qDebug() << "trying to display a focus signature";}
+        {   qDebug() << "trying to display a focus signature";
+
+        }
     }
      //  ---------------------------------------------------//
      else if (UpperView_type == PREFIX_SIGNATURES || UpperView_type == EPOSITIVE_PREFIX_SIGNATURES) {
@@ -254,9 +254,9 @@ UpperTableView::UpperTableView (MainWindow* window, eSortStyle this_sort_style)
  */
 void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
 {
-
+    CLexicon* lexicon = m_parent_window->get_lexicon();
     QString component;
-    qDebug() << "show model upper table" << index.data().toString() << "table views" << 204;
+    //qDebug() << "show model upper table" << index.data().toString() << "table views" << 204;
     if (index.isValid()){
         component = index.data().toString();
     }
@@ -273,18 +273,19 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         set_document_type( SUFFIXES );
     }
     else     if (component == "Signatures"){
-//        if (m_signature_sort_style==SIG_BY_AFFIX_COUNT){
-            setModel(m_parent_window->m_Models["Signatures"]);
-//        } else{
-//            setModel(m_parent_window->m_Models["Signatures by affix count"]);
-//        }
+        setModel(m_parent_window->m_Models["Signatures"]);
         set_document_type( SIGNATURES );
         set_content_type( "signatures");
+
+         m_parent_window->m_graphics_scene = new lxa_graphics_scene (m_parent_window, lexicon->get_signatures(),DT_All_Suffix_Signatures);
+
     }
     else     if (component == "EPositive Signatures"){
         setModel(m_parent_window->m_Models["EPositive Signatures"]);
         set_document_type( EPOSITIVE_SIGNATURES );
         set_content_type( "signatures");
+        // memory leak;
+        m_parent_window->m_graphics_scene = new lxa_graphics_scene (m_parent_window, lexicon->get_signatures(), DT_Positive_Suffix_Signatures);
         qDebug() << "epositive sigs"<< 229;
     }
     else     if (component == "Prefix signatures"){
@@ -358,7 +359,7 @@ void LowerTableView::graphics_sig_tree_edges(CSignature* pSig, CLexicon* p_lexic
         ++edge_iter;
     }
 
-    m_parent_window->m_graphics_scene = new lxa_graphics_scene(m_parent_window, &Signatures,pSig_tree_edge->sig_1, pSig_tree_edge->sig_2);
+    m_parent_window->m_graphics_scene = new lxa_graphics_scene(m_parent_window,  &Signatures,  DT_sig_tree_edges, pSig_tree_edge->sig_1, pSig_tree_edge->sig_2);
     m_parent_window->m_graphics_scene->place_signatures();
     m_parent_window->m_graphics_view->setScene(m_parent_window->m_graphics_scene);
 }

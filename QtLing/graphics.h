@@ -66,6 +66,7 @@ public:
 class lxa_graphics_scene : public QGraphicsScene
 {
     MainWindow*                             m_main_window;
+    eDisplayType                            m_display_type;
     lxa_graphics_view*                      m_graphics_view;
     QList<QList<CSignature*>*>              m_signature_lattice;
     QList<QPair<CSignature*,CSignature*>*>  m_signature_containment_edges;
@@ -80,10 +81,10 @@ class lxa_graphics_scene : public QGraphicsScene
 private:
     void                                    mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent);
 public:
-                    lxa_graphics_scene( MainWindow * , CSignatureCollection*, CSignature* pSig1 = NULL, CSignature* pSig2 = NULL );
+                    lxa_graphics_scene( MainWindow * , CSignatureCollection*, eDisplayType this_display_type, CSignature* pSig1 = NULL, CSignature* pSig2 = NULL );
                     ~lxa_graphics_scene();
     void            set_graphics_view (lxa_graphics_view* );
-    void            ingest_signatures(CSignatureCollection*);
+    void            ingest_signatures(CSignatureCollection* );
     void            add_signature_containment_edge (QPair<CSignature*, CSignature*>* pPair)
                             {m_signature_containment_edges.append (pPair); }
     void            place_signatures();

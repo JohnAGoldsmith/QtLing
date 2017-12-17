@@ -25,20 +25,32 @@ graphic_signature::graphic_signature(int x, int y, CSignature* pSig, lxa_graphic
     switch(pSig->get_number_of_affixes()){
     case 3:{
         QPolygon triangle;
-        triangle.append(QPoint(x,y+27));
-        triangle.append(QPoint(x+40,y+27));
-        triangle.append(QPoint(x+20,y-13));
-        triangle.append(QPoint(x,y+25));
+        triangle.append(QPoint(x,y+30));
+        triangle.append(QPoint(x+40,y+30));
+        triangle.append(QPoint(x+20,y-10));
+        triangle.append(QPoint(x,y+28));
         QGraphicsPolygonItem * pTriangleItem = scene->addPolygon(triangle,QPen(), QBrush(m_color));
         break;}
     case 4:{
         QPolygon square;
-        square.append(QPoint(x,y+27));
-        square.append(QPoint(x+40,y+27));
-        square.append(QPoint(x+40,y-13));
-        square.append(QPoint(x,y-13));
-        square.append(QPoint(x,y+27));
+        square.append(QPoint(x,y+30));
+        square.append(QPoint(x+40,y+30));
+        square.append(QPoint(x+40,y-10));
+        square.append(QPoint(x,y-10));
+        square.append(QPoint(x,y+30));
         QGraphicsPolygonItem * p_square_item = scene->addPolygon(square,QPen(), QBrush(m_color));
+        break;}
+    case 5:{
+        QPolygon pent;
+        double xprime  = x+ 30;
+        pent.append(QPoint(xprime,y-30 ));
+        pent.append(QPoint(xprime-29,y-12));
+        pent.append(QPoint(xprime-18,y+24));
+        pent.append(QPoint(xprime+18,y+24));
+        pent.append(QPoint(xprime+18,y+24));
+        pent.append(QPoint(xprime+29,y-9));
+        pent.append(QPoint(xprime,y-30 ));
+        QGraphicsPolygonItem * p_square_item = scene->addPolygon(pent,QPen(), QBrush(m_color));
         break;}
     default:
         scene->addEllipse(x,y,radius ,radius,QPen(),QBrush(m_color));
@@ -112,13 +124,14 @@ void lxa_graphics_view::mousePressEvent(QMouseEvent* event)
     QGraphicsView::mousePressEvent(event);
 }
 
-lxa_graphics_scene::lxa_graphics_scene (MainWindow * window, CSignatureCollection* p_signatures, CSignature* pSig1, CSignature * pSig2)
-{   qDebug() << "scene constructor";
+lxa_graphics_scene::lxa_graphics_scene (MainWindow * window, CSignatureCollection* p_signatures, eDisplayType display_type, CSignature* pSig1, CSignature * pSig2)
+{   qDebug() << "scene constructor" << 128 << display_type;
 
     m_main_window = window;
     m_location_of_bottom_row = 0;
     m_row_delta = 100;
     m_column_delta = 200;
+    m_display_type = display_type;
     ingest_signatures(p_signatures);
     set_focus_signature_1 (pSig1);
     set_focus_signature_2 (pSig2);
@@ -147,6 +160,8 @@ const  bool compare_robustness(const CSignature* pSig1, const CSignature* pSig2)
 }
 void lxa_graphics_scene::ingest_signatures(CSignatureCollection* signatures){
     qDebug() << "Ingesting signatures.";
+    CLexicon* lexicon = m_main_window->get_lexicon();
+    double entropy_threshold = lexicon->get_entropy_threshold_for_positive_signatures();
     int max_size = 0;
     int sig_size;
     int MAXIMUM_NUMBER_OF_CONTAINMENT_EDGES = 2;
@@ -155,7 +170,13 @@ void lxa_graphics_scene::ingest_signatures(CSignatureCollection* signatures){
     map_sigstring_to_sig_ptr_iter sig_iter(*signatures->get_map());
     while(sig_iter.hasNext()){
         pSig = sig_iter.next().value();
-        if (pSig->get_number_of_stems() < MINIMUM_NUMBER_OF_STEMS) {continue;}
+        if (pSig->get_number_of_stems() < MINIMUM_NUMBER_OF_STEMS) {
+            continue;
+        }
+        if (m_display_type == DT_Positive_Suffix_Signatures &&
+                pSig->get_stem_entropy() <entropy_threshold ){
+            continue;
+        }
         int this_size = pSig->get_number_of_affixes();
         if (this_size > max_size){ max_size = this_size;}
     }
@@ -167,6 +188,11 @@ void lxa_graphics_scene::ingest_signatures(CSignatureCollection* signatures){
     while(sig_iter.hasNext()){
         pSig = sig_iter.next().value();
         if (pSig->get_number_of_stems() < MINIMUM_NUMBER_OF_STEMS) {continue;}
+        if ( (m_display_type == DT_Positive_Prefix_Signatures ||
+              m_display_type == DT_Positive_Suffix_Signatures) &&
+                pSig->get_stem_entropy() < entropy_threshold){
+            continue;
+        }
         sig_size = pSig->get_number_of_affixes();
         m_signature_lattice[sig_size]->append(pSig);
     }

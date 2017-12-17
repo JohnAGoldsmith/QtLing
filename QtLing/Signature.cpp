@@ -200,6 +200,6 @@ double CSignature::calculate_stem_entropy()
         entropy += -1.0 * freq * log_base_2 (freq);
     }
     m_stem_entropy = entropy;
-    qDebug() << "Stem entropy of signature"<<entropy << 195;
+    //qDebug() << "Stem entropy of signature"<<entropy << 195;
     return entropy;
 }

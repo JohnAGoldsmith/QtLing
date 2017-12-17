@@ -164,6 +164,7 @@ class MainWindow : public QMainWindow
     QString             m_name_of_data_file;
     QProgressBar *      m_ProgressBar;
     QMap<QString, LxaStandardItemModel*>   m_Models;
+    eDisplayType        m_graphic_display_type;
 
 public:
     MainWindow();
@@ -221,6 +222,8 @@ private:
     bool saveFile(const QString &fileName);
     void setCurrentFile(const QString &fileName);
     QString strippedName(const QString &fullFileName);
+    void cycle_through_graphic_displays();
+
     lxa_graphics_view*      get_graphics_view() {return  m_graphics_view;}
     //lxa_graphics_view*      get_graphics_view_2() {return  m_graphics_view_2;}
     lxa_graphics_scene*     get_graphics_scene()  {return m_graphics_scene;}

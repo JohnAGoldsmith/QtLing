@@ -359,17 +359,17 @@ void   CLexicon::AssignSuffixesToStems()
                 if (this_stem_t == "wasahaulisha"){
                     int i = 0;
                 }
-                qDebug() << this_signature_string << this_stem_t << 330;
+                //qDebug() << this_signature_string << this_stem_t << 330;
                 pStem = m_Stems->find_or_add(this_stem_t);
                 pStem->add_signature (this_signature_string);
-                qDebug() << this_signature_string << this_stem_t << 339;
+                //qDebug() << this_signature_string << this_stem_t << 339;
                 pSig->add_stem_pointer(pStem);
                 pStem->add_memo ("Pass1= ");
                 QStringList affixes = this_signature_string.split("=");
                 //m_StatusBar->showMessage(this_stem_t);
                 for (int affixno = 0; affixno < affixes.size(); affixno++)
                 {   this_affix = affixes[affixno];
-                    qDebug() << this_affix << 345;
+                    //qDebug() << this_affix << 345;
                     if (this_affix == "NULL"){
                         this_word = this_stem_t;
                     } else{
@@ -389,10 +389,8 @@ void   CLexicon::AssignSuffixesToStems()
 
             //this_signature_string =  iter_sigstring_to_stems.key();
             pSig =  *m_ParaSignatures << this_signature_string;
-            qDebug() << this_signature_string << 369;
             this_stem_t = p_this_stem_list->first();
             pStem = *m_ResidualStems << this_stem_t;
-                        qDebug() << this_stem_t << 372;
 
 
             pSig->add_stem_pointer(pStem);

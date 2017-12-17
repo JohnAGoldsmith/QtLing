@@ -5,6 +5,14 @@
 //class CStem;
 //class CSignature;
 
+enum eDisplayType{
+    DT_sig_tree_edges,
+    DT_Positive_Suffix_Signatures,
+    DT_Positive_Prefix_Signatures,
+    DT_All_Suffix_Signatures,
+    DT_All_Prefix_Signatures,
+    DT_Unspecified
+};
 
 enum eDocumentType  // for the Collection View
 { SINGLETON_SIGNATURES,
