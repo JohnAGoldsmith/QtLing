@@ -22,27 +22,31 @@ graphic_signature::graphic_signature(int x, int y, CSignature* pSig, lxa_graphic
     QGraphicsItem::setAcceptHoverEvents(true);
     QGraphicsItem::ItemIsSelectable;
     QGraphicsItem::ItemIsMovable;
+
+    int push_figure_to_right = 50;
+    int xprime = x+ push_figure_to_right;
+
     switch(pSig->get_number_of_affixes()){
     case 3:{
         QPolygon triangle;
-        triangle.append(QPoint(x,y+30));
-        triangle.append(QPoint(x+40,y+30));
-        triangle.append(QPoint(x+20,y-10));
-        triangle.append(QPoint(x,y+28));
+        triangle.append(QPoint(xprime,y+30));
+        triangle.append(QPoint(xprime+40,y+30));
+        triangle.append(QPoint(xprime+20,y-10));
+        triangle.append(QPoint(xprime,y+28));
         QGraphicsPolygonItem * pTriangleItem = scene->addPolygon(triangle,QPen(), QBrush(m_color));
         break;}
     case 4:{
         QPolygon square;
-        square.append(QPoint(x,y+30));
-        square.append(QPoint(x+40,y+30));
-        square.append(QPoint(x+40,y-10));
-        square.append(QPoint(x,y-10));
-        square.append(QPoint(x,y+30));
+        square.append(QPoint(xprime,y+30));
+        square.append(QPoint(xprime+40,y+30));
+        square.append(QPoint(xprime+40,y-10));
+        square.append(QPoint(xprime,y-10));
+        square.append(QPoint(xprime,y+30));
         QGraphicsPolygonItem * p_square_item = scene->addPolygon(square,QPen(), QBrush(m_color));
         break;}
     case 5:{
         QPolygon pent;
-        double xprime  = x+ 30;
+        xprime += 20;
         pent.append(QPoint(xprime,y-30 ));
         pent.append(QPoint(xprime-29,y-12));
         pent.append(QPoint(xprime-18,y+24));
@@ -51,6 +55,7 @@ graphic_signature::graphic_signature(int x, int y, CSignature* pSig, lxa_graphic
         pent.append(QPoint(xprime+29,y-9));
         pent.append(QPoint(xprime,y-30 ));
         QGraphicsPolygonItem * p_square_item = scene->addPolygon(pent,QPen(), QBrush(m_color));
+        xprime -= 20;
         break;}
     default:
         scene->addEllipse(x,y,radius ,radius,QPen(),QBrush(m_color));

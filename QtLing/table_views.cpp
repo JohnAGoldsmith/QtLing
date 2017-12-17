@@ -277,16 +277,22 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         set_document_type( SIGNATURES );
         set_content_type( "signatures");
 
-         m_parent_window->m_graphics_scene = new lxa_graphics_scene (m_parent_window, lexicon->get_signatures(),DT_All_Suffix_Signatures);
+        m_parent_window->m_graphics_scene->clear();
+        //m_parent_window->m_graphics_scene->set_parameters();
+        m_parent_window->m_graphics_scene->ingest_signatures(lexicon->get_signatures(), DT_All_Suffix_Signatures);
+
+        qDebug() << "all suffix signaturess"<< 282;
 
     }
     else     if (component == "EPositive Signatures"){
         setModel(m_parent_window->m_Models["EPositive Signatures"]);
         set_document_type( EPOSITIVE_SIGNATURES );
         set_content_type( "signatures");
-        // memory leak;
-        m_parent_window->m_graphics_scene = new lxa_graphics_scene (m_parent_window, lexicon->get_signatures(), DT_Positive_Suffix_Signatures);
-        qDebug() << "epositive sigs"<< 229;
+
+        m_parent_window->m_graphics_scene->clear();
+        m_parent_window->m_graphics_scene->set_parameters(lexicon->get_signatures(), DT_Positive_Suffix_Signatures);
+
+        qDebug() << "epositive sigs"<< 292;
     }
     else     if (component == "Prefix signatures"){
         setModel(m_parent_window->m_Models["Prefix signatures"]);
