@@ -337,6 +337,9 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         qDebug() << "line 234 in table views.";
     }
 // add component 10
+
+
+
     resizeColumnsToContents();
 }
 

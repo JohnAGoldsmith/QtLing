@@ -75,7 +75,7 @@ MainWindow::MainWindow()
 
 
 //  this is part of an experiment:
-    QMap<QString,LxaStandardItemModel*> temp_Models;
+    QMap<QString,LxaStandardItemModel*> temp_Models;// this will become "m_Models";
     QMapIterator<QString,eComponentType> iter (m_lexicon_list.last()->get_category_types());
     while (iter.hasNext()){
         QString key = iter.next().key();
@@ -247,6 +247,17 @@ void MainWindow::do_crab()
     m_Models["Hypotheses"]          ->load_hypotheses(get_lexicon()->get_hypotheses());
     createTreeModel();
 
+// add component 4
+    //  part of an experiment:
+    //     QMapIterator<QString,eComponentType> iter (get_lexicon()->get_category_types());
+    //    while (iter.hasNext()){
+    //      QString component_name = iter.next().key();
+    //      eComponentType this_component_type = iter.value();
+    //      m_Models[component_name]->load_category(component_name, this_component_type);
+    //    }
+    // end of experiment
+
+
     delete m_graphics_scene;
     if (get_lexicon()->get_suffix_flag()){
         m_graphics_scene = new lxa_graphics_scene(this, get_lexicon()->get_signatures(),DT_All_Suffix_Signatures);
@@ -296,11 +307,14 @@ void MainWindow::do_crab2()
     createTreeModel();
 
 // add component 5
-
-//  part of an experiment:
-//
-
-
+    //     part of an experiment:
+    //     QMapIterator<QString,eComponentType> iter (get_lexicon()->get_category_types());
+    //     while (iter.hasNext()){
+    //      QString component_name = iter.next().key();
+    //      eComponentType this_component_type = iter.value();
+    //      m_Models[component_name]->load_category(component_name, this_component_type);
+    //    }
+    // end of experiment
 
 
     print_prefix_signatures();
@@ -327,8 +341,7 @@ void MainWindow::read_file_do_crab()
 
 
 void MainWindow::read_dx1_file()
-    {   int max_count (10000);
-        int count (0);
+    {
             QFile file(m_name_of_data_file);
             if (!file.open(QFile::ReadOnly | QFile::Text)) {
             QMessageBox::warning(this, tr("Application"),
@@ -395,9 +408,11 @@ void MainWindow::createTreeModel()
 {
     QStandardItem * parent = m_treeModel->invisibleRootItem();
 
+//  this pair of lines must stay here after experiment:
     QStandardItem * lexicon_item = new QStandardItem(QString("Lexicon"));
     QStandardItem * lexicon_count_item = new QStandardItem(QString("1"));
 
+// will be eliminated by the experiment:
     QStandardItem * word_item = new QStandardItem(QString("Words"));
     QStandardItem * word_count_item = new QStandardItem(QString::number(get_lexicon()->get_word_collection()->get_count()));
 
@@ -433,6 +448,31 @@ void MainWindow::createTreeModel()
 
     QStandardItem * hypothesis_item = new QStandardItem(QString("Hypotheses"));
     QStandardItem * hypothesis_count_item = new QStandardItem(QString::number(get_lexicon()->get_hypotheses()->count()));
+
+// This is part of an experiment:
+//  This code deals with the components in the Lexicon, so that that set can be easily updated by the programmer.
+//  it will eliminate above code and below code too:
+//
+//          QList<QStandardItem*>                   lexicon_items;
+//                                                  lexicon_items.append(lexicon_item);
+//                                                  lexicon_items.append(lexicon_count_item);
+    //                                              parent->appendRow(lexicon_items);
+    //      QMapIterator<QString,eComponentType>    iter (get_lexicon()->get_category_types());
+    //      while (iter.hasNext()){
+    //
+    //          QString             component_name = iter.next().key();
+    //          eComponentType      this_component_type = iter.value();
+    //          QList<QStandardItem*> this_list_of_standard_items;
+    //
+    //          QStandardItem *     component_item = new QStandardItem(component_name);
+    //          QStandardItem *     component_count_item = new QStandardItem(component_count_name);
+    //            this_list_of_standard_items.append(component_item);
+    //            this_list_of_standard_items.append(component_count_item);
+    //            lexicon_item.appendRow(this_list_of_standard_items);
+    //    }
+    // end of experiment
+
+
 
 
 // add component 6

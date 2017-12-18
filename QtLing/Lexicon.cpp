@@ -37,18 +37,18 @@ CLexicon::CLexicon( bool suffix_flag)
     m_entropy_threshold_for_stems = 1.2;
 
 //  This is part of an experiment.
-    m_category_types["words"]               = CT_word;
-    m_category_types["stems"]               = CT_stem;
-    m_category_types["suffixes"]            = CT_affix;
-    m_category_types["prefixes"]            = CT_affix;
-    m_category_types["suffix_signatures"]   = CT_signature;
-    m_category_types["prefix_signatures"]   = CT_signature;
-    m_category_types["compounds"]           = CT_compound;
-    m_category_types["parses"]              = CT_parse;
-    m_category_types["protostems"]          = CT_stem;
-    m_category_types["parasignatures"]      = CT_signature;
-    m_category_types["parasuffixes"]        = CT_affix;
-    m_category_types["hypotheses"]          = CT_hypothesis;
+    m_category_types["Words"]               = CT_word;
+    m_category_types["Stems"]               = CT_stem;
+    m_category_types["Suffixes"]            = CT_affix;
+    m_category_types["Prefixes"]            = CT_affix;
+    m_category_types["Suffix signatures"]   = CT_signature;
+    m_category_types["Prefix signatures"]   = CT_signature;
+    m_category_types["Compounds"]           = CT_compound;
+    m_category_types["Parses"]              = CT_parse;
+    m_category_types["Protostems"]          = CT_stem;
+    m_category_types["Parasignatures"]      = CT_signature;
+    m_category_types["Parasuffixes"]        = CT_affix;
+    m_category_types["Hypotheses"]          = CT_hypothesis;
 
     // add component 2
 }

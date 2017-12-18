@@ -18,6 +18,19 @@ class CPrefixCollection;
 class QProgressBar;
 class CHypothesis;
 
+//  part of an experiment:
+class Collection
+{
+    eComponentType      m_component_type;
+
+public:
+    Collection(eComponentType this_type)        {m_component_type = this_type;}
+    QString             get_output();
+};
+
+//  end of experiment
+
+
 class simple_sig_tree_edge{
 public:
     CSignature*         sig_1;
@@ -74,8 +87,10 @@ class CLexicon
 {
 protected:
                                                          // this is part of an experiment.
-    QMap<QString,eComponentType>    m_category_types;    // part of the experiment.
-
+    QMap<QString,eComponentType>    m_category_types;    // part of the experiment. It serves
+                                                        // as the principal way in which the Lexicon communicates
+                                                        // with the GUI as far as architecture is concerned.
+                                                        // Each entry in this must have a pointer to a real Collection (of the sort that follows here):
     CWordCollection *               m_Words;
     CStemCollection *               m_Stems;
     CSuffixCollection *             m_Suffixes;
@@ -112,7 +127,11 @@ public:
     CLexicon(bool suffix_flag = true);
 public:
     // accessors and protostems
+//  part of an experiment:
     QMap<QString, eComponentType> &             get_category_types()        { return m_category_types;}
+//  end of experiment;
+
+
     CWordCollection*                            get_word_collection()       { return m_Words; }
     CStemCollection*                            GetStemCollection()         { return m_Stems; }
     CSuffixCollection*                          GetSuffixCollection()       { return m_Suffixes; }
