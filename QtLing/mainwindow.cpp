@@ -73,6 +73,17 @@ MainWindow::MainWindow()
     m_Models["Hypotheses"]              = new LxaStandardItemModel("Hypotheses");
 // add component 3
 
+
+//  this is part of an experiment:
+    QMap<QString,LxaStandardItemModel*> temp_Models;
+    QMapIterator<QString,eComponentType> iter (m_lexicon_list.last()->get_category_types());
+    while (iter.hasNext()){
+        QString key = iter.next().key();
+        temp_Models[key] = new LxaStandardItemModel(key);
+    }
+//  end of experiment
+
+
     m_treeModel     = new QStandardItemModel();
 
     get_lexicon()->set_status_bar(statusBar());
@@ -286,8 +297,13 @@ void MainWindow::do_crab2()
 
 // add component 5
 
-    print_prefix_signatures();
+//  part of an experiment:
+//
 
+
+
+
+    print_prefix_signatures();
     m_graphics_scene->clear();
 
 

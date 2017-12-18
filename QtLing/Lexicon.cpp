@@ -35,7 +35,22 @@ CLexicon::CLexicon( bool suffix_flag)
     m_SuffixesFlag          = true;
     m_Hypotheses            = new QList<CHypothesis*>;
     m_entropy_threshold_for_stems = 1.2;
-// add component 2
+
+//  This is part of an experiment.
+    m_category_types["words"]               = CT_word;
+    m_category_types["stems"]               = CT_stem;
+    m_category_types["suffixes"]            = CT_affix;
+    m_category_types["prefixes"]            = CT_affix;
+    m_category_types["suffix_signatures"]   = CT_signature;
+    m_category_types["prefix_signatures"]   = CT_signature;
+    m_category_types["compounds"]           = CT_compound;
+    m_category_types["parses"]              = CT_parse;
+    m_category_types["protostems"]          = CT_stem;
+    m_category_types["parasignatures"]      = CT_signature;
+    m_category_types["parasuffixes"]        = CT_affix;
+    m_category_types["hypotheses"]          = CT_hypothesis;
+
+    // add component 2
 }
 
 
@@ -957,7 +972,7 @@ void CLexicon::collect_parasuffixes()
         }
     }
     m_ParaSuffixes->sort_by_count();
-}
+};
 
 
 

@@ -166,6 +166,12 @@ lxa_graphics_scene::~lxa_graphics_scene ()
     m_signature_lattice.clear();
 
 };
+void lxa_graphics_scene::clear()
+{   m_signature_lattice.clear();
+    m_map_from_sig_to_column_no.clear();
+    QGraphicsScene::clear();
+}
+
 void lxa_graphics_scene::set_graphics_view(lxa_graphics_view * this_graphics_view)
 {
     m_graphics_view  = this_graphics_view;
@@ -178,7 +184,8 @@ const  bool compare_robustness(const CSignature* pSig1, const CSignature* pSig2)
  return  pSig1->get_robustness() > pSig2->get_robustness();
 }
 void lxa_graphics_scene::ingest_signatures(CSignatureCollection* signatures, eDisplayType this_display_type){
-    qDebug() << "Ingesting signatures.";
+    qDebug() << "Ingesting signatures." << 181;
+    clear();
     m_display_type = this_display_type;
     CLexicon* lexicon = m_main_window->get_lexicon();
     double entropy_threshold = lexicon->get_entropy_threshold_for_positive_signatures();
@@ -362,7 +369,6 @@ void lxa_graphics_scene::display_focus_signature(){
         graphic_signature * p_graphic_sig = dynamic_cast<graphic_signature *>( p_item );
         if (p_graphic_sig){
             p_graphic_sig->set_color(Qt::white);
-            //qDebug() << p_graphic_sig->get_signature()->get_key();
         }
     }
     update();

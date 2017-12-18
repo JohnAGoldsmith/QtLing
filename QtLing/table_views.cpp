@@ -290,9 +290,10 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         set_content_type( "signatures");
 
         m_parent_window->m_graphics_scene->clear();
-        m_parent_window->m_graphics_scene->set_parameters(lexicon->get_signatures(), DT_Positive_Suffix_Signatures);
+        //m_parent_window->m_graphics_scene->set_parameters(lexicon->get_signatures(), DT_Positive_Suffix_Signatures);
+        m_parent_window->m_graphics_scene->ingest_signatures(lexicon->get_signatures(), DT_Positive_Suffix_Signatures);
 
-        qDebug() << "epositive sigs"<< 292;
+       // qDebug() << "epositive sigs"<< 292;
     }
     else     if (component == "Prefix signatures"){
         setModel(m_parent_window->m_Models["Prefix signatures"]);

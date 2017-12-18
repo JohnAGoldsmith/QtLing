@@ -180,6 +180,21 @@ enum eParseSortStyle
     eAlphabetizedFromEnd,
     eSortByPieceLength
 };
+
+// part of an experiment:
+enum eComponentType
+{
+   CT_signature,
+   CT_word,
+   CT_stem,
+   CT_affix,
+   CT_compound,
+   CT_parse,
+   CT_hypothesis
+};
+
+
+
 /*
 enum eCurrentDisplay
 {

@@ -73,6 +73,9 @@ public:
 class CLexicon
 {
 protected:
+                                                         // this is part of an experiment.
+    QMap<QString,eComponentType>    m_category_types;    // part of the experiment.
+
     CWordCollection *               m_Words;
     CStemCollection *               m_Stems;
     CSuffixCollection *             m_Suffixes;
@@ -109,8 +112,7 @@ public:
     CLexicon(bool suffix_flag = true);
 public:
     // accessors and protostems
-
-
+    QMap<QString, eComponentType> &             get_category_types()        { return m_category_types;}
     CWordCollection*                            get_word_collection()       { return m_Words; }
     CStemCollection*                            GetStemCollection()         { return m_Stems; }
     CSuffixCollection*                          GetSuffixCollection()       { return m_Suffixes; }

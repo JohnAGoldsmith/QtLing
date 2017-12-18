@@ -85,6 +85,7 @@ public:
                     lxa_graphics_scene( MainWindow * , CSignatureCollection*, eDisplayType this_display_type, CSignature* pSig1 = NULL, CSignature* pSig2 = NULL );
                     ~lxa_graphics_scene();
                     lxa_graphics_scene(MainWindow *);
+    void            clear();
     void            set_graphics_view (lxa_graphics_view* );
     void            set_parameters (CSignatureCollection*, eDisplayType);
     void            ingest_signatures(CSignatureCollection*, eDisplayType );
