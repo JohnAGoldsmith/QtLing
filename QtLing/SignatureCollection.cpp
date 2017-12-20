@@ -133,7 +133,6 @@ void CSignatureCollection::compute_containment_list()
             if (qSig->get_number_of_affixes() < 2) {break;}
             if (pSig->contains(qSig)){
                 m_ContainmentMap[pSig]->append(qSig);
-                //qDebug() << pSig->get_key() << qSig->get_key();
             }
         }
     }

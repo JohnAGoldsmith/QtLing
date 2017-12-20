@@ -45,7 +45,7 @@ public:
     lxaWindow( MainWindow * );
     virtual void    paintEvent(QPaintEvent * );
     void            drawSignatures(QPainter& painter);
-    void            ingest_signatures(CSignatureCollection* );
+    void            assign_scene_positions_to_signatures(CSignatureCollection* );
     void            expand();
     void            contract();
     void            move_down();

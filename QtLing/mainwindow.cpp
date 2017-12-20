@@ -161,7 +161,8 @@ void MainWindow::cycle_through_graphic_displays()
 }
 
 void MainWindow::keyPressEvent(QKeyEvent* ke)
-{
+{   //qDebug() << "hit a key" << ke->key() << "start of function line 164";
+
     if (ke->key() == Qt::Key_S){
         do_crab();
     }
@@ -173,13 +174,15 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         do_crab();
     }
     if (ke->key() == Qt::Key_G)
-    {
+    {   //qDebug() << "hit a G key";
         if (m_graphic_display_flag==false){
+            //qDebug() << "trying to display graph"<< 179;
             m_rightSplitter->replaceWidget(1,m_graphics_view);
             m_graphics_view->centerOn(0,1000);// this should be fixed so that the initial showing of the graphic is done right.
             m_graphic_display_flag = true;
             m_rightSplitter->setFocus();
         } else{
+           // qDebug() << "displaying table view";
             m_rightSplitter->replaceWidget(1,m_tableView_lower);
             m_graphic_display_flag = false;
         }
@@ -208,6 +211,11 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     }
     if (ke->key() == Qt::Key_I){
         m_graphics_scene->narrow_columns();
+    }
+    if (ke->key() == Qt::Key_A){
+        qDebug() << 214 << "set focus sig";
+        m_graphics_scene->set_focus_signature();
+
     }
     QMainWindow::keyPressEvent(ke);
 }
@@ -256,14 +264,25 @@ void MainWindow::do_crab()
     //      m_Models[component_name]->load_category(component_name, this_component_type);
     //    }
     // end of experiment
-
-
+/*
+    // the next line should be unnecessary. Just clear its contents.
     delete m_graphics_scene;
+
+
+    m_graphics_scene = new lxa_graphics_scene(this);
     if (get_lexicon()->get_suffix_flag()){
-        m_graphics_scene = new lxa_graphics_scene(this, get_lexicon()->get_signatures(),DT_All_Suffix_Signatures);
+        m_graphics_scene->set_parameters(get_lexicon()->get_signatures(), DT_All_Suffix_Signatures);
+        m_graphics_scene->ingest_signatures(get_lexicon()->get_signatures(),   DT_All_Suffix_Signatures);
+        m_graphics_scene->place_signatures();
     }else{
-        m_graphics_scene = new lxa_graphics_scene(this, get_lexicon()->get_prefix_signatures(),DT_All_Prefix_Signatures);
+        m_graphics_scene->set_parameters(get_lexicon()->get_prefix_signatures(), DT_All_Prefix_Signatures);
+        m_graphics_scene->ingest_signatures(get_lexicon()->get_prefix_signatures(),DT_All_Prefix_Signatures);
+        m_graphics_scene->place_signatures();
     }
+    */
+
+    m_graphics_scene = new lxa_graphics_scene(this);
+
     m_graphics_view->setScene(m_graphics_scene);
     m_graphics_scene->set_graphics_view(m_graphics_view);
     m_leftTreeView->expandAll();
@@ -307,6 +326,8 @@ void MainWindow::do_crab2()
     createTreeModel();
 
 // add component 5
+
+
     //     part of an experiment:
     //     QMapIterator<QString,eComponentType> iter (get_lexicon()->get_category_types());
     //     while (iter.hasNext()){
@@ -318,15 +339,14 @@ void MainWindow::do_crab2()
 
 
     print_prefix_signatures();
-    m_graphics_scene->clear();
 
-
-
-    if (get_lexicon()->get_suffix_flag()) {
-        m_graphics_scene = new lxa_graphics_scene(this, get_lexicon()->get_signatures(),DT_All_Suffix_Signatures);
-    }else {
-        m_graphics_scene = new lxa_graphics_scene(this, get_lexicon()->get_prefix_signatures(),DT_All_Prefix_Signatures);
+    m_graphics_scene = new lxa_graphics_scene(this);
+    if (get_lexicon()->get_suffix_flag()){
+        m_graphics_scene->assign_scene_positions_to_signatures(get_lexicon()->get_signatures(),   DT_All_Suffix_Signatures);
+    }else{
+        m_graphics_scene->assign_scene_positions_to_signatures(get_lexicon()->get_prefix_signatures(),DT_All_Prefix_Signatures);
     }
+
     m_graphics_scene->place_signatures();
     m_graphics_view->setScene(m_graphics_scene);
     m_leftTreeView->expandAll();

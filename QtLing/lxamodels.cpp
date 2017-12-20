@@ -109,7 +109,7 @@ void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures, e
     m_sort_style = this_sort_style;
 
 
-    qDebug() << "load  signatures"<<110 << "number of them: " << p_signatures->get_count();
+    //qDebug() << "load  signatures"<<110 << "number of them: " << p_signatures->get_count();
 
     for (int signo = 0; signo<p_signatures->get_count(); signo++)
     {   sig = p_signatures->get_at_sorted(signo);
