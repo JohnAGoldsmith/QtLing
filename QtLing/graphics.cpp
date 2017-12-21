@@ -104,8 +104,8 @@ void pentagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene 
     p_text_item1->setPos( x+3  - bR1.width()/2, y-35 - bR1.height()   );
     p_text_item2->setPos( x-35 - bR2.width()  , y-12 - bR2.height()/2 );
     p_text_item3->setPos( x-18 - bR3.width()  , y+24 - bR3.height()/2 );
-    p_text_item4->setPos( x+18                , y+24 - bR3.height()/2 );
-    p_text_item5->setPos( x+29                , y-9  - bR3.height()/2 );
+    p_text_item4->setPos( x+22                , y+24 - bR3.height()/2 );
+    p_text_item5->setPos( x+32                , y-9  - bR3.height()/2 );
     scene->addItem(p_text_item1);
     scene->addItem(p_text_item2);
     scene->addItem(p_text_item3);

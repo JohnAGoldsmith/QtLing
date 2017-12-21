@@ -41,6 +41,7 @@ public:
 //    CSuffix_ptr_list  *         get_CSuffixes ()              const { return m_Suffixes;}
     QList<CSuffix*>*            get_suffix_list()                         {return m_Suffixes;}
     QList<CPrefix*>*            get_prefix_list()                         {return m_Prefixes;}
+    QStringList                 get_string_list(QStringList&)  ;
     void                        dump_string_set_of_suffixes(QSet<QString> & this_StringSet);
     void                        add_stem (QString);
 //    void                        add_stem (CStem* pStem);

@@ -5,6 +5,11 @@
 //class CStem;
 //class CSignature;
 
+
+enum eHypothesisType{
+    HT_affix_goes_to_signature
+};
+
 enum eDisplayType{
     DT_sig_tree_edges,
     DT_Positive_Suffix_Signatures,

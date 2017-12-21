@@ -2,18 +2,20 @@
 #define HYPOTHESIS_H
 
 #include "QString"
+#include "generaldefinitions.h"
 
 class CHypothesis
 {
-    QString m_key;
-    QString m_hypothesis_type;
-    QString m_signature_1;
-    QString m_signature_2;
-    QString m_affix_in_signature_1;
-    double  m_minimum_saving;
-    double  m_maximum_saving;
+    QString             m_key;
+    eHypothesisType     m_hypothesis_type;
+    sigstring_t         m_signature_1;
+    sigstring_t         m_signature_2;
+    affix_t             m_affix;
+    double              m_minimum_saving;
+    double              m_maximum_saving;
 
 public:
+    CHypothesis (eHypothesisType,  )
     QString  get_key() {return m_key;}
 };
 

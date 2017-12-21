@@ -33,7 +33,10 @@ CSignature::~CSignature()
   delete m_Prefixes;
   delete m_Suffixes;
 }
-
+QStringList CSignature::get_string_list(QStringList& affix_string_list){
+    affix_string_list.clear();
+    affix_string_list = m_Signature.split("=");
+}
 
 
 void CSignature::add_stem_pointer(CStem* pStem)
