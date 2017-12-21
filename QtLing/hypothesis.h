@@ -15,7 +15,7 @@ class CHypothesis
     double              m_maximum_saving;
 
 public:
-    CHypothesis (eHypothesisType,  )
+    CHypothesis (eHypothesisType  );
     QString  get_key() {return m_key;}
 };
 

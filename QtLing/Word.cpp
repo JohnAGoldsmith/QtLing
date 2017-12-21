@@ -2,7 +2,6 @@
 #include <QDebug>
 CWord::CWord(QString word) : m_WordCount(0), m_Word(word)
 {
-     m_WordCount = 0;
     m_Signatures.clear();
 }
 

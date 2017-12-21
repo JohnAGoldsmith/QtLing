@@ -35,6 +35,7 @@ CWord* CWordCollection::find_or_add(QString word_string){
     if (word_iter == m_WordMap.end()){
         CWord* pWord = new CWord(word_string);
         m_WordMap[word_string] = pWord;
+        return pWord;
     }else{
         return word_iter.value();
     }
@@ -65,7 +66,8 @@ CWord* CWordCollection::operator <<(QString word)
 
 CWord* CWordCollection::operator ^=(QString word)
 {
-    this->find_or_add(word);
+    return this->find_or_add(word);
+
 
 }
 

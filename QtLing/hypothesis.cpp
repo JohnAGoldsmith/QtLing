@@ -20,7 +20,7 @@ void CLexicon::generate_hypotheses()
         double minimal_savings = 0;
         double maximal_savings = 0;
         QString affix;
-        QStringList affixes1, newaffixes1
+        QStringList affixes1, newaffixes1;
         pSig1->get_string_list(affixes1);
         for (int affixno = 0; affixno < affixes1.count(); affixno++){
             affix = affixes1[affixno];

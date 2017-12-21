@@ -32,7 +32,7 @@ CLexicon::CLexicon( bool suffix_flag)
     m_ParaSuffixes          = new CSuffixCollection(this);
     m_ResidualStems         = new CStemCollection(this);
     m_PassiveSignatures     = new CSignatureCollection(this, true);
-    m_SuffixesFlag          = true;
+    m_SuffixesFlag          = suffix_flag;
     m_Hypotheses            = new QList<CHypothesis*>;
     m_entropy_threshold_for_stems = 1.2;
 
@@ -257,7 +257,7 @@ void   CLexicon::AssignSuffixesToStems()
     CSignature*                 pSig;
     QString                     this_stem_t, this_suffix, this_prefix, this_affix, this_signature_string, this_word;
     stem_list       *           p_this_stem_list;
-    suffix_set *                this_ptr_to_suffix_set;
+//    suffix_set *                this_ptr_to_suffix_set;
     affix_set *                 this_ptr_to_affix_set;
     CStem*                      pStem;
     map_sigstring_to_suffix_set      temp_stems_to_affix_set;
@@ -340,11 +340,8 @@ void   CLexicon::AssignSuffixesToStems()
         m_ProgressBar->setValue(count);
         iter_sigstring_to_stems.next();
         this_signature_string    = iter_sigstring_to_stems.key();
-        //qDebug() << 303 << this_signature_string;
         p_this_stem_list         = iter_sigstring_to_stems.value();
         affix_set this_affix_set = QSet<QString>::fromList( this_signature_string.split("="));
-        //qDebug () << this_signature_string << this_affix_set <<  302;
-        //qDebug () << this_signature_string<<  "signature."<< p_this_stem_list->size()<<  309;
         if (p_this_stem_list->size() >= MINIMUM_NUMBER_OF_STEMS)
         {  if( m_SuffixesFlag) {
                 pSig = *m_Signatures       << this_signature_string;
@@ -371,20 +368,13 @@ void   CLexicon::AssignSuffixesToStems()
             stem_list_iterator stem_iter(*p_this_stem_list);
             while (stem_iter.hasNext()){
                 this_stem_t = stem_iter.next();
-                if (this_stem_t == "wasahaulisha"){
-                    int i = 0;
-                }
-                //qDebug() << this_signature_string << this_stem_t << 330;
                 pStem = m_Stems->find_or_add(this_stem_t);
                 pStem->add_signature (this_signature_string);
-                //qDebug() << this_signature_string << this_stem_t << 339;
                 pSig->add_stem_pointer(pStem);
                 pStem->add_memo ("Pass1= ");
                 QStringList affixes = this_signature_string.split("=");
-                //m_StatusBar->showMessage(this_stem_t);
                 for (int affixno = 0; affixno < affixes.size(); affixno++)
                 {   this_affix = affixes[affixno];
-                    //qDebug() << this_affix << 345;
                     if (this_affix == "NULL"){
                         this_word = this_stem_t;
                     } else{
@@ -653,8 +643,7 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
     word_t                      this_word;
     suffix_t                    this_suffix;
     sig_string                  this_signature_string;
-    CStem*                      pStem, *qStem;
-    CSuffix*                    pSuffix;
+    CStem*                      pStem;
     CWord*                      pWord;
     CSignature*                 pSig, *p_proven_sig;
     CSuffix*                    pSuffix1;
@@ -703,7 +692,6 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
                                 if ( contains(&suffixes_of_residual_sig, &proven_sig_list) ){
 
                                     // We have found the longest signature contained in this_residual_suffix_set
-                                    //qDebug() << this_stem << 409 <<  "lexicon.cpp";
                                     pStem = m_Stems->find_or_add(this_stem);
                                     pStem->add_signature(p_proven_sigstring);
                                     p_proven_sig->add_stem_pointer(pStem);
