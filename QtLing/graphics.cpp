@@ -12,7 +12,7 @@
 #include "SignatureCollection.h"
 #include "mainwindow.h"
 
-void triangle(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene)
+void triangle(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count)
 {
     QPolygon triangle;
     triangle.append(QPoint(x,y+30));
@@ -28,14 +28,19 @@ void triangle(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene 
     p_text_item2->setText(affixes[1]);
     p_text_item3->setText(affixes[2]);
     QRectF bR1 = p_text_item1->sceneBoundingRect();
-    QRectF bR2 = p_text_item1->sceneBoundingRect();
-    QRectF bR3 = p_text_item1->sceneBoundingRect();
-    p_text_item1->setPos( x-10 - bR1.width()  , y+30 - bR1.height()/2 );
-    p_text_item2->setPos( x+30 - bR2.width()/2, y-30 - bR2.height()/2 );
-    p_text_item3->setPos( x+50                , y+30 - bR3.height()/2 );
+    QRectF bR2 = p_text_item2->sceneBoundingRect();
+    QRectF bR3 = p_text_item3->sceneBoundingRect();
+    p_text_item1->setPos( x-7 - bR1.width()   , y+30 - bR1.height()/2 );
+    p_text_item2->setPos( x+25 - bR2.width()/2, y-30 - bR2.height()/2 );
+    p_text_item3->setPos( x+47                , y+30 - bR3.height()/2 );
     scene->addItem(p_text_item1);
     scene->addItem(p_text_item2);
     scene->addItem(p_text_item3);
+    QGraphicsSimpleTextItem * p_text_item = new QGraphicsSimpleTextItem;
+    p_text_item->setText(QString::number(pSig->get_number_of_stems()));
+    p_text_item->setPos (x + 15 ,y + 0.3* row_delta );
+    scene->addItem(p_text_item);
+
 }
 void square(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene)
 {
@@ -56,9 +61,9 @@ void square(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * 
     p_text_item3->setText(affixes[2]);
     p_text_item4->setText(affixes[3]);
     QRectF bR1 = p_text_item1->sceneBoundingRect();
-    QRectF bR2 = p_text_item1->sceneBoundingRect();
-    QRectF bR3 = p_text_item1->sceneBoundingRect();
-    QRectF bR4 = p_text_item1->sceneBoundingRect();
+    QRectF bR2 = p_text_item2->sceneBoundingRect();
+    QRectF bR3 = p_text_item3->sceneBoundingRect();
+    QRectF bR4 = p_text_item4->sceneBoundingRect();
     p_text_item1->setPos( x-10 - bR1.width()  , y+30 - bR1.height()/2 );
     p_text_item2->setPos( x-10 - bR2.width()  , y-20 - bR2.height()/2 );
     p_text_item3->setPos( x+50                , y-20 - bR3.height()/2 );
@@ -68,7 +73,45 @@ void square(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * 
     scene->addItem(p_text_item3);
     scene->addItem(p_text_item4);
 }
+void pentagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene)
+{
+    QPolygon pentagon;
+    pentagon.append(QPoint(x,y-30));
+    pentagon.append(QPoint(x-29,y-12));
+    pentagon.append(QPoint(x-18,y+24));
+    pentagon.append(QPoint(x+18,y+24));
+    pentagon.append(QPoint(x+29,y-9));
+    pentagon.append(QPoint(x,y-30));
+    QGraphicsPolygonItem * pPentagonItem = scene->addPolygon(pentagon,QPen(), QBrush(Qt::black));
+    QGraphicsSimpleTextItem * p_text_item1 = new QGraphicsSimpleTextItem;
+    QGraphicsSimpleTextItem * p_text_item2 = new QGraphicsSimpleTextItem;
+    QGraphicsSimpleTextItem * p_text_item3 = new QGraphicsSimpleTextItem;
+    QGraphicsSimpleTextItem * p_text_item4 = new QGraphicsSimpleTextItem;
+    QGraphicsSimpleTextItem * p_text_item5 = new QGraphicsSimpleTextItem;
 
+    QStringList affixes = pSig->get_key().split("=");
+    p_text_item1->setText(affixes[0]);
+    p_text_item2->setText(affixes[1]);
+    p_text_item3->setText(affixes[2]);
+    p_text_item4->setText(affixes[3]);
+    p_text_item5->setText(affixes[4]);
+
+    QRectF bR1 = p_text_item1->sceneBoundingRect();
+    QRectF bR2 = p_text_item2->sceneBoundingRect();
+    QRectF bR3 = p_text_item3->sceneBoundingRect();
+    QRectF bR4 = p_text_item4->sceneBoundingRect();
+    QRectF bR5 = p_text_item5->sceneBoundingRect();
+    p_text_item1->setPos( x+3  - bR1.width()/2, y-35 - bR1.height()   );
+    p_text_item2->setPos( x-35 - bR2.width()  , y-12 - bR2.height()/2 );
+    p_text_item3->setPos( x-18 - bR3.width()  , y+24 - bR3.height()/2 );
+    p_text_item4->setPos( x+18                , y+24 - bR3.height()/2 );
+    p_text_item5->setPos( x+29                , y-9  - bR3.height()/2 );
+    scene->addItem(p_text_item1);
+    scene->addItem(p_text_item2);
+    scene->addItem(p_text_item3);
+    scene->addItem(p_text_item4);
+    scene->addItem(p_text_item5);
+}
 graphic_signature::graphic_signature(int x, int y, CSignature* pSig, lxa_graphics_scene * scene,
                                      int radius, int row_delta, QColor this_color, bool focus_flag)
 {
@@ -88,22 +131,14 @@ graphic_signature::graphic_signature(int x, int y, CSignature* pSig, lxa_graphic
 
     switch(pSig->get_number_of_affixes()){
     case 3:{
-        triangle(pSig, xprime, y, row_delta, scene);
+        triangle(pSig, xprime, y, row_delta, scene,pSig->get_number_of_stems());
         break;}
     case 4:{
         square(pSig, xprime,y,row_delta, scene);
         break;}
     case 5:{
-        QPolygon pent;
         xprime += 20;
-        pent.append(QPoint(xprime,y-30 ));
-        pent.append(QPoint(xprime-29,y-12));
-        pent.append(QPoint(xprime-18,y+24));
-        pent.append(QPoint(xprime+18,y+24));
-        pent.append(QPoint(xprime+18,y+24));
-        pent.append(QPoint(xprime+29,y-9));
-        pent.append(QPoint(xprime,y-30 ));
-        QGraphicsPolygonItem * p_square_item = scene->addPolygon(pent,QPen(), QBrush(m_color));
+        pentagon(pSig, xprime,y,row_delta,scene);
         xprime -= 20;
         break;}
     case 6:{
@@ -129,7 +164,7 @@ graphic_signature::graphic_signature(int x, int y, CSignature* pSig, lxa_graphic
     QGraphicsTextItem * p_text_item = new QGraphicsTextItem;
     int text_width = p_text_item->textWidth();
 
-    if (pSig->get_number_of_affixes() > 4) {
+    if (pSig->get_number_of_affixes() > 5) {
         p_text_item->setPlainText(pSig->get_key());
         p_text_item->setPos (x - 0.5 * text_width,y + 0.3* row_delta);
     }
