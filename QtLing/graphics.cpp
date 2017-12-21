@@ -38,11 +38,11 @@ void triangle(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene 
     scene->addItem(p_text_item3);
     QGraphicsSimpleTextItem * p_text_item = new QGraphicsSimpleTextItem;
     p_text_item->setText(QString::number(pSig->get_number_of_stems()));
-    p_text_item->setPos (x + 15 ,y + 0.3* row_delta );
+    p_text_item->setPos (x + 30 ,y-8 + 0.3* row_delta );
     scene->addItem(p_text_item);
 
 }
-void square(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene)
+void square(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count)
 {
     QPolygon square;
     square.append(QPoint(x,y+30));
@@ -72,8 +72,12 @@ void square(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * 
     scene->addItem(p_text_item2);
     scene->addItem(p_text_item3);
     scene->addItem(p_text_item4);
+    QGraphicsSimpleTextItem * p_text_item = new QGraphicsSimpleTextItem;
+    p_text_item->setText(QString::number(pSig->get_number_of_stems()));
+    p_text_item->setPos (x + 15 ,y + 0.3* row_delta );
+    scene->addItem(p_text_item);
 }
-void pentagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene)
+void pentagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count)
 {
     QPolygon pentagon;
     pentagon.append(QPoint(x,y-30));
@@ -111,6 +115,67 @@ void pentagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene 
     scene->addItem(p_text_item3);
     scene->addItem(p_text_item4);
     scene->addItem(p_text_item5);
+    QGraphicsSimpleTextItem * p_text_item = new QGraphicsSimpleTextItem;
+    p_text_item->setText(QString::number(pSig->get_number_of_stems()));
+    p_text_item->setPos (x, y + 0.3* row_delta );
+    scene->addItem(p_text_item);
+}
+void hexagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count)
+{
+
+    x  += 20;
+    QPolygon triangle1, triangle2;
+    triangle1.append(QPoint(x,y-15));
+    triangle1.append(QPoint(x+40,y-15 ));
+    triangle1.append(QPoint(x+20,y-35));
+    triangle1.append(QPoint(x,y-15));
+    QGraphicsPolygonItem * pTriangleItem1 = scene->addPolygon(triangle1,QPen(), QBrush(Qt::blue));
+    triangle2.append(QPoint(x,y-5));
+    triangle2.append(QPoint(x+40,y-5));
+    triangle2.append(QPoint(x+20,y+15));
+    triangle2.append(QPoint(x,y-5));
+    QGraphicsPolygonItem * pTriangleItem2 = scene->addPolygon(triangle2,QPen(), QBrush(Qt::blue));
+   x  -= 20;
+
+    QGraphicsSimpleTextItem * p_text_item1 = new QGraphicsSimpleTextItem;
+    QGraphicsSimpleTextItem * p_text_item2 = new QGraphicsSimpleTextItem;
+    QGraphicsSimpleTextItem * p_text_item3 = new QGraphicsSimpleTextItem;
+    QGraphicsSimpleTextItem * p_text_item4 = new QGraphicsSimpleTextItem;
+    QGraphicsSimpleTextItem * p_text_item5 = new QGraphicsSimpleTextItem;
+    QGraphicsSimpleTextItem * p_text_item6 = new QGraphicsSimpleTextItem;
+
+
+    QStringList affixes = pSig->get_key().split("=");
+    p_text_item1->setText(affixes[0]);
+    p_text_item2->setText(affixes[1]);
+    p_text_item3->setText(affixes[2]);
+    p_text_item4->setText(affixes[3]);
+    p_text_item5->setText(affixes[4]);
+    p_text_item6->setText(affixes[5]);
+
+    QRectF bR1 = p_text_item1->sceneBoundingRect();
+    QRectF bR2 = p_text_item2->sceneBoundingRect();
+    QRectF bR3 = p_text_item3->sceneBoundingRect();
+    QRectF bR4 = p_text_item4->sceneBoundingRect();
+    QRectF bR5 = p_text_item5->sceneBoundingRect();
+    QRectF bR6 = p_text_item6->sceneBoundingRect();
+
+    p_text_item1->setPos( x+35 - bR2.width()/2, y-50  );
+    p_text_item2->setPos( x+80                , y-25  );
+    p_text_item3->setPos( x    - bR3.width()  , y-25  );
+    p_text_item4->setPos( x+35 - bR2.width()/2, y+18  );
+    p_text_item5->setPos( x+80                , y - 5 );
+    p_text_item6->setPos( x     - bR6.width() , y - 5 );
+    scene->addItem(p_text_item1);
+    scene->addItem(p_text_item2);
+    scene->addItem(p_text_item3);
+    scene->addItem(p_text_item4);
+    scene->addItem(p_text_item5);
+    scene->addItem(p_text_item6);
+    QGraphicsSimpleTextItem * p_text_item = new QGraphicsSimpleTextItem;
+    p_text_item->setText(QString::number(pSig->get_number_of_stems()));
+    p_text_item->setPos (x, y + 0.3* row_delta );
+    scene->addItem(p_text_item);
 }
 graphic_signature::graphic_signature(int x, int y, CSignature* pSig, lxa_graphics_scene * scene,
                                      int radius, int row_delta, QColor this_color, bool focus_flag)
@@ -134,27 +199,15 @@ graphic_signature::graphic_signature(int x, int y, CSignature* pSig, lxa_graphic
         triangle(pSig, xprime, y, row_delta, scene,pSig->get_number_of_stems());
         break;}
     case 4:{
-        square(pSig, xprime,y,row_delta, scene);
+        square(pSig, xprime,y,row_delta, scene,pSig->get_number_of_stems());
         break;}
     case 5:{
         xprime += 20;
-        pentagon(pSig, xprime,y,row_delta,scene);
+        pentagon(pSig, xprime,y,row_delta,scene,pSig->get_number_of_stems());
         xprime -= 20;
         break;}
     case 6:{
-        xprime += 20;
-        QPolygon triangle1, triangle2;
-        triangle1.append(QPoint(xprime,y-15));
-        triangle1.append(QPoint(xprime+40,y-15 ));
-        triangle1.append(QPoint(xprime+20,y-45));
-        triangle1.append(QPoint(xprime,y-15));
-        QGraphicsPolygonItem * pTriangleItem1 = scene->addPolygon(triangle1,QPen(), QBrush(m_color));
-        triangle2.append(QPoint(xprime,y-5));
-        triangle2.append(QPoint(xprime+40,y-5));
-        triangle2.append(QPoint(xprime+20,y+25));
-        triangle2.append(QPoint(xprime,y-5));
-        QGraphicsPolygonItem * pTriangleItem2 = scene->addPolygon(triangle2,QPen(), QBrush(m_color));
-       xprime -= 20;
+        hexagon(pSig,xprime,y,row_delta,scene, pSig->get_number_of_stems());
         break;}
     default:{
         scene->addEllipse(x,y,radius ,radius,QPen(),QBrush(m_color));
@@ -164,7 +217,7 @@ graphic_signature::graphic_signature(int x, int y, CSignature* pSig, lxa_graphic
     QGraphicsTextItem * p_text_item = new QGraphicsTextItem;
     int text_width = p_text_item->textWidth();
 
-    if (pSig->get_number_of_affixes() > 5) {
+    if (pSig->get_number_of_affixes() > 6) {
         p_text_item->setPlainText(pSig->get_key());
         p_text_item->setPos (x - 0.5 * text_width,y + 0.3* row_delta);
     }
@@ -245,7 +298,7 @@ void lxa_graphics_view::mousePressEvent(QMouseEvent* event)
 lxa_graphics_scene::lxa_graphics_scene(MainWindow * window){
     m_main_window               = window;
     m_location_of_bottom_row    = 0;
-    m_row_delta                 = 125;
+    m_row_delta                 = 175;
     m_column_delta              = 200;
     m_normal_color              = Qt::red;
     m_focus_color               = Qt::blue;
