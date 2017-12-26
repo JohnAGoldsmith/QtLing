@@ -11,7 +11,7 @@ enum eHypothesisType{
 };
 
 enum eDisplayType{
-    DT_sig_tree_edges,
+    DT_sig_graph_edges,
     DT_Positive_Suffix_Signatures,
     DT_Positive_Prefix_Signatures,
     DT_All_Suffix_Signatures,
@@ -40,7 +40,7 @@ enum eDocumentType  // for the Collection View
   ROOTS,
   MDL_TYPE,
   SIGNATURES,
-  SIGNATURE_TREE_EDGES,
+  SIGNATURE_GRAPH_EDGES,
   SIGNATURE_RESIDUES,
   PREFIX_SIGNATURES,
   SUFFIX_SIGNATURES,

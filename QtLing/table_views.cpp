@@ -5,7 +5,7 @@
 #include "Word.h"
 #include "WordCollection.h"
 #include "graphics.h"
-class sig_tree_edge;
+class sig_graph_edge;
 
 /**
  * @brief LowerTableView::LowerTableView
@@ -135,7 +135,7 @@ LowerTableView::LowerTableView(MainWindow * window)
      setModel( m_my_current_model);
     }
      //  ---------------------------------------------------//
-     else if (UpperView_type == SIGNATURE_TREE_EDGES) {
+     else if (UpperView_type == SIGNATURE_GRAPH_EDGES) {
      //  ---------------------------------------------------//
         item_list.clear();
         if (index.isValid()){
@@ -143,8 +143,8 @@ LowerTableView::LowerTableView(MainWindow * window)
              column = index.column();
         }
         QString               edge_key = index.sibling(row,5).data().toString();
-        sig_tree_edge*        this_edge = this_lexicon->get_sig_tree_edge_map()->value(edge_key);
-        sig_tree_edge *       pSig_tree_edge;
+        sig_graph_edge*        this_edge = this_lexicon->get_sig_graph_edge_map()->value(edge_key);
+        sig_graph_edge *       psig_graph_edge;
         CSignature*           pSig;
         CSignature*           pSig1 = this_edge->sig_1;
         CSignature*           pSig2 = this_edge->sig_2;
@@ -160,7 +160,7 @@ LowerTableView::LowerTableView(MainWindow * window)
             if (column == 1){
                 pSig = pSig1;
             } else { pSig = pSig2;}
-            graphics_sig_tree_edges(pSig, this_lexicon );
+            graphics_sig_graph_edges(pSig, this_lexicon );
         } else
          // -->   Tabular display in lower right window <--//
         {   foreach (this_word_stem_item, this_edge->shared_word_stems){
@@ -203,8 +203,12 @@ LowerTableView::LowerTableView(MainWindow * window)
         }
     }
      //  ---------------------------------------------------//
-     else if (UpperView_type == SIGNATURE_TREE_EDGES) {
+     else if (UpperView_type == HYPOTHESES) {
      //  ---------------------------------------------------//
+
+
+
+
     }
      // add component 9
  }
@@ -277,7 +281,7 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         set_document_type( SIGNATURES );
         set_content_type( "signatures");
 
-        m_parent_window->m_graphics_scene->clear();
+        m_parent_window->m_graphics_scene->clear_all();
         m_parent_window->m_graphics_scene->assign_scene_positions_to_signatures(lexicon->get_signatures(), DT_All_Suffix_Signatures);
         m_parent_window->m_graphics_scene->place_signatures();
 
@@ -287,7 +291,7 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         set_document_type( EPOSITIVE_SIGNATURES );
         set_content_type( "signatures");
 
-        m_parent_window->m_graphics_scene->clear();
+        m_parent_window->m_graphics_scene->clear_all();
         m_parent_window->m_graphics_scene->assign_scene_positions_to_signatures(lexicon->get_signatures(), DT_Positive_Suffix_Signatures);
         m_parent_window->m_graphics_scene->place_signatures();
         qDebug() << "epositive sigs"<< 292;
@@ -301,9 +305,9 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         set_document_type( EPOSITIVE_PREFIX_SIGNATURES );
         set_content_type( "signatures");
     }
-    else     if (component == "Signature tree edges"){
-        setModel(m_parent_window->m_Models["SigTreeEdges"]);
-        set_document_type( SIGNATURE_TREE_EDGES );
+    else     if (component == "Signature graph edges"){
+        setModel(m_parent_window->m_Models["SigGraphEdges"]);
+        set_document_type( SIGNATURE_GRAPH_EDGES );
         sortByColumn(-1);
     }
     else     if (component == "Residual parasignatures"){
@@ -343,31 +347,31 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
 
 
 /**
- * @brief LowerTableView::graphics_sig_tree_edges
+ * @brief LowerTableView::graphics_sig_graph_edges
  * @param pSig
  * @param p_lexicon
  *
  *
  */
-void LowerTableView::graphics_sig_tree_edges(CSignature* pSig, CLexicon* p_lexicon)
+void LowerTableView::graphics_sig_graph_edges(CSignature* pSig, CLexicon* p_lexicon)
 {
-    sig_tree_edge *       pSig_tree_edge;
+    sig_graph_edge *       psig_graph_edge;
     //-->  Graphic display in lower right window <--//
     // "Signatures" is what should be sent to the Model in the mainwindow.
     CSignatureCollection Signatures(p_lexicon);
     Signatures << pSig;
     // We iterate through the SigTreeEdges in the SigTreeEdgeMap. If its Sig1 is pSig, then we enter it into Signatures;
-    QMap<QString,sig_tree_edge*>::iterator edge_iter = p_lexicon->get_sig_tree_edge_map()->begin();
-    while (edge_iter !=  p_lexicon->get_sig_tree_edge_map()->constEnd()){
-        pSig_tree_edge = edge_iter.value();
-        if (pSig_tree_edge->sig_1 == pSig){
-            Signatures << pSig_tree_edge->sig_2;
+    QMap<QString,sig_graph_edge*>::iterator edge_iter = p_lexicon->get_sig_graph_edge_map()->begin();
+    while (edge_iter !=  p_lexicon->get_sig_graph_edge_map()->constEnd()){
+        psig_graph_edge = edge_iter.value();
+        if (psig_graph_edge->sig_1 == pSig){
+            Signatures << psig_graph_edge->sig_2;
         }
         ++edge_iter;
     }
 
     // put this back in when things are figured out ****
-//    m_parent_window->m_graphics_scene = new lxa_graphics_scene(m_parent_window,  &Signatures,  DT_sig_tree_edges);
+//    m_parent_window->m_graphics_scene = new lxa_graphics_scene(m_parent_window,  &Signatures,  DT_sig_graph_edges);
 //    m_parent_window->m_graphics_scene->place_signatures();
 //    m_parent_window->m_graphics_view->setScene(m_parent_window->m_graphics_scene);
 }
@@ -495,7 +499,7 @@ void LowerTableView::table_passive_signature(CSignature *p_this_sig)
 {
     QStandardItem*              p_item;
     QList<QStandardItem*>       item_list;
-    sig_tree_edge *             p_edge;
+    sig_graph_edge *             p_edge;
     QMap<CSignature*, int>      stem_counter; // key is signature, value is number of stems shared with p_this_sig;
     QList<CSignature*>          sig_list;
     m_my_current_model =        new QStandardItemModel();
@@ -503,12 +507,12 @@ void LowerTableView::table_passive_signature(CSignature *p_this_sig)
     QMap<CSignature*, QString>  Morphs;
 
     // put signatures in a Map, values are numbers of stems shared
-    QMap<QString, sig_tree_edge*> * pMap = get_lexicon()->get_sig_tree_edge_map();
-    QMapIterator<QString, sig_tree_edge*> this_sig_tree_edge_iter (*pMap);
-    while (this_sig_tree_edge_iter.hasNext()){
-        sig_tree_edge * p_edge  = this_sig_tree_edge_iter.next().value();
+    QMap<QString, sig_graph_edge*> * pMap = get_lexicon()->get_sig_graph_edge_map();
+    QMapIterator<QString, sig_graph_edge*> this_sig_graph_edge_iter (*pMap);
+    while (this_sig_graph_edge_iter.hasNext()){
+        sig_graph_edge * p_edge  = this_sig_graph_edge_iter.next().value();
         if (p_this_sig == p_edge->sig_1){
-            stem_counter[p_edge->sig_2] = p_edge->get_number_of_stems();
+            stem_counter[p_edge->sig_2] = p_edge->get_number_of_words();
             Morphs[p_edge->sig_2] = p_edge->morph;
         }
     }

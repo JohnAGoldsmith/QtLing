@@ -36,6 +36,7 @@ CSignature::~CSignature()
 QStringList CSignature::get_string_list(QStringList& affix_string_list){
     affix_string_list.clear();
     affix_string_list = m_Signature.split("=");
+    return affix_string_list;
 }
 
 
@@ -206,3 +207,30 @@ double CSignature::calculate_stem_entropy()
     //qDebug() << "Stem entropy of signature"<<entropy << 195;
     return entropy;
 }
+/////////////////////////////////////////////////////////////////////////
+//
+//      non-class functions dealing with signatures
+//
+/////////////////////////////////////////////////////////////////////////
+
+sigstring_t restructure_signature(sigstring_t sig, QString morph, QStringList new_affixes)
+{
+    QStringList affixes = sig.split("=");
+    QStringList new_sig;
+    affix_t     affix;
+    sigstring_t new_signature;
+
+    qDebug() << "restructuring 1: old signature" << sig << "morph:" << morph << "new affixes:" << new_affixes.join("=");
+    for (int i = 0; i < affixes.count(); i++){
+        affix = affixes[i];
+        if (! new_affixes.contains(affix)){
+            new_sig.append(affix);
+        }
+    }
+    new_sig.append(morph);
+    new_sig.sort();
+    new_signature = new_sig.join("=");
+    qDebug() <<"restructuring 2 old sig:" << sig << "new signature:"<< new_signature << morph;
+    return new_signature;
+}
+

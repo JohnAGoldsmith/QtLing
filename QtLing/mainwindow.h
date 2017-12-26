@@ -76,7 +76,7 @@ public:
     void        load_signatures(CSignatureCollection * p_signatures, eSortStyle = SIG_BY_STEM_COUNT);
     void        load_parasignatures(CSignatureCollection * p_signatures);
     void        sort_signatures(eSortStyle);
-    void        load_sig_tree_edges(QMap<QString, sig_tree_edge*> *);
+    void        load_sig_graph_edges(QMap<QString, sig_graph_edge*> *);
     void        load_passive_signatures (CSignatureCollection* p_passive_signatures);
     void        load_positive_signatures(CSignatureCollection* p_positive_signatures);
     void        load_positive_prefix_signatures(CSignatureCollection* p_positive_prefix_signatures);
@@ -131,7 +131,7 @@ public slots:
         void table_word (CWord*);
         void table_one_signature(CSignature*, QStringList stem_list);
         void table_passive_signature(CSignature*);
-        void graphics_sig_tree_edges(CSignature* , CLexicon*);
+        void graphics_sig_graph_edges(CSignature* , CLexicon*);
         int  get_number_of_columns () {return m_number_of_columns;}
         CLexicon* get_lexicon() {return m_lexicon;}
         //void    advance_sortstyle() {m_sort}

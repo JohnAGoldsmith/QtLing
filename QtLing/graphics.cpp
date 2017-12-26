@@ -19,7 +19,7 @@ void triangle(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene 
     triangle.append(QPoint(x+40,y+30));
     triangle.append(QPoint(x+20,y-10));
     triangle.append(QPoint(x,y+28));
-    QGraphicsPolygonItem * pTriangleItem = scene->addPolygon(triangle,QPen(), QBrush(Qt::black));
+    QGraphicsPolygonItem * pTriangleItem = scene->addPolygon(triangle,QPen(), QBrush(Qt::darkRed));
     QGraphicsSimpleTextItem * p_text_item1 = new QGraphicsSimpleTextItem;
     QGraphicsSimpleTextItem * p_text_item2 = new QGraphicsSimpleTextItem;
     QGraphicsSimpleTextItem * p_text_item3 = new QGraphicsSimpleTextItem;
@@ -38,7 +38,7 @@ void triangle(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene 
     scene->addItem(p_text_item3);
     QGraphicsSimpleTextItem * p_text_item = new QGraphicsSimpleTextItem;
     p_text_item->setText(QString::number(pSig->get_number_of_stems()));
-    p_text_item->setPos (x + 30 ,y-8 + 0.3* row_delta );
+    p_text_item->setPos (x + 5 ,y-8 + 0.3* row_delta );
     scene->addItem(p_text_item);
 
 }
@@ -50,7 +50,7 @@ void square(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * 
     square.append(QPoint(x+40,y-10));
     square.append(QPoint(x,y-10));
     square.append(QPoint(x,y+30));
-    QGraphicsPolygonItem * pSquareItem = scene->addPolygon(square,QPen(), QBrush(Qt::black));
+    QGraphicsPolygonItem * pSquareItem = scene->addPolygon(square,QPen(), QBrush(Qt::red));
     QGraphicsSimpleTextItem * p_text_item1 = new QGraphicsSimpleTextItem;
     QGraphicsSimpleTextItem * p_text_item2 = new QGraphicsSimpleTextItem;
     QGraphicsSimpleTextItem * p_text_item3 = new QGraphicsSimpleTextItem;
@@ -74,7 +74,7 @@ void square(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * 
     scene->addItem(p_text_item4);
     QGraphicsSimpleTextItem * p_text_item = new QGraphicsSimpleTextItem;
     p_text_item->setText(QString::number(pSig->get_number_of_stems()));
-    p_text_item->setPos (x + 15 ,y + 0.3* row_delta );
+    p_text_item->setPos (x + 5 ,y-15 + 0.3* row_delta );
     scene->addItem(p_text_item);
 }
 void pentagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count)
@@ -86,7 +86,7 @@ void pentagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene 
     pentagon.append(QPoint(x+18,y+24));
     pentagon.append(QPoint(x+29,y-9));
     pentagon.append(QPoint(x,y-30));
-    QGraphicsPolygonItem * pPentagonItem = scene->addPolygon(pentagon,QPen(), QBrush(Qt::black));
+    QGraphicsPolygonItem * pPentagonItem = scene->addPolygon(pentagon,QPen(), QBrush(Qt::darkMagenta));
     QGraphicsSimpleTextItem * p_text_item1 = new QGraphicsSimpleTextItem;
     QGraphicsSimpleTextItem * p_text_item2 = new QGraphicsSimpleTextItem;
     QGraphicsSimpleTextItem * p_text_item3 = new QGraphicsSimpleTextItem;
@@ -107,7 +107,7 @@ void pentagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene 
     QRectF bR5 = p_text_item5->sceneBoundingRect();
     p_text_item1->setPos( x+3  - bR1.width()/2, y-35 - bR1.height()   );
     p_text_item2->setPos( x-35 - bR2.width()  , y-12 - bR2.height()/2 );
-    p_text_item3->setPos( x-18 - bR3.width()  , y+24 - bR3.height()/2 );
+    p_text_item3->setPos( x-22 - bR3.width()  , y+24 - bR3.height()/2 );
     p_text_item4->setPos( x+22                , y+24 - bR3.height()/2 );
     p_text_item5->setPos( x+32                , y-9  - bR3.height()/2 );
     scene->addItem(p_text_item1);
@@ -117,7 +117,7 @@ void pentagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene 
     scene->addItem(p_text_item5);
     QGraphicsSimpleTextItem * p_text_item = new QGraphicsSimpleTextItem;
     p_text_item->setText(QString::number(pSig->get_number_of_stems()));
-    p_text_item->setPos (x, y + 0.3* row_delta );
+    p_text_item->setPos (x-5, y-15 + 0.3* row_delta );
     scene->addItem(p_text_item);
 }
 void hexagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count)
@@ -129,12 +129,12 @@ void hexagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene *
     triangle1.append(QPoint(x+40,y-15 ));
     triangle1.append(QPoint(x+20,y-35));
     triangle1.append(QPoint(x,y-15));
-    QGraphicsPolygonItem * pTriangleItem1 = scene->addPolygon(triangle1,QPen(), QBrush(Qt::blue));
+    QGraphicsPolygonItem * pTriangleItem1 = scene->addPolygon(triangle1,QPen(), QBrush(Qt::darkBlue));
     triangle2.append(QPoint(x,y-5));
     triangle2.append(QPoint(x+40,y-5));
     triangle2.append(QPoint(x+20,y+15));
     triangle2.append(QPoint(x,y-5));
-    QGraphicsPolygonItem * pTriangleItem2 = scene->addPolygon(triangle2,QPen(), QBrush(Qt::blue));
+    QGraphicsPolygonItem * pTriangleItem2 = scene->addPolygon(triangle2,QPen(), QBrush(Qt::darkBlue));
    x  -= 20;
 
     QGraphicsSimpleTextItem * p_text_item1 = new QGraphicsSimpleTextItem;
@@ -160,10 +160,10 @@ void hexagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene *
     QRectF bR5 = p_text_item5->sceneBoundingRect();
     QRectF bR6 = p_text_item6->sceneBoundingRect();
 
-    p_text_item1->setPos( x+35 - bR2.width()/2, y-50  );
+    p_text_item1->setPos( x+35 - bR1.width()/2, y-50  );
     p_text_item2->setPos( x+80                , y-25  );
     p_text_item3->setPos( x    - bR3.width()  , y-25  );
-    p_text_item4->setPos( x+35 - bR2.width()/2, y+18  );
+    p_text_item4->setPos( x+38 - bR4.width()/2, y+18  );
     p_text_item5->setPos( x+80                , y - 5 );
     p_text_item6->setPos( x     - bR6.width() , y - 5 );
     scene->addItem(p_text_item1);
@@ -174,7 +174,8 @@ void hexagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene *
     scene->addItem(p_text_item6);
     QGraphicsSimpleTextItem * p_text_item = new QGraphicsSimpleTextItem;
     p_text_item->setText(QString::number(pSig->get_number_of_stems()));
-    p_text_item->setPos (x, y + 0.3* row_delta );
+    QRectF bR = p_text_item->sceneBoundingRect();
+    p_text_item->setPos (x+38 - bR.width()/2, y-10 + 0.3* row_delta );
     scene->addItem(p_text_item);
 }
 graphic_signature::graphic_signature(int x, int y, CSignature* pSig, lxa_graphics_scene * scene,
@@ -217,14 +218,15 @@ graphic_signature::graphic_signature(int x, int y, CSignature* pSig, lxa_graphic
     QGraphicsTextItem * p_text_item = new QGraphicsTextItem;
     int text_width = p_text_item->textWidth();
 
-    if (pSig->get_number_of_affixes() > 6) {
+    if (pSig->get_number_of_affixes() > 6 || pSig->get_number_of_affixes() == 2) {
         p_text_item->setPlainText(pSig->get_key());
         p_text_item->setPos (x - 0.5 * text_width,y + 0.3* row_delta);
     }
     QGraphicsTextItem * q_text_item = new QGraphicsTextItem;
-    q_text_item->setPlainText(QString::number(pSig->get_number_of_stems()));
-    q_text_item->setPos (x - 0.5 * text_width,y + 0.3* row_delta + 20);
-
+    if  (pSig->get_number_of_affixes() > 6 || pSig->get_number_of_affixes() == 2) {
+        q_text_item->setPlainText(QString::number(pSig->get_number_of_stems()));
+        q_text_item->setPos (x - 0.5 * text_width,y + 0.3* row_delta + 20);
+    }
     scene->addItem(p_text_item);
     scene->addItem(q_text_item);
 
@@ -313,9 +315,13 @@ lxa_graphics_scene::~lxa_graphics_scene ()
     m_signature_lattice.clear();
 };
 //--------------------------------------------------------------------------//
-void lxa_graphics_scene::clear()
+void lxa_graphics_scene::clear_all()
 {  m_signature_lattice.clear();
    m_map_from_sig_to_column_no.clear();
+    QGraphicsScene::clear();
+}
+void lxa_graphics_scene::clear()
+{
     QGraphicsScene::clear();
 }
 //--------------------------------------------------------------------------//
@@ -411,8 +417,8 @@ void lxa_graphics_scene::assign_scene_positions_to_signatures(CSignatureCollecti
 //--------------------------------------------------------------------------//
 void lxa_graphics_scene::place_signatures()
 {
-    qDebug() << "Place signatures" << 277;
-    qDebug() << "number of rows " << "306 graphics scene";
+   // qDebug() << "Place signatures" << 277;
+   // qDebug() << "number of rows " << "306 graphics scene";
 
     m_signature_radius  = 30;
     int border          = 100;
@@ -492,6 +498,7 @@ void lxa_graphics_scene::widen_columns()
     m_column_delta *= 1.25;
     clear();
     place_signatures();
+    update();
     //place_containment_edges();
 }
 void lxa_graphics_scene::narrow_columns()
@@ -502,8 +509,7 @@ void lxa_graphics_scene::narrow_columns()
     //place_containment_edges();
 }
 void  lxa_graphics_scene::move_rows_apart()
-{
-    m_row_delta *= 1.2;
+{    m_row_delta *= 1.2;
     clear();
     place_signatures();
 }

@@ -54,15 +54,15 @@ CLexicon::CLexicon( bool suffix_flag)
 }
 
 
-QListIterator<simple_sig_tree_edge*> * CLexicon::get_sig_tree_edge_list_iter()
+QListIterator<simple_sig_graph_edge*> * CLexicon::get_sig_graph_edge_list_iter()
 {
-    QListIterator<simple_sig_tree_edge*> * iter = new QListIterator<simple_sig_tree_edge*>(m_SigTreeEdgeList);
+    QListIterator<simple_sig_graph_edge*> * iter = new QListIterator<simple_sig_graph_edge*>(m_SigGraphEdgeList);
     return iter;
 }
 
-QMapIterator<QString, sig_tree_edge*> * CLexicon::get_sig_tree_edge_map_iter()
+QMapIterator<QString, sig_graph_edge*> * CLexicon::get_sig_graph_edge_map_iter()
 {
-    QMapIterator<QString, sig_tree_edge*> * iter = new QMapIterator<QString, sig_tree_edge*>(m_SigTreeEdgeMap);
+    QMapIterator<QString, sig_graph_edge*> * iter = new QMapIterator<QString, sig_graph_edge*>(m_SigGraphEdgeMap);
     return iter;
 }
 
@@ -108,10 +108,13 @@ void CLexicon::Crab_2()
         m_Signatures->calculate_stem_entropy():
         m_PrefixSignatures->calculate_stem_entropy();
 
-    compute_sig_tree_edges();
 
-    compute_sig_tree_edge_map();
+    qDebug() << "hypothesis count " << m_Hypotheses->count() << 112;
 
+            compute_sig_graph_edges();
+
+    compute_sig_graph_edge_map();
+    generate_hypotheses();
     test_for_phonological_relations_between_signatures();
 
     qDebug() << "finished crab 2.";
@@ -763,18 +766,18 @@ void CLexicon::replace_parse_pairs_from_current_signature_structure(bool FindSuf
 /*!
  * We can build a graph whose nodes are the signatures, where an edge connects
  * any pair of signatures if there exists a word that they both analyze.
- * A sig_tree_edge has two flavors: this function uses the flavor that
+ * A sig_graph_edge has two flavors: this function uses the flavor that
  * contains the two signatures, the word, and the string-difference between
  * the stems of the word at the two signatures.
  * The edge has: signature1, signature2, a morph, and a pair of stems.
  *
  * This is Part 1 of the 3rd major function of Crab 2.
  */
-void CLexicon::compute_sig_tree_edges()
+void CLexicon::compute_sig_graph_edges()
 {
     map_string_to_word *            WordMap = m_Words->GetMap();
     map_string_to_word_ptr_iter     word_iter(*WordMap);
-    simple_sig_tree_edge *          p_SigTreeEdge;
+    simple_sig_graph_edge *          p_SigTreeEdge;
     CSignatureCollection*           pSignatures;
     CWord*                          pWord;
     morph_t                         difference;
@@ -802,15 +805,15 @@ void CLexicon::compute_sig_tree_edges()
                         m_SuffixesFlag?
                             difference = stem1->get_key().mid(stem2->get_key().length()):
                             difference = stem1->get_key().left(length_of_difference);
-                        p_SigTreeEdge = new simple_sig_tree_edge (sig1,sig2,difference, pWord->get_key(), stem1->get_key(), stem2->get_key());
+                        p_SigTreeEdge = new simple_sig_graph_edge (sig1,sig2,difference, pWord->get_key(), stem1->get_key(), stem2->get_key());
                     } else{
                         int length_of_difference = stem2length - stem1length;
                         m_SuffixesFlag?
                             difference = stem2->get_key().mid(stem1->get_key().length()):
                             difference = stem2->get_key().left(length_of_difference);
-                        p_SigTreeEdge =  new simple_sig_tree_edge (sig2,sig1,difference, pWord->get_key(), stem2->get_key(), stem1->get_key());
+                        p_SigTreeEdge =  new simple_sig_graph_edge (sig2,sig1,difference, pWord->get_key(), stem2->get_key(), stem1->get_key());
                     }
-                    m_SigTreeEdgeList.append(p_SigTreeEdge);
+                    m_SigGraphEdgeList.append(p_SigTreeEdge);
                     pWord->add_to_autobiography("multiple parse=" + stem1->get_key() + "=" +  sig1->get_key() + "=" + stem2->get_key() + "=" + sig2->get_key());
                 }
             }
@@ -821,41 +824,41 @@ void CLexicon::compute_sig_tree_edges()
 /*!
  * This function takes the SigTreeEdge list, and makes a smaller list composed of
  * SigTreeEdges which share the same signature pair and string-difference. This
- * flavor of sig_tree_edge contains a list of all the words that participate in
- * this particular sig_tree_edge.
+ * flavor of sig_graph_edge contains a list of all the words that participate in
+ * this particular sig_graph_edge.
  *
  * This is Part 2 of the 3rd major function of Crab 2.
  */
-void CLexicon::compute_sig_tree_edge_map() {
+void CLexicon::compute_sig_graph_edge_map() {
 morph_t         edge_label;
 word_t          this_word;
-simple_sig_tree_edge * p_sig_tree_edge;
-sig_tree_edge        * p_sig_tree_edge_2,
-                     * p_sig_tree_edge_3;
-lxa_sig_tree_edge_map* p_EdgeMap = & m_SigTreeEdgeMap;
+simple_sig_graph_edge * p_sig_graph_edge;
+sig_graph_edge        * p_sig_graph_edge_2,
+                     * p_sig_graph_edge_3;
+lxa_sig_graph_edge_map* p_EdgeMap = & m_SigGraphEdgeMap;
 
-QListIterator<simple_sig_tree_edge*> this_simple_sig_tree_edge_iter (m_SigTreeEdgeList);
-while (this_simple_sig_tree_edge_iter.hasNext())
+QListIterator<simple_sig_graph_edge*> this_simple_sig_graph_edge_iter (m_SigGraphEdgeList);
+while (this_simple_sig_graph_edge_iter.hasNext())
 {
-    p_sig_tree_edge = this_simple_sig_tree_edge_iter.next();
-    edge_label = p_sig_tree_edge->label();
-    this_word  = p_sig_tree_edge->word;
+    p_sig_graph_edge = this_simple_sig_graph_edge_iter.next();
+    edge_label = p_sig_graph_edge->label();
+    this_word  = p_sig_graph_edge->word;
     // --> We iterate through the simple Edges contained in the TreeEdge List            <-- //
     // --> We build a map of larger TreeEdges, each containing multiple stems and words. <-- //
     if (p_EdgeMap->contains(edge_label)){
-        p_sig_tree_edge_3 = p_EdgeMap->value(edge_label);
+        p_sig_graph_edge_3 = p_EdgeMap->value(edge_label);
         word_stem_struct * this_word_stem_struct = new word_stem_struct;
         this_word_stem_struct->word = this_word;
-        this_word_stem_struct->stem_1 = p_sig_tree_edge->stem_1;
-        this_word_stem_struct->stem_2 = p_sig_tree_edge->stem_2;
+        this_word_stem_struct->stem_1 = p_sig_graph_edge->stem_1;
+        this_word_stem_struct->stem_2 = p_sig_graph_edge->stem_2;
         QString this_label = this_word_stem_struct->get_label();
-        if ( ! p_sig_tree_edge_3->shared_word_stems.contains(this_label)){
-               p_sig_tree_edge_3->shared_word_stems[this_label] = this_word_stem_struct;
+        if ( ! p_sig_graph_edge_3->shared_word_stems.contains(this_label)){
+               p_sig_graph_edge_3->shared_word_stems[this_label] = this_word_stem_struct;
         }
-     } else {  // --> start a new sig_tree_edge with multiple stems <-- //
-        sig_tree_edge * p_sig_tree_edge_2 = new sig_tree_edge(*p_sig_tree_edge);
-        m_SigTreeEdgeMap.insert(p_sig_tree_edge_2->label(),p_sig_tree_edge_2);
-        qDebug() << 839 << "lexicon.cpp pSig 1 entropy"<< p_sig_tree_edge->sig_1->get_key() << p_sig_tree_edge->sig_1->get_stem_entropy();
+     } else {  // --> start a new sig_graph_edge with multiple stems <-- //
+        sig_graph_edge * p_sig_graph_edge_2 = new sig_graph_edge(*p_sig_graph_edge);
+        m_SigGraphEdgeMap.insert(p_sig_graph_edge_2->label(),p_sig_graph_edge_2);
+        //qDebug() << 839 << "lexicon.cpp pSig 1 entropy"<< p_sig_graph_edge->sig_1->get_key() << p_sig_graph_edge->sig_1->get_stem_entropy();
      }
 }
 }
@@ -867,7 +870,7 @@ while (this_simple_sig_tree_edge_iter.hasNext())
  */
 void CLexicon::test_for_phonological_relations_between_signatures()
 {
-   lxa_sig_tree_edge_map_iter  sig_iter (m_SigTreeEdgeMap);
+   lxa_sig_graph_edge_map_iter  sig_iter (m_SigGraphEdgeMap);
    QString difference;
    QSet<QString> differences_1_letter, differences_longer;
    while (sig_iter.hasNext()){
@@ -886,7 +889,7 @@ void CLexicon::test_for_phonological_relations_between_signatures()
 
    for (int i = 0; i < differences.size(); i++){
        difference = differences[i];
-       //--> Pull out the sig_tree_edges with each particular difference (morpheme).
+       //--> Pull out the sig_graph_edges with each particular difference (morpheme).
        sig_iter.toFront();
        while (sig_iter.hasNext()){
              sig_iter.next();
@@ -912,17 +915,17 @@ void CLexicon::test_for_phonological_relations_between_signatures()
  * This is not currently being used.
  */
 void CLexicon::compare_opposite_sets_of_signatures(QSet<CSignature*>* sig_set_1, QSet<CSignature*>* sig_set_2, QString morph)
-{   sig_tree_edge * p_edge;
+{   sig_graph_edge * p_edge;
     CSignature* pSig_1, *pSig_2;
     QHash<QString,int> Counts;
-    foreach(p_edge,  m_SigTreeEdgeMap){
+    foreach(p_edge,  m_SigGraphEdgeMap){
         //qDebug() << morph << p_edge->morph << 668;
         if (p_edge->morph == morph){
             //qDebug() << p_edge->label() << 670;
             pSig_1 = p_edge->sig_1;
             pSig_2 = p_edge->sig_2;
             QString code = pSig_1->get_key() + "@" + pSig_2->get_key();
-            Counts[code] = p_edge->get_number_of_stems();
+            Counts[code] = p_edge->get_number_of_words();
             //qDebug() << morph<<  code << Counts[code] << 671;
         }
     }

@@ -212,12 +212,16 @@ void LxaStandardItemModel::load_hypotheses(QList<CHypothesis*>* p_hypotheses)
     this->clear();
     m_Description = " ";
     CHypothesis*         hypothesis;
+    //qDebug() << "hypothesis count " <<get_lexicon()-> m_Hypotheses->count() << 311;
 
     for (int hypno = 0; hypno<p_hypotheses->count(); hypno++)
     {   hypothesis = p_hypotheses->at(hypno);
         QList<QStandardItem*> items;
-        QStandardItem * item1 = new QStandardItem(hypothesis->get_key());
-        items.append(item1);
+        QStringList pieces = hypothesis->express();
+        for (int i = 0; i < pieces.count(); i++){
+             QStandardItem * item1 = new QStandardItem(pieces[i]);
+             items.append(item1);
+        }
         appendRow(items);
     }
 }
@@ -242,12 +246,12 @@ void LxaStandardItemModel::sort_signatures(eSortStyle sort_style)
 
 
 struct{
-    bool operator ()(sig_tree_edge* a, sig_tree_edge* b) const {
+    bool operator ()(sig_graph_edge* a, sig_graph_edge* b) const {
      return a->shared_word_stems.size() > b->shared_word_stems.size();
     }
 }custom_compare;
 struct{
-    bool operator ()(sig_tree_edge* a, sig_tree_edge* b) const
+    bool operator ()(sig_graph_edge* a, sig_graph_edge* b) const
     {
         if (a->morph == b->morph){
             if (a->sig_1 == b->sig_1){
@@ -263,30 +267,31 @@ struct{
     }
 }custom_compare_2;
 
-void LxaStandardItemModel::load_sig_tree_edges( QMap<QString, sig_tree_edge*> * this_sig_tree_edge_map )
-{   QList<sig_tree_edge*>               temp_list;
-    QMapIterator<word_t, sig_tree_edge*> * this_sig_tree_edge_iter = new QMapIterator<word_t, sig_tree_edge*>( * this_sig_tree_edge_map );
-    while (this_sig_tree_edge_iter->hasNext())    {
-        this_sig_tree_edge_iter->next();
+void LxaStandardItemModel::load_sig_graph_edges( QMap<QString, sig_graph_edge*> * this_sig_graph_edge_map )
+{   QList<sig_graph_edge*>               temp_list;
+    int MINIMUM_NUMBER_OF_SHARED_WORDS = 1;
+    QMapIterator<word_t, sig_graph_edge*> * this_sig_graph_edge_iter = new QMapIterator<word_t, sig_graph_edge*>( * this_sig_graph_edge_map );
+    while (this_sig_graph_edge_iter->hasNext())    {
+        this_sig_graph_edge_iter->next();
 
-        if (this_sig_tree_edge_iter->value()->shared_word_stems.count() > 3) {
-            temp_list.append(this_sig_tree_edge_iter->value());
+        if (this_sig_graph_edge_iter->value()->shared_word_stems.count() >= MINIMUM_NUMBER_OF_SHARED_WORDS) {
+            temp_list.append(this_sig_graph_edge_iter->value());
         }
     }
     std::sort( temp_list.begin(),  temp_list.end(), custom_compare_2);
-    QListIterator<sig_tree_edge*> temp_list_iter (temp_list);
+    QListIterator<sig_graph_edge*> temp_list_iter (temp_list);
     while (temp_list_iter.hasNext())
      {
-        sig_tree_edge * p_sig_tree_edge = temp_list_iter.next();
+        sig_graph_edge * p_sig_graph_edge = temp_list_iter.next();
         QList<QStandardItem*> items;
-        QStandardItem * item1 = new QStandardItem (p_sig_tree_edge->morph);
+        QStandardItem * item1 = new QStandardItem (p_sig_graph_edge->morph);
         items.append(item1);
 
-        QStandardItem * item2 = new QStandardItem(p_sig_tree_edge->sig_1->get_key());
-        QStandardItem * item3 = new QStandardItem(QString::number(p_sig_tree_edge->sig_1->get_stem_entropy()));
-        QStandardItem * item4 = new QStandardItem(p_sig_tree_edge->sig_2->get_key());
-        QStandardItem * item5 = new QStandardItem(QString::number(p_sig_tree_edge->shared_word_stems.size()));
-        QStandardItem * item6 = new QStandardItem(p_sig_tree_edge->label());
+        QStandardItem * item2 = new QStandardItem(p_sig_graph_edge->sig_1->get_key());
+        QStandardItem * item3 = new QStandardItem(QString::number(p_sig_graph_edge->sig_1->get_stem_entropy()));
+        QStandardItem * item4 = new QStandardItem(p_sig_graph_edge->sig_2->get_key());
+        QStandardItem * item5 = new QStandardItem(QString::number(p_sig_graph_edge->shared_word_stems.size()));
+        QStandardItem * item6 = new QStandardItem(p_sig_graph_edge->label());
         items.append(item2);
         items.append(item3);
         items.append(item4);

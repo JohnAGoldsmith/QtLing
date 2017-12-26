@@ -16,6 +16,8 @@ class CPrefix;
 class CStem;
 class CSignatureCollection;
 
+sigstring_t restructure_signature(sigstring_t, QString morph, QStringList new_affixes);
+
 class CSignature
 {
 protected:

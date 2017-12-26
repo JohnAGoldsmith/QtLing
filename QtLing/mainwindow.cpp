@@ -67,7 +67,7 @@ MainWindow::MainWindow()
     m_Models["Prefix signatures"]       = new LxaStandardItemModel("Prefix signatures");
     m_Models["EPositive Prefix Signatures"] = new LxaStandardItemModel("EPositive Prefix Signatures");
     m_Models["Residual parasignatures"] = new LxaStandardItemModel("Residual parasignatures");
-    m_Models["SigTreeEdges"]            = new LxaStandardItemModel("SigTreeEdges");
+    m_Models["SigGraphEdges"]            = new LxaStandardItemModel("SigTreeEdges");
     m_Models["Parasuffixes"]            = new LxaStandardItemModel("Parasuffixes");
     m_Models["Passive signatures"]      = new LxaStandardItemModel("Passive signatures");
     m_Models["Hypotheses"]              = new LxaStandardItemModel("Hypotheses");
@@ -161,8 +161,7 @@ void MainWindow::cycle_through_graphic_displays()
 }
 
 void MainWindow::keyPressEvent(QKeyEvent* ke)
-{   //qDebug() << "hit a key" << ke->key() << "start of function line 164";
-
+{
     if (ke->key() == Qt::Key_S){
         do_crab();
     }
@@ -174,15 +173,13 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         do_crab();
     }
     if (ke->key() == Qt::Key_G)
-    {   //qDebug() << "hit a G key";
+    {
         if (m_graphic_display_flag==false){
-            //qDebug() << "trying to display graph"<< 179;
             m_rightSplitter->replaceWidget(1,m_graphics_view);
             m_graphics_view->centerOn(0,1000);// this should be fixed so that the initial showing of the graphic is done right.
             m_graphic_display_flag = true;
             m_rightSplitter->setFocus();
         } else{
-           // qDebug() << "displaying table view";
             m_rightSplitter->replaceWidget(1,m_tableView_lower);
             m_graphic_display_flag = false;
         }
@@ -264,30 +261,17 @@ void MainWindow::do_crab()
     //      m_Models[component_name]->load_category(component_name, this_component_type);
     //    }
     // end of experiment
-/*
-    // the next line should be unnecessary. Just clear its contents.
-    delete m_graphics_scene;
 
 
-    m_graphics_scene = new lxa_graphics_scene(this);
-    if (get_lexicon()->get_suffix_flag()){
-        m_graphics_scene->set_parameters(get_lexicon()->get_signatures(), DT_All_Suffix_Signatures);
-        m_graphics_scene->ingest_signatures(get_lexicon()->get_signatures(),   DT_All_Suffix_Signatures);
-        m_graphics_scene->place_signatures();
-    }else{
-        m_graphics_scene->set_parameters(get_lexicon()->get_prefix_signatures(), DT_All_Prefix_Signatures);
-        m_graphics_scene->ingest_signatures(get_lexicon()->get_prefix_signatures(),DT_All_Prefix_Signatures);
-        m_graphics_scene->place_signatures();
-    }
-    */
-
-    m_graphics_scene = new lxa_graphics_scene(this);
+        m_graphics_scene = new lxa_graphics_scene(this);
 
     m_graphics_view->setScene(m_graphics_scene);
     m_graphics_scene->set_graphics_view(m_graphics_view);
     m_leftTreeView->expandAll();
     m_leftTreeView->resizeColumnToContents(0);
     statusBar()->showMessage("All models are loaded.");
+
+
 
 }
 void MainWindow::do_crab2()
@@ -314,7 +298,7 @@ void MainWindow::do_crab2()
     statusBar()->showMessage("Loading signature-tree edges.");
     qApp->processEvents();
 
-    m_Models["SigTreeEdges"]        ->load_sig_tree_edges(get_lexicon()->get_sig_tree_edge_map());
+    m_Models["SigGraphEdges"]        ->load_sig_graph_edges(get_lexicon()->get_sig_graph_edge_map());
 
     statusBar()->showMessage("Loading residual signatures.");
     qApp->processEvents();
@@ -324,6 +308,7 @@ void MainWindow::do_crab2()
     m_Models["Passive signatures"]  ->load_signatures(get_lexicon()->get_passive_signatures());
     m_Models["Hypotheses"]          ->load_hypotheses(get_lexicon()->get_hypotheses());
     createTreeModel();
+    qDebug() << "hypothesis count " <<get_lexicon()->get_hypotheses()->count() << 311;
 
 // add component 5
 
@@ -340,17 +325,25 @@ void MainWindow::do_crab2()
 
     print_prefix_signatures();
 
-    m_graphics_scene = new lxa_graphics_scene(this);
+    if (m_graphics_scene == NULL){
+        m_graphics_scene = new lxa_graphics_scene(this);
+    }else{
+        m_graphics_scene->clear_all();
+    }
+
     if (get_lexicon()->get_suffix_flag()){
         m_graphics_scene->assign_scene_positions_to_signatures(get_lexicon()->get_signatures(),   DT_All_Suffix_Signatures);
     }else{
         m_graphics_scene->assign_scene_positions_to_signatures(get_lexicon()->get_prefix_signatures(),DT_All_Prefix_Signatures);
     }
 
+
     m_graphics_scene->place_signatures();
     m_graphics_view->setScene(m_graphics_scene);
     m_leftTreeView->expandAll();
     statusBar()->showMessage("All models are loaded.");
+    qDebug() << "hypothesis count " <<get_lexicon()-> get_hypotheses()->count() << 345;
+
 
 }
 void MainWindow::read_file_do_crab()
@@ -460,14 +453,15 @@ void MainWindow::createTreeModel()
     QStandardItem * parasuffix_item = new QStandardItem(QString("Parasuffixes"));
     QStandardItem * parasuffix_count_item = new QStandardItem(QString::number(get_lexicon()->get_parasuffixes()->get_count()));
 
-    QStandardItem * sig_tree_edge_item = new QStandardItem(QString("Signature tree edges"));
-    QStandardItem * sig_tree_edge_count_item = new QStandardItem(QString::number(get_lexicon()->get_sig_tree_edge_map()->size()));
+    QStandardItem * sig_graph_edge_item = new QStandardItem(QString("Signature graph edges"));
+    QStandardItem * sig_graph_edge_count_item = new QStandardItem(QString::number(get_lexicon()->get_sig_graph_edge_map()->size()));
 
     QStandardItem * passive_signature_item = new QStandardItem(QString("Passive signatures"));
     QStandardItem * passive_signature_count_item = new QStandardItem(QString::number(get_lexicon()->get_passive_signatures()->get_count()));
 
     QStandardItem * hypothesis_item = new QStandardItem(QString("Hypotheses"));
     QStandardItem * hypothesis_count_item = new QStandardItem(QString::number(get_lexicon()->get_hypotheses()->count()));
+    qDebug() << "hypothesis count " <<get_lexicon()-> get_hypotheses()->count() << 311;
 
 // This is part of an experiment:
 //  This code deals with the components in the Lexicon, so that that set can be easily updated by the programmer.
@@ -537,13 +531,16 @@ void MainWindow::createTreeModel()
     parasuffix_items.append(parasuffix_item);
     parasuffix_items.append(parasuffix_count_item);
 
-    QList<QStandardItem*> sig_tree_edge_items;
-    sig_tree_edge_items.append(sig_tree_edge_item);
-    sig_tree_edge_items.append(sig_tree_edge_count_item);
+    QList<QStandardItem*> sig_graph_edge_items;
+    sig_graph_edge_items.append(sig_graph_edge_item);
+    sig_graph_edge_items.append(sig_graph_edge_count_item);
 
     QList<QStandardItem*> passive_signature_items;
     passive_signature_items.append(passive_signature_item);
     passive_signature_items.append(passive_signature_count_item);
+
+
+    qDebug() << "hypothesis count " <<get_lexicon()-> get_hypotheses()->count() << 542;
 
     QList<QStandardItem*> hypothesis_items;
     hypothesis_items.append(hypothesis_item);
@@ -559,7 +556,7 @@ void MainWindow::createTreeModel()
     lexicon_item->appendRow(pos_sig_items);
     lexicon_item->appendRow(prefix_sig_items);
     lexicon_item->appendRow(pos_prefix_sig_items);
-    lexicon_item->appendRow(sig_tree_edge_items);
+    lexicon_item->appendRow(sig_graph_edge_items);
     lexicon_item->appendRow(residual_sig_items);
     lexicon_item->appendRow(parasuffix_items);
     lexicon_item->appendRow(passive_signature_items);
