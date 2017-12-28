@@ -44,7 +44,7 @@ CWord* CWordCollection::find_or_fail(QString word_string){
     QMap<QString,CWord*>::const_iterator word_iter = m_WordMap.find(word_string);
     //qDebug() << word_string;
     if (word_iter == m_WordMap.end()){
-       // qDebug() << "not found in find or fail";
+         qDebug() << word_string + " not found in find or fail";
          return NULL;
     }else{
         //qDebug() << "found something in find or fail";

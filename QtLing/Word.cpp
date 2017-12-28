@@ -23,7 +23,10 @@ void CWord::IncrementWordCount (int n )
   Q_ASSERT (m_WordCount > 0);
   Q_ASSERT (m_WordCount < 1000000);
 }
-
+void CWord::add_to_autobiography(QString line)
+{
+     m_Autobiography.append(line);
+}
 void CWord::AddParse(CStem* stem, CSuffix* suffix, CSignature* signature)
 {
     Parse parse;

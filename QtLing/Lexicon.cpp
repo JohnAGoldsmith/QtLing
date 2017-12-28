@@ -107,14 +107,11 @@ void CLexicon::Crab_2()
     m_SuffixesFlag ?
         m_Signatures->calculate_stem_entropy():
         m_PrefixSignatures->calculate_stem_entropy();
-
-
-    qDebug() << "hypothesis count " << m_Hypotheses->count() << 112;
-
-            compute_sig_graph_edges();
-
+    compute_sig_graph_edges();
     compute_sig_graph_edge_map();
     generate_hypotheses();
+    qDebug() << "hypothesis count " << m_Hypotheses->count() << 112;
+
     test_for_phonological_relations_between_signatures();
 
     qDebug() << "finished crab 2.";
@@ -334,7 +331,7 @@ void   CLexicon::AssignSuffixesToStems()
     m_StatusBar->showMessage("Form signatures: 3. final step.");
     count = 0;
     QMapIterator<sigstring_t, stem_list*> iter_sigstring_to_stems ( temp_signatures_to_stems);
-
+qDebug() << 337;
     // -->  Iterate through tentative signatures.    <-- //
     while (iter_sigstring_to_stems.hasNext())
     {
@@ -344,13 +341,17 @@ void   CLexicon::AssignSuffixesToStems()
         iter_sigstring_to_stems.next();
         this_signature_string    = iter_sigstring_to_stems.key();
         p_this_stem_list         = iter_sigstring_to_stems.value();
+        qDebug() << this_signature_string;
         affix_set this_affix_set = QSet<QString>::fromList( this_signature_string.split("="));
+
         if (p_this_stem_list->size() >= MINIMUM_NUMBER_OF_STEMS)
-        {  if( m_SuffixesFlag) {
+        {  // qDebug() << 351;
+            if( m_SuffixesFlag) {
                 pSig = *m_Signatures       << this_signature_string;
             } else {
                 pSig = *m_PrefixSignatures << this_signature_string;
                 pSig->set_suffix_flag(false);
+                //qDebug() << 356;
             }
             pSig->add_memo("Pass 1");
             QSetIterator<suffix_t> affix_iter(this_affix_set);
@@ -366,18 +367,23 @@ void   CLexicon::AssignSuffixesToStems()
                       pSig->add_affix_ptr(pPrefix);
                   }
             }
-            //m_StatusBar->showMessage("Form signatures: 3b");
+            m_StatusBar->showMessage("Form signatures: 3b");
             // --> We go through this sig's stems and reconstitute its words. <--//
             stem_list_iterator stem_iter(*p_this_stem_list);
             while (stem_iter.hasNext()){
                 this_stem_t = stem_iter.next();
+                //qDebug() << 377 << this_stem_t;
                 pStem = m_Stems->find_or_add(this_stem_t);
                 pStem->add_signature (this_signature_string);
                 pSig->add_stem_pointer(pStem);
                 pStem->add_memo ("Pass1= ");
-                QStringList affixes = this_signature_string.split("=");
-                for (int affixno = 0; affixno < affixes.size(); affixno++)
-                {   this_affix = affixes[affixno];
+
+                //QStringList affixes = this_signature_string.split("=");
+                QSetIterator<suffix_t> affix_iter(this_affix_set);
+                while(affix_iter.hasNext()){
+                    this_affix = affix_iter.next();
+                    //                for (int affixno = 0; affixno < affixes.size(); affixno++)
+                    //                {   this_affix = affixes[affixno];
                     if (this_affix == "NULL"){
                         this_word = this_stem_t;
                     } else{
@@ -387,24 +393,29 @@ void   CLexicon::AssignSuffixesToStems()
                     }
                     CWord* pWord = m_Words->get_word(this_word);
                     pWord->add_stem_and_signature(pStem,pSig);
-                    pWord->add_to_autobiography("Pass1= " + this_stem_t + "=" + this_signature_string);
+                    QString message = this_signature_string;
+                    if (this_affix_set.size() > 50){message = "Super long signature";};
+                    pWord->add_to_autobiography("Pass1= " + this_stem_t + "=" + message);
                     //qDebug() << pWord->get_key() << 348;
                 }
             }
         }
         else
         {  //-->   This tentative signature has only one stem. <-- //
+            //qDebug() << 401;
 
-            //this_signature_string =  iter_sigstring_to_stems.key();
+            this_signature_string =  iter_sigstring_to_stems.key();
             pSig =  *m_ParaSignatures << this_signature_string;
-            this_stem_t = p_this_stem_list->first();
-            pStem = *m_ResidualStems << this_stem_t;
-
-
+            if (pSig){
+                    this_stem_t = p_this_stem_list->first();
+                    pStem = *m_ResidualStems << this_stem_t;
+            }
             pSig->add_stem_pointer(pStem);
+
             QSetIterator<QString> affix_iter(this_affix_set);
+
             while (affix_iter.hasNext()){
-                affix_iter.next();
+                this_affix = affix_iter.next();
                 if (this_affix == "NULL"){
                     this_word = this_stem_t;
                 } else{
@@ -413,8 +424,10 @@ void   CLexicon::AssignSuffixesToStems()
                        this_word = this_affix + this_stem_t;
                 }
                 pWord = m_Words->find_or_fail(this_word);
+                QString message = this_signature_string;
+                if (this_affix_set.size()> 50){message = "very long signature";}
                 if (pWord){
-                    pWord->add_to_autobiography("*singleton signature=" + this_stem_t + "=" + this_signature_string);
+                      pWord->add_to_autobiography("*singleton signature=" + this_stem_t + "=" + message);
                 }
             }
          }
@@ -423,7 +436,7 @@ void   CLexicon::AssignSuffixesToStems()
     m_SuffixesFlag ?
         m_Signatures->calculate_stem_entropy():
         m_PrefixSignatures->calculate_stem_entropy();
-    qDebug() << "step 4 Finished finding signatures.";
+    qDebug() << "step 4 Finished finding signatures:";
     m_StatusBar->showMessage("Computation of Crab 1 completed.");
 }
 
@@ -567,7 +580,9 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
                    }
                    CWord* pWord = m_Words->get_word(this_word);
                    pWord->add_stem_and_signature(pStem,pSig);
-                   pWord->add_to_autobiography("Pass2= " + this_stem_t + "=" + this_signature_string);
+                   QString message = this_signature_string;
+                   if (affixes.size()> 50){message = "very long signature";}
+                   pWord->add_to_autobiography("Pass2= " + this_stem_t + "=" + message );
                }
            }
 
@@ -588,7 +603,9 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
                if ( this_word != pWord->get_key()){
                    qDebug() << this_word << pWord->get_key() << 795;
                }
-               pWord->add_to_autobiography("*" + this_word + "=" + this_stem_t + "=" + this_signature_string);
+               QString message = this_signature_string;
+               if (this_affix_set.size()> 50){message = "very long signature";}
+               pWord->add_to_autobiography("*" + this_word + "=" + this_stem_t + "=" + message );
            }
        }
    }

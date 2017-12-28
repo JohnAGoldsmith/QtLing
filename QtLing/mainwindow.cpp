@@ -179,6 +179,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
             m_graphics_view->centerOn(0,1000);// this should be fixed so that the initial showing of the graphic is done right.
             m_graphic_display_flag = true;
             m_rightSplitter->setFocus();
+            qDebug() << "trying to show graphics";
         } else{
             m_rightSplitter->replaceWidget(1,m_tableView_lower);
             m_graphic_display_flag = false;
@@ -243,13 +244,17 @@ void MainWindow::do_crab()
     m_Models["Stems"]               ->load_stems(get_lexicon()->get_stems());
     m_Models["Suffixes"]            ->load_suffixes(get_lexicon()->get_suffixes());
     m_Models["Signatures"]          ->load_signatures(get_lexicon()->get_signatures());
+qDebug() << 246;
     m_Models["EPositive Signatures"]->load_positive_signatures(get_lexicon()->get_signatures());
     m_Models["Prefix signatures"]   ->load_signatures(get_lexicon()->get_prefix_signatures());
     m_Models["EPositive Prefix Signatures"]->load_positive_signatures(get_lexicon()->get_prefix_signatures());
     m_Models["Residual parasignatures"]->load_parasignatures(get_lexicon()->get_residual_signatures());
+qDebug() << 251;
     m_Models["Parasuffixes"]        ->load_suffixes(get_lexicon()->get_parasuffixes());
     m_Models["Passive signatures"]  ->load_signatures(get_lexicon()->get_passive_signatures());
+qDebug() << 254;
     m_Models["Hypotheses"]          ->load_hypotheses(get_lexicon()->get_hypotheses());
+qDebug() << 256;
     createTreeModel();
 
 // add component 4

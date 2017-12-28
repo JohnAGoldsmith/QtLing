@@ -299,6 +299,11 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
     else     if (component == "Prefix signatures"){
         setModel(m_parent_window->m_Models["Prefix signatures"]);
         set_document_type( PREFIX_SIGNATURES );
+        m_parent_window->m_graphics_scene->clear_all();
+        m_parent_window->m_graphics_scene->assign_scene_positions_to_signatures(lexicon->get_prefix_signatures(), DT_All_Prefix_Signatures);
+        m_parent_window->m_graphics_scene->place_signatures();
+
+
     }
     else     if (component == "EPositive Prefix Signatures"){
         setModel(m_parent_window->m_Models["EPositive Prefix Signatures"]);

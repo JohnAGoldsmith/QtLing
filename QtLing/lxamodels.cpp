@@ -1,3 +1,4 @@
+#include <QPair>
 #include "WordCollection.h"
 #include "Word.h"
 #include "mainwindow.h"
@@ -207,12 +208,52 @@ void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures)
 }
 
 */
+
+bool sort_function_1(const QPair<QString ,int >  * a ,  QPair<QString , int >  * b)
+{
+    if (a->second==b->second){return a->first < b->first;}
+    else{
+        return a->second > b->second;
+    }
+};
 void LxaStandardItemModel::load_hypotheses(QList<CHypothesis*>* p_hypotheses)
 {
     this->clear();
     m_Description = " ";
     CHypothesis*         hypothesis;
-    //qDebug() << "hypothesis count " <<get_lexicon()-> m_Hypotheses->count() << 311;
+    QMap<QString,QList<CHypothesis*> >  Hypothesis_map;
+    QMap<QString,int>                   Key_counts;
+    QList<QPair<QString,int>*>           pairs;
+
+    for (int hypno = 0; hypno<p_hypotheses->count(); hypno++)
+    {   hypothesis = p_hypotheses->at(hypno);
+        QString key = hypothesis->get_key();
+        if (Key_counts.contains(key))  {
+                Key_counts[key] += hypothesis->get_number_of_words_saved();
+            } else{
+                Key_counts[key] = hypothesis->get_number_of_words_saved();
+            }
+    }
+    foreach (QString key, Key_counts.keys()){
+            QPair<QString,int> * pair = new QPair<QString, int>(key, Key_counts[key]);
+        pairs.append(pair);
+    }
+    std::sort(pairs.begin(),pairs.end(),sort_function_1);
+    QListIterator<QPair<QString,int>*> iter (pairs);
+    while (iter.hasNext()){
+        QList<QStandardItem*> items;
+        QPair<QString,int>* pPair = iter.next();
+        QStandardItem* item1 = new QStandardItem(QString::number(pPair->second));
+        items.append(item1);
+
+        QString this_key = pPair->first;
+        QStringList key_list = this_key.split("@");
+        foreach (QString key, key_list){
+            QStandardItem * this_item = new QStandardItem(key);
+            items.append(this_item);
+        }
+        appendRow(items);
+    }
 
     for (int hypno = 0; hypno<p_hypotheses->count(); hypno++)
     {   hypothesis = p_hypotheses->at(hypno);

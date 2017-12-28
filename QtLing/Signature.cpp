@@ -176,12 +176,14 @@ double CSignature::calculate_stem_entropy()
     double     total_count (0);
     CStem* pStem;
     QChar  letter;
-    double entropy =0;
+    double entropy =0.0;
     foreach (pStem, *m_Stems){
         stem_t this_stem = pStem->get_key();
-        if (m_SuffixFlag ){
-          //  qDebug() << "this is a suffix signature."<< 177 << "signature.cpp";
-        }
+        //if (m_SuffixFlag ){
+           // qDebug() << "this is a suffix signature."<< 177 << "signature.cpp";
+        //} else{
+           // qDebug() << "these are prefix signatures"<< 185;
+        //}
         m_SuffixFlag?
             letter = this_stem.at(this_stem.length()-1):
             letter = this_stem.at(0);
