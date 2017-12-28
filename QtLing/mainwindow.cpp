@@ -11,7 +11,6 @@
 #include <QList>
 #include <QFile>
 #include <QTextStream>
-#include <QDebug>
 #include <QString>
 #include <algorithm>
 #include <stdio.h>
@@ -244,17 +243,13 @@ void MainWindow::do_crab()
     m_Models["Stems"]               ->load_stems(get_lexicon()->get_stems());
     m_Models["Suffixes"]            ->load_suffixes(get_lexicon()->get_suffixes());
     m_Models["Signatures"]          ->load_signatures(get_lexicon()->get_signatures());
-qDebug() << 246;
     m_Models["EPositive Signatures"]->load_positive_signatures(get_lexicon()->get_signatures());
     m_Models["Prefix signatures"]   ->load_signatures(get_lexicon()->get_prefix_signatures());
     m_Models["EPositive Prefix Signatures"]->load_positive_signatures(get_lexicon()->get_prefix_signatures());
     m_Models["Residual parasignatures"]->load_parasignatures(get_lexicon()->get_residual_signatures());
-qDebug() << 251;
     m_Models["Parasuffixes"]        ->load_suffixes(get_lexicon()->get_parasuffixes());
     m_Models["Passive signatures"]  ->load_signatures(get_lexicon()->get_passive_signatures());
-qDebug() << 254;
     m_Models["Hypotheses"]          ->load_hypotheses(get_lexicon()->get_hypotheses());
-qDebug() << 256;
     createTreeModel();
 
 // add component 4
@@ -313,7 +308,6 @@ void MainWindow::do_crab2()
     m_Models["Passive signatures"]  ->load_signatures(get_lexicon()->get_passive_signatures());
     m_Models["Hypotheses"]          ->load_hypotheses(get_lexicon()->get_hypotheses());
     createTreeModel();
-    qDebug() << "hypothesis count " <<get_lexicon()->get_hypotheses()->count() << 311;
 
 // add component 5
 
@@ -347,7 +341,6 @@ void MainWindow::do_crab2()
     m_graphics_view->setScene(m_graphics_scene);
     m_leftTreeView->expandAll();
     statusBar()->showMessage("All models are loaded.");
-    qDebug() << "hypothesis count " <<get_lexicon()-> get_hypotheses()->count() << 345;
 
 
 }
@@ -370,7 +363,6 @@ void MainWindow::read_dx1_file()
 
             QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
             settings.setValue("name_of_data_file", m_name_of_data_file );
-            qDebug() << m_name_of_data_file << "Filename saved 2.";
 
             QTextStream in(&file);
             CWordCollection * Words = get_lexicon()->get_word_collection();
@@ -466,7 +458,6 @@ void MainWindow::createTreeModel()
 
     QStandardItem * hypothesis_item = new QStandardItem(QString("Hypotheses"));
     QStandardItem * hypothesis_count_item = new QStandardItem(QString::number(get_lexicon()->get_hypotheses()->count()));
-    qDebug() << "hypothesis count " <<get_lexicon()-> get_hypotheses()->count() << 311;
 
 // This is part of an experiment:
 //  This code deals with the components in the Lexicon, so that that set can be easily updated by the programmer.
@@ -545,7 +536,6 @@ void MainWindow::createTreeModel()
     passive_signature_items.append(passive_signature_count_item);
 
 
-    qDebug() << "hypothesis count " <<get_lexicon()-> get_hypotheses()->count() << 542;
 
     QList<QStandardItem*> hypothesis_items;
     hypothesis_items.append(hypothesis_item);
@@ -708,7 +698,7 @@ void MainWindow::readSettings()
     QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
 
     m_name_of_data_file = settings.value("name_of_data_file").toString();
-    qDebug() << m_name_of_data_file << "data file retrieved.";
+
     const QByteArray geometry = settings.value("geometry", QByteArray()).toByteArray();
     if (geometry.isEmpty()) {
         const QRect availableGeometry = QApplication::desktop()->availableGeometry(this);
@@ -724,7 +714,7 @@ void MainWindow::writeSettings()
     QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
     settings.setValue("geometry", saveGeometry());
     settings.setValue("name_of_data_file", m_name_of_data_file );
-    qDebug() << m_name_of_data_file << "Filename saved.";
+
 }
 bool MainWindow::ask_to_save()
 {

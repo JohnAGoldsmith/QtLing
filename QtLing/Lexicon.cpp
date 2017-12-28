@@ -17,7 +17,7 @@
 #include "WordCollection.h"
 #include "Word.h"
 
-CLexicon::CLexicon( bool suffix_flag)
+CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag)
 {
     m_Signatures            = new CSignatureCollection(this, true);
     m_PrefixSignatures      = new CSignatureCollection(this,false);
@@ -35,6 +35,7 @@ CLexicon::CLexicon( bool suffix_flag)
     m_SuffixesFlag          = suffix_flag;
     m_Hypotheses            = new QList<CHypothesis*>;
     m_entropy_threshold_for_stems = 1.2;
+    m_parent_lexicon        = lexicon;
 
 //  This is part of an experiment.
     m_category_types["Words"]               = CT_word;
@@ -91,7 +92,7 @@ void CLexicon::Crab_1()
         m_Signatures->compute_containment_list():
         m_PrefixSignatures->compute_containment_list();
 
-    qDebug() << "finished making signatures.";
+    qDebug() << "finished crab 1.";
  }
 
 /**
@@ -101,19 +102,15 @@ void CLexicon::Crab_1()
 void CLexicon::Crab_2()
 {
     ReSignaturizeWithKnownAffixes();
-
     FindGoodSignaturesInsideParaSignatures();
-
     m_SuffixesFlag ?
         m_Signatures->calculate_stem_entropy():
         m_PrefixSignatures->calculate_stem_entropy();
     compute_sig_graph_edges();
     compute_sig_graph_edge_map();
     generate_hypotheses();
-    qDebug() << "hypothesis count " << m_Hypotheses->count() << 112;
-
+   // qDebug() << "hypothesis count " << m_Hypotheses->count() << 112;
     test_for_phonological_relations_between_signatures();
-
     qDebug() << "finished crab 2.";
 }
 
@@ -191,7 +188,7 @@ void CLexicon::FindProtostems()
         previous_word = this_word;
         previous_word_length = this_word_length;
     }
-    qDebug() << "Finished finding protostems.";
+    //qDebug() << "Finished finding protostems.";
     return;
 }
 
@@ -243,7 +240,7 @@ void CLexicon::CreateStemAffixPairs()
             } // end of prefixes.
         }
     }
-        qDebug() << "Finished finding stem/affix pairs.";
+        //qDebug() << "Finished finding stem/affix pairs.";
 }
 
 /*!
@@ -331,8 +328,7 @@ void   CLexicon::AssignSuffixesToStems()
     m_StatusBar->showMessage("Form signatures: 3. final step.");
     count = 0;
     QMapIterator<sigstring_t, stem_list*> iter_sigstring_to_stems ( temp_signatures_to_stems);
-qDebug() << 337;
-    // -->  Iterate through tentative signatures.    <-- //
+     // -->  Iterate through tentative signatures.    <-- //
     while (iter_sigstring_to_stems.hasNext())
     {
         qApp->processEvents();
@@ -341,17 +337,17 @@ qDebug() << 337;
         iter_sigstring_to_stems.next();
         this_signature_string    = iter_sigstring_to_stems.key();
         p_this_stem_list         = iter_sigstring_to_stems.value();
-        qDebug() << this_signature_string;
+
         affix_set this_affix_set = QSet<QString>::fromList( this_signature_string.split("="));
 
         if (p_this_stem_list->size() >= MINIMUM_NUMBER_OF_STEMS)
-        {  // qDebug() << 351;
+        {
             if( m_SuffixesFlag) {
                 pSig = *m_Signatures       << this_signature_string;
             } else {
                 pSig = *m_PrefixSignatures << this_signature_string;
                 pSig->set_suffix_flag(false);
-                //qDebug() << 356;
+
             }
             pSig->add_memo("Pass 1");
             QSetIterator<suffix_t> affix_iter(this_affix_set);
@@ -372,7 +368,7 @@ qDebug() << 337;
             stem_list_iterator stem_iter(*p_this_stem_list);
             while (stem_iter.hasNext()){
                 this_stem_t = stem_iter.next();
-                //qDebug() << 377 << this_stem_t;
+
                 pStem = m_Stems->find_or_add(this_stem_t);
                 pStem->add_signature (this_signature_string);
                 pSig->add_stem_pointer(pStem);
@@ -436,7 +432,7 @@ qDebug() << 337;
     m_SuffixesFlag ?
         m_Signatures->calculate_stem_entropy():
         m_PrefixSignatures->calculate_stem_entropy();
-    qDebug() << "step 4 Finished finding signatures:";
+    //qDebug() << "step 4 Finished finding signatures:";
     m_StatusBar->showMessage("Computation of Crab 1 completed.");
 }
 
@@ -586,7 +582,7 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
                }
            }
 
-       }else{
+       }else{       // insufficient number of stems ...
            this_signature_string =  iter_sigstring_to_stems.key();
            pSig =  *m_ParaSignatures << this_signature_string;
            pStem = *m_ResidualStems << this_stem_t;
@@ -601,7 +597,7 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
                }
                pWord = m_Words->find_or_fail(this_word);
                if ( this_word != pWord->get_key()){
-                   qDebug() << this_word << pWord->get_key() << 795;
+                   //qDebug() << this_word << pWord->get_key() << 795;
                }
                QString message = this_signature_string;
                if (this_affix_set.size()> 50){message = "very long signature";}
@@ -652,16 +648,20 @@ void CLexicon::create_temporary_map_from_stems_to_affix_sets(map_sigstring_to_mo
         }
 }
 
-
 /*!
- * We look inside the ParaSignatures, and  find the longest approved signature inside each.
+ *  This function looks at all the non-signatures that were rejected
+ *  because they were associated with only one stem. For each one, it
+ *  looks for the broadest signature that occurs inside it, and assigns
+ *  its stem to that signature.
  *
  * 2nd function of Crab 2.
  */
+
+
 void   CLexicon::FindGoodSignaturesInsideParaSignatures()
 {   stem_t                      this_stem;
     word_t                      this_word;
-    suffix_t                    this_suffix;
+    affix_t                    this_affix;
     sig_string                  this_signature_string;
     CStem*                      pStem;
     CWord*                      pWord;
@@ -671,23 +671,27 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
     int                         count_of_new_stems = 0;
     int                         count_of_new_words = 0;
     int                         signature_count (0);
-    //suffix_list               true_suffix_list;
-    suffix_list                 suffixes_of_residual_sig;
+    affix_list                  affixes_of_residual_sig;
     CSuffix_ptr_list  *         list_of_CSuffixes_of_proven_sig;
     CSuffix_ptr_list            this_residual_sig_suffix_pointer_list;
     bool                        success_flag;
-
+    CSignatureCollection*       signatures;
     suffix_t                    Null_string ("NULL");
     CSuffix*                    pNullSuffix = *m_Suffixes << Null_string;
 
                                 m_ProgressBar->reset();
                                 m_ProgressBar->setMinimum(0);
                                 m_ProgressBar->setMaximum(m_ParaSignatures->get_count());
-                                m_Signatures->sort(SIG_BY_AFFIX_COUNT);
                                 m_StatusBar->showMessage("Find good signatures inside bad.");
 
     //---->   We iterate through the list of Residual Signatures <-------//
 
+    if (m_SuffixesFlag) {
+         signatures = m_Signatures;
+    } else{
+         signatures = m_PrefixSignatures;
+    }
+    signatures->sort(SIG_BY_AFFIX_COUNT);
     map_sigstring_to_sig_ptr_iter   sig_iter(*  m_ParaSignatures->get_map());
 
     //--> Outer loop, over all Residual Signatures. <--//
@@ -697,19 +701,19 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
         m_ProgressBar->setValue(signature_count);
         qApp->processEvents();
         CSignature*         pResidualSig              = sig_iter.value();
-                            suffixes_of_residual_sig  = pResidualSig->get_key().split("=");
+                            affixes_of_residual_sig  = pResidualSig->get_key().split("=");
                             this_stem = pResidualSig->get_stems()->first()->get_key(); // there is only 1 stem in these signatures, by construction.
                             if (m_Words->contains(this_stem)){
-                              suffixes_of_residual_sig.append ("NULL");
+                              affixes_of_residual_sig.append ("NULL");
                             }
                             //--> Now we look for largest true signature inside this list of suffixes. <--//
                             //--> Inner loop, over all good signatures. <--//
 
-                            for (int sig_no=0; sig_no < get_signatures()->get_count(); sig_no++){
-                                p_proven_sig = m_Signatures->get_at_sorted(sig_no);
+                            for (int sig_no=0; sig_no < signatures->get_count(); sig_no++){
+                                p_proven_sig = signatures->get_at_sorted(sig_no);
                                 QString p_proven_sigstring  = p_proven_sig->get_key();
                                 QList<QString> proven_sig_list = p_proven_sigstring.split("=");
-                                if ( contains(&suffixes_of_residual_sig, &proven_sig_list) ){
+                                if ( contains(&affixes_of_residual_sig, &proven_sig_list) ){
 
                                     // We have found the longest signature contained in this_residual_suffix_set
                                     pStem = m_Stems->find_or_add(this_stem);
@@ -719,11 +723,13 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
                                     //--> add to autobiographies <--//
 
                                     for (int affixno = 0; affixno < proven_sig_list.length(); affixno++){
-                                        this_suffix = proven_sig_list[affixno];
-                                        if (this_suffix == "NULL"){
+                                        this_affix = proven_sig_list[affixno];
+                                        if (this_affix == "NULL"){
                                             this_word= this_stem;
                                         }else{
-                                            this_word = this_stem + this_suffix;
+                                            m_SuffixesFlag?
+                                                this_word = this_stem + this_affix:
+                                                this_word = this_affix + this_stem;
                                         }
                                         pWord = m_Words->find_or_fail(this_word);
                                         if (pWord){
@@ -740,12 +746,6 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
 }
 
 
-/*!
- *  This function looks at all the non-signatures that were rejected
- *  because they were associated with only one stem. For each one, it
- *  looks for the broadest signature that occurs inside it, and assigns
- *  its stem to that signature.
- */
 
 struct{
     bool operator ()(CSignature* pSig_a, CSignature* pSig_b) const {

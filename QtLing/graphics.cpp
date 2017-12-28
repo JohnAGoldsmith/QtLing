@@ -12,14 +12,14 @@
 #include "SignatureCollection.h"
 #include "mainwindow.h"
 
-void triangle(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count)
+void triangle(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count, QColor color)
 {
     QPolygon triangle;
     triangle.append(QPoint(x,y+30));
     triangle.append(QPoint(x+40,y+30));
     triangle.append(QPoint(x+20,y-10));
     triangle.append(QPoint(x,y+28));
-    QGraphicsPolygonItem * pTriangleItem = scene->addPolygon(triangle,QPen(), QBrush(Qt::darkRed));
+    QGraphicsPolygonItem * pTriangleItem = scene->addPolygon(triangle,QPen(), QBrush(color));
     QGraphicsSimpleTextItem * p_text_item1 = new QGraphicsSimpleTextItem;
     QGraphicsSimpleTextItem * p_text_item2 = new QGraphicsSimpleTextItem;
     QGraphicsSimpleTextItem * p_text_item3 = new QGraphicsSimpleTextItem;
@@ -295,7 +295,7 @@ void octagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene *
     QRectF bR5 = p_text_item5->sceneBoundingRect();
     QRectF bR6 = p_text_item6->sceneBoundingRect();
     QRectF bR7 = p_text_item7->sceneBoundingRect();
-    QRectF bR8 = p_text_item7->sceneBoundingRect();
+    QRectF bR8 = p_text_item8->sceneBoundingRect();
 
     p_text_item1->setPos( x    , y-70  );
     p_text_item2->setPos( x+80                , y-70  );
@@ -401,7 +401,7 @@ graphic_signature::graphic_signature(int x, int y, CSignature* pSig, lxa_graphic
 
     switch(pSig->get_number_of_affixes()){
     case 3:{
-        triangle(pSig, xprime, y, row_delta, scene,pSig->get_number_of_stems());
+        triangle(pSig, xprime, y, row_delta, scene,pSig->get_number_of_stems(), m_color );
         break;}
     case 4:{
         square(pSig, xprime,y,row_delta, scene,pSig->get_number_of_stems());
@@ -552,7 +552,7 @@ const  bool compare_robustness(const CSignature* pSig1, const CSignature* pSig2)
  return  pSig1->get_robustness() > pSig2->get_robustness();
 }
 void lxa_graphics_scene::assign_scene_positions_to_signatures(CSignatureCollection* signatures, eDisplayType this_display_type){
-    qDebug() << "Assigning scene positions to signatures." << 199;
+    //qDebug() << "Assigning scene positions to signatures." << 199;
     m_signature_collection      = signatures;
     m_display_type              = this_display_type;
     CLexicon*   lexicon          = m_main_window->get_lexicon();

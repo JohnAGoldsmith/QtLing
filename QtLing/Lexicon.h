@@ -103,7 +103,7 @@ protected:
     QMap<QString, int>              m_Protostems;
 
     bool                            m_SuffixesFlag;
-
+    CLexicon*                       m_parent_lexicon;
 
     CSignatureCollection*           m_ParaSignatures;   /*!<  the information we have about stems which we have not yet integrated into a morphological system. */
     CSuffixCollection *             m_ParaSuffixes;
@@ -124,7 +124,7 @@ protected:
     double                          m_entropy_threshold_for_stems;
 
 public:
-    CLexicon(bool suffix_flag = true);
+    CLexicon(CLexicon* parent_lexicon = NULL, bool suffix_flag = true);
 public:
     // accessors and protostems
 //  part of an experiment:
@@ -154,15 +154,17 @@ public:
     QList<QPair<QString,QString>>*              GetParses()                 { return m_Parses;}
     QMap<QString,int>*                          get_protostems()            { return &m_Protostems;}
     void                                        compute_sig_graph_edges();
-    QList<simple_sig_graph_edge*> *              get_sig_graph_edges()        { return &m_SigGraphEdgeList;}
-    lxa_sig_graph_edge_map *                     get_sig_graph_edge_map()     { return & m_SigGraphEdgeMap;}
-    sig_graph_edge*                              get_sig_graph_edge(QString label) {return m_SigGraphEdgeMap[label];}
-    QListIterator<simple_sig_graph_edge*>    *   get_sig_graph_edge_list_iter();
-    lxa_sig_graph_edge_map_iter *                get_sig_graph_edge_map_iter();
+    QList<simple_sig_graph_edge*> *             get_sig_graph_edges()        { return &m_SigGraphEdgeList;}
+    lxa_sig_graph_edge_map *                    get_sig_graph_edge_map()     { return & m_SigGraphEdgeMap;}
+    sig_graph_edge*                             get_sig_graph_edge(QString label) {return m_SigGraphEdgeMap[label];}
+    QListIterator<simple_sig_graph_edge*>    *  get_sig_graph_edge_list_iter();
+    lxa_sig_graph_edge_map_iter *               get_sig_graph_edge_map_iter();
     void                                        set_progress_bar (QProgressBar * pPB) { m_ProgressBar = pPB;}
     void                                        set_status_bar(QStatusBar* pBar) {m_StatusBar = pBar;}
     void                                        set_prefixes_flag()         { m_SuffixesFlag = false;}
     bool                                        get_suffix_flag()           { return m_SuffixesFlag; }
+
+
 public:
     // insert functions here
     void Crab_1();
@@ -177,7 +179,7 @@ public:
     void compare_opposite_sets_of_signatures(QSet<CSignature*>* sig_set_1, QSet<CSignature*>* sig_set_2,QString letter);
     void replace_parse_pairs_from_current_signature_structure(bool FindSuffixesFlag=true);
     void create_temporary_map_from_stems_to_affix_sets(map_sigstring_to_morph_set   &, map_sigstring_to_stem_list &);
-
+    void create_sublexicon ();
 };
 
 #endif // CLEXICON_H

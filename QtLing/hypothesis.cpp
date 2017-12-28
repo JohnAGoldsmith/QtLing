@@ -9,7 +9,7 @@ void CLexicon::generate_hypotheses()
     QString affix, new_affix;
     QStringList affixes1, affixes2, new_affixes, new_sig_2;
     int MINIMUM_AFFIX_OVERLAP = 10;
-    qDebug() << "entering generate hypotheses";
+    //qDebug() << "entering generate hypotheses";
     while    (edge_iter.hasNext()){
         p_edge = edge_iter.next().value();
         QString this_morph = p_edge->get_morph();
@@ -20,7 +20,7 @@ void CLexicon::generate_hypotheses()
         if (this_morph.length() < 2){
             continue;
         }
-        qDebug() << this_morph << 19;
+        //qDebug() << this_morph << 19;
 
         if (pSig1->get_stem_entropy() < m_entropy_threshold_for_stems ||
             pSig2->get_stem_entropy() < m_entropy_threshold_for_stems  ){
@@ -34,10 +34,10 @@ void CLexicon::generate_hypotheses()
         new_affixes.clear();
         pSig1->get_string_list(affixes1);
         pSig2->get_string_list(affixes2);
-        qDebug() << "number of words" << p_edge->get_number_of_words() << 37;
+       // qDebug() << "number of words" << p_edge->get_number_of_words() << 37;
         if (p_edge->get_number_of_words() < 6 ){continue;}
 
-        qDebug() << p_edge->get_number_of_words() << 34;
+        //qDebug() << p_edge->get_number_of_words() << 34;
         //--> new_affixes is the set of affixes that sig1 proposes to sig2  for retirement
         for (int affixno = 0; affixno < affixes1.count(); affixno++){
             affix = affixes1[affixno];
@@ -71,7 +71,7 @@ void CLexicon::generate_hypotheses()
 
 
     }
-    qDebug() << "hypothesis count " <<m_Hypotheses->count() << 72;
+  //  qDebug() << "hypothesis count " <<m_Hypotheses->count() << 72;
 
 }
 CHypothesis::CHypothesis(eHypothesisType HypothesisT,   sig_graph_edge*  p_edge)
