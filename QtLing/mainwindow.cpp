@@ -280,17 +280,21 @@ void MainWindow::do_crab2()
     qApp->processEvents();
     statusBar()->showMessage("We have returned from the Crab Nebular again.");
     m_Models["Words"]               ->load_words(get_lexicon()->get_words());
-
-    statusBar()->showMessage("Loading stems.");
     qApp->processEvents();
+    statusBar()->showMessage("Loaded words.");
+
 
     m_Models["Stems"]               ->load_stems(get_lexicon()->get_stems());
+    statusBar()->showMessage("Loaded stems.");
+
     m_Models["Suffixes"]            ->load_suffixes(get_lexicon()->get_suffixes());
 
     statusBar()->showMessage("Loading signatures.");
     qApp->processEvents();
 
     m_Models["Signatures"]          ->load_signatures(get_lexicon()->get_signatures());
+    statusBar()->showMessage("Loaded signatures.");
+
     m_Models["EPositive Signatures"]    ->load_positive_signatures(get_lexicon()->get_signatures());
     m_Models["Prefix signatures"]   ->load_signatures(get_lexicon()->get_prefix_signatures());
     m_Models["EPositive Prefix Signatures"]    ->load_positive_signatures(get_lexicon()->get_prefix_signatures());

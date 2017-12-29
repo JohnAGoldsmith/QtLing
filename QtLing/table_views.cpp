@@ -1,5 +1,7 @@
 #include <QDebug>
 #include <QMap>
+#include <QFont>
+#include <QHeaderView>
 #include "Lexicon.h"
 #include "mainwindow.h"
 #include "Word.h"
@@ -16,6 +18,7 @@ LowerTableView::LowerTableView()
 {
    m_my_current_model =new  QStandardItemModel();
    m_number_of_columns = 20;
+
 }
 LowerTableView::LowerTableView(MainWindow * window)
 {
@@ -24,6 +27,8 @@ LowerTableView::LowerTableView(MainWindow * window)
    m_number_of_columns = 20;
    m_lexicon = window->get_lexicon();
    m_current_sortstyle = 0;
+   QFont sansFont("Ariel", 20);
+   setFont(sansFont);
 }
 /**
   * @brief LowerTableView::display_this_item
@@ -236,6 +241,9 @@ UpperTableView::UpperTableView (MainWindow* window, eSortStyle this_sort_style)
 {
         m_parent_window = window;
         m_signature_sort_style = this_sort_style;
+        QFont sansFont("Ariel", 20);
+        setFont(sansFont);
+
 }
 
 /**
@@ -284,6 +292,7 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         m_parent_window->m_graphics_scene->clear_all();
         m_parent_window->m_graphics_scene->assign_scene_positions_to_signatures(lexicon->get_signatures(), DT_All_Suffix_Signatures);
         m_parent_window->m_graphics_scene->place_signatures();
+
 
     }
     else     if (component == "EPositive Signatures"){
@@ -458,6 +467,8 @@ void LowerTableView::table_signature(CSignature* pSig ){
     if (item_list.size() > 0){
         m_my_current_model->appendRow(item_list);
     }
+    //resizeColumnsToContents();
+
 }
 
 /**
