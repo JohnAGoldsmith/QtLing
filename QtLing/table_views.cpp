@@ -18,6 +18,9 @@ LowerTableView::LowerTableView()
 {
    m_my_current_model =new  QStandardItemModel();
    m_number_of_columns = 20;
+   QFont sansFont("Ariel", 20);
+   setFont(sansFont);
+
 
 }
 LowerTableView::LowerTableView(MainWindow * window)
@@ -50,174 +53,159 @@ LowerTableView::LowerTableView(MainWindow * window)
      QStandardItem*             p_item;
      QList<QStandardItem*>      item_list;
 
-    //  ---------------------------------------------------//
-     if (UpperView_type == WORDS){
-    //  ---------------------------------------------------//
-        if (index.isValid()) {row = index.row();}
-        QString word = index.sibling(row,0).data().toString();
-        CWord* pWord = this_lexicon->get_words()->get_word(word);
-        table_word(pWord);
-        setModel( m_my_current_model);
-    }
-     //  ---------------------------------------------------//
-     else if (UpperView_type == SIGNATURES || UpperView_type == EPOSITIVE_SIGNATURES ){
-     //  ---------------------------------------------------//
-         if (index.isValid()) {row = index.row();}
-         signature = index.sibling(row,0).data().toString();
-         CSignature*  pSig = this_lexicon->get_signatures()->get_signature(signature);
-
-        // -->  If Graphics is NOT showing, we display the information about the signature <-- //
-        if (m_parent_window->m_graphic_display_flag == false){
-            table_signature(pSig);
+     switch (UpperView_type){
+        case WORDS:{
+            if (index.isValid()) {row = index.row();}
+            QString word = index.sibling(row,0).data().toString();
+            CWord* pWord = this_lexicon->get_words()->get_word(word);
+            table_word(pWord);
             setModel( m_my_current_model);
-        } else // -->   Now, graphics display IS showing<-- //
-        {   qDebug() << "trying to display a focus signature";
+            break;}
+         //  ---------------------------------------------------//
+        case  SIGNATURES:
+        case  EPOSITIVE_SIGNATURES:{
+            if (index.isValid()) {row = index.row();}
+            signature = index.sibling(row,0).data().toString();
+            CSignature*  pSig = this_lexicon->get_signatures()->get_signature(signature);
 
-        }
-    }
-     //  ---------------------------------------------------//
-     else if (UpperView_type == PREFIX_SIGNATURES || UpperView_type == EPOSITIVE_PREFIX_SIGNATURES) {
-     //  ---------------------------------------------------//
-        item_list.clear();
-        if (index.isValid()) {row = index.row();}
-        signature = index.sibling(row,0).data().toString();
-        CSignature*           pSig = this_lexicon->get_prefix_signatures()->get_signature(signature);
-       // -->  If Graphics is NOT showing, we display the information about the signature <-- //
-       if (m_parent_window->m_graphic_display_flag == false){
-           table_signature(pSig);
-           setModel( m_my_current_model);
-       } // -->   Now, graphics display IS showing<-- //
-       {
-           qDebug() << "trying to display a focus signature";
-           m_parent_window->get_graphics_scene()->set_focus_signature_1(pSig);
-           m_parent_window->get_graphics_scene()->display_focus_signature();
-       }
-    }
-     //  ---------------------------------------------------//
-     else if (UpperView_type == RESIDUAL_PARASIGNATURES){
-     //  ---------------------------------------------------//
-        if (index.isValid()){row = index.row();}
-        item_list.clear();
-        signature = index.sibling(row,0).data().toString();
-        CSignature*           pSig = this_lexicon->get_signatures()->get_signature(signature);
-        CStem*                p_Stem;
-        CStem_ptr_list     *  sig_stems = pSig->get_stems();
-        QStandardItem*        p_item;
-
-        if (m_my_current_model) {
-            delete m_my_current_model;
-        }
-        m_my_current_model = new QStandardItemModel();
-        foreach (p_Stem, *sig_stems)  {
-            p_item = new QStandardItem(p_Stem->get_key() );
-            item_list.append(p_item);
-            if (item_list.length() >= m_number_of_columns){
+            // -->  If Graphics is NOT showing, we display the information about the signature <-- //
+            if (m_parent_window->m_graphic_display_flag == false){
+               table_signature(pSig);
+               setModel( m_my_current_model);
+            }
+            break;}
+         //  ---------------------------------------------------//
+        case PREFIX_SIGNATURES:
+        case EPOSITIVE_PREFIX_SIGNATURES:{
+              item_list.clear();
+              if (index.isValid()) {row = index.row();}
+              signature = index.sibling(row,0).data().toString();
+              CSignature*           pSig = this_lexicon->get_prefix_signatures()->get_signature(signature);
+              // -->  If Graphics is NOT showing, we display the information about the signature <-- //
+              if (m_parent_window->m_graphic_display_flag == false){
+                 table_signature(pSig);
+                 setModel( m_my_current_model);
+              } // -->   Now, graphics display IS showing<-- //
+              {
+                 qDebug() << "trying to display a focus signature";
+                 m_parent_window->get_graphics_scene()->set_focus_signature_1(pSig);
+                 m_parent_window->get_graphics_scene()->display_focus_signature();
+              }
+              break;}
+         //  ---------------------------------------------------//
+        case RESIDUAL_PARASIGNATURES:{
+              if (index.isValid()){row = index.row();}
+              item_list.clear();
+              signature = index.sibling(row,0).data().toString();
+              CSignature*           pSig = this_lexicon->get_signatures()->get_signature(signature);
+              CStem*                p_Stem;
+              CStem_ptr_list     *  sig_stems = pSig->get_stems();
+              QStandardItem*        p_item;
+              if (m_my_current_model) {
+                  delete m_my_current_model;
+              }
+              m_my_current_model = new QStandardItemModel();
+              foreach (p_Stem, *sig_stems)  {
+              p_item = new QStandardItem(p_Stem->get_key() );
+              item_list.append(p_item);
+              if (item_list.length() >= m_number_of_columns){
+                         m_my_current_model->appendRow(item_list);
+                         item_list.clear();
+                }
+              }
+              setModel( m_my_current_model);
+              break;}
+         //  ---------------------------------------------------//
+        case PASSIVE_SIGNATURES:{
+            item_list.clear();
+            if (index.isValid()){
+                row = index.row();
+                column = index.column();
+             }
+             if (m_my_current_model) {
+                delete m_my_current_model;
+             }
+             m_my_current_model = new QStandardItemModel();
+             sig_string sig = index.sibling(row,0).data().toString();
+             CSignature* pSig;
+             this_lexicon->get_suffix_flag()?
+                     pSig = this_lexicon->get_signatures()->get_signature(sig):
+                     pSig = this_lexicon->get_prefix_signatures()->get_signature(sig);
+             table_passive_signature(pSig);
+             setModel( m_my_current_model);
+         break;}
+           //  ---------------------------------------------------//
+        case  SIGNATURE_GRAPH_EDGES:{
+            item_list.clear();
+            if (index.isValid()){
+                 row = index.row();
+                 column = index.column();
+            }
+            QString               edge_key = index.sibling(row,5).data().toString();
+            sig_graph_edge*       this_edge = this_lexicon->get_sig_graph_edge_map()->value(edge_key);
+            sig_graph_edge *      psig_graph_edge;
+            CSignature*           pSig;
+            CSignature*           pSig1 = this_edge->sig_1;
+            CSignature*           pSig2 = this_edge->sig_2;
+            QStandardItem*        p_item;
+            CStem*                p_Stem;
+            QStringList           sig1_stems;
+            QStringList           sig2_stems;
+            QStringList           words;
+            word_stem_struct *    this_word_stem_item;
+            if (m_parent_window->m_graphic_display_flag){
+                //-->  Graphic display in lower right window <--//
+                if (column == 1){
+                    pSig = pSig1;
+                } else { pSig = pSig2;}
+                graphics_sig_graph_edges(pSig, this_lexicon );
+            } else
+             // -->   Tabular display in lower right window <--//
+            {   foreach (this_word_stem_item, this_edge->shared_word_stems){
+                    words.append(     this_word_stem_item->word);
+                    sig1_stems.append(this_word_stem_item->stem_1);
+                    sig2_stems.append(this_word_stem_item->stem_2);
+                }
+                if (m_my_current_model) {
+                    delete m_my_current_model;
+                }
+                m_my_current_model = new QStandardItemModel();
+                // --> first signature <-- //
+                table_one_signature(pSig1, sig1_stems );
+                // --> second signature <-- //
+                table_one_signature(pSig2, sig2_stems );
+                // --> words <-- //
+                m_my_current_model->appendRow(item_list);    // blank row in table.
+                item_list.clear();
                 m_my_current_model->appendRow(item_list);
                 item_list.clear();
-            }
-        }
-        setModel( m_my_current_model);
-    }
-     //  ---------------------------------------------------//
-     else if (UpperView_type == PASSIVE_SIGNATURES){
-     //  ---------------------------------------------------//
-        item_list.clear();
-        if (index.isValid()){
-             row = index.row();
-             column = index.column();
-        }
-     if (m_my_current_model) {
-         delete m_my_current_model;
-     }
-     m_my_current_model = new QStandardItemModel();
-     sig_string sig = index.sibling(row,0).data().toString();
-     CSignature* pSig;
-     this_lexicon->get_suffix_flag()?
-            pSig = this_lexicon->get_signatures()->get_signature(sig):
-            pSig = this_lexicon->get_prefix_signatures()->get_signature(sig);
-     qDebug() << 110 << pSig->get_key();
-     table_passive_signature(pSig);
-     setModel( m_my_current_model);
-    }
-     //  ---------------------------------------------------//
-     else if (UpperView_type == SIGNATURE_GRAPH_EDGES) {
-     //  ---------------------------------------------------//
-        item_list.clear();
-        if (index.isValid()){
-             row = index.row();
-             column = index.column();
-        }
-        QString               edge_key = index.sibling(row,5).data().toString();
-        sig_graph_edge*        this_edge = this_lexicon->get_sig_graph_edge_map()->value(edge_key);
-        sig_graph_edge *       psig_graph_edge;
-        CSignature*           pSig;
-        CSignature*           pSig1 = this_edge->sig_1;
-        CSignature*           pSig2 = this_edge->sig_2;
-        QStandardItem*        p_item;
-        CStem*                p_Stem;
-        QStringList           sig1_stems;
-        QStringList           sig2_stems;
-        QStringList           words;
-        word_stem_struct *    this_word_stem_item;
-
-        if (m_parent_window->m_graphic_display_flag){
-            //-->  Graphic display in lower right window <--//
-            if (column == 1){
-                pSig = pSig1;
-            } else { pSig = pSig2;}
-            graphics_sig_graph_edges(pSig, this_lexicon );
-        } else
-         // -->   Tabular display in lower right window <--//
-        {   foreach (this_word_stem_item, this_edge->shared_word_stems){
-                words.append(     this_word_stem_item->word);
-                sig1_stems.append(this_word_stem_item->stem_1);
-                sig2_stems.append(this_word_stem_item->stem_2);
-            }
-            if (m_my_current_model) {
-                delete m_my_current_model;
-            }
-            m_my_current_model = new QStandardItemModel();
-
-            // --> first signature <-- //
-            table_one_signature(pSig1, sig1_stems );
-
-            // --> second signature <-- //
-            table_one_signature(pSig2, sig2_stems );
-
-            // --> words <-- //
-            m_my_current_model->appendRow(item_list);    // blank row in table.
-            item_list.clear();
-            m_my_current_model->appendRow(item_list);
-            item_list.clear();
-
-            for (int wordno= 0; wordno< words.size();wordno++)  {
-                p_item = new QStandardItem(words[wordno]);
-                item_list.append(p_item);
-                if (item_list.length() >= m_number_of_columns){
+                for (int wordno= 0; wordno< words.size();wordno++)  {
+                    p_item = new QStandardItem(words[wordno]);
+                    item_list.append(p_item);
+                    if (item_list.length() >= m_number_of_columns){
+                        m_my_current_model->appendRow(item_list);
+                        item_list.clear();
+                    }
+                }
+                if (item_list.size() > 0 ){
                     m_my_current_model->appendRow(item_list);
                     item_list.clear();
                 }
-            }
-            if (item_list.size() > 0 ){
-                m_my_current_model->appendRow(item_list);
-                item_list.clear();
-            }
-            // --> end of words <-- //
-            setModel( m_my_current_model);
-            resizeColumnsToContents();
-        }
-    }
-     //  ---------------------------------------------------//
-     else if (UpperView_type == HYPOTHESES) {
-     //  ---------------------------------------------------//
+                // --> end of words <-- //
+                setModel( m_my_current_model);
+                resizeColumnsToContents();
+            } // end of tabular display, lower right window
+         break;}
+    case  HYPOTHESES:
+          break;
 
+    // add component 9
+    default:
+         break;
+     }
 
-
-
-    }
-     // add component 9
  }
-
+//------------------->         <---------------------------------------------------//
  /**
   * @brief LeftSideTreeView::LeftSideTreeView
   * @param window
@@ -245,27 +233,7 @@ UpperTableView::UpperTableView (MainWindow* window, eSortStyle this_sort_style)
         setFont(sansFont);
 
 }
-/**
- * @brief UpperTableView::display_suffix_signatures
- * This is the first example, but maybe we will want a lot of these --
- * this is called by a QAction in the MainWindow cpp file, which
- * triggers a signal/slot connection.
- *
- * Maybe this should really be in the parent window, not here.Yes, I have put it there.
- */
 
-/*void UpperTableView::display_suffix_signatures()
-{
-    setModel(m_parent_window->m_Models["Signatures"]);
-    set_document_type( SIGNATURES );
-    set_content_type( "signatures");
-    CLexicon* lexicon = m_parent_window->get_lexicon();
-    m_parent_window->m_graphics_scene->clear_all();
-    m_parent_window->m_graphics_scene->assign_scene_positions_to_signatures(lexicon->get_signatures(), DT_All_Suffix_Signatures);
-    m_parent_window->m_graphics_scene->place_signatures();
-
-}
-*/
 /**
  * @brief UpperTableView::ShowModelsUpperTableView
  * @param index

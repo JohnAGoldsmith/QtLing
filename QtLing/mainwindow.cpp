@@ -578,10 +578,12 @@ void MainWindow::display_suffix_signatures()
     m_tableView_upper_left->setModel(m_Models["Signatures"]);
     m_tableView_upper_left->set_document_type( SIGNATURES );
     m_tableView_upper_left->set_content_type( "signatures");
+    m_tableView_upper_left->resizeColumnsToContents();
     CLexicon* lexicon = get_lexicon();
     m_graphics_scene->clear_all();
     m_graphics_scene->assign_scene_positions_to_signatures(lexicon->get_signatures(), DT_All_Suffix_Signatures);
     m_graphics_scene->place_signatures();
+
 }
 
 
