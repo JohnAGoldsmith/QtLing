@@ -28,6 +28,7 @@ enum eDocumentType  // for the Collection View
   EPOSITIVE_SIGNATURES, // positi
   EPOSITIVE_PREFIX_SIGNATURES,
   HYPOTHESES,
+  HYPOTHESES_2,
   NO_DOC,
   CORPUS_DOC,
   WORDS,
@@ -195,7 +196,8 @@ enum eComponentType
    CT_affix,
    CT_compound,
    CT_parse,
-   CT_hypothesis
+   CT_hypothesis,
+   CT_hypothesis2
 };
 
 

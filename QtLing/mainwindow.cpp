@@ -73,6 +73,7 @@ MainWindow::MainWindow()
     m_Models["Parasuffixes"]            = new LxaStandardItemModel("Parasuffixes");
     m_Models["Passive signatures"]      = new LxaStandardItemModel("Passive signatures");
     m_Models["Hypotheses"]              = new LxaStandardItemModel("Hypotheses");
+    m_Models["Hypotheses 2"]              = new LxaStandardItemModel("Hypotheses 2");
 // add component 3
 
 
@@ -260,17 +261,18 @@ void MainWindow::do_crab()
     m_Models["Parasuffixes"]        ->load_suffixes(get_lexicon()->get_parasuffixes());
     m_Models["Passive signatures"]  ->load_signatures(get_lexicon()->get_passive_signatures());
     m_Models["Hypotheses"]          ->load_hypotheses(get_lexicon()->get_hypotheses());
+    m_Models["Hypotheses 2"]          ->load_hypotheses_2(get_lexicon()->get_hypotheses());
     createTreeModel();
 
 // add component 4
-    //  part of an experiment:
-    //     QMapIterator<QString,eComponentType> iter (get_lexicon()->get_category_types());
-    //    while (iter.hasNext()){
-    //      QString component_name = iter.next().key();
-    //      eComponentType this_component_type = iter.value();
-    //      m_Models[component_name]->load_category(component_name, this_component_type);
-    //    }
-    // end of experiment
+      //part of an experiment:
+        QMapIterator<QString,eComponentType> iter (get_lexicon()->get_category_types());
+        while (iter.hasNext()){
+          QString component_name = iter.next().key();
+          eComponentType this_component_type = iter.value();
+          m_Models[component_name]->load_category(component_name, this_component_type);
+        }
+// end of experiment
 
 
         m_graphics_scene = new lxa_graphics_scene(this);
@@ -321,6 +323,7 @@ void MainWindow::do_crab2()
     m_Models["Parasuffixes"]        ->load_suffixes(get_lexicon()->get_parasuffixes());
     m_Models["Passive signatures"]  ->load_signatures(get_lexicon()->get_passive_signatures());
     m_Models["Hypotheses"]          ->load_hypotheses(get_lexicon()->get_hypotheses());
+    m_Models["Hypotheses 2"]          ->load_hypotheses_2(get_lexicon()->get_hypotheses());
     createTreeModel();
 
 // add component 5
@@ -612,6 +615,22 @@ void MainWindow::display_prefix_signatures()
     CLexicon* lexicon = get_lexicon();
     m_graphics_scene->assign_scene_positions_to_signatures(lexicon->get_prefix_signatures(), DT_All_Prefix_Signatures);
     m_graphics_scene->place_signatures();
+}
+/**
+ * @brief MainWindow::display_prefix_signatures
+ * This is called by a QAction.
+ */
+void MainWindow::display_hypotheses()
+{
+    m_tableView_upper_left->setModel(m_Models["Hypotheses"]);
+    m_tableView_upper_left->set_document_type( HYPOTHESES );
+    m_tableView_upper_left->resizeColumnsToContents();
+
+    m_tableView_upper_right->setModel(m_Models["Hypotheses 2"]);
+    m_tableView_upper_right->set_document_type( HYPOTHESES_2 );
+    m_tableView_upper_right->resizeColumnsToContents();
+
+
 }
 
 

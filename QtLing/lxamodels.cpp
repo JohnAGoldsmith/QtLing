@@ -45,15 +45,15 @@ bool LxaSortFilterProxyModel::lessThan(const QModelIndex & left, const QModelInd
 
     QString sig1 = leftdata.toString();
     QString sig2 = leftdata.toString();
-//   if (left.isValid()) { left_row = left.row();}
-//   if (right.isValid()){ right_row = right.row();}
-//   sig_string sig1 = left.sibling(left_row,0).data().toString();
-//   sig_string sig2 = right.sibling(right_row,0).data().toString();
+
    return sig1.split("=").length() > sig2.split("=").length();
 
 };
 
+void  LxaStandardItemModel::load_category(QString component_name, eComponentType)
+{
 
+}
 
 void LxaStandardItemModel::load_words(CWordCollection* p_words)
 {
@@ -244,7 +244,58 @@ void LxaStandardItemModel::load_hypotheses(QList<CHypothesis*>* p_hypotheses)
         }
         appendRow(items);
     }
+/*
+    for (int hypno = 0; hypno<p_hypotheses->count(); hypno++)
+    {   hypothesis = p_hypotheses->at(hypno);
+        QList<QStandardItem*> items;
+        QStringList pieces = hypothesis->express();
+        for (int i = 0; i < pieces.count(); i++){
+             QStandardItem * item1 = new QStandardItem(pieces[i]);
+             items.append(item1);
+        }
+        appendRow(items);
+    }
+    */
+}
+void LxaStandardItemModel::load_hypotheses_2(QList<CHypothesis*>* p_hypotheses)
+{
+    this->clear();
+    m_Description = " ";
+    CHypothesis*         hypothesis;
+    QMap<QString,QList<CHypothesis*> >  Hypothesis_map;
+    QMap<QString,int>                   Key_counts;
+    QList<QPair<QString,int>*>           pairs;
+/*
+    for (int hypno = 0; hypno<p_hypotheses->count(); hypno++)
+    {   hypothesis = p_hypotheses->at(hypno);
+        QString key = hypothesis->get_key();
+        if (Key_counts.contains(key))  {
+                Key_counts[key] += hypothesis->get_number_of_words_saved();
+            } else{
+                Key_counts[key] = hypothesis->get_number_of_words_saved();
+            }
+    }
+    foreach (QString key, Key_counts.keys()){
+            QPair<QString,int> * pair = new QPair<QString, int>(key, Key_counts[key]);
+        pairs.append(pair);
+    }
+    std::sort(pairs.begin(),pairs.end(),sort_function_1);
+    QListIterator<QPair<QString,int>*> iter (pairs);
+    while (iter.hasNext()){
+        QList<QStandardItem*> items;
+        QPair<QString,int>* pPair = iter.next();
+        QStandardItem* item1 = new QStandardItem(QString::number(pPair->second));
+        items.append(item1);
 
+        QString this_key = pPair->first;
+        QStringList key_list = this_key.split("@");
+        foreach (QString key, key_list){
+            QStandardItem * this_item = new QStandardItem(key);
+            items.append(this_item);
+        }
+        appendRow(items);
+    }
+*/
     for (int hypno = 0; hypno<p_hypotheses->count(); hypno++)
     {   hypothesis = p_hypotheses->at(hypno);
         QList<QStandardItem*> items;
@@ -256,7 +307,6 @@ void LxaStandardItemModel::load_hypotheses(QList<CHypothesis*>* p_hypotheses)
         appendRow(items);
     }
 }
-
 
 
 

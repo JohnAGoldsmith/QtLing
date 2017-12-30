@@ -331,10 +331,12 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         qDebug() << "line 234 in table views.";
     }
     else     if (component == "Hypotheses"){
-        setModel(m_parent_window->m_Models["Hypotheses"]);
-        set_document_type( HYPOTHESES );
-        sortByColumn(1);
-        qDebug() << "line 234 in table views.";
+        m_parent_window->display_hypotheses();
+
+//        setModel(m_parent_window->m_Models["Hypotheses"]);
+//        set_document_type( HYPOTHESES );
+//        sortByColumn(1);
+//        qDebug() << "line 234 in table views.";
     }
 // add component 10
 

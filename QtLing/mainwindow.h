@@ -81,7 +81,9 @@ public:
     void        load_positive_signatures(CSignatureCollection* p_positive_signatures);
     void        load_positive_prefix_signatures(CSignatureCollection* p_positive_prefix_signatures);
     void        load_hypotheses(QList<CHypothesis*>*);
+    void        load_hypotheses_2(QList<CHypothesis*>*);
 // add component 11
+    void        load_category(QString component_name, eComponentType);
 };
 
 class LxaSortFilterProxyModel : public QSortFilterProxyModel
@@ -203,6 +205,7 @@ public:
 
     void        display_suffix_signatures();
     void        display_prefix_signatures();
+    void        display_hypotheses();
     void        DisplaySignatures();
     CLexicon*   get_lexicon() {return m_lexicon_list.last();  }
 

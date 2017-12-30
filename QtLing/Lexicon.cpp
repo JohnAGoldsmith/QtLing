@@ -50,7 +50,7 @@ CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag)
     m_category_types["Parasignatures"]      = CT_signature;
     m_category_types["Parasuffixes"]        = CT_affix;
     m_category_types["Hypotheses"]          = CT_hypothesis;
-
+    m_category_types["Hypotheses 2"]          = CT_hypothesis2;
     // add component 2
 }
 
