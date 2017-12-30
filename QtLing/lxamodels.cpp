@@ -109,12 +109,8 @@ void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures, e
     p_signatures->sort(this_sort_style);
     m_sort_style = this_sort_style;
 
-
-    //qDebug() << "load  signatures"<<110 << "number of them: " << p_signatures->get_count();
-
     for (int signo = 0; signo<p_signatures->get_count(); signo++)
     {   sig = p_signatures->get_at_sorted(signo);
-        //qDebug() << 112 << sig->get_key() << signo;
         QList<QStandardItem*> items;
         QStandardItem * item2 = new QStandardItem(QString::number(sig->get_number_of_stems()));
         QStandardItem * item3 = new QStandardItem(QString::number(sig->get_robustness()));
@@ -161,7 +157,6 @@ void LxaStandardItemModel::load_parasignatures(CSignatureCollection* p_signature
     p_signatures->sort(SIG_BY_AFFIX_COUNT);
     m_sort_style = SIG_BY_AFFIX_COUNT;
     stem_t  this_stem;
-    //qDebug() << 139 << "lxamodels";
     QList<QStandardItem*> items;
     QStandardItem * item1 = new QStandardItem("stem");
     QStandardItem * item2 = new QStandardItem("robustness");
@@ -174,40 +169,14 @@ void LxaStandardItemModel::load_parasignatures(CSignatureCollection* p_signature
     for (int signo = 0; signo<p_signatures->get_count(); signo++)
     {   sig = p_signatures->get_at_sorted(signo);
         QList<QStandardItem*> items;
-        //qDebug() << sig->get_key() << 145;
         QStandardItem * item1 = new QStandardItem(sig->get_stems()->first()->get_key());
-        //QStandardItem * item2 = new QStandardItem(QString::number(sig->get_number_of_stems()));
         QStandardItem * item3 = new QStandardItem(QString::number(sig->get_robustness()));
         items.append(item1);
-        //items.append(item2);
         items.append(item3);
         items.append(new QStandardItem(sig->GetSignature()));
         appendRow(items);
     }
 }
-
-/*
-void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures)
-{
-    this->clear();
-    m_Description = " ";
-    CSignature*         sig;
-    p_signatures->sort(SIG_BY_STEM_COUNT);
-    m_sort_style = SIG_BY_STEM_COUNT;
-
-    for (int signo = 0; signo<p_signatures->get_count(); signo++)
-    {   sig = p_signatures->get_at_sorted(signo);
-        QList<QStandardItem*> items;
-        QStandardItem * item2 = new QStandardItem(QString::number(sig->get_number_of_stems()));
-        QStandardItem * item3 = new QStandardItem(QString::number(sig->get_robustness()));
-        items.append(new QStandardItem(sig->GetSignature()));
-        items.append(item2);
-        items.append(item3);
-        appendRow(items);
-    }
-}
-
-*/
 
 bool sort_function_1(const QPair<QString ,int >  * a ,  QPair<QString , int >  * b)
 {

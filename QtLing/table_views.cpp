@@ -245,7 +245,27 @@ UpperTableView::UpperTableView (MainWindow* window, eSortStyle this_sort_style)
         setFont(sansFont);
 
 }
+/**
+ * @brief UpperTableView::display_suffix_signatures
+ * This is the first example, but maybe we will want a lot of these --
+ * this is called by a QAction in the MainWindow cpp file, which
+ * triggers a signal/slot connection.
+ *
+ * Maybe this should really be in the parent window, not here.Yes, I have put it there.
+ */
 
+/*void UpperTableView::display_suffix_signatures()
+{
+    setModel(m_parent_window->m_Models["Signatures"]);
+    set_document_type( SIGNATURES );
+    set_content_type( "signatures");
+    CLexicon* lexicon = m_parent_window->get_lexicon();
+    m_parent_window->m_graphics_scene->clear_all();
+    m_parent_window->m_graphics_scene->assign_scene_positions_to_signatures(lexicon->get_signatures(), DT_All_Suffix_Signatures);
+    m_parent_window->m_graphics_scene->place_signatures();
+
+}
+*/
 /**
  * @brief UpperTableView::ShowModelsUpperTableView
  * @param index
@@ -285,15 +305,7 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         set_document_type( SUFFIXES );
     }
     else     if (component == "Signatures"){
-        setModel(m_parent_window->m_Models["Signatures"]);
-        set_document_type( SIGNATURES );
-        set_content_type( "signatures");
-
-        m_parent_window->m_graphics_scene->clear_all();
-        m_parent_window->m_graphics_scene->assign_scene_positions_to_signatures(lexicon->get_signatures(), DT_All_Suffix_Signatures);
-        m_parent_window->m_graphics_scene->place_signatures();
-
-
+        m_parent_window->display_suffix_signatures();
     }
     else     if (component == "EPositive Signatures"){
         setModel(m_parent_window->m_Models["EPositive Signatures"]);
@@ -357,7 +369,6 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
 
     resizeColumnsToContents();
 }
-
 
 
 /**

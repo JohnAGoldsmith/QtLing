@@ -104,7 +104,6 @@ public slots:
     void ShowModelsUpperTableView(const QModelIndex& );
     eSortStyle      get_signature_sort_style () { return m_signature_sort_style;}
     void            set_signature_sort_style (eSortStyle style) {m_signature_sort_style = style;}
-
     signals:
     void please_display_this_signature(QString sig);
 };
@@ -189,8 +188,9 @@ class MainWindow : public QMainWindow
 public:
     MainWindow();
 
-    void DisplaySignatures();
-        CLexicon*  get_lexicon() {return m_lexicon_list.last();  }
+    void        display_suffix_signatures();
+    void        DisplaySignatures();
+    CLexicon*   get_lexicon() {return m_lexicon_list.last();  }
 
 protected:
     void closeEvent(QCloseEvent *event) override;

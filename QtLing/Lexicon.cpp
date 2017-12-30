@@ -477,7 +477,6 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
    map_sigstring_to_morph_set& ref_stems_to_affix_set (temp_stems_to_affix_set);
    map_sigstring_to_stem_list  temp_signatures_to_stems;
    map_sigstring_to_stem_list& ref_temp_signatures_to_stems(temp_signatures_to_stems);
-//   morph_set *                 pSet;
 
    m_StatusBar->showMessage("Resignaturize with known affixes");
    m_ProgressBar->reset();
@@ -502,7 +501,7 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
    int stem_count = 0;
    while (stem_iter.hasNext())                                                                  // make a presignature for each stem.
    {    stem_iter.next();
-       m_ProgressBar->setValue(stem_count++);
+        m_ProgressBar->setValue(stem_count++);
         this_stem_t            = stem_iter.key();
         //qDebug() <<789 << this_stem_t;
         this_ptr_to_affix_set  = stem_iter.value();
@@ -596,9 +595,9 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
                       this_word = this_affix + this_stem_t;
                }
                pWord = m_Words->find_or_fail(this_word);
-               if ( this_word != pWord->get_key()){
+              // if ( this_word != pWord->get_key()){
                    //qDebug() << this_word << pWord->get_key() << 795;
-               }
+               //}
                QString message = this_signature_string;
                if (this_affix_set.size()> 50){message = "very long signature";}
                pWord->add_to_autobiography("*" + this_word + "=" + this_stem_t + "=" + message );

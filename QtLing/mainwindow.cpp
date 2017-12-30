@@ -163,6 +163,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
 {
     if (ke->key() == Qt::Key_S){
         do_crab();
+        display_suffix_signatures();
     }
     if (ke->key() == Qt::Key_D){
         read_dx1_file();
@@ -212,6 +213,9 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     if (ke->key() == Qt::Key_A){
         qDebug() << 214 << "set focus sig";
         m_graphics_scene->set_focus_signature();
+
+    }
+    if (ke->key()== Qt::Key_H){
 
     }
     QMainWindow::keyPressEvent(ke);
@@ -563,6 +567,32 @@ void MainWindow::createTreeModel()
 // add component 8
 }
 
+
+
+/**
+ * @brief MainWindow::display_suffix_signatures
+ * This is called by a QAction.
+ */
+void MainWindow::display_suffix_signatures()
+{
+    m_tableView_upper_left->setModel(m_Models["Signatures"]);
+    m_tableView_upper_left->set_document_type( SIGNATURES );
+    m_tableView_upper_left->set_content_type( "signatures");
+    CLexicon* lexicon = get_lexicon();
+    m_graphics_scene->clear_all();
+    m_graphics_scene->assign_scene_positions_to_signatures(lexicon->get_signatures(), DT_All_Suffix_Signatures);
+    m_graphics_scene->place_signatures();
+}
+
+
+
+
+
+
+
+
+
+
 void MainWindow::print_prefix_signatures()
 {
     CSignature* pSig;
@@ -623,7 +653,9 @@ void MainWindow::createActions()
     QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
     QToolBar *fileToolBar = addToolBar(tr("File"));
 
-
+    QAction * suffix_signature_display_action = new QAction();
+    //connect(suffix_signature_display_action, &QAction::triggered, m_tableView_upper_left,  &UpperTableView::display_suffix_signatures );
+    connect(suffix_signature_display_action, &QAction::triggered, this,  &MainWindow::display_suffix_signatures );
 
     // Give a data file name, store the name, and read the file.
     const QIcon openIcon = QIcon::fromTheme("document-open", QIcon("../../../../QtLing/images/open.png"));
