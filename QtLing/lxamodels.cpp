@@ -125,7 +125,7 @@ void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures, e
 {
     this->clear();
     m_Signatures = p_signatures;
-    m_Description = "suffix signatures";
+  //  m_Description = "suffix signatures";
     CSignature*         sig;
     p_signatures->sort(this_sort_style);
     m_sort_style = this_sort_style;

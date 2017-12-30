@@ -63,10 +63,11 @@ MainWindow::MainWindow()
     m_Models["Stems"]                   = new LxaStandardItemModel("Stems");
     m_Models["Suffixes"]                = new LxaStandardItemModel("Suffixes");
     m_Models["Signatures"]              = new LxaStandardItemModel("Signatures");
-    m_Models["Signatures_2"]              = new LxaStandardItemModel("Signatures");// sorted by affix count;
-    m_Models["EPositive Signatures"]    = new LxaStandardItemModel("EPositive Signatures");
+    m_Models["Signatures 2"]              = new LxaStandardItemModel("Signatures");// sorted by affix count;
+    m_Models["EPositive signatures"]    = new LxaStandardItemModel("EPositive signatures");
     m_Models["Prefix signatures"]       = new LxaStandardItemModel("Prefix signatures");
-    m_Models["EPositive Prefix Signatures"] = new LxaStandardItemModel("EPositive Prefix Signatures");
+    m_Models["Prefix signatures 2"]       = new LxaStandardItemModel("Prefix signatures"); //sorted by affix count;
+    m_Models["EPositive prefix signatures"] = new LxaStandardItemModel("EPositive prefix signatures");
     m_Models["Residual parasignatures"] = new LxaStandardItemModel("Residual parasignatures");
     m_Models["SigGraphEdges"]            = new LxaStandardItemModel("SigTreeEdges");
     m_Models["Parasuffixes"]            = new LxaStandardItemModel("Parasuffixes");
@@ -173,6 +174,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     if (ke->key() == Qt::Key_P){
         get_lexicon()->set_prefixes_flag();
         do_crab();
+        display_prefix_signatures();
     }
     if (ke->key() == Qt::Key_G)
     {
@@ -249,10 +251,11 @@ void MainWindow::do_crab()
     m_Models["Stems"]               ->load_stems(get_lexicon()->get_stems());
     m_Models["Suffixes"]            ->load_suffixes(get_lexicon()->get_suffixes());
     m_Models["Signatures"]          ->load_signatures(get_lexicon()->get_signatures());
-    m_Models["Signatures_2"]         ->load_signatures(get_lexicon()->get_signatures(), SIG_BY_AFFIX_COUNT);
-    m_Models["EPositive Signatures"]->load_positive_signatures(get_lexicon()->get_signatures());
+    m_Models["Signatures 2"]         ->load_signatures(get_lexicon()->get_signatures(), SIG_BY_AFFIX_COUNT);
+    m_Models["EPositive signatures"]->load_positive_signatures(get_lexicon()->get_signatures());
     m_Models["Prefix signatures"]   ->load_signatures(get_lexicon()->get_prefix_signatures());
-    m_Models["EPositive Prefix Signatures"]->load_positive_signatures(get_lexicon()->get_prefix_signatures());
+    m_Models["Prefix signatures 2"] ->load_signatures(get_lexicon()->get_prefix_signatures(), SIG_BY_AFFIX_COUNT);
+    m_Models["EPositive prefix signatures"]->load_positive_signatures(get_lexicon()->get_prefix_signatures());
     m_Models["Residual parasignatures"]->load_parasignatures(get_lexicon()->get_residual_signatures());
     m_Models["Parasuffixes"]        ->load_suffixes(get_lexicon()->get_parasuffixes());
     m_Models["Passive signatures"]  ->load_signatures(get_lexicon()->get_passive_signatures());
@@ -302,9 +305,9 @@ void MainWindow::do_crab2()
     m_Models["Signatures"]          ->load_signatures(get_lexicon()->get_signatures());
     statusBar()->showMessage("Loaded signatures.");
 
-    m_Models["EPositive Signatures"]    ->load_positive_signatures(get_lexicon()->get_signatures());
+    m_Models["EPositive signatures"]    ->load_positive_signatures(get_lexicon()->get_signatures());
     m_Models["Prefix signatures"]   ->load_signatures(get_lexicon()->get_prefix_signatures());
-    m_Models["EPositive Prefix Signatures"]    ->load_positive_signatures(get_lexicon()->get_prefix_signatures());
+    m_Models["EPositive prefix signatures"]    ->load_positive_signatures(get_lexicon()->get_prefix_signatures());
 
     statusBar()->showMessage("Loading signature-tree edges.");
     qApp->processEvents();
@@ -446,13 +449,13 @@ void MainWindow::createTreeModel()
     QStandardItem * sig_item = new QStandardItem(QString("Signatures"));
     QStandardItem * sig_count_item = new QStandardItem(QString::number(get_lexicon()->GetSignatureCollection()->get_count()));
 
-    QStandardItem * pos_sig_item = new QStandardItem(QString("EPositive Signatures"));
+    QStandardItem * pos_sig_item = new QStandardItem(QString("EPositive signatures"));
     QStandardItem * pos_sig_count_item = new QStandardItem(QString::number(get_lexicon()->GetSignatureCollection()->get_number_of_epositive_signatures()));
 
     QStandardItem * prefix_sig_item = new QStandardItem(QString("Prefix signatures"));
     QStandardItem * prefix_sig_count_item = new QStandardItem(QString::number(get_lexicon()->get_prefix_signatures()->get_count()));
 
-    QStandardItem * pos_prefix_sig_item = new QStandardItem(QString("EPositive Prefix Signatures"));
+    QStandardItem * pos_prefix_sig_item = new QStandardItem(QString("EPositive prefix signatures"));
     QStandardItem * pos_prefix_sig_count_item = new QStandardItem(QString::number(get_lexicon()->get_prefix_signatures()->get_number_of_epositive_signatures()));
 
     QStandardItem * residual_sig_item = new QStandardItem(QString("Residual parasignatures"));
@@ -580,23 +583,34 @@ void MainWindow::display_suffix_signatures()
 {
     m_tableView_upper_left->setModel(m_Models["Signatures"]);
     m_tableView_upper_left->set_document_type( SIGNATURES );
-    m_tableView_upper_left->set_content_type( "signatures");
     m_tableView_upper_left->resizeColumnsToContents();
 
-    //LxaSortFilterProxyModel * proxyModel = new LxaSortFilterProxyModel (this);
-    //proxyModel->setSourceModel(m_Models["Signatures"]);
-    //proxyModel->sort();
-    //m_tableView_upper_right->setModel(proxyModel);
     CLexicon* lexicon = get_lexicon();
-    m_tableView_upper_right->setModel(m_Models["Signatures_2"]);
+    m_tableView_upper_right->setModel(m_Models["Signatures 2"]);
     m_tableView_upper_right->set_document_type( SIGNATURES );
-    m_tableView_upper_right->set_content_type( "signatures");
     m_tableView_upper_right->resizeColumnsToContents();
-
-
 
     m_graphics_scene->clear_all();
     m_graphics_scene->assign_scene_positions_to_signatures(lexicon->get_signatures(), DT_All_Suffix_Signatures);
+    m_graphics_scene->place_signatures();
+}
+/**
+ * @brief MainWindow::display_prefix_signatures
+ * This is called by a QAction.
+ */
+void MainWindow::display_prefix_signatures()
+{
+    m_tableView_upper_left->setModel(m_Models["Prefix signatures"]);
+    m_tableView_upper_left->set_document_type( PREFIX_SIGNATURES );
+    m_tableView_upper_left->resizeColumnsToContents();
+
+    m_tableView_upper_right->setModel(m_Models["Prefix signatures 2"]);
+    m_tableView_upper_right->set_document_type( PREFIX_SIGNATURES );
+    m_tableView_upper_right->resizeColumnsToContents();
+
+    m_graphics_scene->clear_all();
+    CLexicon* lexicon = get_lexicon();
+    m_graphics_scene->assign_scene_positions_to_signatures(lexicon->get_prefix_signatures(), DT_All_Prefix_Signatures);
     m_graphics_scene->place_signatures();
 }
 
@@ -645,6 +659,7 @@ void MainWindow::print_prefix_signatures()
     file.close();
 }
 
+// remove this...
 void MainWindow::sort_upper_table()
 {
     // a signal comes to sort the contents of the upper table.
@@ -670,8 +685,10 @@ void MainWindow::createActions()
     QToolBar *fileToolBar = addToolBar(tr("File"));
 
     QAction * suffix_signature_display_action = new QAction();
-    //connect(suffix_signature_display_action, &QAction::triggered, m_tableView_upper_left,  &UpperTableView::display_suffix_signatures );
     connect(suffix_signature_display_action, &QAction::triggered, this,  &MainWindow::display_suffix_signatures );
+    QAction * prefix_signature_display_action = new QAction();
+    connect(prefix_signature_display_action, &QAction::triggered, this,  &MainWindow::display_prefix_signatures );
+
 
     // Give a data file name, store the name, and read the file.
     const QIcon openIcon = QIcon::fromTheme("document-open", QIcon("../../../../QtLing/images/open.png"));

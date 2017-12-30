@@ -372,7 +372,7 @@ void   CLexicon::AssignSuffixesToStems()
                 pStem = m_Stems->find_or_add(this_stem_t);
                 pStem->add_signature (this_signature_string);
                 pSig->add_stem_pointer(pStem);
-                pStem->add_memo ("Pass1= ");
+                //pStem->add_memo ("Pass1= ");
 
                 //QStringList affixes = this_signature_string.split("=");
                 QSetIterator<suffix_t> affix_iter(this_affix_set);

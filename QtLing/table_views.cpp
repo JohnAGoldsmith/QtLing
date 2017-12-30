@@ -278,8 +278,8 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
     else     if (component == "Signatures"){
         m_parent_window->display_suffix_signatures();
     }
-    else     if (component == "EPositive Signatures"){
-        setModel(m_parent_window->m_Models["EPositive Signatures"]);
+    else     if (component == "EPositive signatures"){
+        setModel(m_parent_window->m_Models["EPositive signatures"]);
         set_document_type( EPOSITIVE_SIGNATURES );
         set_content_type( "signatures");
 
@@ -289,16 +289,18 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         qDebug() << "epositive sigs"<< 292;
     }
     else     if (component == "Prefix signatures"){
-        setModel(m_parent_window->m_Models["Prefix signatures"]);
-        set_document_type( PREFIX_SIGNATURES );
-        m_parent_window->m_graphics_scene->clear_all();
-        m_parent_window->m_graphics_scene->assign_scene_positions_to_signatures(lexicon->get_prefix_signatures(), DT_All_Prefix_Signatures);
-        m_parent_window->m_graphics_scene->place_signatures();
+        m_parent_window->display_prefix_signatures();
+
+//        setModel(m_parent_window->m_Models["Prefix signatures"]);
+//        set_document_type( PREFIX_SIGNATURES );
+//        m_parent_window->m_graphics_scene->clear_all();
+//        m_parent_window->m_graphics_scene->assign_scene_positions_to_signatures(lexicon->get_prefix_signatures(), DT_All_Prefix_Signatures);
+//        m_parent_window->m_graphics_scene->place_signatures();
 
 
     }
-    else     if (component == "EPositive Prefix Signatures"){
-        setModel(m_parent_window->m_Models["EPositive Prefix Signatures"]);
+    else     if (component == "EPositive prefix signatures"){
+        setModel(m_parent_window->m_Models["EPositive prefix signatures"]);
         set_document_type( EPOSITIVE_PREFIX_SIGNATURES );
         set_content_type( "signatures");
     }

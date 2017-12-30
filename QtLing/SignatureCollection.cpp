@@ -81,7 +81,10 @@ bool compare_stem_count(const CSignature* pSig1, const CSignature* pSig2)
 
 bool compare_affix_count(const CSignature* pSig1, const CSignature* pSig2)
 {   if (pSig1->get_number_of_affixes() == pSig2->get_number_of_affixes())
-     {    return  pSig1->get_number_of_stems() > pSig2->get_number_of_stems(); }
+     {
+//        return  pSig1->get_number_of_stems() > pSig2->get_number_of_stems();
+        return pSig1->get_key() < pSig2->get_key();
+     }
      return pSig1->get_number_of_affixes() > pSig2->get_number_of_affixes();
 }
 

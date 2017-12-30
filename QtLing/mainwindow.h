@@ -202,6 +202,7 @@ public:
     MainWindow();
 
     void        display_suffix_signatures();
+    void        display_prefix_signatures();
     void        DisplaySignatures();
     CLexicon*   get_lexicon() {return m_lexicon_list.last();  }
 
