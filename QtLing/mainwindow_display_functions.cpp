@@ -41,7 +41,7 @@ void MainWindow::display_prefix_signatures()
     m_graphics_scene->place_signatures();
 }
 /**
- * @brief MainWindow::display_prefix_signatures
+ * @brief MainWindow::display_hypotheses
  * This is called by a QAction.
  */
 void MainWindow::display_hypotheses()

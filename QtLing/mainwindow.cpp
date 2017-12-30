@@ -645,11 +645,13 @@ void MainWindow::createActions()
 
     QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
     QToolBar *fileToolBar = addToolBar(tr("File"));
-
+//---------------------> --------------------------> -------------------------->
     QAction * suffix_signature_display_action = new QAction();
     connect(suffix_signature_display_action, &QAction::triggered, this,  &MainWindow::display_suffix_signatures );
+
     QAction * prefix_signature_display_action = new QAction();
     connect(prefix_signature_display_action, &QAction::triggered, this,  &MainWindow::display_prefix_signatures );
+//---------------------> --------------------------> -------------------------->
 
 
     // Give a data file name, store the name, and read the file.

@@ -259,7 +259,6 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
 {
     CLexicon* lexicon = m_parent_window->get_lexicon();
     QString component;
-    //qDebug() << "show model upper table" << index.data().toString() << "table views" << 204;
     if (index.isValid()){
         component = index.data().toString();
     }
@@ -290,14 +289,6 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
     }
     else     if (component == "Prefix signatures"){
         m_parent_window->display_prefix_signatures();
-
-//        setModel(m_parent_window->m_Models["Prefix signatures"]);
-//        set_document_type( PREFIX_SIGNATURES );
-//        m_parent_window->m_graphics_scene->clear_all();
-//        m_parent_window->m_graphics_scene->assign_scene_positions_to_signatures(lexicon->get_prefix_signatures(), DT_All_Prefix_Signatures);
-//        m_parent_window->m_graphics_scene->place_signatures();
-
-
     }
     else     if (component == "EPositive prefix signatures"){
         setModel(m_parent_window->m_Models["EPositive prefix signatures"]);
@@ -327,16 +318,9 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
     else     if (component == "Passive signatures"){
         setModel(m_parent_window->m_Models["Passive signatures"]);
         set_document_type( PASSIVE_SIGNATURES );
-        sortByColumn(1);
-        qDebug() << "line 234 in table views.";
-    }
+        sortByColumn(1);    }
     else     if (component == "Hypotheses"){
         m_parent_window->display_hypotheses();
-
-//        setModel(m_parent_window->m_Models["Hypotheses"]);
-//        set_document_type( HYPOTHESES );
-//        sortByColumn(1);
-//        qDebug() << "line 234 in table views.";
     }
 // add component 10
 
