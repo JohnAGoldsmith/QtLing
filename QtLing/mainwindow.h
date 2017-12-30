@@ -84,6 +84,19 @@ public:
 // add component 11
 };
 
+class LxaSortFilterProxyModel : public QSortFilterProxyModel
+{
+    Q_OBJECT;
+public:
+    LxaSortFilterProxyModel(QObject*);
+    void  sort() {QSortFilterProxyModel::sort(-1);}
+
+private:
+    bool lessThan(const QModelIndex & left, const QModelIndex & right) const override;
+
+};
+
+
 
 class UpperTableView : public QTableView
 {

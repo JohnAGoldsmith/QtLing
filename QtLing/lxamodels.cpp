@@ -32,6 +32,27 @@ void LxaStandardItemModel::sort(int column_no, Qt::SortOrder order)
     }
 }
 
+LxaSortFilterProxyModel::LxaSortFilterProxyModel(QObject * parent) : QSortFilterProxyModel (parent)
+{
+    //nothing here.
+}
+
+bool LxaSortFilterProxyModel::lessThan(const QModelIndex & left, const QModelIndex & right) const
+{   int left_row, right_row;
+
+    QVariant leftdata = sourceModel()->data(left);
+    QVariant rightdata = sourceModel()->data(right);
+
+    QString sig1 = leftdata.toString();
+    QString sig2 = leftdata.toString();
+//   if (left.isValid()) { left_row = left.row();}
+//   if (right.isValid()){ right_row = right.row();}
+//   sig_string sig1 = left.sibling(left_row,0).data().toString();
+//   sig_string sig2 = right.sibling(right_row,0).data().toString();
+   return sig1.split("=").length() > sig2.split("=").length();
+
+};
+
 
 
 void LxaStandardItemModel::load_words(CWordCollection* p_words)

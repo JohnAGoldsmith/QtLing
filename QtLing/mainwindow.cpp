@@ -40,6 +40,7 @@
 #include "graphics.h"
 #include "generaldefinitions.h"
 
+
 //typedef  QMap<QString,CWord*>                       StringToWordPtr;
 //typedef  QPair<CStem*,CSignature*>                  stem_sig_pair;
 //typedef  QPair<stem_sig_pair*,                      stem_sig_pair*> pair_of_stem_sig_pairs;
@@ -62,6 +63,7 @@ MainWindow::MainWindow()
     m_Models["Stems"]                   = new LxaStandardItemModel("Stems");
     m_Models["Suffixes"]                = new LxaStandardItemModel("Suffixes");
     m_Models["Signatures"]              = new LxaStandardItemModel("Signatures");
+    m_Models["Signatures_2"]              = new LxaStandardItemModel("Signatures");// sorted by affix count;
     m_Models["EPositive Signatures"]    = new LxaStandardItemModel("EPositive Signatures");
     m_Models["Prefix signatures"]       = new LxaStandardItemModel("Prefix signatures");
     m_Models["EPositive Prefix Signatures"] = new LxaStandardItemModel("EPositive Prefix Signatures");
@@ -247,6 +249,7 @@ void MainWindow::do_crab()
     m_Models["Stems"]               ->load_stems(get_lexicon()->get_stems());
     m_Models["Suffixes"]            ->load_suffixes(get_lexicon()->get_suffixes());
     m_Models["Signatures"]          ->load_signatures(get_lexicon()->get_signatures());
+    m_Models["Signatures_2"]         ->load_signatures(get_lexicon()->get_signatures(), SIG_BY_AFFIX_COUNT);
     m_Models["EPositive Signatures"]->load_positive_signatures(get_lexicon()->get_signatures());
     m_Models["Prefix signatures"]   ->load_signatures(get_lexicon()->get_prefix_signatures());
     m_Models["EPositive Prefix Signatures"]->load_positive_signatures(get_lexicon()->get_prefix_signatures());
@@ -579,11 +582,22 @@ void MainWindow::display_suffix_signatures()
     m_tableView_upper_left->set_document_type( SIGNATURES );
     m_tableView_upper_left->set_content_type( "signatures");
     m_tableView_upper_left->resizeColumnsToContents();
+
+    //LxaSortFilterProxyModel * proxyModel = new LxaSortFilterProxyModel (this);
+    //proxyModel->setSourceModel(m_Models["Signatures"]);
+    //proxyModel->sort();
+    //m_tableView_upper_right->setModel(proxyModel);
     CLexicon* lexicon = get_lexicon();
+    m_tableView_upper_right->setModel(m_Models["Signatures_2"]);
+    m_tableView_upper_right->set_document_type( SIGNATURES );
+    m_tableView_upper_right->set_content_type( "signatures");
+    m_tableView_upper_right->resizeColumnsToContents();
+
+
+
     m_graphics_scene->clear_all();
     m_graphics_scene->assign_scene_positions_to_signatures(lexicon->get_signatures(), DT_All_Suffix_Signatures);
     m_graphics_scene->place_signatures();
-
 }
 
 

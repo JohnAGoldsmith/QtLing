@@ -32,6 +32,7 @@ LowerTableView::LowerTableView(MainWindow * window)
    m_current_sortstyle = 0;
    QFont sansFont("Ariel", 20);
    setFont(sansFont);
+
 }
 /**
   * @brief LowerTableView::display_this_item
@@ -204,6 +205,8 @@ LowerTableView::LowerTableView(MainWindow * window)
          break;
      }
 
+
+    resizeColumnsToContents();
  }
 //------------------->         <---------------------------------------------------//
  /**
