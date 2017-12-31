@@ -18,6 +18,8 @@ protected:
     QList<CSuffix*>     m_parasignature; // a parasignature is made up of approved affixes, but the parasignature has not yet been approved.
     int                 m_count;
     QStringList         m_Autobiography;
+    int                 m_word_list_start_point;
+    int                 m_word_list_end_point;
 public:
     CStem (QString);
     CStem(CStem&);

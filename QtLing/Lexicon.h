@@ -82,7 +82,16 @@ public:
 
 };
 
-
+class protostem{
+        QString     m_protostem;
+        int         m_start_word;
+        int         m_end_word;
+public:
+        protostem(QString stem, int start_word, int end_word=-1) { m_protostem = stem; m_start_word = start_word; m_end_word = end_word;}
+        QString     get_stem() { return m_protostem;}
+        int         get_start_word() { return m_start_word;}
+        int         get_end_word()   {return m_end_word;}
+};
 class CLexicon
 {
 protected:
@@ -101,6 +110,7 @@ protected:
     QList<QPair<QString,QString>> * m_Parses;
     QMap<QString,int>               m_Parse_map;
     QMap<QString, int>              m_Protostems;
+    QMap<QString, protostem*>        m_protostems_2;
 
     bool                            m_SuffixesFlag;
     CLexicon*                       m_parent_lexicon;

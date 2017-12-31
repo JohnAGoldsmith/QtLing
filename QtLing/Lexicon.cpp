@@ -109,7 +109,6 @@ void CLexicon::Crab_2()
     compute_sig_graph_edges();
     compute_sig_graph_edge_map();
     generate_hypotheses();
-   // qDebug() << "hypothesis count " << m_Hypotheses->count() << 112;
     test_for_phonological_relations_between_signatures();
     qDebug() << "finished crab 2.";
 }
@@ -146,14 +145,28 @@ void CLexicon::FindProtostems()
             continue;
         }
         DifferenceFoundFlag = false;
+        int end_word;
+        int wordno2;
         if (m_SuffixesFlag){
             int end = qMin(this_word_length, previous_word_length);
             for (int i=0; i <end; i++){
                 if (previous_word[i] != this_word[i]){
                     stem = previous_word.left(i);
+                    if (stem.length()== 0){continue;}
                     DifferenceFoundFlag = true;
                     if (!m_Protostems.contains(stem))                {
                         m_Protostems[stem] = 1;
+                    }
+                    if (!m_protostems_2.contains(stem)){
+                        for (wordno2 = wordno; wordno2 < m_Words->get_count(); wordno2++ ){
+                            if ( ! Words->at(wordno2).startsWith(stem) ){
+                                end_word = wordno2 - 1;
+                                break;                            }
+                        } // add case for last word on list here.
+                        qDebug() << 165 << stem << stem.length() << 165;
+                        protostem * this_protostem = new protostem(stem, wordno-1, end_word );
+                        qDebug() << 166 << stem << wordno-1 << end_word;
+                        m_protostems_2[stem] = this_protostem;
                     }
                     break;
                 }
@@ -188,7 +201,6 @@ void CLexicon::FindProtostems()
         previous_word = this_word;
         previous_word_length = this_word_length;
     }
-    //qDebug() << "Finished finding protostems.";
     return;
 }
 
@@ -218,7 +230,8 @@ void CLexicon::CreateStemAffixPairs()
         for (int letterno = MinimumStemLength; letterno < word.length(); letterno++){
             if (m_SuffixesFlag){
                 stem = word.left(letterno);
-                if (m_Protostems.contains(stem)){
+                //if (m_Protostems.contains(stem)){
+                if(m_protostems_2.contains(stem))  {
                     suffix_length = word.length() - letterno;
                     suffix = word.right(suffix_length);
                     m_Parses->append(QPair<QString,QString>(stem,suffix));
@@ -240,7 +253,6 @@ void CLexicon::CreateStemAffixPairs()
             } // end of prefixes.
         }
     }
-        //qDebug() << "Finished finding stem/affix pairs.";
 }
 
 /*!
@@ -274,7 +286,6 @@ void   CLexicon::AssignSuffixesToStems()
         } else{
             this_stem_t = this_pair.second;
             this_affix = this_pair.first;
-            //qDebug() << 242 << this_stem_t << this_affix;
 
         }
         if (! temp_stems_to_affix_set.contains(this_stem_t)){
@@ -392,13 +403,12 @@ void   CLexicon::AssignSuffixesToStems()
                     QString message = this_signature_string;
                     if (this_affix_set.size() > 50){message = "Super long signature";};
                     pWord->add_to_autobiography("Pass1= " + this_stem_t + "=" + message);
-                    //qDebug() << pWord->get_key() << 348;
                 }
             }
         }
         else
-        {  //-->   This tentative signature has only one stem. <-- //
-            //qDebug() << 401;
+        {  /*
+            //-->   This tentative signature has only one stem. <-- //
 
             this_signature_string =  iter_sigstring_to_stems.key();
             pSig =  *m_ParaSignatures << this_signature_string;
@@ -426,13 +436,13 @@ void   CLexicon::AssignSuffixesToStems()
                       pWord->add_to_autobiography("*singleton signature=" + this_stem_t + "=" + message);
                 }
             }
+            */
          }
     }
     m_Suffixes->sort_by_count();
     m_SuffixesFlag ?
         m_Signatures->calculate_stem_entropy():
         m_PrefixSignatures->calculate_stem_entropy();
-    //qDebug() << "step 4 Finished finding signatures:";
     m_StatusBar->showMessage("Computation of Crab 1 completed.");
 }
 
@@ -503,7 +513,6 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
    {    stem_iter.next();
         m_ProgressBar->setValue(stem_count++);
         this_stem_t            = stem_iter.key();
-        //qDebug() <<789 << this_stem_t;
         this_ptr_to_affix_set  = stem_iter.value();
         if (this_ptr_to_affix_set->size() < 2){continue;}
         QStringList temp_presignature;
@@ -595,9 +604,6 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
                       this_word = this_affix + this_stem_t;
                }
                pWord = m_Words->find_or_fail(this_word);
-              // if ( this_word != pWord->get_key()){
-                   //qDebug() << this_word << pWord->get_key() << 795;
-               //}
                QString message = this_signature_string;
                if (this_affix_set.size()> 50){message = "very long signature";}
                pWord->add_to_autobiography("*" + this_word + "=" + this_stem_t + "=" + message );
@@ -693,7 +699,72 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
     signatures->sort(SIG_BY_AFFIX_COUNT);
     map_sigstring_to_sig_ptr_iter   sig_iter(*  m_ParaSignatures->get_map());
 
+
+    // instead of going through parasignatures, we will look at protostems that are not stems.
+    // We will not keep Parasignatures or residual stems.
+
+    int protostem_count = 0;
+    m_ProgressBar->setMaximum(m_protostems_2.count());
+    foreach (auto this_protostem, m_protostems_2)
+    {
+        affixes_of_residual_sig.clear();
+        m_ProgressBar->setValue(protostem_count++);
+        stem_t this_stem = this_protostem->get_stem();
+        //qDebug() << this_stem << this_protostem->get_start_word() << this_protostem->get_end_word() << 710;
+        int stem_length = this_stem.length();
+
+        for (int wordno= this_protostem->get_start_word(); wordno <= this_protostem->get_end_word(); wordno++){
+            //qDebug() << m_Words->get_count() << 714;
+            QString this_word = m_Words->get_word_string(wordno);
+            //qDebug() << this_stem << this_word << 716;
+            QString ending = this_word.mid( stem_length );
+            affixes_of_residual_sig.append( ending );
+        }
+        if (m_Words->contains(this_stem)) {
+                affixes_of_residual_sig.append("NULL");
+        }
+        //qDebug() << affixes_of_residual_sig.join("-") << 721;
+        //--> Now we look for largest true signature inside this list of suffixes. <--//
+        //--> Inner loop, over all good signatures. <--//
+        for (int sig_no=0; sig_no < signatures->get_count(); sig_no++){
+            p_proven_sig = signatures->get_at_sorted(sig_no);
+            QString p_proven_sigstring  = p_proven_sig->get_key();
+            QList<QString> proven_sig_list = p_proven_sigstring.split("=");
+            if ( contains(&affixes_of_residual_sig, &proven_sig_list) ){
+
+                // We have found the longest signature contained in this_residual_suffix_set
+                pStem = m_Stems->find_or_add(this_stem);
+                pStem->add_signature(p_proven_sigstring);
+                p_proven_sig->add_stem_pointer(pStem);
+
+                //qDebug() << this_stem << affixes_of_residual_sig << proven_sig_list;
+                //--> add to autobiographies <--//
+
+                for (int affixno = 0; affixno < proven_sig_list.length(); affixno++){
+                    this_affix = proven_sig_list[affixno];
+                    if (this_affix == "NULL"){
+                        this_word= this_stem;
+                    }else{
+                        m_SuffixesFlag?
+                            this_word = this_stem + this_affix:
+                            this_word = this_affix + this_stem;
+                    }
+                    pWord = m_Words->find_or_fail(this_word);
+                    if (pWord){
+                        pWord->add_stem_and_signature(pStem, p_proven_sig);
+                        pWord->add_to_autobiography("from within parasigs="  + this_stem  + "=" +  p_proven_sigstring);
+                    }
+                }
+                break;
+            }
+        } // loop over proven signatures;
+    }
+
     //--> Outer loop, over all Residual Signatures. <--//
+
+    /*
+    m_ProgressBar->setMaximum(m_ParaSignatures->get_count());
+    m_ProgressBar->reset();
     while (sig_iter.hasNext()){
         sig_iter.next();
         signature_count++;
@@ -739,8 +810,9 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
                                     break;
                                 }
                             } // loop over proven signatures;
-
     }
+
+    */
     m_Signatures->sort_each_signatures_stems_alphabetically();
 }
 
@@ -874,7 +946,6 @@ while (this_simple_sig_graph_edge_iter.hasNext())
      } else {  // --> start a new sig_graph_edge with multiple stems <-- //
         sig_graph_edge * p_sig_graph_edge_2 = new sig_graph_edge(*p_sig_graph_edge);
         m_SigGraphEdgeMap.insert(p_sig_graph_edge_2->label(),p_sig_graph_edge_2);
-        //qDebug() << 839 << "lexicon.cpp pSig 1 entropy"<< p_sig_graph_edge->sig_1->get_key() << p_sig_graph_edge->sig_1->get_stem_entropy();
      }
 }
 }
@@ -935,14 +1006,11 @@ void CLexicon::compare_opposite_sets_of_signatures(QSet<CSignature*>* sig_set_1,
     CSignature* pSig_1, *pSig_2;
     QHash<QString,int> Counts;
     foreach(p_edge,  m_SigGraphEdgeMap){
-        //qDebug() << morph << p_edge->morph << 668;
         if (p_edge->morph == morph){
-            //qDebug() << p_edge->label() << 670;
             pSig_1 = p_edge->sig_1;
             pSig_2 = p_edge->sig_2;
             QString code = pSig_1->get_key() + "@" + pSig_2->get_key();
             Counts[code] = p_edge->get_number_of_words();
-            //qDebug() << morph<<  code << Counts[code] << 671;
         }
     }
 }

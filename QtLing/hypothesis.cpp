@@ -24,7 +24,7 @@ void CLexicon::generate_hypotheses()
 
         if (pSig1->get_stem_entropy() < m_entropy_threshold_for_stems ||
             pSig2->get_stem_entropy() < m_entropy_threshold_for_stems  ){
-            qDebug() << pSig1->get_key() << pSig1->get_stem_entropy() << pSig2->get_key() << pSig2->get_stem_entropy();
+            //qDebug() << pSig1->get_key() << pSig1->get_stem_entropy() << pSig2->get_key() << pSig2->get_stem_entropy();
             continue;
         }
 

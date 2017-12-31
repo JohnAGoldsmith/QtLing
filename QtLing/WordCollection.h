@@ -26,12 +26,9 @@ protected:
     public:
     // construction/destruction.
     CWordCollection(CLexicon*);
-//    CWordCollection(CLexicon* Lex, QString MemberName = QString());
     ~CWordCollection();
 
-// disable copy
 private:
-//    CWordCollection(const CWordCollection& x);
     CWordCollection& operator=(const CWordCollection& x);
 
 public:
@@ -43,7 +40,7 @@ public:
     CWord* find_or_null (QString);
     CWord* add (QString);
     CWord* get_word (QString); // returns false if the string is not in the word collection
-
+    QString get_word_string (int n) {return m_SortedStringArray[n];}
     //CWord* GetAt( uint itemno) {return m_WordList.at(itemno);}
     int get_count() const { return m_WordMap.size(); }
 
