@@ -163,9 +163,7 @@ void CLexicon::FindProtostems()
                                 end_word = wordno2 - 1;
                                 break;                            }
                         } // add case for last word on list here.
-                        qDebug() << 165 << stem << stem.length() << 165;
                         protostem * this_protostem = new protostem(stem, wordno-1, end_word );
-                        qDebug() << 166 << stem << wordno-1 << end_word;
                         m_protostems_2[stem] = this_protostem;
                     }
                     break;
@@ -265,8 +263,7 @@ void   CLexicon::AssignSuffixesToStems()
     QPair<QString,QString>      this_pair;
     CSignature*                 pSig;
     QString                     this_stem_t, this_suffix, this_prefix, this_affix, this_signature_string, this_word;
-    stem_list       *           p_this_stem_list;
-//    suffix_set *                this_ptr_to_suffix_set;
+    stem_list *                 p_this_stem_list;
     affix_set *                 this_ptr_to_affix_set;
     CStem*                      pStem;
     map_sigstring_to_suffix_set      temp_stems_to_affix_set;
@@ -383,7 +380,6 @@ void   CLexicon::AssignSuffixesToStems()
                 pStem = m_Stems->find_or_add(this_stem_t);
                 pStem->add_signature (this_signature_string);
                 pSig->add_stem_pointer(pStem);
-                //pStem->add_memo ("Pass1= ");
 
                 //QStringList affixes = this_signature_string.split("=");
                 QSetIterator<suffix_t> affix_iter(this_affix_set);
@@ -406,38 +402,6 @@ void   CLexicon::AssignSuffixesToStems()
                 }
             }
         }
-        else
-        {  /*
-            //-->   This tentative signature has only one stem. <-- //
-
-            this_signature_string =  iter_sigstring_to_stems.key();
-            pSig =  *m_ParaSignatures << this_signature_string;
-            if (pSig){
-                    this_stem_t = p_this_stem_list->first();
-                    pStem = *m_ResidualStems << this_stem_t;
-            }
-            pSig->add_stem_pointer(pStem);
-
-            QSetIterator<QString> affix_iter(this_affix_set);
-
-            while (affix_iter.hasNext()){
-                this_affix = affix_iter.next();
-                if (this_affix == "NULL"){
-                    this_word = this_stem_t;
-                } else{
-                    m_SuffixesFlag ?
-                       this_word = this_stem_t + this_affix :
-                       this_word = this_affix + this_stem_t;
-                }
-                pWord = m_Words->find_or_fail(this_word);
-                QString message = this_signature_string;
-                if (this_affix_set.size()> 50){message = "very long signature";}
-                if (pWord){
-                      pWord->add_to_autobiography("*singleton signature=" + this_stem_t + "=" + message);
-                }
-            }
-            */
-         }
     }
     m_Suffixes->sort_by_count();
     m_SuffixesFlag ?
