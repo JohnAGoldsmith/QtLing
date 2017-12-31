@@ -1,7 +1,19 @@
+#include <QStandardItemModel>
+
 #include "mainwindow.h"
 #include "graphics.h"
+#include "lxamodels.h"
 
-
+/**
+ * @brief MainWindow::display_suffix_signatures
+ * This is called by a QAction.
+ */
+void MainWindow::display_suffixes()
+{
+    m_tableView_upper_left->setModel(m_Models["Suffixes"]);
+    m_tableView_upper_left->set_document_type( SUFFIXES );
+    m_tableView_upper_left->resizeColumnsToContents();
+ }
 /**
  * @brief MainWindow::display_suffix_signatures
  * This is called by a QAction.

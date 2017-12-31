@@ -40,13 +40,11 @@ public:
     CSignatureCollection*       get_signatures()            const  {return m_SignatureCollection;}
     QString                     GetSignature()              const   { return m_Signature; }
     QString                     get_key()                   const   { return m_Signature;}
-//    CSuffix_ptr_list  *         get_CSuffixes ()              const { return m_Suffixes;}
     QList<CSuffix*>*            get_suffix_list()                         {return m_Suffixes;}
     QList<CPrefix*>*            get_prefix_list()                         {return m_Prefixes;}
     QStringList                 get_string_list(QStringList&)  ;
     void                        dump_string_set_of_suffixes(QSet<QString> & this_StringSet);
     void                        add_stem (QString);
-//    void                        add_stem (CStem* pStem);
     void                        add_stem_pointer(CStem*);
 
     QList<CStem*>*              get_stems()                         { return   m_Stems;}
@@ -65,6 +63,7 @@ public:
     word_and_count_list *       get_word_and_count_vectors(word_and_count_list* );
     double                      get_stem_entropy()              {return m_stem_entropy;};
     double                      calculate_stem_entropy();
+    bool                        contains_affix_string (affix_t affix);
  ;
 };
 

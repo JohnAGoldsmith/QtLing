@@ -7,6 +7,7 @@
 #include "Word.h"
 #include "WordCollection.h"
 #include "graphics.h"
+#include "lxamodels.h"
 class sig_graph_edge;
 
 /**
@@ -47,7 +48,7 @@ LowerTableView::LowerTableView(MainWindow * window)
  void LowerTableView::display_this_item( const  QModelIndex & index )
  {
      eDocumentType              UpperView_type = m_parent_window->m_tableView_upper_left->get_document_type();
-     QString                    component = m_parent_window->m_tableView_upper_left->get_content();
+//     QString                    component = m_parent_window->m_tableView_upper_left->get_content();
      QString                    word, stem, prefix, suffix, signature;
      CLexicon *                 this_lexicon = get_parent_window()->get_lexicon();
      int                        row, column;
@@ -122,21 +123,26 @@ LowerTableView::LowerTableView(MainWindow * window)
             if (index.isValid()){
                 row = index.row();
                 column = index.column();
-             }
-             if (m_my_current_model) {
+            }
+            if (m_my_current_model) {
                 delete m_my_current_model;
-             }
-             m_my_current_model = new QStandardItemModel();
-             sig_string sig = index.sibling(row,0).data().toString();
-             CSignature* pSig;
-             this_lexicon->get_suffix_flag()?
+            }
+            m_my_current_model = new QStandardItemModel();
+            sig_string sig = index.sibling(row,0).data().toString();
+            CSignature* pSig;
+            this_lexicon->get_suffix_flag()?
                      pSig = this_lexicon->get_signatures()->get_signature(sig):
                      pSig = this_lexicon->get_prefix_signatures()->get_signature(sig);
-             table_passive_signature(pSig);
-             setModel( m_my_current_model);
-         break;}
+            table_passive_signature(pSig);
+            setModel( m_my_current_model);
+            break;}
            //  ---------------------------------------------------//
-        case  SIGNATURE_GRAPH_EDGES:{
+     case SUFFIXES:{
+            break;
+             }
+         //  ---------------------------------------------------//
+
+     case  SIGNATURE_GRAPH_EDGES:{
             item_list.clear();
             if (index.isValid()){
                  row = index.row();
@@ -219,9 +225,46 @@ LowerTableView::LowerTableView(MainWindow * window)
      m_parent_window = window;
  }
 
+ /**
+ * @brief UpperTableView::display_signatures
+ * When we click on an affix in the upper-table on the left,
+ * we display signatures on the right upper-table that contain that affix.
+ * We should just put that in a model, and link the model to that view.
+ */
+/*void UpperTableView::display_signatures()
+{
+    if (index.isValid()){
+        row = index.row();
+        column = index.column();
+    }
+    qDebug() << 145 <<  "table views suffixes";
+    m_my_current_model->clear();
+    CSignature* pSig;
+    QStandardItem*        p_item;
+    suffix_t suffix = index.sibling(row,0).data().toString();
+    auto sig_iter (get_lexicon()->get_signatures()->get_map_iterator());
+    while (sig_iter->hasNext()){
+        pSig = sig_iter->next().value();
+        if (pSig->contains_affix_string(suffix)){
+            p_item = new QStandardItem(pSig->get_key());
+            m_my_current_model->appendRow(p_item);
+        }
+    }
+    get_parent_window()->get
+}
+*/
+ /**
+  * @brief UpperTableView::display_this_affixes_signatures
+  * This is used when we click on the left upper view to identify an affix;
+  * then we display all signatures containing that affix on the right.
+  */
+ void  UpperTableView::display_this_affixes_signatures(const QModelIndex & index)
+ {
+     if (index.isValid()){
 
+     }
 
-
+ }
 
  /**
  * @brief UpperTableView::UpperTableView
@@ -271,8 +314,9 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         set_document_type( STEMS );
     }
     else     if (component == "Suffixes"){
-        setModel(m_parent_window->m_Models["Suffixes"]);
-        set_document_type( SUFFIXES );
+        m_parent_window->display_suffixes();
+        //setModel(m_parent_window->m_Models["Suffixes"]);
+        //set_document_type( SUFFIXES );
     }
     else     if (component == "Signatures"){
         m_parent_window->display_suffix_signatures();
@@ -328,6 +372,18 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
 
     resizeColumnsToContents();
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /**

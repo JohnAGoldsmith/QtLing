@@ -56,8 +56,14 @@ void CSignature::sort_stems(){
     qSort(m_Stems->begin(), m_Stems->end(), compare_stems_of_sig);
 }
 
-void  add_stem (QString);
-
+bool CSignature::contains_affix_string(affix_t affix)
+{
+    QStringList affixes = m_Signature.split("=");
+    if (affixes.contains(affix) ){
+        return true;
+    }
+    return false;
+}
 
 
 void CSignature::dump_string_set_of_suffixes(QSet<QString> & this_StringSet)

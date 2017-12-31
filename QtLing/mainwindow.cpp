@@ -39,6 +39,7 @@
 #include "mainwindow.h"
 #include "graphics.h"
 #include "generaldefinitions.h"
+#include "lxamodels.h"
 
 //typedef  QMap<QString,CWord*>                       StringToWordPtr;
 //typedef  QPair<CStem*,CSignature*>                  stem_sig_pair;
@@ -58,21 +59,22 @@ MainWindow::MainWindow()
 
     m_lexicon_list.append ( new CLexicon() );
     // models
-    m_Models["Words"]                   = new LxaStandardItemModel("Words");
-    m_Models["Stems"]                   = new LxaStandardItemModel("Stems");
-    m_Models["Suffixes"]                = new LxaStandardItemModel("Suffixes");
-    m_Models["Signatures"]              = new LxaStandardItemModel("Signatures");
-    m_Models["Signatures 2"]              = new LxaStandardItemModel("Signatures");// sorted by affix count;
-    m_Models["EPositive signatures"]    = new LxaStandardItemModel("EPositive signatures");
-    m_Models["Prefix signatures"]       = new LxaStandardItemModel("Prefix signatures");
-    m_Models["Prefix signatures 2"]       = new LxaStandardItemModel("Prefix signatures"); //sorted by affix count;
+    m_Models["Words"]                       = new LxaStandardItemModel("Words");
+    m_Models["Stems"]                       = new LxaStandardItemModel("Stems");
+    m_Models["Suffixes"]                    = new LxaStandardItemModel("Suffixes");
+    m_Models["Signatures"]                  = new LxaStandardItemModel("Signatures");
+    m_Models["Signatures 2"]                = new LxaStandardItemModel("Signatures");// sorted by affix count;
+    m_Models["Signatures 3"]                = new LxaStandardItemModel("Signatures");// used temporarily;
+    m_Models["EPositive signatures"]        = new LxaStandardItemModel("EPositive signatures");
+    m_Models["Prefix signatures"]           = new LxaStandardItemModel("Prefix signatures");
+    m_Models["Prefix signatures 2"]         = new LxaStandardItemModel("Prefix signatures"); //sorted by affix count;
     m_Models["EPositive prefix signatures"] = new LxaStandardItemModel("EPositive prefix signatures");
-    m_Models["Residual parasignatures"] = new LxaStandardItemModel("Residual parasignatures");
-    m_Models["SigGraphEdges"]            = new LxaStandardItemModel("SigTreeEdges");
-    m_Models["Parasuffixes"]            = new LxaStandardItemModel("Parasuffixes");
-    m_Models["Passive signatures"]      = new LxaStandardItemModel("Passive signatures");
-    m_Models["Hypotheses"]              = new LxaStandardItemModel("Hypotheses");
-    m_Models["Hypotheses 2"]              = new LxaStandardItemModel("Hypotheses 2");
+    m_Models["Residual parasignatures"]     = new LxaStandardItemModel("Residual parasignatures");
+    m_Models["SigGraphEdges"]               = new LxaStandardItemModel("SigTreeEdges");
+    m_Models["Parasuffixes"]                = new LxaStandardItemModel("Parasuffixes");
+    m_Models["Passive signatures"]          = new LxaStandardItemModel("Passive signatures");
+    m_Models["Hypotheses"]                  = new LxaStandardItemModel("Hypotheses");
+    m_Models["Hypotheses 2"]                = new LxaStandardItemModel("Hypotheses 2");
 // add component 3
 
 
@@ -144,10 +146,21 @@ MainWindow::MainWindow()
     setCurrentFile(QString());
     setUnifiedTitleAndToolBarOnMac(true);
 
-    connect(m_leftTreeView, SIGNAL(clicked(const QModelIndex&)), m_tableView_upper_left, SLOT(ShowModelsUpperTableView(const QModelIndex&)));
-    connect(m_leftTreeView, SIGNAL(clicked(const QModelIndex&)), m_tableView_upper_right, SLOT(ShowModelsUpperTableView(const QModelIndex&)));
-    connect(m_tableView_upper_left,SIGNAL(clicked(const QModelIndex & )), m_tableView_lower,SLOT(display_this_item(const QModelIndex &  )));
-    connect(m_tableView_upper_right,SIGNAL(clicked(const QModelIndex & )), m_tableView_lower,SLOT(display_this_item(const QModelIndex &  )));
+    connect(m_leftTreeView, SIGNAL(clicked(const QModelIndex&)),
+            m_tableView_upper_left, SLOT(ShowModelsUpperTableView(const QModelIndex&)));
+    connect(m_leftTreeView, SIGNAL(clicked(const QModelIndex&)),
+            m_tableView_upper_right, SLOT(ShowModelsUpperTableView(const QModelIndex&)));
+
+    connect(m_tableView_upper_left,SIGNAL(clicked(const QModelIndex & )),
+            m_tableView_lower,SLOT(display_this_item(const QModelIndex &  )));
+    connect(m_tableView_upper_right,SIGNAL(clicked(const QModelIndex & )),
+            m_tableView_lower,SLOT(display_this_item(const QModelIndex &  )));
+
+    connect(m_tableView_upper_left,SIGNAL(clicked(const QModelIndex & )),
+            m_tableView_upper_right,SLOT(display_this_affixes_signatures(const QModelIndex &  )));
+
+
+
 }
 void MainWindow::cycle_through_graphic_displays()
 {
@@ -252,6 +265,7 @@ void MainWindow::do_crab()
     m_Models["Suffixes"]            ->load_suffixes(get_lexicon()->get_suffixes());
     m_Models["Signatures"]          ->load_signatures(get_lexicon()->get_signatures());
     m_Models["Signatures 2"]         ->load_signatures(get_lexicon()->get_signatures(), SIG_BY_AFFIX_COUNT);
+    m_Models["Signatures 3"]         ->load_signatures(get_lexicon()->get_signatures());
     m_Models["EPositive signatures"]->load_positive_signatures(get_lexicon()->get_signatures());
     m_Models["Prefix signatures"]   ->load_signatures(get_lexicon()->get_prefix_signatures());
     m_Models["Prefix signatures 2"] ->load_signatures(get_lexicon()->get_prefix_signatures(), SIG_BY_AFFIX_COUNT);
@@ -289,7 +303,7 @@ void MainWindow::do_crab2()
 {   statusBar()->showMessage("Entering the Crab Nebula, phase 2");
     get_lexicon()->Crab_2();
     qApp->processEvents();
-    statusBar()->showMessage("We have returned from the Crab Nebular again.");
+    statusBar()->showMessage("We have returned from the Crab Nebula again.");
     m_Models["Words"]               ->load_words(get_lexicon()->get_words());
     qApp->processEvents();
     statusBar()->showMessage("Loaded words.");
