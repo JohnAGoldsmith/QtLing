@@ -14,6 +14,18 @@ class MainWindow;
 class lxa_graphics_scene;
 class CSupersignature;
 
+void triangle(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count, QColor color);
+void square(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count);
+void pentagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count);
+void hexagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count);
+void septagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count);
+void octagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count);
+void nonagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count);
+void decagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count);
+void elevenagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count);
+void twelvagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count);
+
+
 /////////////////////////////////////////////////////////////////////////////
 //          Graphic signature
 //
@@ -124,6 +136,7 @@ public:
     void            set_focus_signature();
     void            set_focus_signature_1(CSignature* pSig)       {m_focus_signature_1 = pSig;}
     void            set_focus_signature_2(CSignature* pSig)       {m_focus_signature_2 = pSig;}
+    graphic_signature* get_focus_signature_1();
     void            display_focus_signature();
 };
 
