@@ -19,8 +19,7 @@ graphic_signature::graphic_signature(int x, int y, CSignature* pSig, lxa_graphic
 {
     m_graphics_scene = scene;
     m_signature = pSig;
-
-    if ( focus_flag ){
+    qDebug() << pSig->get_key() <<  "focus flag"<< focus_flag;    if ( focus_flag ){
         m_is_focused = true;
         m_color = scene->m_focus_color;
         qDebug() << "We have a focus signature" << pSig->get_key();
@@ -36,33 +35,32 @@ graphic_signature::graphic_signature(int x, int y, CSignature* pSig, lxa_graphic
         triangle(pSig, xprime, y, row_delta, scene,pSig->get_number_of_stems(), m_color );
         break;}
     case 4:{
-        square(pSig, xprime,y,row_delta, scene,pSig->get_number_of_stems());
+        square(pSig, xprime,y,row_delta, scene,pSig->get_number_of_stems(), m_color);
         break;}
     case 5:{
         xprime += 20;
-        pentagon(pSig, xprime,y,row_delta,scene,pSig->get_number_of_stems());
+        pentagon(pSig, xprime,y,row_delta,scene,pSig->get_number_of_stems(), m_color);
         xprime -= 20;
         break;}
     case 6:{
-        hexagon(pSig,xprime,y,row_delta,scene, pSig->get_number_of_stems());
+        hexagon(pSig,xprime,y,row_delta,scene, pSig->get_number_of_stems(), m_color);
         break;}
     case 7:{
-        septagon(pSig,xprime,y,row_delta,scene, pSig->get_number_of_stems());
+        septagon(pSig,xprime,y,row_delta,scene, pSig->get_number_of_stems(), m_color);
         break;}
-    case 8:{
-        octagon(pSig,xprime,y,row_delta,scene, pSig->get_number_of_stems());
+    case 8:{       octagon(pSig,xprime,y,row_delta,scene, pSig->get_number_of_stems(), m_color);
         break;}
     case 9:{
-        nonagon(pSig,xprime,y,row_delta,scene, pSig->get_number_of_stems());
+        nonagon(pSig,xprime,y,row_delta,scene, pSig->get_number_of_stems(), m_color);
         break;}
     case 10:{
-        decagon(pSig,xprime,y,row_delta,scene, pSig->get_number_of_stems());
+        decagon(pSig,xprime,y,row_delta,scene, pSig->get_number_of_stems(), m_color);
         break;}
     case 11:{
-        elevenagon(pSig,xprime,y,row_delta,scene, pSig->get_number_of_stems());
+        elevenagon(pSig,xprime,y,row_delta,scene, pSig->get_number_of_stems(), m_color);
         break;}
     case 12:{
-        twelvagon(pSig,xprime,y,row_delta,scene, pSig->get_number_of_stems());
+        twelvagon(pSig,xprime,y,row_delta,scene, pSig->get_number_of_stems(), m_color);
         break;}
 
     default:{
@@ -133,6 +131,7 @@ lxa_graphics_view::lxa_graphics_view(MainWindow* this_window)
     m_scale =1;
     m_x_scale =1.0;
     m_y_scale = 1.0;
+
     setDragMode(QGraphicsView::ScrollHandDrag);
     setMouseTracking(true);
 
@@ -304,21 +303,20 @@ void lxa_graphics_scene::place_signatures()
             }
             int x = border + col * m_column_delta;
             int y = m_location_of_bottom_row - (row-2) * m_row_delta;
-            p_graph_sig = new graphic_signature (x,y, pSig, this, radius, m_row_delta, m_normal_color);
-            //qDebug() << x << y << 303;
+
             //-->  the m_top_graphic_signature is the first item on the top row, and will be the first signature chosen for graphics.
             if (row == number_of_rows -1 && col == 0){
                 m_top_graphic_signature = p_graph_sig;
                 m_top_graphic_signature->mark_as_focus();
-                //qDebug() << 333 <<  "Setting focus " << p_graph_sig->get_signature()->get_key();
+                qDebug() << 333 <<  "Setting focus " << p_graph_sig->get_signature()->get_key();
             }
+            p_graph_sig = new graphic_signature (x,y, pSig, this, radius, m_row_delta, m_normal_color);
+
             addItem(p_graph_sig);
 
             col++;
         }
     }
-    //_graphics_view->fitInView(1000,1000,1000,1000,1.0);
-    //m_graphics_view->ensureVisible(0,0,125000,m_maximum_y);
     m_graphics_view->centerOn(m_bottom_left_x, m_bottom_left_y);
     update();
 }

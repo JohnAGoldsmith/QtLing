@@ -33,7 +33,7 @@ void triangle(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene 
     scene->addItem(p_text_item);
 
 }
-void square(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count)
+void square(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count, QColor color)
 {
     QPolygon square;
     square.append(QPoint(x,y+30));
@@ -68,7 +68,7 @@ void square(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * 
     p_text_item->setPos (x + 5 ,y-15 + 0.3* row_delta );
     scene->addItem(p_text_item);
 }
-void pentagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count)
+void pentagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count, QColor color)
 {
     QPolygon pentagon;
     pentagon.append(QPoint(x,y-30));
@@ -111,7 +111,7 @@ void pentagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene 
     p_text_item->setPos (x-5, y-15 + 0.3* row_delta );
     scene->addItem(p_text_item);
 }
-void hexagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count)
+void hexagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count, QColor color)
 {
 
     x  += 20;
@@ -170,7 +170,7 @@ void hexagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene *
     scene->addItem(p_text_item);
 }
 
-void septagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count)
+void septagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count, QColor color)
 {
 
     x  += 20;
@@ -236,7 +236,7 @@ void septagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene 
     p_text_item->setPos (x+38 - bR.width()/2, y-10 + 0.3* row_delta );
     scene->addItem(p_text_item);
 }
-void octagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count)
+void octagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count, QColor color)
 {
 
     x  += 20;
@@ -312,7 +312,7 @@ void octagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene *
     p_text_item->setPos (x+38 - bR.width()/2, y-10 + 0.3* row_delta );
     scene->addItem(p_text_item);
 }
-void nonagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count)
+void nonagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count, QColor color)
 {
 
     x -= 30;
@@ -399,7 +399,7 @@ void nonagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene *
     p_text_item->setPos (x+38 - bR.width()/2, y-10 + 0.3* row_delta );
     scene->addItem(p_text_item);
 }
-void decagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count)
+void decagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count, QColor color)
 {
     QPolygon pentagon1;
     pentagon1.append(QPoint(x,y-30));
@@ -481,7 +481,7 @@ void decagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene *
     p_text_item->setPos (x-5, y-15 + 0.3* row_delta );
     scene->addItem(p_text_item);
 }
-    void elevenagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count)
+    void elevenagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count, QColor color)
 {
 
     x  += 20;
@@ -583,7 +583,7 @@ void decagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene *
     p_text_item->setPos (x+38 - bR.width()/2, y-10 + 0.3* row_delta );
     scene->addItem(p_text_item);
 }
-void twelvagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count)
+void twelvagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count, QColor color)
 {
 
     x  += 20;
