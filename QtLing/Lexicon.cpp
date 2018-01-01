@@ -674,20 +674,16 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
         affixes_of_residual_sig.clear();
         m_ProgressBar->setValue(protostem_count++);
         stem_t this_stem = this_protostem->get_stem();
-        //qDebug() << this_stem << this_protostem->get_start_word() << this_protostem->get_end_word() << 710;
         int stem_length = this_stem.length();
 
         for (int wordno= this_protostem->get_start_word(); wordno <= this_protostem->get_end_word(); wordno++){
-            //qDebug() << m_Words->get_count() << 714;
             QString this_word = m_Words->get_word_string(wordno);
-            //qDebug() << this_stem << this_word << 716;
             QString ending = this_word.mid( stem_length );
             affixes_of_residual_sig.append( ending );
         }
         if (m_Words->contains(this_stem)) {
                 affixes_of_residual_sig.append("NULL");
         }
-        //qDebug() << affixes_of_residual_sig.join("-") << 721;
         //--> Now we look for largest true signature inside this list of suffixes. <--//
         //--> Inner loop, over all good signatures. <--//
         for (int sig_no=0; sig_no < signatures->get_count(); sig_no++){
@@ -701,7 +697,6 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
                 pStem->add_signature(p_proven_sigstring);
                 p_proven_sig->add_stem_pointer(pStem);
 
-                //qDebug() << this_stem << affixes_of_residual_sig << proven_sig_list;
                 //--> add to autobiographies <--//
 
                 for (int affixno = 0; affixno < proven_sig_list.length(); affixno++){
@@ -724,60 +719,7 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
         } // loop over proven signatures;
     }
 
-    //--> Outer loop, over all Residual Signatures. <--//
-
-    /*
-    m_ProgressBar->setMaximum(m_ParaSignatures->get_count());
-    m_ProgressBar->reset();
-    while (sig_iter.hasNext()){
-        sig_iter.next();
-        signature_count++;
-        m_ProgressBar->setValue(signature_count);
-        qApp->processEvents();
-        CSignature*         pResidualSig              = sig_iter.value();
-                            affixes_of_residual_sig  = pResidualSig->get_key().split("=");
-                            this_stem = pResidualSig->get_stems()->first()->get_key(); // there is only 1 stem in these signatures, by construction.
-                            if (m_Words->contains(this_stem)){
-                              affixes_of_residual_sig.append ("NULL");
-                            }
-                            //--> Now we look for largest true signature inside this list of suffixes. <--//
-                            //--> Inner loop, over all good signatures. <--//
-
-                            for (int sig_no=0; sig_no < signatures->get_count(); sig_no++){
-                                p_proven_sig = signatures->get_at_sorted(sig_no);
-                                QString p_proven_sigstring  = p_proven_sig->get_key();
-                                QList<QString> proven_sig_list = p_proven_sigstring.split("=");
-                                if ( contains(&affixes_of_residual_sig, &proven_sig_list) ){
-
-                                    // We have found the longest signature contained in this_residual_suffix_set
-                                    pStem = m_Stems->find_or_add(this_stem);
-                                    pStem->add_signature(p_proven_sigstring);
-                                    p_proven_sig->add_stem_pointer(pStem);
-
-                                    //--> add to autobiographies <--//
-
-                                    for (int affixno = 0; affixno < proven_sig_list.length(); affixno++){
-                                        this_affix = proven_sig_list[affixno];
-                                        if (this_affix == "NULL"){
-                                            this_word= this_stem;
-                                        }else{
-                                            m_SuffixesFlag?
-                                                this_word = this_stem + this_affix:
-                                                this_word = this_affix + this_stem;
-                                        }
-                                        pWord = m_Words->find_or_fail(this_word);
-                                        if (pWord){
-                                            pWord->add_stem_and_signature(pStem, p_proven_sig);
-                                            pWord->add_to_autobiography("from within parasigs="  + this_stem  + "=" +  p_proven_sigstring);
-                                        }
-                                    }
-                                    break;
-                                }
-                            } // loop over proven signatures;
-    }
-
-    */
-    m_Signatures->sort_each_signatures_stems_alphabetically();
+     m_Signatures->sort_each_signatures_stems_alphabetically();
 }
 
 

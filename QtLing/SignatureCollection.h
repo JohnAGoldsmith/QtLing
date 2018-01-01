@@ -30,7 +30,6 @@ public:
     CSignatureCollection(CLexicon*, bool suffix_flag = true);
     ~CSignatureCollection();
 
-// disable copy
 private:
 //    CSignatureCollection(const CSignatureCollection& x);
     CSignatureCollection& operator=(const CSignatureCollection& x);

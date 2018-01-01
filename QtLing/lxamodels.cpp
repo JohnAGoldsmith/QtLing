@@ -384,3 +384,153 @@ void LxaStandardItemModel::load_sig_graph_edges( QMap<QString, sig_graph_edge*> 
 
 };
 
+void MainWindow::createTreeModel()
+{
+    QStandardItem * parent = m_treeModel->invisibleRootItem();
+
+//  this pair of lines must stay here after experiment:
+    QStandardItem * lexicon_item = new QStandardItem(QString("Lexicon"));
+    QStandardItem * lexicon_count_item = new QStandardItem(QString("1"));
+
+// will be eliminated by the experiment:
+    QStandardItem * word_item = new QStandardItem(QString("Words"));
+    QStandardItem * word_count_item = new QStandardItem(QString::number(get_lexicon()->get_word_collection()->get_count()));
+
+    QStandardItem * stem_item = new QStandardItem(QString("Stems"));
+    QStandardItem * stem_count_item = new QStandardItem(QString::number(get_lexicon()->GetStemCollection()->get_count()));
+
+    QStandardItem * suffix_item = new QStandardItem(QString("Suffixes"));
+    QStandardItem * suffix_count_item = new QStandardItem(QString::number(get_lexicon()->GetSuffixCollection()->get_count()));
+
+    QStandardItem * sig_item = new QStandardItem(QString("Signatures"));
+    QStandardItem * sig_count_item = new QStandardItem(QString::number(get_lexicon()->GetSignatureCollection()->get_count()));
+
+    QStandardItem * pos_sig_item = new QStandardItem(QString("EPositive signatures"));
+    QStandardItem * pos_sig_count_item = new QStandardItem(QString::number(get_lexicon()->GetSignatureCollection()->get_number_of_epositive_signatures()));
+
+    QStandardItem * prefix_sig_item = new QStandardItem(QString("Prefix signatures"));
+    QStandardItem * prefix_sig_count_item = new QStandardItem(QString::number(get_lexicon()->get_prefix_signatures()->get_count()));
+
+    QStandardItem * pos_prefix_sig_item = new QStandardItem(QString("EPositive prefix signatures"));
+    QStandardItem * pos_prefix_sig_count_item = new QStandardItem(QString::number(get_lexicon()->get_prefix_signatures()->get_number_of_epositive_signatures()));
+
+    QStandardItem * residual_sig_item = new QStandardItem(QString("Residual parasignatures"));
+    QStandardItem * residual_sig_count_item = new QStandardItem(QString::number(get_lexicon()->get_residual_signatures()->get_count()));
+
+    QStandardItem * parasuffix_item = new QStandardItem(QString("Parasuffixes"));
+    QStandardItem * parasuffix_count_item = new QStandardItem(QString::number(get_lexicon()->get_parasuffixes()->get_count()));
+
+    QStandardItem * sig_graph_edge_item = new QStandardItem(QString("Signature graph edges"));
+    QStandardItem * sig_graph_edge_count_item = new QStandardItem(QString::number(get_lexicon()->get_sig_graph_edge_map()->size()));
+
+    QStandardItem * passive_signature_item = new QStandardItem(QString("Passive signatures"));
+    QStandardItem * passive_signature_count_item = new QStandardItem(QString::number(get_lexicon()->get_passive_signatures()->get_count()));
+
+    QStandardItem * hypothesis_item = new QStandardItem(QString("Hypotheses"));
+    QStandardItem * hypothesis_count_item = new QStandardItem(QString::number(get_lexicon()->get_hypotheses()->count()));
+
+// This is part of an experiment:
+//  This code deals with the components in the Lexicon, so that that set can be easily updated by the programmer.
+//  it will eliminate above code and below code too:
+//
+//          QList<QStandardItem*>                   lexicon_items;
+//                                                  lexicon_items.append(lexicon_item);
+//                                                  lexicon_items.append(lexicon_count_item);
+    //                                              parent->appendRow(lexicon_items);
+    //      QMapIterator<QString,eComponentType>    iter (get_lexicon()->get_category_types());
+    //      while (iter.hasNext()){
+    //
+    //          QString             component_name = iter.next().key();
+    //          eComponentType      this_component_type = iter.value();
+    //          QList<QStandardItem*> this_list_of_standard_items;
+    //
+    //          QStandardItem *     component_item = new QStandardItem(component_name);
+    //          QStandardItem *     component_count_item = new QStandardItem(component_count_name);
+    //            this_list_of_standard_items.append(component_item);
+    //            this_list_of_standard_items.append(component_count_item);
+    //            lexicon_item.appendRow(this_list_of_standard_items);
+    //    }
+    // end of experiment
+
+
+
+
+// add component 6
+
+    QList<QStandardItem*> lexicon_items;
+    lexicon_items.append(lexicon_item);
+    lexicon_items.append(lexicon_count_item);
+
+    QList<QStandardItem*> word_items;
+    word_items.append(word_item);
+    word_items.append(word_count_item);
+
+    QList<QStandardItem*> stem_items;
+    stem_items.append(stem_item);
+    stem_items.append(stem_count_item);
+
+    QList<QStandardItem*> suffix_items;
+    suffix_items.append(suffix_item);
+    suffix_items.append(suffix_count_item);
+
+    QList<QStandardItem*> sig_items;
+    sig_items.append(sig_item);
+    sig_items.append(sig_count_item);
+
+    QList<QStandardItem*> pos_sig_items;
+    pos_sig_items.append(pos_sig_item);
+    pos_sig_items.append(pos_sig_count_item);
+
+    QList<QStandardItem*> prefix_sig_items;
+    prefix_sig_items.append(prefix_sig_item);
+    prefix_sig_items.append(prefix_sig_count_item);
+
+    QList<QStandardItem*> pos_prefix_sig_items;
+    pos_prefix_sig_items.append(pos_prefix_sig_item);
+    pos_prefix_sig_items.append(pos_prefix_sig_count_item);
+
+    QList<QStandardItem*> residual_sig_items;
+    residual_sig_items.append(residual_sig_item);
+    residual_sig_items.append(residual_sig_count_item);
+
+    QList<QStandardItem*> parasuffix_items;
+    parasuffix_items.append(parasuffix_item);
+    parasuffix_items.append(parasuffix_count_item);
+
+    QList<QStandardItem*> sig_graph_edge_items;
+    sig_graph_edge_items.append(sig_graph_edge_item);
+    sig_graph_edge_items.append(sig_graph_edge_count_item);
+
+    QList<QStandardItem*> passive_signature_items;
+    passive_signature_items.append(passive_signature_item);
+    passive_signature_items.append(passive_signature_count_item);
+
+
+
+    QList<QStandardItem*> hypothesis_items;
+    hypothesis_items.append(hypothesis_item);
+    hypothesis_items.append(hypothesis_count_item);
+
+// add component 7
+
+    parent->appendRow(lexicon_items);
+    lexicon_item->appendRow(word_items);
+    lexicon_item->appendRow(stem_items);
+    lexicon_item->appendRow(suffix_items);
+    lexicon_item->appendRow(sig_items);
+    lexicon_item->appendRow(pos_sig_items);
+    lexicon_item->appendRow(prefix_sig_items);
+    lexicon_item->appendRow(pos_prefix_sig_items);
+    lexicon_item->appendRow(sig_graph_edge_items);
+    lexicon_item->appendRow(residual_sig_items);
+    lexicon_item->appendRow(parasuffix_items);
+    lexicon_item->appendRow(passive_signature_items);
+    lexicon_item->appendRow(hypothesis_items);
+// add component 8
+}
+
+
+
+
+
+

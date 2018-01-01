@@ -5,7 +5,7 @@
     #include <QChar>
     #include <QList>
     #include <QMap>
-    //#include "generaldefinitions.h"
+
 
     class CSuffix
     {
@@ -18,12 +18,12 @@
         CSuffix(CSuffix&);
     public:
         //Accessors
-        QString get_key() const {return m_key;}
-        QString GetSuffix() const { return m_key;    }
-        int     GetFrequency()    { return m_frequency; }
-        void    SetFrequency(int frequency) { m_frequency = frequency; }
-        int     get_count() const {return m_count;}
-        int     increment_count() {m_count+= 1; return m_count;}
+        QString get_key() const                 {return m_key;}
+        QString GetSuffix() const               { return m_key;    }
+        int     GetFrequency()                  { return m_frequency; }
+        void    SetFrequency(int frequency)     { m_frequency = frequency; }
+        int     get_count() const               { return m_count;}
+        int     increment_count()               { m_count+= 1; return m_count;}
     };
 
     class CPrefix
@@ -37,12 +37,12 @@
         CPrefix(CPrefix&);
     public:
         //Accessors
-        QString get_key() const {return m_key;}
-        QString GetPrefix() const { return m_key;    }
-        int     GetFrequency()    { return m_frequency; }
-        void    SetFrequency(int frequency) { m_frequency = frequency; }
-        int     get_count() const {return m_count;}
-        int     increment_count() {m_count+= 1; return m_count;}
+        QString get_key() const                 { return m_key;}
+        QString GetPrefix() const               { return m_key;    }
+        int     GetFrequency()                  { return m_frequency; }
+        void    SetFrequency(int frequency)     { m_frequency = frequency; }
+        int     get_count() const               { return m_count;}
+        int     increment_count()               { m_count+= 1; return m_count;}
     };
 
 

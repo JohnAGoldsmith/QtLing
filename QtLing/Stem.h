@@ -1,12 +1,11 @@
 #ifndef CSTEM_H
 #define CSTEM_H
 
-//#include "Parse.h"
 #include <QString>
 #include <QChar>
 #include <QList>
 #include <QMap>
-//#include "generaldefinitions.h"
+
 class CSuffix;
 class CSignature;
 

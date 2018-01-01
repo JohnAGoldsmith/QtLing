@@ -41,7 +41,6 @@ public:
     CStem*                          GetAtKey( QString);
     int                             get_count() const { return m_StringToStemMap->size(); }
     void                            add_stem_pointer (CStem* pStem);
- //   QMapIterator<QString,CStem*> *  get_map_iterator();
     QListIterator<CStem*> *         get_sorted_list_iterator();
     map_string_to_stem *            get_map() { return m_StringToStemMap;}         //       FIX THIS< DO IT RIGHT;
 };
