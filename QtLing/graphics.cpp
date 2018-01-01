@@ -5,6 +5,7 @@
 #include <QMouseEvent>
 #include <QGraphicsSceneEvent>
 #include <QGraphicsItem>
+#include <QGraphicsView>
 #include <QRect>
 #include <QtMath>
 #include "graphics.h"
@@ -130,6 +131,8 @@ lxa_graphics_view::lxa_graphics_view(MainWindow* this_window)
 {
     m_main_window = this_window;
     m_scale =1;
+    m_x_scale =1.0;
+    m_y_scale = 1.0;
     setDragMode(QGraphicsView::ScrollHandDrag);
     setMouseTracking(true);
 
@@ -193,15 +196,15 @@ const  bool compare_robustness(const CSignature* pSig1, const CSignature* pSig2)
  return  pSig1->get_robustness() > pSig2->get_robustness();
 }
 void lxa_graphics_scene::assign_scene_positions_to_signatures(CSignatureCollection* signatures, eDisplayType this_display_type){
-    //qDebug() << "Assigning scene positions to signatures." << 199;
+
     m_signature_collection      = signatures;
     m_display_type              = this_display_type;
     CLexicon*   lexicon          = m_main_window->get_lexicon();
     double      entropy_threshold= lexicon->get_entropy_threshold_for_positive_signatures();
-    int max_size                = 0;
-    int sig_size;
-    int MAXIMUM_NUMBER_OF_CONTAINMENT_EDGES = 2;
-    int MINIMUM_NUMBER_OF_STEMS = 2;
+    int         max_size                = 0;
+    int         sig_size;
+    int         MAXIMUM_NUMBER_OF_CONTAINMENT_EDGES = 2;
+    int         MINIMUM_NUMBER_OF_STEMS = 2;
     CSignature * pSig, *qSig;
 
 //  -->  Find out what the largest number of affixes is in the signatures  <-- //
@@ -267,20 +270,23 @@ void lxa_graphics_scene::assign_scene_positions_to_signatures(CSignatureCollecti
         }
     }
     update();
+
  }
 //--------------------------------------------------------------------------//
 void lxa_graphics_scene::place_signatures()
 {
-   // qDebug() << "Place signatures" << 277;
-   // qDebug() << "number of rows " << "306 graphics scene";
-
     m_signature_radius  = 30;
     int border          = 100;
     int radius;
     int number_of_rows = m_signature_lattice.size();
     graphic_signature * p_graph_sig;
     m_location_of_bottom_row = m_row_delta * number_of_rows;
-//  -->    Iterate through the rows of signatures, and calculate a reasonable radius to show how many stems each has. <--//
+    m_maximum_y = m_row_delta * number_of_rows;
+
+    m_bottom_left_x = 0;
+    m_bottom_left_y = m_location_of_bottom_row ;
+
+    //  -->    Iterate through the rows of signatures, and calculate a reasonable radius to show how many stems each has. <--//
     for (int row = 2; row < number_of_rows; row++){
         CSignature_ptr_list_iterator sig_iter(*m_signature_lattice[row]);
         int col = 0;
@@ -299,18 +305,21 @@ void lxa_graphics_scene::place_signatures()
             int x = border + col * m_column_delta;
             int y = m_location_of_bottom_row - (row-2) * m_row_delta;
             p_graph_sig = new graphic_signature (x,y, pSig, this, radius, m_row_delta, m_normal_color);
-
+            //qDebug() << x << y << 303;
             //-->  the m_top_graphic_signature is the first item on the top row, and will be the first signature chosen for graphics.
             if (row == number_of_rows -1 && col == 0){
                 m_top_graphic_signature = p_graph_sig;
                 m_top_graphic_signature->mark_as_focus();
-                qDebug() << 333 <<  "Setting focus " << p_graph_sig->get_signature()->get_key();
+                //qDebug() << 333 <<  "Setting focus " << p_graph_sig->get_signature()->get_key();
             }
             addItem(p_graph_sig);
 
             col++;
         }
     }
+    //_graphics_view->fitInView(1000,1000,1000,1000,1.0);
+    //m_graphics_view->ensureVisible(0,0,125000,m_maximum_y);
+    m_graphics_view->centerOn(m_bottom_left_x, m_bottom_left_y);
     update();
 }
 //--------------------------------------------------------------------------//
@@ -354,6 +363,8 @@ void lxa_graphics_scene::widen_columns()
     clear();
     place_signatures();
     update();
+    m_graphics_view->centerOn(m_bottom_left_x, m_bottom_left_y);
+
     //place_containment_edges();
 }
 void lxa_graphics_scene::narrow_columns()
@@ -361,12 +372,15 @@ void lxa_graphics_scene::narrow_columns()
     m_column_delta *= 0.8;
     clear();
     place_signatures();
-    //place_containment_edges();
+    m_graphics_view->centerOn(m_bottom_left_x, m_bottom_left_y);
+
 }
 void  lxa_graphics_scene::move_rows_apart()
 {    m_row_delta *= 1.2;
     clear();
     place_signatures();
+     m_graphics_view->centerOn(m_bottom_left_x, m_bottom_left_y);
+
 }
 
 void lxa_graphics_scene::move_rows_closer()
@@ -374,7 +388,26 @@ void lxa_graphics_scene::move_rows_closer()
     m_row_delta *= 0.8;
     clear();
     place_signatures();
+    m_graphics_view->centerOn(m_bottom_left_x, m_bottom_left_y);
+
 }
+void lxa_graphics_view::zoom_up()
+{
+    m_x_scale *= 0.8;
+    m_y_scale *= 0.8;
+    scale(0.8,0.8);
+
+    return;
+}
+
+void lxa_graphics_view::zoom_down()
+{
+        m_x_scale *= 1.2;
+        m_y_scale *= 1.2;
+        scale(1.2,1.2);
+
+}
+
 
 void lxa_graphics_view::move_up()
 {//   int min  = horizontalScrollBar()->minimum;

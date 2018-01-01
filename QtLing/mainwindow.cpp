@@ -214,18 +214,19 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     if (ke->key() == Qt::Key_K){
         m_graphics_scene->move_rows_closer();
     }
-    if (ke->key() == Qt::Key_L){
-        get_graphics_view()->move_down();
-    }
-    if (ke->key() == Qt::Key_Semicolon){
-        qDebug() << "semicolon";
-        get_graphics_view()->move_up();
-    }
     if (ke->key() == Qt::Key_U){
         m_graphics_scene->widen_columns();
     }
     if (ke->key() == Qt::Key_I){
         m_graphics_scene->narrow_columns();
+    }
+    if (ke->key() == Qt::Key_L){
+        m_graphics_view->zoom_up();
+
+    }
+    if (ke->key() == Qt::Key_Semicolon){
+        m_graphics_view->zoom_down();
+
     }
     if (ke->key() == Qt::Key_A){
         qDebug() << 214 << "set focus sig";

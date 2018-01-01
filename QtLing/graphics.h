@@ -71,6 +71,8 @@ class lxa_graphics_view : public QGraphicsView
     MainWindow *                    m_main_window;
     lxa_graphics_scene*             m_graphics_scene;
     double                          m_scale;
+    double                             m_x_scale;
+    double                             m_y_scale;
     void                            mousePressEvent(QMouseEvent*);
 
 public:
@@ -83,6 +85,8 @@ public:
     void                            move_right() {translate(50,0);}
     lxa_graphics_scene*             get_graphics_scene() {return m_graphics_scene;}
     void                            set_graphics_scene( lxa_graphics_scene* pScene ) {m_graphics_scene = pScene;}
+    void                            zoom_up();
+    void                            zoom_down();
 
 
 };
@@ -112,7 +116,9 @@ class lxa_graphics_scene : public QGraphicsScene
     int                                     m_column_delta;
     int                                     m_location_of_bottom_row;
     int                                     m_signature_radius;
-
+    int                                     m_maximum_y;
+    int                                     m_bottom_left_x;
+    int                                     m_bottom_left_y;
 private:
     void                                    mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent);
 public:
