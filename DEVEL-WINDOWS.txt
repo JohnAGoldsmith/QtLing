@@ -2,7 +2,7 @@
 Required disk space:
 ====================
 Qt: 5GB
-Build directory: MB
+Build directory: 100MB
 
 ==========================================
 Getting the source and contribute changes:
