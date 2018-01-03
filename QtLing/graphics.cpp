@@ -133,8 +133,8 @@ graphic_signature::graphic_signature(int x, int y, CSignature* pSig, lxa_graphic
         {
        // septagon(pSig,xprime,y, scene,  m_color);
         break;}
-    case 8:{       octagon(pSig,xprime,y, scene,  m_color);
-        break;}
+    //case 8:{       octagon(pSig,xprime,y, scene,  m_color);
+    //    break;}
     case 9:{
         nonagon(pSig,xprime,y, scene,  m_color);
         break;}
@@ -444,6 +444,14 @@ void lxa_graphics_scene::place_signatures()
 
                 break;
             }
+/*            case 9:{
+                nonagon2 * this_nonagon_2  = new nonagon2 (pSig->get_key());
+                addItem(this_nonagon_2);
+                this_nonagon_2->setPos(x,y);
+
+                break;
+            }
+            */
             default:{
                 p_graph_sig = new graphic_signature (x,y, pSig, this,   m_row_delta, m_normal_color);
                 m_map_from_sig_to_pgraphsig[pSig] = p_graph_sig;

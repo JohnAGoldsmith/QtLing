@@ -121,6 +121,16 @@ public:
     void set_text(sigstring_t this_sigstring);
 };
 
+class nonagon2 : public graphic_signature2
+{
+public:
+    nonagon2(QString);
+    void paint ();
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+               QWidget *widget);
+    void set_text(sigstring_t this_sigstring);
+};
+
 class graphic_signature : public QGraphicsRectItem // QGraphicsEllipseItem
 {
     lxa_graphics_scene * m_graphics_scene;
