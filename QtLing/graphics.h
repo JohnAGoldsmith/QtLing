@@ -14,22 +14,113 @@ class MainWindow;
 class lxa_graphics_scene;
 class CSupersignature;
 
-void triangle(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count, QColor color);
-void square(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count, QColor color);
-void pentagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count, QColor color);
-void hexagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count, QColor color);
-void septagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count, QColor color);
-void octagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count, QColor color);
-void nonagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count, QColor color);
-void decagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count, QColor color);
-void elevenagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count, QColor color);
-void twelvagon(CSignature* pSig, int x, int y, int row_delta, lxa_graphics_scene * scene, int count, QColor color);
+
+void triangle(CSignature*   pSig, int x, int y, lxa_graphics_scene * scene,  QColor color);
+void square(CSignature*     pSig, int x, int y,  lxa_graphics_scene * scene,  QColor color);
+void pentagon(CSignature*   pSig, int x, int y,  lxa_graphics_scene * scene,  QColor color);
+void hexagon(CSignature*    pSig, int x, int y,  lxa_graphics_scene * scene,  QColor color);
+void septagon(CSignature*   pSig, int x, int y,  lxa_graphics_scene * scene,  QColor color);
+void octagon(CSignature*    pSig, int x, int y,  lxa_graphics_scene * scene,  QColor color);
+void nonagon(CSignature*    pSig, int x, int y,   lxa_graphics_scene * scene,  QColor color);
+void decagon(CSignature*    pSig, int x, int y,   lxa_graphics_scene * scene,  QColor color);
+void elevenagon(CSignature* pSig, int x, int y,   lxa_graphics_scene * scene,  QColor color);
+void twelvagon(CSignature*  pSig, int x, int y,   lxa_graphics_scene * scene,  QColor color);
 
 
 /////////////////////////////////////////////////////////////////////////////
 //          Graphic signature
 //
 /////////////////////////////////////////////////////////////////////////////
+class graphic_signature2 : public QGraphicsItem
+{
+    lxa_graphics_scene * m_graphics_scene;
+    CSignature *         m_signature;
+    Qt::GlobalColor      m_color;
+    bool                 m_is_focused;
+
+    public:
+    QRectF              boundingRect() const
+    {   return QRectF(-100,-65,60,150);
+    }
+
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+               QWidget *widget)
+    {
+        QBrush brush(Qt::SolidPattern);
+        QPen pen (Qt::green, 3);
+        painter->setBrush(brush);
+        painter->setPen(pen);
+
+        painter->drawRoundedRect(-10, -10, 20, 20, 5, 5);
+    }
+    graphic_signature2  () {};
+    graphic_signature2   (QString) {};
+    graphic_signature2   (CSignature*,   QColor, bool focus_flag = false);
+
+    CSignature*         get_signature() {return m_signature;}
+    void                mark_as_focus();
+};
+
+class triangle2 : public graphic_signature2
+{
+public:
+    triangle2(QString);
+    void paint ();
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+               QWidget *widget);
+    void set_text(sigstring_t this_sigstring);
+
+};
+class square2 : public graphic_signature2
+{
+public:
+    square2(QString);
+    void paint ();
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+               QWidget *widget);
+    void set_text(sigstring_t this_sigstring);
+};
+
+class pentagon2 : public graphic_signature2
+{
+public:
+    pentagon2(QString);
+    void paint ();
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+               QWidget *widget);
+    void set_text(sigstring_t this_sigstring);
+};
+
+class hexagon2 : public graphic_signature2
+{
+public:
+    hexagon2(QString);
+    void paint ();
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+               QWidget *widget);
+    void set_text(sigstring_t this_sigstring);
+};
+
+class septagon2 : public graphic_signature2
+{
+public:
+    septagon2(QString);
+    void paint ();
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+               QWidget *widget);
+    void set_text(sigstring_t this_sigstring);
+};
+
+class octagon2 : public graphic_signature2
+{
+public:
+    octagon2(QString);
+    void paint ();
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+               QWidget *widget);
+    void set_text(sigstring_t this_sigstring);
+};
+
 class graphic_signature : public QGraphicsRectItem // QGraphicsEllipseItem
 {
     lxa_graphics_scene * m_graphics_scene;
@@ -38,7 +129,9 @@ class graphic_signature : public QGraphicsRectItem // QGraphicsEllipseItem
     bool                 m_is_focused;
 
     public:
-    graphic_signature   (int x, int y, CSignature*, lxa_graphics_scene* scene, int radius, int row_delta, QColor,  bool focus_flag = false);
+    graphic_signature   (int x, int y, CSignature*, lxa_graphics_scene* scene,  QColor, bool focus_flag = false);
+    graphic_signature   (int x, int y, CSignature*, int radius, QColor, bool focus_flag = false);
+
     void                mousePressEvent (QGraphicsSceneMouseEvent*);
     void                set_color(Qt::GlobalColor this_color) { m_color = this_color;}
     CSignature*         get_signature() {return m_signature;}
@@ -105,7 +198,10 @@ class lxa_graphics_scene : public QGraphicsScene
     lxa_graphics_view*                      m_graphics_view;
     QList<QList<CSignature*>*>              m_signature_lattice;
     QList<QPair<CSignature*,CSignature*>*>  m_signature_containment_edges;
-    QMap<CSignature*, int>                  m_map_from_sig_to_column_no;
+    QMap<CSignature*, int>                  m_map_from_sig_to_column_no; // deprecated, not used.
+    QMap<CSignature*,QPair<int, int > >     m_map_from_sig_to_row_and_column;
+    //QMap<CSignature*,QPair<int, int> >      m_map_from_sig_to_x_and_y_in_view;
+    QMap<CSignature*,graphic_signature*>    m_map_from_sig_to_pgraphsig;
     graphic_signature *                     m_top_graphic_signature;
     CSignature*                             m_focus_signature_1;
     CSignature*                             m_focus_signature_2;
@@ -122,28 +218,27 @@ class lxa_graphics_scene : public QGraphicsScene
 private:
     void                                    mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent);
 public:
-    //                lxa_graphics_scene( MainWindow * , CSignatureCollection*, eDisplayType this_display_type );
                     ~lxa_graphics_scene();
-                   lxa_graphics_scene(MainWindow *);
-    void            clear_all();
-    void            clear();
-    void            set_graphics_view (lxa_graphics_view* );
-//    void            set_parameters (CSignatureCollection*, eDisplayType);
-    void            assign_scene_positions_to_signatures(CSignatureCollection*, eDisplayType );
+                    lxa_graphics_scene(MainWindow *);
     void            add_signature_containment_edge (QPair<CSignature*, CSignature*>* pPair)
-                            {m_signature_containment_edges.append (pPair); }
-    void            place_signatures();
-    void            place_containment_edges();
-    void            widen_columns();
-    void            narrow_columns();
+                                           {m_signature_containment_edges.append (pPair); }
+    void            assign_scene_positions_to_signatures(CSignatureCollection*, eDisplayType );
+    void            clear();
+    void            clear_all();
+    void            display_focus_signature();
+    graphic_signature* get_focus_signature_1();
     void            move_rows_apart();
     void            move_rows_closer();
     void            mouseMoveEvent(QGraphicsSceneMouseEvent * event);
+    void            narrow_columns();
+    void            place_containment_edges();
+    void            place_signatures();
     void            set_focus_signature();
     void            set_focus_signature_1(CSignature* pSig)       {m_focus_signature_1 = pSig;}
     void            set_focus_signature_2(CSignature* pSig)       {m_focus_signature_2 = pSig;}
-    graphic_signature* get_focus_signature_1();
-    void            display_focus_signature();
+    void            set_graphics_view (lxa_graphics_view* );
+    void            widen_columns();
+
 };
 
 class signature_node : public QGraphicsItem

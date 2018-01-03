@@ -14,53 +14,138 @@
 #include "mainwindow.h"
 
 
-graphic_signature::graphic_signature(int x, int y, CSignature* pSig, lxa_graphics_scene * scene,
-                                     int radius, int row_delta, QColor this_color, bool focus_flag)
+
+
+/*
+graphic_signature2::graphic_signature2( CSignature* pSig,  QColor this_color, bool focus_flag)
 {
-    m_graphics_scene = scene;
+    int radius = 50;
     m_signature = pSig;
-    qDebug() << pSig->get_key() <<  "focus flag"<< focus_flag;    if ( focus_flag ){
-        m_is_focused = true;
-        m_color = scene->m_focus_color;
-        qDebug() << "We have a focus signature" << pSig->get_key();
-    } else{
-        m_is_focused = false;
-        m_color = scene->m_normal_color;
-    }
+    m_is_focused = focus_flag;
+
+    int x = 0;
+    int y = 0;
     int push_figure_to_right = 50;
     int xprime = x+ push_figure_to_right;
 
     switch(pSig->get_number_of_affixes()){
     case 3:{
-        triangle(pSig, xprime, y, row_delta, scene,pSig->get_number_of_stems(), m_color );
+        triangle2(pSig, xprime, y,  scene, m_color );
         break;}
     case 4:{
-        square(pSig, xprime,y,row_delta, scene,pSig->get_number_of_stems(), m_color);
+        square(pSig, xprime,y, scene, m_color);
         break;}
     case 5:{
         xprime += 20;
-        pentagon(pSig, xprime,y,row_delta,scene,pSig->get_number_of_stems(), m_color);
+        pentagon(pSig, xprime,y, scene, m_color);
         xprime -= 20;
         break;}
     case 6:{
-        hexagon(pSig,xprime,y,row_delta,scene, pSig->get_number_of_stems(), m_color);
+        hexagon(pSig,xprime,y, scene,  m_color);
         break;}
     case 7:{
-        septagon(pSig,xprime,y,row_delta,scene, pSig->get_number_of_stems(), m_color);
+        septagon(pSig,xprime,y, scene,  m_color);
         break;}
-    case 8:{       octagon(pSig,xprime,y,row_delta,scene, pSig->get_number_of_stems(), m_color);
+    case 8:{       octagon(pSig,xprime,y, scene,  m_color);
         break;}
     case 9:{
-        nonagon(pSig,xprime,y,row_delta,scene, pSig->get_number_of_stems(), m_color);
+        nonagon(pSig,xprime,y, scene,  m_color);
         break;}
     case 10:{
-        decagon(pSig,xprime,y,row_delta,scene, pSig->get_number_of_stems(), m_color);
+        decagon(pSig,xprime,y, scene,  m_color);
         break;}
     case 11:{
-        elevenagon(pSig,xprime,y,row_delta,scene, pSig->get_number_of_stems(), m_color);
+        elevenagon(pSig,xprime,y, scene,  m_color);
         break;}
     case 12:{
-        twelvagon(pSig,xprime,y,row_delta,scene, pSig->get_number_of_stems(), m_color);
+        twelvagon(pSig,xprime,y, scene,  m_color);
+        break;}
+
+    default:{
+        scene->addEllipse(x,y,radius ,radius,QPen(),QBrush(m_color));
+         break;
+        }
+    }
+
+
+    QGraphicsTextItem * p_text_item = new QGraphicsTextItem;
+    int text_width;
+    if (pSig->get_number_of_affixes() > 6 || pSig->get_number_of_affixes() == 2) {
+        p_text_item->setPlainText(pSig->get_key());
+        text_width = p_text_item->textWidth();
+        p_text_item->setPos (x - 0.5 * text_width,y + 65);
+    }
+    QGraphicsTextItem * q_text_item = new QGraphicsTextItem;
+    if  (pSig->get_number_of_affixes() > 6 || pSig->get_number_of_affixes() == 2) {
+        q_text_item->setPlainText(QString::number(pSig->get_number_of_stems()));
+        text_width = q_text_item->textWidth();
+        q_text_item->setPos (x - 0.5 * text_width,y + 85);
+    }
+
+    if  (focus_flag ) {
+        QGraphicsTextItem * r_text_item = new QGraphicsTextItem;
+        r_text_item->setPlainText(QString("In focus"));
+        text_width = r_text_item->textWidth();
+        r_text_item->setPos (x - 0.5 * text_width,y + 85);
+    }
+
+    scene->addItem(p_text_item);
+    scene->addItem(q_text_item);
+
+};
+*/
+
+
+graphic_signature::graphic_signature(int x, int y, CSignature* pSig, lxa_graphics_scene * scene,
+                                   QColor this_color, bool focus_flag)
+{   int radius =100;
+    m_graphics_scene = scene;
+    m_signature = pSig;
+
+    m_is_focused = false;
+    m_color = scene->m_normal_color;
+
+    int push_figure_to_right = 50;
+    int xprime = x+ push_figure_to_right;
+
+    switch(pSig->get_number_of_affixes()){
+    case 3:
+        //{
+        //triangle2 this_tri(pSig->get_key());
+        //this_tri.set_text(pSig->get_key());
+        //triangle(pSig, xprime, y,  scene, m_color );
+        //break;}
+    case 4:
+        //{
+        //square(pSig, xprime,y, scene, m_color);
+        //break;}
+    case 5:
+        //    {
+        //xprime += 20;
+        //pentagon(pSig, xprime,y, scene, m_color);
+        //xprime -= 20;
+        //break;}
+    case 6:
+       //{
+       //hexagon(pSig,xprime,y, scene,  m_color);
+        //break;}
+    case 7:
+        {
+       // septagon(pSig,xprime,y, scene,  m_color);
+        break;}
+    case 8:{       octagon(pSig,xprime,y, scene,  m_color);
+        break;}
+    case 9:{
+        nonagon(pSig,xprime,y, scene,  m_color);
+        break;}
+    case 10:{
+        decagon(pSig,xprime,y, scene,  m_color);
+        break;}
+    case 11:{
+        elevenagon(pSig,xprime,y, scene,  m_color);
+        break;}
+    case 12:{
+        twelvagon(pSig,xprime,y, scene,  m_color);
         break;}
 
     default:{
@@ -69,17 +154,26 @@ graphic_signature::graphic_signature(int x, int y, CSignature* pSig, lxa_graphic
         }
     }
     QGraphicsTextItem * p_text_item = new QGraphicsTextItem;
-    int text_width = p_text_item->textWidth();
-
+    int text_width;
     if (pSig->get_number_of_affixes() > 6 || pSig->get_number_of_affixes() == 2) {
         p_text_item->setPlainText(pSig->get_key());
-        p_text_item->setPos (x - 0.5 * text_width,y + 0.3* row_delta);
+        text_width = p_text_item->textWidth();
+        p_text_item->setPos (x - 0.5 * text_width,y + 65);
     }
     QGraphicsTextItem * q_text_item = new QGraphicsTextItem;
     if  (pSig->get_number_of_affixes() > 6 || pSig->get_number_of_affixes() == 2) {
         q_text_item->setPlainText(QString::number(pSig->get_number_of_stems()));
-        q_text_item->setPos (x - 0.5 * text_width,y + 0.3* row_delta + 20);
+        text_width = q_text_item->textWidth();
+        q_text_item->setPos (x - 0.5 * text_width,y + 85);
     }
+
+    if  (focus_flag ) {
+        QGraphicsTextItem * r_text_item = new QGraphicsTextItem;
+        r_text_item->setPlainText(QString("In focus"));
+        text_width = r_text_item->textWidth();
+        r_text_item->setPos (x - 0.5 * text_width,y + 85);
+    }
+
     scene->addItem(p_text_item);
     scene->addItem(q_text_item);
 
@@ -156,7 +250,7 @@ void lxa_graphics_view::mousePressEvent(QMouseEvent* event)
 lxa_graphics_scene::lxa_graphics_scene(MainWindow * window){
     m_main_window               = window;
     m_location_of_bottom_row    = 0;
-    m_row_delta                 = 175;
+    m_row_delta                 = 225;
     m_column_delta              = 200;
     m_normal_color              = Qt::red;
     m_focus_color               = Qt::blue;
@@ -243,7 +337,8 @@ void lxa_graphics_scene::assign_scene_positions_to_signatures(CSignatureCollecti
         std::sort(m_signature_lattice[rowno]->begin(), m_signature_lattice[rowno]->end(),  compare_stem_count_2);
         for (int colno = 0; colno < m_signature_lattice[rowno]->size(); colno++){
             pSig = m_signature_lattice[rowno]->at(colno);
-            m_map_from_sig_to_column_no[pSig] = colno;
+            //m_map_from_sig_to_column_no[pSig] = colno;
+            m_map_from_sig_to_row_and_column[pSig] = QPair<int,int>(rowno, colno);
         }
      }
 //  --> Now the signatures are nicely organized in a matrix of sorts.   <-- //
@@ -279,6 +374,7 @@ void lxa_graphics_scene::place_signatures()
     int radius;
     int number_of_rows = m_signature_lattice.size();
     graphic_signature * p_graph_sig;
+    triangle2 * this_triangle_2;
     m_location_of_bottom_row = m_row_delta * number_of_rows;
     m_maximum_y = m_row_delta * number_of_rows;
 
@@ -304,19 +400,72 @@ void lxa_graphics_scene::place_signatures()
             int x = border + col * m_column_delta;
             int y = m_location_of_bottom_row - (row-2) * m_row_delta;
 
-            //-->  the m_top_graphic_signature is the first item on the top row, and will be the first signature chosen for graphics.
-            if (row == number_of_rows -1 && col == 0){
-                m_top_graphic_signature = p_graph_sig;
-                m_top_graphic_signature->mark_as_focus();
-                qDebug() << 333 <<  "Setting focus " << p_graph_sig->get_signature()->get_key();
-            }
-            p_graph_sig = new graphic_signature (x,y, pSig, this, radius, m_row_delta, m_normal_color);
 
-            addItem(p_graph_sig);
+
+            switch (row){
+            case 3:{
+                this_triangle_2  = new triangle2 (pSig->get_key());
+                addItem(this_triangle_2);
+                this_triangle_2->setPos(x,y);
+                break;
+            }
+            case 4:{
+                square2 * this_square_2  = new square2 (pSig->get_key());
+                addItem(this_square_2);
+                this_square_2->setPos(x,y);
+
+                break;
+            }
+            case 5:{
+                pentagon2 * this_pentagon_2  = new pentagon2 (pSig->get_key());
+                addItem(this_pentagon_2);
+                this_pentagon_2->setPos(x,y);
+
+                break;
+            }
+            case 6:{
+                hexagon2 * this_hexagon_2  = new hexagon2 (pSig->get_key());
+                addItem(this_hexagon_2);
+                this_hexagon_2->setPos(x,y);
+
+                break;
+            }
+            case 7:{
+                septagon2 * this_septagon_2  = new septagon2 (pSig->get_key());
+                addItem(this_septagon_2);
+                this_septagon_2->setPos(x,y);
+
+                break;
+            }
+            case 8:{
+                octagon2 * this_octagon_2  = new octagon2 (pSig->get_key());
+                addItem(this_octagon_2);
+                this_octagon_2->setPos(x,y);
+
+                break;
+            }
+            default:{
+                p_graph_sig = new graphic_signature (x,y, pSig, this,   m_row_delta, m_normal_color);
+                m_map_from_sig_to_pgraphsig[pSig] = p_graph_sig;
+                addItem(p_graph_sig);
+                break;
+            }
+            }
+
+
+
 
             col++;
         }
     }
+   //-->  the m_top_graphic_signature is the first item on the top row, and will be the first signature chosen for graphics.
+   CSignature* top_sig = m_signature_lattice[number_of_rows-1]->first();
+   delete m_map_from_sig_to_pgraphsig[top_sig];
+   // m_map_from_sig_to_pgraphsig = new p_graph_sig( );
+   qDebug() << 333 <<  "Setting focus " << p_graph_sig->get_signature()->get_key();
+
+
+
     m_graphics_view->centerOn(m_bottom_left_x, m_bottom_left_y);
     update();
 }
