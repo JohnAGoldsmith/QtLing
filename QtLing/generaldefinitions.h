@@ -19,6 +19,13 @@ enum eDisplayType{
     DT_Unspecified
 };
 
+enum eGraphicsStatus{
+    GS_no_focus,
+    GS_one_focus_signature,
+    GS_one_focus_signature_all_others_grayed,
+    GS_one_focus_signature_some_satellites_others_grayed
+};
+
 enum eDocumentType  // for the Collection View
 { SINGLETON_SIGNATURES,
   PARASIGNATURES,

@@ -36,11 +36,13 @@ class graphic_signature2 : public QGraphicsItem
     lxa_graphics_scene * m_graphics_scene;
     CSignature *         m_signature;
     Qt::GlobalColor      m_color;
-    bool                 m_is_focused;
+protected:
+    bool                 m_focus_flag;
 
     public:
     QRectF              boundingRect() const
-    {   return QRectF(-100,-65,60,150);
+    {   //return QRectF(-100,-65,60,150);
+        return QRectF(00, 0,60,150);
     }
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
@@ -57,6 +59,24 @@ class graphic_signature2 : public QGraphicsItem
     graphic_signature2   (QString) {};
     graphic_signature2   (CSignature*,   QColor, bool focus_flag = false);
 
+    CSignature*         get_signature() {return m_signature;}
+    void                mark_as_focus() {m_focus_flag = true;}
+};
+
+
+class graphic_signature : public QGraphicsRectItem // QGraphicsEllipseItem
+{
+    lxa_graphics_scene * m_graphics_scene;
+    CSignature *         m_signature;
+    Qt::GlobalColor      m_color;
+    bool                 m_focus_flag;
+
+    public:
+    graphic_signature   (int x, int y, CSignature*, lxa_graphics_scene* scene,  QColor, bool focus_flag = false);
+    graphic_signature   (int x, int y, CSignature*, int radius, QColor, bool focus_flag = false);
+
+    void                mousePressEvent (QGraphicsSceneMouseEvent*);
+    void                set_color(Qt::GlobalColor this_color) { m_color = this_color;}
     CSignature*         get_signature() {return m_signature;}
     void                mark_as_focus();
 };
@@ -131,22 +151,6 @@ public:
     void set_text(sigstring_t this_sigstring);
 };
 
-class graphic_signature : public QGraphicsRectItem // QGraphicsEllipseItem
-{
-    lxa_graphics_scene * m_graphics_scene;
-    CSignature *         m_signature;
-    Qt::GlobalColor      m_color;
-    bool                 m_is_focused;
-
-    public:
-    graphic_signature   (int x, int y, CSignature*, lxa_graphics_scene* scene,  QColor, bool focus_flag = false);
-    graphic_signature   (int x, int y, CSignature*, int radius, QColor, bool focus_flag = false);
-
-    void                mousePressEvent (QGraphicsSceneMouseEvent*);
-    void                set_color(Qt::GlobalColor this_color) { m_color = this_color;}
-    CSignature*         get_signature() {return m_signature;}
-    void                mark_as_focus();
-};
 
 class graphic_super_signature : public QRect
 {
@@ -210,7 +214,6 @@ class lxa_graphics_scene : public QGraphicsScene
     QList<QPair<CSignature*,CSignature*>*>  m_signature_containment_edges;
     QMap<CSignature*, int>                  m_map_from_sig_to_column_no; // deprecated, not used.
     QMap<CSignature*,QPair<int, int > >     m_map_from_sig_to_row_and_column;
-    //QMap<CSignature*,QPair<int, int> >      m_map_from_sig_to_x_and_y_in_view;
     QMap<CSignature*,graphic_signature*>    m_map_from_sig_to_pgraphsig;
     graphic_signature *                     m_top_graphic_signature;
     CSignature*                             m_focus_signature_1;
@@ -218,6 +221,7 @@ class lxa_graphics_scene : public QGraphicsScene
     CSignatureCollection *                  m_signature_collection;
     Qt::GlobalColor                         m_normal_color;
     Qt::GlobalColor                         m_focus_color;
+    eGraphicsStatus                         m_graphics_status;
     int                                     m_row_delta;
     int                                     m_column_delta;
     int                                     m_location_of_bottom_row;
@@ -233,6 +237,7 @@ public:
     void            add_signature_containment_edge (QPair<CSignature*, CSignature*>* pPair)
                                            {m_signature_containment_edges.append (pPair); }
     void            assign_scene_positions_to_signatures(CSignatureCollection*, eDisplayType );
+    eGraphicsStatus change_graphics_status();
     void            clear();
     void            clear_all();
     void            display_focus_signature();
@@ -247,6 +252,7 @@ public:
     void            set_focus_signature_1(CSignature* pSig)       {m_focus_signature_1 = pSig;}
     void            set_focus_signature_2(CSignature* pSig)       {m_focus_signature_2 = pSig;}
     void            set_graphics_view (lxa_graphics_view* );
+    void            update_signature_focus();
     void            widen_columns();
 
 };

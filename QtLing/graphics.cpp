@@ -16,85 +16,6 @@
 
 
 
-/*
-graphic_signature2::graphic_signature2( CSignature* pSig,  QColor this_color, bool focus_flag)
-{
-    int radius = 50;
-    m_signature = pSig;
-    m_is_focused = focus_flag;
-
-    int x = 0;
-    int y = 0;
-    int push_figure_to_right = 50;
-    int xprime = x+ push_figure_to_right;
-
-    switch(pSig->get_number_of_affixes()){
-    case 3:{
-        triangle2(pSig, xprime, y,  scene, m_color );
-        break;}
-    case 4:{
-        square(pSig, xprime,y, scene, m_color);
-        break;}
-    case 5:{
-        xprime += 20;
-        pentagon(pSig, xprime,y, scene, m_color);
-        xprime -= 20;
-        break;}
-    case 6:{
-        hexagon(pSig,xprime,y, scene,  m_color);
-        break;}
-    case 7:{
-        septagon(pSig,xprime,y, scene,  m_color);
-        break;}
-    case 8:{       octagon(pSig,xprime,y, scene,  m_color);
-        break;}
-    case 9:{
-        nonagon(pSig,xprime,y, scene,  m_color);
-        break;}
-    case 10:{
-        decagon(pSig,xprime,y, scene,  m_color);
-        break;}
-    case 11:{
-        elevenagon(pSig,xprime,y, scene,  m_color);
-        break;}
-    case 12:{
-        twelvagon(pSig,xprime,y, scene,  m_color);
-        break;}
-
-    default:{
-        scene->addEllipse(x,y,radius ,radius,QPen(),QBrush(m_color));
-         break;
-        }
-    }
-
-
-    QGraphicsTextItem * p_text_item = new QGraphicsTextItem;
-    int text_width;
-    if (pSig->get_number_of_affixes() > 6 || pSig->get_number_of_affixes() == 2) {
-        p_text_item->setPlainText(pSig->get_key());
-        text_width = p_text_item->textWidth();
-        p_text_item->setPos (x - 0.5 * text_width,y + 65);
-    }
-    QGraphicsTextItem * q_text_item = new QGraphicsTextItem;
-    if  (pSig->get_number_of_affixes() > 6 || pSig->get_number_of_affixes() == 2) {
-        q_text_item->setPlainText(QString::number(pSig->get_number_of_stems()));
-        text_width = q_text_item->textWidth();
-        q_text_item->setPos (x - 0.5 * text_width,y + 85);
-    }
-
-    if  (focus_flag ) {
-        QGraphicsTextItem * r_text_item = new QGraphicsTextItem;
-        r_text_item->setPlainText(QString("In focus"));
-        text_width = r_text_item->textWidth();
-        r_text_item->setPos (x - 0.5 * text_width,y + 85);
-    }
-
-    scene->addItem(p_text_item);
-    scene->addItem(q_text_item);
-
-};
-*/
-
 
 graphic_signature::graphic_signature(int x, int y, CSignature* pSig, lxa_graphics_scene * scene,
                                    QColor this_color, bool focus_flag)
@@ -102,42 +23,13 @@ graphic_signature::graphic_signature(int x, int y, CSignature* pSig, lxa_graphic
     m_graphics_scene = scene;
     m_signature = pSig;
 
-    m_is_focused = false;
+    m_focus_flag = false;
     m_color = scene->m_normal_color;
 
     int push_figure_to_right = 50;
     int xprime = x+ push_figure_to_right;
 
     switch(pSig->get_number_of_affixes()){
-    case 3:
-        //{
-        //triangle2 this_tri(pSig->get_key());
-        //this_tri.set_text(pSig->get_key());
-        //triangle(pSig, xprime, y,  scene, m_color );
-        //break;}
-    case 4:
-        //{
-        //square(pSig, xprime,y, scene, m_color);
-        //break;}
-    case 5:
-        //    {
-        //xprime += 20;
-        //pentagon(pSig, xprime,y, scene, m_color);
-        //xprime -= 20;
-        //break;}
-    case 6:
-       //{
-       //hexagon(pSig,xprime,y, scene,  m_color);
-        //break;}
-    case 7:
-        {
-       // septagon(pSig,xprime,y, scene,  m_color);
-        break;}
-    //case 8:{       octagon(pSig,xprime,y, scene,  m_color);
-    //    break;}
-    case 9:{
-        nonagon(pSig,xprime,y, scene,  m_color);
-        break;}
     case 10:{
         decagon(pSig,xprime,y, scene,  m_color);
         break;}
@@ -178,9 +70,6 @@ graphic_signature::graphic_signature(int x, int y, CSignature* pSig, lxa_graphic
     scene->addItem(q_text_item);
 
 };
-void graphic_signature::mark_as_focus(){
-    m_is_focused = true;
-}
 
 void graphic_signature::mousePressEvent(QGraphicsSceneMouseEvent * event){
     if (event->button()== Qt::LeftButton){
@@ -404,7 +293,9 @@ void lxa_graphics_scene::place_signatures()
 
             switch (row){
             case 3:{
+                //this_triangle_2->mark_as_focus();
                 this_triangle_2  = new triangle2 (pSig->get_key());
+
                 addItem(this_triangle_2);
                 this_triangle_2->setPos(x,y);
                 break;
@@ -444,6 +335,13 @@ void lxa_graphics_scene::place_signatures()
 
                 break;
             }
+           // case 9:{
+                //nonagon2 * this_nonagon_2  = new nonagon2 (pSig->get_key());
+                //addItem(this_nonagon_2);
+                //this_nonagon_2->setPos(x,y);
+
+            //    break;
+           // }
 /*            case 9:{
                 nonagon2 * this_nonagon_2  = new nonagon2 (pSig->get_key());
                 addItem(this_nonagon_2);
@@ -477,6 +375,46 @@ void lxa_graphics_scene::place_signatures()
     m_graphics_view->centerOn(m_bottom_left_x, m_bottom_left_y);
     update();
 }
+//--------------------------------------------------------------------------//
+void lxa_graphics_scene::update_signature_focus()
+{
+    switch (m_graphics_status){
+        case GS_no_focus:{
+
+            }
+        case GS_one_focus_signature:{
+
+        }
+        case GS_one_focus_signature_all_others_grayed:{
+
+        }
+        case GS_one_focus_signature_some_satellites_others_grayed:{
+
+        }
+    }
+}
+
+eGraphicsStatus lxa_graphics_scene::change_graphics_status(){
+    switch (m_graphics_status) {
+        case GS_no_focus:{
+           m_graphics_status =  GS_one_focus_signature;
+            }
+        case GS_one_focus_signature:{
+            m_graphics_status =GS_one_focus_signature_all_others_grayed;
+        }
+        case GS_one_focus_signature_all_others_grayed:{
+            m_graphics_status =GS_one_focus_signature_some_satellites_others_grayed;
+        }
+        case GS_one_focus_signature_some_satellites_others_grayed:{
+            m_graphics_status =GS_no_focus;
+        }
+
+
+
+    }
+
+}
+
 //--------------------------------------------------------------------------//
 void lxa_graphics_scene::place_containment_edges(){
     QPair<CSignature*, CSignature*> * pPair;
@@ -586,7 +524,7 @@ void lxa_graphics_scene::display_focus_signature(){
 //--------------------------------------------------------------------------//
 void lxa_graphics_scene::set_focus_signature(){
     qDebug() << "set focus signature"<<379;
-    m_top_graphic_signature->mark_as_focus();
+   // m_top_graphic_signature->mark_as_focus();
     update();
 
 }
