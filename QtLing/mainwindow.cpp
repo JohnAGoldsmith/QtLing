@@ -229,8 +229,6 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
 
     }
     if (ke->key() == Qt::Key_A){
-        qDebug() << 214 << "set focus sig";
-        m_graphics_scene->set_focus_signature();
 
     }
     if (ke->key()== Qt::Key_H){

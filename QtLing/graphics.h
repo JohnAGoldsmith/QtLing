@@ -30,6 +30,7 @@ protected:
 protected:
     bool                 m_focus_flag;
     Qt::GlobalColor      m_color;
+//    Qt::GlobalColor     m_out_of_focus_color;
 
     public:
     graphic_signature2  ();
@@ -41,7 +42,7 @@ protected:
         return QRectF(00, 0,60,150);
     }
     CSignature*         get_signature() {return m_signature;}
-    void mark_color(Qt::GlobalColor);
+    void                set_color(Qt::GlobalColor);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget)
     {
@@ -195,6 +196,7 @@ class lxa_graphics_scene : public QGraphicsScene
     CSignatureCollection *                  m_signature_collection;
     Qt::GlobalColor                         m_normal_color;
     Qt::GlobalColor                         m_focus_color;
+    Qt::GlobalColor                         m_out_of_focus_color;
     eGraphicsStatus                         m_graphics_status;
     int                                     m_row_delta;
     int                                     m_column_delta;
@@ -222,7 +224,7 @@ public:
     void            narrow_columns();
     void            place_containment_edges();
     void            place_signatures();
-    void            set_focus_signature();
+    void            set_focus_signature(CSignature* );
     void            set_focus_signature_1(CSignature* pSig)       {m_focus_signature_1 = pSig;}
     void            set_focus_signature_2(CSignature* pSig)       {m_focus_signature_2 = pSig;}
     void            set_graphics_view (lxa_graphics_view* );

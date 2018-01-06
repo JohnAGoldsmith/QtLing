@@ -21,22 +21,22 @@
 
 graphic_signature2::graphic_signature2  () {
     m_focus_flag = false;
-    m_color = Qt::gray;
+    m_color = Qt::green;
 };
 
 graphic_signature2::graphic_signature2   (CSignature* this_signature,   QColor, bool focus_flag )
 {
     m_focus_flag =false;
-    m_color = Qt::gray;
+    m_color = Qt::green;
     m_signature = this_signature;
 };
 graphic_signature2::graphic_signature2   (CSignature* this_signature )
 {
     m_signature = this_signature;
-    m_color = Qt::gray;
+    m_color = Qt::green;
 };
 
-void graphic_signature2::mark_color(Qt::GlobalColor this_color){
+void graphic_signature2::set_color(Qt::GlobalColor this_color){
     m_color = this_color;
     update();
 };
@@ -111,8 +111,9 @@ lxa_graphics_scene::lxa_graphics_scene(MainWindow * window){
     m_location_of_bottom_row    = 0;
     m_row_delta                 = 225;
     m_column_delta              = 200;
-    m_normal_color              = Qt::black;
+    m_normal_color              = Qt::green;
     m_focus_color               = Qt::red;
+    m_out_of_focus_color        = Qt::gray;
     m_focus_signature_1         = NULL;
     m_focus_signature_2         = NULL;
 };
@@ -339,7 +340,7 @@ void lxa_graphics_scene::place_signatures()
     }
     if (m_focus_signature_1){
         qDebug() << 389 << m_focus_signature_1->get_key();
-        m_map_from_sig_to_pgraphsig[m_focus_signature_1]->mark_color(m_focus_color);
+        m_map_from_sig_to_pgraphsig[m_focus_signature_1]->set_color(m_focus_color);
         update();
     }
 
@@ -424,6 +425,7 @@ void lxa_graphics_scene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         if (item) {
             graphic_signature2 * this_sig =  dynamic_cast<graphic_signature2*> (item);
             qDebug() << this_sig->get_signature()->get_key();
+            set_focus_signature(this_sig->get_signature());
         }
     }
 }
@@ -481,9 +483,11 @@ void lxa_graphics_view::zoom_down()
 //--------------------------------------------------------------------------//
 
 //--------------------------------------------------------------------------//
-void lxa_graphics_scene::set_focus_signature(){
+void lxa_graphics_scene::set_focus_signature(CSignature* pSig){
     qDebug() << "set focus signature"<<379;
-   // m_top_graphic_signature->mark_as_focus();
+    m_map_from_sig_to_pgraphsig[m_focus_signature_1]->set_color(m_normal_color);
+    set_focus_signature_1(pSig);
+    m_map_from_sig_to_pgraphsig[pSig]->set_color(m_focus_color);
     update();
 
 }

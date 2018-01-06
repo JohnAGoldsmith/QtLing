@@ -354,7 +354,7 @@ void nonagon(CSignature* pSig, int x, int y, lxa_graphics_scene * scene, QColor 
     triangle.append(QPoint(x+40,y+30));
     triangle.append(QPoint(x+20,y-10));
     triangle.append(QPoint(x,y+28));
-    QGraphicsPolygonItem * pTriangleItem = scene->addPolygon(triangle,QPen(), QBrush(Qt::darkRed));
+    QGraphicsPolygonItem * pTriangleItem = scene->addPolygon(triangle,QPen(), QBrush(color));
     QGraphicsSimpleTextItem * p_text_item1 = new QGraphicsSimpleTextItem;
     QGraphicsSimpleTextItem * p_text_item2 = new QGraphicsSimpleTextItem;
     QGraphicsSimpleTextItem * p_text_item3 = new QGraphicsSimpleTextItem;
@@ -379,7 +379,7 @@ void nonagon(CSignature* pSig, int x, int y, lxa_graphics_scene * scene, QColor 
     triangle2.append(QPoint(x+40,y+30));
     triangle2.append(QPoint(x+20,y-10));
     triangle2.append(QPoint(x,y+28));
-    QGraphicsPolygonItem * pTriangleItem2 = scene->addPolygon(triangle2,QPen(), QBrush(Qt::darkRed));
+    QGraphicsPolygonItem * pTriangleItem2 = scene->addPolygon(triangle2,QPen(), QBrush(color));
     QGraphicsSimpleTextItem * p_text_item4 = new QGraphicsSimpleTextItem;
     QGraphicsSimpleTextItem * p_text_item5 = new QGraphicsSimpleTextItem;
     QGraphicsSimpleTextItem * p_text_item6 = new QGraphicsSimpleTextItem;
@@ -404,7 +404,7 @@ void nonagon(CSignature* pSig, int x, int y, lxa_graphics_scene * scene, QColor 
         triangle3.append(QPoint(x+40,y+30));
         triangle3.append(QPoint(x+20,y-10));
         triangle3.append(QPoint(x,y+28));
-        QGraphicsPolygonItem * pTriangleItem3 = scene->addPolygon(triangle3,QPen(), QBrush(Qt::darkRed));
+        QGraphicsPolygonItem * pTriangleItem3 = scene->addPolygon(triangle3,QPen(), QBrush(color));
         QGraphicsSimpleTextItem * p_text_item7 = new QGraphicsSimpleTextItem;
         QGraphicsSimpleTextItem * p_text_item8 = new QGraphicsSimpleTextItem;
         QGraphicsSimpleTextItem * p_text_item9 = new QGraphicsSimpleTextItem;
