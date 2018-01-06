@@ -313,21 +313,21 @@ void lxa_graphics_scene::place_signatures()
                 m_map_from_sig_to_pgraphsig[pSig]=this_octagon_2;
                 break;
             }
-           // case 9:{
-                //nonagon2 * this_nonagon_2  = new nonagon2 (pSig->get_key());
-                //addItem(this_nonagon_2);
-                //this_nonagon_2->setPos(x,y);
-
-            //    break;
-           // }
-/*            case 9:{
-                nonagon2 * this_nonagon_2  = new nonagon2 (pSig->get_key());
+            case 9:{
+                 octagon2 * this_nonagon_2  = new octagon2 (pSig);
                 addItem(this_nonagon_2);
                 this_nonagon_2->setPos(x,y);
 
                 break;
             }
-            */
+            case 10:{
+                octagon2 * this_decagon_2  = new octagon2 (pSig);
+                addItem(this_decagon_2);
+                this_decagon_2->setPos(x,y);
+
+                break;
+            }
+
             default:{
               //  p_graph_sig = new graphic_signature (x,y, pSig,  m_row_delta, m_normal_color);
               //  m_map_from_sig_to_pgraphsig[pSig] = p_graph_sig;
@@ -422,7 +422,8 @@ void lxa_graphics_scene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
     if (mouseEvent->button() == Qt::LeftButton)
     {
         QGraphicsItem * item = this->itemAt(  mouseEvent->scenePos() , QTransform() );
-        if (item) {
+        graphic_signature2 * this_sig = dynamic_cast<graphic_signature2*> (item);
+        if (item && this_sig) {
             graphic_signature2 * this_sig =  dynamic_cast<graphic_signature2*> (item);
             qDebug() << this_sig->get_signature()->get_key();
             set_focus_signature(this_sig->get_signature());
@@ -488,7 +489,25 @@ void lxa_graphics_scene::set_focus_signature(CSignature* pSig){
     m_map_from_sig_to_pgraphsig[m_focus_signature_1]->set_color(m_normal_color);
     set_focus_signature_1(pSig);
     m_map_from_sig_to_pgraphsig[pSig]->set_color(m_focus_color);
+    show_subsignatures();
     update();
 
-}
+};
 
+void lxa_graphics_scene::show_subsignatures(){
+
+    if (! m_focus_signature_1){
+        return;
+    }
+    for (auto sig_iter : m_map_from_sig_to_pgraphsig.keys()){
+        qDebug() << sig_iter->get_key() << 501;
+        if (m_focus_signature_1->contains(sig_iter)){
+            m_map_from_sig_to_pgraphsig[sig_iter]->set_color(m_focus_color);
+        } else{
+            m_map_from_sig_to_pgraphsig[sig_iter]->set_color(m_out_of_focus_color);
+            qDebug()     << 506 << sig_iter->get_key();
+        }
+    }
+    update();
+
+};

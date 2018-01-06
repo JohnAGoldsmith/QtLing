@@ -76,7 +76,7 @@ void triangle2::set_text(sigstring_t this_sigstring){
 
 void square2::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                       QWidget *widget) {
-    qDebug() << 400;
+
 
     QBrush brush(m_color, Qt::SolidPattern);
     QPen pen (Qt::blue, 3);

@@ -228,6 +228,7 @@ public:
     void            set_focus_signature_1(CSignature* pSig)       {m_focus_signature_1 = pSig;}
     void            set_focus_signature_2(CSignature* pSig)       {m_focus_signature_2 = pSig;}
     void            set_graphics_view (lxa_graphics_view* );
+    void            show_subsignatures() ;
     void            update_signature_focus();
     void            widen_columns();
 
