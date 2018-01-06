@@ -21,13 +21,19 @@
 
 graphic_signature2::graphic_signature2  () {
     m_focus_flag = false;
-    m_color = Qt::green;
+    m_color = Qt::gray;
 };
 
-graphic_signature2::graphic_signature2   (CSignature*,   QColor, bool focus_flag )
+graphic_signature2::graphic_signature2   (CSignature* this_signature,   QColor, bool focus_flag )
 {
     m_focus_flag =false;
-    m_color = Qt::green;
+    m_color = Qt::gray;
+    m_signature = this_signature;
+};
+graphic_signature2::graphic_signature2   (CSignature* this_signature )
+{
+    m_signature = this_signature;
+    m_color = Qt::gray;
 };
 
 void graphic_signature2::mark_color(Qt::GlobalColor this_color){
@@ -265,42 +271,42 @@ void lxa_graphics_scene::place_signatures()
             switch (row){
             case 3:{
                 if (col == 0) { m_focus_signature_1 = pSig;}
-                triangle2 *  this_triangle_2  = new triangle2 (pSig->get_key());
+                triangle2 *  this_triangle_2  = new triangle2 (pSig);
                 addItem(this_triangle_2);
                 this_triangle_2->setPos(x,y);
                 m_map_from_sig_to_pgraphsig[pSig]=this_triangle_2;
                 break;
             }
             case 4:{
-                square2 * this_square_2  = new square2 (pSig->get_key());
+                square2 * this_square_2  = new square2 (pSig);
                 addItem(this_square_2);
                 this_square_2->setPos(x,y);
                 m_map_from_sig_to_pgraphsig[pSig]=this_square_2;
                 break;
             }
             case 5:{
-                pentagon2 * this_pentagon_2  = new pentagon2 (pSig->get_key());
+                pentagon2 * this_pentagon_2  = new pentagon2 (pSig);
                 addItem(this_pentagon_2);
                 this_pentagon_2->setPos(x,y);
                 m_map_from_sig_to_pgraphsig[pSig]=this_pentagon_2;
                 break;
             }
             case 6:{
-                hexagon2 * this_hexagon_2  = new hexagon2 (pSig->get_key());
+                hexagon2 * this_hexagon_2  = new hexagon2 (pSig);
                 addItem(this_hexagon_2);
                 this_hexagon_2->setPos(x,y);
                 m_map_from_sig_to_pgraphsig[pSig]=this_hexagon_2;
                 break;
             }
             case 7:{
-                septagon2 * this_septagon_2  = new septagon2 (pSig->get_key());
+                septagon2 * this_septagon_2  = new septagon2 (pSig);
                 addItem(this_septagon_2);
                 this_septagon_2->setPos(x,y);
                 m_map_from_sig_to_pgraphsig[pSig]=this_septagon_2;
                 break;
             }
             case 8:{
-                octagon2 * this_octagon_2  = new octagon2 (pSig->get_key());
+                octagon2 * this_octagon_2  = new octagon2 (pSig);
                 addItem(this_octagon_2);
                 this_octagon_2->setPos(x,y);
                 m_map_from_sig_to_pgraphsig[pSig]=this_octagon_2;
@@ -408,14 +414,17 @@ void lxa_graphics_scene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
    //QToolTip::showText(event->screenPos().toPoint(), "x");
    //QGraphicsScene::mouseMoveEvent();
-   qDebug() << "mouse over";
 }
 //--------------------------------------------------------------------------//
 void lxa_graphics_scene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
     if (mouseEvent->button() == Qt::LeftButton)
     {
-        qDebug() << "mouse move"<<178;
+        QGraphicsItem * item = this->itemAt(  mouseEvent->scenePos() , QTransform() );
+        if (item) {
+            graphic_signature2 * this_sig =  dynamic_cast<graphic_signature2*> (item);
+            qDebug() << this_sig->get_signature()->get_key();
+        }
     }
 }
 //--------------------------------------------------------------------------//

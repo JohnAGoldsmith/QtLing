@@ -8,8 +8,8 @@
 
 class CSignature;
 
-triangle2::triangle2(QString this_sigstring): graphic_signature2(){
-         set_text(this_sigstring);
+triangle2::triangle2(CSignature* pSig): graphic_signature2(  pSig){
+         set_text(pSig->get_key());
 };
 
 //-----------------------------------------------------------//
@@ -17,28 +17,28 @@ square2::~square2()
 {
 
 }
-square2::square2(QString this_sigstring): graphic_signature2(){
-         set_text(this_sigstring);
+square2::square2(CSignature* pSig): graphic_signature2(pSig){
+         set_text(pSig->get_key());
 };
 //-----------------------------------------------------------//
-pentagon2::pentagon2(QString this_sigstring): graphic_signature2(){
-         set_text(this_sigstring);
+pentagon2::pentagon2(CSignature* pSig): graphic_signature2(pSig){
+         set_text(pSig->get_key());
 };
 //-----------------------------------------------------------//
-hexagon2::hexagon2(QString this_sigstring): graphic_signature2(){
-         set_text(this_sigstring);
+hexagon2::hexagon2(CSignature* pSig): graphic_signature2(pSig){
+         set_text(pSig->get_key());
 };
 //-----------------------------------------------------------//
-septagon2::septagon2(QString this_sigstring): graphic_signature2(){
-         set_text(this_sigstring);
+septagon2::septagon2(CSignature* pSig): graphic_signature2(pSig){
+         set_text(pSig->get_key());
 };
 //-----------------------------------------------------------//
-octagon2::octagon2(QString this_sigstring): graphic_signature2(){
-         set_text(this_sigstring);
+octagon2::octagon2(CSignature* pSig): graphic_signature2(pSig){
+         set_text(pSig->get_key());
 };
 //-----------------------------------------------------------//
-nonagon2::nonagon2(QString this_sigstring): graphic_signature2(){
-         set_text(this_sigstring);
+nonagon2::nonagon2(CSignature* pSig): graphic_signature2(){
+         set_text(pSig->get_key());
 };
 // --------------------------------->      <--------------------------------------------//
 void triangle2::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
@@ -55,7 +55,6 @@ void triangle2::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     };
     painter->drawPolygon(points,3);
 }
-
 void triangle2::set_text(sigstring_t this_sigstring){
     QList<QRectF*> br_list;
     QList<QGraphicsSimpleTextItem*> text_item_list;
@@ -68,9 +67,9 @@ void triangle2::set_text(sigstring_t this_sigstring){
         text_item_list[i]->setFont( serifFont );
         br_list.append(new QRectF(text_item_list[i]->sceneBoundingRect()));
     }
-    text_item_list[0]->setPos( 3 - br_list[0]->width()   ,  60 -  br_list[1]->height()/2      );
-    text_item_list[1]->setPos( 35 - br_list[1]->width()   , 0 -  br_list[1]->height()/2 );
-    text_item_list[2]->setPos( 57                         ,  60 -  br_list[1]->height()/2  );
+    text_item_list[2]->setPos( 3 - br_list[2]->width()   ,  60 -  br_list[2]->height()/2      );
+    text_item_list[0]->setPos( 35 - br_list[0]->width()/2   , 0 -  br_list[0]->height()/2 );
+    text_item_list[1]->setPos( 57                         ,  60 -  br_list[1]->height()/2  );
 }
 
 // --------------------------------->      <--------------------------------------------//
@@ -106,10 +105,10 @@ void square2::set_text(sigstring_t this_sigstring){
         text_item_list[i]->setText( affixes[i] );
         br_list.append(new QRectF(text_item_list[i]->sceneBoundingRect()));
     }
-    text_item_list[0]->setPos( 10 - br_list[0]->width()  ,  50 - br_list[0]->height()/2       );
-    text_item_list[1]->setPos( 10 - br_list[1]->width()  ,  0  - br_list[1]->height()/2 );
-    text_item_list[2]->setPos(  70                       ,  0  - br_list[2]->height()/2  );
-    text_item_list[3]->setPos(  70                       ,  50 - br_list[3]->height()/2 );
+    text_item_list[0]->setPos( 10 - br_list[0]->width()  ,  0  - br_list[0]->height()/2 );
+    text_item_list[1]->setPos(  70                       ,  0  - br_list[1]->height()/2  );
+    text_item_list[2]->setPos(  70                       ,  50 - br_list[2]->height()/2 );
+    text_item_list[3]->setPos( 10 - br_list[3]->width()  ,  50 - br_list[3]->height()/2       );
 
 }
 
@@ -119,7 +118,7 @@ void square2::set_text(sigstring_t this_sigstring){
 
 void pentagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                       QWidget *widget){
-    QBrush brush(Qt::green, Qt::SolidPattern);
+    QBrush brush(m_color, Qt::SolidPattern);
     QPen pen (Qt::darkBlue, 3);
     painter->setBrush(brush);
     painter->setPen(pen);
@@ -155,7 +154,7 @@ void pentagon2::set_text(sigstring_t this_sigstring){
 // --------------------------------->      <--------------------------------------------//
 void hexagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                       QWidget *widget){
-    QBrush brush(Qt::green, Qt::SolidPattern);
+    QBrush brush(m_color, Qt::SolidPattern);
     QPen pen (Qt::darkBlue, 3);
     painter->setBrush(brush);
     painter->setPen(pen);
@@ -198,7 +197,7 @@ void hexagon2::set_text(sigstring_t this_sigstring){
 // --------------------------------->      <--------------------------------------------//
 void septagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                       QWidget *widget){
-    QBrush brush(Qt::green, Qt::SolidPattern);
+    QBrush brush(m_color, Qt::SolidPattern);
     QPen pen (Qt::darkBlue, 3);
     painter->setBrush(brush);
     painter->setPen(pen);
@@ -247,7 +246,7 @@ void septagon2::set_text(sigstring_t this_sigstring){
 
 void octagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                       QWidget *widget){
-    QBrush brush(Qt::green, Qt::SolidPattern);
+   QBrush brush(m_color, Qt::SolidPattern);
     QPen pen (Qt::darkBlue, 3);
     painter->setBrush(brush);
     painter->setPen(pen);
@@ -295,7 +294,7 @@ void octagon2::set_text(sigstring_t this_sigstring){
 void nonagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                       QWidget *widget){
 
-    QBrush brush(Qt::green, Qt::SolidPattern);
+   QBrush brush(m_color, Qt::SolidPattern);
     QPen pen (Qt::darkBlue, 3);
     painter->setBrush(brush);
     painter->setPen(pen);

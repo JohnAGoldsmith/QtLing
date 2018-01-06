@@ -24,6 +24,8 @@ class CSupersignature;
 class graphic_signature2 : public QGraphicsItem
 {
     lxa_graphics_scene * m_graphics_scene;
+
+protected:
     CSignature *         m_signature;
 protected:
     bool                 m_focus_flag;
@@ -31,26 +33,26 @@ protected:
 
     public:
     graphic_signature2  ();
-    graphic_signature2  (QString );
+    graphic_signature2  (CSignature* );
     graphic_signature2   (CSignature*,   QColor, bool focus_flag = false);
     ~graphic_signature2 ();
     QRectF              boundingRect() const
     {
         return QRectF(00, 0,60,150);
     }
+    CSignature*         get_signature() {return m_signature;}
     void mark_color(Qt::GlobalColor);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget)
     {
     }
-    CSignature*         get_signature() {return m_signature;}
 };
 
 //--------------------->       <-----------------------------//
 class triangle2 : public graphic_signature2
 {
 public:
-    triangle2(QString);
+    triangle2(CSignature*);
     void paint ();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget);
@@ -62,7 +64,7 @@ class square2 : public graphic_signature2
 {
 public:
     //square2();
-    square2(QString);
+    square2(CSignature*);
     ~square2();
     void paint ();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
@@ -75,7 +77,7 @@ public:
 class pentagon2 : public graphic_signature2
 {
 public:
-    pentagon2(QString);
+    pentagon2(CSignature*);
     void paint ();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget);
@@ -85,7 +87,7 @@ public:
 class hexagon2 : public graphic_signature2
 {
 public:
-    hexagon2(QString);
+    hexagon2(CSignature*);
     void paint ();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget);
@@ -95,7 +97,7 @@ public:
 class septagon2 : public graphic_signature2
 {
 public:
-    septagon2(QString);
+    septagon2(CSignature*);
     void paint ();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget);
@@ -105,7 +107,7 @@ public:
 class octagon2 : public graphic_signature2
 {
 public:
-    octagon2(QString);
+    octagon2(CSignature*);
     void paint ();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget);
@@ -115,7 +117,7 @@ public:
 class nonagon2 : public graphic_signature2
 {
 public:
-    nonagon2(QString);
+    nonagon2(CSignature*);
     void paint ();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget);
