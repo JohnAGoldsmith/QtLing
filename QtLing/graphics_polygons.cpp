@@ -8,33 +8,43 @@
 
 class CSignature;
 
-triangle2::triangle2(QString this_sigstring){
-         set_text(this_sigstring);
-};
-square2::square2(QString this_sigstring){
-         set_text(this_sigstring);
-};
-pentagon2::pentagon2(QString this_sigstring){
+triangle2::triangle2(QString this_sigstring): graphic_signature2(){
          set_text(this_sigstring);
 };
 
-hexagon2::hexagon2(QString this_sigstring){
-         set_text(this_sigstring);
-};
-septagon2::septagon2(QString this_sigstring){
-         set_text(this_sigstring);
-};
+//-----------------------------------------------------------//
+square2::~square2()
+{
 
-octagon2::octagon2(QString this_sigstring){
+}
+square2::square2(QString this_sigstring): graphic_signature2(){
          set_text(this_sigstring);
 };
-nonagon2::nonagon2(QString this_sigstring){
+//-----------------------------------------------------------//
+pentagon2::pentagon2(QString this_sigstring): graphic_signature2(){
+         set_text(this_sigstring);
+};
+//-----------------------------------------------------------//
+hexagon2::hexagon2(QString this_sigstring): graphic_signature2(){
+         set_text(this_sigstring);
+};
+//-----------------------------------------------------------//
+septagon2::septagon2(QString this_sigstring): graphic_signature2(){
+         set_text(this_sigstring);
+};
+//-----------------------------------------------------------//
+octagon2::octagon2(QString this_sigstring): graphic_signature2(){
+         set_text(this_sigstring);
+};
+//-----------------------------------------------------------//
+nonagon2::nonagon2(QString this_sigstring): graphic_signature2(){
          set_text(this_sigstring);
 };
 // --------------------------------->      <--------------------------------------------//
 void triangle2::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                       QWidget *widget){
-    QBrush brush(Qt::green, Qt::SolidPattern);
+
+    QBrush brush(m_color, Qt::SolidPattern);
     QPen pen (Qt::darkBlue, 3);
     painter->setBrush(brush);
     painter->setPen(pen);
@@ -45,6 +55,7 @@ void triangle2::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     };
     painter->drawPolygon(points,3);
 }
+
 void triangle2::set_text(sigstring_t this_sigstring){
     QList<QRectF*> br_list;
     QList<QGraphicsSimpleTextItem*> text_item_list;
@@ -60,19 +71,16 @@ void triangle2::set_text(sigstring_t this_sigstring){
     text_item_list[0]->setPos( 3 - br_list[0]->width()   ,  60 -  br_list[1]->height()/2      );
     text_item_list[1]->setPos( 35 - br_list[1]->width()   , 0 -  br_list[1]->height()/2 );
     text_item_list[2]->setPos( 57                         ,  60 -  br_list[1]->height()/2  );
-
 }
 
 // --------------------------------->      <--------------------------------------------//
 
 void square2::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-                      QWidget *widget){
+                      QWidget *widget) {
+    qDebug() << 400;
 
-    QBrush brush(Qt::green, Qt::SolidPattern);
-    if (m_focus_flag){
-        brush.setColor(Qt::red);
-    }
-    QPen pen (Qt::darkBlue, 3);
+    QBrush brush(m_color, Qt::SolidPattern);
+    QPen pen (Qt::blue, 3);
     painter->setBrush(brush);
     painter->setPen(pen);
     QFont serifFont ("Times", 16, QFont::Bold);
@@ -84,6 +92,7 @@ void square2::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
         QPointF(20, 10)
     };
     painter->drawPolygon(points,4);
+
 }
 void square2::set_text(sigstring_t this_sigstring){
     QList<QRectF*> br_list;
@@ -98,9 +107,9 @@ void square2::set_text(sigstring_t this_sigstring){
         br_list.append(new QRectF(text_item_list[i]->sceneBoundingRect()));
     }
     text_item_list[0]->setPos( 10 - br_list[0]->width()  ,  50 - br_list[0]->height()/2       );
-    text_item_list[1]->setPos( 10 - br_list[1]->width()  , 0 - br_list[1]->height()/2 );
-    text_item_list[2]->setPos(  70                        , 0 - br_list[2]->height()/2  );
-    text_item_list[3]->setPos(  70                        ,  50 - br_list[3]->height()/2 );
+    text_item_list[1]->setPos( 10 - br_list[1]->width()  ,  0  - br_list[1]->height()/2 );
+    text_item_list[2]->setPos(  70                       ,  0  - br_list[2]->height()/2  );
+    text_item_list[3]->setPos(  70                       ,  50 - br_list[3]->height()/2 );
 
 }
 
@@ -243,17 +252,17 @@ void octagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     painter->setBrush(brush);
     painter->setPen(pen);
     static const QPointF points[4] = {
-        QPointF(0,70),
-        QPointF(40,70),
-        QPointF(40,30),
-        QPointF(0,30)
+        QPointF(20,70),
+        QPointF(60,70),
+        QPointF(60,30),
+        QPointF(20,30)
     };
     painter->drawPolygon(points,4);
     static const QPointF points_2[4] = {
-        QPointF( 0, 120),
-        QPointF(40, 120),
-        QPointF(40, 80),
-        QPointF( 0, 80)
+        QPointF( 20, 120),
+        QPointF(60, 120),
+        QPointF(60, 80),
+        QPointF( 20, 80)
     };
     painter->drawPolygon(points_2,4);
 
@@ -270,14 +279,14 @@ void octagon2::set_text(sigstring_t this_sigstring){
         text_item_list[i]->setText( affixes[i] );
         br_list.append(new QRectF(text_item_list[i]->sceneBoundingRect()));
     }
-    text_item_list[0]->setPos( -10 - br_list[0]->width()  , 20 - br_list[0]->height()/2 );
-    text_item_list[1]->setPos(  50                        , 20 - br_list[1]->height()/2  );
-    text_item_list[2]->setPos(  50                        ,  60 - br_list[2]->height()/2 );
-    text_item_list[3]->setPos(  50                        ,  80 - br_list[3]->height()/2  );
-    text_item_list[4]->setPos(  50                        ,  120 - br_list[4]->height()/2 );
-    text_item_list[5]->setPos( -10 - br_list[5]->width()  ,  120 - br_list[5]->height()/2 );
-    text_item_list[6]->setPos( -10 - br_list[6]->width()  ,  80 - br_list[6]->height()/2 );
-    text_item_list[7]->setPos( -10 - br_list[7]->width()  ,  60 - br_list[7]->height()/2 );
+    text_item_list[0]->setPos( 10 - br_list[0]->width()  , 20 - br_list[0]->height()/2 );
+    text_item_list[1]->setPos(  70                        , 20 - br_list[1]->height()/2  );
+    text_item_list[2]->setPos(  70                        ,  60 - br_list[2]->height()/2 );
+    text_item_list[3]->setPos(  70                        ,  80 - br_list[3]->height()/2  );
+    text_item_list[4]->setPos(  70                        ,  120 - br_list[4]->height()/2 );
+    text_item_list[5]->setPos( 10 - br_list[5]->width()  ,  120 - br_list[5]->height()/2 );
+    text_item_list[6]->setPos( 10 - br_list[6]->width()  ,  80 - br_list[6]->height()/2 );
+    text_item_list[7]->setPos( 10 - br_list[7]->width()  ,  60 - br_list[7]->height()/2 );
 
 
 

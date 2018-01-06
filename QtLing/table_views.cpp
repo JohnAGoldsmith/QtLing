@@ -90,8 +90,8 @@ LowerTableView::LowerTableView(MainWindow * window)
               } // -->   Now, graphics display IS showing<-- //
               {
                  qDebug() << "trying to display a focus signature";
-                 m_parent_window->get_graphics_scene()->set_focus_signature_1(pSig);
-                 m_parent_window->get_graphics_scene()->display_focus_signature();
+ //                m_parent_window->get_graphics_scene()->set_focus_signature_1(pSig);
+ //                m_parent_window->get_graphics_scene()->display_focus_signature();
               }
               break;}
          //  ---------------------------------------------------//

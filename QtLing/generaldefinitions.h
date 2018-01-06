@@ -20,6 +20,7 @@ enum eDisplayType{
 };
 
 enum eGraphicsStatus{
+    GS_default,
     GS_no_focus,
     GS_one_focus_signature,
     GS_one_focus_signature_all_others_grayed,
