@@ -314,19 +314,20 @@ void lxa_graphics_scene::place_signatures()
                 break;
             }
             case 9:{
-                 octagon2 * this_nonagon_2  = new octagon2 (pSig);
+                nonagon2 * this_nonagon_2  = new nonagon2 (pSig);
                 addItem(this_nonagon_2);
                 this_nonagon_2->setPos(x,y);
-
+                m_map_from_sig_to_pgraphsig[pSig]=this_nonagon_2;
                 break;
             }
-            case 10:{
-                octagon2 * this_decagon_2  = new octagon2 (pSig);
-                addItem(this_decagon_2);
-                this_decagon_2->setPos(x,y);
+//            case 10:{
+//                decagon2 * this_decagon_2  = new decagon2 (pSig);
+//                addItem(this_decagon_2);
+//                m_map_from_sig_to_pgraphsig[pSig]=this_decagon_2;
+//                this_decagon_2->setPos(x,y);
 
-                break;
-            }
+//                break;
+//           }
 
             default:{
               //  p_graph_sig = new graphic_signature (x,y, pSig,  m_row_delta, m_normal_color);
@@ -424,9 +425,13 @@ void lxa_graphics_scene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         QGraphicsItem * item = this->itemAt(  mouseEvent->scenePos() , QTransform() );
         graphic_signature2 * this_sig = dynamic_cast<graphic_signature2*> (item);
         if (item && this_sig) {
-            graphic_signature2 * this_sig =  dynamic_cast<graphic_signature2*> (item);
-            qDebug() << this_sig->get_signature()->get_key();
-            set_focus_signature(this_sig->get_signature());
+            {
+                CSignature* local_sig = this_sig->get_signature();
+                if (local_sig){
+                    qDebug() << local_sig->get_key();
+                    set_focus_signature(local_sig);
+                }
+            }
         }
     }
 }

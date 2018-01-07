@@ -39,7 +39,7 @@ protected:
     ~graphic_signature2 ();
     QRectF              boundingRect() const
     {
-        return QRectF(00, 0,60,150);
+        return QRectF(0, 0,130,150);
     }
     CSignature*         get_signature() {return m_signature;}
     void                set_color(Qt::GlobalColor);
