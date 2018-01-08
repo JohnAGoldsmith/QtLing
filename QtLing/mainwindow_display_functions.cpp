@@ -29,9 +29,9 @@ void MainWindow::display_suffix_signatures()
     m_tableView_upper_right->set_document_type( SIGNATURES );
     m_tableView_upper_right->resizeColumnsToContents();
 
-    m_graphics_scene->clear_all();
-    m_graphics_scene->assign_scene_positions_to_signatures(lexicon->get_signatures(), DT_All_Suffix_Signatures);
-    m_graphics_scene->place_signatures();
+    m_suffix_graphics_scene->clear_all();
+    m_suffix_graphics_scene->assign_scene_positions_to_signatures(lexicon->get_signatures(), DT_All_Suffix_Signatures);
+    m_suffix_graphics_scene->place_signatures();
 }
 /**
  * @brief MainWindow::display_prefix_signatures
@@ -47,10 +47,10 @@ void MainWindow::display_prefix_signatures()
     m_tableView_upper_right->set_document_type( PREFIX_SIGNATURES );
     m_tableView_upper_right->resizeColumnsToContents();
 
-    m_graphics_scene->clear_all();
+    //m_prefix_graphics_scene->clear_all();
     CLexicon* lexicon = get_lexicon();
-    m_graphics_scene->assign_scene_positions_to_signatures(lexicon->get_prefix_signatures(), DT_All_Prefix_Signatures);
-    m_graphics_scene->place_signatures();
+    m_prefix_graphics_scene->assign_scene_positions_to_signatures(lexicon->get_prefix_signatures(), DT_All_Prefix_Signatures);
+    m_prefix_graphics_scene->place_signatures();
 }
 /**
  * @brief MainWindow::display_hypotheses

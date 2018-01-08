@@ -46,7 +46,7 @@ public:
         sig_2 = sig2;
         morph = m;
         word = w;
-            stem_1 = stem1;
+        stem_1 = stem1;
         stem_2 = stem2;
     };
     QString label() {return morph + "/" + sig_1->get_key() + "/" + sig_2->get_key(); }
@@ -101,7 +101,8 @@ protected:
                                                         // with the GUI as far as architecture is concerned.
                                                         // Each entry in this must have a pointer to a real Collection (of the sort that follows here):
     CWordCollection *               m_Words;
-    CStemCollection *               m_Stems;
+    CStemCollection *               m_suffixal_stems;
+    CStemCollection *               m_prefixal_stems;
     CSuffixCollection *             m_Suffixes;
     CPrefixCollection *             m_Prefixes;
     CSignatureCollection *          m_Signatures;
@@ -126,6 +127,7 @@ protected:
     CSignatureCollection *          m_PassiveSignatures;  /*!< these signatures have stems one letter off from another signature. */
     CSignatureCollection *          m_SequentialSignatures; /*! signatures where one affix leads to another signature. */
     QList<CHypothesis*> *            m_Hypotheses;
+    QMap<QString, CHypothesis*> *            m_Hypothesis_map;
 // add component 1
 
     QProgressBar*                   m_ProgressBar;
@@ -143,10 +145,12 @@ public:
 
 
     CWordCollection*                            get_word_collection()       { return m_Words; }
-    CStemCollection*                            GetStemCollection()         { return m_Stems; }
+//    CStemCollection*                            GetStemCollection()         { return m_suffixal_stems; }
     CSuffixCollection*                          GetSuffixCollection()       { return m_Suffixes; }
     CSuffixCollection*                          get_suffixes()              {return m_Suffixes;}
-    CStemCollection *                           get_stems()                 { return m_Stems;}
+    CStemCollection *                           get_suffixal_stems()                 { return m_suffixal_stems;}
+    CStemCollection *                           get_prefixal_stems()                 { return m_prefixal_stems;}
+//    CStemCollection *                           get_prefix_stems()          { return m_prefix_stems;}
     void                                        dump_suffixes(QList<QString>*);
     CWordCollection *                           get_words()                 { return m_Words;}
     CSignatureCollection*                       get_signatures()            { return m_Signatures;}
@@ -157,6 +161,8 @@ public:
     CSignatureCollection*                       get_passive_signatures()    { return m_PassiveSignatures;}
     CSignatureCollection *                      get_sequential_signatures() { return m_SequentialSignatures;}
     QList<CHypothesis*>*                        get_hypotheses ()           {return m_Hypotheses;}
+    QMap<QString, CHypothesis*>  *               get_hypothesis_map()        { return m_Hypothesis_map;}
+    CHypothesis*                                get_hypothesis(QString hypothesis_label);
     void                                        collect_parasuffixes();
     void                                        generate_hypotheses();
     double                                      get_entropy_threshold_for_positive_signatures() {return m_entropy_threshold_for_stems;}

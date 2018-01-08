@@ -9,12 +9,14 @@
 #include <QColor>
 #include "supersignature.h"
 #include <QGraphicsItem>
+#include "Lexicon.h"
+
 class CSignature;
 class CSignatureCollection;
 class MainWindow;
 class lxa_graphics_scene;
 class CSupersignature;
-
+class CHypothesis;
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -47,6 +49,17 @@ protected:
                QWidget *widget)
     {
     }
+};
+//--------------------->       <-----------------------------//
+class bar: public graphic_signature2
+{
+public:
+    bar(CSignature*);
+    void paint ();
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+               QWidget *widget);
+    void set_text(sigstring_t this_sigstring);
+
 };
 
 //--------------------->       <-----------------------------//
@@ -183,6 +196,10 @@ class lxa_graphics_scene : public QGraphicsScene
 {  // friend          graphic_signature;
 
     MainWindow*                             m_main_window;
+    CLexicon*                               m_lexicon;
+    bool                                    m_suffix_flag;
+    CSuffixCollection *                     m_suffixes;
+    CPrefixCollection *                     m_prefixes;
     eDisplayType                            m_display_type;
     lxa_graphics_view*                      m_graphics_view;
     QList<QList<CSignature*>*>              m_signature_lattice;
@@ -209,7 +226,7 @@ private:
     void                                    mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent);
 public:
                     ~lxa_graphics_scene();
-                    lxa_graphics_scene(MainWindow *);
+                    lxa_graphics_scene(MainWindow *, CLexicon* , CSignatureCollection*,bool suffix_flag );
     void            add_signature_containment_edge (QPair<CSignature*, CSignature*>* pPair)
                                            {m_signature_containment_edges.append (pPair); }
     void            assign_scene_positions_to_signatures(CSignatureCollection*, eDisplayType );
@@ -218,6 +235,7 @@ public:
     void            clear_all();
     void            display_focus_signature();
     graphic_signature2* get_focus_signature_1();
+    CLexicon*       get_lexicon()           {return m_lexicon;}
     void            move_rows_apart();
     void            move_rows_closer();
     void            mouseMoveEvent(QGraphicsSceneMouseEvent * event);
@@ -228,6 +246,7 @@ public:
     void            set_focus_signature_1(CSignature* pSig)       {m_focus_signature_1 = pSig;}
     void            set_focus_signature_2(CSignature* pSig)       {m_focus_signature_2 = pSig;}
     void            set_graphics_view (lxa_graphics_view* );
+    void            show_hypothesis_1(CHypothesis*);
     void            show_subsignatures() ;
     void            update_signature_focus();
     void            widen_columns();

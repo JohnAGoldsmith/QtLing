@@ -3,9 +3,13 @@
 
 #include "QString"
 #include "generaldefinitions.h"
+#include "Lexicon.h"
+#include "graphics.h"
+
 
 class CHypothesis
-{
+{   friend lxa_graphics_scene;
+
     QString                         m_key;
     eHypothesisType                 m_hypothesis_type;
     sigstring_t                     m_signature_1;
@@ -24,6 +28,7 @@ public:
                  sigstring_t new_sig, QStringList new_affixes, int number_of_words_saved);
     QString                         get_key();
     QStringList                     express();
+    QString                         express_as_string();
     int                             get_number_of_words_saved();
 
 };

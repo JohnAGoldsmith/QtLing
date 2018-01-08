@@ -396,8 +396,12 @@ void MainWindow::createTreeModel()
     QStandardItem * word_item = new QStandardItem(QString("Words"));
     QStandardItem * word_count_item = new QStandardItem(QString::number(get_lexicon()->get_word_collection()->get_count()));
 
-    QStandardItem * stem_item = new QStandardItem(QString("Stems"));
-    QStandardItem * stem_count_item = new QStandardItem(QString::number(get_lexicon()->GetStemCollection()->get_count()));
+    QStandardItem * suffixal_stem_item = new QStandardItem(QString("Suffixal stems"));
+    QStandardItem * suffixal_stem_count_item = new QStandardItem(QString::number(get_lexicon()->get_suffixal_stems()->get_count()));
+
+    QStandardItem * prefixal_stem_item = new QStandardItem(QString("Prefixal stems"));
+    QStandardItem * prefixal_stem_count_item = new QStandardItem(QString::number(get_lexicon()->get_prefixal_stems()->get_count()));
+
 
     QStandardItem * suffix_item = new QStandardItem(QString("Suffixes"));
     QStandardItem * suffix_count_item = new QStandardItem(QString::number(get_lexicon()->GetSuffixCollection()->get_count()));
@@ -465,9 +469,14 @@ void MainWindow::createTreeModel()
     word_items.append(word_item);
     word_items.append(word_count_item);
 
-    QList<QStandardItem*> stem_items;
-    stem_items.append(stem_item);
-    stem_items.append(stem_count_item);
+    QList<QStandardItem*> suffixal_stem_items;
+    suffixal_stem_items.append(suffixal_stem_item);
+    suffixal_stem_items.append(suffixal_stem_count_item);
+
+    QList<QStandardItem*> prefixal_stem_items;
+    prefixal_stem_items.append(prefixal_stem_item);
+    prefixal_stem_items.append(prefixal_stem_count_item);
+
 
     QList<QStandardItem*> suffix_items;
     suffix_items.append(suffix_item);
@@ -515,7 +524,8 @@ void MainWindow::createTreeModel()
 
     parent->appendRow(lexicon_items);
     lexicon_item->appendRow(word_items);
-    lexicon_item->appendRow(stem_items);
+    lexicon_item->appendRow(suffixal_stem_items);
+    lexicon_item->appendRow(prefixal_stem_items);
     lexicon_item->appendRow(suffix_items);
     lexicon_item->appendRow(sig_items);
     lexicon_item->appendRow(pos_sig_items);

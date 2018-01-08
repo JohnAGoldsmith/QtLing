@@ -204,6 +204,14 @@ LowerTableView::LowerTableView(MainWindow * window)
             } // end of tabular display, lower right window
          break;}
     case  HYPOTHESES:
+          if (m_parent_window->m_graphic_display_flag){
+              if (index.isValid()) {row = index.row();}
+              QString hypothesis_label = index.sibling(row,0).data().toString();
+              CHypothesis*  pHypothesis = this_lexicon->get_hypothesis(hypothesis_label);
+
+
+
+          }
           break;
 
     // add component 9
@@ -309,9 +317,13 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         setModel(m_parent_window->m_Models["Words"]);
         set_document_type( WORDS );
     }
-    else     if (component == "Stems"){
-        setModel(m_parent_window->m_Models["Stems"]);
-        set_document_type( STEMS );
+    else     if (component == "Prefixal stems"){
+        setModel(m_parent_window->m_Models["Prefix stems"]);
+        set_document_type( PREFIX_STEMS );
+    }
+    else     if (component == "Suffixal stems"){
+        setModel(m_parent_window->m_Models["Suffix stems"]);
+        set_document_type( SUFFIX_STEMS );
     }
     else     if (component == "Suffixes"){
         m_parent_window->display_suffixes();
@@ -326,9 +338,10 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         set_document_type( EPOSITIVE_SIGNATURES );
         set_content_type( "signatures");
 
-        m_parent_window->m_graphics_scene->clear_all();
-        m_parent_window->m_graphics_scene->assign_scene_positions_to_signatures(lexicon->get_signatures(), DT_Positive_Suffix_Signatures);
-        m_parent_window->m_graphics_scene->place_signatures();
+        m_parent_window->set_current_graphics_scene (m_parent_window->get_suffix_graphics_scene());
+        m_parent_window->m_current_graphics_scene->clear_all();
+        m_parent_window->m_current_graphics_scene->assign_scene_positions_to_signatures(lexicon->get_signatures(), DT_Positive_Suffix_Signatures);
+        m_parent_window->m_current_graphics_scene->place_signatures();
         qDebug() << "epositive sigs"<< 292;
     }
     else     if (component == "Prefix signatures"){

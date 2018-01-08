@@ -60,7 +60,8 @@ MainWindow::MainWindow()
     m_lexicon_list.append ( new CLexicon() );
     // models
     m_Models["Words"]                       = new LxaStandardItemModel("Words");
-    m_Models["Stems"]                       = new LxaStandardItemModel("Stems");
+    m_Models["Suffixal stems"]              = new LxaStandardItemModel("Suffixal stems");
+    m_Models["Prefixal stems"]          = new LxaStandardItemModel("Prefixal stems");
     m_Models["Suffixes"]                    = new LxaStandardItemModel("Suffixes");
     m_Models["Signatures"]                  = new LxaStandardItemModel("Signatures");
     m_Models["Signatures 2"]                = new LxaStandardItemModel("Signatures");// sorted by affix count;
@@ -100,9 +101,14 @@ MainWindow::MainWindow()
     m_tableView_upper_left->setSortingEnabled(true);
     m_tableView_upper_right->setSortingEnabled(true);
 
-    m_graphics_scene            = new lxa_graphics_scene (this);
+    bool suffix_flag = true;
+    m_suffix_graphics_scene = new lxa_graphics_scene (this, get_lexicon(),
+                                       get_lexicon()->get_signatures(), suffix_flag);
+    suffix_flag = false;
+    m_prefix_graphics_scene   = new lxa_graphics_scene (this, get_lexicon(),
+                                       get_lexicon()->get_prefix_signatures(), suffix_flag);
+
     m_graphics_view             = new lxa_graphics_view(this);
-    m_graphics_view->set_graphics_scene(m_graphics_scene);
     m_graphic_display_flag      = false;             // toggle with Ctrl-G
 
 
@@ -187,7 +193,11 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     if (ke->key() == Qt::Key_P){
         get_lexicon()->set_prefixes_flag();
         do_crab();
+        m_current_graphics_scene = m_prefix_graphics_scene;
+        m_graphics_view->setScene(m_current_graphics_scene);
+        m_current_graphics_scene->set_graphics_view(m_graphics_view);
         display_prefix_signatures();
+
     }
     if (ke->key() == Qt::Key_G)
     {
@@ -196,7 +206,6 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
             m_graphics_view->centerOn(0,1000);// this should be fixed so that the initial showing of the graphic is done right.
             m_graphic_display_flag = true;
             m_rightSplitter->setFocus();
-            qDebug() << "trying to show graphics";
         } else{
             m_rightSplitter->replaceWidget(1,m_tableView_lower);
             m_graphic_display_flag = false;
@@ -209,16 +218,16 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         cycle_through_graphic_displays();
     }
     if (ke->key() == Qt::Key_J){
-        m_graphics_scene->move_rows_apart();
+        m_current_graphics_scene->move_rows_apart();
     }
     if (ke->key() == Qt::Key_K){
-        m_graphics_scene->move_rows_closer();
+        m_current_graphics_scene->move_rows_closer();
     }
     if (ke->key() == Qt::Key_U){
-        m_graphics_scene->widen_columns();
+        m_current_graphics_scene->widen_columns();
     }
     if (ke->key() == Qt::Key_I){
-        m_graphics_scene->narrow_columns();
+        m_current_graphics_scene->narrow_columns();
     }
     if (ke->key() == Qt::Key_L){
         m_graphics_view->zoom_up();
@@ -260,7 +269,8 @@ void MainWindow::do_crab()
 
     statusBar()->showMessage("We have returned from the Crab Nebula.");
     m_Models["Words"]               ->load_words(get_lexicon()->get_words());
-    m_Models["Stems"]               ->load_stems(get_lexicon()->get_stems());
+    m_Models["Suffixal stems"]               ->load_stems(get_lexicon()->get_suffixal_stems());
+    m_Models["Prefixal stems"]               ->load_stems(get_lexicon()->get_prefixal_stems());
     m_Models["Suffixes"]            ->load_suffixes(get_lexicon()->get_suffixes());
     m_Models["Signatures"]          ->load_signatures(get_lexicon()->get_signatures());
     m_Models["Signatures 2"]         ->load_signatures(get_lexicon()->get_signatures(), SIG_BY_AFFIX_COUNT);
@@ -287,10 +297,13 @@ void MainWindow::do_crab()
 // end of experiment
 
 
-        m_graphics_scene = new lxa_graphics_scene(this);
-
-    m_graphics_view->setScene(m_graphics_scene);
-    m_graphics_scene->set_graphics_view(m_graphics_view);
+    m_prefix_graphics_scene = new lxa_graphics_scene(this,
+                                get_lexicon(), get_lexicon()->get_prefix_signatures(), false);
+    m_suffix_graphics_scene = new lxa_graphics_scene(this,
+                                get_lexicon(), get_lexicon()->get_signatures(), true);
+    m_current_graphics_scene = m_suffix_graphics_scene;
+    m_graphics_view->setScene(m_current_graphics_scene);
+    m_current_graphics_scene->set_graphics_view(m_graphics_view);
     m_leftTreeView->expandAll();
     m_leftTreeView->resizeColumnToContents(0);
     statusBar()->showMessage("All models are loaded.");
@@ -308,8 +321,11 @@ void MainWindow::do_crab2()
     statusBar()->showMessage("Loaded words.");
 
 
-    m_Models["Stems"]               ->load_stems(get_lexicon()->get_stems());
-    statusBar()->showMessage("Loaded stems.");
+    m_Models["Prefixal stems"]               ->load_stems(get_lexicon()->get_prefixal_stems());
+    statusBar()->showMessage("Loaded prefixal stems.");
+
+    m_Models["Suffixal stems"]               ->load_stems(get_lexicon()->get_suffixal_stems());
+    statusBar()->showMessage("Loaded suffixal stems.");
 
     m_Models["Suffixes"]            ->load_suffixes(get_lexicon()->get_suffixes());
 
@@ -353,21 +369,17 @@ void MainWindow::do_crab2()
 
     print_prefix_signatures();
 
-    if (m_graphics_scene == NULL){
-        m_graphics_scene = new lxa_graphics_scene(this);
-    }else{
-        m_graphics_scene->clear_all();
-    }
+
 
     if (get_lexicon()->get_suffix_flag()){
-        m_graphics_scene->assign_scene_positions_to_signatures(get_lexicon()->get_signatures(),   DT_All_Suffix_Signatures);
+        m_current_graphics_scene->assign_scene_positions_to_signatures(get_lexicon()->get_signatures(),   DT_All_Suffix_Signatures);
     }else{
-        m_graphics_scene->assign_scene_positions_to_signatures(get_lexicon()->get_prefix_signatures(),DT_All_Prefix_Signatures);
+        m_current_graphics_scene->assign_scene_positions_to_signatures(get_lexicon()->get_prefix_signatures(),DT_All_Prefix_Signatures);
     }
 
 
-    m_graphics_scene->place_signatures();
-    m_graphics_view->setScene(m_graphics_scene);
+    m_current_graphics_scene->place_signatures();
+    m_graphics_view->setScene(m_current_graphics_scene);
     m_leftTreeView->expandAll();
     statusBar()->showMessage("All models are loaded.");
 

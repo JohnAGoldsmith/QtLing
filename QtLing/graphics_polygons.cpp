@@ -8,6 +8,13 @@
 
 class CSignature;
 
+
+bar::bar(CSignature* pSig): graphic_signature2(  pSig){
+         set_text(pSig->get_key());
+};
+
+//-----------------------------------------------------------//
+
 triangle2::triangle2(CSignature* pSig): graphic_signature2(  pSig){
          set_text(pSig->get_key());
 };
@@ -40,6 +47,39 @@ octagon2::octagon2(CSignature* pSig): graphic_signature2(pSig){
 nonagon2::nonagon2(CSignature* pSig): graphic_signature2(pSig){
          set_text(pSig->get_key());
 };
+
+// --------------------------------->      <--------------------------------------------//
+void bar::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+                      QWidget *widget){
+
+    QBrush brush(m_color, Qt::SolidPattern);
+    QPen pen (Qt::darkBlue, 3);
+    painter->setBrush(brush);
+    painter->setPen(pen);
+    static const QPointF points[4] = {
+        QPointF(20,0),
+        QPointF(60,0),
+        QPointF(60,20),
+        QPointF(20,20)
+    };
+    painter->drawPolygon(points,4);
+}
+void bar::set_text(sigstring_t this_sigstring){
+    QList<QRectF*> br_list;
+    QList<QGraphicsSimpleTextItem*> text_item_list;
+    QStringList affixes = this_sigstring.split("=");
+    QFont serifFont ("Times", 16, QFont::Bold);
+
+    for (int i=0; i< 2; i++){
+        text_item_list.append( new QGraphicsSimpleTextItem(this));
+        text_item_list[i]->setText( affixes[i] );
+        text_item_list[i]->setFont( serifFont );
+        br_list.append(new QRectF(text_item_list[i]->sceneBoundingRect()));
+    }
+    text_item_list[0]->setPos( 15 - br_list[0]->width()   , 10 - br_list[0]->height()/2   );
+    text_item_list[1]->setPos( 65                         , 10 - br_list[1]->height()/2  );
+}
+
 // --------------------------------->      <--------------------------------------------//
 void triangle2::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                       QWidget *widget){

@@ -22,7 +22,8 @@ CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag)
     m_Signatures            = new CSignatureCollection(this, true);
     m_PrefixSignatures      = new CSignatureCollection(this,false);
     m_Words                 = new CWordCollection(this);
-    m_Stems                 = new CStemCollection(this);
+    m_prefixal_stems          = new CStemCollection(this);
+    m_suffixal_stems          = new CStemCollection(this);
     m_Suffixes              = new CSuffixCollection(this);
     m_Prefixes              = new CPrefixCollection(this);
     m_Compounds             = new CWordCollection(this);
@@ -39,7 +40,8 @@ CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag)
 
 //  This is part of an experiment.
     m_category_types["Words"]               = CT_word;
-    m_category_types["Stems"]               = CT_stem;
+    m_category_types["Suffixal stems"]      = CT_stem;
+    m_category_types["Prefixal stems"]      = CT_stem;
     m_category_types["Suffixes"]            = CT_affix;
     m_category_types["Prefixes"]            = CT_affix;
     m_category_types["Suffix signatures"]   = CT_signature;
@@ -376,8 +378,9 @@ void   CLexicon::AssignSuffixesToStems()
             stem_list_iterator stem_iter(*p_this_stem_list);
             while (stem_iter.hasNext()){
                 this_stem_t = stem_iter.next();
-
-                pStem = m_Stems->find_or_add(this_stem_t);
+                m_SuffixesFlag ?
+                    pStem = m_suffixal_stems->find_or_add(this_stem_t):
+                    pStem = m_prefixal_stems->find_or_add(this_stem_t);
                 pStem->add_signature (this_signature_string);
                 pSig->add_stem_pointer(pStem);
 
@@ -447,6 +450,10 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
    suffix_set *                this_ptr_to_suffix_set;
    affix_set *                 this_ptr_to_affix_set;
    CStem*                      pStem;
+   CStemCollection*            stems;
+   m_SuffixesFlag ?
+               stems = m_suffixal_stems:
+               stems = m_prefixal_stems;
    map_sigstring_to_suffix_set temp_stems_to_affix_set;
    map_sigstring_to_morph_set& ref_stems_to_affix_set (temp_stems_to_affix_set);
    map_sigstring_to_stem_list  temp_signatures_to_stems;
@@ -497,10 +504,11 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
    }
 
    //-->  create signatures, stems, affixes:  <--//
-   m_Stems->clear();
    if (m_SuffixesFlag){
+       m_suffixal_stems->clear();
        m_Signatures->clear();
    }else {
+       m_prefixal_stems->clear();
        m_PrefixSignatures->clear();
    }
    QMapIterator<sigstring_t, stem_list*> iter_sigstring_to_stems ( temp_signatures_to_stems);
@@ -533,7 +541,8 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
            stem_list_iterator stem_iter(*p_this_stem_list);
            while (stem_iter.hasNext()){
                this_stem_t = stem_iter.next();
-               pStem = m_Stems->find_or_add(this_stem_t);
+
+               pStem = stems->find_or_add(this_stem_t);
                pStem->add_signature (this_signature_string);
                pSig->add_stem_pointer(pStem);
                pStem->add_memo ("Pass1= ");
@@ -586,6 +595,10 @@ void CLexicon::create_temporary_map_from_stems_to_affix_sets(map_sigstring_to_mo
     QPair<QString,QString>      this_pair;
     QString                     this_stem_t, this_suffix_t;
     morph_set *                 pSet;
+    CStemCollection *           stems;
+    m_SuffixesFlag ?
+                stems = m_suffixal_stems:
+                stems = m_prefixal_stems;
 
     // iterate through parselist, and assign to stem cand affix collections;
     for (int parseno = 0; parseno < m_Parses->size(); parseno++){
@@ -647,6 +660,10 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
     CSignatureCollection*       signatures;
     suffix_t                    Null_string ("NULL");
     CSuffix*                    pNullSuffix = *m_Suffixes << Null_string;
+    CStemCollection*            stems;
+    m_SuffixesFlag ?
+                stems = m_suffixal_stems:
+                stems = m_prefixal_stems;
 
                                 m_ProgressBar->reset();
                                 m_ProgressBar->setMinimum(0);
@@ -693,7 +710,7 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
             if ( contains(&affixes_of_residual_sig, &proven_sig_list) ){
 
                 // We have found the longest signature contained in this_residual_suffix_set
-                pStem = m_Stems->find_or_add(this_stem);
+                pStem = stems->find_or_add(this_stem);
                 pStem->add_signature(p_proven_sigstring);
                 p_proven_sig->add_stem_pointer(pStem);
 

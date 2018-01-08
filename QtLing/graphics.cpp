@@ -106,8 +106,10 @@ void lxa_graphics_view::mousePressEvent(QMouseEvent* event)
 
 
 //--------------------------------------------------------------------------//
-lxa_graphics_scene::lxa_graphics_scene(MainWindow * window){
+lxa_graphics_scene::lxa_graphics_scene(MainWindow * window, CLexicon * lexicon,
+                                       CSignatureCollection* signatures, bool suffix_flag){
     m_main_window               = window;
+    m_lexicon                   = lexicon;
     m_location_of_bottom_row    = 0;
     m_row_delta                 = 225;
     m_column_delta              = 200;
@@ -116,6 +118,8 @@ lxa_graphics_scene::lxa_graphics_scene(MainWindow * window){
     m_out_of_focus_color        = Qt::gray;
     m_focus_signature_1         = NULL;
     m_focus_signature_2         = NULL;
+    m_signature_collection      = signatures;
+    m_suffix_flag               = suffix_flag;
 };
 
 //--------------------------------------------------------------------------//
@@ -270,6 +274,14 @@ void lxa_graphics_scene::place_signatures()
             int y = m_location_of_bottom_row - (row-2) * m_row_delta;
 
             switch (row){
+            case 2:{
+                bar * this_bar  = new bar (pSig);
+                addItem(this_bar);
+                this_bar->setPos(x,y);
+                m_map_from_sig_to_pgraphsig[pSig]=this_bar;
+                break;
+            }
+
             case 3:{
                 if (col == 0) { m_focus_signature_1 = pSig;}
                 triangle2 *  this_triangle_2  = new triangle2 (pSig);
@@ -330,20 +342,21 @@ void lxa_graphics_scene::place_signatures()
 //           }
 
             default:{
-              //  p_graph_sig = new graphic_signature (x,y, pSig,  m_row_delta, m_normal_color);
+              //graphic   p_graph_sig = new graphic_signature (x,y, pSig,  m_row_delta, m_normal_color);
               //  m_map_from_sig_to_pgraphsig[pSig] = p_graph_sig;
-             //   addItem(p_graph_sig);
-                break;
+              //  addItem(p_graph_sig);
+              //  break;
             }
         }
             col++;
         }
     }
-    if (m_focus_signature_1){
-        qDebug() << 389 << m_focus_signature_1->get_key();
-        m_map_from_sig_to_pgraphsig[m_focus_signature_1]->set_color(m_focus_color);
-        update();
-    }
+   // if (m_focus_signature_1){
+        //qDebug() << 389 << m_focus_signature_1->get_key();
+        //m_map_from_sig_to_pgraphsig[m_focus_signature_1]->set_color(m_focus_color);
+        //update();
+        // CAUSED  PROBLEMS
+ //   }
 
 //-->  the m_top_graphic_signature is the first item on the top row, and will be the first signature chosen for graphics.
 
@@ -353,7 +366,7 @@ void lxa_graphics_scene::place_signatures()
 
 
 
-    m_graphics_view->centerOn(m_bottom_left_x, m_bottom_left_y);
+    //m_graphics_view->centerOn(m_bottom_left_x, m_bottom_left_y);
     update();
 }
 //--------------------------------------------------------------------------//
