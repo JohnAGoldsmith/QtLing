@@ -304,6 +304,7 @@ void MainWindow::do_crab()
 void MainWindow::do_crab2()
 {   statusBar()->showMessage("Entering the Crab Nebula, phase 2");
     get_lexicon()->Crab_2();
+
     qApp->processEvents();
     statusBar()->showMessage("We have returned from the Crab Nebula again.");
     m_Models["Words"]               ->load_words(get_lexicon()->get_words());

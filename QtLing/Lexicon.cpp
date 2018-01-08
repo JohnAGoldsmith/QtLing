@@ -35,6 +35,7 @@ CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag)
     m_PassiveSignatures     = new CSignatureCollection(this, true);
     m_SuffixesFlag          = suffix_flag;
     m_Hypotheses            = new QList<CHypothesis*>;
+    m_Hypothesis_map        = new QMap<QString, CHypothesis*>;
     m_entropy_threshold_for_stems = 1.2;
     m_parent_lexicon        = lexicon;
 
@@ -111,7 +112,7 @@ void CLexicon::Crab_2()
     compute_sig_graph_edges();
     compute_sig_graph_edge_map();
     generate_hypotheses();
-    test_for_phonological_relations_between_signatures();
+//    test_for_phonological_relations_between_signatures();
     qDebug() << "finished crab 2.";
 }
 
