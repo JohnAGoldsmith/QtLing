@@ -30,8 +30,9 @@ public:
 
 //  end of experiment
 
-
+//-----------------------------------------------------------------------//
 class simple_sig_graph_edge{
+//-----------------------------------------------------------------------//
 public:
     CSignature*         sig_1;
     CSignature*         sig_2;
@@ -51,10 +52,12 @@ public:
     };
     QString label() {return morph + "/" + sig_1->get_key() + "/" + sig_2->get_key(); }
 };
+//-----------------------------------------------------------------------//
 
 
-
+//-----------------------------------------------------------------------//
 class sig_graph_edge{
+//-----------------------------------------------------------------------//
 public:
     CSignature* sig_1;
     CSignature* sig_2;
@@ -82,7 +85,9 @@ public:
 
 };
 
+//-----------------------------------------------------------------------//
 class protostem{
+//-----------------------------------------------------------------------//
         QString     m_protostem;
         int         m_start_word;
         int         m_end_word;
@@ -92,7 +97,11 @@ public:
         int         get_start_word() { return m_start_word;}
         int         get_end_word()   {return m_end_word;}
 };
+
+//-----------------------------------------------------------------------//
 class CLexicon
+//-----------------------------------------------------------------------//
+
 {
 protected:
                                                          // this is part of an experiment.
@@ -139,47 +148,44 @@ public:
     CLexicon(CLexicon* parent_lexicon = NULL, bool suffix_flag = true);
 public:
     // accessors and protostems
-//  part of an experiment:
-    QMap<QString, eComponentType> &             get_category_types()        { return m_category_types;}
-//  end of experiment;
 
-
-    CWordCollection*                            get_word_collection()       { return m_Words; }
-//    CStemCollection*                            GetStemCollection()         { return m_suffixal_stems; }
-    CSuffixCollection*                          GetSuffixCollection()       { return m_Suffixes; }
-    CSuffixCollection*                          get_suffixes()              {return m_Suffixes;}
-    CStemCollection *                           get_suffixal_stems()                 { return m_suffixal_stems;}
-    CStemCollection *                           get_prefixal_stems()                 { return m_prefixal_stems;}
-//    CStemCollection *                           get_prefix_stems()          { return m_prefix_stems;}
-    void                                        dump_suffixes(QList<QString>*);
-    CWordCollection *                           get_words()                 { return m_Words;}
-    CSignatureCollection*                       get_signatures()            { return m_Signatures;}
-    CSignatureCollection*                       get_prefix_signatures()     { return m_PrefixSignatures;}
-    CSignatureCollection*                       GetSignatureCollection()    { return m_Signatures; }
-    CSignatureCollection *                      get_residual_signatures()   { return m_ParaSignatures;}
-    CSuffixCollection*                          get_parasuffixes()          { return m_ParaSuffixes;}
-    CSignatureCollection*                       get_passive_signatures()    { return m_PassiveSignatures;}
-    CSignatureCollection *                      get_sequential_signatures() { return m_SequentialSignatures;}
-    QList<CHypothesis*>*                        get_hypotheses ()           {return m_Hypotheses;}
-    QMap<QString, CHypothesis*>  *               get_hypothesis_map()        { return m_Hypothesis_map;}
-    CHypothesis*                                get_hypothesis(QString hypothesis_label);
     void                                        collect_parasuffixes();
+    void                                        compute_sig_graph_edges();
+
     void                                        generate_hypotheses();
+
+    QMap<QString, eComponentType> &             get_category_types()        { return m_category_types;}
     double                                      get_entropy_threshold_for_positive_signatures() {return m_entropy_threshold_for_stems;}
 
-    QList<QPair<QString,QString>>*              GetParses()                 { return m_Parses;}
+    QList<CHypothesis*>*                        get_hypotheses ()           {return m_Hypotheses;}
+    QMap<QString, CHypothesis*>  *              get_hypothesis_map()        { return m_Hypothesis_map;}
+    CHypothesis*                                get_hypothesis(QString hypothesis_label);
+
+    \
+    void                                        dump_suffixes(QList<QString>*);
+    CSuffixCollection*                          get_parasuffixes()          { return m_ParaSuffixes;}
+    CSignatureCollection*                       get_passive_signatures()    { return m_PassiveSignatures;}
+    CSignatureCollection*                       get_prefix_signatures()     { return m_PrefixSignatures;}
+    CStemCollection *                           get_prefixal_stems()        { return m_prefixal_stems;}
+    CSignatureCollection *                      get_residual_signatures()   { return m_ParaSignatures;}
+    CSignatureCollection *                      get_sequential_signatures() { return m_SequentialSignatures;}
+    CSignatureCollection*                       get_signatures()            { return m_Signatures;}
+    CSuffixCollection*                          get_suffixes()              {return m_Suffixes;}
+    CStemCollection *                           get_suffixal_stems()        { return m_suffixal_stems;}
     QMap<QString,int>*                          get_protostems()            { return &m_Protostems;}
-    void                                        compute_sig_graph_edges();
-    QList<simple_sig_graph_edge*> *             get_sig_graph_edges()        { return &m_SigGraphEdgeList;}
-    lxa_sig_graph_edge_map *                    get_sig_graph_edge_map()     { return & m_SigGraphEdgeMap;}
+    QList<simple_sig_graph_edge*> *             get_sig_graph_edges()       { return &m_SigGraphEdgeList;}
+    lxa_sig_graph_edge_map *                    get_sig_graph_edge_map()    { return & m_SigGraphEdgeMap;}
     sig_graph_edge*                             get_sig_graph_edge(QString label) {return m_SigGraphEdgeMap[label];}
     QListIterator<simple_sig_graph_edge*>    *  get_sig_graph_edge_list_iter();
     lxa_sig_graph_edge_map_iter *               get_sig_graph_edge_map_iter();
+
+    bool                                        get_suffix_flag()           { return m_SuffixesFlag; }
+    CWordCollection*                            get_word_collection()       { return m_Words; }
+    CWordCollection *                           get_words()                 { return m_Words;}
+
     void                                        set_progress_bar (QProgressBar * pPB) { m_ProgressBar = pPB;}
     void                                        set_status_bar(QStatusBar* pBar) {m_StatusBar = pBar;}
     void                                        set_prefixes_flag()         { m_SuffixesFlag = false;}
-    bool                                        get_suffix_flag()           { return m_SuffixesFlag; }
-
 
 public:
     // insert functions here

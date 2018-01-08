@@ -951,8 +951,9 @@ void CLexicon::dump_suffixes(QList<QString> * pList)
  * Parasignatures are signatures with only a single stem, hence are not used directly.
  * Parasuffixes are affixes found in a parasignature.
  *
- * Not currently in use.
+ *
  */
+
 void CLexicon::collect_parasuffixes()
 {   sigstring_t     sigstring;
     suffix_t        suffix;

@@ -244,18 +244,6 @@ void LxaStandardItemModel::load_hypotheses(QList<CHypothesis*>* p_hypotheses)
         }
         appendRow(items);
     }
-/*
-    for (int hypno = 0; hypno<p_hypotheses->count(); hypno++)
-    {   hypothesis = p_hypotheses->at(hypno);
-        QList<QStandardItem*> items;
-        QStringList pieces = hypothesis->express();
-        for (int i = 0; i < pieces.count(); i++){
-             QStandardItem * item1 = new QStandardItem(pieces[i]);
-             items.append(item1);
-        }
-        appendRow(items);
-    }
-    */
 }
 void LxaStandardItemModel::load_hypotheses_2(QList<CHypothesis*>* p_hypotheses)
 {
@@ -404,13 +392,13 @@ void MainWindow::createTreeModel()
 
 
     QStandardItem * suffix_item = new QStandardItem(QString("Suffixes"));
-    QStandardItem * suffix_count_item = new QStandardItem(QString::number(get_lexicon()->GetSuffixCollection()->get_count()));
+    QStandardItem * suffix_count_item = new QStandardItem(QString::number(get_lexicon()->get_suffixes()->get_count()));
 
     QStandardItem * sig_item = new QStandardItem(QString("Signatures"));
-    QStandardItem * sig_count_item = new QStandardItem(QString::number(get_lexicon()->GetSignatureCollection()->get_count()));
+    QStandardItem * sig_count_item = new QStandardItem(QString::number(get_lexicon()->get_signatures()->get_count()));
 
     QStandardItem * pos_sig_item = new QStandardItem(QString("EPositive signatures"));
-    QStandardItem * pos_sig_count_item = new QStandardItem(QString::number(get_lexicon()->GetSignatureCollection()->get_number_of_epositive_signatures()));
+    QStandardItem * pos_sig_count_item = new QStandardItem(QString::number(get_lexicon()->get_signatures()->get_number_of_epositive_signatures()));
 
     QStandardItem * prefix_sig_item = new QStandardItem(QString("Prefix signatures"));
     QStandardItem * prefix_sig_count_item = new QStandardItem(QString::number(get_lexicon()->get_prefix_signatures()->get_count()));

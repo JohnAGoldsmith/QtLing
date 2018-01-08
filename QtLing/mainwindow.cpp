@@ -41,17 +41,7 @@
 #include "generaldefinitions.h"
 #include "lxamodels.h"
 
-//typedef  QMap<QString,CWord*>                       StringToWordPtr;
-//typedef  QPair<CStem*,CSignature*>                  stem_sig_pair;
-//typedef  QPair<stem_sig_pair*,                      stem_sig_pair*> pair_of_stem_sig_pairs;
-//typedef  QPair<QString, pair_of_stem_sig_pairs*>    five_tuple_sig_diffs;
-
 class LxaStandardItemModel;
-
-
-
-
-
 
 
 MainWindow::MainWindow()
@@ -269,8 +259,8 @@ void MainWindow::do_crab()
 
     statusBar()->showMessage("We have returned from the Crab Nebula.");
     m_Models["Words"]               ->load_words(get_lexicon()->get_words());
-    m_Models["Suffixal stems"]               ->load_stems(get_lexicon()->get_suffixal_stems());
-    m_Models["Prefixal stems"]               ->load_stems(get_lexicon()->get_prefixal_stems());
+    m_Models["Suffixal stems"]      ->load_stems(get_lexicon()->get_suffixal_stems());
+    m_Models["Prefixal stems"]      ->load_stems(get_lexicon()->get_prefixal_stems());
     m_Models["Suffixes"]            ->load_suffixes(get_lexicon()->get_suffixes());
     m_Models["Signatures"]          ->load_signatures(get_lexicon()->get_signatures());
     m_Models["Signatures 2"]         ->load_signatures(get_lexicon()->get_signatures(), SIG_BY_AFFIX_COUNT);
@@ -283,7 +273,7 @@ void MainWindow::do_crab()
     m_Models["Parasuffixes"]        ->load_suffixes(get_lexicon()->get_parasuffixes());
     m_Models["Passive signatures"]  ->load_signatures(get_lexicon()->get_passive_signatures());
     m_Models["Hypotheses"]          ->load_hypotheses(get_lexicon()->get_hypotheses());
-    m_Models["Hypotheses 2"]          ->load_hypotheses_2(get_lexicon()->get_hypotheses());
+    m_Models["Hypotheses 2"]        ->load_hypotheses_2(get_lexicon()->get_hypotheses());
     createTreeModel();
 
 // add component 4
@@ -326,27 +316,16 @@ void MainWindow::do_crab2()
 
     m_Models["Suffixal stems"]               ->load_stems(get_lexicon()->get_suffixal_stems());
     statusBar()->showMessage("Loaded suffixal stems.");
-
     m_Models["Suffixes"]            ->load_suffixes(get_lexicon()->get_suffixes());
-
     statusBar()->showMessage("Loading signatures.");
     qApp->processEvents();
-
     m_Models["Signatures"]          ->load_signatures(get_lexicon()->get_signatures());
-    statusBar()->showMessage("Loaded signatures.");
-
     m_Models["EPositive signatures"]    ->load_positive_signatures(get_lexicon()->get_signatures());
     m_Models["Prefix signatures"]   ->load_signatures(get_lexicon()->get_prefix_signatures());
     m_Models["EPositive prefix signatures"]    ->load_positive_signatures(get_lexicon()->get_prefix_signatures());
-
-    statusBar()->showMessage("Loading signature-tree edges.");
     qApp->processEvents();
-
     m_Models["SigGraphEdges"]        ->load_sig_graph_edges(get_lexicon()->get_sig_graph_edge_map());
-
-    statusBar()->showMessage("Loading residual signatures.");
     qApp->processEvents();
-
     m_Models["Residual parasignatures"]->load_parasignatures(get_lexicon()->get_residual_signatures());
     m_Models["Parasuffixes"]        ->load_suffixes(get_lexicon()->get_parasuffixes());
     m_Models["Passive signatures"]  ->load_signatures(get_lexicon()->get_passive_signatures());
@@ -497,6 +476,7 @@ void MainWindow::print_prefix_signatures()
 }
 
 // remove this...
+/*
 void MainWindow::sort_upper_table()
 {
     // a signal comes to sort the contents of the upper table.
@@ -507,8 +487,8 @@ void MainWindow::sort_upper_table()
             m_tableView_upper_left->set_signature_sort_style(SIG_BY_STEM_COUNT);
         }
     }
-
 }
+*/
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //        Infra- and super-structure

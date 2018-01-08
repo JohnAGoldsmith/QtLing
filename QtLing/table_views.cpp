@@ -89,9 +89,6 @@ LowerTableView::LowerTableView(MainWindow * window)
                  setModel( m_my_current_model);
               } // -->   Now, graphics display IS showing<-- //
               {
-                 qDebug() << "trying to display a focus signature";
- //                m_parent_window->get_graphics_scene()->set_focus_signature_1(pSig);
- //                m_parent_window->get_graphics_scene()->display_focus_signature();
               }
               break;}
          //  ---------------------------------------------------//
@@ -388,17 +385,6 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 /**
  * @brief LowerTableView::graphics_sig_graph_edges
  * @param pSig
@@ -588,21 +574,6 @@ void LowerTableView::table_passive_signature(CSignature *p_this_sig)
             }
      }
 
-
-
-
-
-
- //        // --> this sorts by morph, then sig in column 2 <-- //
-//        foreach (int count, counts){
-//            QList<CSignature*> signatures =stem_counter.keys(count);
-//            std::sort(signatures.begin(), signatures.end());
-//            foreach (CSignature* pSig, signatures){
-//                sorted_signatures.append(pSig);
-//            }
-//        }
-//    }
-
     for (int signo = sorted_signatures.count()-1; signo >= 0 ;signo-- ){
         CSignature* pSig2 = sorted_signatures[signo];
         sig_string sig2 = pSig2->get_key();
@@ -615,5 +586,4 @@ void LowerTableView::table_passive_signature(CSignature *p_this_sig)
         item_list.append(p_item);
         m_my_current_model->appendRow(item_list);
         }
-
 }
