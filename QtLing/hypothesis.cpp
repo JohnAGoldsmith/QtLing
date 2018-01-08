@@ -2,7 +2,10 @@
 #include "hypothesis.h"
 #include "Lexicon.h"
 
-
+CHypothesis* CLexicon::get_hypothesis(QString hypothesis)
+{
+    return m_Hypothesis_map->value( hypothesis );
+}
 void CLexicon::generate_hypotheses()
 {   sig_graph_edge * p_edge;
     lxa_sig_graph_edge_map_iter edge_iter (m_SigGraphEdgeMap);
@@ -68,6 +71,7 @@ void CLexicon::generate_hypotheses()
                                                          pSig1, pSig2, new_sig_2.join("="), new_affixes,
                                                          p_edge->get_number_of_words());
         m_Hypotheses->append(this_hypothesis);
+        m_Hypothesis_map->insert (this_hypothesis->express_as_string(),  this_hypothesis);
 
 
     }
@@ -139,6 +143,9 @@ QStringList CHypothesis::express(){
     return output;
 }
 
+QString CHypothesis::express_as_string(){
+    return express().join("@");
+}
 bool compare_number_of_words(CHypothesis* hyp1, CHypothesis* hyp2){
     return hyp1->get_number_of_words_saved()< hyp2->get_number_of_words_saved();
 }
