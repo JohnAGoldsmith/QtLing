@@ -142,7 +142,6 @@ void CLexicon::FindProtostems()
         m_ProgressBar->setValue(wordno);
         if (m_SuffixesFlag){
             this_word = Words->at(wordno);
-            qDebug() << this_word << 145;
         } else{
             this_word = get_words()->get_reverse_sort_list()->at(wordno);
         }
@@ -165,7 +164,7 @@ void CLexicon::FindProtostems()
                     DifferenceFoundFlag = true;
                     if (!m_suffix_protostems.contains(stem))                {
                         m_suffix_protostems[stem] = 1;
-                        qDebug() << 167 << stem << "Protostem";
+                       // qDebug() << 167 << stem << "Protostem";
                     }
                     if (!m_suffix_protostems_2.contains(stem)){
                         for (wordno2 = wordno; wordno2 < m_Words->get_count(); wordno2++ ){

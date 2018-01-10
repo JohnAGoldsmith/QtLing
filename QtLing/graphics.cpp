@@ -526,12 +526,10 @@ void lxa_graphics_scene::show_subsignatures(){
         return;
     }
     for (auto sig_iter : m_map_from_sig_to_pgraphsig.keys()){
-        qDebug() << sig_iter->get_key() << 501;
         if (m_focus_signature_1->contains(sig_iter)){
             m_map_from_sig_to_pgraphsig[sig_iter]->set_color(m_focus_color);
         } else{
             m_map_from_sig_to_pgraphsig[sig_iter]->set_color(m_out_of_focus_color);
-            qDebug()     << 506 << sig_iter->get_key();
         }
     }
     update();

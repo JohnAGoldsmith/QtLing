@@ -298,9 +298,6 @@ void MainWindow::do_crab()
     m_leftTreeView->expandAll();
     m_leftTreeView->resizeColumnToContents(0);
     statusBar()->showMessage("All models are loaded.");
-
-
-
 }
 void MainWindow::do_crab2()
 {   statusBar()->showMessage("Entering the Crab Nebula, phase 2");
@@ -311,11 +308,8 @@ void MainWindow::do_crab2()
     m_Models["Words"]               ->load_words(get_lexicon()->get_words());
     qApp->processEvents();
     statusBar()->showMessage("Loaded words.");
-
-
     m_Models["Prefixal stems"]               ->load_stems(get_lexicon()->get_prefixal_stems());
     statusBar()->showMessage("Loaded prefixal stems.");
-
     m_Models["Suffixal stems"]               ->load_stems(get_lexicon()->get_suffixal_stems());
     statusBar()->showMessage("Loaded suffixal stems.");
     m_Models["Suffixes"]            ->load_suffixes(get_lexicon()->get_suffixes());
@@ -360,9 +354,32 @@ void MainWindow::do_crab2()
 
 
     m_current_graphics_scene->place_signatures();
+
+    if (get_lexicon()->get_suffix_flag()){
+        m_suffix_graphics_scene = new lxa_graphics_scene(this, get_lexicon(), get_lexicon()->get_signatures(), true);
+        m_current_graphics_scene = m_suffix_graphics_scene;
+
+    } else{
+        m_prefix_graphics_scene = new lxa_graphics_scene(this, get_lexicon(), get_lexicon()->get_prefix_signatures(), false);
+        m_current_graphics_scene = m_prefix_graphics_scene;
+
+    }
+
     m_graphics_view->setScene(m_current_graphics_scene);
+    m_current_graphics_scene->set_graphics_view(m_graphics_view);
     m_leftTreeView->expandAll();
+    m_leftTreeView->resizeColumnToContents(0);
+
+
+
     statusBar()->showMessage("All models are loaded.");
+
+
+
+
+
+
+
 
 
 }
