@@ -174,6 +174,7 @@ void MainWindow::cycle_through_graphic_displays()
 void MainWindow::keyPressEvent(QKeyEvent* ke)
 {
     if (ke->key() == Qt::Key_S){
+        get_lexicon()->set_suffixes_flag();
         do_crab();
         display_suffix_signatures();
     }

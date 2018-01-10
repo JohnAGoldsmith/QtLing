@@ -28,7 +28,8 @@ CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag)
     m_Prefixes              = new CPrefixCollection(this);
     m_Compounds             = new CWordCollection(this);
     m_Parses                = new QList<QPair<QString,QString>>();
-    m_Protostems            = QMap<QString, int>();
+    m_suffix_protostems            = QMap<QString, int>();
+    m_prefix_protostems            = QMap<QString, int>();
     m_ParaSignatures        =  new CSignatureCollection(this, true);
     m_ParaSuffixes          = new CSuffixCollection(this);
     m_ResidualStems         = new CStemCollection(this);
@@ -105,7 +106,7 @@ void CLexicon::Crab_1()
 void CLexicon::Crab_2()
 {
     ReSignaturizeWithKnownAffixes();
-//   FindGoodSignaturesInsideParaSignatures();
+    FindGoodSignaturesInsideParaSignatures();
 //    m_SuffixesFlag ?
 //        m_Signatures->calculate_stem_entropy():
 //        m_PrefixSignatures->calculate_stem_entropy();
@@ -133,13 +134,15 @@ void CLexicon::FindProtostems()
     m_ProgressBar->setMinimum(0);
     m_ProgressBar->setMaximum(Words->size());
     m_StatusBar->showMessage("Proto-stems.");
-    m_Protostems.clear();
+    m_prefix_protostems.clear();
+    m_suffix_protostems.clear();
     m_Parses->clear();
     m_Parse_map.clear();
     for (int wordno=0; wordno<Words->size(); wordno ++){
         m_ProgressBar->setValue(wordno);
         if (m_SuffixesFlag){
             this_word = Words->at(wordno);
+            qDebug() << this_word << 145;
         } else{
             this_word = get_words()->get_reverse_sort_list()->at(wordno);
         }
@@ -160,17 +163,18 @@ void CLexicon::FindProtostems()
                     stem = previous_word.left(i);
                     if (stem.length()== 0){continue;}
                     DifferenceFoundFlag = true;
-                    if (!m_Protostems.contains(stem))                {
-                        m_Protostems[stem] = 1;
+                    if (!m_suffix_protostems.contains(stem))                {
+                        m_suffix_protostems[stem] = 1;
+                        qDebug() << 167 << stem << "Protostem";
                     }
-                    if (!m_protostems_2.contains(stem)){
+                    if (!m_suffix_protostems_2.contains(stem)){
                         for (wordno2 = wordno; wordno2 < m_Words->get_count(); wordno2++ ){
                             if ( ! Words->at(wordno2).startsWith(stem) ){
                                 end_word = wordno2 - 1;
                                 break;                            }
                         } // add case for last word on list here.
                         protostem * this_protostem = new protostem(stem, wordno-1, end_word );
-                        m_protostems_2[stem] = this_protostem;
+                        m_suffix_protostems_2[stem] = this_protostem;
                     }
                     break;
                 }
@@ -186,8 +190,8 @@ void CLexicon::FindProtostems()
                     stem = previous_word.right(i-1);
                     DifferenceFoundFlag = true;
 
-                    if (!m_Protostems.contains(stem))                {
-                        m_Protostems[stem] = 1;
+                    if (!m_prefix_protostems.contains(stem))                {
+                        m_prefix_protostems[stem] = 1;
                     }
                     break;
                 }
@@ -199,7 +203,7 @@ void CLexicon::FindProtostems()
         }
         else {
             if (previous_word.length() < this_word.length()) {
-                m_Protostems[previous_word] = 1;
+                m_prefix_protostems[previous_word] = 1;
             }
         }
         previous_word = this_word;
@@ -235,7 +239,7 @@ void CLexicon::CreateStemAffixPairs()
             if (m_SuffixesFlag){
                 stem = word.left(letterno);
                 //if (m_Protostems.contains(stem)){
-                if(m_protostems_2.contains(stem))  {
+                if(m_suffix_protostems_2.contains(stem))  {
                     suffix_length = word.length() - letterno;
                     suffix = word.right(suffix_length);
                     m_Parses->append(QPair<QString,QString>(stem,suffix));
@@ -245,7 +249,7 @@ void CLexicon::CreateStemAffixPairs()
                 }
             }else{
                 stem = word.right(letterno);
-                if (m_Protostems.contains(stem)){
+                if (m_prefix_protostems.contains(stem)){
                     prefix_length = word.length() - letterno;
                     prefix = word.left(prefix_length);
                     m_Parses->append(QPair<QString,QString>(prefix,stem));
@@ -289,7 +293,6 @@ void   CLexicon::AssignSuffixesToStems()
         } else{
             this_stem_t = this_pair.second;
             this_affix = this_pair.first;
-            qDebug() << 290 << this_affix << this_stem_t;
         }
         if (! temp_stems_to_affix_set.contains(this_stem_t)){
             if (m_SuffixesFlag){
@@ -300,7 +303,6 @@ void   CLexicon::AssignSuffixesToStems()
             temp_stems_to_affix_set.insert(this_stem_t,pSet);
         }
         temp_stems_to_affix_set.value(this_stem_t)->insert(this_affix);
-        //qDebug() << 300  << this_affix << this_stem_t;
     }
     qDebug() << "Step 1.";
     //--> We iterate through these stems and for each stem, create QStringLists of their affixes. <--//
@@ -518,7 +520,6 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
        this_signature_string    = iter_sigstring_to_stems.key();
        p_this_stem_list         = iter_sigstring_to_stems.value();
        this_stem_t              = p_this_stem_list->first();
-       qDebug() << this_stem_t << this_signature_string << 521;
        affix_set this_affix_set = QSet<QString>::fromList( this_signature_string.split("="));
        if (p_this_stem_list->size() >= MINIMUM_NUMBER_OF_STEMS)
        {   m_SuffixesFlag ?
@@ -644,7 +645,7 @@ void CLexicon::create_temporary_map_from_stems_to_affix_sets(map_sigstring_to_mo
 void   CLexicon::FindGoodSignaturesInsideParaSignatures()
 {   stem_t                      this_stem;
     word_t                      this_word;
-    affix_t                    this_affix;
+    affix_t                     this_affix;
     sig_string                  this_signature_string;
     CStem*                      pStem;
     CWord*                      pWord;
@@ -685,9 +686,17 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
     // instead of going through parasignatures, we will look at protostems that are not stems.
     // We will not keep Parasignatures or residual stems.
 
+    QMap<QString, int>        * these_protostems;
+    QMap<QString, protostem*> * these_protostems_2;
+    m_SuffixesFlag?
+                these_protostems = & m_suffix_protostems:
+                these_protostems = & m_prefix_protostems;
+    m_SuffixesFlag?
+                these_protostems_2 = & m_suffix_protostems_2:
+                these_protostems_2 = & m_prefix_protostems_2;
     int protostem_count = 0;
-    m_ProgressBar->setMaximum(m_protostems_2.count());
-    foreach (auto this_protostem, m_protostems_2)
+    m_ProgressBar->setMaximum(these_protostems_2->count());
+    foreach (auto this_protostem, * these_protostems_2)
     {
         affixes_of_residual_sig.clear();
         m_ProgressBar->setValue(protostem_count++);
@@ -737,7 +746,7 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
         } // loop over proven signatures;
     }
 
-     m_Signatures->sort_each_signatures_stems_alphabetically();
+     signatures->sort_each_signatures_stems_alphabetically();
 }
 
 

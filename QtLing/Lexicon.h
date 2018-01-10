@@ -119,8 +119,15 @@ protected:
     CWordCollection *               m_Compounds;
     QList<QPair<QString,QString>> * m_Parses;
     QMap<QString,int>               m_Parse_map;
-    QMap<QString, int>              m_Protostems;
-    QMap<QString, protostem*>        m_protostems_2;
+    QMap<QString, int>              m_suffix_protostems;
+    QMap<QString, int>              m_prefix_protostems;
+
+    // m_protostems_2 is used in order to keep track of exactly which interval of words in the word list begins
+    // with a particular proto-stem (i.e., a word-beginning). This replaces using a huge signature to store
+    // that same information.
+    QMap<QString, protostem*>        m_suffix_protostems_2;
+    QMap<QString, protostem*>        m_prefix_protostems_2;
+
 
     bool                            m_SuffixesFlag;
     CLexicon*                       m_parent_lexicon;
@@ -172,7 +179,7 @@ public:
     CSignatureCollection*                       get_signatures()            { return m_Signatures;}
     CSuffixCollection*                          get_suffixes()              {return m_Suffixes;}
     CStemCollection *                           get_suffixal_stems()        { return m_suffixal_stems;}
-    QMap<QString,int>*                          get_protostems()            { return &m_Protostems;}
+    QMap<QString,int>*                          get_protostems()            { return &m_suffix_protostems;}
     QList<simple_sig_graph_edge*> *             get_sig_graph_edges()       { return &m_SigGraphEdgeList;}
     lxa_sig_graph_edge_map *                    get_sig_graph_edge_map()    { return & m_SigGraphEdgeMap;}
     sig_graph_edge*                             get_sig_graph_edge(QString label) {return m_SigGraphEdgeMap[label];}
@@ -186,7 +193,7 @@ public:
     void                                        set_progress_bar (QProgressBar * pPB) { m_ProgressBar = pPB;}
     void                                        set_status_bar(QStatusBar* pBar) {m_StatusBar = pBar;}
     void                                        set_prefixes_flag()         { m_SuffixesFlag = false;}
-
+    void                                        set_suffixes_flag()         { m_SuffixesFlag = true;}
 public:
     // insert functions here
     void Crab_1();
