@@ -203,8 +203,23 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         }
     }
     if (ke->key() == Qt::Key_2){
+        get_lexicon()->set_suffixes_flag();
         do_crab2();
+        m_current_graphics_scene = m_suffix_graphics_scene;
+        m_graphics_view->setScene(m_current_graphics_scene);
+        m_current_graphics_scene->set_graphics_view(m_graphics_view);
+        display_suffix_signatures();
     }
+    if (ke->key() == Qt::Key_1){
+        get_lexicon()->set_prefixes_flag();
+        do_crab2();
+        m_current_graphics_scene = m_prefix_graphics_scene;
+        m_graphics_view->setScene(m_current_graphics_scene);
+        m_current_graphics_scene->set_graphics_view(m_graphics_view);
+        display_prefix_signatures();
+
+     }
+
     if (ke->key() == Qt::Key_V){
         cycle_through_graphic_displays();
     }
