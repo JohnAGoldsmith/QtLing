@@ -372,9 +372,9 @@ void LxaStandardItemModel::load_sig_graph_edges( QMap<QString, sig_graph_edge*> 
 
 };
 
-void MainWindow::createTreeModel()
+void MainWindow::create_or_update_TreeModel()
 {
-    QStandardItem * parent = m_treeModel->invisibleRootItem();
+     QStandardItem * parent = m_treeModel->invisibleRootItem();
 
 //  this pair of lines must stay here after experiment:
     QStandardItem * lexicon_item = new QStandardItem(QString("Lexicon"));

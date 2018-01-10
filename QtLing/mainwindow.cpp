@@ -80,6 +80,7 @@ MainWindow::MainWindow()
 
 
     m_treeModel     = new QStandardItemModel();
+    //m_treeModel         = nullptr;
 
     get_lexicon()->set_status_bar(statusBar());
 
@@ -154,7 +155,6 @@ MainWindow::MainWindow()
 
     connect(m_tableView_upper_left,SIGNAL(clicked(const QModelIndex & )),
             m_tableView_upper_right,SLOT(display_this_affixes_signatures(const QModelIndex &  )));
-
 
 
 }
@@ -274,7 +274,7 @@ void MainWindow::do_crab()
     m_Models["Passive signatures"]  ->load_signatures(get_lexicon()->get_passive_signatures());
     m_Models["Hypotheses"]          ->load_hypotheses(get_lexicon()->get_hypotheses());
     m_Models["Hypotheses 2"]        ->load_hypotheses_2(get_lexicon()->get_hypotheses());
-    createTreeModel();
+    create_or_update_TreeModel();
 
 // add component 4
       //part of an experiment:
@@ -332,7 +332,7 @@ void MainWindow::do_crab2()
     m_Models["Passive signatures"]  ->load_signatures(get_lexicon()->get_passive_signatures());
     m_Models["Hypotheses"]          ->load_hypotheses(get_lexicon()->get_hypotheses());
     m_Models["Hypotheses 2"]          ->load_hypotheses_2(get_lexicon()->get_hypotheses());
-    createTreeModel();
+    create_or_update_TreeModel();
 
 // add component 5
 

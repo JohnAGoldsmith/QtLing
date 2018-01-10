@@ -126,7 +126,7 @@ private slots:
     void                    commitData(QSessionManager &);
 #endif
 
-private:
+public:
 
     void createHorizontalGroupBox();
     void createSplitter();
@@ -148,7 +148,7 @@ private:
     void                    load_StemSet2_model();
     void                    load_subsignature_model();
     void                    load_word_model();
-    void                    createTreeModel();
+    void                    create_or_update_TreeModel();
 
     void                    sort_upper_table();
 
@@ -171,6 +171,7 @@ private:
     lxa_graphics_scene*     get_graphics_scene()    {return m_current_graphics_scene;}
     lxa_graphics_scene*     get_suffix_graphics_scene()     {return m_suffix_graphics_scene;}
     lxa_graphics_scene*     get_prefix_graphics_scene()    {return m_prefix_graphics_scene;}
+    UpperTableView *        get_upper_right_tableview() { return m_tableView_upper_right;}
     void                    set_current_graphics_scene(lxa_graphics_scene* this_scene) {m_current_graphics_scene = this_scene;}
 
 protected:

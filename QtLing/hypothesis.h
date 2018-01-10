@@ -31,5 +31,7 @@ public:
     QString                         express_as_string();
     int                             get_number_of_words_saved();
 
+
+
 };
 #endif // HYPOTHESIS_H

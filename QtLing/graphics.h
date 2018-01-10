@@ -236,6 +236,7 @@ public:
     void            display_focus_signature();
     graphic_signature2* get_focus_signature_1();
     CLexicon*       get_lexicon()           {return m_lexicon;}
+    void            implement_hypothesis(const QModelIndex & );
     void            move_rows_apart();
     void            move_rows_closer();
     void            mouseMoveEvent(QGraphicsSceneMouseEvent * event);

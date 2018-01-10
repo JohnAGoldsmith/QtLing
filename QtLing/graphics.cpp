@@ -120,6 +120,13 @@ lxa_graphics_scene::lxa_graphics_scene(MainWindow * window, CLexicon * lexicon,
     m_focus_signature_2         = NULL;
     m_signature_collection      = signatures;
     m_suffix_flag               = suffix_flag;
+
+    // click on a hypothesis, watch its effects on the signature lattice.
+    connect(m_main_window->get_upper_right_tableview(),SIGNAL(clicked(const QModelIndex & )),
+            this,SLOT(implement_hypothesis(const QModelIndex &  )));
+
+
+
 };
 
 //--------------------------------------------------------------------------//
@@ -333,7 +340,8 @@ void lxa_graphics_scene::place_signatures()
                 break;
             }
 //            case 10:{
-//                decagon2 * this_decagon_2  = new decagon2 (pSig);
+
+                //                decagon2 * this_decagon_2  = new decagon2 (pSig);
 //                addItem(this_decagon_2);
 //                m_map_from_sig_to_pgraphsig[pSig]=this_decagon_2;
 //                this_decagon_2->setPos(x,y);

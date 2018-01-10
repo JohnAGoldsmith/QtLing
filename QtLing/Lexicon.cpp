@@ -105,13 +105,13 @@ void CLexicon::Crab_1()
 void CLexicon::Crab_2()
 {
     ReSignaturizeWithKnownAffixes();
-    FindGoodSignaturesInsideParaSignatures();
-    m_SuffixesFlag ?
-        m_Signatures->calculate_stem_entropy():
-        m_PrefixSignatures->calculate_stem_entropy();
-    compute_sig_graph_edges();
-    compute_sig_graph_edge_map();
-    generate_hypotheses();
+//   FindGoodSignaturesInsideParaSignatures();
+//    m_SuffixesFlag ?
+//        m_Signatures->calculate_stem_entropy():
+//        m_PrefixSignatures->calculate_stem_entropy();
+//    compute_sig_graph_edges();
+//    compute_sig_graph_edge_map();
+//    generate_hypotheses();
 //    test_for_phonological_relations_between_signatures();
     qDebug() << "finished crab 2.";
 }
@@ -133,6 +133,9 @@ void CLexicon::FindProtostems()
     m_ProgressBar->setMinimum(0);
     m_ProgressBar->setMaximum(Words->size());
     m_StatusBar->showMessage("Proto-stems.");
+    m_Protostems.clear();
+    m_Parses->clear();
+    m_Parse_map.clear();
     for (int wordno=0; wordno<Words->size(); wordno ++){
         m_ProgressBar->setValue(wordno);
         if (m_SuffixesFlag){
@@ -269,8 +272,8 @@ void   CLexicon::AssignSuffixesToStems()
     stem_list *                 p_this_stem_list;
     affix_set *                 this_ptr_to_affix_set;
     CStem*                      pStem;
-    map_sigstring_to_suffix_set      temp_stems_to_affix_set;
-    map_sigstring_to_stem_list        temp_signatures_to_stems;
+    map_sigstring_to_suffix_set temp_stems_to_affix_set;
+    map_sigstring_to_stem_list  temp_signatures_to_stems;
     morph_set *                 pSet;
     m_ProgressBar->reset();
     m_ProgressBar->setMinimum(0);
@@ -286,7 +289,7 @@ void   CLexicon::AssignSuffixesToStems()
         } else{
             this_stem_t = this_pair.second;
             this_affix = this_pair.first;
-
+            qDebug() << 290 << this_affix << this_stem_t;
         }
         if (! temp_stems_to_affix_set.contains(this_stem_t)){
             if (m_SuffixesFlag){
@@ -297,6 +300,7 @@ void   CLexicon::AssignSuffixesToStems()
             temp_stems_to_affix_set.insert(this_stem_t,pSet);
         }
         temp_stems_to_affix_set.value(this_stem_t)->insert(this_affix);
+        //qDebug() << 300  << this_affix << this_stem_t;
     }
     qDebug() << "Step 1.";
     //--> We iterate through these stems and for each stem, create QStringLists of their affixes. <--//
@@ -358,7 +362,6 @@ void   CLexicon::AssignSuffixesToStems()
             } else {
                 pSig = *m_PrefixSignatures << this_signature_string;
                 pSig->set_suffix_flag(false);
-
             }
             pSig->add_memo("Pass 1");
             QSetIterator<suffix_t> affix_iter(this_affix_set);
@@ -385,12 +388,9 @@ void   CLexicon::AssignSuffixesToStems()
                 pStem->add_signature (this_signature_string);
                 pSig->add_stem_pointer(pStem);
 
-                //QStringList affixes = this_signature_string.split("=");
                 QSetIterator<suffix_t> affix_iter(this_affix_set);
                 while(affix_iter.hasNext()){
                     this_affix = affix_iter.next();
-                    //                for (int affixno = 0; affixno < affixes.size(); affixno++)
-                    //                {   this_affix = affixes[affixno];
                     if (this_affix == "NULL"){
                         this_word = this_stem_t;
                     } else{
@@ -455,10 +455,10 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
    m_SuffixesFlag ?
                stems = m_suffixal_stems:
                stems = m_prefixal_stems;
-   map_sigstring_to_suffix_set temp_stems_to_affix_set;
-   map_sigstring_to_morph_set& ref_stems_to_affix_set (temp_stems_to_affix_set);
-   map_sigstring_to_stem_list  temp_signatures_to_stems;
-   map_sigstring_to_stem_list& ref_temp_signatures_to_stems(temp_signatures_to_stems);
+   map_sigstring_to_suffix_set   temp_stems_to_affix_set;
+   map_sigstring_to_morph_set  & ref_stems_to_affix_set (temp_stems_to_affix_set);
+   map_sigstring_to_stem_list    temp_signatures_to_stems;
+   map_sigstring_to_stem_list  & ref_temp_signatures_to_stems(temp_signatures_to_stems);
 
    m_StatusBar->showMessage("Resignaturize with known affixes");
    m_ProgressBar->reset();
@@ -517,7 +517,8 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
    {   iter_sigstring_to_stems.next();
        this_signature_string    = iter_sigstring_to_stems.key();
        p_this_stem_list         = iter_sigstring_to_stems.value();
-       this_stem_t =  p_this_stem_list->first();
+       this_stem_t              = p_this_stem_list->first();
+       qDebug() << this_stem_t << this_signature_string << 521;
        affix_set this_affix_set = QSet<QString>::fromList( this_signature_string.split("="));
        if (p_this_stem_list->size() >= MINIMUM_NUMBER_OF_STEMS)
        {   m_SuffixesFlag ?
@@ -563,7 +564,6 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
                    pWord->add_to_autobiography("Pass2= " + this_stem_t + "=" + message );
                }
            }
-
        }else{       // insufficient number of stems ...
            this_signature_string =  iter_sigstring_to_stems.key();
            pSig =  *m_ParaSignatures << this_signature_string;
