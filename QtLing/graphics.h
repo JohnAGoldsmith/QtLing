@@ -182,6 +182,7 @@ public:
     void                            set_graphics_scene( lxa_graphics_scene* pScene ) {m_graphics_scene = pScene;}
     void                            zoom_up();
     void                            zoom_down();
+    void                            reset_scale();
 
 
 };
@@ -194,6 +195,7 @@ public:
 
 class lxa_graphics_scene : public QGraphicsScene
 {  // friend          graphic_signature;
+    friend                                  lxa_graphics_view;
 
     MainWindow*                             m_main_window;
     CLexicon*                               m_lexicon;
@@ -227,28 +229,30 @@ private:
 public:
                     ~lxa_graphics_scene();
                     lxa_graphics_scene(MainWindow *, CLexicon* , CSignatureCollection*,bool suffix_flag );
-    void            add_signature_containment_edge (QPair<CSignature*, CSignature*>* pPair)
+    void                add_signature_containment_edge (QPair<CSignature*, CSignature*>* pPair)
                                            {m_signature_containment_edges.append (pPair); }
-    void            assign_scene_positions_to_signatures(CSignatureCollection*, eDisplayType );
-    eGraphicsStatus change_graphics_status();
-    void            clear();
-    void            clear_all();
-    void            display_focus_signature();
+    void                assign_scene_positions_to_signatures(CSignatureCollection*, eDisplayType );
+    eGraphicsStatus     change_graphics_status();
+    void                clear();
+    void                clear_all();
+    void                display_focus_signature();
     graphic_signature2* get_focus_signature_1();
-    CLexicon*       get_lexicon()           {return m_lexicon;}
-    void            implement_hypothesis(const QModelIndex & );
-    void            move_rows_apart();
-    void            move_rows_closer();
-    void            mouseMoveEvent(QGraphicsSceneMouseEvent * event);
-    void            narrow_columns();
-    void            place_containment_edges();
-    void            place_signatures();
-    void            set_focus_signature(CSignature* );
-    void            set_focus_signature_1(CSignature* pSig)       {m_focus_signature_1 = pSig;}
-    void            set_focus_signature_2(CSignature* pSig)       {m_focus_signature_2 = pSig;}
-    void            set_graphics_view (lxa_graphics_view* );
-    void            show_hypothesis_1(CHypothesis*);
-    void            show_subsignatures() ;
+    CLexicon*           get_lexicon()           {return m_lexicon;}
+    void                implement_hypothesis(const QModelIndex & );
+    void                move_rows_apart();
+    void                move_rows_closer();
+    void                mouseMoveEvent(QGraphicsSceneMouseEvent * event);
+    void                narrow_columns();
+    void                place_containment_edges();
+    void                place_signatures();
+    void                set_focus_signature(CSignature* );
+    void                set_focus_signature_1(CSignature* pSig)       {m_focus_signature_1 = pSig;}
+    void                set_focus_signature_2(CSignature* pSig)       {m_focus_signature_2 = pSig;}
+    void                set_graphics_view (lxa_graphics_view* );
+    void                show_hypothesis_1(CHypothesis*);
+    void                set_column_delta (double s)                 {m_column_delta = s;}
+    void                set_row_delta(double s)                     {m_row_delta = s;}
+    void                show_subsignatures() ;
     void            update_signature_focus();
     void            widen_columns();
 

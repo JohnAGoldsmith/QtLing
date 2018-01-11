@@ -150,11 +150,14 @@ MainWindow::MainWindow()
 
     connect(m_tableView_upper_left,SIGNAL(clicked(const QModelIndex & )),
             m_tableView_lower,SLOT(display_this_item(const QModelIndex &  )));
+
+
     connect(m_tableView_upper_right,SIGNAL(clicked(const QModelIndex & )),
             m_tableView_lower,SLOT(display_this_item(const QModelIndex &  )));
 
     connect(m_tableView_upper_left,SIGNAL(clicked(const QModelIndex & )),
             m_tableView_upper_right,SLOT(display_this_affixes_signatures(const QModelIndex &  )));
+
 
 
 }
@@ -197,9 +200,15 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
             m_graphics_view->centerOn(0,1000);// this should be fixed so that the initial showing of the graphic is done right.
             m_graphic_display_flag = true;
             m_rightSplitter->setFocus();
+            QList<int> sizes;
+            sizes<< 200 << 500;
+            m_rightSplitter->setSizes(sizes);
         } else{
             m_rightSplitter->replaceWidget(1,m_tableView_lower);
             m_graphic_display_flag = false;
+            QList<int> sizes;
+            sizes<< 500 << 200;
+            m_rightSplitter->setSizes(sizes);
         }
     }
     if (ke->key() == Qt::Key_2){
@@ -246,8 +255,8 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     if (ke->key() == Qt::Key_A){
 
     }
-    if (ke->key()== Qt::Key_H){
-
+    if (ke->key()== Qt::Key_Exclam){
+        m_graphics_view->reset_scale();
     }
     QMainWindow::keyPressEvent(ke);
 }

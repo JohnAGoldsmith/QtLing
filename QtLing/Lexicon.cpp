@@ -107,12 +107,12 @@ void CLexicon::Crab_2()
 {
     ReSignaturizeWithKnownAffixes();
     FindGoodSignaturesInsideParaSignatures();
-//    m_SuffixesFlag ?
-//        m_Signatures->calculate_stem_entropy():
-//        m_PrefixSignatures->calculate_stem_entropy();
-//    compute_sig_graph_edges();
-//    compute_sig_graph_edge_map();
-//    generate_hypotheses();
+    m_SuffixesFlag ?
+        m_Signatures->calculate_stem_entropy():
+        m_PrefixSignatures->calculate_stem_entropy();
+    compute_sig_graph_edges();
+    compute_sig_graph_edge_map();
+    generate_hypotheses();
 //    test_for_phonological_relations_between_signatures();
     qDebug() << "finished crab 2.";
 }

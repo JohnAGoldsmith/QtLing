@@ -463,20 +463,20 @@ void lxa_graphics_scene::widen_columns()
     clear();
     place_signatures();
     update();
-    m_graphics_view->centerOn(m_bottom_left_x, m_bottom_left_y);
+//    m_graphics_view->centerOn(m_bottom_left_x, m_bottom_left_y);
 }
 void lxa_graphics_scene::narrow_columns()
 {
     m_column_delta *= 0.8;
     clear();
     place_signatures();
-    m_graphics_view->centerOn(m_bottom_left_x, m_bottom_left_y);
+//    m_graphics_view->centerOn(m_bottom_left_x, m_bottom_left_y);
 }
 void  lxa_graphics_scene::move_rows_apart()
 {    m_row_delta *= 1.2;
     clear();
     place_signatures();
-     m_graphics_view->centerOn(m_bottom_left_x, m_bottom_left_y);
+//     m_graphics_view->centerOn(m_bottom_left_x, m_bottom_left_y);
 }
 
 void lxa_graphics_scene::move_rows_closer()
@@ -484,7 +484,6 @@ void lxa_graphics_scene::move_rows_closer()
     m_row_delta *= 0.8;
     clear();
     place_signatures();
-    m_graphics_view->centerOn(m_bottom_left_x, m_bottom_left_y);
 
 }
 void lxa_graphics_view::zoom_up()
@@ -503,7 +502,19 @@ void lxa_graphics_view::zoom_down()
         scale(1.2,1.2);
 
 }
+void lxa_graphics_view::reset_scale()
+{
+    double new_scale = 1.0 / m_x_scale;
+    scale(new_scale, new_scale);
 
+    m_x_scale = 1.0;
+    m_y_scale = 1.0;
+
+    m_graphics_scene->set_row_delta (225);
+    m_graphics_scene->set_column_delta ( 200 ) ;
+
+
+}
 
 
 
@@ -511,7 +522,7 @@ void lxa_graphics_view::zoom_down()
 
 //--------------------------------------------------------------------------//
 void lxa_graphics_scene::set_focus_signature(CSignature* pSig){
-    qDebug() << "set focus signature"<<379;
+
     m_map_from_sig_to_pgraphsig[m_focus_signature_1]->set_color(m_normal_color);
     set_focus_signature_1(pSig);
     m_map_from_sig_to_pgraphsig[pSig]->set_color(m_focus_color);
