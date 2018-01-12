@@ -216,23 +216,25 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         }
     }
     if (ke->key() == Qt::Key_2){
-        get_lexicon()->set_suffixes_flag();
-        do_crab2();
-        m_current_graphics_scene = m_suffix_graphics_scene;
-        m_graphics_view->setScene(m_current_graphics_scene);
-        m_current_graphics_scene->set_graphics_view(m_graphics_view);
-        display_suffix_signatures();
+        if (get_lexicon()->get_suffixal_stems()->get_count() > 0){
+            get_lexicon()->set_suffixes_flag();
+            do_crab2();
+            m_current_graphics_scene = m_suffix_graphics_scene;
+            m_graphics_view->setScene(m_current_graphics_scene);
+            m_current_graphics_scene->set_graphics_view(m_graphics_view);
+            display_suffix_signatures();
+        }
     }
     if (ke->key() == Qt::Key_1){
-        get_lexicon()->set_prefixes_flag();
-        do_crab2();
-        m_current_graphics_scene = m_prefix_graphics_scene;
-        m_graphics_view->setScene(m_current_graphics_scene);
-        m_current_graphics_scene->set_graphics_view(m_graphics_view);
-        display_prefix_signatures();
-
+        if (get_lexicon()->get_prefixal_stems()->get_count() > 0){
+            get_lexicon()->set_prefixes_flag();
+            do_crab2();
+            m_current_graphics_scene = m_prefix_graphics_scene;
+            m_graphics_view->setScene(m_current_graphics_scene);
+            m_current_graphics_scene->set_graphics_view(m_graphics_view);
+            display_prefix_signatures();
+        }
      }
-
     if (ke->key() == Qt::Key_V){
         cycle_through_graphic_displays();
     }
@@ -325,6 +327,8 @@ void MainWindow::do_crab()
         {
             m_prefix_graphics_scene = new lxa_graphics_scene(this,
                                         get_lexicon(), get_lexicon()->get_prefix_signatures(), false);
+            m_current_graphics_scene = m_prefix_graphics_scene;
+
         }
         m_graphics_view->setScene(m_current_graphics_scene);
         m_current_graphics_scene->set_graphics_view(m_graphics_view);

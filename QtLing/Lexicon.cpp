@@ -99,13 +99,17 @@ void CLexicon::Crab_1()
     qDebug() << "finished crab 1.";
  }
 
+//  <-------------->
+
 /**
  * @brief CLexicon::Crab_2
  * Crab_2 is a bit slower than Crab_1.
  */
 void CLexicon::Crab_2()
 {
+    qDebug() << 108;
     ReSignaturizeWithKnownAffixes();
+    qDebug() << 110;
     FindGoodSignaturesInsideParaSignatures();
     m_SuffixesFlag ?
         m_Signatures->calculate_stem_entropy():
@@ -113,6 +117,8 @@ void CLexicon::Crab_2()
     compute_sig_graph_edges();
     compute_sig_graph_edge_map();
     generate_hypotheses();
+
+
 //    test_for_phonological_relations_between_signatures();
     qDebug() << "finished crab 2.";
 }
@@ -487,6 +493,7 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
         m_ProgressBar->setValue(stem_count++);
         this_stem_t            = stem_iter.key();
         this_ptr_to_affix_set  = stem_iter.value();
+        qDebug() << this_stem_t  << 492;
         if (this_ptr_to_affix_set->size() < 2){continue;}
         QStringList temp_presignature;
 
@@ -519,6 +526,7 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
        this_signature_string    = iter_sigstring_to_stems.key();
        p_this_stem_list         = iter_sigstring_to_stems.value();
        this_stem_t              = p_this_stem_list->first();
+       qDebug() << 524 << this_signature_string << this_stem_t;
        affix_set this_affix_set = QSet<QString>::fromList( this_signature_string.split("="));
        if (p_this_stem_list->size() >= MINIMUM_NUMBER_OF_STEMS)
        {   m_SuffixesFlag ?
@@ -701,6 +709,7 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
         m_ProgressBar->setValue(protostem_count++);
         stem_t this_stem = this_protostem->get_stem();
         int stem_length = this_stem.length();
+        qDebug() << this_stem << 710;
 
         for (int wordno= this_protostem->get_start_word(); wordno <= this_protostem->get_end_word(); wordno++){
             QString this_word = m_Words->get_word_string(wordno);
