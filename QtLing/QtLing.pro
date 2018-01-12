@@ -25,7 +25,15 @@ SOURCES += main.cpp\
     SuffixCollection.cpp \
     Suffix.cpp \
     graphics.cpp \
-    lxamodels.cpp
+    lxamodels.cpp \
+    supersignature.cpp \
+    display_collections.cpp \
+    hypothesis.cpp \
+    graphics_polygons.cpp \
+    graphics_hypotheses.cpp \
+    table_display_functions.cpp \
+    table_views_lower.cpp \
+    table_views_upper.cpp
 
 HEADERS  += mainwindow.h \
     CompareFunc.h \
@@ -42,7 +50,11 @@ HEADERS  += mainwindow.h \
     SuffixCollection.h \
     Suffix.h \
     graphics.h \
-    ui_mainwindow.h
+    ui_mainwindow.h \
+    supersignature.h \
+    hypothesis.h \
+    lxamodels.h \
+    table_views.h
 
 FORMS    +=
 

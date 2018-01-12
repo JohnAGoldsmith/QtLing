@@ -51,7 +51,7 @@ MainWindow::MainWindow()
     // models
     m_Models["Words"]                       = new LxaStandardItemModel("Words");
     m_Models["Suffixal stems"]              = new LxaStandardItemModel("Suffixal stems");
-    m_Models["Prefixal stems"]          = new LxaStandardItemModel("Prefixal stems");
+    m_Models["Prefixal stems"]              = new LxaStandardItemModel("Prefixal stems");
     m_Models["Suffixes"]                    = new LxaStandardItemModel("Suffixes");
     m_Models["Signatures"]                  = new LxaStandardItemModel("Signatures");
     m_Models["Signatures 2"]                = new LxaStandardItemModel("Signatures");// sorted by affix count;
@@ -148,8 +148,13 @@ MainWindow::MainWindow()
     connect(m_leftTreeView, SIGNAL(clicked(const QModelIndex&)),
             m_tableView_upper_right, SLOT(ShowModelsUpperTableView(const QModelIndex&)));
 
+
+    // clicking on the upperleft corner can signal a graphic view below it, or a table below it.
     connect(m_tableView_upper_left,SIGNAL(clicked(const QModelIndex & )),
             m_tableView_lower,SLOT(display_this_item(const QModelIndex &  )));
+//    connect(m_tableView_upper_left,SIGNAL(clicked(const QModelIndex & )),
+//            m_current_graphics_scene,SLOT(display_this_item(const QModelIndex &  )));
+
 
 
     connect(m_tableView_upper_right,SIGNAL(clicked(const QModelIndex & )),
@@ -311,17 +316,22 @@ void MainWindow::do_crab()
         }
 // end of experiment
 
-
-    m_prefix_graphics_scene = new lxa_graphics_scene(this,
-                                get_lexicon(), get_lexicon()->get_prefix_signatures(), false);
-    m_suffix_graphics_scene = new lxa_graphics_scene(this,
-                                get_lexicon(), get_lexicon()->get_signatures(), true);
-    m_current_graphics_scene = m_suffix_graphics_scene;
-    m_graphics_view->setScene(m_current_graphics_scene);
-    m_current_graphics_scene->set_graphics_view(m_graphics_view);
-    m_leftTreeView->expandAll();
-    m_leftTreeView->resizeColumnToContents(0);
-    statusBar()->showMessage("All models are loaded.");
+        if (get_lexicon()->get_suffix_flag())
+        {
+            m_suffix_graphics_scene = new lxa_graphics_scene(this,
+                                        get_lexicon(), get_lexicon()->get_signatures(), true);
+            m_current_graphics_scene = m_suffix_graphics_scene;
+          }
+        else
+        {
+            m_prefix_graphics_scene = new lxa_graphics_scene(this,
+                                        get_lexicon(), get_lexicon()->get_prefix_signatures(), false);
+        }
+        m_graphics_view->setScene(m_current_graphics_scene);
+        m_current_graphics_scene->set_graphics_view(m_graphics_view);
+        m_leftTreeView->expandAll();
+        m_leftTreeView->resizeColumnToContents(0);
+        statusBar()->showMessage("All models are loaded.");
 }
 void MainWindow::do_crab2()
 {   statusBar()->showMessage("Entering the Crab Nebula, phase 2");

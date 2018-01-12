@@ -8,21 +8,21 @@ class MainWindow;
 class UpperTableView : public QTableView
 {
     Q_OBJECT
-    QString                 m_content;
+    QString                 m_content;  // tells us what is in the table
     MainWindow*             m_parent_window;
-    eDocumentType           m_document_type;
+    eDisplayType            m_display_type;     // this says the kind of thing in the table, so another view knows how to handle the information
     eSortStyle              m_signature_sort_style;
 public:
     UpperTableView ();
     UpperTableView (MainWindow*, eSortStyle = DEFAULT);
     void                    display_this_affixes_signatures(const QModelIndex & index);
-    QString                 get_content()                   {return m_content;}
-    void                    set_content_type(QString text)  {m_content = text;}
-    MainWindow*             get_parent_window()             {return m_parent_window;}
-    eDocumentType           get_document_type()             {return m_document_type;}
-    void                    set_document_type(eDocumentType type) {m_document_type = type;}
+    QString                 get_content()                               {return m_content;}
+    void                    set_content_type(QString text)              {m_content = text;}
+    MainWindow*             get_parent_window()                         {return m_parent_window;}
+    eDisplayType            get_display_type()                          {return m_display_type;}
+    void                    set_display_type(eDisplayType type)         {m_display_type = type;}
 public slots:
-    eSortStyle              get_signature_sort_style () { return m_signature_sort_style;}
+    eSortStyle              get_signature_sort_style ()                 { return m_signature_sort_style;}
     void                    set_signature_sort_style (eSortStyle style) {m_signature_sort_style = style;}
     void                    ShowModelsUpperTableView(const QModelIndex& );
 

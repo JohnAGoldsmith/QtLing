@@ -78,7 +78,8 @@ class MainWindow : public QMainWindow
     QProgressBar *                          m_ProgressBar;
     QMap<QString, LxaStandardItemModel*>    m_Models;
     eDisplayType                            m_graphic_display_type;
-
+    eDisplayType                            m_upper_table_left_display_type;
+    eDisplayType                            m_upper_table_right_display_type;
     QSplitter *                             m_mainSplitter;
     QSplitter *                             m_rightSplitter;
     QSplitter *                             m_top_rightSplitter;
@@ -104,6 +105,7 @@ public:
     void        display_suffixes();
     void        display_suffix_signatures();
     void        display_prefix_signatures();
+    void        display_epositive_suffix_signatures();
     void        display_hypotheses();
     void        DisplaySignatures();
     CLexicon*   get_lexicon() {return m_lexicon_list.last();  }

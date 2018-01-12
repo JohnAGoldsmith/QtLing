@@ -47,51 +47,47 @@ LowerTableView::LowerTableView(MainWindow * window)
   */
  void LowerTableView::display_this_item( const  QModelIndex & index )
  {
-     eDocumentType              UpperView_type = m_parent_window->m_tableView_upper_left->get_document_type();
+     eDisplayType              UpperView_type = m_parent_window->m_tableView_upper_left->get_display_type();
      QString                    word, stem, prefix, suffix, signature;
      CLexicon *                 this_lexicon = get_parent_window()->get_lexicon();
      int                        row, column;
      QStandardItem*             p_item;
      QList<QStandardItem*>      item_list;
 
+     if (m_parent_window->m_graphic_display_flag == true){
+         return;
+     }
+
      switch (UpperView_type){
-        case WORDS:{
+        case e_data_words:{
             if (index.isValid()) {row = index.row();}
             QString word = index.sibling(row,0).data().toString();
             CWord* pWord = this_lexicon->get_words()->get_word(word);
             table_word(pWord);
             setModel( m_my_current_model);
-            break;}
+            break;
+        }
          //  ---------------------------------------------------//
-        case  SIGNATURES:
-        case  EPOSITIVE_SIGNATURES:{
+        case  e_data_suffixal_signatures:
+        case  e_data_epositive_suffixal_signatures:{
             if (index.isValid()) {row = index.row();}
             signature = index.sibling(row,0).data().toString();
             CSignature*  pSig = this_lexicon->get_signatures()->get_signature(signature);
-
-            // -->  If Graphics is NOT showing, we display the information about the signature <-- //
-            if (m_parent_window->m_graphic_display_flag == false){
-               table_signature(pSig);
-               setModel( m_my_current_model);
-            }
+            table_signature(pSig);
+            setModel( m_my_current_model);
             break;}
          //  ---------------------------------------------------//
-        case PREFIX_SIGNATURES:
-        case EPOSITIVE_PREFIX_SIGNATURES:{
+        case e_data_prefixal_signatures:
+        case e_data_epositive_prefixal_signatures:{
               item_list.clear();
               if (index.isValid()) {row = index.row();}
               signature = index.sibling(row,0).data().toString();
               CSignature*           pSig = this_lexicon->get_prefix_signatures()->get_signature(signature);
-              // -->  If Graphics is NOT showing, we display the information about the signature <-- //
-              if (m_parent_window->m_graphic_display_flag == false){
-                 table_signature(pSig);
-                 setModel( m_my_current_model);
-              } // -->   Now, graphics display IS showing<-- //
-              {
-              }
+              table_signature(pSig);
+              setModel( m_my_current_model);
               break;}
          //  ---------------------------------------------------//
-        case RESIDUAL_PARASIGNATURES:{
+        case e_data_residual_signatures:{
               if (index.isValid()){row = index.row();}
               item_list.clear();
               signature = index.sibling(row,0).data().toString();
@@ -114,7 +110,7 @@ LowerTableView::LowerTableView(MainWindow * window)
               setModel( m_my_current_model);
               break;}
          //  ---------------------------------------------------//
-        case PASSIVE_SIGNATURES:{
+        case e_data_hollow_signatures:{
             item_list.clear();
             if (index.isValid()){
                 row = index.row();
@@ -133,12 +129,12 @@ LowerTableView::LowerTableView(MainWindow * window)
             setModel( m_my_current_model);
             break;}
            //  ---------------------------------------------------//
-     case SUFFIXES:{
+     case e_data_suffixes:{
             break;
              }
          //  ---------------------------------------------------//
 
-     case  SIGNATURE_GRAPH_EDGES:{
+     case  e_data_signatures_graph_edges:{
             item_list.clear();
             if (index.isValid()){
                  row = index.row();
@@ -156,12 +152,20 @@ LowerTableView::LowerTableView(MainWindow * window)
             QStringList           sig2_stems;
             QStringList           words;
             word_stem_struct *    this_word_stem_item;
+
+
             if (m_parent_window->m_graphic_display_flag){
                 //-->  Graphic display in lower right window <--//
                 if (column == 1){
                     pSig = pSig1;
                 } else { pSig = pSig2;}
                 graphics_sig_graph_edges(pSig, this_lexicon );
+
+
+
+
+
+
             } else
              // -->   Tabular display in lower right window <--//
             {   foreach (this_word_stem_item, this_edge->shared_word_stems){
@@ -199,11 +203,17 @@ LowerTableView::LowerTableView(MainWindow * window)
                 resizeColumnsToContents();
             } // end of tabular display, lower right window
          break;}
-    case  HYPOTHESES:
+    case  e_data_hypotheses:
           if (m_parent_window->m_graphic_display_flag){
-              if (index.isValid()) {row = index.row();}
-              QString hypothesis_label = index.sibling(row,0).data().toString();
-              CHypothesis*  pHypothesis = this_lexicon->get_hypothesis(hypothesis_label);
+
+
+
+                if (index.isValid()) {row = index.row();}
+                QString hypothesis_label = index.sibling(row,0).data().toString();
+                CHypothesis*  pHypothesis = this_lexicon->get_hypothesis(hypothesis_label);
+                qDebug() << 207 << hypothesis_label;
+
+
 
 
 
@@ -228,159 +238,6 @@ LowerTableView::LowerTableView(MainWindow * window)
  {
      m_parent_window = window;
  }
-
- /**
- * @brief UpperTableView::display_signatures
- * When we click on an affix in the upper-table on the left,
- * we display signatures on the right upper-table that contain that affix.
- * We should just put that in a model, and link the model to that view.
- */
-/*void UpperTableView::display_signatures()
-{
-    if (index.isValid()){
-        row = index.row();
-        column = index.column();
-    }
-    qDebug() << 145 <<  "table views suffixes";
-    m_my_current_model->clear();
-    CSignature* pSig;
-    QStandardItem*        p_item;
-    suffix_t suffix = index.sibling(row,0).data().toString();
-    auto sig_iter (get_lexicon()->get_signatures()->get_map_iterator());
-    while (sig_iter->hasNext()){
-        pSig = sig_iter->next().value();
-        if (pSig->contains_affix_string(suffix)){
-            p_item = new QStandardItem(pSig->get_key());
-            m_my_current_model->appendRow(p_item);
-        }
-    }
-    get_parent_window()->get
-}
-*/
- /**
-  * @brief UpperTableView::display_this_affixes_signatures
-  * This is used when we click on the left upper view to identify an affix;
-  * then we display all signatures containing that affix on the right.
-  */
- void  UpperTableView::display_this_affixes_signatures(const QModelIndex & index)
- {
-     if (index.isValid()){
-
-     }
-
- }
-
- /**
- * @brief UpperTableView::UpperTableView
- * @param window
- * This TableView responds to the User's click on the LeftSideTreeView.
- */
-UpperTableView::UpperTableView (MainWindow* window, eSortStyle this_sort_style)
-{
-        m_parent_window = window;
-        m_signature_sort_style = this_sort_style;
-        QFont sansFont("Ariel", 20);
-        setFont(sansFont);
-
-}
-
-/**
- * @brief UpperTableView::ShowModelsUpperTableView
- * @param index
- * What is displayed in the UpperTableView is the direct result
- * of what item the user clicks on the LeftTree; that is the
- * input to this function.
- * This function chooses one of the many Qt models that
- * Crab generated when it had finished its work.
- *
- * I have set up two knds of UpperTableViews, so that they can be seen
- * side by side. They differ by sorting style. Signatures can be
- * sorted by the number of stems or the number of affixes, for example.
- *
- * TODO: Make the different sortings be done by a Surrogate QView sorter.
- * Right now I have created two different models for different sorts
- * of the Signatures, which isn't the right way to do things in principle. Dec 2017.
- * And I have had to do this several times.
- */
-void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
-{
-    CLexicon* lexicon = m_parent_window->get_lexicon();
-    QString component;
-    if (index.isValid()){
-        component = index.data().toString();
-    }
-    if (component == "Words"){
-        setModel(m_parent_window->m_Models["Words"]);
-        set_document_type( WORDS );
-    }
-    else     if (component == "Prefixal stems"){
-        setModel(m_parent_window->m_Models["Prefix stems"]);
-        set_document_type( PREFIX_STEMS );
-    }
-    else     if (component == "Suffixal stems"){
-        setModel(m_parent_window->m_Models["Suffix stems"]);
-        set_document_type( SUFFIX_STEMS );
-    }
-    else     if (component == "Suffixes"){
-        m_parent_window->display_suffixes();
-        //setModel(m_parent_window->m_Models["Suffixes"]);
-        //set_document_type( SUFFIXES );
-    }
-    else     if (component == "Signatures"){
-        m_parent_window->display_suffix_signatures();
-    }
-    else     if (component == "EPositive signatures"){
-        setModel(m_parent_window->m_Models["EPositive signatures"]);
-        set_document_type( EPOSITIVE_SIGNATURES );
-        set_content_type( "signatures");
-
-        m_parent_window->set_current_graphics_scene (m_parent_window->get_suffix_graphics_scene());
-        m_parent_window->m_current_graphics_scene->clear_all();
-        m_parent_window->m_current_graphics_scene->assign_scene_positions_to_signatures(lexicon->get_signatures(), DT_Positive_Suffix_Signatures);
-        m_parent_window->m_current_graphics_scene->place_signatures();
-        qDebug() << "epositive sigs"<< 292;
-    }
-    else     if (component == "Prefix signatures"){
-        m_parent_window->display_prefix_signatures();
-    }
-    else     if (component == "EPositive prefix signatures"){
-        setModel(m_parent_window->m_Models["EPositive prefix signatures"]);
-        set_document_type( EPOSITIVE_PREFIX_SIGNATURES );
-        set_content_type( "signatures");
-    }
-    else     if (component == "Signature graph edges"){
-        setModel(m_parent_window->m_Models["SigGraphEdges"]);
-        set_document_type( SIGNATURE_GRAPH_EDGES );
-        sortByColumn(-1);
-    }
-    else     if (component == "Residual parasignatures"){
-        setModel(m_parent_window->m_Models["Residual parasignatures"]);
-        set_document_type( SIGNATURE_RESIDUES );
-        sortByColumn(1);
-        qDebug() << 238 << "table views";
-    }
-    else     if (component == "Parasuffixes"){
-        setModel(m_parent_window->m_Models["Parasuffixes"]);
-        set_document_type( PARASUFFIXES );
-        sortByColumn(1);
-    }
-    else     if (component == "Singleton signatures"){
-        set_document_type( SINGLETON_SIGNATURES );
-        sortByColumn(1);
-    }
-    else     if (component == "Passive signatures"){
-        setModel(m_parent_window->m_Models["Passive signatures"]);
-        set_document_type( PASSIVE_SIGNATURES );
-        sortByColumn(1);    }
-    else     if (component == "Hypotheses"){
-        m_parent_window->display_hypotheses();
-    }
-// add component 10
-
-
-
-    resizeColumnsToContents();
-}
 
 
 
