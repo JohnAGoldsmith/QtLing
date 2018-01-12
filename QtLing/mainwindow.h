@@ -77,9 +77,9 @@ class MainWindow : public QMainWindow
     QString                                 m_name_of_data_file;
     QProgressBar *                          m_ProgressBar;
     QMap<QString, LxaStandardItemModel*>    m_Models;
-    eDisplayType                            m_graphic_display_type;
-    eDisplayType                            m_upper_table_left_display_type;
-    eDisplayType                            m_upper_table_right_display_type;
+    eDataType                               m_graphic_display_type;
+    eDataType                               m_upper_table_left_data_type;
+    eDataType                               m_upper_table_right_data_type;
     QSplitter *                             m_mainSplitter;
     QSplitter *                             m_rightSplitter;
     QSplitter *                             m_top_rightSplitter;

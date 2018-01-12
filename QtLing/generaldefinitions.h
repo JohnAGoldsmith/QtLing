@@ -10,22 +10,6 @@ enum eHypothesisType{
     HT_affix_goes_to_signature
 };
 
-enum eDisplayType{
-    DT_hypotheses,
-    DT_words,
-    DT_stems,
-    DT_affixes,
-    DT_prefixal_signatures,
-    DT_suffixal_signatures,
-    DT_signature_graph_edges,
-    DT_Positive_Suffix_Signatures,
-    DT_Positive_Prefix_Signatures,
-    DT_All_Suffix_Signatures,
-    DT_All_Prefix_Signatures,
-    DT_hollow_suffixal_signatures,
-    DT_Unspecified
-};
-
 enum eGraphicsStatus{
     GS_default,
     GS_no_focus,
@@ -34,8 +18,10 @@ enum eGraphicsStatus{
     GS_one_focus_signature_some_satellites_others_grayed
 };
 
-enum eData{
-   e_data_words,
+enum eDataType{
+    e_data_words,
+    e_suffixal_stems,
+    e_prefixal_stems,
     e_data_suffixal_signatures,
     e_data_epositive_suffixal_signatures,
     e_data_prefixal_signatures,
@@ -43,8 +29,11 @@ enum eData{
     e_data_residual_signatures,
     e_data_hollow_signatures,
     e_data_suffixes,
+    e_data_prefixes,
     e_data_signatures_graph_edges,
-    e_data_hypotheses
+    e_data_hypotheses,
+    e_data_hollow_suffixal_signatures,
+    e_data_hollow_prefixal_signatures
 };
 
 enum eDocumentType  // for the Collection View

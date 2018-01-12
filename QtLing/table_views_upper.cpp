@@ -3,6 +3,23 @@
 #include "lxamodels.h"
 
 
+
+/**
+* @brief UpperTableView::UpperTableView
+* @param window
+* This TableView responds to the User's click on the LeftSideTreeView.
+*/
+UpperTableView::UpperTableView (MainWindow* window, eSortStyle this_sort_style)
+{
+       m_parent_window = window;
+       m_signature_sort_style = this_sort_style;
+       QFont sansFont("Ariel", 20);
+       setFont(sansFont);
+
+}
+
+
+
 /**
  * @brief UpperTableView::ShowModelsUpperTableView
  * @param index
@@ -30,23 +47,20 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
     }
     if (component == "Words"){
         setModel(m_parent_window->m_Models["Words"]);
-        set_display_type( DT_words );
-        set_content_type("all words");
+        set_data_type( e_data_words );
     }
     else     if (component == "Prefixal stems"){
         setModel(m_parent_window->m_Models["Prefix stems"]);
-        set_display_type(DT_stems);
-        set_content_type( "prefixal stems" );
+        set_data_type(e_prefixal_stems);
     }
     else     if (component == "Suffixal stems"){
         setModel(m_parent_window->m_Models["Suffix stems"]);
-        set_display_type(DT_stems);
-        set_content_type( "suffixal stems" );
+        set_data_type(e_suffixal_stems);
     }
     else     if (component == "Suffixes"){
         m_parent_window->display_suffixes();
-        set_display_type(DT_affixes);
-        set_content_type( "suffixes" );    }
+        set_data_type(e_data_suffixes);
+    }
     else     if (component == "Signatures"){
         m_parent_window->display_suffix_signatures();
     }
@@ -58,36 +72,32 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
     }
     else     if (component == "EPositive prefix signatures"){
         setModel(m_parent_window->m_Models["EPositive prefix signatures"]);
-        set_display_type ( DT_Positive_Prefix_Signatures );
-        set_content_type( "signatures");
+        set_data_type ( e_data_epositive_prefixal_signatures );
     }
     else     if (component == "Signature graph edges"){
         setModel(m_parent_window->m_Models["SigGraphEdges"]);
-        set_display_type ( DT_signature_graph_edges );
+        set_data_type ( e_data_signatures_graph_edges );
         sortByColumn(-1);
     }
     else     if (component == "Residual parasignatures"){
-        //setModel(m_parent_window->m_Models["Residual parasignatures"]);
-        //set_display_type ( DT_signatures );
-        //sortByColumn(1);
+
     }
     else     if (component == "Parasuffixes"){
         setModel(m_parent_window->m_Models["Parasuffixes"]);
-        set_display_type ( DT_affixes );
+        set_data_type ( e_data_suffixes );
         sortByColumn(1);
     }
     else     if (component == "Singleton signatures"){
-       // set_display_type ( DT_signatures );
-       // sortByColumn(1);
+
     }
     else     if (component == "Passive signatures"){
         setModel(m_parent_window->m_Models["Passive signatures"]);
-        set_display_type ( DT_hollow_suffixal_signatures );
+        set_data_type ( e_data_hollow_suffixal_signatures );
         sortByColumn(1);    }
     else     if (component == "Hypotheses"){
         m_parent_window->display_hypotheses();
     }
-// add component 10
+    // add component 10
 
 
 
@@ -108,20 +118,6 @@ void  UpperTableView::display_this_affixes_signatures(const QModelIndex & index)
     if (index.isValid()){
 
     }
-
-}
-
-/**
-* @brief UpperTableView::UpperTableView
-* @param window
-* This TableView responds to the User's click on the LeftSideTreeView.
-*/
-UpperTableView::UpperTableView (MainWindow* window, eSortStyle this_sort_style)
-{
-       m_parent_window = window;
-       m_signature_sort_style = this_sort_style;
-       QFont sansFont("Ariel", 20);
-       setFont(sansFont);
 
 }
 

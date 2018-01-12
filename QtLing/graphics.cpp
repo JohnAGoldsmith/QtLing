@@ -162,13 +162,13 @@ const  bool compare_robustness(const CSignature* pSig1, const CSignature* pSig2)
  return  pSig1->get_robustness() > pSig2->get_robustness();
 }
 //--------------------------------------------------------------------------//
-void lxa_graphics_scene::assign_scene_positions_to_signatures(CSignatureCollection* signatures, eDisplayType this_display_type){
+void lxa_graphics_scene::assign_scene_positions_to_signatures(CSignatureCollection* signatures, eDataType this_display_type){
 
-    m_signature_collection      = signatures;
-    m_display_type              = this_display_type;
-    CLexicon*   lexicon          = m_main_window->get_lexicon();
-    double      entropy_threshold= lexicon->get_entropy_threshold_for_positive_signatures();
-    int         max_size                = 0;
+    m_signature_collection          = signatures;
+    m_data_type                     = this_display_type;
+    CLexicon*   lexicon             = m_main_window->get_lexicon();
+    double      entropy_threshold   = lexicon->get_entropy_threshold_for_positive_signatures();
+    int         max_size            = 0;
     int         sig_size;
     int         MAXIMUM_NUMBER_OF_CONTAINMENT_EDGES = 2;
     int         MINIMUM_NUMBER_OF_STEMS = 2;
@@ -179,7 +179,7 @@ void lxa_graphics_scene::assign_scene_positions_to_signatures(CSignatureCollecti
     while(sig_iter.hasNext()){
         pSig = sig_iter.next().value();
         if ( (pSig->get_number_of_stems() < MINIMUM_NUMBER_OF_STEMS) ||
-           (  m_display_type == DT_Positive_Suffix_Signatures && pSig->get_stem_entropy() <entropy_threshold )   ){
+           (  m_data_type == e_data_epositive_suffixal_signatures && pSig->get_stem_entropy() <entropy_threshold )   ){
                 continue;
            }
         int this_size = pSig->get_number_of_affixes();
@@ -197,8 +197,8 @@ void lxa_graphics_scene::assign_scene_positions_to_signatures(CSignatureCollecti
     while(sig_iter.hasNext()){
         pSig = sig_iter.next().value();
         if (pSig->get_number_of_stems() < MINIMUM_NUMBER_OF_STEMS) {continue;}
-        if ( (m_display_type == DT_Positive_Prefix_Signatures ||
-              m_display_type == DT_Positive_Suffix_Signatures) &&
+        if ( (m_data_type == e_data_epositive_prefixal_signatures ||
+              m_data_type == e_data_epositive_suffixal_signatures) &&
                 pSig->get_stem_entropy() < entropy_threshold){
             continue;
         }

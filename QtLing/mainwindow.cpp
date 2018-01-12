@@ -80,7 +80,6 @@ MainWindow::MainWindow()
 
 
     m_treeModel     = new QStandardItemModel();
-    //m_treeModel         = nullptr;
 
     get_lexicon()->set_status_bar(statusBar());
 
@@ -170,12 +169,12 @@ void MainWindow::cycle_through_graphic_displays()
 {
     switch (m_graphic_display_type)
     {   qDebug() << "trying to cycle graphic display"<< 141;
-        case DT_All_Suffix_Signatures:
-            m_graphic_display_type = DT_Positive_Suffix_Signatures;
-        case DT_Positive_Suffix_Signatures:
-            m_graphic_display_type = DT_All_Prefix_Signatures;
+        case e_data_suffixal_signatures:
+            m_graphic_display_type = e_data_epositive_suffixal_signatures;
+        case e_data_epositive_suffixal_signatures:
+            m_graphic_display_type = e_data_prefixal_signatures;
         default:
-            m_graphic_display_type = DT_All_Prefix_Signatures;
+            m_graphic_display_type = e_data_prefixal_signatures;
     }
 }
 
@@ -381,9 +380,9 @@ void MainWindow::do_crab2()
 
 
     if (get_lexicon()->get_suffix_flag()){
-        m_current_graphics_scene->assign_scene_positions_to_signatures(get_lexicon()->get_signatures(),   DT_All_Suffix_Signatures);
+        m_current_graphics_scene->assign_scene_positions_to_signatures(get_lexicon()->get_signatures(),   e_data_suffixal_signatures);
     }else{
-        m_current_graphics_scene->assign_scene_positions_to_signatures(get_lexicon()->get_prefix_signatures(),DT_All_Prefix_Signatures);
+        m_current_graphics_scene->assign_scene_positions_to_signatures(get_lexicon()->get_prefix_signatures(),e_data_prefixal_signatures);
     }
 
 

@@ -202,7 +202,7 @@ class lxa_graphics_scene : public QGraphicsScene
     bool                                    m_suffix_flag;
     CSuffixCollection *                     m_suffixes;
     CPrefixCollection *                     m_prefixes;
-    eDisplayType                            m_display_type;
+    eDataType                               m_data_type;
     lxa_graphics_view*                      m_graphics_view;
     QList<QList<CSignature*>*>              m_signature_lattice;
     QList<QPair<CSignature*,CSignature*>*>  m_signature_containment_edges;
@@ -231,7 +231,7 @@ public:
                     lxa_graphics_scene(MainWindow *, CLexicon* , CSignatureCollection*,bool suffix_flag );
     void                add_signature_containment_edge (QPair<CSignature*, CSignature*>* pPair)
                                            {m_signature_containment_edges.append (pPair); }
-    void                assign_scene_positions_to_signatures(CSignatureCollection*, eDisplayType );
+    void                assign_scene_positions_to_signatures(CSignatureCollection*, eDataType );
     eGraphicsStatus     change_graphics_status();
     void                clear();
     void                clear_all();

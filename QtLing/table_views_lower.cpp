@@ -47,7 +47,7 @@ LowerTableView::LowerTableView(MainWindow * window)
   */
  void LowerTableView::display_this_item( const  QModelIndex & index )
  {
-     eDisplayType              UpperView_type = m_parent_window->m_tableView_upper_left->get_display_type();
+     eDataType                  UpperView_data_type = m_parent_window->m_tableView_upper_left->get_data_type();
      QString                    word, stem, prefix, suffix, signature;
      CLexicon *                 this_lexicon = get_parent_window()->get_lexicon();
      int                        row, column;
@@ -58,7 +58,7 @@ LowerTableView::LowerTableView(MainWindow * window)
          return;
      }
 
-     switch (UpperView_type){
+     switch (UpperView_data_type){
         case e_data_words:{
             if (index.isValid()) {row = index.row();}
             QString word = index.sibling(row,0).data().toString();
@@ -89,7 +89,7 @@ LowerTableView::LowerTableView(MainWindow * window)
          //  ---------------------------------------------------//
         case e_data_residual_signatures:{
               if (index.isValid()){row = index.row();}
-              item_list.clear();
+                item_list.clear();
               signature = index.sibling(row,0).data().toString();
               CSignature*           pSig = this_lexicon->get_signatures()->get_signature(signature);
               CStem*                p_Stem;
