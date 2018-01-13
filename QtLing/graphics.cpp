@@ -34,11 +34,12 @@ graphic_signature2::graphic_signature2   (CSignature* this_signature )
 {
     m_signature = this_signature;
     m_color = Qt::green;
+    m_focus_flag = false;
 };
 
 void graphic_signature2::set_color(Qt::GlobalColor this_color){
     m_color = this_color;
-    update();
+//    update();
 };
 
 graphic_signature2::~graphic_signature2(){
@@ -146,7 +147,13 @@ lxa_graphics_scene::~lxa_graphics_scene ()
 void lxa_graphics_scene::clear_all()
 {  m_signature_lattice.clear();
    m_map_from_sig_to_column_no.clear();
-    QGraphicsScene::clear();
+   m_suffixes = NULL;
+   m_prefixes = NULL;
+   m_signature_lattice.clear();
+   m_map_from_sig_to_row_and_column.clear();
+   m_map_from_sig_to_pgraphsig.clear();
+
+   QGraphicsScene::clear();
 
 
     // There is more that needs to be cleared here. //
