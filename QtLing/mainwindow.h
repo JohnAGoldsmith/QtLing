@@ -83,10 +83,12 @@ class MainWindow : public QMainWindow
     QSplitter *                             m_mainSplitter;
     QSplitter *                             m_rightSplitter;
     QSplitter *                             m_top_rightSplitter;
+
     UpperTableView *                        m_tableView_upper_left;
     UpperTableView *                        m_tableView_upper_right;
     LowerTableView *                        m_tableView_lower;
     LeftSideTreeView *                      m_leftTreeView;
+
     lxa_graphics_scene *                    m_current_graphics_scene;
     lxa_graphics_scene *                    m_suffix_graphics_scene;
     lxa_graphics_scene *                    m_prefix_graphics_scene;
@@ -102,27 +104,28 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow();
-    void        display_suffixes();
-    void        display_suffix_signatures();
-    void        display_prefix_signatures();
-    void        display_epositive_suffix_signatures();
-    void        display_hypotheses();
-    void        DisplaySignatures();
-    CLexicon*   get_lexicon() {return m_lexicon_list.last();  }
-
+    void                                    display_suffixes();
+    void                                    display_suffix_signatures();
+    void                                    display_prefix_signatures();
+    void                                    display_epositive_suffix_signatures();
+    void                                    display_hypotheses();
+    void                                    DisplaySignatures();
+    CLexicon*                               get_lexicon()                       {return m_lexicon_list.last();  }
+    bool                                    get_graphic_display_flag()        {return m_graphic_display_flag;}
 protected:
     void closeEvent(QCloseEvent *event) override;
 
 private slots:
-    void newFile();
-    void read_file_do_crab();
-    void do_crab2();
-    void do_crab();
-    bool save();
-    bool saveAs();
-    void about();
-    void documentWasModified();
-    void print_prefix_signatures();
+    void                                    about();
+
+    void                                    do_crab();
+    void                                    do_crab2();
+    void                                    documentWasModified();
+    void                                    newFile();
+    void                                    print_prefix_signatures();
+    void                                    read_file_do_crab();
+    bool                                    save();
+    bool                                    saveAs();
 
 #ifndef QT_NO_SESSIONMANAGER
     void                    commitData(QSessionManager &);
@@ -154,26 +157,30 @@ public:
 
     void                    sort_upper_table();
 
-//          windows
+    //                      windows
+
     void                    createActions();
     void                    createStatusBar();
 
-//          settings
+    //                      settings
+
     void                    readSettings();
     void                    writeSettings();
 
-//          working with files
+    //                      working with files
+
     bool                    ask_to_save();
     bool                    saveFile(const QString &fileName);
     void                    setCurrentFile(const QString &fileName);
     QString                 strippedName(const QString &fullFileName);
     void                    cycle_through_graphic_displays();
 
-    lxa_graphics_view*      get_graphics_view()     {return  m_graphics_view;}
-    lxa_graphics_scene*     get_graphics_scene()    {return m_current_graphics_scene;}
-    lxa_graphics_scene*     get_suffix_graphics_scene()     {return m_suffix_graphics_scene;}
-    lxa_graphics_scene*     get_prefix_graphics_scene()    {return m_prefix_graphics_scene;}
-    UpperTableView *        get_upper_right_tableview() { return m_tableView_upper_right;}
+    lxa_graphics_view*      get_graphics_view()                     {return  m_graphics_view;}
+    lxa_graphics_scene*     get_graphics_scene()                    {return m_current_graphics_scene;}
+    lxa_graphics_scene*     get_suffix_graphics_scene()             {return m_suffix_graphics_scene;}
+    lxa_graphics_scene*     get_prefix_graphics_scene()             {return m_prefix_graphics_scene;}
+    UpperTableView *        get_upper_left_tableview()              { return m_tableView_upper_left;}
+    UpperTableView *        get_upper_right_tableview()             { return m_tableView_upper_right;}
     void                    set_current_graphics_scene(lxa_graphics_scene* this_scene) {m_current_graphics_scene = this_scene;}
 
 protected:

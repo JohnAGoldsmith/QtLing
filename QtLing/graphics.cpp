@@ -106,8 +106,7 @@ void lxa_graphics_view::mousePressEvent(QMouseEvent* event)
 
 
 //--------------------------------------------------------------------------//
-lxa_graphics_scene::lxa_graphics_scene(MainWindow * window, CLexicon * lexicon,
-                                       CSignatureCollection* signatures, bool suffix_flag){
+lxa_graphics_scene::lxa_graphics_scene(MainWindow * window, CLexicon * lexicon){
     m_main_window               = window;
     m_lexicon                   = lexicon;
     m_location_of_bottom_row    = 0;
@@ -118,8 +117,7 @@ lxa_graphics_scene::lxa_graphics_scene(MainWindow * window, CLexicon * lexicon,
     m_out_of_focus_color        = Qt::gray;
     m_focus_signature_1         = NULL;
     m_focus_signature_2         = NULL;
-    m_signature_collection      = signatures;
-    m_suffix_flag               = suffix_flag;
+    m_suffix_flag               = true;
 
     // click on a hypothesis, watch its effects on the signature lattice.
     connect(m_main_window->get_upper_right_tableview(),SIGNAL(clicked(const QModelIndex & )),
@@ -130,9 +128,17 @@ lxa_graphics_scene::lxa_graphics_scene(MainWindow * window, CLexicon * lexicon,
 };
 
 //--------------------------------------------------------------------------//
+void lxa_graphics_scene::ingest( CLexicon* lexicon, CSignatureCollection* signatures, bool suffix_flag)
+{
+    m_lexicon                   = lexicon;
+    m_signature_collection      = signatures;
+    m_suffix_flag               = suffix_flag;
+
+};
+//--------------------------------------------------------------------------//
 lxa_graphics_scene::~lxa_graphics_scene ()
 {    for (int itemno = 0; itemno < m_signature_lattice.size(); itemno ++ ){
-        delete m_signature_lattice[itemno];
+            delete m_signature_lattice[itemno];
     }
     m_signature_lattice.clear();
 };
@@ -141,6 +147,9 @@ void lxa_graphics_scene::clear_all()
 {  m_signature_lattice.clear();
    m_map_from_sig_to_column_no.clear();
     QGraphicsScene::clear();
+
+
+    // There is more that needs to be cleared here. //
 }
 //--------------------------------------------------------------------------//
 void lxa_graphics_scene::clear()

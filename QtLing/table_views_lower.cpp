@@ -265,7 +265,8 @@ void LowerTableView::graphics_sig_graph_edges(CSignature* pSig, CLexicon* p_lexi
         ++edge_iter;
     }
 
-    // put this back in when things are figured out ****
+    // put this back in when things are figured out **** BUT we don't want to get rid of old graphics scene, just
+    // clear it out. The old one is still connected with a signal / slot connection.
 //    m_parent_window->m_graphics_scene = new lxa_graphics_scene(m_parent_window,  &Signatures,  DT_sig_graph_edges);
 //    m_parent_window->m_graphics_scene->place_signatures();
 //    m_parent_window->m_graphics_view->setScene(m_parent_window->m_graphics_scene);

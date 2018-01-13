@@ -47,7 +47,10 @@ class LxaStandardItemModel;
 MainWindow::MainWindow()
 {
 
+
     m_lexicon_list.append ( new CLexicon() );
+    CLexicon * lexicon =  m_lexicon_list.last();
+
     // models
     m_Models["Words"]                       = new LxaStandardItemModel("Words");
     m_Models["Suffixal stems"]              = new LxaStandardItemModel("Suffixal stems");
@@ -92,12 +95,15 @@ MainWindow::MainWindow()
     m_tableView_upper_right->setSortingEnabled(true);
 
     bool suffix_flag = true;
-    m_suffix_graphics_scene = new lxa_graphics_scene (this, get_lexicon(),
-                                       get_lexicon()->get_signatures(), suffix_flag);
-    suffix_flag = false;
-    m_prefix_graphics_scene   = new lxa_graphics_scene (this, get_lexicon(),
-                                       get_lexicon()->get_prefix_signatures(), suffix_flag);
 
+//    if (false) {
+//    m_suffix_graphics_scene = new lxa_graphics_scene (this, lexicon,
+//                                       lexicon->get_signatures(), suffix_flag);
+//    suffix_flag = false;
+//    m_prefix_graphics_scene   = new lxa_graphics_scene (this, lexicon,
+ //                                      lexicon->get_prefix_signatures(), suffix_flag);
+//    }
+    m_current_graphics_scene    = new lxa_graphics_scene( this, lexicon);
     m_graphics_view             = new lxa_graphics_view(this);
     m_graphic_display_flag      = false;             // toggle with Ctrl-G
 
@@ -191,9 +197,6 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     if (ke->key() == Qt::Key_P){
         get_lexicon()->set_prefixes_flag();
         do_crab();
-        m_current_graphics_scene = m_prefix_graphics_scene;
-        m_graphics_view->setScene(m_current_graphics_scene);
-        m_current_graphics_scene->set_graphics_view(m_graphics_view);
         display_prefix_signatures();
 
     }
@@ -219,9 +222,6 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         if (get_lexicon()->get_suffixal_stems()->get_count() > 0){
             get_lexicon()->set_suffixes_flag();
             do_crab2();
-            m_current_graphics_scene = m_suffix_graphics_scene;
-            m_graphics_view->setScene(m_current_graphics_scene);
-            m_current_graphics_scene->set_graphics_view(m_graphics_view);
             display_suffix_signatures();
         }
     }
@@ -229,7 +229,6 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         if (get_lexicon()->get_prefixal_stems()->get_count() > 0){
             get_lexicon()->set_prefixes_flag();
             do_crab2();
-            m_current_graphics_scene = m_prefix_graphics_scene;
             m_graphics_view->setScene(m_current_graphics_scene);
             m_current_graphics_scene->set_graphics_view(m_graphics_view);
             display_prefix_signatures();
@@ -319,16 +318,11 @@ void MainWindow::do_crab()
 
         if (get_lexicon()->get_suffix_flag())
         {
-            m_suffix_graphics_scene = new lxa_graphics_scene(this,
-                                        get_lexicon(), get_lexicon()->get_signatures(), true);
-            m_current_graphics_scene = m_suffix_graphics_scene;
+              m_current_graphics_scene ->ingest(get_lexicon(),get_lexicon()->get_signatures(), true);
           }
         else
         {
-            m_prefix_graphics_scene = new lxa_graphics_scene(this,
-                                        get_lexicon(), get_lexicon()->get_prefix_signatures(), false);
-            m_current_graphics_scene = m_prefix_graphics_scene;
-
+              m_current_graphics_scene->ingest(get_lexicon(), get_lexicon()->get_prefix_signatures(), false);
         }
         m_graphics_view->setScene(m_current_graphics_scene);
         m_current_graphics_scene->set_graphics_view(m_graphics_view);
@@ -337,8 +331,10 @@ void MainWindow::do_crab()
         statusBar()->showMessage("All models are loaded.");
 }
 void MainWindow::do_crab2()
-{   statusBar()->showMessage("Entering the Crab Nebula, phase 2");
-    get_lexicon()->Crab_2();
+{
+    statusBar()->showMessage("Entering the Crab Nebula, phase 2");
+    CLexicon* lexicon = get_lexicon();
+    lexicon->Crab_2();
 
     qApp->processEvents();
     statusBar()->showMessage("We have returned from the Crab Nebula again.");
@@ -383,42 +379,28 @@ void MainWindow::do_crab2()
 
 
 
-    if (get_lexicon()->get_suffix_flag()){
-        m_current_graphics_scene->assign_scene_positions_to_signatures(get_lexicon()->get_signatures(),   e_data_suffixal_signatures);
+    if (lexicon->get_suffix_flag()){
+        m_current_graphics_scene->assign_scene_positions_to_signatures(lexicon->get_signatures(),   e_data_suffixal_signatures);
     }else{
-        m_current_graphics_scene->assign_scene_positions_to_signatures(get_lexicon()->get_prefix_signatures(),e_data_prefixal_signatures);
+        m_current_graphics_scene->assign_scene_positions_to_signatures(lexicon->get_prefix_signatures(),e_data_prefixal_signatures);
     }
 
-
+    // there something wrong here -- we can't clear just after we have placed!
     m_current_graphics_scene->place_signatures();
 
-    if (get_lexicon()->get_suffix_flag()){
-        m_suffix_graphics_scene = new lxa_graphics_scene(this, get_lexicon(), get_lexicon()->get_signatures(), true);
-        m_current_graphics_scene = m_suffix_graphics_scene;
+    m_current_graphics_scene->clear();
 
+    if (lexicon->get_suffix_flag()){
+           m_current_graphics_scene->ingest(lexicon, lexicon->get_signatures(), true);
     } else{
-        m_prefix_graphics_scene = new lxa_graphics_scene(this, get_lexicon(), get_lexicon()->get_prefix_signatures(), false);
-        m_current_graphics_scene = m_prefix_graphics_scene;
+        m_current_graphics_scene->ingest(lexicon, lexicon->get_prefix_signatures(), false);
 
     }
 
-    m_graphics_view->setScene(m_current_graphics_scene);
-    m_current_graphics_scene->set_graphics_view(m_graphics_view);
     m_leftTreeView->expandAll();
     m_leftTreeView->resizeColumnToContents(0);
 
-
-
     statusBar()->showMessage("All models are loaded.");
-
-
-
-
-
-
-
-
-
 }
 void MainWindow::read_file_do_crab()
 {       read_dx1_file();

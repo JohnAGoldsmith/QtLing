@@ -194,7 +194,11 @@ public:
 /////////////////////////////////////////////////////////////////////////////
 
 class lxa_graphics_scene : public QGraphicsScene
-{  // friend          graphic_signature;
+{
+
+    Q_OBJECT
+
+
     friend                                  lxa_graphics_view;
 
     MainWindow*                             m_main_window;
@@ -226,9 +230,16 @@ class lxa_graphics_scene : public QGraphicsScene
     int                                     m_bottom_left_y;
 private:
     void                                    mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent);
+
+
+public slots:
+    void                implement_hypothesis(const QModelIndex & );
+
+
 public:
-                    ~lxa_graphics_scene();
-                    lxa_graphics_scene(MainWindow *, CLexicon* , CSignatureCollection*,bool suffix_flag );
+                        ~lxa_graphics_scene();
+                        lxa_graphics_scene(MainWindow *, CLexicon* );
+    void                ingest( CLexicon*, CSignatureCollection*, bool suffix_flag);
     void                add_signature_containment_edge (QPair<CSignature*, CSignature*>* pPair)
                                            {m_signature_containment_edges.append (pPair); }
     void                assign_scene_positions_to_signatures(CSignatureCollection*, eDataType );
@@ -238,7 +249,6 @@ public:
     void                display_focus_signature();
     graphic_signature2* get_focus_signature_1();
     CLexicon*           get_lexicon()           {return m_lexicon;}
-    void                implement_hypothesis(const QModelIndex & );
     void                move_rows_apart();
     void                move_rows_closer();
     void                mouseMoveEvent(QGraphicsSceneMouseEvent * event);

@@ -48,16 +48,18 @@ void MainWindow::display_suffix_signatures()
     m_tableView_upper_left->set_data_type( e_data_suffixal_signatures );
     m_tableView_upper_right->resizeColumnsToContents();
 
-    m_suffix_graphics_scene->clear_all();
-    m_suffix_graphics_scene->assign_scene_positions_to_signatures(lexicon->get_signatures(), e_data_suffixal_signatures);
-    m_suffix_graphics_scene->place_signatures();
+     m_current_graphics_scene->clear_all();
+     m_current_graphics_scene->assign_scene_positions_to_signatures(lexicon->get_signatures(), e_data_suffixal_signatures);
+     m_current_graphics_scene->place_signatures();
+
 }
 /**
  * @brief MainWindow::display_prefix_signatures
  * This is called by a QAction.
  */
 void MainWindow::display_prefix_signatures()
-{
+{   CLexicon* lexicon = get_lexicon();
+
     m_tableView_upper_left->setModel(m_Models["Prefix signatures"]);
     m_tableView_upper_left->set_data_type ( e_data_prefixal_signatures );
     m_tableView_upper_left->resizeColumnsToContents();
@@ -66,9 +68,9 @@ void MainWindow::display_prefix_signatures()
     m_tableView_upper_right->set_data_type ( e_data_prefixal_signatures );
     m_tableView_upper_right->resizeColumnsToContents();
 
-    CLexicon* lexicon = get_lexicon();
-    m_prefix_graphics_scene->assign_scene_positions_to_signatures(lexicon->get_prefix_signatures(), e_data_prefixal_signatures);
-    m_prefix_graphics_scene->place_signatures();
+    m_current_graphics_scene->clear_all();
+    m_current_graphics_scene->assign_scene_positions_to_signatures(lexicon->get_prefix_signatures(), e_data_prefixal_signatures);
+    m_current_graphics_scene->place_signatures();
 }
 /**
  * @brief MainWindow::display_hypotheses
