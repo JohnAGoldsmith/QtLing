@@ -263,6 +263,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     if (ke->key()== Qt::Key_Exclam){
         m_graphics_view->reset_scale();
     }
+    if (ke->key()== Qt::Key_H)
     QMainWindow::keyPressEvent(ke);
 }
 
@@ -513,20 +514,6 @@ void MainWindow::print_prefix_signatures()
     file.close();
 }
 
-// remove this...
-/*
-void MainWindow::sort_upper_table()
-{
-    // a signal comes to sort the contents of the upper table.
-    if (m_tableView_upper_left->get_document_type()== SIGNATURES){
-        if (m_tableView_upper_left->get_signature_sort_style()==SIG_BY_STEM_COUNT){
-            m_tableView_upper_left->set_signature_sort_style(SIG_BY_AFFIX_COUNT);
-        } else{
-            m_tableView_upper_left->set_signature_sort_style(SIG_BY_STEM_COUNT);
-        }
-    }
-}
-*/
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //        Infra- and super-structure

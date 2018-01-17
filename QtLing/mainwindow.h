@@ -90,8 +90,8 @@ class MainWindow : public QMainWindow
     LeftSideTreeView *                      m_leftTreeView;
 
     lxa_graphics_scene *                    m_current_graphics_scene;
-    lxa_graphics_scene *                    m_suffix_graphics_scene;
-    lxa_graphics_scene *                    m_prefix_graphics_scene;
+//    lxa_graphics_scene *                    m_suffix_graphics_scene;
+//    lxa_graphics_scene *                    m_prefix_graphics_scene;
     lxa_graphics_view *                     m_graphics_view;
     bool                                    m_graphic_display_flag;
     QStandardItemModel *                    m_treeModel;
@@ -177,8 +177,8 @@ public:
 
     lxa_graphics_view*      get_graphics_view()                     {return  m_graphics_view;}
     lxa_graphics_scene*     get_graphics_scene()                    {return m_current_graphics_scene;}
-    lxa_graphics_scene*     get_suffix_graphics_scene()             {return m_suffix_graphics_scene;}
-    lxa_graphics_scene*     get_prefix_graphics_scene()             {return m_prefix_graphics_scene;}
+//    lxa_graphics_scene*     get_suffix_graphics_scene()             {return m_suffix_graphics_scene;}
+//    lxa_graphics_scene*     get_prefix_graphics_scene()             {return m_prefix_graphics_scene;}
     UpperTableView *        get_upper_left_tableview()              { return m_tableView_upper_left;}
     UpperTableView *        get_upper_right_tableview()             { return m_tableView_upper_right;}
     void                    set_current_graphics_scene(lxa_graphics_scene* this_scene) {m_current_graphics_scene = this_scene;}

@@ -306,7 +306,7 @@ void LowerTableView::table_word(CWord* pWord ){
     }
     // Display the signatures this word bears:
     for (int signo = 0; signo < pWord->m_Signatures.size(); signo++){
-        qDebug() << signo;
+        //qDebug() << signo;
         QString sig = pWord->GetSignatures()->at(signo)->second->get_key();
         QString stem = pWord->GetSignatures()->at(signo)->first->get_key();
         item_list.clear();
@@ -422,7 +422,7 @@ void LowerTableView::table_passive_signature(CSignature *p_this_sig)
     int                 count;
 
     for (int i = 0; i < counts.size(); i++){
-            qDebug() << i <<404;
+            //qDebug() << i <<404;
             count = counts[i];
             QList<CSignature*> signatures =stem_counter.keys(count);
             std::sort(signatures.begin(), signatures.end());

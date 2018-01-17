@@ -12,42 +12,69 @@ class CSignature;
 bar::bar(CSignature* pSig): graphic_signature2(  pSig){
          set_text(pSig->get_key());
 };
+bar::~bar()
+{
+
+}
 
 //-----------------------------------------------------------//
 
 triangle2::triangle2(CSignature* pSig): graphic_signature2(  pSig){
          set_text(pSig->get_key());
 };
+triangle2::~triangle2()
+{
 
+}
 //-----------------------------------------------------------//
+
+square2::square2(CSignature* pSig): graphic_signature2(pSig){
+         set_text(pSig->get_key());
+};
 square2::~square2()
 {
 
 }
-square2::square2(CSignature* pSig): graphic_signature2(pSig){
-         set_text(pSig->get_key());
-};
 //-----------------------------------------------------------//
 pentagon2::pentagon2(CSignature* pSig): graphic_signature2(pSig){
          set_text(pSig->get_key());
 };
+pentagon2::~pentagon2()
+{
+
+}
 //-----------------------------------------------------------//
 hexagon2::hexagon2(CSignature* pSig): graphic_signature2(pSig){
          set_text(pSig->get_key());
 };
+hexagon2::~hexagon2()
+{
+
+}
 //-----------------------------------------------------------//
 septagon2::septagon2(CSignature* pSig): graphic_signature2(pSig){
          set_text(pSig->get_key());
 };
+septagon2::~septagon2()
+{
+
+}
 //-----------------------------------------------------------//
 octagon2::octagon2(CSignature* pSig): graphic_signature2(pSig){
          set_text(pSig->get_key());
 };
+octagon2::~octagon2()
+{
+
+}
 //-----------------------------------------------------------//
 nonagon2::nonagon2(CSignature* pSig): graphic_signature2(pSig){
          set_text(pSig->get_key());
 };
+nonagon2::~nonagon2()
+{
 
+}
 // --------------------------------->      <--------------------------------------------//
 void bar::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                       QWidget *widget){
@@ -79,7 +106,11 @@ void bar::set_text(sigstring_t this_sigstring){
     text_item_list[0]->setPos( 15 - br_list[0]->width()   , 10 - br_list[0]->height()/2   );
     text_item_list[1]->setPos( 65                         , 10 - br_list[1]->height()/2  );
 }
-
+QPointF bar::get_center(){
+    QPointF this_point = pos();
+    QPointF diff (40,10);
+    return this_point + diff;
+}
 // --------------------------------->      <--------------------------------------------//
 void triangle2::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                       QWidget *widget){
@@ -111,7 +142,11 @@ void triangle2::set_text(sigstring_t this_sigstring){
     text_item_list[0]->setPos( 35 - br_list[0]->width()/2   , 0 -  br_list[0]->height()/2 );
     text_item_list[1]->setPos( 57                         ,  60 -  br_list[1]->height()/2  );
 }
-
+QPointF triangle2::get_center(){
+    QPointF this_point = pos();
+    QPointF diff (30,40);
+    return this_point + diff;
+}
 // --------------------------------->      <--------------------------------------------//
 
 void square2::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
@@ -151,7 +186,11 @@ void square2::set_text(sigstring_t this_sigstring){
     text_item_list[3]->setPos( 10 - br_list[3]->width()  ,  50 - br_list[3]->height()/2       );
 
 }
-
+QPointF square2::get_center(){
+    QPointF this_point = pos();
+    QPointF diff (40,30);
+    return this_point + diff;
+}
 
 // --------------------------------->      <--------------------------------------------//
 
@@ -189,6 +228,11 @@ void pentagon2::set_text(sigstring_t this_sigstring){
     text_item_list[3]->setPos( 10 - br_list[3]->width()  , 64 - br_list[3]->height()/2  );
     text_item_list[2]->setPos(  62                        , 64 - br_list[2]->height()/2 );
     text_item_list[1]->setPos(  72                        ,  31 - br_list[1]->height()/2 );
+}
+QPointF pentagon2::get_center(){
+    QPointF this_point = pos();
+    QPointF diff (55,37);
+    return this_point + diff;
 }
 
 // --------------------------------->      <--------------------------------------------//
@@ -231,6 +275,11 @@ void hexagon2::set_text(sigstring_t this_sigstring){
     text_item_list[4]->setPos(  5  - br_list[4]->width()     , 60   );
     text_item_list[5]->setPos(  5  - br_list[5]->width()    , 40  );
 
+}
+QPointF hexagon2::get_center(){
+    QPointF this_point = pos();
+    QPointF diff (30,60);
+    return this_point + diff;
 }
 
 
@@ -283,6 +332,11 @@ void septagon2::set_text(sigstring_t this_sigstring){
 
 
 }
+QPointF septagon2::get_center(){
+    QPointF this_point = pos();
+    QPointF diff (55,35);
+    return this_point + diff;
+}
 
 void octagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                       QWidget *widget){
@@ -329,6 +383,11 @@ void octagon2::set_text(sigstring_t this_sigstring){
 
 
 
+}
+QPointF octagon2::get_center(){
+    QPointF this_point = pos();
+    QPointF diff (55,35);
+    return this_point + diff;
 }
 
 void nonagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
@@ -394,6 +453,11 @@ void nonagon2::set_text(sigstring_t this_sigstring){
     text_item_list[7]->setPos(x + 47                      , y + 30 -  br_list[7]->height()/2 );
     text_item_list[8]->setPos(x -  7 - br_list[8]->width(), y + 30 -  br_list[8]->height()/2 );
 
+}
+QPointF nonagon2::get_center(){
+    QPointF this_point = pos();
+    QPointF diff (55,35);
+    return this_point + diff;
 }
 
  void decagon(CSignature* pSig, int x, int y,  lxa_graphics_scene * scene, QColor color)
