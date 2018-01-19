@@ -26,8 +26,8 @@ void MainWindow::display_epositive_suffix_signatures()
         m_tableView_upper_left->set_data_type(e_data_epositive_suffixal_signatures);
 
         m_current_graphics_scene->clear_all();
-        m_current_graphics_scene->assign_scene_positions_to_signatures(get_lexicon()->get_signatures(), e_data_epositive_suffixal_signatures);
-        m_current_graphics_scene->place_signatures();
+        m_current_graphics_scene->assign_lattice_positions_to_signatures(get_lexicon()->get_signatures(), e_data_epositive_suffixal_signatures);
+        m_current_graphics_scene->create_and_place_signatures();
     }
 }
 
@@ -49,8 +49,8 @@ void MainWindow::display_suffix_signatures()
     m_tableView_upper_right->resizeColumnsToContents();
 
      m_current_graphics_scene->clear_all();
-     m_current_graphics_scene->assign_scene_positions_to_signatures(lexicon->get_signatures(), e_data_suffixal_signatures);
-     m_current_graphics_scene->place_signatures();
+     m_current_graphics_scene->assign_lattice_positions_to_signatures(lexicon->get_signatures(), e_data_suffixal_signatures);
+     m_current_graphics_scene->create_and_place_signatures();
 
 }
 
@@ -72,8 +72,8 @@ void MainWindow::display_prefix_signatures()
     m_tableView_upper_right->resizeColumnsToContents();
 
     m_current_graphics_scene->clear_all();
-    m_current_graphics_scene->assign_scene_positions_to_signatures(lexicon->get_prefix_signatures(), e_data_prefixal_signatures);
-    m_current_graphics_scene->place_signatures();
+    m_current_graphics_scene->assign_lattice_positions_to_signatures(lexicon->get_prefix_signatures(), e_data_prefixal_signatures);
+    m_current_graphics_scene->create_and_place_signatures();
 }
 
 

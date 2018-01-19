@@ -7,6 +7,27 @@
 #include <QString>
 #include <QChar>
 
+bool signature_1_contains_signature_2(QString sig1, QString sig2)
+{
+    QStringList list_1 = sig1.split("=");
+    QStringList list_2 = sig2.split("=");
+    foreach (QString affix, list_2 ){
+        if (! list_1.contains(affix)){
+            return false;
+        }
+    }
+    return true;
+}
+
+bool contains_affix_string(QString sig1, QString affix)
+{
+    QStringList affixes = sig1.split("=");
+    if (affixes.contains(affix) ){
+        return true;
+    }
+    return false;
+}
+
 
 int GreaterThan (const void *pA, const void *pB)
 {

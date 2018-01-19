@@ -23,8 +23,9 @@ void lxa_graphics_scene::show_hypothesis_1(CHypothesis* hypothesis)
 void  lxa_graphics_scene::implement_hypothesis(const QModelIndex &  index )
 {   int row, column;
 
-    qDebug() << 26;
-    graphic_signature2 * original_sig, * lower_sig, * shortened_sig;
+    graphic_signature2 * original_graphic_sig, * lower_graphic_sig, * shortened_graphic_sig, * this_graphic_signature;
+    bool    shortened_graphic_signature_already_existed (false);
+
     // this function should fire only if the hypotheses are being shown in the right tables,
     // and the main windows is in graphics mode, showing the lattice of signatures.
 
@@ -42,35 +43,47 @@ void  lxa_graphics_scene::implement_hypothesis(const QModelIndex &  index )
         sigstring_t  shortened_sigstring    = index.sibling(row,3).data().toString();
         QPointF original_point, lower_point, shortened_point;
 
-        for (auto sig_iter : m_map_from_sig_to_pgraphsig.keys()){
-            QString this_sig_string = sig_iter->get_key();
-            CSignature* pSig = sig_iter;
+
+        for (auto sig_iter : m_map_from_sig_to_pgraphsig.values()){
+            this_graphic_signature = sig_iter;
+            sigstring_t this_sig_string = this_graphic_signature->get_signature()->get_key();
+
             if ( this_sig_string == original_sigstring ){
-                original_sig = m_map_from_sig_to_pgraphsig[sig_iter];
-                original_sig ->set_color(m_focus_color);
-                //move_signature_to_the_left(pSig);
-                original_point = original_sig->get_center() ;
-                qDebug() << 47 << this_sig_string;
+                original_graphic_sig = this_graphic_signature;
+                original_graphic_sig ->set_color(m_focus_color);
+                move_graphic_signature_to_the_left(this_graphic_signature);
+                original_point = original_graphic_sig->get_center() ;
             } else if (this_sig_string == lower_sigstring )
             {
-                lower_sig = m_map_from_sig_to_pgraphsig[sig_iter];
-                lower_sig->set_color(m_focus_color);
-                lower_point = lower_sig->get_center() ;
+                lower_graphic_sig = this_graphic_signature;
+                lower_graphic_sig->set_color(m_focus_color);
+                move_graphic_signature_to_the_left(this_graphic_signature);
+                lower_point = lower_graphic_sig->get_center() ;
 
             } else if (this_sig_string == shortened_sigstring)
             {
-                shortened_sig =  m_map_from_sig_to_pgraphsig[sig_iter];
-                shortened_point = shortened_sig->get_center() ;
-                shortened_sig -> set_color(m_focus_color);
+                shortened_graphic_sig =  this_graphic_signature;
+                if (shortened_graphic_sig){
+                    move_graphic_signature_to_the_left(this_graphic_signature);
+                    shortened_graphic_sig -> set_color(m_focus_color);
+                    shortened_point = shortened_graphic_sig->get_center() ;
+                    shortened_graphic_signature_already_existed = true;
+                } else{
+                    shortened_graphic_signature_already_existed = false;
+                }
             } else
             {
-                    m_map_from_sig_to_pgraphsig[sig_iter]->set_color(m_out_of_focus_color);
+                    this_graphic_signature->set_color(m_out_of_focus_color);
             }
         }
 
         place_arrow(original_point, lower_point);
-        place_arrow(original_point, shortened_point);
-        place_arrow(shortened_point, lower_point);
+        if (shortened_graphic_signature_already_existed){
+            place_arrow(shortened_point, lower_point);
+            place_arrow(original_point, shortened_point);
+        }
+
+        re_place_signatures();
    }
 
    update();

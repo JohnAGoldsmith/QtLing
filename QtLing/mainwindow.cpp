@@ -381,13 +381,13 @@ void MainWindow::do_crab2()
 
 
     if (lexicon->get_suffix_flag()){
-        m_current_graphics_scene->assign_scene_positions_to_signatures(lexicon->get_signatures(),   e_data_suffixal_signatures);
+        m_current_graphics_scene->assign_lattice_positions_to_signatures(lexicon->get_signatures(),   e_data_suffixal_signatures);
     }else{
-        m_current_graphics_scene->assign_scene_positions_to_signatures(lexicon->get_prefix_signatures(),e_data_prefixal_signatures);
+        m_current_graphics_scene->assign_lattice_positions_to_signatures(lexicon->get_prefix_signatures(),e_data_prefixal_signatures);
     }
 
     // there something wrong here -- we can't clear just after we have placed!
-    m_current_graphics_scene->place_signatures();
+    m_current_graphics_scene->create_and_place_signatures();
 
     m_current_graphics_scene->clear();
 
