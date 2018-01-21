@@ -39,7 +39,7 @@ graphic_signature2::graphic_signature2   (CSignature* this_signature )
 
 void graphic_signature2::set_color(Qt::GlobalColor this_color){
     m_color = this_color;
-//    update();
+
 };
 
 
@@ -110,7 +110,7 @@ lxa_graphics_scene::lxa_graphics_scene(MainWindow * window, CLexicon * lexicon){
     m_main_window               = window;
     m_lexicon                   = lexicon;
     m_location_of_bottom_row    = 0;
-    m_row_delta                 = 225;
+    m_row_delta                 = 250;
     m_column_delta              = 200;
     m_border                    = 0;
     m_normal_color              = Qt::green;
@@ -537,13 +537,15 @@ void lxa_graphics_scene::create_and_place_signatures()
                 m_graphic_signature_lattice[row]->append(this_nonagon_2);
                 break;
             }
-//            case 10:{
-//                decagon2 * this_decagon_2  = new decagon2 (pSig);
-//                addItem(this_decagon_2);
-//                m_map_from_sig_to_pgraphsig[pSig]=this_decagon_2;
-//                this_decagon_2->setPos(x,y);
-//                break;
-//           }
+            case 10:{
+                decagon2 * this_decagon_2  = new decagon2 (pSig);
+                addItem(this_decagon_2);
+                this_decagon_2->setPos(x,y);
+                m_map_from_sig_to_pgraphsig[pSig]=this_decagon_2;
+                m_graphic_signature_lattice[row]->append(this_decagon_2);
+
+                break;
+           }
 
             default:{
               //graphic   p_graph_sig = new graphic_signature (x,y, pSig,  m_row_delta, m_normal_color);

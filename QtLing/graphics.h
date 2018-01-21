@@ -154,6 +154,20 @@ public:
                QWidget *widget);
     void set_text(sigstring_t this_sigstring);
 };
+
+//--------------------->       <-----------------------------//
+class decagon2 : public graphic_signature2
+{
+public:
+    decagon2(CSignature*);
+    ~decagon2();
+    void paint ();
+    QPointF             get_center();
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+               QWidget *widget);
+    void set_text(sigstring_t this_sigstring);
+};
+
 //--------------------->       <-----------------------------//
 
 // not currently used.
@@ -222,6 +236,10 @@ class lxa_graphics_scene : public QGraphicsScene
     CPrefixCollection *                     m_prefixes;
     eDataType                               m_data_type;
     lxa_graphics_view*                      m_graphics_view;
+
+    QList<graphic_signature2*>              m_target_1_list;
+    QList<graphic_signature2*>              m_target_2_list;
+    QList<graphic_signature2*>              m_target_3_list;
 
     // the signature-lattice is a set of lists, one for each set of graphic-signatures with the same number of affixes.
     // There is a natural order of them, provided by the sorting function.

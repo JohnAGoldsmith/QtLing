@@ -23,6 +23,13 @@ void lxa_graphics_scene::show_hypothesis_1(CHypothesis* hypothesis)
 void  lxa_graphics_scene::implement_hypothesis(const QModelIndex &  index )
 {   int row, column;
 
+    Qt::GlobalColor color_target_1, color_target_2, color_target_3, color_target_old_1, color_target_old_2, color_target_old_3;
+    color_target_1 = Qt::red;
+    color_target_old_1 = Qt::yellow;
+    color_target_2 = Qt::blue;
+    color_target_3 = Qt::green;
+
+
     graphic_signature2 * original_graphic_sig, * lower_graphic_sig, * shortened_graphic_sig, * this_graphic_signature;
     bool    shortened_graphic_signature_already_existed (false);
 
@@ -50,13 +57,17 @@ void  lxa_graphics_scene::implement_hypothesis(const QModelIndex &  index )
 
             if ( this_sig_string == original_sigstring ){
                 original_graphic_sig = this_graphic_signature;
-                original_graphic_sig ->set_color(m_focus_color);
+                original_graphic_sig ->set_color(color_target_1);
                 move_graphic_signature_to_the_left(this_graphic_signature);
                 original_point = original_graphic_sig->get_center() ;
+                if (m_target_1_list.count() > 0 ) {
+                 //   m_target_1_list.last()->set_color() = color_target_old_1;
+                }
+                m_target_1_list.append(original_graphic_sig);
             } else if (this_sig_string == lower_sigstring )
             {
                 lower_graphic_sig = this_graphic_signature;
-                lower_graphic_sig->set_color(m_focus_color);
+                lower_graphic_sig->set_color(color_target_2);
                 move_graphic_signature_to_the_left(this_graphic_signature);
                 lower_point = lower_graphic_sig->get_center() ;
 
@@ -77,7 +88,7 @@ void  lxa_graphics_scene::implement_hypothesis(const QModelIndex &  index )
             }
         }
 
-        //place_arrow(original_point, lower_point);
+        place_arrow(original_point, lower_point);
         if (shortened_graphic_signature_already_existed){
             place_arrow(shortened_point, lower_point);
             place_arrow(original_point, shortened_point);
