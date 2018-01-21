@@ -19,6 +19,7 @@ protected:
     int                                     m_CorpusCount;
     QString                                 m_MemberName;
     QList<CSignature*>                      m_SortList;
+    QList<CSignature*>                      m_signature_list;
     bool                                    m_SortValidFlag;
     enum  eSortStyle                        m_SortStyle;
     map_sigstring_to_sig_ptr_iter *         m_MapIterator;
@@ -58,5 +59,7 @@ public:
     QList<word_and_count_list*> *           get_count_vectors(QList<word_and_count_list*> * count_vectors);
     void                                    calculate_stem_entropy();
     int                                     get_number_of_epositive_signatures();
+    QList<CSignature*> *                     get_signature_list()            { return & m_signature_list;}
+    QMap<QString, CSignature*> *            get_signature_map()             {  return & m_SignatureMap;}
 };
 #endif // CSIGNATURECOLLECTION_H

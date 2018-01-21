@@ -114,12 +114,12 @@ int CSignature::get_robustness() const
 {    if (m_SuffixFlag){
          if (m_Suffixes->count() > 0)
          {return m_Suffixes->count();}
-         else {return m_Signature.count("="); }
+         else {return m_Signature.count("=") + 1; }
      }
      else{
          if (m_Prefixes->count() > 0)
          {return m_Prefixes->count();}
-         else {return m_Signature.count("="); }
+         else {return m_Signature.count("=") + 1; }
      }
 }
 

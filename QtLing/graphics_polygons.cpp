@@ -231,7 +231,7 @@ void pentagon2::set_text(sigstring_t this_sigstring){
 }
 QPointF pentagon2::get_center(){
     QPointF this_point = pos();
-    QPointF diff (55,37);
+    QPointF diff (50,37);
     return this_point + diff;
 }
 
@@ -334,7 +334,7 @@ void septagon2::set_text(sigstring_t this_sigstring){
 }
 QPointF septagon2::get_center(){
     QPointF this_point = pos();
-    QPointF diff (55,35);
+    QPointF diff (30,50);
     return this_point + diff;
 }
 

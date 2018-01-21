@@ -154,7 +154,13 @@ protected:
 public:
     CLexicon(CLexicon* parent_lexicon = NULL, bool suffix_flag = true);
 public:
+
+
+    void                                        dump_signatures_to_debug();
     // accessors and protostems
+
+
+
 
     void                                        collect_parasuffixes();
     void                                        compute_sig_graph_edges();

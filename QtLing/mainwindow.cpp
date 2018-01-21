@@ -101,8 +101,9 @@ MainWindow::MainWindow()
 //                                       lexicon->get_signatures(), suffix_flag);
 //    suffix_flag = false;
 //    m_prefix_graphics_scene   = new lxa_graphics_scene (this, lexicon,
- //                                      lexicon->get_prefix_signatures(), suffix_flag);
+//                                      lexicon->get_prefix_signatures(), suffix_flag);
 //    }
+
     m_current_graphics_scene    = new lxa_graphics_scene( this, lexicon);
     m_graphics_view             = new lxa_graphics_view(this);
     m_graphic_display_flag      = false;             // toggle with Ctrl-G
@@ -189,7 +190,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     if (ke->key() == Qt::Key_S){
         get_lexicon()->set_suffixes_flag();
         do_crab();
-        display_suffix_signatures();
+        display_suffix_signatures(); // this causes a doubling of the signatures in the lattice.
     }
     if (ke->key() == Qt::Key_D){
         read_dx1_file();
@@ -220,8 +221,9 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     }
     if (ke->key() == Qt::Key_2){
         if (get_lexicon()->get_suffixal_stems()->get_count() > 0){
-            get_lexicon()->set_suffixes_flag();
+           get_lexicon()->set_suffixes_flag();
             do_crab2();
+            //m_current_graphics_scene->clear_all();
             display_suffix_signatures();
         }
     }
@@ -349,7 +351,12 @@ void MainWindow::do_crab2()
     m_Models["Suffixes"]            ->load_suffixes(get_lexicon()->get_suffixes());
     statusBar()->showMessage("Loading signatures.");
     qApp->processEvents();
+
+    m_Models["Signatures"]          ->clear();
     m_Models["Signatures"]          ->load_signatures(get_lexicon()->get_signatures());
+
+    m_Models["Signatures 2"]         ->load_signatures(get_lexicon()->get_signatures(), SIG_BY_AFFIX_COUNT);
+    m_Models["Signatures 3"]         ->load_signatures(get_lexicon()->get_signatures());
     m_Models["EPositive signatures"]    ->load_positive_signatures(get_lexicon()->get_signatures());
     m_Models["Prefix signatures"]   ->load_signatures(get_lexicon()->get_prefix_signatures());
     m_Models["EPositive prefix signatures"]    ->load_positive_signatures(get_lexicon()->get_prefix_signatures());
@@ -377,27 +384,7 @@ void MainWindow::do_crab2()
 
 
     print_prefix_signatures();
-
-
-
-    if (lexicon->get_suffix_flag()){
-        m_current_graphics_scene->assign_lattice_positions_to_signatures(lexicon->get_signatures(),   e_data_suffixal_signatures);
-    }else{
-        m_current_graphics_scene->assign_lattice_positions_to_signatures(lexicon->get_prefix_signatures(),e_data_prefixal_signatures);
-    }
-
-    // there something wrong here -- we can't clear just after we have placed!
-    m_current_graphics_scene->create_and_place_signatures();
-
-    m_current_graphics_scene->clear();
-
-    if (lexicon->get_suffix_flag()){
-           m_current_graphics_scene->ingest(lexicon, lexicon->get_signatures(), true);
-    } else{
-        m_current_graphics_scene->ingest(lexicon, lexicon->get_prefix_signatures(), false);
-
-    }
-
+    m_current_graphics_scene->clear_all();
     m_leftTreeView->expandAll();
     m_leftTreeView->resizeColumnToContents(0);
 

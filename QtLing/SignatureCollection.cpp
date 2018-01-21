@@ -40,25 +40,41 @@ QListIterator<CSignature*> * CSignatureCollection::get_sorted_list_iterator()
 }
 
 
-// -->   Accssing  <--     //
+// -->   Accessing  <--     //
 
 
 bool CSignatureCollection::contains(sigstring_t this_sigstring){
     return m_SignatureMap.contains(this_sigstring);
 }
-CSignature* CSignatureCollection::operator <<(QString szSignature)
+CSignature* CSignatureCollection::operator <<(QString this_sigstring)
 {
-    CSignature* pSig = new CSignature(szSignature,this);
-    m_SignatureMap.insert(szSignature, pSig);
-    m_suffix_flag?
-        pSig->set_suffix_flag(true):
-        pSig->set_suffix_flag(false);
+    CSignature* pSig;
+
+    Q_ASSERT(this_sigstring.length() > 0);
+    if (! m_SignatureMap.contains(this_sigstring)){
+        pSig = new CSignature(this_sigstring);
+        m_signature_list.append(pSig);
+        m_SignatureMap.insert(this_sigstring, pSig);
+        m_suffix_flag?
+            pSig->set_suffix_flag(true):
+            pSig->set_suffix_flag(false);
+    } else
+    {
+        pSig = m_SignatureMap[this_sigstring];
+    }
+
     return pSig;
 }
 
 void CSignatureCollection::operator<< (CSignature * pSig)
 {
-    m_SignatureMap.insert(pSig->display(), pSig);
+    if (! m_SignatureMap.contains(pSig->get_key())){
+        m_signature_list.append(pSig);
+        m_SignatureMap.insert(pSig->get_key(), pSig);
+        m_suffix_flag?
+            pSig->set_suffix_flag(true):
+            pSig->set_suffix_flag(false);
+    }
 }
 
 CSignature* CSignatureCollection::operator ^=(QString szSignature)
@@ -66,12 +82,16 @@ CSignature* CSignatureCollection::operator ^=(QString szSignature)
     return this->find_or_add(szSignature);
 }
 CSignature* CSignatureCollection::find_or_add (QString sigstring )
-{   if (m_SignatureMap.contains(sigstring)){
+{   if (m_SignatureMap.contains(sigstring))
+    {
         return m_SignatureMap[sigstring];
+    } else
+    {
+        CSignature* pSig = new CSignature(sigstring);
+        m_SignatureMap[sigstring] = pSig;
+        m_signature_list.append(pSig);
+        return pSig;
     }
-    CSignature* pSig = new CSignature(sigstring);
-    m_SignatureMap[sigstring] = pSig;
-    return pSig;
 }
 
 // -->   Sorting  <--     //
@@ -82,7 +102,6 @@ bool compare_stem_count(const CSignature* pSig1, const CSignature* pSig2)
 bool compare_affix_count(const CSignature* pSig1, const CSignature* pSig2)
 {   if (pSig1->get_number_of_affixes() == pSig2->get_number_of_affixes())
      {
-//        return  pSig1->get_number_of_stems() > pSig2->get_number_of_stems();
         return pSig1->get_key() < pSig2->get_key();
      }
      return pSig1->get_number_of_affixes() > pSig2->get_number_of_affixes();

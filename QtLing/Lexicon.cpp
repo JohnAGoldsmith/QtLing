@@ -82,6 +82,19 @@ QMapIterator<QString, sig_graph_edge*> * CLexicon::get_sig_graph_edge_map_iter()
  * get part of the algorithm going to test what I am doing.
  */
 
+
+void CLexicon::dump_signatures_to_debug()
+{
+    qDebug() << "********  signature dump ********************* ";
+    int i = 0;
+    foreach (CSignature* pSig, *m_Signatures->get_signature_list()){
+        i++;
+        qDebug()<< i << pSig->get_key();
+    }
+    qDebug() << "******** end of signature dump ********************* ";
+
+}
+
 void CLexicon::Crab_1()
 {
     FindProtostems();
@@ -97,6 +110,7 @@ void CLexicon::Crab_1()
         m_PrefixSignatures->compute_containment_list();
 
     qDebug() << "finished crab 1.";
+
  }
 
 //  <-------------->
@@ -107,18 +121,23 @@ void CLexicon::Crab_1()
  */
 void CLexicon::Crab_2()
 {
+    CSignature* pSig;
+
     ReSignaturizeWithKnownAffixes();
+
     FindGoodSignaturesInsideParaSignatures();
-    m_SuffixesFlag ?
+
+     m_SuffixesFlag ?
         m_Signatures->calculate_stem_entropy():
         m_PrefixSignatures->calculate_stem_entropy();
+
     compute_sig_graph_edges();
     compute_sig_graph_edge_map();
     generate_hypotheses();
 
 
-//    test_for_phonological_relations_between_signatures();
     qDebug() << "finished crab 2.";
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -363,10 +382,12 @@ void   CLexicon::AssignSuffixesToStems()
         {
             if( m_SuffixesFlag) {
                 pSig = *m_Signatures       << this_signature_string;
+                //qDebug() <<375 << this_signature_string << 375;
             } else {
                 pSig = *m_PrefixSignatures << this_signature_string;
                 pSig->set_suffix_flag(false);
             }
+
             pSig->add_memo("Pass 1");
             QSetIterator<suffix_t> affix_iter(this_affix_set);
             while(affix_iter.hasNext()){

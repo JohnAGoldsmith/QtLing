@@ -44,6 +44,7 @@ protected:
     {
         return QRectF(0, 0,130,150);
     }
+    sigstring_t         get_key()       {return m_signature->get_key();}
     CSignature*         get_signature() {return m_signature;}
     void                set_color(Qt::GlobalColor);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
@@ -211,10 +212,7 @@ public:
 
 class lxa_graphics_scene : public QGraphicsScene
 {
-
     Q_OBJECT
-
-
     friend                                  lxa_graphics_view;
 
     MainWindow*                             m_main_window;
@@ -225,26 +223,30 @@ class lxa_graphics_scene : public QGraphicsScene
     eDataType                               m_data_type;
     lxa_graphics_view*                      m_graphics_view;
 
-    // the signature-lattice is a set of lists, one for each set of signatures with the same number of affixes.
+    // the signature-lattice is a set of lists, one for each set of graphic-signatures with the same number of affixes.
     // There is a natural order of them, provided by the sorting function.
-    // However, sometimes we want to shift some signatures to the left-end, so that they are visible.
-    // For that reason, we keep a pointer to the right-end of the set of signatures which have
+    // However, sometimes we want to shift some graphic-signatures to the left-end, so that they are visible.
+    // For that reason, we keep a pointer to the right-end of the set of graphic-signatures which have
     // been permuted to the beginning: this is a 0-based index of that sig in the list.
+
     QList<QList<CSignature*>*>              m_signature_lattice;
+    QList<QList<graphic_signature2*>*>      m_graphic_signature_lattice;
+
+    QMap<CSignature*,graphic_signature2*>   m_map_from_sig_to_pgraphsig;
+
     QVector<int>                            m_insertion_point_in_signature_lattice;
 
     QList<QPair<CSignature*,CSignature*>*>  m_signature_containment_edges;
-//    QMap<CSignature*, int>                  m_map_from_sig_to_column_no; // deprecated, not used.
-    QMap<CSignature*,QPair<int, int > >     m_map_from_sig_to_row_and_column;
-    QMap<CSignature*,graphic_signature2*>    m_map_from_sig_to_pgraphsig;
-    graphic_signature2 *                     m_top_graphic_signature;
-    CSignature*                             m_focus_signature_1;
+    graphic_signature2 *                    m_top_graphic_signature;
+    CSignature*                             m_focus_signature;
+    graphic_signature2 *                    m_focus_graphic_signature;
     CSignature*                             m_focus_signature_2;
     CSignatureCollection *                  m_signature_collection;
     Qt::GlobalColor                         m_normal_color;
     Qt::GlobalColor                         m_focus_color;
     Qt::GlobalColor                         m_out_of_focus_color;
     eGraphicsStatus                         m_graphics_status;
+    int                                     m_border;
     int                                     m_row_delta;
     int                                     m_column_delta;
     int                                     m_location_of_bottom_row;
@@ -254,36 +256,40 @@ class lxa_graphics_scene : public QGraphicsScene
     int                                     m_bottom_left_y;
 private:
     void                                    mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent);
-
+    int                                     m_calculate_column_in_scene_pos_coord( int column_no) {return m_border + column_no * m_row_delta;}
+    int                                     m_calculate_row_in_scene_pos_coord(int row_no);
 
 public slots:
     void                implement_hypothesis(const QModelIndex & );
 
 
 public:
+
+    void                make_debug_report();
                         ~lxa_graphics_scene();
                         lxa_graphics_scene(MainWindow *, CLexicon* );
     void                ingest( CLexicon*, CSignatureCollection*, bool suffix_flag);
     void                add_signature_containment_edge (QPair<CSignature*, CSignature*>* pPair)
                                            {m_signature_containment_edges.append (pPair); }
-    void                assign_scene_positions_to_signatures(CSignatureCollection*, eDataType );
+    void                assign_lattice_positions_to_signatures(CSignatureCollection*, eDataType );
     eGraphicsStatus     change_graphics_status();
-    void                clear();
+    void                clear_scene();
     void                clear_all();
+    void                create_and_place_signatures();
     void                display_focus_signature();
-    graphic_signature2* get_focus_signature_1();
+    graphic_signature2* get_focus_signature();
     CLexicon*           get_lexicon()           {return m_lexicon;}
     void                move_rows_apart();
     void                move_rows_closer();
-    void                move_signature_to_the_left(CSignature*);
+    void                move_graphic_signature_to_the_left(graphic_signature2 * );
     void                mouseMoveEvent(QGraphicsSceneMouseEvent * event);
     void                narrow_columns();
     void                place_containment_edges();
-    void                place_signatures();
-    void                place_arrow(QPointF, QPointF);
-    void                set_focus_signature(CSignature* );
-    void                set_focus_signature_and_move(CSignature* );
-    void                set_focus_signature_1(CSignature* pSig)       {m_focus_signature_1 = pSig;}
+    void                place_arrow(QPointF, QPointF, QColor = Qt::green);
+    void                re_place_signatures();
+    void                set_focus_signature_and_move(graphic_signature2* );
+    void                set_focus_graphic_signature_and_show_subsignatures(graphic_signature2 *);
+    void                set_focus_signature(CSignature* pSig)       {m_focus_signature = pSig;}
     void                set_focus_signature_2(CSignature* pSig)       {m_focus_signature_2 = pSig;}
     void                set_graphics_view (lxa_graphics_view* );
     void                show_hypothesis_1(CHypothesis*);

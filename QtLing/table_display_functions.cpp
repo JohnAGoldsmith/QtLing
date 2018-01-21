@@ -37,6 +37,7 @@ void MainWindow::display_epositive_suffix_signatures()
  */
 void MainWindow::display_suffix_signatures()
 {
+
     m_tableView_upper_left->setModel(m_Models["Signatures"]);
     m_tableView_upper_left->set_data_type( e_data_suffixal_signatures );
     m_tableView_upper_left->resizeColumnsToContents();
@@ -48,9 +49,14 @@ void MainWindow::display_suffix_signatures()
     m_tableView_upper_left->set_data_type( e_data_suffixal_signatures );
     m_tableView_upper_right->resizeColumnsToContents();
 
+    lexicon->dump_signatures_to_debug();
+
      m_current_graphics_scene->clear_all();
      m_current_graphics_scene->assign_lattice_positions_to_signatures(lexicon->get_signatures(), e_data_suffixal_signatures);
      m_current_graphics_scene->create_and_place_signatures();
+
+
+
 
 }
 

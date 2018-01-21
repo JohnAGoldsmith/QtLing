@@ -130,6 +130,7 @@ void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures, e
     p_signatures->sort(this_sort_style);
     m_sort_style = this_sort_style;
 
+    qDebug() << 133 << "number of signatures"<< p_signatures->get_count() <<  "in Models file";
     for (int signo = 0; signo<p_signatures->get_count(); signo++)
     {   sig = p_signatures->get_at_sorted(signo);
         QList<QStandardItem*> items;
@@ -141,6 +142,9 @@ void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures, e
         items.append(item3);
         items.append(item4);
         appendRow(items);
+        if (sig->get_number_of_affixes() == 5){
+            qDebug() << sig->get_key() << 145 << "loading signature model";
+        }
     }
 }
 
