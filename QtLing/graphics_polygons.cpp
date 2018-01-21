@@ -345,6 +345,7 @@ QPointF septagon2::get_center(){
     QPointF diff (30,50);
     return this_point + diff;
 }
+// --------------------------------->      <--------------------------------------------//
 
 void octagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                       QWidget *widget){
@@ -397,6 +398,7 @@ QPointF octagon2::get_center(){
     QPointF diff (55,35);
     return this_point + diff;
 }
+// --------------------------------->      <--------------------------------------------//
 
 void nonagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                       QWidget *widget){
@@ -467,6 +469,7 @@ QPointF nonagon2::get_center(){
     QPointF diff (55,35);
     return this_point + diff;
 }
+// --------------------------------->      <--------------------------------------------//
 
 void decagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                       QWidget *widget){
