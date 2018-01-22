@@ -154,8 +154,6 @@ void lxa_graphics_scene::place_arrow( QPointF start, QPointF end, QColor color )
     double real_end_x = start.rx() +  delta_x - margin;
     double real_end_y = start.ry() +  (delta_x - margin) * slope ;
 
-
-
     QPointF start_point (real_start_x, real_start_y);
     QPointF end_point (real_end_x, real_end_y);
 
@@ -546,7 +544,15 @@ void lxa_graphics_scene::create_and_place_signatures()
 
                 break;
            }
+            case 11:{
+                elevenagon2 * this_elevenagon_2  = new elevenagon2 (pSig);
+                addItem(this_elevenagon_2);
+                this_elevenagon_2->setPos(x,y);
+                m_map_from_sig_to_pgraphsig[pSig]=this_elevenagon_2;
+                m_graphic_signature_lattice[row]->append(this_elevenagon_2);
 
+                break;
+           }
             default:{
               //graphic   p_graph_sig = new graphic_signature (x,y, pSig,  m_row_delta, m_normal_color);
               //  m_map_from_sig_to_pgraphsig[pSig] = p_graph_sig;
@@ -743,8 +749,8 @@ void lxa_graphics_scene::set_focus_signature_and_move(graphic_signature2* graph_
     m_focus_graphic_signature = graph_sig;
     graph_sig -> set_color(m_focus_color);
     move_graphic_signature_to_the_left(graph_sig);
-//    show_subsignatures_and_move_them();
-//    place_signatures();
+    show_subsignatures_and_move_them();
+    re_place_signatures();
 
     update();
     re_place_signatures();
@@ -792,4 +798,9 @@ void lxa_graphics_scene::make_debug_report()
 
 }
 
-
+QColor random_color(){
+QColor colours[10] = {QColor("cyan"), QColor("magenta"), QColor("red"),
+                      QColor("darkRed"), QColor("darkCyan"), QColor("darkMagenta"),
+                      QColor("green"), QColor("darkGreen"), QColor("yellow"),
+                      QColor("blue")};
+}

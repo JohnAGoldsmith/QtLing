@@ -167,6 +167,18 @@ public:
                QWidget *widget);
     void set_text(sigstring_t this_sigstring);
 };
+//--------------------->       <-----------------------------//
+class elevenagon2 : public graphic_signature2
+{
+public:
+    elevenagon2(CSignature*);
+    ~elevenagon2();
+    void paint ();
+    QPointF             get_center();
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+               QWidget *widget);
+    void set_text(sigstring_t this_sigstring);
+};
 
 //--------------------->       <-----------------------------//
 

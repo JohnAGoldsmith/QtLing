@@ -398,23 +398,24 @@ void MainWindow::read_file_do_crab()
 
 
 void MainWindow::read_dx1_file()
-    {
-            QFile file(m_name_of_data_file);
-            if (!file.open(QFile::ReadOnly | QFile::Text)) {
+{
+     QFile file(m_name_of_data_file);
+     if (!file.open(QFile::ReadOnly | QFile::Text))
+     {
             QMessageBox::warning(this, tr("Application"),
                                  tr("Cannot read file %1:\n%2.")
                                  .arg(QDir::toNativeSeparators(m_name_of_data_file), file.errorString()));
             return;
-            }
+     }
 
-            QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
-            settings.setValue("name_of_data_file", m_name_of_data_file );
+     QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
+     settings.setValue("name_of_data_file", m_name_of_data_file );
 
-            QTextStream in(&file);
-            CWordCollection * Words = get_lexicon()->get_word_collection();
+     QTextStream in(&file);
+     CWordCollection * Words = get_lexicon()->get_word_collection();
 
-    while (!in.atEnd())
-    {
+     while (!in.atEnd())
+     {
             QString line = in.readLine();
             line = line.simplified(); // get rid of extra spaces
             QStringList words = line.split(" ");
@@ -423,7 +424,7 @@ void MainWindow::read_dx1_file()
             if (words.size()> 1) {
                 pWord->SetWordCount(words[1].toInt());
             }
-    }
+     }
     Words->sort_word_list();
     setCurrentFile(m_name_of_data_file);
     statusBar()->showMessage(tr("File loaded"), 5000);
