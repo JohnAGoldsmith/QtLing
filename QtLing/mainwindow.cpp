@@ -292,13 +292,44 @@ void MainWindow::do_crab()
 
     statusBar()->showMessage("We have returned from the Crab Nebula.");
     m_Models["Words"]               ->load_words(get_lexicon()->get_words());
-    m_Models["Suffixal stems"]      ->load_stems(get_lexicon()->get_suffixal_stems());
+    statusBar()->showMessage("Words.");
+    QCoreApplication::processEvents();
+
+     m_Models["Suffixal stems"]      ->load_stems(get_lexicon()->get_suffixal_stems());
+     statusBar()->showMessage("Suffixal stems.");
+     QCoreApplication::processEvents();
+
+
     m_Models["Prefixal stems"]      ->load_stems(get_lexicon()->get_prefixal_stems());
+    statusBar()->showMessage("Prefixal stems.");
+    QCoreApplication::processEvents();
+
+
     m_Models["Suffixes"]            ->load_suffixes(get_lexicon()->get_suffixes());
+    statusBar()->showMessage("Suffixes.");
+    QCoreApplication::processEvents();
+
+
     m_Models["Signatures"]          ->load_signatures(get_lexicon()->get_signatures());
+    statusBar()->showMessage("Signatures.");
+    QCoreApplication::processEvents();
+
     m_Models["Signatures 2"]         ->load_signatures(get_lexicon()->get_signatures(), SIG_BY_AFFIX_COUNT);
+    statusBar()->showMessage("Signatures 2.");
+    QCoreApplication::processEvents();
+
+
     m_Models["Signatures 3"]         ->load_signatures(get_lexicon()->get_signatures());
+    statusBar()->showMessage("Signatures 3.");
+    QCoreApplication::processEvents();
+
+
+
     m_Models["EPositive signatures"]->load_positive_signatures(get_lexicon()->get_signatures());
+    statusBar()->showMessage("EPositive signatures.");
+    QCoreApplication::processEvents();
+
+
     m_Models["Prefix signatures"]   ->load_signatures(get_lexicon()->get_prefix_signatures());
     m_Models["Prefix signatures 2"] ->load_signatures(get_lexicon()->get_prefix_signatures(), SIG_BY_AFFIX_COUNT);
     m_Models["EPositive prefix signatures"]->load_positive_signatures(get_lexicon()->get_prefix_signatures());

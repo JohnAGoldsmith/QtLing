@@ -58,7 +58,6 @@ void  LxaStandardItemModel::load_category(QString component_name, eComponentType
 
 void LxaStandardItemModel::load_words(CWordCollection* p_words)
 {
-    this->clear();
     m_Description = QString (" ");
     QMapIterator<word_t, CWord*> word_iter ( * p_words->get_map() );
     while (word_iter.hasNext())

@@ -88,7 +88,7 @@ void  lxa_graphics_scene::implement_hypothesis(const QModelIndex &  index )
             }
         }
 
-        place_arrow(original_point, lower_point);
+        //place_arrow(original_point, lower_point);
         if (shortened_graphic_signature_already_existed){
             place_arrow(shortened_point, lower_point);
             place_arrow(original_point, shortened_point);

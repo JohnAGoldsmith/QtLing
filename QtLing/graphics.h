@@ -179,6 +179,18 @@ public:
                QWidget *widget);
     void set_text(sigstring_t this_sigstring);
 };
+//--------------------->       <-----------------------------//
+class twelvagon2 : public graphic_signature2
+{
+public:
+    twelvagon2(CSignature*);
+    ~twelvagon2();
+    void paint ();
+    QPointF             get_center();
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+               QWidget *widget);
+    void set_text(sigstring_t this_sigstring);
+};
 
 //--------------------->       <-----------------------------//
 

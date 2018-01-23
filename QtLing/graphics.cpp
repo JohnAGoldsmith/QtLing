@@ -553,6 +553,15 @@ void lxa_graphics_scene::create_and_place_signatures()
 
                 break;
            }
+            case 12:{
+                twelvagon2 * this_twelvagon_2  = new twelvagon2 (pSig);
+                addItem(this_twelvagon_2);
+                this_twelvagon_2->setPos(x,y);
+                m_map_from_sig_to_pgraphsig[pSig]=this_twelvagon_2;
+                m_graphic_signature_lattice[row]->append(this_twelvagon_2);
+
+                break;
+           }
             default:{
               //graphic   p_graph_sig = new graphic_signature (x,y, pSig,  m_row_delta, m_normal_color);
               //  m_map_from_sig_to_pgraphsig[pSig] = p_graph_sig;
