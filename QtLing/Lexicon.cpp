@@ -259,7 +259,6 @@ void CLexicon::CreateStemAffixPairs()
         for (int letterno = MinimumStemLength; letterno < word.length(); letterno++){
             if (m_SuffixesFlag){
                 stem = word.left(letterno);
-                //if (m_Protostems.contains(stem)){
                 if(m_suffix_protostems_2.contains(stem))  {
                     suffix_length = word.length() - letterno;
                     suffix = word.right(suffix_length);
