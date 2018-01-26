@@ -12,10 +12,10 @@ CWord::CWord(CWord& word)
     m_Signatures.clear();
  }
 
-// Increment the word count
-//
-// Parameters:
-//    n - amount to increment, default = 1
+
+CWord::~CWord(){
+
+}
 
 void CWord::IncrementWordCount (int n )
 {
@@ -27,24 +27,9 @@ void CWord::add_to_autobiography(QString line)
 {
      m_Autobiography.append(line);
 }
-void CWord::AddParse(CStem* stem, CSuffix* suffix, CSignature* signature)
+ void CWord::add_parse_triple(QString stem, QString affix, CSignature* pSig)
 {
-    Parse parse;
-    parse.p_stem = stem;
-    parse.p_suffix = suffix;
-    parse.p_signature = signature;
-    m_Parses << parse;
-}
-
-void CWord::add_stem_and_signature(CStem* pStem, CSignature * pSig)
-{   //Debug() << "word 38" << get_key() << "size"<<m_Signatures.size();
-    for (int i =0; i< m_Signatures.size(); i++){
-        ptr_to_stem_sig_pair stem_ptr = m_Signatures.at(i);
-        if (stem_ptr->first->get_key() == pStem->get_key()){
-            return;
-        }
-    }
-    QPair<CStem*,CSignature*>* pPair = new QPair<CStem*,CSignature*>(pStem,pSig);
-    m_Signatures.append(pPair);
+    Parse_triple * this_triple = new Parse_triple(stem, affix, pSig);
+    m_Parse_triples.append(this_triple);
 
 }

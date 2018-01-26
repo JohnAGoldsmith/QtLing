@@ -18,6 +18,9 @@ CSignatureCollection::CSignatureCollection(CLexicon* p_lexicon, bool suffix_flag
 
 CSignatureCollection::~CSignatureCollection()
 {
+    foreach(CSignature* pSig, m_signature_list){
+        delete pSig;
+    }
     delete m_MapIterator;
     delete m_SortedListIterator;
 }

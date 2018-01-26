@@ -109,9 +109,14 @@ public:
     void                                    display_prefix_signatures();
     void                                    display_epositive_suffix_signatures();
     void                                    display_hypotheses();
-    void                                    DisplaySignatures();
+//    void                                    DisplaySignatures();
     CLexicon*                               get_lexicon()                       {return m_lexicon_list.last();  }
     bool                                    get_graphic_display_flag()        {return m_graphic_display_flag;}
+    void                                    load_models();
+    void                                    set_up_graphics_scene_and_view();
+
+
+
 protected:
     void closeEvent(QCloseEvent *event) override;
 
@@ -126,6 +131,9 @@ private slots:
     void                                    read_file_do_crab();
     bool                                    save();
     bool                                    saveAs();
+
+    void                                    read_stems_and_words();
+    void                                    write_stems_and_words();
 
 #ifndef QT_NO_SESSIONMANAGER
     void                    commitData(QSessionManager &);
@@ -182,6 +190,8 @@ public:
     UpperTableView *        get_upper_left_tableview()              { return m_tableView_upper_left;}
     UpperTableView *        get_upper_right_tableview()             { return m_tableView_upper_right;}
     void                    set_current_graphics_scene(lxa_graphics_scene* this_scene) {m_current_graphics_scene = this_scene;}
+
+    void                    write_stems_and_affixes();
 
 protected:
    void keyPressEvent(QKeyEvent *e);

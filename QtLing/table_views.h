@@ -16,7 +16,6 @@ class UpperTableView : public QTableView
 public:
     UpperTableView ();
     UpperTableView (MainWindow*, eSortStyle = DEFAULT);
-    void                    display_this_affixes_signatures(const QModelIndex & index);
 //    QString                 get_content()                               {return m_content;}
 //    void                    set_content_type(QString text)              {m_content = text;}
     MainWindow*             get_parent_window()                         {return m_parent_window;}
@@ -26,6 +25,7 @@ public slots:
     eSortStyle              get_signature_sort_style ()                 { return m_signature_sort_style;}
     void                    set_signature_sort_style (eSortStyle style) {m_signature_sort_style = style;}
     void                    ShowModelsUpperTableView(const QModelIndex& );
+    void                    display_this_affixes_signatures(const QModelIndex & index);
 
     signals:
     void                    please_display_this_signature(QString sig);

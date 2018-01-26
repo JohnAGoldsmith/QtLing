@@ -238,15 +238,12 @@ void lxa_graphics_scene::assign_lattice_positions_to_signatures(CSignatureCollec
 
     clear_all();
 
-    qDebug() << 247;
-    make_debug_report();
+     //make_debug_report();
 
 
     //  -->  Find out what the largest number of affixes is in the signatures  <-- //
-    qDebug() << "number of signatures line 234"<< signatures->get_count();
-    qDebug() << 254 << "beginning assignment of signature locations.";
 
-    lexicon->dump_signatures_to_debug();
+    //lexicon->dump_signatures_to_debug();
 
     QListIterator<CSignature*> sig_iter_1 (* signatures->get_signature_list());
     while(sig_iter_1.hasNext()){
@@ -284,32 +281,18 @@ void lxa_graphics_scene::assign_lattice_positions_to_signatures(CSignatureCollec
         }
         sig_size = pSig->get_number_of_affixes();
         m_signature_lattice[sig_size]->append(pSig);
-        if (pSig->get_number_of_affixes()==5){
-            qDebug() << 284 << sig_size << pSig->get_key()<< m_signature_lattice[5]->size() ; // it is doubled here.
-        }
     }
-    qDebug() << 299;
-    make_debug_report();
+
 
     // -->  Sort each row of the m_signature_lattice by stem frequency
     for (int rowno = 0; rowno < m_signature_lattice.size(); rowno ++){
         std::sort(m_signature_lattice[rowno]->begin(), m_signature_lattice[rowno]->end(),  compare_stem_count_2);
         for (int colno = 0; colno < m_signature_lattice[rowno]->size(); colno++){
             pSig = m_signature_lattice[rowno]->at(colno);
-            //QPair<int,int> * pPair = new QPair<int,int> (rowno, colno);
-            //m_map_from_sig_to_row_and_column[pSig] = pPair;
-            if (rowno==5){
-                qDebug() << 295 << pSig->get_key(); // it is doubled here the second time around.
-            }
         }
      }
 
-     qDebug() << "end of assign lattice position to signatures";
-     make_debug_report();
-
     //  --> Now the signatures are nicely organized in a matrix of sorts.   <-- //
-
-
 
     update();
 
@@ -430,7 +413,7 @@ void lxa_graphics_scene::create_and_place_signatures()
     int number_of_rows = m_graphic_signature_lattice.size();
 
     qDebug() << "now we are in create and place signaures";
-    make_debug_report();
+    //make_debug_report();
 
     if (m_graphic_signature_lattice.size() > 0){
         for (int i = 0; i < m_graphic_signature_lattice.size(); i++){
@@ -496,7 +479,7 @@ void lxa_graphics_scene::create_and_place_signatures()
             }
             case 5:{
                 pentagon2 * this_pentagon_2  = new pentagon2 (pSig);
-                qDebug() << 431 << pSig->get_key(); // here there is doubling the second time around.
+                //qDebug() << 431 << pSig->get_key(); // here there is doubling the second time around.
                 addItem(this_pentagon_2);
                 this_pentagon_2->setPos(x,y);
                 m_map_from_sig_to_pgraphsig[pSig]=this_pentagon_2;
@@ -573,7 +556,7 @@ void lxa_graphics_scene::create_and_place_signatures()
         }
     }
     qDebug() << "end of create and place signatures";
-    make_debug_report();
+    //make_debug_report();
 
 
     update();

@@ -28,8 +28,6 @@ CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag)
     m_Prefixes              = new CPrefixCollection(this);
     m_Compounds             = new CWordCollection(this);
     m_Parses                = new QList<QPair<QString,QString>>();
-    m_suffix_protostems            = QMap<QString, int>();
-    m_prefix_protostems            = QMap<QString, int>();
     m_ParaSignatures        =  new CSignatureCollection(this, true);
     m_ParaSuffixes          = new CSuffixCollection(this);
     m_ResidualStems         = new CStemCollection(this);
@@ -71,6 +69,13 @@ QMapIterator<QString, sig_graph_edge*> * CLexicon::get_sig_graph_edge_map_iter()
     return iter;
 }
 
+CLexicon::~CLexicon()
+{
+    delete m_Signatures;
+    delete m_PrefixSignatures;
+    delete m_ParaSignatures;
+    delete m_PassiveSignatures;
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -108,6 +113,7 @@ void CLexicon::Crab_1()
     m_SuffixesFlag?
         m_Signatures->compute_containment_list():
         m_PrefixSignatures->compute_containment_list();
+
 
     qDebug() << "finished crab 1.";
 
@@ -157,8 +163,8 @@ void CLexicon::FindProtostems()
     m_ProgressBar->setMinimum(0);
     m_ProgressBar->setMaximum(Words->size());
     m_StatusBar->showMessage("Proto-stems.");
-    m_prefix_protostems.clear();
-    m_suffix_protostems.clear();
+//    m_prefix_protostems.clear();
+//    m_suffix_protostems.clear();
     m_Parses->clear();
     m_Parse_map.clear();
     for (int wordno=0; wordno<Words->size(); wordno ++){
@@ -185,9 +191,9 @@ void CLexicon::FindProtostems()
                     stem = previous_word.left(i);
                     if (stem.length()== 0){continue;}
                     DifferenceFoundFlag = true;
-                    if (!m_suffix_protostems.contains(stem))                {
-                        m_suffix_protostems[stem] = 1;
-                    }
+                    //if (!m_suffix_protostems.contains(stem))                {
+                    //    m_suffix_protostems[stem] = 1;
+                    //}
                     if (!m_suffix_protostems_2.contains(stem)){
                         for (wordno2 = wordno; wordno2 < m_Words->get_count(); wordno2++ ){
                             if ( ! Words->at(wordno2).startsWith(stem) ){
@@ -423,7 +429,7 @@ void   CLexicon::AssignSuffixesToStems()
                             this_word = this_affix + this_stem_t ;
                     }
                     CWord* pWord = m_Words->get_word(this_word);
-                    pWord->add_stem_and_signature(pStem,pSig);
+                    pWord->add_parse_triple(this_stem_t, this_affix, pSig);
                     QString message = this_signature_string;
                     if (this_affix_set.size() > 50){message = "Super long signature";};
                     pWord->add_to_autobiography("Pass1= " + this_stem_t + "=" + message);
@@ -493,6 +499,7 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
    while(word_iter.hasNext()){
        pWord = word_iter.next().value();
        pWord->clear_signatures();
+       pWord->clear_parse_triples();
    }
    //--> We establish a temporary map from stems to sets of affixes as we iterate through parses. <--//
 
@@ -581,7 +588,9 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
                            this_word = this_affix + this_stem_t ;
                    }
                    CWord* pWord = m_Words->get_word(this_word);
-                   pWord->add_stem_and_signature(pStem,pSig);
+                   //pWord->add_stem_and_signature(pStem,pSig);
+                   pWord->add_parse_triple(this_stem_t, this_affix, pSig);
+                   qDebug() << pSig->get_key() << 594;
                    QString message = this_signature_string;
                    if (affixes.size()> 50){message = "very long signature";}
                    pWord->add_to_autobiography("Pass2= " + this_stem_t + "=" + message );
@@ -708,11 +717,13 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
     // instead of going through parasignatures, we will look at protostems that are not stems.
     // We will not keep Parasignatures or residual stems.
 
-    QMap<QString, int>        * these_protostems;
+//    QMap<QString, int>        * these_protostems;
+//    m_SuffixesFlag?
+//                these_protostems = & m_suffix_protostems:
+//                these_protostems = & m_prefix_protostems;
+
+
     QMap<QString, protostem*> * these_protostems_2;
-    m_SuffixesFlag?
-                these_protostems = & m_suffix_protostems:
-                these_protostems = & m_prefix_protostems;
     m_SuffixesFlag?
                 these_protostems_2 = & m_suffix_protostems_2:
                 these_protostems_2 = & m_prefix_protostems_2;
@@ -759,7 +770,8 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
                     }
                     pWord = m_Words->find_or_fail(this_word);
                     if (pWord){
-                        pWord->add_stem_and_signature(pStem, p_proven_sig);
+                        //pWord->add_stem_and_signature(pStem, p_proven_sig);
+                        pWord->add_parse_triple(this_stem, this_affix, p_proven_sig);
                         pWord->add_to_autobiography("from within parasigs="  + this_stem  + "=" +  p_proven_sigstring);
                     }
                 }
@@ -828,15 +840,15 @@ void CLexicon::compute_sig_graph_edges()
 
     while (word_iter.hasNext())   {
         pWord = word_iter.next().value();
-        number_of_signatures = pWord->GetSignatures()->size();
+        number_of_signatures = pWord->get_signatures()->size();
         if ( number_of_signatures > 1){
             for (int signo1=0; signo1 < number_of_signatures; signo1++){
-                stem_sig_pair* pair1 =  pWord->GetSignatures()->value(signo1);
+                stem_sig_pair* pair1 =  pWord->get_signatures()->value(signo1);
                 CStem * stem1        = pair1->first;
                 int stem1length      = stem1->get_key().length();
                 CSignature* sig1     = pair1->second;
                 for (int signo2=signo1 + 1; signo2 < number_of_signatures; signo2++){
-                    stem_sig_pair * pair2 = pWord->GetSignatures()->value(signo2);
+                    stem_sig_pair * pair2 = pWord->get_signatures()->value(signo2);
                     CStem *  stem2   = pair2->first;
                     CSignature* sig2 = pair2->second;
                     if (sig1 == sig2){continue;}

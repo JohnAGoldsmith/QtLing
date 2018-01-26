@@ -72,9 +72,9 @@ void LxaStandardItemModel::load_words(CWordCollection* p_words)
         QStandardItem* pItem2 = new QStandardItem(QString::number(pWord->get_word_count()));
         item_list.append(pItem2);
 
-        QListIterator<QPair<CStem*,CSignature*>*> sig_iter(*pWord->GetSignatures());
-        while (sig_iter.hasNext()){
-            QStandardItem* pItem3 = new QStandardItem(sig_iter.next()->second->GetSignature());
+        QListIterator<Parse_triple*> parse_3_iter(*pWord->get_parse_triples());
+        while (parse_3_iter.hasNext()){
+            QStandardItem* pItem3 = new QStandardItem(parse_3_iter.next()->p_signature->get_key()) ;
             item_list.append(pItem3);
         }
         appendRow(item_list);
@@ -129,7 +129,7 @@ void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures, e
     p_signatures->sort(this_sort_style);
     m_sort_style = this_sort_style;
 
-    qDebug() << 133 << "number of signatures"<< p_signatures->get_count() <<  "in Models file";
+    //qDebug() << 133 << "number of signatures"<< p_signatures->get_count() <<  "in Models file";
     for (int signo = 0; signo<p_signatures->get_count(); signo++)
     {   sig = p_signatures->get_at_sorted(signo);
         QList<QStandardItem*> items;
@@ -141,9 +141,6 @@ void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures, e
         items.append(item3);
         items.append(item4);
         appendRow(items);
-        if (sig->get_number_of_affixes() == 5){
-            qDebug() << sig->get_key() << 145 << "loading signature model";
-        }
     }
 }
 

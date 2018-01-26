@@ -73,7 +73,6 @@ public:
              this_word_stems->word = this_edge.word;
              this_word_stems->stem_1 = this_edge.stem_1;
              this_word_stems->stem_2 = this_edge.stem_2;
-             //shared_word_stems.append(this_word_stems);
              shared_word_stems[this_word_stems->get_label()] = this_word_stems;
          }
     QString label() {return morph + "/" + sig_1->get_key() + "/" + sig_2->get_key(); }
@@ -155,6 +154,7 @@ public:
     CLexicon(CLexicon* parent_lexicon = NULL, bool suffix_flag = true);
 public:
 
+    ~CLexicon();
 
     void                                        dump_signatures_to_debug();
     // accessors and protostems
@@ -173,8 +173,7 @@ public:
     QList<CHypothesis*>*                        get_hypotheses ()           {return m_Hypotheses;}
     QMap<QString, CHypothesis*>  *              get_hypothesis_map()        { return m_Hypothesis_map;}
     CHypothesis*                                get_hypothesis(QString hypothesis_label);
-
-    \
+    QList<QPair<QString,QString> > *            get_parses()                {return m_Parses;}
     void                                        dump_suffixes(QList<QString>*);
     CSuffixCollection*                          get_parasuffixes()          { return m_ParaSuffixes;}
     CSignatureCollection*                       get_passive_signatures()    { return m_PassiveSignatures;}
@@ -200,6 +199,7 @@ public:
     void                                        set_status_bar(QStatusBar* pBar) {m_StatusBar = pBar;}
     void                                        set_prefixes_flag()         { m_SuffixesFlag = false;}
     void                                        set_suffixes_flag()         { m_SuffixesFlag = true;}
+
 public:
     // insert functions here
     void Crab_1();

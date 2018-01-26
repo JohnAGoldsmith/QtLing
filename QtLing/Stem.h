@@ -12,7 +12,7 @@ class CSignature;
 class CStem
 {
 protected:
-    QString m_key;
+    QString             m_key;
     QList<QString>      m_Signatures;
     QList<CSuffix*>     m_parasignature; // a parasignature is made up of approved affixes, but the parasignature has not yet been approved.
     int                 m_count;

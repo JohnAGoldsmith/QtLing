@@ -307,8 +307,8 @@ void LowerTableView::table_word(CWord* pWord ){
     // Display the signatures this word bears:
     for (int signo = 0; signo < pWord->m_Signatures.size(); signo++){
         //qDebug() << signo;
-        QString sig = pWord->GetSignatures()->at(signo)->second->get_key();
-        QString stem = pWord->GetSignatures()->at(signo)->first->get_key();
+        QString sig = pWord->get_signatures()->at(signo)->second->get_key();
+        QString stem = pWord->get_signatures()->at(signo)->first->get_key();
         item_list.clear();
         p_item = new QStandardItem(stem);
         item_list.append(p_item);
