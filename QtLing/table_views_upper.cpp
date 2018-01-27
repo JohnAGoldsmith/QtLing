@@ -50,11 +50,11 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         set_data_type( e_data_words );
     }
     else     if (component == "Prefixal stems"){
-        setModel(m_parent_window->m_Models["Prefix stems"]);
+        setModel(m_parent_window->m_Models["Prefixal stems"]);
         set_data_type(e_prefixal_stems);
     }
     else     if (component == "Suffixal stems"){
-        setModel(m_parent_window->m_Models["Suffix stems"]);
+        setModel(m_parent_window->m_Models["Suffixal stems"]);
         set_data_type(e_suffixal_stems);
     }
     else     if (component == "Suffixes"){

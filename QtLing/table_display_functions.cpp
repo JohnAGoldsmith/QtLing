@@ -49,6 +49,7 @@ void MainWindow::display_suffix_signatures()
     m_tableView_upper_left->set_data_type( e_data_suffixal_signatures );
     m_tableView_upper_right->resizeColumnsToContents();
 
+
     //lexicon->dump_signatures_to_debug();
 
      m_current_graphics_scene->clear_all();

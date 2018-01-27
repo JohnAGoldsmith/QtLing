@@ -739,8 +739,6 @@ void lxa_graphics_scene::set_focus_signature_and_move(graphic_signature2* graph_
         m_focus_graphic_signature->set_color(m_normal_color);
     }
     m_focus_graphic_signature = graph_sig;
-    graph_sig -> set_color(m_focus_color);
-    move_graphic_signature_to_the_left(graph_sig);
     show_subsignatures_and_move_them();
     re_place_signatures();
 
@@ -757,10 +755,21 @@ void lxa_graphics_scene::show_subsignatures_and_move_them()
         return;
     }
     for (auto sig_iter : m_map_from_sig_to_pgraphsig.values()){
-        if (m_focus_graphic_signature->get_signature()->contains(sig_iter->get_signature())){
-            move_graphic_signature_to_the_left(sig_iter);
+        if (m_focus_graphic_signature->get_signature()==sig_iter->get_signature())
+        {
             sig_iter->set_color(m_focus_color);
-        } else{
+
+        } else if (m_focus_graphic_signature->get_signature()->contains(sig_iter->get_signature()))
+        {
+            move_graphic_signature_to_the_left(sig_iter);
+            sig_iter->set_color(Qt::cyan);
+        } else if (sig_iter->get_signature() -> contains (m_focus_graphic_signature->get_signature()))
+        {
+            move_graphic_signature_to_the_left(sig_iter);
+            sig_iter->set_color(Qt::magenta);
+        }
+        else
+        {
             sig_iter->set_color(m_out_of_focus_color);
         }
     }

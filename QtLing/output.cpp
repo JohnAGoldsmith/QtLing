@@ -36,7 +36,7 @@ void MainWindow::write_stems_and_words()
         }
         else
         {
-            out  <<  pWord->get_key() <<  endl;
+//            out  <<  pWord->get_key() <<  endl;
         }
     }
 }
@@ -77,3 +77,30 @@ void MainWindow::read_stems_and_words()
     m_leftTreeView->resizeColumnToContents(0);
 
 }
+void MainWindow::read_corpus()
+{
+    QString file_name = "../../../../Dropbox/data/english/TomSawyer.txt";
+    QString word;
+    QFile in_file (file_name);
+    if (! in_file.open(QFile::ReadOnly | QIODevice::Text))
+    {
+        qDebug() << "************  no corpus file opened ";
+        return;
+    }
+    int word_count_limit = 1000;
+    int word_count = 0;
+    while (! in_file.atEnd() && word_count <= word_count_limit){
+        QString line = in_file.readLine();
+        line = line.trimmed();
+        QStringList words = line.split(" ");
+        while (!words.isEmpty()){
+            word_count++;
+            word = words[0];
+            words.pop_front();
+            m_corpus.append(word);
+
+        }
+    }
+}
+
+

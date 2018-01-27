@@ -68,12 +68,14 @@ class MainWindow : public QMainWindow
 //-----------------------------------------------------------------//
 {
     Q_OBJECT
+
     friend class                            LeftSideTreeView;
     friend class                            UpperTableView;
     friend class                            LowerTableView;
     friend class                            lxaWindow;
 
     QList<CLexicon*>                        m_lexicon_list;
+    QStringList                             m_corpus;
     QString                                 m_name_of_data_file;
     QProgressBar *                          m_ProgressBar;
     QMap<QString, LxaStandardItemModel*>    m_Models;
@@ -103,6 +105,7 @@ class MainWindow : public QMainWindow
 
 
 public:
+    void                                    analyze_corpus();
     MainWindow();
     void                                    display_suffixes();
     void                                    display_suffix_signatures();
@@ -113,6 +116,7 @@ public:
     CLexicon*                               get_lexicon()                       {return m_lexicon_list.last();  }
     bool                                    get_graphic_display_flag()        {return m_graphic_display_flag;}
     void                                    load_models();
+    void                                    read_corpus();
     void                                    set_up_graphics_scene_and_view();
 
 

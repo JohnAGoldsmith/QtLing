@@ -7,13 +7,15 @@ class CWordCollection;
 class CStemCollection;
 class CSuffixCollection;
 class CHypothesis;
+class MainWindow;
 
 
 class LxaStandardItemModel : public QStandardItemModel
 {
     Q_OBJECT
+
 public:
-    LxaStandardItemModel();
+    LxaStandardItemModel(MainWindow* parent);
     LxaStandardItemModel(QString shortname);
     ~LxaStandardItemModel();
 

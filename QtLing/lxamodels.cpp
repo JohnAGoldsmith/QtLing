@@ -8,7 +8,7 @@
 #include "hypothesis.h"
 #include "lxamodels.h"
 
-LxaStandardItemModel::LxaStandardItemModel()
+LxaStandardItemModel::LxaStandardItemModel(MainWindow* main_window): QStandardItemModel(main_window)
 {
     m_sort_style = UNSPECIFIED;
 }
@@ -58,6 +58,10 @@ void  LxaStandardItemModel::load_category(QString component_name, eComponentType
 
 void LxaStandardItemModel::load_words(CWordCollection* p_words)
 {
+    QStringList labels;
+    labels  << tr("word") << "word count" << "signatures";
+    setHorizontalHeaderLabels(labels);
+
     m_Description = QString (" ");
     QMapIterator<word_t, CWord*> word_iter ( * p_words->get_map() );
     while (word_iter.hasNext())
@@ -129,6 +133,10 @@ void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures, e
     p_signatures->sort(this_sort_style);
     m_sort_style = this_sort_style;
 
+    QStringList labels;
+    labels  << tr("signature") << "stem count" << "robustness"<< "fullness";
+    setHorizontalHeaderLabels(labels);
+
     //qDebug() << 133 << "number of signatures"<< p_signatures->get_count() <<  "in Models file";
     for (int signo = 0; signo<p_signatures->get_count(); signo++)
     {   sig = p_signatures->get_at_sorted(signo);
@@ -150,6 +158,12 @@ void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures, e
 void LxaStandardItemModel::load_positive_signatures(CSignatureCollection* p_signatures)
 {
     this->clear();
+
+    QStringList labels;
+    labels  << tr("signature") << "stem count" << "robustness"<< "fullness";
+    setHorizontalHeaderLabels(labels);
+
+
     m_Signatures = p_signatures;
     m_Description = "positive suffix signatures";
     CSignature*         sig;

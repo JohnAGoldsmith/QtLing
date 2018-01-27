@@ -47,7 +47,6 @@ class LxaStandardItemModel;
 MainWindow::MainWindow()
 {
 
-
     m_lexicon_list.append ( new CLexicon() );
     CLexicon * lexicon =  m_lexicon_list.last();
 
@@ -187,21 +186,47 @@ void MainWindow::cycle_through_graphic_displays()
 
 void MainWindow::keyPressEvent(QKeyEvent* ke)
 {
-    if (ke->key() == Qt::Key_S){
-        get_lexicon()->set_suffixes_flag();
-        do_crab();
-        display_suffix_signatures(); // this causes a doubling of the signatures in the lattice.
-    }
-    if (ke->key() == Qt::Key_D){
-        read_dx1_file();
-    }
-    if (ke->key() == Qt::Key_P){
-        get_lexicon()->set_prefixes_flag();
-        do_crab();
-        display_prefix_signatures();
+    int this_key = ke->key();
 
+    switch(this_key){
+    case Qt::Key_1:
+    {
+        if (get_lexicon()->get_prefixal_stems()->get_count() > 0){
+            get_lexicon()->set_prefixes_flag();
+            do_crab2();
+            m_graphics_view->setScene(m_current_graphics_scene);
+            m_current_graphics_scene->set_graphics_view(m_graphics_view);
+            display_prefix_signatures();
+        }
+        break;
+     }
+    case Qt::Key_2:
+    {
+        if (get_lexicon()->get_suffixal_stems()->get_count() > 0){
+           get_lexicon()->set_suffixes_flag();
+            do_crab2();
+            //m_current_graphics_scene->clear_all();
+            display_suffix_signatures();
+        }
+        break;
     }
-    if (ke->key() == Qt::Key_G)
+    case  Qt::Key_3:    {
+        statusBar()->showMessage(tr("Read file."), 5000);
+        read_stems_and_words();
+
+        display_suffix_signatures();
+        break;
+    }
+    case Qt::Key_4:{
+        read_corpus();
+        analyze_corpus();
+        break;
+    }
+    case Qt::Key_D:     {
+        read_dx1_file();
+        break;
+    }
+    case Qt::Key_G:
     {
         if (m_graphic_display_flag==false){
             m_rightSplitter->replaceWidget(1,m_graphics_view);
@@ -218,59 +243,86 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
             sizes<< 500 << 200;
             m_rightSplitter->setSizes(sizes);
         }
+        break;
     }
-    if (ke->key() == Qt::Key_2){
-        if (get_lexicon()->get_suffixal_stems()->get_count() > 0){
-           get_lexicon()->set_suffixes_flag();
-            do_crab2();
-            //m_current_graphics_scene->clear_all();
-            display_suffix_signatures();
-        }
-    }
-    if (ke->key() == Qt::Key_1){
-        if (get_lexicon()->get_prefixal_stems()->get_count() > 0){
-            get_lexicon()->set_prefixes_flag();
-            do_crab2();
-            m_graphics_view->setScene(m_current_graphics_scene);
-            m_current_graphics_scene->set_graphics_view(m_graphics_view);
-            display_prefix_signatures();
-        }
-     }
-    if (ke->key() == Qt::Key_V){
-        cycle_through_graphic_displays();
-    }
-    if (ke->key() == Qt::Key_J){
-        m_current_graphics_scene->move_rows_apart();
-    }
-    if (ke->key() == Qt::Key_K){
-        m_current_graphics_scene->move_rows_closer();
-    }
-    if (ke->key() == Qt::Key_U){
-        m_current_graphics_scene->widen_columns();
-    }
-    if (ke->key() == Qt::Key_I){
+    case Qt::Key_I: {
         m_current_graphics_scene->narrow_columns();
+            break;
     }
-    if (ke->key() == Qt::Key_L){
+    case Qt::Key_J: {
+        m_current_graphics_scene->move_rows_apart();
+            break;
+    }
+    case Qt::Key_K: {
+        m_current_graphics_scene->move_rows_closer();
+        break;
+    }
+    case Qt::Key_L:    {
         m_graphics_view->zoom_up();
-
+        break;
     }
-    if (ke->key() == Qt::Key_Semicolon){
+    case Qt::Key_S:
+    {
+        get_lexicon()->set_suffixes_flag();
+        do_crab();
+        display_suffix_signatures();
+        break;
+    }
+    case Qt::Key_V:
+    {
+        cycle_through_graphic_displays();
+        break;
+    }
+    case Qt::Key_U:
+    {
+        m_current_graphics_scene->widen_columns();
+        break;
+    }
+    case Qt::Key_P:
+    {
+        get_lexicon()->set_prefixes_flag();
+        do_crab();
+        display_prefix_signatures();
+        break;
+    }
+    case Qt::Key_Q:
+    {
+         break;
+    }
+    case Qt::Key_Semicolon:
+    {
         m_graphics_view->zoom_down();
-
+        break;
     }
-    if (ke->key() == Qt::Key_A){
-
-    }
-    if (ke->key()== Qt::Key_Exclam){
+    case Qt::Key_Exclam:
+    {
         m_graphics_view->reset_scale();
+        break;
     }
-    if (ke->key()== Qt::Key_H)
-    QMainWindow::keyPressEvent(ke);
+    case Qt::Key_H:
+    {
+        QMainWindow::keyPressEvent(ke);
+        break;
+    }
+    }
 }
 
 
 
+void MainWindow::do_crab()
+{   statusBar()->showMessage("Entering the Crab Nebula.");
+    get_lexicon()->Crab_1();
+    load_models();
+    write_stems_and_words();
+
+    statusBar()->showMessage("We have returned from the Crab Nebula.");
+    create_or_update_TreeModel();
+
+    set_up_graphics_scene_and_view();
+    m_leftTreeView->expandAll();
+    m_leftTreeView->resizeColumnToContents(0);
+    statusBar()->showMessage("All models are loaded.");
+}
 void MainWindow::newFile()
 {
     if (ask_to_save()) {
@@ -286,11 +338,9 @@ void MainWindow::ask_for_filename()
     read_dx1_file();
 }
 
-void MainWindow::do_crab()
-{   statusBar()->showMessage("Entering the Crab Nebula.");
-    get_lexicon()->Crab_1();
+void MainWindow::load_models()
+{
 
-    statusBar()->showMessage("We have returned from the Crab Nebula.");
     m_Models["Words"]               ->load_words(get_lexicon()->get_words());
     statusBar()->showMessage("Words.");
     QCoreApplication::processEvents();
@@ -338,32 +388,25 @@ void MainWindow::do_crab()
     m_Models["Passive signatures"]  ->load_signatures(get_lexicon()->get_passive_signatures());
     m_Models["Hypotheses"]          ->load_hypotheses(get_lexicon()->get_hypotheses());
     m_Models["Hypotheses 2"]        ->load_hypotheses_2(get_lexicon()->get_hypotheses());
-    create_or_update_TreeModel();
 
-// add component 4
-      //part of an experiment:
-        QMapIterator<QString,eComponentType> iter (get_lexicon()->get_category_types());
-        while (iter.hasNext()){
-          QString component_name = iter.next().key();
-          eComponentType this_component_type = iter.value();
-          m_Models[component_name]->load_category(component_name, this_component_type);
-        }
-// end of experiment
 
-        if (get_lexicon()->get_suffix_flag())
-        {
-              m_current_graphics_scene ->ingest(get_lexicon(),get_lexicon()->get_signatures(), true);
-          }
-        else
-        {
-              m_current_graphics_scene->ingest(get_lexicon(), get_lexicon()->get_prefix_signatures(), false);
-        }
-        m_graphics_view->setScene(m_current_graphics_scene);
-        m_current_graphics_scene->set_graphics_view(m_graphics_view);
-        m_leftTreeView->expandAll();
-        m_leftTreeView->resizeColumnToContents(0);
-        statusBar()->showMessage("All models are loaded.");
+
 }
+void MainWindow::set_up_graphics_scene_and_view()
+{
+    if (get_lexicon()->get_suffix_flag())
+    {
+          m_current_graphics_scene ->ingest(get_lexicon(),get_lexicon()->get_signatures(), true);
+      }
+    else
+    {
+          m_current_graphics_scene->ingest(get_lexicon(), get_lexicon()->get_prefix_signatures(), false);
+    }
+    m_graphics_view->setScene(m_current_graphics_scene);
+    m_current_graphics_scene->set_graphics_view(m_graphics_view);
+
+}
+
 void MainWindow::do_crab2()
 {
     statusBar()->showMessage("Entering the Crab Nebula, phase 2");
@@ -418,6 +461,8 @@ void MainWindow::do_crab2()
     m_current_graphics_scene->clear_all();
     m_leftTreeView->expandAll();
     m_leftTreeView->resizeColumnToContents(0);
+
+    write_stems_and_words();
 
     statusBar()->showMessage("All models are loaded.");
 }
