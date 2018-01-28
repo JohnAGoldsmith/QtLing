@@ -77,6 +77,7 @@ class MainWindow : public QMainWindow
     QList<CLexicon*>                        m_lexicon_list;
     QStringList                             m_corpus;
     QString                                 m_name_of_data_file;
+    QString                                 m_name_of_project_file;
     QProgressBar *                          m_ProgressBar;
     QMap<QString, LxaStandardItemModel*>    m_Models;
     eDataType                               m_graphic_display_type;
@@ -91,9 +92,7 @@ class MainWindow : public QMainWindow
     LowerTableView *                        m_tableView_lower;
     LeftSideTreeView *                      m_leftTreeView;
 
-    lxa_graphics_scene *                    m_current_graphics_scene;
-//    lxa_graphics_scene *                    m_suffix_graphics_scene;
-//    lxa_graphics_scene *                    m_prefix_graphics_scene;
+    lxa_graphics_scene *                    m_graphics_scene;
     lxa_graphics_view *                     m_graphics_view;
     bool                                    m_graphic_display_flag;
     QStandardItemModel *                    m_treeModel;
@@ -148,6 +147,7 @@ public:
     void createHorizontalGroupBox();
     void createSplitter();
     void ask_for_filename();
+    void ask_for_project_file();
     void read_dx1_file();
     void read_text_file();
 
@@ -187,13 +187,11 @@ public:
     QString                 strippedName(const QString &fullFileName);
     void                    cycle_through_graphic_displays();
 
-    lxa_graphics_view*      get_graphics_view()                     {return  m_graphics_view;}
-    lxa_graphics_scene*     get_graphics_scene()                    {return m_current_graphics_scene;}
-//    lxa_graphics_scene*     get_suffix_graphics_scene()             {return m_suffix_graphics_scene;}
-//    lxa_graphics_scene*     get_prefix_graphics_scene()             {return m_prefix_graphics_scene;}
-    UpperTableView *        get_upper_left_tableview()              { return m_tableView_upper_left;}
-    UpperTableView *        get_upper_right_tableview()             { return m_tableView_upper_right;}
-    void                    set_current_graphics_scene(lxa_graphics_scene* this_scene) {m_current_graphics_scene = this_scene;}
+    lxa_graphics_view*      get_graphics_view()                                 {return  m_graphics_view;}
+    lxa_graphics_scene*     get_graphics_scene()                                {return m_graphics_scene;}
+    UpperTableView *        get_upper_left_tableview()                          { return m_tableView_upper_left;}
+    UpperTableView *        get_upper_right_tableview()                         { return m_tableView_upper_right;}
+    void                    set_graphics_scene(lxa_graphics_scene* this_scene)  { m_graphics_scene = this_scene;}
 
     void                    write_stems_and_affixes();
 

@@ -44,9 +44,9 @@ void MainWindow::write_stems_and_words()
 void MainWindow::read_stems_and_words()
 {
     CLexicon* lexicon = get_lexicon();
-    QString file_name = "../../../../Dropbox/data/english/lxa/parses.txt";
+    //QString file_name = "../../../../Dropbox/data/english/lxa/parses.txt";
 
-    QFile in_file (file_name);
+    QFile in_file (m_name_of_project_file);
     QTextStream in(&in_file);
 
     if (! in_file.open(QFile::ReadOnly | QIODevice::Text))

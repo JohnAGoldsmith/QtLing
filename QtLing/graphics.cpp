@@ -76,7 +76,8 @@ graphic_super_signature::graphic_super_signature(int x, int y, CSupersignature* 
 /////////////////////////////////////////////////////////////////////////////
 
 
-lxa_graphics_view::lxa_graphics_view(MainWindow* this_window)
+lxa_graphics_view::lxa_graphics_view(lxa_graphics_scene* this_scene, MainWindow* this_window):
+    QGraphicsView( static_cast<QGraphicsScene*> ( this_scene) )
 {
     m_main_window = this_window;
     m_scale =1;
@@ -90,12 +91,15 @@ lxa_graphics_view::lxa_graphics_view(MainWindow* this_window)
 //--------------------------------------------------------------------------//
 void lxa_graphics_view::mousePressEvent(QMouseEvent* event)
 {
-    // ADD STUFF HERE.
-
-
     QGraphicsView::mousePressEvent(event);
 };
 
+/*
+void lxa_graphics_view::set_graphics_scene(lxa_graphics_scene*  pScene)
+{
+    m_graphics_scene = pScene;
+}
+*/
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -194,7 +198,6 @@ void lxa_graphics_scene::clear_all()
    m_suffixes                   = NULL;
    m_prefixes                   = NULL;
 
-   //m_map_from_sig_to_row_and_column.clear();
    m_map_from_sig_to_pgraphsig.clear();
 
    QGraphicsScene::clear();
@@ -208,10 +211,12 @@ void lxa_graphics_scene::clear_scene()
     QGraphicsScene::clear();
 }
 //--------------------------------------------------------------------------//
+/*
 void lxa_graphics_scene::set_graphics_view(lxa_graphics_view * this_graphics_view)
 {
     m_graphics_view  = this_graphics_view;
 }
+*/
 //--------------------------------------------------------------------------//
 const bool compare_stem_count_2(const CSignature* pSig1, const CSignature* pSig2){
     return pSig1->get_number_of_stems() > pSig2->get_number_of_stems();
@@ -242,8 +247,6 @@ void lxa_graphics_scene::assign_lattice_positions_to_signatures(CSignatureCollec
 
 
     //  -->  Find out what the largest number of affixes is in the signatures  <-- //
-
-    //lexicon->dump_signatures_to_debug();
 
     QListIterator<CSignature*> sig_iter_1 (* signatures->get_signature_list());
     while(sig_iter_1.hasNext()){
@@ -335,20 +338,15 @@ void   lxa_graphics_scene::move_graphic_signature_to_the_left(graphic_signature2
 
     col_no = m_graphic_signature_lattice[row_no]->indexOf(graphic_sig);
 
-    qDebug() << "move to left:" << graphic_sig->get_signature()->get_key() << "in column"<< col_no;
-
     // test that the row is the correct value?
     if (col_no == m_insertion_point_in_signature_lattice[row_no]){
         m_insertion_point_in_signature_lattice[row_no] ++ ;
-        qDebug () << "New insertion point is "<<m_insertion_point_in_signature_lattice;
     }
     if (col_no < m_insertion_point_in_signature_lattice[row_no])
     {
-        qDebug() << "the signature is already on the left side; no changes.";
         return;
     }
     int new_column = m_insertion_point_in_signature_lattice[row_no];
-    qDebug() << "It will be moved to position "<<new_column;
     m_graphic_signature_lattice[row_no]->move(col_no, new_column);
 
     // now reassign each graphic_sig in this row its proper "pos"...
@@ -357,15 +355,11 @@ void   lxa_graphics_scene::move_graphic_signature_to_the_left(graphic_signature2
     row_of_graphic_sigs = m_graphic_signature_lattice.at(row_no);
     for (int col_no_2 = new_column; col_no_2 <= col_no; col_no_2++){
         graphic_sig_2 = row_of_graphic_sigs->at(col_no_2);
-        qDebug() << col_no_2 << graphic_sig_2->get_key() << m_calculate_column_in_scene_pos_coord(col_no_2);
         graphic_sig_2->setPos(m_calculate_column_in_scene_pos_coord(col_no_2), row_pos );
-        qDebug() << graphic_sig_2->pos().rx() << graphic_sig_2->pos().ry();
     }
 
     m_insertion_point_in_signature_lattice[row_no] ++ ;
-    qDebug () << "New insertion point is "<<m_insertion_point_in_signature_lattice;
     update();
-    m_graphics_view->update();
 }
 
 int convert_count_to_radius(int count)
@@ -389,14 +383,12 @@ void    lxa_graphics_scene::re_place_signatures()
     graphic_signature2 * p_graph_sig;
     for (int row = 2; row < number_of_rows; row++){
 
-        //qDebug() << "row"<< row <<  "Re-place";
         for (int col = 0; col < m_graphic_signature_lattice[row]->size(); col++  ){
             graphic_signature2* this_graphic_signature = m_graphic_signature_lattice.at(row)->at(col);
             //int x = border + col * m_column_delta;
             int x = m_calculate_column_in_scene_pos_coord(col);
             int y = m_location_of_bottom_row - (row-2) * m_row_delta;
             this_graphic_signature -> setPos(x,y);
-            //qDebug() << this_graphic_signature->get_key() << x << y << "re-place signatures" ;
          }
 
     }
@@ -408,12 +400,8 @@ void    lxa_graphics_scene::re_place_signatures()
 void lxa_graphics_scene::create_and_place_signatures()
 {
     m_signature_radius  = 30;
-    //int border          = 100;
     int radius;
     int number_of_rows = m_graphic_signature_lattice.size();
-
-    qDebug() << "now we are in create and place signaures";
-    //make_debug_report();
 
     if (m_graphic_signature_lattice.size() > 0){
         for (int i = 0; i < m_graphic_signature_lattice.size(); i++){
@@ -556,7 +544,6 @@ void lxa_graphics_scene::create_and_place_signatures()
         }
     }
     qDebug() << "end of create and place signatures";
-    //make_debug_report();
 
 
     update();
@@ -631,28 +618,22 @@ void lxa_graphics_scene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void lxa_graphics_scene::widen_columns()
 {
     m_column_delta *= 1.25;
-    //clear();
     re_place_signatures();
     update();
 }
 void lxa_graphics_scene::narrow_columns()
 {
     m_column_delta *= 0.8;
-    //clear();
     re_place_signatures();
-//    m_graphics_view->centerOn(m_bottom_left_x, m_bottom_left_y);
 }
 void  lxa_graphics_scene::move_rows_apart()
 {    m_row_delta *= 1.2;
-    //clear();
-    re_place_signatures();
-//     m_graphics_view->centerOn(m_bottom_left_x, m_bottom_left_y);
+     re_place_signatures();
 }
 
 void lxa_graphics_scene::move_rows_closer()
 {
     m_row_delta *= 0.8;
-    //clear();
     re_place_signatures();
 
 }
@@ -660,8 +641,15 @@ void lxa_graphics_view::zoom_up()
 {
     m_x_scale *= 0.8;
     m_y_scale *= 0.8;
+    lxa_graphics_scene * p_scene =static_cast<lxa_graphics_scene*>(scene());
     scale(0.8,0.8);
+    if ( p_scene->m_focus_signature ){
+        graphic_signature2 * p_sig = p_scene->m_focus_graphic_signature;
+        QGraphicsView::ensureVisible(p_sig->boundingRect());
+    } else{
+        QGraphicsView::ensureVisible(0,0,10,10);
 
+    }
     return;
 }
 
@@ -670,6 +658,7 @@ void lxa_graphics_view::zoom_down()
         m_x_scale *= 1.2;
         m_y_scale *= 1.2;
         scale(1.2,1.2);
+        QGraphicsView::ensureVisible(0,0,10,10);
 
 }
 void lxa_graphics_view::reset_scale()
@@ -680,8 +669,8 @@ void lxa_graphics_view::reset_scale()
     m_x_scale = 1.0;
     m_y_scale = 1.0;
 
-    m_graphics_scene->set_row_delta (225);
-    m_graphics_scene->set_column_delta ( 200 ) ;
+    static_cast<lxa_graphics_scene*>(scene())->set_row_delta (225);
+    static_cast<lxa_graphics_scene*>(scene())->set_column_delta ( 200 ) ;
 
 
 }
@@ -700,8 +689,6 @@ void lxa_graphics_scene::set_focus_graphic_signature_and_show_subsignatures (gra
     graphic_sig -> set_color(m_focus_color);
     show_subsignatures();
     re_place_signatures();
-    //update();
-    //assign_scene_positions_to_signatures();
 
 };
 
@@ -728,7 +715,6 @@ void lxa_graphics_scene::show_subsignatures(){
             sig_iter->set_color(m_out_of_focus_color);
         }
     }
-  //  update();
 
 };
 

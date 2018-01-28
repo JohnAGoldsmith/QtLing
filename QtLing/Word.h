@@ -18,12 +18,6 @@ class LowerTableView;
 
 typedef  QPair<CStem*,CSignature*>* ptr_to_stem_sig_pair;
 
-//struct Parse {
-//    CStem*          p_stem;
-//    CSuffix*        p_suffix;
-//    CSignature*     p_signature;
-//};
-// the name Parse will be replaced by Parse_triple
 struct Parse_triple {
     QString         p_stem;
     QString         p_suffix;

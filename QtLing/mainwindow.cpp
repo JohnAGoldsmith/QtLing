@@ -103,9 +103,11 @@ MainWindow::MainWindow()
 //                                      lexicon->get_prefix_signatures(), suffix_flag);
 //    }
 
-    m_current_graphics_scene    = new lxa_graphics_scene( this, lexicon);
-    m_graphics_view             = new lxa_graphics_view(this);
+    m_graphics_scene            = new lxa_graphics_scene( this, lexicon);
+    m_graphics_view             = new lxa_graphics_view(m_graphics_scene, this);
+    //m_graphics_scene->
     m_graphic_display_flag      = false;             // toggle with Ctrl-G
+    set_up_graphics_scene_and_view();
 
 
 
@@ -194,8 +196,8 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         if (get_lexicon()->get_prefixal_stems()->get_count() > 0){
             get_lexicon()->set_prefixes_flag();
             do_crab2();
-            m_graphics_view->setScene(m_current_graphics_scene);
-            m_current_graphics_scene->set_graphics_view(m_graphics_view);
+            //m_graphics_view->setScene(m_graphics_scene);
+            //m_graphics_scene->set_graphics_view(m_graphics_view);
             display_prefix_signatures();
         }
         break;
@@ -212,9 +214,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     }
     case  Qt::Key_3:    {
         statusBar()->showMessage(tr("Read file."), 5000);
-        read_stems_and_words();
-
-        display_suffix_signatures();
+        ask_for_project_file();
         break;
     }
     case Qt::Key_4:{
@@ -246,15 +246,15 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         break;
     }
     case Qt::Key_I: {
-        m_current_graphics_scene->narrow_columns();
+        m_graphics_scene->narrow_columns();
             break;
     }
     case Qt::Key_J: {
-        m_current_graphics_scene->move_rows_apart();
+        m_graphics_scene->move_rows_apart();
             break;
     }
     case Qt::Key_K: {
-        m_current_graphics_scene->move_rows_closer();
+        m_graphics_scene->move_rows_closer();
         break;
     }
     case Qt::Key_L:    {
@@ -275,7 +275,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     }
     case Qt::Key_U:
     {
-        m_current_graphics_scene->widen_columns();
+        m_graphics_scene->widen_columns();
         break;
     }
     case Qt::Key_P:
@@ -338,6 +338,14 @@ void MainWindow::ask_for_filename()
     read_dx1_file();
 }
 
+void MainWindow::ask_for_project_file()
+{
+    m_name_of_project_file = QFileDialog::getOpenFileName (this);
+    read_stems_and_words();
+    display_suffix_signatures();
+}
+
+
 void MainWindow::load_models()
 {
 
@@ -396,14 +404,14 @@ void MainWindow::set_up_graphics_scene_and_view()
 {
     if (get_lexicon()->get_suffix_flag())
     {
-          m_current_graphics_scene ->ingest(get_lexicon(),get_lexicon()->get_signatures(), true);
+          m_graphics_scene ->ingest(get_lexicon(),get_lexicon()->get_signatures(), true);
       }
     else
     {
-          m_current_graphics_scene->ingest(get_lexicon(), get_lexicon()->get_prefix_signatures(), false);
+          m_graphics_scene->ingest(get_lexicon(), get_lexicon()->get_prefix_signatures(), false);
     }
-    m_graphics_view->setScene(m_current_graphics_scene);
-    m_current_graphics_scene->set_graphics_view(m_graphics_view);
+    //m_graphics_view->setScene(m_graphics_scene);
+    //m_graphics_scene->set_graphics_view(m_graphics_view);
 
 }
 
@@ -458,7 +466,7 @@ void MainWindow::do_crab2()
 
 
     print_prefix_signatures();
-    m_current_graphics_scene->clear_all();
+    m_graphics_scene->clear_all();
     m_leftTreeView->expandAll();
     m_leftTreeView->resizeColumnToContents(0);
 

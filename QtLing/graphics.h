@@ -29,20 +29,19 @@ class graphic_signature2 : public QGraphicsItem
 
 protected:
     CSignature *         m_signature;
+
 protected:
     bool                 m_focus_flag;
     Qt::GlobalColor      m_color;
-//    Qt::GlobalColor     m_out_of_focus_color;
 
-    public:
+public:
     graphic_signature2  ();
     graphic_signature2  (CSignature* );
     graphic_signature2   (CSignature*,   QColor, bool focus_flag = false);
     virtual QPointF             get_center() {};
-    ~graphic_signature2 () {};
     QRectF              boundingRect() const
     {
-        return QRectF(0, 0,130,150);
+        return QRectF(0,0,130,150);
     }
     sigstring_t         get_key()       {return m_signature->get_key();}
     CSignature*         get_signature() {return m_signature;}
@@ -219,22 +218,20 @@ class lxa_graphics_view : public QGraphicsView
 
     QList<QList<CSignature*>*>      m_signature_lattice;
     MainWindow *                    m_main_window;
-    lxa_graphics_scene*             m_graphics_scene;
+//    lxa_graphics_scene*             m_graphics_scene;
     double                          m_scale;
     double                             m_x_scale;
     double                             m_y_scale;
     void                            mousePressEvent(QMouseEvent*);
 
 public:
-                                    lxa_graphics_view( MainWindow * );
+                                    lxa_graphics_view(lxa_graphics_scene* my_scene, MainWindow * );
     void                            expand() {scale(1.25,1.25);}
     void                            contract() {scale(0.8,0.8);}
     void                            move_up() ;
     void                            move_down() {translate(0,-50);}
     void                            move_left() {translate(-50,0);}
     void                            move_right() {translate(50,0);}
-    lxa_graphics_scene*             get_graphics_scene() {return m_graphics_scene;}
-    void                            set_graphics_scene( lxa_graphics_scene* pScene ) {m_graphics_scene = pScene;}
     void                            zoom_up();
     void                            zoom_down();
     void                            reset_scale();
@@ -333,7 +330,7 @@ public:
     void                set_focus_graphic_signature_and_show_subsignatures(graphic_signature2 *);
     void                set_focus_signature(CSignature* pSig)       {m_focus_signature = pSig;}
     void                set_focus_signature_2(CSignature* pSig)       {m_focus_signature_2 = pSig;}
-    void                set_graphics_view (lxa_graphics_view* );
+//    void                set_graphics_view (lxa_graphics_view* );
     void                show_hypothesis_1(CHypothesis*);
     void                set_column_delta (double s)                 {m_column_delta = s;}
     void                set_row_delta(double s)                     {m_row_delta = s;}

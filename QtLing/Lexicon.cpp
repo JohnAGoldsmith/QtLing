@@ -590,7 +590,7 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
                    CWord* pWord = m_Words->get_word(this_word);
                    //pWord->add_stem_and_signature(pStem,pSig);
                    pWord->add_parse_triple(this_stem_t, this_affix, pSig);
-                   qDebug() << pSig->get_key() << 594;
+                   //qDebug() << pSig->get_key() << 594;
                    QString message = this_signature_string;
                    if (affixes.size()> 50){message = "very long signature";}
                    pWord->add_to_autobiography("Pass2= " + this_stem_t + "=" + message );

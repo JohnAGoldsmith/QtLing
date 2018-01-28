@@ -612,16 +612,12 @@ void elevenagon2::set_text(sigstring_t this_sigstring)
     text_item_list[8]->setPos( 10 - br_list[8]->width(),  60 - br_list[8]->height()/2 + delta );
     text_item_list[9]->setPos( 10 - br_list[9]->width(),  30 - br_list[9]->height()/2 + delta );
     text_item_list[10]->setPos(10 - br_list[10]->width(),  0 - br_list[10]->height()/2 + delta );
+}
 
-
-
-    ///////////////////////////
-
-//    QGraphicsSimpleTextItem *p_text_item = new QGraphicsSimpleTextItem;
-//    p_text_item     ->  setText(QString::number(pSig->get_number_of_stems()));/
-//    QRectF bR       =   p_text_item->sceneBoundingRect();
-//    p_text_item     ->  setPos (x+38 - bR.width()/2, y-10 + 65 );
-//    scene->addItem(p_text_item);
+QPointF elevenagon2::get_center(){
+        QPointF this_point = pos();
+        QPointF diff (50,37);
+        return this_point + diff;
 }
 
 // --------------------------------->      <--------------------------------------------//
@@ -704,12 +700,6 @@ void twelvagon2::set_text(sigstring_t this_sigstring)
 }
 
 
-
-QPointF elevenagon2::get_center(){
-        QPointF this_point = pos();
-        QPointF diff (50,37);
-        return this_point + diff;
-}
 
 
 QPointF twelvagon2::get_center(){
