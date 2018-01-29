@@ -836,30 +836,20 @@ void CLexicon::compute_sig_graph_edges()
     CSignatureCollection*           pSignatures;
     CWord*                          pWord;
     morph_t                         difference;
-//    int                             number_of_signatures;
     int                             number_of_parses;
     while (word_iter.hasNext())   {
         pWord = word_iter.next().value();
-        //number_of_signatures = pWord->get_signatures()->size();
         number_of_parses = pWord->get_parse_triples()->size();
         if ( number_of_parses > 1){
-            //for (int signo1=0; signo1 < number_of_signatures; signo1++){
             for (int parse_no = 0; parse_no < number_of_parses; parse_no ++ ){
                 Parse_triple * triple = pWord->get_parse_triples()->at(parse_no);
-                //stem_sig_pair* pair1 =  pWord->get_signatures()->value(signo1);
-                //CStem * stem1        = pair1->first;
                 stem_t  stem1        = triple->p_stem;
                 int stem1length      = stem1.length();
-                //CSignature* sig1     = pair1->second;
                 CSignature* sig1        = triple->p_signature;
                 for (int parse_no2=parse_no + 1; parse_no2 < number_of_parses; parse_no2++){
-                //for (int signo2=signo1 + 1; signo2 < number_of_signatures; signo2++){
-                    //stem_sig_pair * pair2 = pWord->get_signatures()->value(signo2);
                     Parse_triple * triple2 = pWord->get_parse_triples()->at(parse_no2);
                     stem_t stem2 = triple2->p_stem;
                     CSignature* sig2 = triple2->p_signature;
-                    //CStem *  stem2   = pair2->first;
-                    //CSignature* sig2 = pair2->second;
                     if (sig1 == sig2){continue;}
                     int stem2length = stem2.length();
                     // the following "if" is there so that the "difference" can be simply defined.

@@ -32,7 +32,7 @@ class CWord
 protected:
     QString                             m_Word;
     int                                 m_WordCount;
-    QList<Parse_triple*>                        m_Parse_triples;
+    QList<Parse_triple*>                m_Parse_triples;
     QList<ptr_to_stem_sig_pair>         m_Signatures;
     QList<QString>                      m_Autobiography;
 public:
@@ -42,7 +42,6 @@ public:
 public:
     //Accessors
     void                                add_parse(CStem* stem, CSuffix* suffix, CSignature* signature);
-//    void                                add_stem_and_signature(CStem*, CSignature*);
     void                                add_parse_triple(QString stem, QString affix, CSignature*);
     void                                add_to_autobiography(QString line);
     void                                clear_signatures() { m_Signatures.clear();}
