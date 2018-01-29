@@ -137,7 +137,7 @@ void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures, e
     labels  << tr("signature") << "stem count" << "robustness"<< "fullness";
     setHorizontalHeaderLabels(labels);
 
-    //qDebug() << 133 << "number of signatures"<< p_signatures->get_count() <<  "in Models file";
+    qDebug() << 133 << "number of signatures"<< p_signatures->get_count() <<  "in Models file";
     for (int signo = 0; signo<p_signatures->get_count(); signo++)
     {   sig = p_signatures->get_at_sorted(signo);
         QList<QStandardItem*> items;
@@ -151,24 +151,17 @@ void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures, e
         appendRow(items);
     }
 }
-
-
-
-
-void LxaStandardItemModel::load_positive_signatures(CSignatureCollection* p_signatures)
+void LxaStandardItemModel::load_positive_signatures(CSignatureCollection* p_signatures, eSortStyle this_sort_style)
 {
     this->clear();
-
     QStringList labels;
     labels  << tr("signature") << "stem count" << "robustness"<< "fullness";
     setHorizontalHeaderLabels(labels);
-
-
     m_Signatures = p_signatures;
     m_Description = "positive suffix signatures";
     CSignature*         sig;
-    p_signatures->sort(SIG_BY_STEM_COUNT);
-    m_sort_style = SIG_BY_STEM_COUNT;
+    p_signatures->sort(this_sort_style);
+    m_sort_style = this_sort_style;
     double threshold = p_signatures->get_lexicon()->get_entropy_threshold_for_positive_signatures();
     for (int signo = 0; signo<p_signatures->get_count(); signo++)
     {   sig = p_signatures->get_at_sorted(signo);
@@ -390,11 +383,18 @@ void MainWindow::create_or_update_TreeModel()
 {
      QStandardItem * parent = m_treeModel->invisibleRootItem();
 
-//  this pair of lines must stay here after experiment:
+    //  this pair of lines must stay here after experiment:
     QStandardItem * lexicon_item = new QStandardItem(QString("Lexicon"));
     QStandardItem * lexicon_count_item = new QStandardItem(QString("1"));
 
-// will be eliminated by the experiment:
+    QStandardItem * suffix_flag_item;
+    if (get_lexicon()->get_suffix_flag()){
+        suffix_flag_item = new QStandardItem(QString("suffixes"));
+    } else {
+        suffix_flag_item = new QStandardItem(QString("prefixes"));
+    }
+
+    // will be eliminated by the experiment:
     QStandardItem * word_item = new QStandardItem(QString("Words"));
     QStandardItem * word_count_item = new QStandardItem(QString::number(get_lexicon()->get_word_collection()->get_count()));
 
@@ -525,6 +525,7 @@ void MainWindow::create_or_update_TreeModel()
 // add component 7
 
     parent->appendRow(lexicon_items);
+    lexicon_item->appendRow(suffix_flag_item);
     lexicon_item->appendRow(word_items);
     lexicon_item->appendRow(suffixal_stem_items);
     lexicon_item->appendRow(prefixal_stem_items);

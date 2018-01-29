@@ -44,8 +44,6 @@ void MainWindow::write_stems_and_words()
 void MainWindow::read_stems_and_words()
 {
     CLexicon* lexicon = get_lexicon();
-    //QString file_name = "../../../../Dropbox/data/english/lxa/parses.txt";
-
     QFile in_file (m_name_of_project_file);
     QTextStream in(&in_file);
 
@@ -57,14 +55,10 @@ void MainWindow::read_stems_and_words()
     while (! in_file.atEnd()){
         QString line = in_file.readLine();
         line = line.trimmed();
-        //qDebug() << line;
         QStringList words = line.split("+");
         if (words.size() == 3){
-            //qDebug() << words[0] << words[1] << words[2];
-
             lexicon->get_parses()->append(QPair<QString,QString>(words[1], words[2]));
         }
-        //qDebug() << line;
         lexicon->get_words()->add(words[0]);
     }
     lexicon->CreateStemAffixPairs();

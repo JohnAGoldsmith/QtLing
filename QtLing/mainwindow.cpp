@@ -59,6 +59,7 @@ MainWindow::MainWindow()
     m_Models["Signatures 2"]                = new LxaStandardItemModel("Signatures");// sorted by affix count;
     m_Models["Signatures 3"]                = new LxaStandardItemModel("Signatures");// used temporarily;
     m_Models["EPositive signatures"]        = new LxaStandardItemModel("EPositive signatures");
+    m_Models["EPositive signatures 2"]      = new LxaStandardItemModel("EPositive signatures 2"); // sorted by affix count
     m_Models["Prefix signatures"]           = new LxaStandardItemModel("Prefix signatures");
     m_Models["Prefix signatures 2"]         = new LxaStandardItemModel("Prefix signatures"); //sorted by affix count;
     m_Models["EPositive prefix signatures"] = new LxaStandardItemModel("EPositive prefix signatures");
@@ -95,22 +96,12 @@ MainWindow::MainWindow()
 
     bool suffix_flag = true;
 
-//    if (false) {
-//    m_suffix_graphics_scene = new lxa_graphics_scene (this, lexicon,
-//                                       lexicon->get_signatures(), suffix_flag);
-//    suffix_flag = false;
-//    m_prefix_graphics_scene   = new lxa_graphics_scene (this, lexicon,
-//                                      lexicon->get_prefix_signatures(), suffix_flag);
-//    }
-
     m_graphics_scene            = new lxa_graphics_scene( this, lexicon);
     m_graphics_view             = new lxa_graphics_view(m_graphics_scene, this);
-    //m_graphics_scene->
     m_graphic_display_flag      = false;             // toggle with Ctrl-G
     set_up_graphics_scene_and_view();
 
-
-
+    //<--------------     set up main window widget ------------------------->
     // set model for tree view
     m_leftTreeView->setModel(m_treeModel);
     // whole window
@@ -173,18 +164,6 @@ MainWindow::MainWindow()
 
 
 }
-void MainWindow::cycle_through_graphic_displays()
-{
-    switch (m_graphic_display_type)
-    {   qDebug() << "trying to cycle graphic display"<< 141;
-        case e_data_suffixal_signatures:
-            m_graphic_display_type = e_data_epositive_suffixal_signatures;
-        case e_data_epositive_suffixal_signatures:
-            m_graphic_display_type = e_data_prefixal_signatures;
-        default:
-            m_graphic_display_type = e_data_prefixal_signatures;
-    }
-}
 
 void MainWindow::keyPressEvent(QKeyEvent* ke)
 {
@@ -196,8 +175,6 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         if (get_lexicon()->get_prefixal_stems()->get_count() > 0){
             get_lexicon()->set_prefixes_flag();
             do_crab2();
-            //m_graphics_view->setScene(m_graphics_scene);
-            //m_graphics_scene->set_graphics_view(m_graphics_view);
             display_prefix_signatures();
         }
         break;
@@ -206,9 +183,12 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     {
         if (get_lexicon()->get_suffixal_stems()->get_count() > 0){
            get_lexicon()->set_suffixes_flag();
+           do_crab2();
+           display_suffix_signatures();
+        } else{
+            get_lexicon()->set_prefixes_flag();
             do_crab2();
-            //m_current_graphics_scene->clear_all();
-            display_suffix_signatures();
+            display_prefix_signatures();
         }
         break;
     }
@@ -222,6 +202,12 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         analyze_corpus();
         break;
     }
+    case Qt::Key_5:{
+        CLexicon* sublexicon = get_lexicon()->build_sublexicon();
+        //sublexicon->display_suffix_signatures();
+        break;
+    }
+
     case Qt::Key_D:     {
         read_dx1_file();
         break;
@@ -270,8 +256,6 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     }
     case Qt::Key_V:
     {
-        cycle_through_graphic_displays();
-        break;
     }
     case Qt::Key_U:
     {
@@ -323,6 +307,7 @@ void MainWindow::do_crab()
     m_leftTreeView->resizeColumnToContents(0);
     statusBar()->showMessage("All models are loaded.");
 }
+
 void MainWindow::newFile()
 {
     if (ask_to_save()) {
@@ -353,20 +338,17 @@ void MainWindow::load_models()
     statusBar()->showMessage("Words.");
     QCoreApplication::processEvents();
 
-     m_Models["Suffixal stems"]      ->load_stems(get_lexicon()->get_suffixal_stems());
-     statusBar()->showMessage("Suffixal stems.");
-     QCoreApplication::processEvents();
-
+    m_Models["Suffixal stems"]      ->load_stems(get_lexicon()->get_suffixal_stems());
+    statusBar()->showMessage("Suffixal stems.");
+    QCoreApplication::processEvents();
 
     m_Models["Prefixal stems"]      ->load_stems(get_lexicon()->get_prefixal_stems());
     statusBar()->showMessage("Prefixal stems.");
     QCoreApplication::processEvents();
 
-
     m_Models["Suffixes"]            ->load_suffixes(get_lexicon()->get_suffixes());
     statusBar()->showMessage("Suffixes.");
     QCoreApplication::processEvents();
-
 
     m_Models["Signatures"]          ->load_signatures(get_lexicon()->get_signatures());
     statusBar()->showMessage("Signatures.");
@@ -376,15 +358,17 @@ void MainWindow::load_models()
     statusBar()->showMessage("Signatures 2.");
     QCoreApplication::processEvents();
 
-
     m_Models["Signatures 3"]         ->load_signatures(get_lexicon()->get_signatures());
     statusBar()->showMessage("Signatures 3.");
     QCoreApplication::processEvents();
 
-
-
     m_Models["EPositive signatures"]->load_positive_signatures(get_lexicon()->get_signatures());
     statusBar()->showMessage("EPositive signatures.");
+
+    m_Models["EPositive signatures 2"]->load_positive_signatures(get_lexicon()->get_signatures(),SIG_BY_AFFIX_COUNT);
+    statusBar()->showMessage("EPositive signatures 2.");
+
+
     QCoreApplication::processEvents();
 
 
@@ -410,9 +394,6 @@ void MainWindow::set_up_graphics_scene_and_view()
     {
           m_graphics_scene->ingest(get_lexicon(), get_lexicon()->get_prefix_signatures(), false);
     }
-    //m_graphics_view->setScene(m_graphics_scene);
-    //m_graphics_scene->set_graphics_view(m_graphics_view);
-
 }
 
 void MainWindow::do_crab2()
@@ -420,16 +401,23 @@ void MainWindow::do_crab2()
     statusBar()->showMessage("Entering the Crab Nebula, phase 2");
     CLexicon* lexicon = get_lexicon();
     lexicon->Crab_2();
+    load_models();
 
+    // REFACTORIZE this, use  "load_models" function
+/*
     qApp->processEvents();
     statusBar()->showMessage("We have returned from the Crab Nebula again.");
     m_Models["Words"]               ->load_words(get_lexicon()->get_words());
     qApp->processEvents();
     statusBar()->showMessage("Loaded words.");
-    m_Models["Prefixal stems"]               ->load_stems(get_lexicon()->get_prefixal_stems());
-    statusBar()->showMessage("Loaded prefixal stems.");
+
     m_Models["Suffixal stems"]               ->load_stems(get_lexicon()->get_suffixal_stems());
     statusBar()->showMessage("Loaded suffixal stems.");
+
+    m_Models["Prefixal stems"]               ->load_stems(get_lexicon()->get_prefixal_stems());
+    statusBar()->showMessage("Loaded prefixal stems.");
+
+
     m_Models["Suffixes"]            ->load_suffixes(get_lexicon()->get_suffixes());
     statusBar()->showMessage("Loading signatures.");
     qApp->processEvents();
@@ -437,10 +425,13 @@ void MainWindow::do_crab2()
     m_Models["Signatures"]          ->clear();
     m_Models["Signatures"]          ->load_signatures(get_lexicon()->get_signatures());
 
-    m_Models["Signatures 2"]         ->load_signatures(get_lexicon()->get_signatures(), SIG_BY_AFFIX_COUNT);
-    m_Models["Signatures 3"]         ->load_signatures(get_lexicon()->get_signatures());
+    m_Models["Signatures 2"]            ->load_signatures(get_lexicon()->get_signatures(), SIG_BY_AFFIX_COUNT);
+    m_Models["Signatures 3"]            ->load_signatures(get_lexicon()->get_signatures());
     m_Models["EPositive signatures"]    ->load_positive_signatures(get_lexicon()->get_signatures());
-    m_Models["Prefix signatures"]   ->load_signatures(get_lexicon()->get_prefix_signatures());
+    m_Models["EPositive signatures 2"]  ->load_positive_signatures(get_lexicon()->get_signatures(), SIG_BY_AFFIX_COUNT);
+    m_Models["Prefix signatures"]       ->load_signatures(get_lexicon()->get_prefix_signatures());
+    m_Models["Prefix signatures 2"]       ->load_signatures(get_lexicon()->get_prefix_signatures());
+
     m_Models["EPositive prefix signatures"]    ->load_positive_signatures(get_lexicon()->get_prefix_signatures());
     qApp->processEvents();
     m_Models["SigGraphEdges"]        ->load_sig_graph_edges(get_lexicon()->get_sig_graph_edge_map());
@@ -450,6 +441,9 @@ void MainWindow::do_crab2()
     m_Models["Passive signatures"]  ->load_signatures(get_lexicon()->get_passive_signatures());
     m_Models["Hypotheses"]          ->load_hypotheses(get_lexicon()->get_hypotheses());
     m_Models["Hypotheses 2"]          ->load_hypotheses_2(get_lexicon()->get_hypotheses());
+*/
+
+
     create_or_update_TreeModel();
 
 // add component 5

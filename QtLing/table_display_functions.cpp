@@ -25,6 +25,12 @@ void MainWindow::display_epositive_suffix_signatures()
         m_tableView_upper_left->set_data_type(e_data_epositive_suffixal_signatures );
         m_tableView_upper_left->set_data_type(e_data_epositive_suffixal_signatures);
 
+        CLexicon* lexicon = get_lexicon();
+        m_tableView_upper_right->setModel(m_Models["EPositive signatures 2"]);
+        m_tableView_upper_right->set_data_type( e_data_epositive_suffixal_signatures );
+        m_tableView_upper_right->resizeColumnsToContents();
+
+
         m_graphics_scene->clear_all();
         m_graphics_scene->assign_lattice_positions_to_signatures(get_lexicon()->get_signatures(), e_data_epositive_suffixal_signatures);
         m_graphics_scene->create_and_place_signatures();
@@ -46,7 +52,6 @@ void MainWindow::display_suffix_signatures()
     CLexicon* lexicon = get_lexicon();
     m_tableView_upper_right->setModel(m_Models["Signatures 2"]);
     m_tableView_upper_right->set_data_type( e_data_suffixal_signatures );
-    m_tableView_upper_left->set_data_type( e_data_suffixal_signatures );
     m_tableView_upper_right->resizeColumnsToContents();
 
 

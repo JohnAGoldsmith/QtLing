@@ -836,40 +836,49 @@ void CLexicon::compute_sig_graph_edges()
     CSignatureCollection*           pSignatures;
     CWord*                          pWord;
     morph_t                         difference;
-    int                             number_of_signatures;
-
+//    int                             number_of_signatures;
+    int                             number_of_parses;
     while (word_iter.hasNext())   {
         pWord = word_iter.next().value();
-        number_of_signatures = pWord->get_signatures()->size();
-        if ( number_of_signatures > 1){
-            for (int signo1=0; signo1 < number_of_signatures; signo1++){
-                stem_sig_pair* pair1 =  pWord->get_signatures()->value(signo1);
-                CStem * stem1        = pair1->first;
-                int stem1length      = stem1->get_key().length();
-                CSignature* sig1     = pair1->second;
-                for (int signo2=signo1 + 1; signo2 < number_of_signatures; signo2++){
-                    stem_sig_pair * pair2 = pWord->get_signatures()->value(signo2);
-                    CStem *  stem2   = pair2->first;
-                    CSignature* sig2 = pair2->second;
+        //number_of_signatures = pWord->get_signatures()->size();
+        number_of_parses = pWord->get_parse_triples()->size();
+        if ( number_of_parses > 1){
+            //for (int signo1=0; signo1 < number_of_signatures; signo1++){
+            for (int parse_no = 0; parse_no < number_of_parses; parse_no ++ ){
+                Parse_triple * triple = pWord->get_parse_triples()->at(parse_no);
+                //stem_sig_pair* pair1 =  pWord->get_signatures()->value(signo1);
+                //CStem * stem1        = pair1->first;
+                stem_t  stem1        = triple->p_stem;
+                int stem1length      = stem1.length();
+                //CSignature* sig1     = pair1->second;
+                CSignature* sig1        = triple->p_signature;
+                for (int parse_no2=parse_no + 1; parse_no2 < number_of_parses; parse_no2++){
+                //for (int signo2=signo1 + 1; signo2 < number_of_signatures; signo2++){
+                    //stem_sig_pair * pair2 = pWord->get_signatures()->value(signo2);
+                    Parse_triple * triple2 = pWord->get_parse_triples()->at(parse_no2);
+                    stem_t stem2 = triple2->p_stem;
+                    CSignature* sig2 = triple2->p_signature;
+                    //CStem *  stem2   = pair2->first;
+                    //CSignature* sig2 = pair2->second;
                     if (sig1 == sig2){continue;}
-                    int stem2length = stem2->get_key().length();
+                    int stem2length = stem2.length();
                     // the following "if" is there so that the "difference" can be simply defined.
                     //
                     if (stem1length > stem2length){
                         int length_of_difference = stem1length - stem2length;
                         m_SuffixesFlag?
-                            difference = stem1->get_key().mid(stem2->get_key().length()):
-                            difference = stem1->get_key().left(length_of_difference);
-                        p_SigTreeEdge = new simple_sig_graph_edge (sig1,sig2,difference, pWord->get_key(), stem1->get_key(), stem2->get_key());
+                            difference = stem1.mid(stem2.length()):
+                            difference = stem1.left(length_of_difference);
+                        p_SigTreeEdge = new simple_sig_graph_edge (sig1,sig2,difference, pWord->get_key(), stem1, stem2);
                     } else{
                         int length_of_difference = stem2length - stem1length;
                         m_SuffixesFlag?
-                            difference = stem2->get_key().mid(stem1->get_key().length()):
-                            difference = stem2->get_key().left(length_of_difference);
-                        p_SigTreeEdge =  new simple_sig_graph_edge (sig2,sig1,difference, pWord->get_key(), stem2->get_key(), stem1->get_key());
+                            difference = stem2.mid(stem1.length()):
+                            difference = stem2.left(length_of_difference);
+                        p_SigTreeEdge =  new simple_sig_graph_edge (sig2,sig1,difference, pWord->get_key(), stem2, stem1);
                     }
                     m_SigGraphEdgeList.append(p_SigTreeEdge);
-                    pWord->add_to_autobiography("multiple parse=" + stem1->get_key() + "=" +  sig1->get_key() + "=" + stem2->get_key() + "=" + sig2->get_key());
+                    pWord->add_to_autobiography("multiple parse=" + stem1 + "=" +  sig1->get_key() + "=" + stem2 + "=" + sig2->get_key());
                 }
             }
         }

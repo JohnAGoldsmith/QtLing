@@ -158,23 +158,16 @@ public:
 
     void                                        dump_signatures_to_debug();
     // accessors and protostems
-
-
-
-
+    void                                        dump_suffixes(QList<QString>*);
     void                                        collect_parasuffixes();
     void                                        compute_sig_graph_edges();
-
     void                                        generate_hypotheses();
-
     QMap<QString, eComponentType> &             get_category_types()        { return m_category_types;}
     double                                      get_entropy_threshold_for_positive_signatures() {return m_entropy_threshold_for_stems;}
-
     QList<CHypothesis*>*                        get_hypotheses ()           {return m_Hypotheses;}
     QMap<QString, CHypothesis*>  *              get_hypothesis_map()        { return m_Hypothesis_map;}
     CHypothesis*                                get_hypothesis(QString hypothesis_label);
     QList<QPair<QString,QString> > *            get_parses()                {return m_Parses;}
-    void                                        dump_suffixes(QList<QString>*);
     CSuffixCollection*                          get_parasuffixes()          { return m_ParaSuffixes;}
     CSignatureCollection*                       get_passive_signatures()    { return m_PassiveSignatures;}
     CSignatureCollection*                       get_prefix_signatures()     { return m_PrefixSignatures;}
@@ -199,6 +192,8 @@ public:
     void                                        set_status_bar(QStatusBar* pBar) {m_StatusBar = pBar;}
     void                                        set_prefixes_flag()         { m_SuffixesFlag = false;}
     void                                        set_suffixes_flag()         { m_SuffixesFlag = true;}
+
+    CLexicon *                                  build_sublexicon();
 
 public:
     // insert functions here

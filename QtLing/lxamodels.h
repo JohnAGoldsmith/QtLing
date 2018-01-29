@@ -36,7 +36,7 @@ public:
     void        sort_signatures(eSortStyle);
     void        load_sig_graph_edges(QMap<QString, sig_graph_edge*> *);
     void        load_passive_signatures (CSignatureCollection* p_passive_signatures);
-    void        load_positive_signatures(CSignatureCollection* p_positive_signatures);
+    void        load_positive_signatures(CSignatureCollection* p_positive_signatures,  eSortStyle = SIG_BY_STEM_COUNT);
     void        load_positive_prefix_signatures(CSignatureCollection* p_positive_prefix_signatures);
     void        load_hypotheses(QList<CHypothesis*>*);
     void        load_hypotheses_2(QList<CHypothesis*>*);
