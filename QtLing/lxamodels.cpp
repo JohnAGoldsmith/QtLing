@@ -98,9 +98,9 @@ void LxaStandardItemModel::load_stems(CStemCollection * p_stems)
         QStandardItem *item = new QStandardItem(stem->get_key());
         QList<QStandardItem*> item_list;
         item_list.append(item);
-        QListIterator<QString> sig_iter(*stem->GetSignatures());
+        QListIterator<CSignature*> sig_iter(*stem->GetSignatures());
         while (sig_iter.hasNext()){
-           sigstring_t sig = sig_iter.next();
+           sigstring_t sig = sig_iter.next()->get_key();
            QStandardItem *item = new QStandardItem(sig);
            item_list.append(item);
         }
@@ -379,16 +379,35 @@ void LxaStandardItemModel::load_sig_graph_edges( QMap<QString, sig_graph_edge*> 
 
 };
 
-void MainWindow::create_or_update_TreeModel()
+void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
 {
      QStandardItem * parent = m_treeModel->invisibleRootItem();
+
+     QStandardItem * command_item = new QStandardItem(QString("Keyboard commands"));
+
+     QStandardItem * ctrl_1 = new QStandardItem(QString("Prefixes step 2"));
+     QStandardItem * ctrl_1_key = new QStandardItem("Ctrl 1");
+
+     QStandardItem * ctrl_2 = new QStandardItem(QString("Suffixes step 2"));
+     QStandardItem * ctrl_2_key = new QStandardItem("Ctrl 2");
+
+     QStandardItem * ctrl_3 = new QStandardItem(QString("Read project file"));
+     QStandardItem * ctrl_3_key = new QStandardItem("Ctrl 3");
+
+     QStandardItem * ctrl_4 = new QStandardItem(QString("Read corpus"));
+     QStandardItem * ctrl_4_key = new QStandardItem("Ctrl 4");
+
+     QStandardItem * ctrl_5 = new QStandardItem(QString("Sublexicon"));
+     QStandardItem * ctrl_5_key = new QStandardItem("Ctrl 5");
+
+
 
     //  this pair of lines must stay here after experiment:
     QStandardItem * lexicon_item = new QStandardItem(QString("Lexicon"));
     QStandardItem * lexicon_count_item = new QStandardItem(QString("1"));
 
     QStandardItem * suffix_flag_item;
-    if (get_lexicon()->get_suffix_flag()){
+    if (lexicon->get_suffix_flag()){
         suffix_flag_item = new QStandardItem(QString("suffixes"));
     } else {
         suffix_flag_item = new QStandardItem(QString("prefixes"));
@@ -396,44 +415,44 @@ void MainWindow::create_or_update_TreeModel()
 
     // will be eliminated by the experiment:
     QStandardItem * word_item = new QStandardItem(QString("Words"));
-    QStandardItem * word_count_item = new QStandardItem(QString::number(get_lexicon()->get_word_collection()->get_count()));
+    QStandardItem * word_count_item = new QStandardItem(QString::number(lexicon->get_word_collection()->get_count()));
 
     QStandardItem * suffixal_stem_item = new QStandardItem(QString("Suffixal stems"));
-    QStandardItem * suffixal_stem_count_item = new QStandardItem(QString::number(get_lexicon()->get_suffixal_stems()->get_count()));
+    QStandardItem * suffixal_stem_count_item = new QStandardItem(QString::number(lexicon->get_suffixal_stems()->get_count()));
 
     QStandardItem * prefixal_stem_item = new QStandardItem(QString("Prefixal stems"));
-    QStandardItem * prefixal_stem_count_item = new QStandardItem(QString::number(get_lexicon()->get_prefixal_stems()->get_count()));
+    QStandardItem * prefixal_stem_count_item = new QStandardItem(QString::number(lexicon->get_prefixal_stems()->get_count()));
 
 
     QStandardItem * suffix_item = new QStandardItem(QString("Suffixes"));
-    QStandardItem * suffix_count_item = new QStandardItem(QString::number(get_lexicon()->get_suffixes()->get_count()));
+    QStandardItem * suffix_count_item = new QStandardItem(QString::number(lexicon->get_suffixes()->get_count()));
 
     QStandardItem * sig_item = new QStandardItem(QString("Signatures"));
-    QStandardItem * sig_count_item = new QStandardItem(QString::number(get_lexicon()->get_signatures()->get_count()));
+    QStandardItem * sig_count_item = new QStandardItem(QString::number(lexicon->get_signatures()->get_count()));
 
     QStandardItem * pos_sig_item = new QStandardItem(QString("EPositive signatures"));
-    QStandardItem * pos_sig_count_item = new QStandardItem(QString::number(get_lexicon()->get_signatures()->get_number_of_epositive_signatures()));
+    QStandardItem * pos_sig_count_item = new QStandardItem(QString::number(lexicon->get_signatures()->get_number_of_epositive_signatures()));
 
     QStandardItem * prefix_sig_item = new QStandardItem(QString("Prefix signatures"));
-    QStandardItem * prefix_sig_count_item = new QStandardItem(QString::number(get_lexicon()->get_prefix_signatures()->get_count()));
+    QStandardItem * prefix_sig_count_item = new QStandardItem(QString::number(lexicon->get_prefix_signatures()->get_count()));
 
     QStandardItem * pos_prefix_sig_item = new QStandardItem(QString("EPositive prefix signatures"));
-    QStandardItem * pos_prefix_sig_count_item = new QStandardItem(QString::number(get_lexicon()->get_prefix_signatures()->get_number_of_epositive_signatures()));
+    QStandardItem * pos_prefix_sig_count_item = new QStandardItem(QString::number(lexicon->get_prefix_signatures()->get_number_of_epositive_signatures()));
 
     QStandardItem * residual_sig_item = new QStandardItem(QString("Residual parasignatures"));
-    QStandardItem * residual_sig_count_item = new QStandardItem(QString::number(get_lexicon()->get_residual_signatures()->get_count()));
+    QStandardItem * residual_sig_count_item = new QStandardItem(QString::number(lexicon->get_residual_signatures()->get_count()));
 
     QStandardItem * parasuffix_item = new QStandardItem(QString("Parasuffixes"));
-    QStandardItem * parasuffix_count_item = new QStandardItem(QString::number(get_lexicon()->get_parasuffixes()->get_count()));
+    QStandardItem * parasuffix_count_item = new QStandardItem(QString::number(lexicon->get_parasuffixes()->get_count()));
 
     QStandardItem * sig_graph_edge_item = new QStandardItem(QString("Signature graph edges"));
-    QStandardItem * sig_graph_edge_count_item = new QStandardItem(QString::number(get_lexicon()->get_sig_graph_edge_map()->size()));
+    QStandardItem * sig_graph_edge_count_item = new QStandardItem(QString::number(lexicon->get_sig_graph_edge_map()->size()));
 
     QStandardItem * passive_signature_item = new QStandardItem(QString("Passive signatures"));
-    QStandardItem * passive_signature_count_item = new QStandardItem(QString::number(get_lexicon()->get_passive_signatures()->get_count()));
+    QStandardItem * passive_signature_count_item = new QStandardItem(QString::number(lexicon->get_passive_signatures()->get_count()));
 
     QStandardItem * hypothesis_item = new QStandardItem(QString("Hypotheses"));
-    QStandardItem * hypothesis_count_item = new QStandardItem(QString::number(get_lexicon()->get_hypotheses()->count()));
+    QStandardItem * hypothesis_count_item = new QStandardItem(QString::number(lexicon->get_hypotheses()->count()));
 
 // This is part of an experiment:
 //  This code deals with the components in the Lexicon, so that that set can be easily updated by the programmer.
@@ -443,7 +462,7 @@ void MainWindow::create_or_update_TreeModel()
 //                                                  lexicon_items.append(lexicon_item);
 //                                                  lexicon_items.append(lexicon_count_item);
     //                                              parent->appendRow(lexicon_items);
-    //      QMapIterator<QString,eComponentType>    iter (get_lexicon()->get_category_types());
+    //      QMapIterator<QString,eComponentType>    iter (lexicon->get_category_types());
     //      while (iter.hasNext()){
     //
     //          QString             component_name = iter.next().key();
@@ -462,6 +481,28 @@ void MainWindow::create_or_update_TreeModel()
 
 
 // add component 6
+
+    QList<QStandardItem*> keyboard_1;
+    keyboard_1.append(ctrl_1);
+    keyboard_1.append(ctrl_1_key);
+
+    QList<QStandardItem*> keyboard_2;
+    keyboard_2.append(ctrl_2);
+    keyboard_2.append(ctrl_2_key);
+
+    QList<QStandardItem*> keyboard_3;
+    keyboard_3.append(ctrl_3);
+    keyboard_3.append(ctrl_3_key);
+
+    QList<QStandardItem*> keyboard_4;
+    keyboard_4.append(ctrl_4);
+    keyboard_4.append(ctrl_4_key);
+
+    QList<QStandardItem*> keyboard_5;
+    keyboard_5.append(ctrl_5);
+    keyboard_5.append(ctrl_5_key);
+
+
 
     QList<QStandardItem*> lexicon_items;
     lexicon_items.append(lexicon_item);
@@ -525,6 +566,11 @@ void MainWindow::create_or_update_TreeModel()
 // add component 7
 
     parent->appendRow(lexicon_items);
+    lexicon_item->appendRow(keyboard_1);
+    lexicon_item->appendRow(keyboard_2);
+    lexicon_item->appendRow(keyboard_3);
+    lexicon_item->appendRow(keyboard_4);
+    lexicon_item->appendRow(keyboard_5);
     lexicon_item->appendRow(suffix_flag_item);
     lexicon_item->appendRow(word_items);
     lexicon_item->appendRow(suffixal_stem_items);

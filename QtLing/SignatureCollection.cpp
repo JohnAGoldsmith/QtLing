@@ -206,3 +206,15 @@ int CSignatureCollection::get_number_of_epositive_signatures()
     }
     return count;
 }
+
+void CSignatureCollection::get_epositive_signatures(QMap<CSignature*, int> sig_map)
+{
+    map_sigstring_to_sig_ptr_iter sig_iter (m_SignatureMap);
+    while (sig_iter.hasNext())
+    {
+        sig_iter.next();
+        if (sig_iter.value()->get_stem_entropy() > get_lexicon()->get_entropy_threshold_for_positive_signatures()){
+            sig_map.insert( sig_iter.value(), 1);
+        }
+    }
+}

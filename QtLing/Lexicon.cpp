@@ -415,7 +415,7 @@ void   CLexicon::AssignSuffixesToStems()
                 m_SuffixesFlag ?
                     pStem = m_suffixal_stems->find_or_add(this_stem_t):
                     pStem = m_prefixal_stems->find_or_add(this_stem_t);
-                pStem->add_signature (this_signature_string);
+                pStem->add_signature (pSig);
                 pSig->add_stem_pointer(pStem);
 
                 QSetIterator<suffix_t> affix_iter(this_affix_set);
@@ -429,11 +429,15 @@ void   CLexicon::AssignSuffixesToStems()
                             this_word = this_affix + this_stem_t ;
                     }
                     CWord* pWord = m_Words->get_word(this_word);
-                    pWord->add_parse_triple(this_stem_t, this_affix, pSig);
-                    QString message = this_signature_string;
-                    if (this_affix_set.size() > 50){message = "Super long signature";};
-                    pWord->add_to_autobiography("Pass1= " + this_stem_t + "=" + message);
-                }
+                    if (!pWord){
+                        qDebug() << "Error: this_word not found among words.";
+                    } else{
+                        pWord->add_parse_triple(this_stem_t, this_affix, pSig);
+                        QString message = this_signature_string;
+                        if (this_affix_set.size() > 50){message = "Super long signature";};
+                        pWord->add_to_autobiography("Pass1= " + this_stem_t + "=" + message);
+                    }
+                 }
             }
         }
     }
@@ -575,7 +579,7 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
                this_stem_t = stem_iter.next();
 
                pStem = stems->find_or_add(this_stem_t);
-               pStem->add_signature (this_signature_string);
+               pStem->add_signature (pSig);
                pSig->add_stem_pointer(pStem);
                pStem->add_memo ("Pass1= ");
                QStringList affixes = this_signature_string.split("=");
@@ -754,7 +758,8 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
 
                 // We have found the longest signature contained in this_residual_suffix_set
                 pStem = stems->find_or_add(this_stem);
-                pStem->add_signature(p_proven_sigstring);
+                //pStem->add_signature(p_proven_sigstring);
+                pStem->add_signature(p_proven_sig);
                 p_proven_sig->add_stem_pointer(pStem);
 
                 //--> add to autobiographies <--//

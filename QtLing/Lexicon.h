@@ -164,6 +164,7 @@ public:
     void                                        generate_hypotheses();
     QMap<QString, eComponentType> &             get_category_types()        { return m_category_types;}
     double                                      get_entropy_threshold_for_positive_signatures() {return m_entropy_threshold_for_stems;}
+    //void                                        get_epositive_signatures(QList<CSignature*> *);
     QList<CHypothesis*>*                        get_hypotheses ()           {return m_Hypotheses;}
     QMap<QString, CHypothesis*>  *              get_hypothesis_map()        { return m_Hypothesis_map;}
     CHypothesis*                                get_hypothesis(QString hypothesis_label);

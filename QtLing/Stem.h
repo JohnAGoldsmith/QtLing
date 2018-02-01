@@ -13,7 +13,7 @@ class CStem
 {
 protected:
     QString             m_key;
-    QList<QString>      m_Signatures;
+    QList<CSignature*>  m_Signatures;
     QList<CSuffix*>     m_parasignature; // a parasignature is made up of approved affixes, but the parasignature has not yet been approved.
     int                 m_count;
     QStringList         m_Autobiography;
@@ -26,8 +26,9 @@ public:
     //Accessors
     QString             get_key()       const{return m_key;}
     QString             get_stem()       const { return m_key; }
-    QList<QString>*     GetSignatures()  { return &m_Signatures; }
-    void                add_signature(QString sig_string ) {m_Signatures.append(sig_string); } 
+    QList<CSignature*> *  GetSignatures()  { return &m_Signatures; }
+    CSignature*         get_last_signature() { return m_Signatures.last(); }
+    void                add_signature(CSignature* pSig ) {m_Signatures.append(pSig); }
     QString             display();
     int                 get_count() {return m_count;}
     void                set_count (int n) {m_count = n;}

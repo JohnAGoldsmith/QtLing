@@ -12,7 +12,7 @@ void MainWindow::write_stems_and_words()
     CLexicon* lexicon = get_lexicon();
     QString file_name;
     file_name = "../../../../Dropbox/data/english/lxa/parses.txt";
-    CStem *     pStem;
+    //CStem *     pStem;
 
     QFile out_file (file_name);
 
@@ -63,8 +63,8 @@ void MainWindow::read_stems_and_words()
     }
     lexicon->CreateStemAffixPairs();
     lexicon->AssignSuffixesToStems();
-    load_models();
-    create_or_update_TreeModel();
+    load_models(lexicon);
+    create_or_update_TreeModel(lexicon);
 
     set_up_graphics_scene_and_view();
     m_leftTreeView->expandAll();

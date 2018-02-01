@@ -41,7 +41,7 @@ void MainWindow::display_epositive_suffix_signatures()
  * @brief MainWindow::display_suffix_signatures
  * This is called by a QAction.
  */
-void MainWindow::display_suffix_signatures()
+void MainWindow::display_suffix_signatures(CLexicon* lexicon)
 {
 
     m_tableView_upper_left->setModel(m_Models["Signatures"]);
@@ -49,13 +49,9 @@ void MainWindow::display_suffix_signatures()
     m_tableView_upper_left->resizeColumnsToContents();
     m_tableView_upper_left->set_data_type( e_data_suffixal_signatures);
 
-    CLexicon* lexicon = get_lexicon();
     m_tableView_upper_right->setModel(m_Models["Signatures 2"]);
     m_tableView_upper_right->set_data_type( e_data_suffixal_signatures );
     m_tableView_upper_right->resizeColumnsToContents();
-
-
-    //lexicon->dump_signatures_to_debug();
 
      m_graphics_scene->clear_all();
      m_graphics_scene->assign_lattice_positions_to_signatures(lexicon->get_signatures(), e_data_suffixal_signatures);
@@ -72,9 +68,8 @@ void MainWindow::display_suffix_signatures()
  * @brief MainWindow::display_prefix_signatures
  * This is called by a QAction.
  */
-void MainWindow::display_prefix_signatures()
-{   CLexicon* lexicon = get_lexicon();
-
+void MainWindow::display_prefix_signatures(CLexicon* lexicon)
+{
     m_tableView_upper_left->setModel(m_Models["Prefix signatures"]);
     m_tableView_upper_left->set_data_type ( e_data_prefixal_signatures );
     m_tableView_upper_left->resizeColumnsToContents();

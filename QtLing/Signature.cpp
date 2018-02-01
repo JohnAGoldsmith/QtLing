@@ -16,7 +16,7 @@ CSignature::CSignature(QString signature_string, bool suffix_flag, CSignatureCol
   m_Prefixes = new CPrefix_ptr_list;
   m_SuffixFlag = suffix_flag;
   m_SignatureCollection = Signatures;
-  m_stem_entropy = 0;
+  m_stem_entropy = -1;
 }
 
 CSignature::CSignature(CSignature& signature) {
@@ -25,7 +25,7 @@ CSignature::CSignature(CSignature& signature) {
     m_Suffixes = signature.get_suffix_list();
     m_Stems = new CStem_ptr_list();
     m_SuffixFlag = signature.get_suffix_flag();
-    m_stem_entropy = 0;
+    m_stem_entropy = signature.get_stem_entropy();
 }
 CSignature::~CSignature()
 {
@@ -171,8 +171,17 @@ word_and_count_list * CSignature::get_word_and_count_vectors(word_and_count_list
     return this_vector;
 }
 
+double CSignature::get_stem_entropy()
+{
+    if (m_stem_entropy >= 0){
+        return m_stem_entropy;
+    }
+    m_stem_entropy = calculate_stem_entropy();
+    return m_stem_entropy;
+}
+
 double log_base_2(double x)
-{   //qDebug() << x << qLn(x)/qLn(2) << "signature.cpp 162";
+{
     return qLn(x) / qLn(2.0);
 }
 

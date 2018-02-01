@@ -62,13 +62,13 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         set_data_type(e_data_suffixes);
     }
     else     if (component == "Signatures"){
-        m_parent_window->display_suffix_signatures();
+        m_parent_window->display_suffix_signatures(lexicon);
     }
     else     if (component == "EPositive signatures"){
         m_parent_window->display_epositive_suffix_signatures();
     }
     else     if (component == "Prefix signatures"){
-        m_parent_window->display_prefix_signatures();
+        m_parent_window->display_prefix_signatures(lexicon);
     }
     else     if (component == "EPositive prefix signatures"){
         setModel(m_parent_window->m_Models["EPositive prefix signatures"]);

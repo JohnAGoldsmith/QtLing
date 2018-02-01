@@ -107,14 +107,14 @@ public:
     void                                    analyze_corpus();
     MainWindow();
     void                                    display_suffixes();
-    void                                    display_suffix_signatures();
-    void                                    display_prefix_signatures();
+    void                                    display_suffix_signatures(CLexicon*);
+    void                                    display_prefix_signatures(CLexicon*);
     void                                    display_epositive_suffix_signatures();
     void                                    display_hypotheses();
 //    void                                    DisplaySignatures();
     CLexicon*                               get_lexicon()                       {return m_lexicon_list.last();  }
     bool                                    get_graphic_display_flag()        {return m_graphic_display_flag;}
-    void                                    load_models();
+    void                                    load_models(CLexicon* lexicon);
     void                                    read_corpus();
     void                                    set_up_graphics_scene_and_view();
 
@@ -165,7 +165,7 @@ public:
     void                    load_StemSet2_model();
     void                    load_subsignature_model();
     void                    load_word_model();
-    void                    create_or_update_TreeModel();
+    void                    create_or_update_TreeModel(CLexicon* lexicon);
 
     void                    sort_upper_table();
 
