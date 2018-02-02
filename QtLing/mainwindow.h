@@ -110,6 +110,7 @@ public:
     void                                    display_suffix_signatures(CLexicon*);
     void                                    display_prefix_signatures(CLexicon*);
     void                                    display_epositive_suffix_signatures();
+    void                                    display_epositive_prefix_signatures();
     void                                    display_hypotheses();
 //    void                                    DisplaySignatures();
     CLexicon*                               get_lexicon()                       {return m_lexicon_list.last();  }

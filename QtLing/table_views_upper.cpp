@@ -71,8 +71,10 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         m_parent_window->display_prefix_signatures(lexicon);
     }
     else     if (component == "EPositive prefix signatures"){
-        setModel(m_parent_window->m_Models["EPositive prefix signatures"]);
-        set_data_type ( e_data_epositive_prefixal_signatures );
+        m_parent_window->display_epositive_prefix_signatures();
+
+        //setModel(m_parent_window->m_Models["EPositive prefix signatures"]);
+        //set_data_type ( e_data_epositive_prefixal_signatures );
     }
     else     if (component == "Signature graph edges"){
         setModel(m_parent_window->m_Models["SigGraphEdges"]);

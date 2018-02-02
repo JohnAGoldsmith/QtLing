@@ -63,6 +63,7 @@ MainWindow::MainWindow()
     m_Models["Prefix signatures"]           = new LxaStandardItemModel("Prefix signatures");
     m_Models["Prefix signatures 2"]         = new LxaStandardItemModel("Prefix signatures"); //sorted by affix count;
     m_Models["EPositive prefix signatures"] = new LxaStandardItemModel("EPositive prefix signatures");
+    m_Models["EPositive prefix signatures 2"]= new LxaStandardItemModel("EPositive prefix signatures");
     m_Models["Residual parasignatures"]     = new LxaStandardItemModel("Residual parasignatures");
     m_Models["SigGraphEdges"]               = new LxaStandardItemModel("SigTreeEdges");
     m_Models["Parasuffixes"]                = new LxaStandardItemModel("Parasuffixes");
@@ -380,6 +381,8 @@ void MainWindow::load_models(CLexicon* lexicon)
     m_Models["Prefix signatures"]   ->load_signatures( lexicon->get_prefix_signatures());
     m_Models["Prefix signatures 2"] ->load_signatures(lexicon->get_prefix_signatures(), SIG_BY_AFFIX_COUNT);
     m_Models["EPositive prefix signatures"]->load_positive_signatures(lexicon->get_prefix_signatures());
+    m_Models["EPositive prefix signatures 2"]->load_positive_signatures(lexicon->get_prefix_signatures(), SIG_BY_AFFIX_COUNT);
+
     m_Models["Residual parasignatures"]->load_parasignatures(lexicon->get_residual_signatures());
     m_Models["Parasuffixes"]        ->load_suffixes(lexicon->get_parasuffixes());
     m_Models["Passive signatures"]  ->load_signatures(lexicon->get_passive_signatures());

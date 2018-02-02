@@ -382,7 +382,7 @@ void   CLexicon::AssignSuffixesToStems()
         p_this_stem_list         = iter_sigstring_to_stems.value();
 
         affix_set this_affix_set = QSet<QString>::fromList( this_signature_string.split("="));
-
+        //qDebug() << this_affix_set << 385 << p_this_stem_list->takeFirst();
         if (p_this_stem_list->size() >= MINIMUM_NUMBER_OF_STEMS)
         {
             if( m_SuffixesFlag) {
@@ -436,6 +436,7 @@ void   CLexicon::AssignSuffixesToStems()
                         QString message = this_signature_string;
                         if (this_affix_set.size() > 50){message = "Super long signature";};
                         pWord->add_to_autobiography("Pass1= " + this_stem_t + "=" + message);
+                        //qDebug() << pWord->get_key() + message << 439;
                     }
                  }
             }
@@ -537,6 +538,9 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
            temp_signatures_to_stems[this_signature_string] = pStemSet;
         }
         temp_signatures_to_stems.value(this_signature_string)->append(this_stem_t);
+//        if (this_stem_t == "school"){
+//            qDebug() << this_signature_string <<542;
+//        }
    }
 
    //-->  create signatures, stems, affixes:  <--//
@@ -755,12 +759,12 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
             QString p_proven_sigstring  = p_proven_sig->get_key();
             QList<QString> proven_sig_list = p_proven_sigstring.split("=");
             if ( contains(&affixes_of_residual_sig, &proven_sig_list) ){
-
                 // We have found the longest signature contained in this_residual_suffix_set
                 pStem = stems->find_or_add(this_stem);
-                //pStem->add_signature(p_proven_sigstring);
                 pStem->add_signature(p_proven_sig);
                 p_proven_sig->add_stem_pointer(pStem);
+
+                qDebug() << this_stem << affixes_of_residual_sig.join("=") <<   p_proven_sigstring << 768;
 
                 //--> add to autobiographies <--//
 
