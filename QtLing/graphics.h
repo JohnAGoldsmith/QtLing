@@ -192,6 +192,20 @@ public:
 };
 
 //--------------------->       <-----------------------------//
+//--------------------->       <-----------------------------//
+class fourteenagon : public graphic_signature2
+{
+public:
+    fourteenagon(CSignature*);
+    ~fourteenagon();
+    void paint ();
+    QPointF             get_center();
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+               QWidget *widget);
+    void set_text(sigstring_t this_sigstring);
+};
+
+//--------------------->       <-----------------------------//
 
 // not currently used.
 class graphic_super_signature : public QRect

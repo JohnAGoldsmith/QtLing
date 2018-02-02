@@ -533,6 +533,15 @@ void lxa_graphics_scene::create_and_place_signatures()
 
                 break;
            }
+            case 14:{
+                fourteenagon * this_fourteenagon  = new fourteenagon (pSig);
+                addItem(this_fourteenagon);
+                this_fourteenagon->setPos(x,y);
+                m_map_from_sig_to_pgraphsig[pSig]=this_fourteenagon;
+                m_graphic_signature_lattice[row]->append(this_fourteenagon);
+
+                break;
+           }
             default:{
               //graphic   p_graph_sig = new graphic_signature (x,y, pSig,  m_row_delta, m_normal_color);
               //  m_map_from_sig_to_pgraphsig[pSig] = p_graph_sig;

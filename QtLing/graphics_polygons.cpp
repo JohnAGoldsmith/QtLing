@@ -99,7 +99,14 @@ twelvagon2::~twelvagon2()
 {
 
 }
+//-----------------------------------------------------------//
+fourteenagon::fourteenagon(CSignature* pSig): graphic_signature2(pSig){
+         set_text(pSig->get_key());
+};
+fourteenagon::~fourteenagon()
+{
 
+}
 // --------------------------------->      <--------------------------------------------//
 void bar::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                       QWidget *widget){
@@ -708,6 +715,104 @@ QPointF twelvagon2::get_center(){
         return this_point + diff;
 }
 
+// --------------------------------->      <--------------------------------------------//
+// ==================================      =============================================//
+
+
+void fourteenagon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+                      QWidget *widget){
+    QBrush brush(m_color, Qt::SolidPattern);
+     QPen pen (Qt::darkBlue, 3);
+     painter->setBrush(brush);
+     painter->setPen(pen);
+     int x = 60;
+     int y = 0;
+     static const QPointF points_1[5] = {
+         QPointF(40,10),
+         QPointF(11,30),
+         QPointF(22,64),
+         QPointF(58,64),
+         QPointF(69,30)
+     };
+     painter->drawPolygon(points_1,5);
+     x = 0;
+     y = 90;
+     static const QPointF points_2[5] = {
+         QPointF(x + 40,y + 10),
+         QPointF(x + 11,y + 30),
+         QPointF(x + 22,y + 64),
+         QPointF(x + 58,y + 64),
+         QPointF(x + 69,y + 30)
+     };
+     painter->drawPolygon(points_2,5);
+     x = 120;
+     static const QPointF points_3[4] = {
+         QPointF(x + 60,y + 20),
+         QPointF(x + 20,y + 20),
+         QPointF(x + 20,y + 64),
+         QPointF(x + 60,y + 64)
+     };     painter->drawPolygon(points_3,4);
+
+
+
+
+};
+
+void fourteenagon::set_text(sigstring_t this_sigstring)
+{
+    QList<QRectF*> br_list;
+    QList<QGraphicsSimpleTextItem*> text_item_list;
+    QStringList affixes = this_sigstring.split("=");
+    QFont serifFont ("Times", 16, QFont::Bold);
+
+
+    for (int i=0; i< 14; i++){
+        text_item_list.append( new QGraphicsSimpleTextItem(this));
+        text_item_list[i]->setFont( serifFont );
+        text_item_list[i]->setText( affixes[i] );
+        br_list.append(new QRectF(text_item_list[i]->sceneBoundingRect()));
+    }
+    text_item_list[0]->setPos( 43 - br_list[0]->width()/2, 10 - br_list[0]->height()   );
+    text_item_list[4]->setPos( 5 - br_list[4]->width()   , 28 - br_list[1]->height()/2 );
+    text_item_list[3]->setPos( 10 - br_list[3]->width()  , 64 - br_list[3]->height()/2 );
+    text_item_list[2]->setPos( 62                        , 64 - br_list[2]->height()/2 );
+    text_item_list[1]->setPos( 72                        , 31 - br_list[1]->height()/2 );
+
+    int delta_y =90;
+
+
+    text_item_list[5]->setPos( 43 - br_list[5]->width()/2, delta_y + 10 - br_list[5]->height()   );
+    text_item_list[6]->setPos( 72                        , delta_y + 31 - br_list[6]->height()/2 );
+    text_item_list[7]->setPos( 62                        , delta_y + 64 - br_list[7]->height()/2 );
+    text_item_list[8]->setPos( 10 - br_list[8]->width()  , delta_y + 64 - br_list[8]->height()/2 );
+    text_item_list[9]->setPos( 5 - br_list[9]->width()   , delta_y + 28 - br_list[9]->height()/2 );
+
+    int delta_x = 120;
+    delta_y = 120;
+
+    text_item_list[10]->setPos(delta_x +  10 - br_list[10]->width(), delta_y - br_list[10]->height()/2 );
+    text_item_list[11]->setPos(delta_x +  70                       , delta_y - br_list[11]->height()/2 );
+    text_item_list[12]->setPos(delta_x +  70                       , delta_y + 30 - br_list[12]->height()/2 );
+    text_item_list[13]->setPos(delta_x + 10 - br_list[13]->width() , delta_y + 30 - br_list[13]->height()/2 );
+
+
+    ///////////////////////////
+
+//    QGraphicsSimpleTextItem *p_text_item = new QGraphicsSimpleTextItem;
+//    p_text_item     ->  setText(QString::number(pSig->get_number_of_stems()));/
+//    QRectF bR       =   p_text_item->sceneBoundingRect();
+//    p_text_item     ->  setPos (x+38 - bR.width()/2, y-10 + 65 );
+//    scene->addItem(p_text_item);
+}
+
+
+
+
+QPointF fourteenagon::get_center(){
+        QPointF this_point = pos();
+        QPointF diff (50,37);
+        return this_point + diff;
+}
 
 /*
 void triangle(CSignature* pSig, int x, int y, lxa_graphics_scene * scene,   QColor color)
