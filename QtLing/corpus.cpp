@@ -13,7 +13,7 @@ void MainWindow::analyze_corpus()
         CWord* pWord = get_lexicon()->get_words()->get_word(word);
         //if (pWord) { qDebug() << "   found " << word;}
         if (pWord && pWord->get_parse_triples()->count() > 0){
-            qDebug() << pWord->get_key() << pWord->get_parse_triples()->first()->p_signature->get_key();
+           // qDebug() << pWord->get_key() << pWord->get_parse_triples()->first()->p_signature->get_key();
         } else
         {
           //  qDebug() << word << "not found";

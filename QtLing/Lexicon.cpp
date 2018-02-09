@@ -108,6 +108,8 @@ void CLexicon::Crab_1()
 
     AssignSuffixesToStems();
 
+    find_full_signatures();
+
     collect_parasuffixes();
 
     m_SuffixesFlag?
@@ -191,9 +193,6 @@ void CLexicon::FindProtostems()
                     stem = previous_word.left(i);
                     if (stem.length()== 0){continue;}
                     DifferenceFoundFlag = true;
-                    //if (!m_suffix_protostems.contains(stem))                {
-                    //    m_suffix_protostems[stem] = 1;
-                    //}
                     if (!m_suffix_protostems_2.contains(stem)){
                         for (wordno2 = wordno; wordno2 < m_Words->get_count(); wordno2++ ){
                             if ( ! Words->at(wordno2).startsWith(stem) ){
@@ -211,16 +210,21 @@ void CLexicon::FindProtostems()
         {       // -->   Prefix case   <-- //
             this_word_length = this_word.length();
             previous_word_length = previous_word.length();
+            if (this_word == "kitabu") {qDebug()<< 213 << previous_word;}
+
             int end = qMin(this_word_length, previous_word_length);
-            for (int i=0; i <end; i++){
-                if (previous_word[previous_word_length - i] != this_word[ this_word_length - i]){
+            for (int i=1; i <=end; i++){
+                if (previous_word.right(i) != this_word.right(i)){
+                    if (this_word=="kitabu"){
+                        qDebug() << 217 <<  i << this_word.right(i);
+                    }
                     stem = previous_word.right(i-1);
                     DifferenceFoundFlag = true;
-
+                    if (this_word == "kitabu"){qDebug() << stem << previous_word << 221;}
                     if (!m_prefix_protostems.contains(stem))                {
-                        m_prefix_protostems[stem] = 1;
-                    }
-                    break;
+                            m_prefix_protostems[stem] = 1;
+                     }
+                     break;
                 }
             }
         }
@@ -278,6 +282,9 @@ void CLexicon::CreateStemAffixPairs()
                 if (m_prefix_protostems.contains(stem)){
                     prefix_length = word.length() - letterno;
                     prefix = word.left(prefix_length);
+                    if (word == "kitabu") {
+                            qDebug() << "kitabu"<< 282 << stem;
+                    }
                     m_Parses->append(QPair<QString,QString>(prefix,stem));
                     if (m_Words->contains(stem)){
                         m_Parses->append(QPair<QString,QString>(QString("NULL"),stem));
@@ -330,6 +337,7 @@ void   CLexicon::AssignSuffixesToStems()
         }
         temp_stems_to_affix_set.value(this_stem_t)->insert(this_affix);
     }
+    //-----------------------------------------------------------------------------------------------//
     qDebug() << "Step 1.";
     //--> We iterate through these stems and for each stem, create QStringLists of their affixes. <--//
     //--> then we create a "pre-signature" in a map that points to lists of stems. <--//
@@ -339,8 +347,8 @@ void   CLexicon::AssignSuffixesToStems()
     m_StatusBar->showMessage("Form signatures: 2. tentative signatures.");
 
     int count= 0;
-    QMapIterator<QString, morph_set*>   stem_iter(temp_stems_to_affix_set);                       // part 1
-    while (stem_iter.hasNext())                                                                  // make a presignature for each stem.
+    QMapIterator<QString, morph_set*>   stem_iter(temp_stems_to_affix_set);    // part 1
+    while (stem_iter.hasNext())                                                // make a presignature for each stem.
     {    qApp->processEvents();
          count ++;
          m_ProgressBar->setValue(count);
@@ -348,13 +356,10 @@ void   CLexicon::AssignSuffixesToStems()
          this_stem_t            = stem_iter.key();
          this_ptr_to_affix_set  = stem_iter.value();
          QStringList temp_presignature;
-
-
          affix_set_iter affix_iter (*this_ptr_to_affix_set);
          while (affix_iter.hasNext()){
                  temp_presignature.append ( affix_iter.next() );
          }
-
          temp_presignature.sort();
          sigstring_t this_signature_string = temp_presignature.join("=");
          if ( ! temp_signatures_to_stems.contains(this_signature_string)){
@@ -363,7 +368,7 @@ void   CLexicon::AssignSuffixesToStems()
          }
          temp_signatures_to_stems.value(this_signature_string)->append(this_stem_t);
     }
-
+    //-----------------------------------------------------------------------------------------------//
     //-->  create signatures, stems, affixes:  <--//
     m_ProgressBar->reset();
     m_ProgressBar->setMinimum(0);
@@ -382,12 +387,10 @@ void   CLexicon::AssignSuffixesToStems()
         p_this_stem_list         = iter_sigstring_to_stems.value();
 
         affix_set this_affix_set = QSet<QString>::fromList( this_signature_string.split("="));
-        //qDebug() << this_affix_set << 385 << p_this_stem_list->takeFirst();
         if (p_this_stem_list->size() >= MINIMUM_NUMBER_OF_STEMS)
         {
             if( m_SuffixesFlag) {
                 pSig = *m_Signatures       << this_signature_string;
-                //qDebug() <<375 << this_signature_string << 375;
             } else {
                 pSig = *m_PrefixSignatures << this_signature_string;
                 pSig->set_suffix_flag(false);
@@ -436,7 +439,6 @@ void   CLexicon::AssignSuffixesToStems()
                         QString message = this_signature_string;
                         if (this_affix_set.size() > 50){message = "Super long signature";};
                         pWord->add_to_autobiography("Pass1= " + this_stem_t + "=" + message);
-                        //qDebug() << pWord->get_key() + message << 439;
                     }
                  }
             }
@@ -466,9 +468,90 @@ bool contains(QList<QString> * list2, QList<QString> * list1){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //      End of Crab 1
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//      Find full signatures
+
+void remove_final_letter (QStringList & stem_list, bool suffix_flag){
+    for (int i = 0; i < stem_list.size(); i++){
+        if (suffix_flag){
+            stem_list[i] = stem_list[i].left(stem_list[i].length()-1);
+        }else{
+            stem_list[i] = stem_list[i].mid(1);
+        }
+     }
+}
+void add_initial_letter (QStringList & affix_list, QString letter, bool suffix_flag){
+    for (int i = 0; i < affix_list.size(); i++){
+        if (affix_list[i]== "NULL"){
+            affix_list[i] = letter;
+        } else {
+            if (suffix_flag){
+                affix_list[i] = letter + affix_list[i];
+            }else{
+                affix_list[i] = affix_list[i] + letter;
+            }
+        }
+     }
+}
+void CLexicon::find_full_signatures()
+{
+/*  1. iterate through signatures.
+        a. if the edge has zero-entropy, make a shorter stem, and the stem-affix pair to Parses, for all stems in sig.
+        b. keep pairs of (new stem, whole word) and see if the set of new stems has zero-entropy. if so, repeat. If not, exit.
+    2. Call AssignSuffixesToStems.
+*/
+    m_StatusBar->showMessage("Find full signatures inside hollow signatures.");
+    CStemCollection * stems;
+    CSignature * pSig;
+    QString letter, affix, stem;
+    QStringList affix_list, stem_list;
+    CSignatureCollection * signatures;
+    m_SuffixesFlag ?
+                stems = m_suffixal_stems:
+                stems = m_prefixal_stems;
+    m_SuffixesFlag ?
+                signatures = m_Signatures:
+                signatures = m_PrefixSignatures;
+    m_ProgressBar->reset();
+    m_ProgressBar->setMinimum(0);
+    m_ProgressBar->setMaximum(signatures->get_count());
+    QMapIterator<sigstring_t,CSignature*> * sig_iter = new QMapIterator<sigstring_t,CSignature*> (* signatures->get_map() );
+    while (sig_iter->hasNext()){
+        pSig = sig_iter->next().value();
+        if (pSig->get_stem_entropy() > 0){
+            continue;
+        }
+
+        letter = pSig->get_stems()->at(0)->get_key().right(1);
+        pSig->get_stem_strings(stem_list);
+        remove_final_letter(stem_list, m_SuffixesFlag);
+        pSig->get_string_list(affix_list);
+        add_initial_letter (affix_list, letter, m_SuffixesFlag);
+
+        for (int i = 0; i < stem_list.size(); i++){
+            stem = stem_list.at(i);
+            for (int affno = 0; affno < affix_list.size(); affno++){
+                affix = affix_list.at(affno);
+                if (m_SuffixesFlag){
+                    m_Parses->append(QPair<QString, QString> (stem,affix));
+                } else{
+                    m_Parses->append(QPair<QString, QString> (stem,affix));
+                }
+            }
+            //stem_set.append(QString(pSig->get_stems()->at(i)->get_key()));
+        }
+
+
+    }
 
 
 
+}
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /*!
 * This is lke AssignSuffixesToStems, but crucially: with Suffixes known ahead of time.
@@ -721,16 +804,6 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
     signatures->sort(SIG_BY_AFFIX_COUNT);
     map_sigstring_to_sig_ptr_iter   sig_iter(*  m_ParaSignatures->get_map());
 
-
-    // instead of going through parasignatures, we will look at protostems that are not stems.
-    // We will not keep Parasignatures or residual stems.
-
-//    QMap<QString, int>        * these_protostems;
-//    m_SuffixesFlag?
-//                these_protostems = & m_suffix_protostems:
-//                these_protostems = & m_prefix_protostems;
-
-
     QMap<QString, protostem*> * these_protostems_2;
     m_SuffixesFlag?
                 these_protostems_2 = & m_suffix_protostems_2:
@@ -763,8 +836,6 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
                 pStem = stems->find_or_add(this_stem);
                 pStem->add_signature(p_proven_sig);
                 p_proven_sig->add_stem_pointer(pStem);
-
-                qDebug() << this_stem << affixes_of_residual_sig.join("=") <<   p_proven_sigstring << 768;
 
                 //--> add to autobiographies <--//
 
@@ -815,7 +886,7 @@ void CLexicon::replace_parse_pairs_from_current_signature_structure(bool FindSuf
     CSignature*                     pSig;
     CStem*                          pStem;
     QList<CStem*> *                 stem_list;
-    map_sigstring_to_sig_ptr_iter  * sig_iter =  get_signatures()->get_map_iterator();
+    map_sigstring_to_sig_ptr_iter  * sig_iter =   new map_sigstring_to_sig_ptr_iter(*  get_signatures()->get_map() );
 
     while (sig_iter->hasNext()){
         pSig = sig_iter->next().value();

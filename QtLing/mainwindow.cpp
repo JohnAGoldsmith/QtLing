@@ -213,7 +213,10 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         }
         break;
     }
-
+    case Qt::Key_6:{
+        get_lexicon()->set_prefixes_flag();
+        break;
+    }
     case Qt::Key_D:     {
         read_dx1_file();
         break;
@@ -333,7 +336,8 @@ void MainWindow::ask_for_project_file()
 {
     m_name_of_project_file = QFileDialog::getOpenFileName (this);
     read_stems_and_words();
-  //  display_suffix_signatures(get_lexicon());
+
+    //display_suffix_signatures(get_lexicon());
 }
 
 

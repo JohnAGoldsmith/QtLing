@@ -10,7 +10,7 @@ CSignatureCollection::CSignatureCollection(CLexicon* p_lexicon, bool suffix_flag
     m_MemberName			= QString::null;
     m_SortValidFlag			= 0;
     m_SortStyle				= KEY;
-    m_MapIterator           = new map_sigstring_to_sig_ptr_iter (m_SignatureMap);
+//    m_MapIterator           = new map_sigstring_to_sig_ptr_iter (m_SignatureMap);
     m_SortedListIterator    = new     QListIterator<CSignature*> (m_SortList);
     m_suffix_flag           = suffix_flag;
     m_Lexicon               = p_lexicon;
@@ -29,12 +29,13 @@ void CSignatureCollection::clear(){
     m_SignatureMap.clear();
     m_SortList.clear();
 }
-
+/*
 map_sigstring_to_sig_ptr_iter * CSignatureCollection::get_map_iterator()
 {   qDebug() << "In signature collection, getting the map iterator.";
     m_MapIterator->toFront();
     return m_MapIterator ;
 }
+*/
 QListIterator<CSignature*> * CSignatureCollection::get_sorted_list_iterator()
 {
 

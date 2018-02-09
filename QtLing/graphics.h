@@ -190,6 +190,19 @@ public:
                QWidget *widget);
     void set_text(sigstring_t this_sigstring);
 };
+//--------------------->       <-----------------------------//
+//--------------------->       <-----------------------------//
+class thirteenagon : public graphic_signature2
+{
+public:
+    thirteenagon(CSignature*);
+    ~thirteenagon();
+    void paint ();
+    QPointF             get_center();
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+               QWidget *widget);
+    void set_text(sigstring_t this_sigstring);
+};
 
 //--------------------->       <-----------------------------//
 //--------------------->       <-----------------------------//
@@ -198,6 +211,18 @@ class fourteenagon : public graphic_signature2
 public:
     fourteenagon(CSignature*);
     ~fourteenagon();
+    void paint ();
+    QPointF             get_center();
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+               QWidget *widget);
+    void set_text(sigstring_t this_sigstring);
+};
+//--------------------->       <-----------------------------//
+class fifteenagon : public graphic_signature2
+{
+public:
+    fifteenagon(CSignature*);
+    ~fifteenagon();
     void paint ();
     QPointF             get_center();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,

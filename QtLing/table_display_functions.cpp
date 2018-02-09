@@ -57,7 +57,7 @@ void MainWindow::display_epositive_prefix_signatures()
 
 /**
  * @brief MainWindow::display_suffix_signatures
- * This is called by a QAction.
+ * Thi  s is called by a QAction.
  */
 void MainWindow::display_suffix_signatures(CLexicon* lexicon)
 {

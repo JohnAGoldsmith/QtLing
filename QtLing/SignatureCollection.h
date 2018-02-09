@@ -55,7 +55,7 @@ public:
     void                                    get_epositive_signatures(QMap<CSignature*,int>);
     CLexicon*                               get_lexicon()                   { return m_Lexicon; }
     map_string_to_sig*                      get_map()                       { return & m_SignatureMap;}
-    map_sigstring_to_sig_ptr_iter *         get_map_iterator() ;
+//    map_sigstring_to_sig_ptr_iter *         get_map_iterator() ;
     int                                     get_number_of_epositive_signatures();
     CSignature*                             get_signature(QString sig)      {return m_SignatureMap.value(sig); }
     QList<CSignature*> *                    get_signature_list()            { return & m_signature_list;}

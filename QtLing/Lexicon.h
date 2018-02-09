@@ -198,19 +198,20 @@ public:
 
 public:
     // insert functions here
+    void AssignSuffixesToStems();
+    void compare_opposite_sets_of_signatures(QSet<CSignature*>* sig_set_1, QSet<CSignature*>* sig_set_2,QString letter);
+    void compute_sig_graph_edge_map();
     void Crab_1();
     void Crab_2();
-    void FindProtostems();
     void CreateStemAffixPairs();
-    void AssignSuffixesToStems();
-    void ReSignaturizeWithKnownAffixes();
-    void FindGoodSignaturesInsideParaSignatures();
-    void compute_sig_graph_edge_map();
-    void test_for_phonological_relations_between_signatures();
-    void compare_opposite_sets_of_signatures(QSet<CSignature*>* sig_set_1, QSet<CSignature*>* sig_set_2,QString letter);
-    void replace_parse_pairs_from_current_signature_structure(bool FindSuffixesFlag=true);
     void create_temporary_map_from_stems_to_affix_sets(map_sigstring_to_morph_set   &, map_sigstring_to_stem_list &);
     void create_sublexicon ();
+    void find_full_signatures();
+    void FindGoodSignaturesInsideParaSignatures();
+    void FindProtostems();
+    void replace_parse_pairs_from_current_signature_structure(bool FindSuffixesFlag=true);
+    void ReSignaturizeWithKnownAffixes();
+    void test_for_phonological_relations_between_signatures();
 };
 
 #endif // CLEXICON_H

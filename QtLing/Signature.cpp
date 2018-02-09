@@ -33,12 +33,19 @@ CSignature::~CSignature()
   delete m_Prefixes;
   delete m_Suffixes;
 }
-QStringList CSignature::get_string_list(QStringList& affix_string_list){
+QStringList& CSignature::get_string_list(QStringList& affix_string_list){
     affix_string_list.clear();
     affix_string_list = m_Signature.split("=");
     return affix_string_list;
 }
 
+QStringList& CSignature::get_stem_strings(QStringList & stem_list)
+{
+    for (int stemno = 0; stemno < m_Stems->size(); stemno++){
+        stem_list.append(m_Stems->at(stemno)->get_key());
+    }
+    return stem_list;
+}
 
 void CSignature::add_stem_pointer(CStem* pStem)
 {
@@ -220,6 +227,8 @@ double CSignature::calculate_stem_entropy()
     //qDebug() << "Stem entropy of signature"<<entropy << 195;
     return entropy;
 }
+
+
 /////////////////////////////////////////////////////////////////////////
 //
 //      non-class functions dealing with signatures

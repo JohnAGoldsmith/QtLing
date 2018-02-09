@@ -312,7 +312,7 @@ void lxa_graphics_scene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         QGraphicsItem * item = this->itemAt(  mouseEvent->scenePos() , QTransform() );
         graphic_signature2 * this_graph_sig = dynamic_cast<graphic_signature2*> (item);
         if (item && this_graph_sig) {
-            {   qDebug() << this_graph_sig->get_key()<<288;
+            {  // qDebug() << this_graph_sig->get_key()<<288;
                 set_focus_signature_and_move(this_graph_sig);
             }
         }
@@ -542,6 +542,15 @@ void lxa_graphics_scene::create_and_place_signatures()
 
                 break;
            }
+            case 15:{
+                fifteenagon * this_fifteenagon  = new fifteenagon (pSig);
+                addItem(this_fifteenagon);
+                this_fifteenagon->setPos(x,y);
+                m_map_from_sig_to_pgraphsig[pSig]=this_fifteenagon;
+                m_graphic_signature_lattice[row]->append(this_fifteenagon);
+
+                break;
+           }
             default:{
               //graphic   p_graph_sig = new graphic_signature (x,y, pSig,  m_row_delta, m_normal_color);
               //  m_map_from_sig_to_pgraphsig[pSig] = p_graph_sig;
@@ -757,7 +766,7 @@ void lxa_graphics_scene::show_subsignatures_and_move_them()
         } else if (m_focus_graphic_signature->get_signature()->contains(sig_iter->get_signature()))
         {
             move_graphic_signature_to_the_left(sig_iter);
-            sig_iter->set_color(Qt::cyan);
+            sig_iter->set_color(Qt::blue);
         } else if (sig_iter->get_signature() -> contains (m_focus_graphic_signature->get_signature()))
         {
             move_graphic_signature_to_the_left(sig_iter);
