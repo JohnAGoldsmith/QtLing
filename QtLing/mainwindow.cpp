@@ -95,7 +95,7 @@ MainWindow::MainWindow()
     m_tableView_upper_left->setSortingEnabled(true);
     m_tableView_upper_right->setSortingEnabled(true);
 
-    bool suffix_flag = true;
+//    bool suffix_flag = true;
 
     m_graphics_scene            = new lxa_graphics_scene( this, lexicon);
     m_graphics_view             = new lxa_graphics_view(m_graphics_scene, this);

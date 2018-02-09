@@ -116,8 +116,8 @@ fifteenagon::~fifteenagon()
 
 }
 // --------------------------------->      <--------------------------------------------//
-void bar::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-                      QWidget *widget){
+void bar::paint(QPainter *painter, const QStyleOptionGraphicsItem * , QWidget*)
+{
 
     QBrush brush(m_color, Qt::SolidPattern);
     QPen pen (Qt::darkBlue, 3);
@@ -152,8 +152,7 @@ QPointF bar::get_center(){
     return this_point + diff;
 }
 // --------------------------------->      <--------------------------------------------//
-void triangle2::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-                      QWidget *widget){
+void triangle2::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *){
 
     QBrush brush(m_color, Qt::SolidPattern);
     QPen pen (Qt::darkBlue, 3);
@@ -189,8 +188,7 @@ QPointF triangle2::get_center(){
 }
 // --------------------------------->      <--------------------------------------------//
 
-void square2::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-                      QWidget *widget) {
+void square2::paint(QPainter *painter, const QStyleOptionGraphicsItem * ,QWidget *) {
 
 
     QBrush brush(m_color, Qt::SolidPattern);
@@ -235,8 +233,7 @@ QPointF square2::get_center(){
 // --------------------------------->      <--------------------------------------------//
 
 
-void pentagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-                      QWidget *widget){
+void pentagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget * ){
     QBrush brush(m_color, Qt::SolidPattern);
     QPen pen (Qt::darkBlue, 3);
     painter->setBrush(brush);
@@ -276,8 +273,7 @@ QPointF pentagon2::get_center(){
 }
 
 // --------------------------------->      <--------------------------------------------//
-void hexagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-                      QWidget *widget){
+void hexagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *,  QWidget *){
     QBrush brush(m_color, Qt::SolidPattern);
     QPen pen (Qt::darkBlue, 3);
     painter->setBrush(brush);
@@ -324,8 +320,7 @@ QPointF hexagon2::get_center(){
 
 
 // --------------------------------->      <--------------------------------------------//
-void septagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-                      QWidget *widget){
+void septagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget * ){
     QBrush brush(m_color, Qt::SolidPattern);
     QPen pen (Qt::darkBlue, 3);
     painter->setBrush(brush);
@@ -378,8 +373,8 @@ QPointF septagon2::get_center(){
 // --------------------------------->      <--------------------------------------------//
 // ==================================      =============================================//
 
-void octagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-                      QWidget *widget){
+void octagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
+                      QWidget *){
    QBrush brush(m_color, Qt::SolidPattern);
     QPen pen (Qt::darkBlue, 3);
     painter->setBrush(brush);
@@ -432,8 +427,8 @@ QPointF octagon2::get_center(){
 // --------------------------------->      <--------------------------------------------//
 // ==================================      =============================================//
 
-void nonagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-                      QWidget *widget){
+void nonagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
+                      QWidget *){
 
    QBrush brush(m_color, Qt::SolidPattern);
     QPen pen (Qt::darkBlue, 3);
@@ -503,8 +498,8 @@ QPointF nonagon2::get_center(){
 }
 // --------------------------------->      <--------------------------------------------//
 // ==================================      =============================================//
-void decagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-                      QWidget *widget){
+void decagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
+                      QWidget *){
     QBrush brush(m_color, Qt::SolidPattern);
     QPen pen (Qt::darkBlue, 3);
     painter->setBrush(brush);
@@ -563,8 +558,8 @@ QPointF decagon2::get_center(){
 // --------------------------------->      <--------------------------------------------//
 // ==================================      =============================================//
 
-void elevenagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-                      QWidget *widget){
+void elevenagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
+                      QWidget *){
     QBrush brush(m_color, Qt::SolidPattern);
      QPen pen (Qt::darkBlue, 3);
      painter->setBrush(brush);
@@ -636,7 +631,7 @@ QPointF elevenagon2::get_center(){
 // --------------------------------->      <--------------------------------------------//
 // ==================================      =============================================//
 
-void twelvagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+void twelvagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
                       QWidget *widget){
     QBrush brush(m_color, Qt::SolidPattern);
      QPen pen (Qt::darkBlue, 3);
@@ -729,8 +724,8 @@ QPointF twelvagon2::get_center(){
 // ==================================      =============================================//
 
 
-void thirteenagon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-                      QWidget *widget){
+void thirteenagon::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
+                      QWidget *){
     QBrush brush(m_color, Qt::SolidPattern);
      QPen pen (Qt::darkBlue, 3);
      painter->setBrush(brush);
@@ -828,8 +823,8 @@ QPointF thirteenagon::get_center(){
 // ==================================      =============================================//
 
 
-void fourteenagon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-                      QWidget *widget){
+void fourteenagon::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
+                      QWidget *){
     QBrush brush(m_color, Qt::SolidPattern);
      QPen pen (Qt::darkBlue, 3);
      painter->setBrush(brush);
@@ -930,8 +925,8 @@ QPointF fourteenagon::get_center(){
 // ==================================      =============================================//
 
 
-void fifteenagon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-                      QWidget *widget){
+void fifteenagon::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
+                      QWidget *){
     QBrush brush(m_color, Qt::SolidPattern);
      QPen pen (Qt::darkBlue, 3);
      painter->setBrush(brush);

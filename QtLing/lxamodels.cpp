@@ -23,7 +23,7 @@ LxaStandardItemModel::~LxaStandardItemModel()
 }
 
 
-void LxaStandardItemModel::sort(int column_no, Qt::SortOrder order)
+void LxaStandardItemModel::sort(int column_no, Qt::SortOrder)
 {
     if (column_no ==0  ){
         QStandardItemModel::sort(column_no);
@@ -39,7 +39,7 @@ LxaSortFilterProxyModel::LxaSortFilterProxyModel(QObject * parent) : QSortFilter
 }
 
 bool LxaSortFilterProxyModel::lessThan(const QModelIndex & left, const QModelIndex & right) const
-{   int left_row, right_row;
+{   //int left_row, right_row;
 
     QVariant leftdata = sourceModel()->data(left);
     QVariant rightdata = sourceModel()->data(right);
@@ -51,7 +51,7 @@ bool LxaSortFilterProxyModel::lessThan(const QModelIndex & left, const QModelInd
 
 };
 
-void  LxaStandardItemModel::load_category(QString component_name, eComponentType)
+void  LxaStandardItemModel::load_category(QString , eComponentType)
 {
 
 }
@@ -481,6 +481,8 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
 
 
 // add component 6
+
+
 
     QList<QStandardItem*> keyboard_1;
     keyboard_1.append(ctrl_1);

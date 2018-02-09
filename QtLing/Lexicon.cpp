@@ -108,7 +108,7 @@ void CLexicon::Crab_1()
 
     AssignSuffixesToStems();
 
-    find_full_signatures();
+    //find_full_signatures();
 
     collect_parasuffixes();
 
@@ -129,8 +129,6 @@ void CLexicon::Crab_1()
  */
 void CLexicon::Crab_2()
 {
-    CSignature* pSig;
-
     ReSignaturizeWithKnownAffixes();
 
     FindGoodSignaturesInsideParaSignatures();
@@ -302,7 +300,7 @@ void CLexicon::CreateStemAffixPairs()
  */
 void   CLexicon::AssignSuffixesToStems()
 {   const int MINIMUM_NUMBER_OF_STEMS = 2;
-    CWord *                     pWord;
+
     QPair<QString,QString>      this_pair;
     CSignature*                 pSig;
     QString                     this_stem_t, this_suffix, this_prefix, this_affix, this_signature_string, this_word;
@@ -566,7 +564,7 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
    CSignature*                 pSig;
    QString                     this_stem_t, this_suffix_t, this_prefix, this_affix, this_signature_string, this_word;
    stem_list *                 p_this_stem_list;
-   suffix_set *                this_ptr_to_suffix_set;
+//   suffix_set *                this_ptr_to_suffix_set;
    affix_set *                 this_ptr_to_affix_set;
    CStem*                      pStem;
    CStemCollection*            stems;
@@ -576,7 +574,7 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
    map_sigstring_to_suffix_set   temp_stems_to_affix_set;
    map_sigstring_to_morph_set  & ref_stems_to_affix_set (temp_stems_to_affix_set);
    map_sigstring_to_stem_list    temp_signatures_to_stems;
-   map_sigstring_to_stem_list  & ref_temp_signatures_to_stems(temp_signatures_to_stems);
+   //map_sigstring_to_stem_list  & ref_temp_signatures_to_stems(temp_signatures_to_stems);
 
    m_StatusBar->showMessage("Resignaturize with known affixes");
    m_ProgressBar->reset();
@@ -591,7 +589,7 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
    }
    //--> We establish a temporary map from stems to sets of affixes as we iterate through parses. <--//
 
-   create_temporary_map_from_stems_to_affix_sets( ref_stems_to_affix_set, ref_temp_signatures_to_stems);
+   create_temporary_map_from_stems_to_affix_sets( ref_stems_to_affix_set);//, ref_temp_signatures_to_stems);
 
    //--> We iterate through these stems and for each stem, create QStringLists of their affixes. <--//
    //--> then we create a "pre-signature" in a map that points to lists of stems. <--//
@@ -605,6 +603,9 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
         m_ProgressBar->setValue(stem_count++);
         this_stem_t            = stem_iter.key();
         this_ptr_to_affix_set  = stem_iter.value();
+        if (this_stem_t == "thro"){
+            qDebug() << 607 << "thro" << this_ptr_to_affix_set ;
+        }
         if (this_ptr_to_affix_set->size() < 2){continue;}
         QStringList temp_presignature;
 
@@ -616,6 +617,9 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
 
         temp_presignature.sort();
         sigstring_t this_signature_string = temp_presignature.join("=");
+        if (this_stem_t == "thro"){
+            qDebug() << this_signature_string << 621;
+        }
         if ( ! temp_signatures_to_stems.contains(this_signature_string)){
            stem_list * pStemSet = new stem_list;
            temp_signatures_to_stems[this_signature_string] = pStemSet;
@@ -691,6 +695,9 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
            this_signature_string =  iter_sigstring_to_stems.key();
            pSig =  *m_ParaSignatures << this_signature_string;
            pStem = *m_ResidualStems << this_stem_t;
+           if (this_stem_t == "thro"){
+               qDebug() << this_signature_string << 693;
+           }
            pSig->add_stem_pointer(pStem);
            foreach (this_affix, this_affix_set){
                if (this_affix == "NULL"){
@@ -714,8 +721,10 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
  * helper function for preceeding function.
  *
  */
-void CLexicon::create_temporary_map_from_stems_to_affix_sets(map_sigstring_to_morph_set & ref_stems_to_affix_set,
-                                                             map_sigstring_to_stem_list & ref_temp_signatures_to_stems){
+void CLexicon::create_temporary_map_from_stems_to_affix_sets(map_sigstring_to_morph_set & ref_stems_to_affix_set//,
+                                                             //map_sigstring_to_stem_list & ref_temp_signatures_to_stems
+                                                             )
+{
     QPair<QString,QString>      this_pair;
     QString                     this_stem_t, this_suffix_t;
     morph_set *                 pSet;
@@ -771,19 +780,19 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
     sig_string                  this_signature_string;
     CStem*                      pStem;
     CWord*                      pWord;
-    CSignature*                 pSig, *p_proven_sig;
-    CSuffix*                    pSuffix1;
-    int                         suffix_no;
-    int                         count_of_new_stems = 0;
-    int                         count_of_new_words = 0;
-    int                         signature_count (0);
+    CSignature*                 p_proven_sig;
+    //CSuffix*                    pSuffix1;
+    //int                         suffix_no;
+    //int                         count_of_new_stems = 0;
+    //int                         count_of_new_words = 0;
+    //int                         signature_count (0);
     affix_list                  affixes_of_residual_sig;
-    CSuffix_ptr_list  *         list_of_CSuffixes_of_proven_sig;
+    //CSuffix_ptr_list  *         list_of_CSuffixes_of_proven_sig;
     CSuffix_ptr_list            this_residual_sig_suffix_pointer_list;
-    bool                        success_flag;
+    //bool                        success_flag;
     CSignatureCollection*       signatures;
     suffix_t                    Null_string ("NULL");
-    CSuffix*                    pNullSuffix = *m_Suffixes << Null_string;
+    //CSuffix*                    pNullSuffix = *m_Suffixes << Null_string;
     CStemCollection*            stems;
     m_SuffixesFlag ?
                 stems = m_suffixal_stems:
@@ -864,13 +873,13 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
 }
 
 
-
+/*
 struct{
     bool operator ()(CSignature* pSig_a, CSignature* pSig_b) const {
     // return pSig_a->number_of_true_suffixes() > pSig_b->number_of_true_suffixes();
     }
 }custom_compare_residual_sig;
-
+*/
 
 
 /*!
@@ -884,7 +893,7 @@ void CLexicon::replace_parse_pairs_from_current_signature_structure(bool FindSuf
     m_Parse_map.clear();
     QString                         sig_string;
     CSignature*                     pSig;
-    CStem*                          pStem;
+    //CStem*                          pStem;
     QList<CStem*> *                 stem_list;
     map_sigstring_to_sig_ptr_iter  * sig_iter =   new map_sigstring_to_sig_ptr_iter(*  get_signatures()->get_map() );
 
@@ -913,7 +922,7 @@ void CLexicon::compute_sig_graph_edges()
     map_string_to_word *            WordMap = m_Words->GetMap();
     map_string_to_word_ptr_iter     word_iter(*WordMap);
     simple_sig_graph_edge *          p_SigTreeEdge;
-    CSignatureCollection*           pSignatures;
+    //CSignatureCollection*           pSignatures;
     CWord*                          pWord;
     morph_t                         difference;
     int                             number_of_parses;
@@ -967,7 +976,7 @@ void CLexicon::compute_sig_graph_edge_map() {
 morph_t         edge_label;
 word_t          this_word;
 simple_sig_graph_edge * p_sig_graph_edge;
-sig_graph_edge        * p_sig_graph_edge_2,
+sig_graph_edge      //  * p_sig_graph_edge_2,
                      * p_sig_graph_edge_3;
 lxa_sig_graph_edge_map* p_EdgeMap = & m_SigGraphEdgeMap;
 
@@ -1047,6 +1056,7 @@ void CLexicon::test_for_phonological_relations_between_signatures()
  *
  * This is not currently being used.
  */
+
 void CLexicon::compare_opposite_sets_of_signatures(QSet<CSignature*>* sig_set_1, QSet<CSignature*>* sig_set_2, QString morph)
 {   sig_graph_edge * p_edge;
     CSignature* pSig_1, *pSig_2;
@@ -1060,7 +1070,6 @@ void CLexicon::compare_opposite_sets_of_signatures(QSet<CSignature*>* sig_set_1,
         }
     }
 }
-
 
 
 

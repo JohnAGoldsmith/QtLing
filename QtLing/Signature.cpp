@@ -91,7 +91,7 @@ QString CSignature::display()
 QString CSignature::display_stems()
 {
     QString outstring;
-    CStem *qStem;
+//    CStem *qStem;
     for (int stem_no = 0; stem_no < m_Stems->size(); stem_no ++ ){
         outstring += m_Stems->at(stem_no)->display();
     }
@@ -154,7 +154,7 @@ int CSignature::get_robustness() const
 word_and_count_list * CSignature::get_word_and_count_vectors(word_and_count_list * this_vector)
 // this produces a list of word_and_count's: each is a word and its corpus count, one for each affix in the signature.
 {   QString this_word;
-    int word_count =0;
+//    int word_count =0;
     if (m_SuffixFlag){
         for (int stem_no = 0; stem_no < m_Stems->size(); stem_no++){
             stem_t this_stem = m_Stems->at(stem_no)->get_key();

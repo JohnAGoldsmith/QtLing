@@ -24,7 +24,7 @@ graphic_signature2::graphic_signature2  () {
     m_color = Qt::green;
 };
 
-graphic_signature2::graphic_signature2   (CSignature* this_signature,   QColor, bool focus_flag )
+graphic_signature2::graphic_signature2   (CSignature* this_signature,   QColor, bool )
 {
     m_focus_flag =false;
     m_color = Qt::green;
@@ -150,7 +150,7 @@ void lxa_graphics_scene::place_arrow( QPointF start, QPointF end, QColor color )
 {
     double slope = (end.ry() - start.ry()) / (end.rx() - start.rx());
     double delta_x = end.rx() - start.rx();
-    double delta_y = end.ry() - start.ry();
+    //double delta_y = end.ry() - start.ry();
     qDebug() << slope  << "slope";
     double margin = 0;
     double real_start_x = start.rx() + margin;
@@ -218,11 +218,11 @@ void lxa_graphics_scene::set_graphics_view(lxa_graphics_view * this_graphics_vie
 }
 */
 //--------------------------------------------------------------------------//
-const bool compare_stem_count_2(const CSignature* pSig1, const CSignature* pSig2){
+bool compare_stem_count_2(const CSignature* pSig1, const CSignature* pSig2){
     return pSig1->get_number_of_stems() > pSig2->get_number_of_stems();
 }
 //--------------------------------------------------------------------------//
-const  bool compare_robustness(const CSignature* pSig1, const CSignature* pSig2)
+ bool compare_robustness(const CSignature* pSig1, const CSignature* pSig2)
 {
  return  pSig1->get_robustness() > pSig2->get_robustness();
 }
@@ -237,9 +237,9 @@ void lxa_graphics_scene::assign_lattice_positions_to_signatures(CSignatureCollec
     double      entropy_threshold   = lexicon->get_entropy_threshold_for_positive_signatures();
     int         max_size            = 0;
     int         sig_size;
-    int         MAXIMUM_NUMBER_OF_CONTAINMENT_EDGES = 2;
+    //int         MAXIMUM_NUMBER_OF_CONTAINMENT_EDGES = 2;
     int         MINIMUM_NUMBER_OF_STEMS = 2;
-    CSignature * pSig, *qSig;
+    CSignature * pSig;//, *qSig;
 
     clear_all();
 
@@ -378,9 +378,9 @@ int convert_count_to_radius(int count)
 //--------------------------------------------------------------------------//
 void    lxa_graphics_scene::re_place_signatures()
 {
-    int border          = 100;
+    //int border          = 100;
     int number_of_rows  = m_graphic_signature_lattice.size();
-    graphic_signature2 * p_graph_sig;
+    //graphic_signature2 * p_graph_sig;
     for (int row = 2; row < number_of_rows; row++){
 
         for (int col = 0; col < m_graphic_signature_lattice[row]->size(); col++  ){
@@ -400,7 +400,7 @@ void    lxa_graphics_scene::re_place_signatures()
 void lxa_graphics_scene::create_and_place_signatures()
 {
     m_signature_radius  = 30;
-    int radius;
+    //int radius;
     int number_of_rows = m_graphic_signature_lattice.size();
 
     if (m_graphic_signature_lattice.size() > 0){
@@ -584,6 +584,9 @@ void lxa_graphics_scene::update_signature_focus()
         case GS_one_focus_signature_some_satellites_others_grayed:{
 
         }
+    default:{
+
+    }
     }
 }
 
@@ -601,10 +604,15 @@ eGraphicsStatus lxa_graphics_scene::change_graphics_status(){
         case GS_one_focus_signature_some_satellites_others_grayed:{
             m_graphics_status =GS_no_focus;
         }
+        default:{
+            m_graphics_status = GS_default;
+        }
     }
+    return m_graphics_status;
 }
 
 //--------------------------------------------------------------------------//
+// not currently used;
 void lxa_graphics_scene::place_containment_edges(){
     QPair<CSignature*, CSignature*> * pPair;
     QPair<int,int>* row_and_col_1, * row_and_col_2;
@@ -804,8 +812,9 @@ void lxa_graphics_scene::make_debug_report()
 }
 
 QColor random_color(){
-QColor colours[10] = {QColor("cyan"), QColor("magenta"), QColor("red"),
+QColor colors[10] = {QColor("cyan"), QColor("magenta"), QColor("red"),
                       QColor("darkRed"), QColor("darkCyan"), QColor("darkMagenta"),
                       QColor("green"), QColor("darkGreen"), QColor("yellow"),
                       QColor("blue")};
+return colors[0];
 }

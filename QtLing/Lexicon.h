@@ -204,7 +204,7 @@ public:
     void Crab_1();
     void Crab_2();
     void CreateStemAffixPairs();
-    void create_temporary_map_from_stems_to_affix_sets(map_sigstring_to_morph_set   &, map_sigstring_to_stem_list &);
+    void create_temporary_map_from_stems_to_affix_sets(map_sigstring_to_morph_set   &); //map_sigstring_to_stem_list &);
     void create_sublexicon ();
     void find_full_signatures();
     void FindGoodSignaturesInsideParaSignatures();

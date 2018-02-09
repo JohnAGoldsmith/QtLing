@@ -37,8 +37,8 @@ protected:
 public:
     graphic_signature2  ();
     graphic_signature2  (CSignature* );
-    graphic_signature2   (CSignature*,   QColor, bool focus_flag = false);
-    virtual QPointF             get_center() {};
+    graphic_signature2   (CSignature*,   QColor, bool);
+    virtual QPointF     get_center() {return QPointF();};
     QRectF              boundingRect() const
     {
         return QRectF(0,0,130,150);
@@ -46,8 +46,8 @@ public:
     sigstring_t         get_key()       {return m_signature->get_key();}
     CSignature*         get_signature() {return m_signature;}
     void                set_color(Qt::GlobalColor);
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-               QWidget *widget)
+    void paint(QPainter, const QStyleOptionGraphicsItem *,
+               QWidget )
     {
     }
 };

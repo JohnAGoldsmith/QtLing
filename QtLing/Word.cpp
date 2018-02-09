@@ -1,6 +1,6 @@
 #include "Word.h"
 #include <QDebug>
-CWord::CWord(QString word) : m_WordCount(0), m_Word(word)
+CWord::CWord(QString word) :  m_Word(word), m_WordCount(0)
 {
     m_Signatures.clear();
 }
