@@ -199,6 +199,7 @@ public:
 public:
     // insert functions here
     void AssignSuffixesToStems();
+    void clear_lexicon();
     void compare_opposite_sets_of_signatures(QSet<CSignature*>* sig_set_1, QSet<CSignature*>* sig_set_2,QString letter);
     void compute_sig_graph_edge_map();
     void Crab_1();

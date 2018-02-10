@@ -68,6 +68,8 @@ void LxaStandardItemModel::load_words(CWordCollection* p_words)
     {   word_iter.next();
         CWord* pWord = word_iter.value();
         word_t this_word = word_iter.key();
+        qDebug() << 69 << this_word;
+
         QList<QStandardItem*> item_list;
 
         QStandardItem* pItem = new QStandardItem(this_word);
@@ -78,7 +80,7 @@ void LxaStandardItemModel::load_words(CWordCollection* p_words)
 
         QListIterator<Parse_triple*> parse_3_iter(*pWord->get_parse_triples());
         while (parse_3_iter.hasNext()){
-            QStandardItem* pItem3 = new QStandardItem(parse_3_iter.next()->p_signature->get_key()) ;
+            QStandardItem* pItem3 = new QStandardItem(parse_3_iter.next()->p_sig_string) ;
             item_list.append(pItem3);
         }
         appendRow(item_list);

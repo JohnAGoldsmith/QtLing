@@ -472,6 +472,7 @@ void MainWindow::read_dx1_file()
             line = line.simplified(); // get rid of extra spaces
             QStringList words = line.split(" ");
             QString word = words[0];
+            word = word.toLower();
             CWord* pWord = *Words <<  word;
             if (words.size()> 1) {
                 pWord->SetWordCount(words[1].toInt());

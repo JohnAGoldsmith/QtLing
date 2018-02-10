@@ -21,9 +21,11 @@ typedef  QPair<CStem*,CSignature*>* ptr_to_stem_sig_pair;
 struct Parse_triple {
     QString         p_stem;
     QString         p_suffix;
-    CSignature*     p_signature;
+    CSignature*     p_signature; // we will get rid of this, since it can be a hanging pointer when the lexicon changes.
+    QString         p_sig_string;
 
-    Parse_triple(QString stem, QString suffix, CSignature*  pSig){p_stem = stem; p_suffix = suffix; p_signature=pSig;}
+    Parse_triple(QString stem, QString suffix, CSignature*  pSig, QString sig_string)
+        {p_stem = stem; p_suffix = suffix; p_signature=pSig; p_sig_string =sig_string;}
 };
 
 

@@ -199,8 +199,10 @@ double CSignature::calculate_stem_entropy()
     CStem* pStem;
     QChar  letter;
     double entropy =0.0;
+    //qDebug() << 202 << get_key();
     foreach (pStem, *m_Stems){
         stem_t this_stem = pStem->get_key();
+        //qDebug() << this_stem;
         m_SuffixFlag?
             letter = this_stem.at(this_stem.length()-1):
             letter = this_stem.at(0);
@@ -224,7 +226,7 @@ double CSignature::calculate_stem_entropy()
         entropy += -1.0 * freq * log_base_2 (freq);
     }
     m_stem_entropy = entropy;
-    //qDebug() << "Stem entropy of signature"<<entropy << 195;
+   // qDebug() << "Stem entropy of signature"<<entropy << 195;
     return entropy;
 }
 

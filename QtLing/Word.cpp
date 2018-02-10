@@ -29,7 +29,7 @@ void CWord::add_to_autobiography(QString line)
 }
  void CWord::add_parse_triple(QString stem, QString affix, CSignature* pSig)
 {
-    Parse_triple * this_triple = new Parse_triple(stem, affix, pSig);
+    Parse_triple * this_triple = new Parse_triple(stem, affix, pSig, pSig->get_key());
     m_Parse_triples.append(this_triple);
 
 }

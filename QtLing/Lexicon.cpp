@@ -77,6 +77,34 @@ CLexicon::~CLexicon()
     delete m_PassiveSignatures;
 }
 
+void CLexicon::clear_lexicon(){
+    delete m_Signatures;
+    m_Signatures = new CSignatureCollection(this, true);
+    delete m_PrefixSignatures;
+    m_PrefixSignatures = new CSignatureCollection(this, false);
+    delete m_prefixal_stems;
+    m_prefixal_stems = new CStemCollection(this);
+    delete m_suffixal_stems;
+    m_suffixal_stems = new CStemCollection(this);
+    delete m_Suffixes;
+    m_Suffixes = new CSuffixCollection(this);
+    delete m_Prefixes;
+    m_Prefixes = new CPrefixCollection(this);
+    delete m_ParaSignatures;
+    m_ParaSignatures = new CSignatureCollection(this, true);
+    delete m_ParaSuffixes;
+    m_ParaSuffixes = new CSuffixCollection(this);
+    delete m_ResidualStems;
+    m_ResidualStems = new CStemCollection(this);
+    delete m_PassiveSignatures;
+    m_PassiveSignatures = new CSignatureCollection(this);
+    delete m_Hypotheses;
+    m_Hypotheses = new QList<CHypothesis*>;
+
+
+
+
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //linguistic methods
@@ -108,7 +136,7 @@ void CLexicon::Crab_1()
 
     AssignSuffixesToStems();
 
-    //find_full_signatures();
+    find_full_signatures();
 
     collect_parasuffixes();
 
@@ -291,6 +319,12 @@ void   CLexicon::AssignSuffixesToStems()
     m_ProgressBar->setMinimum(0);
     m_ProgressBar->setMaximum(m_Parses->size());
     m_StatusBar->showMessage("Form signatures: 1. temporary stems and affixes.");
+
+    clear_lexicon();
+
+    //delete m_PrefixSignatures;
+    //m_PrefixSignatures = new CSignatureCollection(this, m_SuffixesFlag);
+
     //--> We establish a temporary map from stems to sets of affixes as we iterate through parses. <--//
     for (int parseno = 0; parseno < m_Parses->size(); parseno++){
         m_ProgressBar->setValue(parseno);
@@ -408,7 +442,7 @@ void   CLexicon::AssignSuffixesToStems()
                     }
                     CWord* pWord = m_Words->get_word(this_word);
                     if (!pWord){
-                        qDebug() << "Error: this_word not found among words.";
+                        qDebug() << this_word <<  "Error: this_word not found among words.";
                     } else{
                         pWord->add_parse_triple(this_stem_t, this_affix, pSig);
                         QString message = this_signature_string;
@@ -492,11 +526,18 @@ void CLexicon::find_full_signatures()
     QMapIterator<sigstring_t,CSignature*> * sig_iter = new QMapIterator<sigstring_t,CSignature*> (* signatures->get_map() );
     while (sig_iter->hasNext()){
         pSig = sig_iter->next().value();
+        //qDebug() << 495 << pSig->get_key() << pSig->get_stem_entropy();
+        //qDebug() << pSig->display();
+        //if (pSig->display() == "k=v") {
+        //    qDebug() << 496 << pSig->display() << pSig->get_stem_entropy();
+        // }
         if (pSig->get_stem_entropy() > 0){
             continue;
         }
-
-        letter = pSig->get_stems()->at(0)->get_key().right(1);
+        m_SuffixesFlag?
+               letter = pSig->get_stems()->at(0)->get_key().right(1):
+               letter = pSig->get_stems()->at(0)->get_key().left(1);
+        stem_list.clear();
         pSig->get_stem_strings(stem_list);
         remove_final_letter(stem_list, m_SuffixesFlag);
         pSig->get_string_list(affix_list);
@@ -504,13 +545,19 @@ void CLexicon::find_full_signatures()
 
         for (int i = 0; i < stem_list.size(); i++){
             stem = stem_list.at(i);
+            //qDebug() << 508 << stem;
             for (int affno = 0; affno < affix_list.size(); affno++){
                 affix = affix_list.at(affno);
                 if (m_SuffixesFlag){
                     m_Parses->append(QPair<QString, QString> (stem,affix));
-                    qDebug() << 534 << stem << " "<< affix ;
+                    //qDebug() << 534 << stem << " "<< affix ;
                 } else{
-                    m_Parses->append(QPair<QString, QString> (stem,affix));
+                    //qDebug() << affix <<  stem << 521;
+                    m_Parses->append(QPair<QString, QString> (affix ,stem));
+                    if (stem.length() == 0 ){
+                        //qDebug() << 523 << "null stem"   ;
+                    }
+
                 }
             }
             //stem_set.append(QString(pSig->get_stems()->at(i)->get_key()));
@@ -520,7 +567,7 @@ void CLexicon::find_full_signatures()
     }
 
 
-
+    AssignSuffixesToStems();
 }
 
 
