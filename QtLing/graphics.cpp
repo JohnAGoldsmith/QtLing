@@ -258,6 +258,9 @@ void lxa_graphics_scene::assign_lattice_positions_to_signatures(CSignatureCollec
         int this_size = pSig->get_number_of_affixes();
         if (this_size > max_size){ max_size = this_size;}
     }
+    if (max_size > 9){
+        m_column_delta += 300;
+    }
     //  --> Initialize a list of signatures for each "row" (of equal number of affixes)   <-- //
     m_insertion_point_in_signature_lattice.resize(max_size + 1);
     m_insertion_point_in_signature_lattice.fill(0);
@@ -378,14 +381,11 @@ int convert_count_to_radius(int count)
 //--------------------------------------------------------------------------//
 void    lxa_graphics_scene::re_place_signatures()
 {
-    //int border          = 100;
     int number_of_rows  = m_graphic_signature_lattice.size();
-    //graphic_signature2 * p_graph_sig;
     for (int row = 2; row < number_of_rows; row++){
 
         for (int col = 0; col < m_graphic_signature_lattice[row]->size(); col++  ){
             graphic_signature2* this_graphic_signature = m_graphic_signature_lattice.at(row)->at(col);
-            //int x = border + col * m_column_delta;
             int x = m_calculate_column_in_scene_pos_coord(col);
             int y = m_location_of_bottom_row - (row-2) * m_row_delta;
             this_graphic_signature -> setPos(x,y);

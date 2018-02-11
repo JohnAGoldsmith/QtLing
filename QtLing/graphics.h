@@ -41,7 +41,7 @@ public:
     virtual QPointF     get_center() {return QPointF();};
     QRectF              boundingRect() const
     {
-        return QRectF(0,0,130,150);
+        return QRectF(0,0,130,160);
     }
     sigstring_t         get_key()       {return m_signature->get_key();}
     CSignature*         get_signature() {return m_signature;}
@@ -60,7 +60,7 @@ public:
     void paint ();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget);
-    void set_text(sigstring_t this_sigstring);
+    void set_text(sigstring_t this_sigstring, int stem_count);
     QPointF get_center();
 
 };
@@ -75,7 +75,7 @@ public:
     QPointF             get_center();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget);
-    void set_text(sigstring_t this_sigstring);
+    void set_text(sigstring_t this_sigstring, int stem_count);
 
 };
 //--------------------->       <-----------------------------//
@@ -91,7 +91,7 @@ public:
                QWidget *widget);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget,QColor);
-    void set_text(sigstring_t this_sigstring);
+    void set_text(sigstring_t this_sigstring, int stem_count);
 };
 //--------------------->       <-----------------------------//
 class pentagon2 : public graphic_signature2
@@ -103,7 +103,7 @@ public:
     QPointF             get_center();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget);
-    void set_text(sigstring_t this_sigstring);
+    void set_text(sigstring_t this_sigstring, int stem_count);
 };
 //--------------------->       <-----------------------------//
 class hexagon2 : public graphic_signature2
@@ -115,7 +115,7 @@ public:
     QPointF             get_center();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget);
-    void set_text(sigstring_t this_sigstring);
+    void set_text(sigstring_t this_sigstring, int stem_count);
 };
 //--------------------->       <-----------------------------//
 class septagon2 : public graphic_signature2
@@ -127,7 +127,7 @@ public:
     QPointF             get_center();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget);
-    void set_text(sigstring_t this_sigstring);
+    void set_text(sigstring_t this_sigstring, int stem_count);
 };
 //--------------------->       <-----------------------------//
 class octagon2 : public graphic_signature2
@@ -139,7 +139,7 @@ public:
     QPointF             get_center();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget);
-    void set_text(sigstring_t this_sigstring);
+    void set_text(sigstring_t this_sigstring, int stem_count);
 };
 //--------------------->       <-----------------------------//
 class nonagon2 : public graphic_signature2
@@ -151,7 +151,7 @@ public:
     QPointF             get_center();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget);
-    void set_text(sigstring_t this_sigstring);
+    void set_text(sigstring_t this_sigstring, int stem_count);
 };
 
 //--------------------->       <-----------------------------//
@@ -164,7 +164,7 @@ public:
     QPointF             get_center();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget);
-    void set_text(sigstring_t this_sigstring);
+    void set_text(sigstring_t this_sigstring, int stem_count);
 };
 //--------------------->       <-----------------------------//
 class elevenagon2 : public graphic_signature2
@@ -176,7 +176,7 @@ public:
     QPointF             get_center();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget);
-    void set_text(sigstring_t this_sigstring);
+    void set_text(sigstring_t this_sigstring, int stem_count);
 };
 //--------------------->       <-----------------------------//
 class twelvagon2 : public graphic_signature2
@@ -188,7 +188,7 @@ public:
     QPointF             get_center();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget);
-    void set_text(sigstring_t this_sigstring);
+    void set_text(sigstring_t this_sigstring, int stem_count);
 };
 //--------------------->       <-----------------------------//
 //--------------------->       <-----------------------------//
@@ -201,7 +201,7 @@ public:
     QPointF             get_center();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget);
-    void set_text(sigstring_t this_sigstring);
+    void set_text(sigstring_t this_sigstring, int stem_count);
 };
 
 //--------------------->       <-----------------------------//
@@ -215,7 +215,7 @@ public:
     QPointF             get_center();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget);
-    void set_text(sigstring_t this_sigstring);
+    void set_text(sigstring_t this_sigstring, int stem_count);
 };
 //--------------------->       <-----------------------------//
 class fifteenagon : public graphic_signature2
@@ -227,7 +227,7 @@ public:
     QPointF             get_center();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget);
-    void set_text(sigstring_t this_sigstring);
+    void set_text(sigstring_t this_sigstring, int stem_count);
 };
 
 //--------------------->       <-----------------------------//

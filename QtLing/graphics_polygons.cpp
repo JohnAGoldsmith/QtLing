@@ -10,7 +10,7 @@ class CSignature;
 
 
 bar::bar(CSignature* pSig): graphic_signature2(  pSig){
-         set_text(pSig->get_key());
+         set_text(pSig->get_key(), pSig->get_number_of_stems());
 };
 bar::~bar()
 {
@@ -20,7 +20,7 @@ bar::~bar()
 //-----------------------------------------------------------//
 
 triangle2::triangle2(CSignature* pSig): graphic_signature2(  pSig){
-         set_text(pSig->get_key());
+         set_text(pSig->get_key(), pSig->get_number_of_stems());
 };
 triangle2::~triangle2()
 {
@@ -29,7 +29,7 @@ triangle2::~triangle2()
 //-----------------------------------------------------------//
 
 square2::square2(CSignature* pSig): graphic_signature2(pSig){
-         set_text(pSig->get_key());
+         set_text(pSig->get_key(), pSig->get_number_of_stems());
 };
 square2::~square2()
 {
@@ -37,7 +37,7 @@ square2::~square2()
 }
 //-----------------------------------------------------------//
 pentagon2::pentagon2(CSignature* pSig): graphic_signature2(pSig){
-         set_text(pSig->get_key());
+         set_text(pSig->get_key(), pSig->get_number_of_stems());
 };
 pentagon2::~pentagon2()
 {
@@ -45,7 +45,7 @@ pentagon2::~pentagon2()
 }
 //-----------------------------------------------------------//
 hexagon2::hexagon2(CSignature* pSig): graphic_signature2(pSig){
-         set_text(pSig->get_key());
+         set_text(pSig->get_key(), pSig->get_number_of_stems());
 };
 hexagon2::~hexagon2()
 {
@@ -53,7 +53,7 @@ hexagon2::~hexagon2()
 }
 //-----------------------------------------------------------//
 septagon2::septagon2(CSignature* pSig): graphic_signature2(pSig){
-         set_text(pSig->get_key());
+         set_text(pSig->get_key(), pSig->get_number_of_stems());
 };
 septagon2::~septagon2()
 {
@@ -61,7 +61,7 @@ septagon2::~septagon2()
 }
 //-----------------------------------------------------------//
 octagon2::octagon2(CSignature* pSig): graphic_signature2(pSig){
-         set_text(pSig->get_key());
+         set_text(pSig->get_key(), pSig->get_number_of_stems());
 };
 octagon2::~octagon2()
 {
@@ -69,7 +69,7 @@ octagon2::~octagon2()
 }
 //-----------------------------------------------------------//
 nonagon2::nonagon2(CSignature* pSig): graphic_signature2(pSig){
-         set_text(pSig->get_key());
+         set_text(pSig->get_key(), pSig->get_number_of_stems());
 };
 nonagon2::~nonagon2()
 {
@@ -77,7 +77,7 @@ nonagon2::~nonagon2()
 }
 //-----------------------------------------------------------//
 decagon2::decagon2(CSignature* pSig): graphic_signature2(pSig){
-         set_text(pSig->get_key());
+         set_text(pSig->get_key(), pSig->get_number_of_stems());
 };
 decagon2::~decagon2()
 {
@@ -85,7 +85,7 @@ decagon2::~decagon2()
 }
 //-----------------------------------------------------------//
 elevenagon2::elevenagon2(CSignature* pSig): graphic_signature2(pSig){
-         set_text(pSig->get_key());
+         set_text(pSig->get_key(), pSig->get_number_of_stems());
 };
 elevenagon2::~elevenagon2()
 {
@@ -93,7 +93,7 @@ elevenagon2::~elevenagon2()
 }
 //-----------------------------------------------------------//
 twelvagon2::twelvagon2(CSignature* pSig): graphic_signature2(pSig){
-         set_text(pSig->get_key());
+         set_text(pSig->get_key(), pSig->get_number_of_stems());
 };
 twelvagon2::~twelvagon2()
 {
@@ -101,7 +101,7 @@ twelvagon2::~twelvagon2()
 }
 //-----------------------------------------------------------//
 fourteenagon::fourteenagon(CSignature* pSig): graphic_signature2(pSig){
-         set_text(pSig->get_key());
+         set_text(pSig->get_key(), pSig->get_number_of_stems());
 };
 fourteenagon::~fourteenagon()
 {
@@ -109,7 +109,7 @@ fourteenagon::~fourteenagon()
 }
 //-----------------------------------------------------------//
 fifteenagon::fifteenagon(CSignature* pSig): graphic_signature2(pSig){
-         set_text(pSig->get_key());
+         set_text(pSig->get_key(), pSig->get_number_of_stems());
 };
 fifteenagon::~fifteenagon()
 {
@@ -131,7 +131,7 @@ void bar::paint(QPainter *painter, const QStyleOptionGraphicsItem * , QWidget*)
     };
     painter->drawPolygon(points,4);
 }
-void bar::set_text(sigstring_t this_sigstring){
+void bar::set_text(sigstring_t this_sigstring, int stem_count){
     QList<QRectF*> br_list;
     QList<QGraphicsSimpleTextItem*> text_item_list;
     QStringList affixes = this_sigstring.split("=");
@@ -143,8 +143,14 @@ void bar::set_text(sigstring_t this_sigstring){
         text_item_list[i]->setFont( serifFont );
         br_list.append(new QRectF(text_item_list[i]->sceneBoundingRect()));
     }
+    text_item_list.append(new QGraphicsSimpleTextItem(this));
+    text_item_list[2]->setText(QString::number(stem_count));
+    text_item_list[2]->setFont(serifFont);
+    br_list.append(new QRectF(text_item_list[2]->sceneBoundingRect()));
+
     text_item_list[0]->setPos( 15 - br_list[0]->width()   , 10 - br_list[0]->height()/2   );
     text_item_list[1]->setPos( 65                         , 10 - br_list[1]->height()/2  );
+    text_item_list[2]->setPos( 40 -br_list[2]->width()/2.0    , 20  );
 }
 QPointF bar::get_center(){
     QPointF this_point = pos();
@@ -165,7 +171,7 @@ void triangle2::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidg
     };
     painter->drawPolygon(points,3);
 }
-void triangle2::set_text(sigstring_t this_sigstring){
+void triangle2::set_text(sigstring_t this_sigstring, int stem_count){
     QList<QRectF*> br_list;
     QList<QGraphicsSimpleTextItem*> text_item_list;
     QStringList affixes = this_sigstring.split("=");
@@ -177,9 +183,16 @@ void triangle2::set_text(sigstring_t this_sigstring){
         text_item_list[i]->setFont( serifFont );
         br_list.append(new QRectF(text_item_list[i]->sceneBoundingRect()));
     }
+    text_item_list.append(new QGraphicsSimpleTextItem(this));
+    text_item_list[3]->setText(QString::number(stem_count));
+    text_item_list[3]->setFont(serifFont);
+    br_list.append(new QRectF(text_item_list[3]->sceneBoundingRect()));
+
     text_item_list[2]->setPos( 3 - br_list[2]->width()   ,  60 -  br_list[2]->height()/2      );
     text_item_list[0]->setPos( 35 - br_list[0]->width()/2   , 0 -  br_list[0]->height()/2 );
     text_item_list[1]->setPos( 57                         ,  60 -  br_list[1]->height()/2  );
+    text_item_list[3]->setPos( 30 -br_list[3]->width()/2.0    , 65  );
+
 }
 QPointF triangle2::get_center(){
     QPointF this_point = pos();
@@ -206,7 +219,7 @@ void square2::paint(QPainter *painter, const QStyleOptionGraphicsItem * ,QWidget
     painter->drawPolygon(points,4);
 
 }
-void square2::set_text(sigstring_t this_sigstring){
+void square2::set_text(sigstring_t this_sigstring, int stem_count){
     QList<QRectF*> br_list;
     QList<QGraphicsSimpleTextItem*> text_item_list;
     QStringList affixes = this_sigstring.split("=");
@@ -218,10 +231,16 @@ void square2::set_text(sigstring_t this_sigstring){
         text_item_list[i]->setText( affixes[i] );
         br_list.append(new QRectF(text_item_list[i]->sceneBoundingRect()));
     }
+    text_item_list.append(new QGraphicsSimpleTextItem(this));
+    text_item_list[4]->setText(QString::number(stem_count));
+    text_item_list[4]->setFont(serifFont);
+    br_list.append(new QRectF(text_item_list[4]->sceneBoundingRect()));
+
     text_item_list[0]->setPos( 10 - br_list[0]->width(), 0  - br_list[0]->height()/2 );
     text_item_list[1]->setPos( 70                      , 0  - br_list[1]->height()/2 );
     text_item_list[2]->setPos( 70                      , 50 - br_list[2]->height()/2 );
     text_item_list[3]->setPos( 10 - br_list[3]->width(), 50 - br_list[3]->height()/2 );
+    text_item_list[4]->setPos( 40 -br_list[4]->width()/2.0    , 55  );
 
 }
 QPointF square2::get_center(){
@@ -248,7 +267,7 @@ void pentagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidg
     painter->drawPolygon(points,5);
 }
 
-void pentagon2::set_text(sigstring_t this_sigstring){
+void pentagon2::set_text(sigstring_t this_sigstring, int stem_count){
     QList<QRectF*> br_list;
     QList<QGraphicsSimpleTextItem*> text_item_list;
     QStringList affixes = this_sigstring.split("=");
@@ -260,11 +279,18 @@ void pentagon2::set_text(sigstring_t this_sigstring){
         text_item_list[i]->setFont( serifFont );
         br_list.append(new QRectF(text_item_list[i]->sceneBoundingRect()));
     }
+        text_item_list.append(new QGraphicsSimpleTextItem(this));
+        text_item_list[5]->setText(QString::number(stem_count));
+        text_item_list[5]->setFont(serifFont);
+        br_list.append(new QRectF(text_item_list[5]->sceneBoundingRect()));
+
     text_item_list[0]->setPos( 43 - br_list[0]->width()/2  , 10 - br_list[0]->height()       );
     text_item_list[4]->setPos( 5 - br_list[4]->width()  , 28 - br_list[1]->height()/2 );
     text_item_list[3]->setPos( 10 - br_list[3]->width()  , 64 - br_list[3]->height()/2  );
     text_item_list[2]->setPos(  62                        , 64 - br_list[2]->height()/2 );
     text_item_list[1]->setPos(  72                        ,  31 - br_list[1]->height()/2 );
+    text_item_list[5]->setPos( 40 -br_list[5]->width()/2.0    , 64  );
+
 }
 QPointF pentagon2::get_center(){
     QPointF this_point = pos();
@@ -292,7 +318,7 @@ void hexagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *,  QWidg
     painter->drawPolygon(points_2,3);
 }
 
-void hexagon2::set_text(sigstring_t this_sigstring){
+void hexagon2::set_text(sigstring_t this_sigstring, int stem_count){
     QList<QRectF*> br_list;
     QList<QGraphicsSimpleTextItem*> text_item_list;
     QStringList affixes = this_sigstring.split("=");
@@ -304,13 +330,18 @@ void hexagon2::set_text(sigstring_t this_sigstring){
         text_item_list[i]->setText( affixes[i] );
         br_list.append(new QRectF(text_item_list[i]->sceneBoundingRect()));
     }
+    text_item_list.append(new QGraphicsSimpleTextItem(this));
+    text_item_list[6]->setText(QString::number(stem_count));
+    text_item_list[6]->setFont(serifFont);
+    br_list.append(new QRectF(text_item_list[6]->sceneBoundingRect()));
+
     text_item_list[0]->setPos(  32 - br_list[0]->width()/2   , 0      );
     text_item_list[1]->setPos(  60                           , 40  );
     text_item_list[2]->setPos(  60                           , 60   );
-    text_item_list[3]->setPos(  35 - br_list[3]->width()/2   , 85   );
+    text_item_list[3]->setPos(  32 - br_list[3]->width()/2   , 85   );
     text_item_list[4]->setPos(  5  - br_list[4]->width()     , 60   );
-    text_item_list[5]->setPos(  5  - br_list[5]->width()    , 40  );
-
+    text_item_list[5]->setPos(  5  - br_list[5]->width()     , 40  );
+    text_item_list[6]->setPos(  32- br_list[6]->width()/2    , 105  );
 }
 QPointF hexagon2::get_center(){
     QPointF this_point = pos();
@@ -342,7 +373,7 @@ void septagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidg
 }
 
 
-void septagon2::set_text(sigstring_t this_sigstring){
+void septagon2::set_text(sigstring_t this_sigstring, int stem_count){
     QList<QRectF*> br_list;
     QList<QGraphicsSimpleTextItem*> text_item_list;
     QStringList affixes = this_sigstring.split("=");
@@ -354,6 +385,10 @@ void septagon2::set_text(sigstring_t this_sigstring){
         text_item_list[i]->setText( affixes[i] );
         br_list.append(new QRectF(text_item_list[i]->sceneBoundingRect()));
     }
+    text_item_list.append(new QGraphicsSimpleTextItem(this));
+    text_item_list[7]->setText(QString::number(stem_count));
+    text_item_list[7]->setFont(serifFont);
+    br_list.append(new QRectF(text_item_list[7]->sceneBoundingRect()));
 
     text_item_list[0]->setPos( 20 - br_list[0]->width()/2 , 10 - br_list[0]->height()/2  );
     text_item_list[1]->setPos( 50                         , 45 - br_list[1]->height()/2  );
@@ -362,7 +397,7 @@ void septagon2::set_text(sigstring_t this_sigstring){
     text_item_list[4]->setPos( -5 - br_list[4]->width()   , 90 -  br_list[4]->height()/2 );
     text_item_list[5]->setPos( -5 - br_list[5]->width()   , 70 -  br_list[5]->height()/2 );
     text_item_list[6]->setPos( -5 - br_list[6]->width()   , 45 -  br_list[6]->height()/2 );
-
+    text_item_list[7]->setPos( 20 -br_list[7]->width()/2.0    , 100  );
 
 }
 QPointF septagon2::get_center(){
@@ -395,7 +430,7 @@ void octagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
     painter->drawPolygon(points_2,4);
 
 }
-void octagon2::set_text(sigstring_t this_sigstring){
+void octagon2::set_text(sigstring_t this_sigstring, int stem_count){
     QList<QRectF*> br_list;
     QList<QGraphicsSimpleTextItem*> text_item_list;
     QStringList affixes = this_sigstring.split("=");
@@ -407,15 +442,20 @@ void octagon2::set_text(sigstring_t this_sigstring){
         text_item_list[i]->setText( affixes[i] );
         br_list.append(new QRectF(text_item_list[i]->sceneBoundingRect()));
     }
-    text_item_list[0]->setPos( 10 - br_list[0]->width()  , 20 - br_list[0]->height()/2 );
-    text_item_list[1]->setPos(  70                        , 20 - br_list[1]->height()/2  );
-    text_item_list[2]->setPos(  70                        ,  60 - br_list[2]->height()/2 );
-    text_item_list[3]->setPos(  70                        ,  80 - br_list[3]->height()/2  );
-    text_item_list[4]->setPos(  70                        ,  120 - br_list[4]->height()/2 );
-    text_item_list[5]->setPos( 10 - br_list[5]->width()  ,  120 - br_list[5]->height()/2 );
+    text_item_list.append(new QGraphicsSimpleTextItem(this));
+    text_item_list[8]->setText(QString::number(stem_count));
+    text_item_list[8]->setFont(serifFont);
+    br_list.append(new QRectF(text_item_list[8]->sceneBoundingRect()));
+
+    text_item_list[0]->setPos( 10 - br_list[0]->width()  , 30 - br_list[0]->height()/2 );
+    text_item_list[1]->setPos(  70                       , 30 - br_list[1]->height()/2  );
+    text_item_list[2]->setPos(  70                       , 60 - br_list[2]->height()/2 );
+    text_item_list[3]->setPos(  70                       , 80 - br_list[3]->height()/2  );
+    text_item_list[4]->setPos(  70                       , 120 - br_list[4]->height()/2 );
+    text_item_list[5]->setPos( 10 - br_list[5]->width()  , 120 - br_list[5]->height()/2 );
     text_item_list[6]->setPos( 10 - br_list[6]->width()  ,  80 - br_list[6]->height()/2 );
     text_item_list[7]->setPos( 10 - br_list[7]->width()  ,  60 - br_list[7]->height()/2 );
-
+    text_item_list[8]->setPos( 40 -br_list[8]->width()/2.0, 125  );
 
 
 }
@@ -435,7 +475,7 @@ void nonagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
     painter->setBrush(brush);
     painter->setPen(pen);
     int x = 60;
-    int y = 0;
+    int y = 10;
     static const QPointF points[3] = {
         QPointF(x + 0 , y + 30),
         QPointF(x + 40, y + 30),
@@ -443,14 +483,14 @@ void nonagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
     };
     painter->drawPolygon(points,3);
     x = 0;
-    y = 90;
+    y = 100;
     static const QPointF points_2[3] = {
         QPointF(x + 0 , y + 30),
         QPointF(x + 40, y + 30),
         QPointF(x + 20, y - 10)
     };
     painter->drawPolygon(points_2,3);
-    x = 120;
+    x = 130;
     static const QPointF points_3[3] = {
         QPointF(x + 0 , y + 30),
         QPointF(x + 40, y + 30),
@@ -459,7 +499,7 @@ void nonagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
     painter->drawPolygon(points_3,3);
 
 }
-void nonagon2::set_text(sigstring_t this_sigstring){
+void nonagon2::set_text(sigstring_t this_sigstring, int stem_count){
 
     QList<QRectF*> br_list;
     QList<QGraphicsSimpleTextItem*> text_item_list;
@@ -472,24 +512,30 @@ void nonagon2::set_text(sigstring_t this_sigstring){
         text_item_list[i]->setText( affixes[i] );
         br_list.append(new QRectF(text_item_list[i]->sceneBoundingRect()));
     }
+    text_item_list.append(new QGraphicsSimpleTextItem(this));
+    text_item_list[9]->setText(QString::number(stem_count));
+    text_item_list[9]->setFont(serifFont);
+    br_list.append(new QRectF(text_item_list[9]->sceneBoundingRect()));
+
     int x = 60;
-    int y = 0;
-    text_item_list[0]->setPos(x + 20 - br_list[0]->width()/2, y - 30 -  br_list[0]->height()/2 );
-    text_item_list[1]->setPos(x + 47                      , y + 30 -  br_list[1]->height()/2 );
-    text_item_list[2]->setPos(x -  7 - br_list[2]->width(), y + 30 -  br_list[2]->height()/2 );
+    int y = 10;
+    text_item_list[0]->setPos(x + 20 - br_list[0]->width()/2  , y - 30 -  br_list[0]->height()/2 );
+    text_item_list[1]->setPos(x + 47                          , y + 30 -  br_list[1]->height()/2 );
+    text_item_list[2]->setPos(x -  7 - br_list[2]->width()    , y + 30 -  br_list[2]->height()/2 );
 
     x = 0;
-    y = 90;
-    text_item_list[3]->setPos(x + 20 - br_list[3]->width()/2, y - 30 -  br_list[3]->height()/2 );
-    text_item_list[4]->setPos(x + 47                        , y + 30 -  br_list[4]->height()/2 );
-    text_item_list[5]->setPos(x -  7 - br_list[5]->width()  , y + 30 -  br_list[5]->height()/2 );
+    y = 100;
+    text_item_list[3]->setPos(x + 20 - br_list[3]->width()/2  , y - 30 -  br_list[3]->height()/2 );
+    text_item_list[4]->setPos(x + 47                          , y + 30 -  br_list[4]->height()/2 );
+    text_item_list[5]->setPos(x -  7 - br_list[5]->width()    , y + 30 -  br_list[5]->height()/2 );
 
     x = 120;
-    y = 90;
-    text_item_list[6]->setPos(x + 20 - br_list[6]->width()/2, y - 30 -  br_list[6]->height()/2 );
-    text_item_list[7]->setPos(x + 47                      , y + 30 -  br_list[7]->height()/2 );
-    text_item_list[8]->setPos(x -  7 - br_list[8]->width(), y + 30 -  br_list[8]->height()/2 );
+    y = 100;
+    text_item_list[6]->setPos(x + 20 - br_list[6]->width()/2  , y - 30 -  br_list[6]->height()/2 );
+    text_item_list[7]->setPos(x + 47                          , y + 30 -  br_list[7]->height()/2 );
+    text_item_list[8]->setPos(x -  7 - br_list[8]->width()    , y + 30 -  br_list[8]->height()/2 );
 
+    text_item_list[9]->setPos(85      -br_list[9]->width()/2.0  , 80  );
 }
 QPointF nonagon2::get_center(){
     QPointF this_point = pos();
@@ -523,7 +569,7 @@ void decagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
     painter->drawPolygon(points2,5);
 }
 
-void decagon2::set_text(sigstring_t this_sigstring){
+void decagon2::set_text(sigstring_t this_sigstring, int stem_count){
     QList<QRectF*> br_list;
     QList<QGraphicsSimpleTextItem*> text_item_list;
     QStringList affixes = this_sigstring.split("=");
@@ -536,6 +582,11 @@ void decagon2::set_text(sigstring_t this_sigstring){
         text_item_list[i]->setFont( serifFont );
         br_list.append(new QRectF(text_item_list[i]->sceneBoundingRect()));
     }
+    text_item_list.append(new QGraphicsSimpleTextItem(this));
+    text_item_list[10]->setText(QString::number(stem_count));
+    text_item_list[10]->setFont(serifFont);
+    br_list.append(new QRectF(text_item_list[10]->sceneBoundingRect()));
+
     text_item_list[0]->setPos( 43 - br_list[0]->width()/2, 10 - br_list[0]->height()   );
     text_item_list[4]->setPos( 5 - br_list[4]->width()   , 28 - br_list[1]->height()/2 );
     text_item_list[3]->setPos( 10 - br_list[3]->width()  , 64 - br_list[3]->height()/2 );
@@ -548,7 +599,7 @@ void decagon2::set_text(sigstring_t this_sigstring){
     text_item_list[7]->setPos( 62                        , 64 + delta - br_list[7]->height()/2 );
     text_item_list[6]->setPos( 72                        , 31 + delta - br_list[6]->height()/2 );
 
-
+    text_item_list[10]->setPos( 40 -br_list[10]->width()/2.0    , 154  );
 }
 QPointF decagon2::get_center(){
     QPointF this_point = pos();
@@ -595,7 +646,7 @@ void elevenagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
 
 };
 
-void elevenagon2::set_text(sigstring_t this_sigstring)
+void elevenagon2::set_text(sigstring_t this_sigstring, int stem_count)
 {
     QList<QRectF*> br_list;
     QList<QGraphicsSimpleTextItem*> text_item_list;
@@ -608,6 +659,11 @@ void elevenagon2::set_text(sigstring_t this_sigstring)
         text_item_list[i]->setText( affixes[i] );
         br_list.append(new QRectF(text_item_list[i]->sceneBoundingRect()));
     }
+    text_item_list.append(new QGraphicsSimpleTextItem(this));
+    text_item_list[11]->setText(QString::number(stem_count));
+    text_item_list[11]->setFont(serifFont);
+    br_list.append(new QRectF(text_item_list[11]->sceneBoundingRect()));
+
     int delta = 40;
     text_item_list[0]->setPos( 40 - br_list[0]->width()/2,-40 - br_list[0]->height()/2 + delta );
     text_item_list[1]->setPos( 70                      ,   0 - br_list[1]->height()/2 + delta );
@@ -620,6 +676,8 @@ void elevenagon2::set_text(sigstring_t this_sigstring)
     text_item_list[8]->setPos( 10 - br_list[8]->width(),  60 - br_list[8]->height()/2 + delta );
     text_item_list[9]->setPos( 10 - br_list[9]->width(),  30 - br_list[9]->height()/2 + delta );
     text_item_list[10]->setPos(10 - br_list[10]->width(),  0 - br_list[10]->height()/2 + delta );
+
+    text_item_list[11]->setPos( 40 -br_list[11]->width()/2.0    , 154  );
 }
 
 QPointF elevenagon2::get_center(){
@@ -669,7 +727,7 @@ void twelvagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
 
 };
 
-void twelvagon2::set_text(sigstring_t this_sigstring)
+void twelvagon2::set_text(sigstring_t this_sigstring, int stem_count)
 {
     QList<QRectF*> br_list;
     QList<QGraphicsSimpleTextItem*> text_item_list;
@@ -682,6 +740,11 @@ void twelvagon2::set_text(sigstring_t this_sigstring)
         text_item_list[i]->setText( affixes[i] );
         br_list.append(new QRectF(text_item_list[i]->sceneBoundingRect()));
     }
+    text_item_list.append(new QGraphicsSimpleTextItem(this));
+    text_item_list[12]->setText(QString::number(stem_count));
+    text_item_list[12]->setFont(serifFont);
+    br_list.append(new QRectF(text_item_list[12]->sceneBoundingRect()));
+
     int delta = 40;
     text_item_list[0]->setPos( 70                      , -15 - br_list[0]->height()/2 + delta );
     text_item_list[1]->setPos( 70                      ,  10 - br_list[1]->height()/2 + delta );
@@ -696,6 +759,7 @@ void twelvagon2::set_text(sigstring_t this_sigstring)
     text_item_list[10]->setPos(10 - br_list[10]->width(), 10 - br_list[10]->height()/2 + delta );
     text_item_list[11]->setPos(10 - br_list[11]->width(),-15- br_list[11]->height()/2 + delta );
 
+    text_item_list[12]->setPos( 40 -br_list[12]->width()/2.0    , 164  );
 
 
     ///////////////////////////
@@ -762,7 +826,7 @@ void thirteenagon::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
 
 };
 
-void thirteenagon::set_text(sigstring_t this_sigstring)
+void thirteenagon::set_text(sigstring_t this_sigstring, int stem_count)
 {
     QList<QRectF*> br_list;
     QList<QGraphicsSimpleTextItem*> text_item_list;
@@ -776,6 +840,11 @@ void thirteenagon::set_text(sigstring_t this_sigstring)
         text_item_list[i]->setText( affixes[i] );
         br_list.append(new QRectF(text_item_list[i]->sceneBoundingRect()));
     }
+    text_item_list.append(new QGraphicsSimpleTextItem(this));
+    text_item_list[13]->setText(QString::number(stem_count));
+    text_item_list[13]->setFont(serifFont);
+    br_list.append(new QRectF(text_item_list[13]->sceneBoundingRect()));
+
     text_item_list[0]->setPos( 43 - br_list[0]->width()/2, 10 - br_list[0]->height()   );
     text_item_list[4]->setPos( 5 - br_list[4]->width()   , 28 - br_list[1]->height()/2 );
     text_item_list[3]->setPos( 10 - br_list[3]->width()  , 64 - br_list[3]->height()/2 );
@@ -798,6 +867,7 @@ void thirteenagon::set_text(sigstring_t this_sigstring)
     text_item_list[11]->setPos(delta_x +  70                       , delta_y - br_list[11]->height()/2 );
     text_item_list[12]->setPos(delta_x +  70                       , delta_y + 30 - br_list[12]->height()/2 );
 
+    text_item_list[13]->setPos( 40 -br_list[13]->width()/2.0    , 175  );
 
     ///////////////////////////
 
@@ -862,7 +932,7 @@ void fourteenagon::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
 
 };
 
-void fourteenagon::set_text(sigstring_t this_sigstring)
+void fourteenagon::set_text(sigstring_t this_sigstring, int stem_count)
 {
     QList<QRectF*> br_list;
     QList<QGraphicsSimpleTextItem*> text_item_list;
@@ -876,6 +946,11 @@ void fourteenagon::set_text(sigstring_t this_sigstring)
         text_item_list[i]->setText( affixes[i] );
         br_list.append(new QRectF(text_item_list[i]->sceneBoundingRect()));
     }
+    text_item_list.append(new QGraphicsSimpleTextItem(this));
+    text_item_list[14]->setText(QString::number(stem_count));
+    text_item_list[14]->setFont(serifFont);
+    br_list.append(new QRectF(text_item_list[14]->sceneBoundingRect()));
+
     text_item_list[0]->setPos( 43 - br_list[0]->width()/2, 10 - br_list[0]->height()   );
     text_item_list[4]->setPos( 5 - br_list[4]->width()   , 28 - br_list[1]->height()/2 );
     text_item_list[3]->setPos( 10 - br_list[3]->width()  , 64 - br_list[3]->height()/2 );
@@ -898,7 +973,7 @@ void fourteenagon::set_text(sigstring_t this_sigstring)
     text_item_list[11]->setPos(delta_x +  70                       , delta_y - br_list[11]->height()/2 );
     text_item_list[12]->setPos(delta_x +  70                       , delta_y + 30 - br_list[12]->height()/2 );
     text_item_list[13]->setPos(delta_x + 10 - br_list[13]->width() , delta_y + 30 - br_list[13]->height()/2 );
-
+    text_item_list[14]->setPos( 100 -br_list[14]->width()/2.0    , 164  );
 
     ///////////////////////////
 
@@ -966,7 +1041,7 @@ void fifteenagon::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
 
 };
 
-void fifteenagon::set_text(sigstring_t this_sigstring)
+void fifteenagon::set_text(sigstring_t this_sigstring, int stem_count)
 {
     QList<QRectF*> br_list;
     QList<QGraphicsSimpleTextItem*> text_item_list;
@@ -980,6 +1055,11 @@ void fifteenagon::set_text(sigstring_t this_sigstring)
         text_item_list[i]->setText( affixes[i] );
         br_list.append(new QRectF(text_item_list[i]->sceneBoundingRect()));
     }
+    text_item_list.append(new QGraphicsSimpleTextItem(this));
+    text_item_list[15]->setText(QString::number(stem_count));
+    text_item_list[15]->setFont(serifFont);
+    br_list.append(new QRectF(text_item_list[15]->sceneBoundingRect()));
+
     text_item_list[0]->setPos( 43 - br_list[0]->width()/2, 10 - br_list[0]->height()   );
     text_item_list[4]->setPos( 5 - br_list[4]->width()   , 28 - br_list[1]->height()/2 );
     text_item_list[3]->setPos( 10 - br_list[3]->width()  , 64 - br_list[3]->height()/2 );
@@ -996,14 +1076,14 @@ void fifteenagon::set_text(sigstring_t this_sigstring)
     text_item_list[9]->setPos( 5 - br_list[9]->width()   , delta_y + 28 - br_list[9]->height()/2 );
 
     int delta_x = 120;
-    delta_y = 120;
-    text_item_list[10]->setPos( 43 - br_list[10]->width()/2, delta_y + 10 - br_list[10]->height()   );
-    text_item_list[11]->setPos( 72                        , delta_y + 31 - br_list[11]->height()/2 );
-    text_item_list[12]->setPos( 62                        , delta_y + 64 - br_list[12]->height()/2 );
-    text_item_list[13]->setPos( 10 - br_list[13]->width()  , delta_y + 64 - br_list[13]->height()/2 );
-    text_item_list[14]->setPos( 5 - br_list[14]->width()   , delta_y + 28 - br_list[14]->height()/2 );
+    delta_y = 90;
+    text_item_list[10]->setPos(delta_x + 43 - br_list[10]->width()/2, delta_y + 10 - br_list[10]->height()   );
+    text_item_list[11]->setPos(delta_x +  72                        , delta_y + 31 - br_list[11]->height()/2 );
+    text_item_list[12]->setPos(delta_x +  62                        , delta_y + 64 - br_list[12]->height()/2 );
+    text_item_list[13]->setPos(delta_x +  10 - br_list[13]->width()  , delta_y + 64 - br_list[13]->height()/2 );
+    text_item_list[14]->setPos(delta_x +  5 - br_list[14]->width()   , delta_y + 28 - br_list[14]->height()/2 );
 
-
+    text_item_list[15]->setPos( 100 -br_list[15]->width()/2.0    , 164  );
 
     ///////////////////////////
 

@@ -24,7 +24,7 @@ void  lxa_graphics_scene::implement_hypothesis(const QModelIndex &  index )
 {   int row, column;
 
     Qt::GlobalColor color_target_1, color_target_2, color_target_3, color_target_old_1, color_target_old_2, color_target_old_3;
-    color_target_1 = Qt::red;
+    color_target_1 = Qt::white;
     color_target_old_1 = Qt::yellow;
     color_target_2 = Qt::blue;
     color_target_3 = Qt::green;
@@ -60,9 +60,6 @@ void  lxa_graphics_scene::implement_hypothesis(const QModelIndex &  index )
                 original_graphic_sig ->set_color(color_target_1);
                 move_graphic_signature_to_the_left(this_graphic_signature);
                 original_point = original_graphic_sig->get_center() ;
-                if (m_target_1_list.count() > 0 ) {
-                 //   m_target_1_list.last()->set_color() = color_target_old_1;
-                }
                 m_target_1_list.append(original_graphic_sig);
             } else if (this_sig_string == lower_sigstring )
             {
@@ -84,13 +81,13 @@ void  lxa_graphics_scene::implement_hypothesis(const QModelIndex &  index )
                 }
             } else
             {
-                    this_graphic_signature->set_color(m_out_of_focus_color);
+                    //this_graphic_signature->set_color(m_out_of_focus_color);
             }
         }
 
         //place_arrow(original_point, lower_point);
         if (shortened_graphic_signature_already_existed){
-            place_arrow(shortened_point, lower_point);
+            //place_arrow(shortened_point, lower_point);
             place_arrow(original_point, shortened_point);
         }
 
