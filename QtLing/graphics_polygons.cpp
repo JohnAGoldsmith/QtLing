@@ -451,8 +451,8 @@ void octagon2::set_text(sigstring_t this_sigstring, int stem_count){
     text_item_list[1]->setPos(  70                       , 30 - br_list[1]->height()/2  );
     text_item_list[2]->setPos(  70                       , 60 - br_list[2]->height()/2 );
     text_item_list[3]->setPos(  70                       , 80 - br_list[3]->height()/2  );
-    text_item_list[4]->setPos(  70                       , 120 - br_list[4]->height()/2 );
-    text_item_list[5]->setPos( 10 - br_list[5]->width()  , 120 - br_list[5]->height()/2 );
+    text_item_list[4]->setPos(  70                       , 110 - br_list[4]->height()/2 );
+    text_item_list[5]->setPos( 10 - br_list[5]->width()  , 110 - br_list[5]->height()/2 );
     text_item_list[6]->setPos( 10 - br_list[6]->width()  ,  80 - br_list[6]->height()/2 );
     text_item_list[7]->setPos( 10 - br_list[7]->width()  ,  60 - br_list[7]->height()/2 );
     text_item_list[8]->setPos( 40 -br_list[8]->width()/2.0, 125  );
@@ -526,16 +526,16 @@ void nonagon2::set_text(sigstring_t this_sigstring, int stem_count){
     x = 0;
     y = 100;
     text_item_list[3]->setPos(x + 20 - br_list[3]->width()/2  , y - 30 -  br_list[3]->height()/2 );
-    text_item_list[4]->setPos(x + 47                          , y + 30 -  br_list[4]->height()/2 );
-    text_item_list[5]->setPos(x -  7 - br_list[5]->width()    , y + 30 -  br_list[5]->height()/2 );
+    text_item_list[4]->setPos(x + 47                          , y + 25 -  br_list[4]->height()/2 );
+    text_item_list[5]->setPos(x -  7 - br_list[5]->width()    , y + 25 -  br_list[5]->height()/2 );
 
-    x = 120;
+    x = 130;
     y = 100;
     text_item_list[6]->setPos(x + 20 - br_list[6]->width()/2  , y - 30 -  br_list[6]->height()/2 );
-    text_item_list[7]->setPos(x + 47                          , y + 30 -  br_list[7]->height()/2 );
-    text_item_list[8]->setPos(x -  7 - br_list[8]->width()    , y + 30 -  br_list[8]->height()/2 );
+    text_item_list[7]->setPos(x + 47                          , y + 25 -  br_list[7]->height()/2 );
+    text_item_list[8]->setPos(x -  7 - br_list[8]->width()    , y + 25 -  br_list[8]->height()/2 );
 
-    text_item_list[9]->setPos(85      -br_list[9]->width()/2.0  , 80  );
+    text_item_list[9]->setPos(85      -br_list[9]->width()/2.0  , 65  );
 }
 QPointF nonagon2::get_center(){
     QPointF this_point = pos();
@@ -677,7 +677,7 @@ void elevenagon2::set_text(sigstring_t this_sigstring, int stem_count)
     text_item_list[9]->setPos( 10 - br_list[9]->width(),  30 - br_list[9]->height()/2 + delta );
     text_item_list[10]->setPos(10 - br_list[10]->width(),  0 - br_list[10]->height()/2 + delta );
 
-    text_item_list[11]->setPos( 40 -br_list[11]->width()/2.0    , 154  );
+    text_item_list[11]->setPos( 40 -br_list[11]->width()/2.0    , 160  );
 }
 
 QPointF elevenagon2::get_center(){
