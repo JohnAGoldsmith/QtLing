@@ -48,6 +48,7 @@ public:
     void                                    compute_containment_list(); //this gives   for each signature the largest signatures it contains.
     bool                                    contains (sigstring_t);
     CSignature*                             find_or_add ( QString);         // same as operatorˆ=
+    CSignature *                            find_or_fail(QString);
     CSignature*                             get_at_sorted( uint n )         { return m_SortList[n];}
     QMap<CSignature*,QList<CSignature*>*> * get_containment_map()           {return & m_ContainmentMap;}
     QList<word_and_count_list*> *           get_count_vectors(QList<word_and_count_list*> * count_vectors);

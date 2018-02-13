@@ -97,6 +97,15 @@ CSignature* CSignatureCollection::find_or_add (QString sigstring )
         return pSig;
     }
 }
+CSignature* CSignatureCollection::find_or_fail(QString this_sig_string){
+
+    if (m_SignatureMap.contains(this_sig_string)){
+        return m_SignatureMap[this_sig_string];
+    } else{
+        return NULL;
+    }
+}
+
 
 // -->   Sorting  <--     //
 

@@ -78,9 +78,9 @@ void LxaStandardItemModel::load_words(CWordCollection* p_words)
         QStandardItem* pItem2 = new QStandardItem(QString::number(pWord->get_word_count()));
         item_list.append(pItem2);
 
-        QListIterator<Parse_triple*> parse_3_iter(*pWord->get_parse_triples());
+        QMapIterator<stem_t, Parse_triple*> parse_3_iter(*pWord->get_parse_triple_map());
         while (parse_3_iter.hasNext()){
-            QStandardItem* pItem3 = new QStandardItem(parse_3_iter.next()->p_sig_string) ;
+            QStandardItem* pItem3 = new QStandardItem(parse_3_iter.next().value()->p_sig_string) ;
             item_list.append(pItem3);
         }
         appendRow(item_list);
@@ -332,11 +332,11 @@ struct{
     bool operator ()(sig_graph_edge* a, sig_graph_edge* b) const
     {
         if (a->morph == b->morph){
-            if (a->sig_1 == b->sig_1){
-                return a->sig_2 < b->sig_2;
+            if (a->m_sig_1 == b->m_sig_1){
+                return a->m_sig_2 < b->m_sig_2;
             }else
             {
-                return a->sig_1 < b->sig_1;
+                return a->m_sig_1 < b->m_sig_1;
             }
         }  else
         {
@@ -347,7 +347,7 @@ struct{
 
 void LxaStandardItemModel::load_sig_graph_edges( QMap<QString, sig_graph_edge*> * this_sig_graph_edge_map )
 {   QList<sig_graph_edge*>               temp_list;
-    int MINIMUM_NUMBER_OF_SHARED_WORDS = 1;
+    int MINIMUM_NUMBER_OF_SHARED_WORDS = 3;
     QMapIterator<word_t, sig_graph_edge*> * this_sig_graph_edge_iter = new QMapIterator<word_t, sig_graph_edge*>( * this_sig_graph_edge_map );
     while (this_sig_graph_edge_iter->hasNext())    {
         this_sig_graph_edge_iter->next();
@@ -361,15 +361,15 @@ void LxaStandardItemModel::load_sig_graph_edges( QMap<QString, sig_graph_edge*> 
     while (temp_list_iter.hasNext())
      {
         sig_graph_edge * p_sig_graph_edge = temp_list_iter.next();
-        QList<QStandardItem*> items;
         QStandardItem * item1 = new QStandardItem (p_sig_graph_edge->morph);
+        QStandardItem * item2 = new QStandardItem(p_sig_graph_edge->m_sig_1->get_key());
+        QStandardItem * item3 = new QStandardItem(QString::number(p_sig_graph_edge->m_sig_1->get_stem_entropy()));
+        QStandardItem * item4 = new QStandardItem(p_sig_graph_edge->m_sig_2->get_key());
+        QStandardItem * item5 = new QStandardItem(QString::number(p_sig_graph_edge->m_sig_2->get_stem_entropy()));
+        QStandardItem * item6 = new QStandardItem(QString::number(p_sig_graph_edge->shared_word_stems.size()));
+        //QStandardItem * item6 = new QStandardItem(p_sig_graph_edge->label());
+        QList<QStandardItem*> items;
         items.append(item1);
-
-        QStandardItem * item2 = new QStandardItem(p_sig_graph_edge->sig_1->get_key());
-        QStandardItem * item3 = new QStandardItem(QString::number(p_sig_graph_edge->sig_1->get_stem_entropy()));
-        QStandardItem * item4 = new QStandardItem(p_sig_graph_edge->sig_2->get_key());
-        QStandardItem * item5 = new QStandardItem(QString::number(p_sig_graph_edge->shared_word_stems.size()));
-        QStandardItem * item6 = new QStandardItem(p_sig_graph_edge->label());
         items.append(item2);
         items.append(item3);
         items.append(item4);

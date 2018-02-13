@@ -12,12 +12,16 @@ void CLexicon::generate_hypotheses()
     QString affix, new_affix;
     QStringList affixes1, affixes2, new_affixes, new_sig_2;
     int MINIMUM_AFFIX_OVERLAP = 10;
-    //qDebug() << "entering generate hypotheses";
-    while    (edge_iter.hasNext()){
+    CSignatureCollection * signatures;
+    m_SuffixesFlag ?
+        signatures = m_Signatures:
+        signatures = m_PrefixSignatures;
+    while (edge_iter.hasNext()){
         p_edge = edge_iter.next().value();
         QString this_morph = p_edge->get_morph();
-        CSignature* pSig1 = p_edge->get_sig_1();
-        CSignature* pSig2 = p_edge->get_sig_2();
+        CSignature* pSig1 = signatures->find_or_fail( p_edge->m_sig_string_1);
+        CSignature* pSig2 = signatures->find_or_fail( p_edge->m_sig_string_2);
+        //CSignature* pSig2 = p_edge->get_sig_2();
 
 
         if (this_morph.length() < 2){
@@ -82,19 +86,17 @@ CHypothesis::CHypothesis(eHypothesisType HypothesisT,   sig_graph_edge*  p_edge)
 {
     m_hypothesis_type  = HypothesisT;
     m_number_of_words_saved = 0;
-    m_signature_1       = p_edge->get_sig_1()->get_key();
-    m_signature_2       = p_edge->get_sig_2()->get_key();
+    m_signature_1       = p_edge->m_sig_string_1;
+    m_signature_2       = p_edge->m_sig_string_2;
     m_morpheme          = p_edge->get_morph();
 
     affix_t             new_affix, affix;
-    QStringList         affixes1;
-    QStringList         affixes2;
+    QStringList         affixes1 = m_signature_1.split("=");
+    QStringList         affixes2 = m_signature_2.split("=");
     QStringList         new_affixes;
     QStringList         new_sig_2;
-    p_edge->get_sig_1()->get_string_list(affixes1);
-    p_edge->get_sig_2()->get_string_list(affixes2);
-    m_new_edge          = new QPair<affix_t, sigstring_t>(new_affix,m_signature_1);
 
+    m_new_edge          = new QPair<affix_t, sigstring_t>(new_affix,m_signature_1);
 
     //--> new_affixes is the set of affixes that sig1 proposes to sig2  for retirement
     for (int affixno = 0; affixno < affixes1.count(); affixno++){

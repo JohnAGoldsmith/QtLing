@@ -144,8 +144,8 @@ LowerTableView::LowerTableView(MainWindow * window)
             sig_graph_edge*       this_edge = this_lexicon->get_sig_graph_edge_map()->value(edge_key);
             sig_graph_edge *      psig_graph_edge;
             CSignature*           pSig;
-            CSignature*           pSig1 = this_edge->sig_1;
-            CSignature*           pSig2 = this_edge->sig_2;
+            CSignature*           pSig1 = this_edge->m_sig_1;
+            CSignature*           pSig2 = this_edge->m_sig_2;
             QStandardItem*        p_item;
             CStem*                p_Stem;
             QStringList           sig1_stems;
@@ -259,8 +259,8 @@ void LowerTableView::graphics_sig_graph_edges(CSignature* pSig, CLexicon* p_lexi
     QMap<QString,sig_graph_edge*>::iterator edge_iter = p_lexicon->get_sig_graph_edge_map()->begin();
     while (edge_iter !=  p_lexicon->get_sig_graph_edge_map()->constEnd()){
         psig_graph_edge = edge_iter.value();
-        if (psig_graph_edge->sig_1 == pSig){
-            Signatures << psig_graph_edge->sig_2;
+        if (psig_graph_edge->m_sig_1 == pSig){
+            Signatures << psig_graph_edge->m_sig_2;
         }
         ++edge_iter;
     }
@@ -409,9 +409,9 @@ void LowerTableView::table_passive_signature(CSignature *p_this_sig)
     QMapIterator<QString, sig_graph_edge*> this_sig_graph_edge_iter (*pMap);
     while (this_sig_graph_edge_iter.hasNext()){
         sig_graph_edge * p_edge  = this_sig_graph_edge_iter.next().value();
-        if (p_this_sig == p_edge->sig_1){
-            stem_counter[p_edge->sig_2] = p_edge->get_number_of_words();
-            Morphs[p_edge->sig_2] = p_edge->morph;
+        if (p_this_sig == p_edge->m_sig_1){
+            stem_counter[p_edge->m_sig_2] = p_edge->get_number_of_words();
+            Morphs[p_edge->m_sig_2] = p_edge->morph;
         }
     }
 
@@ -422,7 +422,6 @@ void LowerTableView::table_passive_signature(CSignature *p_this_sig)
     int                 count;
 
     for (int i = 0; i < counts.size(); i++){
-            //qDebug() << i <<404;
             count = counts[i];
             QList<CSignature*> signatures =stem_counter.keys(count);
             std::sort(signatures.begin(), signatures.end());

@@ -444,7 +444,7 @@ void   CLexicon::AssignSuffixesToStems()
                     if (!pWord){
                         qDebug() << this_word <<  "Error: this_word not found among words.";
                     } else{
-                        pWord->add_parse_triple(this_stem_t, this_affix, pSig);
+                        pWord->add_parse_triple(this_stem_t, this_affix, pSig->get_key());
                         QString message = this_signature_string;
                         if (this_affix_set.size() > 50){message = "Super long signature";};
                         pWord->add_to_autobiography("Pass1= " + this_stem_t + "=" + message);
@@ -621,47 +621,56 @@ void CLexicon::compute_sig_graph_edges()
 {
     map_string_to_word *            WordMap = m_Words->GetMap();
     map_string_to_word_ptr_iter     word_iter(*WordMap);
-    simple_sig_graph_edge *          p_SigTreeEdge;
-    //CSignatureCollection*           pSignatures;
+    simple_sig_graph_edge *          p_SigGraphEdge;
+    CSignature *                    pSig, * this_sig_ptr, *the_other_sig_ptr;
     CWord*                          pWord;
     morph_t                         difference;
-    int                             number_of_parses;
+    stem_t                          this_stem, the_other_stem;
+
     while (word_iter.hasNext())   {
         pWord = word_iter.next().value();
-        number_of_parses = pWord->get_parse_triples()->size();
-        if ( number_of_parses > 1){
-            for (int parse_no = 0; parse_no < number_of_parses; parse_no ++ ){
-                Parse_triple * triple = pWord->get_parse_triples()->at(parse_no);
-                stem_t  stem1        = triple->p_stem;
-                int stem1length      = stem1.length();
-                CSignature* sig1        = triple->p_signature;
-                for (int parse_no2=parse_no + 1; parse_no2 < number_of_parses; parse_no2++){
-                    Parse_triple * triple2 = pWord->get_parse_triples()->at(parse_no2);
-                    stem_t stem2 = triple2->p_stem;
-                    CSignature* sig2 = triple2->p_signature;
-                    if (sig1 == sig2){continue;}
-                    int stem2length = stem2.length();
-                    // the following "if" is there so that the "difference" can be simply defined.
-                    //
-                    if (stem1length > stem2length){
-                        int length_of_difference = stem1length - stem2length;
-                        m_SuffixesFlag?
-                            difference = stem1.mid(stem2.length()):
-                            difference = stem1.left(length_of_difference);
-                        p_SigTreeEdge = new simple_sig_graph_edge (sig1,sig2,difference, pWord->get_key(), stem1, stem2);
-                    } else{
-                        int length_of_difference = stem2length - stem1length;
-                        m_SuffixesFlag?
-                            difference = stem2.mid(stem1.length()):
-                            difference = stem2.left(length_of_difference);
-                        p_SigTreeEdge =  new simple_sig_graph_edge (sig2,sig1,difference, pWord->get_key(), stem2, stem1);
-                    }
-                    m_SigGraphEdgeList.append(p_SigTreeEdge);
-                    pWord->add_to_autobiography("multiple parse=" + stem1 + "=" +  sig1->get_key() + "=" + stem2 + "=" + sig2->get_key());
+        QMapIterator<stem_t, Parse_triple*> iter_triple_1 (*pWord->get_parse_triple_map());
+        while (iter_triple_1.hasNext())
+        {
+            this_stem = iter_triple_1.next().key();
+            int this_stem_length = this_stem.length();
+            Parse_triple * this_triple = iter_triple_1.value();
+            sig_string this_sig = this_triple->p_sig_string;
+            CSignature* this_sig_ptr;
+            m_SuffixesFlag?
+                this_sig_ptr = m_Signatures->find_or_fail(this_sig):
+                this_sig_ptr = m_PrefixSignatures->find_or_fail(this_sig);
+            QMapIterator<stem_t,Parse_triple*> iter_triple_2 = iter_triple_1;
+            while (iter_triple_2.hasNext())
+            {
+                the_other_stem = iter_triple_2.next().key();
+                int the_other_stem_length = the_other_stem.length();
+                Parse_triple* the_other_triple = iter_triple_2.value();
+                sig_string the_other_sig = the_other_triple->p_sig_string;
+                m_SuffixesFlag?
+                    the_other_sig_ptr = m_Signatures->find_or_fail(the_other_sig):
+                    the_other_sig_ptr = m_PrefixSignatures->find_or_fail(the_other_sig);
+                if (this_sig == the_other_sig){continue;}
+                if (this_stem_length > the_other_stem_length ){     // this cannot happen now (it could in the previous formulation -- so fix this);
+                            int length_of_difference = this_stem_length - the_other_stem_length;
+                            m_SuffixesFlag?
+                                difference = this_stem.mid(the_other_stem_length):
+                                difference = this_stem.left(length_of_difference);
+                            p_SigGraphEdge = new simple_sig_graph_edge (this, this_sig_ptr, the_other_sig_ptr, this_sig,the_other_sig,
+                                                                        difference, pWord->get_key(), this_stem, the_other_stem);
+                 } else{
+                     int length_of_difference = the_other_stem_length - this_stem_length;
+                     m_SuffixesFlag?
+                           difference = the_other_stem.mid(this_stem_length):
+                           difference = the_other_stem.left(length_of_difference);
+                     p_SigGraphEdge = new simple_sig_graph_edge(this, the_other_sig_ptr, this_sig_ptr,  the_other_sig,this_sig,
+                                                                difference, pWord->get_key(), the_other_stem, this_stem);
                 }
-            }
-        }
-    }
+                m_SigGraphEdgeList.append(p_SigGraphEdge);
+                pWord->add_to_autobiography("multiple parse=" + this_stem + "=" +  this_sig + "=" + the_other_stem + "=" + the_other_sig);
+            } // end of looking at stems longer than this_stem
+        } //end of looking at each stem in this word.
+    } // each word
 }
 
 /*!
@@ -736,8 +745,8 @@ void CLexicon::test_for_phonological_relations_between_signatures()
        while (sig_iter.hasNext()){
              sig_iter.next();
              if (sig_iter.value()->morph == difference){
-                 CSignature* pSig1 = sig_iter.value()->sig_1;
-                 CSignature* pSig2 = sig_iter.value()->sig_2;
+                 CSignature* pSig1 = sig_iter.value()->m_sig_1;
+                 CSignature* pSig2 = sig_iter.value()->m_sig_2;
                  SignatureSet_1.insert(pSig1);
                  SignatureSet_2.insert(pSig2);
                  *m_PassiveSignatures << pSig1;
@@ -763,8 +772,8 @@ void CLexicon::compare_opposite_sets_of_signatures(QSet<CSignature*>* sig_set_1,
     QHash<QString,int> Counts;
     foreach(p_edge,  m_SigGraphEdgeMap){
         if (p_edge->morph == morph){
-            pSig_1 = p_edge->sig_1;
-            pSig_2 = p_edge->sig_2;
+            pSig_1 = p_edge->m_sig_1;
+            pSig_2 = p_edge->m_sig_2;
             QString code = pSig_1->get_key() + "@" + pSig_2->get_key();
             Counts[code] = p_edge->get_number_of_words();
         }

@@ -27,16 +27,10 @@ void MainWindow::write_stems_and_words()
     QMapIterator<QString,CWord*> word_iter (*lexicon->get_words()->get_map());
     while (word_iter.hasNext()){
         CWord* pWord = word_iter.next().value();
-        if (pWord->get_parse_triples()->size() > 0){
-            for  (int i = 0; i < pWord->get_parse_triples()->size(); i++ )
-            {
-                Parse_triple *  this_triple = pWord->get_parse_triples()->at(i);
+        QMapIterator<stem_t, Parse_triple*> edge_iter (*pWord->get_parse_triple_map());
+        while (edge_iter.hasNext()){
+                Parse_triple *  this_triple = edge_iter.next().value();
                 out << pWord->get_key() << "+" <<  this_triple->p_stem  << "+"<< this_triple->p_suffix << endl ;
-            }
-        }
-        else
-        {
-//            out  <<  pWord->get_key() <<  endl;
         }
     }
 }

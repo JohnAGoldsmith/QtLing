@@ -80,7 +80,7 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
    while(word_iter.hasNext()){
        pWord = word_iter.next().value();
        pWord->clear_signatures();
-       pWord->clear_parse_triples();
+       pWord->clear_parse_triple_map();
    }
    //--> We establish a temporary map from stems to sets of affixes as we iterate through parses. <--//
 
@@ -179,7 +179,7 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
                    }
                    CWord* pWord = m_Words->get_word(this_word);
                    //pWord->add_stem_and_signature(pStem,pSig);
-                   pWord->add_parse_triple(this_stem_t, this_affix, pSig);
+                   pWord->add_parse_triple(this_stem_t, this_affix, this_signature_string);
                    //qDebug() << pSig->get_key() << 594;
                    QString message = this_signature_string;
                    if (affixes.size()> 50){message = "very long signature";}
@@ -355,7 +355,7 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
                     pWord = m_Words->find_or_fail(this_word);
                     if (pWord){
                         //pWord->add_stem_and_signature(pStem, p_proven_sig);
-                        pWord->add_parse_triple(this_stem, this_affix, p_proven_sig);
+                        pWord->add_parse_triple(this_stem, this_affix, p_proven_sigstring);
                         pWord->add_to_autobiography("from within parasigs="  + this_stem  + "=" +  p_proven_sigstring);
                     }
                 }

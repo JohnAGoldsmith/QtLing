@@ -34,23 +34,32 @@ public:
 class simple_sig_graph_edge{
 //-----------------------------------------------------------------------//
 public:
-    CSignature*         sig_1;
-    CSignature*         sig_2;
+    CSignature*         m_sig_1;
+    CSignature*         m_sig_2;
+    CLexicon *          m_Lexicon;
+    sig_string          m_sig_string_1;
+    sig_string          m_sig_string_2;
+    double              m_sig_1_entropy = -1;
+    double              m_sig_2_entropy = -1;
     morph_t             morph;
     word_t              word;
     stem_t              stem_1;
     stem_t              stem_2;
     simple_sig_graph_edge();
-    simple_sig_graph_edge(CSignature* sig1, CSignature* sig2,morph_t m,word_t w, stem_t stem1, stem_t stem2)
+    simple_sig_graph_edge(CLexicon* lexicon, CSignature* pSig1, CSignature* pSig2, sigstring_t sig_string_1, sigstring_t sig_string_2,morph_t m,word_t w, stem_t stem1, stem_t stem2)
     {
-        sig_1 = sig1;
-        sig_2 = sig2;
+
+        m_sig_1 = pSig1;
+        m_sig_2 = pSig2;
+        m_Lexicon = lexicon;
+        m_sig_string_1 = sig_string_1;
+        m_sig_string_2 = sig_string_2;
         morph = m;
         word = w;
         stem_1 = stem1;
         stem_2 = stem2;
     };
-    QString label() {return morph + "/" + sig_1->get_key() + "/" + sig_2->get_key(); }
+    QString label() {return morph + "/" + m_sig_string_1 + "/" + m_sig_string_2; }
 };
 //-----------------------------------------------------------------------//
 
@@ -59,15 +68,25 @@ public:
 class sig_graph_edge{
 //-----------------------------------------------------------------------//
 public:
-    CSignature* sig_1;
-    CSignature* sig_2;
+    CSignature* m_sig_1;
+    CSignature* m_sig_2;
+    CLexicon*   m_lexicon;
+    sig_string  m_sig_string_1;
+    sig_string  m_sig_string_2;
+    double m_sig_1_entropy = -1;
+    double m_sig_2_entropy = -1;
     morph_t     morph;
     QMap<QString, word_stem_struct*>         shared_word_stems;
     sig_graph_edge();
 
     sig_graph_edge(simple_sig_graph_edge this_edge){
-             sig_1 = this_edge.sig_1;
-             sig_2 = this_edge.sig_2;
+             m_lexicon = this_edge.m_Lexicon;
+             m_sig_1 = this_edge.m_sig_1;
+             m_sig_2 = this_edge.m_sig_2;
+             m_sig_string_1  = this_edge.m_sig_string_1;
+             m_sig_string_2  = this_edge.m_sig_string_2;
+             m_sig_1_entropy = this_edge.m_sig_1_entropy;
+             m_sig_2_entropy = this_edge.m_sig_2_entropy;
              morph = this_edge.morph;
              word_stem_struct * this_word_stems = new word_stem_struct;
              this_word_stems->word = this_edge.word;
@@ -75,10 +94,12 @@ public:
              this_word_stems->stem_2 = this_edge.stem_2;
              shared_word_stems[this_word_stems->get_label()] = this_word_stems;
          }
-    QString label() {return morph + "/" + sig_1->get_key() + "/" + sig_2->get_key(); }
+    QString label() {return morph + "/" + m_sig_string_1 + "/" + m_sig_string_2; }
     int     get_number_of_words() {return shared_word_stems.size();}
-    CSignature*     get_sig_1() {return sig_1;}
-    CSignature*     get_sig_2() {return sig_2;}
+    CSignature*     get_sig_1() {return m_sig_1;}
+    CSignature*     get_sig_2() {return m_sig_2;}
+    sig_string      get_sig1_string() { return m_sig_string_1;}
+    sig_string      get_sig2_string() { return m_sig_string_2;}
     morph_t         get_morph() {return morph;}
 
 
