@@ -65,7 +65,8 @@ MainWindow::MainWindow()
     m_Models["EPositive prefix signatures"] = new LxaStandardItemModel("EPositive prefix signatures");
     m_Models["EPositive prefix signatures 2"]= new LxaStandardItemModel("EPositive prefix signatures");
     m_Models["Residual parasignatures"]     = new LxaStandardItemModel("Residual parasignatures");
-    m_Models["SigGraphEdges"]               = new LxaStandardItemModel("SigTreeEdges");
+    m_Models["SigGraphEdges_1"]               = new LxaStandardItemModel("SigTreeEdges_1");
+    m_Models["SigGraphEdges_2"]               = new LxaStandardItemModel("SigTreeEdges_2");
     m_Models["Parasuffixes"]                = new LxaStandardItemModel("Parasuffixes");
     m_Models["Passive signatures"]          = new LxaStandardItemModel("Passive signatures");
     m_Models["Hypotheses"]                  = new LxaStandardItemModel("Hypotheses");
@@ -392,8 +393,8 @@ void MainWindow::load_models(CLexicon* lexicon)
     m_Models["Passive signatures"]  ->load_signatures(lexicon->get_passive_signatures());
     m_Models["Hypotheses"]          ->load_hypotheses(lexicon->get_hypotheses());
     m_Models["Hypotheses 2"]        ->load_hypotheses_2(lexicon->get_hypotheses());
-    m_Models["SigGraphEdges"]        ->load_sig_graph_edges(lexicon->get_sig_graph_edge_map());
-
+    m_Models["SigGraphEdges_1"]        ->load_sig_graph_edges(lexicon->get_sig_graph_edge_map(),1);
+    m_Models["SigGraphEdges_2"]        ->load_sig_graph_edges(lexicon->get_sig_graph_edge_map(),2);
 
 
 }

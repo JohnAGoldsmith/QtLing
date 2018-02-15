@@ -345,7 +345,7 @@ struct{
     }
 }custom_compare_2;
 
-void LxaStandardItemModel::load_sig_graph_edges( QMap<QString, sig_graph_edge*> * this_sig_graph_edge_map )
+void LxaStandardItemModel::load_sig_graph_edges( QMap<QString, sig_graph_edge*> * this_sig_graph_edge_map, int size )
 {   QList<sig_graph_edge*>               temp_list;
     int MINIMUM_NUMBER_OF_SHARED_WORDS = 3;
     QMapIterator<word_t, sig_graph_edge*> * this_sig_graph_edge_iter = new QMapIterator<word_t, sig_graph_edge*>( * this_sig_graph_edge_map );
@@ -361,13 +361,18 @@ void LxaStandardItemModel::load_sig_graph_edges( QMap<QString, sig_graph_edge*> 
     while (temp_list_iter.hasNext())
      {
         sig_graph_edge * p_sig_graph_edge = temp_list_iter.next();
-        QStandardItem * item1 = new QStandardItem (p_sig_graph_edge->morph);
+        if (size == 1 && p_sig_graph_edge->morph.length() > 1){
+            continue;
+        }else if (size == 2 && p_sig_graph_edge->morph.length()< 2){
+            continue;
+        }
+        QStandardItem * item1 = new QStandardItem(p_sig_graph_edge->morph);
         QStandardItem * item2 = new QStandardItem(p_sig_graph_edge->m_sig_1->get_key());
         QStandardItem * item3 = new QStandardItem(QString::number(p_sig_graph_edge->m_sig_1->get_stem_entropy()));
         QStandardItem * item4 = new QStandardItem(p_sig_graph_edge->m_sig_2->get_key());
         QStandardItem * item5 = new QStandardItem(QString::number(p_sig_graph_edge->m_sig_2->get_stem_entropy()));
         QStandardItem * item6 = new QStandardItem(QString::number(p_sig_graph_edge->shared_word_stems.size()));
-        //QStandardItem * item6 = new QStandardItem(p_sig_graph_edge->label());
+        QStandardItem * item7 = new QStandardItem(p_sig_graph_edge->label());
         QList<QStandardItem*> items;
         items.append(item1);
         items.append(item2);
@@ -375,6 +380,8 @@ void LxaStandardItemModel::load_sig_graph_edges( QMap<QString, sig_graph_edge*> 
         items.append(item4);
         items.append(item5);
         items.append(item6);
+        items.append(item7);
+
         appendRow(items);
      }
 

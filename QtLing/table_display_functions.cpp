@@ -23,7 +23,6 @@ void MainWindow::display_epositive_suffix_signatures()
     if (m_Models["EPositive signatures"]->rowCount() > 0){
         m_tableView_upper_left->setModel(m_Models["EPositive signatures"]);
         m_tableView_upper_left->set_data_type(e_data_epositive_suffixal_signatures );
-        m_tableView_upper_left->set_data_type(e_data_epositive_suffixal_signatures);
 
         CLexicon* lexicon = get_lexicon();
         m_tableView_upper_right->setModel(m_Models["EPositive signatures 2"]);
@@ -65,7 +64,6 @@ void MainWindow::display_suffix_signatures(CLexicon* lexicon)
     m_tableView_upper_left->setModel(m_Models["Signatures"]);
     m_tableView_upper_left->set_data_type( e_data_suffixal_signatures );
     m_tableView_upper_left->resizeColumnsToContents();
-    m_tableView_upper_left->set_data_type( e_data_suffixal_signatures);
 
     m_tableView_upper_right->setModel(m_Models["Signatures 2"]);
     m_tableView_upper_right->set_data_type( e_data_suffixal_signatures );
@@ -101,6 +99,18 @@ void MainWindow::display_prefix_signatures(CLexicon* lexicon)
     m_graphics_scene->create_and_place_signatures();
 }
 
+void MainWindow::display_signature_graph_edges(CLexicon* lexicon){
+    m_tableView_upper_left->setModel(m_Models["SigGraphEdges_1"]);
+    m_tableView_upper_left->set_data_type( e_data_signatures_graph_edges );
+    m_tableView_upper_left->resizeColumnsToContents();
+
+    m_tableView_upper_right->setModel(m_Models["SigGraphEdges_2"]);
+    m_tableView_upper_right->set_data_type( e_data_signatures_graph_edges );
+    m_tableView_upper_right->resizeColumnsToContents();
+
+
+
+}
 
 
 /**

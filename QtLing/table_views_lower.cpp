@@ -140,7 +140,7 @@ LowerTableView::LowerTableView(MainWindow * window)
                  row = index.row();
                  column = index.column();
             }
-            QString               edge_key = index.sibling(row,5).data().toString();
+            QString               edge_key = index.sibling(row,6).data().toString();
             sig_graph_edge*       this_edge = this_lexicon->get_sig_graph_edge_map()->value(edge_key);
             sig_graph_edge *      psig_graph_edge;
             CSignature*           pSig;
@@ -160,12 +160,6 @@ LowerTableView::LowerTableView(MainWindow * window)
                     pSig = pSig1;
                 } else { pSig = pSig2;}
                 graphics_sig_graph_edges(pSig, this_lexicon );
-
-
-
-
-
-
             } else
              // -->   Tabular display in lower right window <--//
             {   foreach (this_word_stem_item, this_edge->shared_word_stems){
