@@ -71,17 +71,6 @@ MainWindow::MainWindow()
     m_Models["Passive signatures"]          = new LxaStandardItemModel("Passive signatures");
     m_Models["Hypotheses"]                  = new LxaStandardItemModel("Hypotheses");
     m_Models["Hypotheses 2"]                = new LxaStandardItemModel("Hypotheses 2");
-// add component 3
-
-
-//  this is part of an experiment:
-    QMap<QString,LxaStandardItemModel*> temp_Models;// this will become "m_Models";
-    QMapIterator<QString,eComponentType> iter (m_lexicon_list.last()->get_category_types());
-    while (iter.hasNext()){
-        QString key = iter.next().key();
-        temp_Models[key] = new LxaStandardItemModel(key);
-    }
-//  end of experiment
 
 
     m_treeModel     = new QStandardItemModel();
@@ -101,7 +90,7 @@ MainWindow::MainWindow()
     m_graphics_scene            = new lxa_graphics_scene( this, lexicon);
     m_graphics_view             = new lxa_graphics_view(m_graphics_scene, this);
     m_graphic_display_flag      = false;             // toggle with Ctrl-G
-    set_up_graphics_scene_and_view();
+    m_graphics_scene->set_signature_collection(get_lexicon()->get_signatures());
 
     //<--------------     set up main window widget ------------------------->
     // set model for tree view
@@ -186,11 +175,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         if (get_lexicon()->get_suffixal_stems()->get_count() > 0){
            get_lexicon()->set_suffixes_flag();
            do_crab2();
-           //display_suffix_signatures();
-        } else{
-            get_lexicon()->set_prefixes_flag();
-            do_crab2();
-            display_prefix_signatures(get_lexicon());
+           display_suffix_signatures(get_lexicon());
         }
         break;
     }
@@ -257,6 +242,18 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         m_graphics_view->zoom_up();
         break;
     }
+    case Qt::Key_P:
+    {
+        get_lexicon()->set_prefixes_flag();
+        do_crab();
+        display_prefix_signatures(get_lexicon());
+        break;
+    }
+    case Qt::Key_Q:
+    {   // reset scene scale
+        m_graphics_view->resetMatrix();
+         break;
+    }
     case Qt::Key_S:
     {
         get_lexicon()->set_suffixes_flag();
@@ -272,16 +269,28 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         m_graphics_scene->widen_columns();
         break;
     }
-    case Qt::Key_P:
-    {
-        get_lexicon()->set_prefixes_flag();
-        do_crab();
-        display_prefix_signatures(get_lexicon());
+    case Qt::Key_Y:
+    {   // toggle flag for sliding signature icons to the left when they become in-use.
+        m_graphics_scene->toggle_signature_slide_flag();
         break;
     }
-    case Qt::Key_Q:
-    {
-         break;
+    case Qt::Key_Z:
+    {   // toggle graphical circles versus real shapes
+
+        if (m_graphics_scene->get_display_circles_for_signatures()){
+            qDebug() << "setting circles flag false";
+            m_graphics_scene = new lxa_graphics_scene(this, get_lexicon(), false);
+            m_graphics_scene->set_signature_collection(get_lexicon()->get_active_signature_collection());
+            display_suffix_signatures(get_lexicon());
+            }
+        else{
+            qDebug() << "setting circles flag true";
+            m_graphics_scene = new lxa_graphics_scene(this, get_lexicon(), true);
+            m_graphics_scene->set_signature_collection(get_lexicon()->get_active_signature_collection());
+            display_suffix_signatures(get_lexicon());
+        }
+        display_epositive_suffix_signatures();
+          break;
     }
     case Qt::Key_Semicolon:
     {
@@ -305,16 +314,34 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
 
 void MainWindow::do_crab()
 {   statusBar()->showMessage("Entering the Crab Nebula.");
-    get_lexicon()->Crab_1();
+    CLexicon* lexicon = get_lexicon();
+    lexicon->Crab_1();
     load_models(get_lexicon());
     write_stems_and_words();
-
     statusBar()->showMessage("We have returned from the Crab Nebula.");
-    create_or_update_TreeModel(get_lexicon());
 
-    set_up_graphics_scene_and_view();
+    create_or_update_TreeModel(get_lexicon());
+    //delete m_graphics_scene;
+    //m_graphics_scene = new lxa_graphics_scene(this, lexicon);
+    m_graphics_scene->set_signature_collection(get_lexicon()->get_active_signature_collection());
     m_leftTreeView->expandAll();
     m_leftTreeView->resizeColumnToContents(0);
+    statusBar()->showMessage("All models are loaded.");
+}
+
+void MainWindow::do_crab2()
+{
+    statusBar()->showMessage("Entering the Crab Nebula, phase 2");
+    CLexicon* lexicon = get_lexicon();
+    lexicon->Crab_2();
+    load_models(lexicon);
+    statusBar()->showMessage("We have returned from the Crab Nebula.");
+
+    create_or_update_TreeModel(lexicon);
+   // m_graphics_scene->clear_all();
+    m_leftTreeView->expandAll();
+    m_leftTreeView->resizeColumnToContents(0);
+    write_stems_and_words();
     statusBar()->showMessage("All models are loaded.");
 }
 
@@ -397,51 +424,6 @@ void MainWindow::load_models(CLexicon* lexicon)
     m_Models["SigGraphEdges_2"]        ->load_sig_graph_edges(lexicon->get_sig_graph_edge_map(),2);
 
 
-}
-void MainWindow::set_up_graphics_scene_and_view()
-{
-    if (get_lexicon()->get_suffix_flag())
-    {
-          m_graphics_scene ->ingest(get_lexicon(),get_lexicon()->get_signatures(), true);
-      }
-    else
-    {
-          m_graphics_scene->ingest(get_lexicon(), get_lexicon()->get_prefix_signatures(), false);
-    }
-}
-
-void MainWindow::do_crab2()
-{
-    statusBar()->showMessage("Entering the Crab Nebula, phase 2");
-    CLexicon* lexicon = get_lexicon();
-    lexicon->Crab_2();
-    load_models(get_lexicon());
-
-
-
-    create_or_update_TreeModel(get_lexicon());
-
-// add component 5
-
-
-    //     part of an experiment:
-    //     QMapIterator<QString,eComponentType> iter (get_lexicon()->get_category_types());
-    //     while (iter.hasNext()){
-    //      QString component_name = iter.next().key();
-    //      eComponentType this_component_type = iter.value();
-    //      m_Models[component_name]->load_category(component_name, this_component_type);
-    //    }
-    // end of experiment
-
-
-    print_prefix_signatures();
-    m_graphics_scene->clear_all();
-    m_leftTreeView->expandAll();
-    m_leftTreeView->resizeColumnToContents(0);
-
-    write_stems_and_words();
-
-    statusBar()->showMessage("All models are loaded.");
 }
 void MainWindow::read_file_do_crab()
 {       read_dx1_file();

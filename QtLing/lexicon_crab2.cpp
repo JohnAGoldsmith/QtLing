@@ -183,16 +183,13 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
                    //qDebug() << pSig->get_key() << 594;
                    QString message = this_signature_string;
                    if (affixes.size()> 50){message = "very long signature";}
-                   pWord->add_to_autobiography("Pass2= " + this_stem_t + "=" + message );
+                   pWord->add_to_autobiography("Resignaturize= " + this_stem_t + "=" + message );
                }
            }
        }else{       // insufficient number of stems ...
            this_signature_string =  iter_sigstring_to_stems.key();
            pSig =  *m_ParaSignatures << this_signature_string;
            pStem = *m_ResidualStems << this_stem_t;
-           if (this_stem_t == "thro"){
-               qDebug() << this_signature_string << 693;
-           }
            pSig->add_stem_pointer(pStem);
            foreach (this_affix, this_affix_set){
                if (this_affix == "NULL"){

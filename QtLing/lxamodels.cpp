@@ -68,7 +68,7 @@ void LxaStandardItemModel::load_words(CWordCollection* p_words)
     {   word_iter.next();
         CWord* pWord = word_iter.value();
         word_t this_word = word_iter.key();
-        qDebug() << 69 << this_word;
+        //qDebug() << 69 << this_word;
 
         QList<QStandardItem*> item_list;
 
@@ -139,7 +139,7 @@ void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures, e
     labels  << tr("signature") << "stem count" << "robustness"<< "fullness";
     setHorizontalHeaderLabels(labels);
 
-    qDebug() << 133 << "number of signatures"<< p_signatures->get_count() <<  "in Models file";
+    //qDebug() << 133 << "number of signatures"<< p_signatures->get_count() <<  "in Models file";
     for (int signo = 0; signo<p_signatures->get_count(); signo++)
     {   sig = p_signatures->get_at_sorted(signo);
         QList<QStandardItem*> items;
@@ -318,7 +318,7 @@ void LxaStandardItemModel::sort_signatures(eSortStyle sort_style)
     } else if (sort_style==SIG_BY_AFFIX_COUNT){
         m_Signatures->sort(SIG_BY_AFFIX_COUNT);
     }
-    qDebug() << "sort_signatures" << 178;
+    //qDebug() << "sort_signatures" << 178;
 }
 
 
@@ -417,9 +417,9 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
 
     QStandardItem * suffix_flag_item;
     if (lexicon->get_suffix_flag()){
-        suffix_flag_item = new QStandardItem(QString("suffixes"));
+        suffix_flag_item = new QStandardItem(QString("Suffixes"));
     } else {
-        suffix_flag_item = new QStandardItem(QString("prefixes"));
+        suffix_flag_item = new QStandardItem(QString("Prefixes"));
     }
 
     // will be eliminated by the experiment:

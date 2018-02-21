@@ -61,6 +61,7 @@ void  lxa_graphics_scene::implement_hypothesis(const QModelIndex &  index )
                 move_graphic_signature_to_the_left(this_graphic_signature);
                 original_point = original_graphic_sig->get_center() ;
                 m_target_1_list.append(original_graphic_sig);
+                //original_graphic_sig->set_score (10);
             } else if (this_sig_string == lower_sigstring )
             {
                 lower_graphic_sig = this_graphic_signature;
@@ -76,7 +77,8 @@ void  lxa_graphics_scene::implement_hypothesis(const QModelIndex &  index )
                     shortened_graphic_sig -> set_color(m_focus_color);
                     shortened_point = shortened_graphic_sig->get_center() ;
                     shortened_graphic_signature_already_existed = true;
-                } else{
+                    shortened_graphic_sig->increase_score(original_graphic_sig->get_score());
+                    original_graphic_sig->set_score (10);                } else{
                     shortened_graphic_signature_already_existed = false;
                 }
             } else

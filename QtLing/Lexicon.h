@@ -183,6 +183,7 @@ public:
     void                                        collect_parasuffixes();
     void                                        compute_sig_graph_edges();
     void                                        generate_hypotheses();
+    CSignatureCollection*                       get_active_signature_collection();
     QMap<QString, eComponentType> &             get_category_types()        { return m_category_types;}
     double                                      get_entropy_threshold_for_positive_signatures() {return m_entropy_threshold_for_stems;}
     //void                                        get_epositive_signatures(QList<CSignature*> *);
@@ -219,7 +220,7 @@ public:
 
 public:
     // insert functions here
-    void AssignSuffixesToStems();
+    void assign_suffixes_to_stems(QString name_of_calling_function);
     void clear_lexicon();
     void compare_opposite_sets_of_signatures(QSet<CSignature*>* sig_set_1, QSet<CSignature*>* sig_set_2,QString letter);
     void compute_sig_graph_edge_map();

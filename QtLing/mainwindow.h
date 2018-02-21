@@ -118,7 +118,7 @@ public:
     bool                                    get_graphic_display_flag()        {return m_graphic_display_flag;}
     void                                    load_models(CLexicon* lexicon);
     void                                    read_corpus();
-    void                                    set_up_graphics_scene_and_view();
+   // void                                    set_up_graphics_scene_and_view();
 
 
 

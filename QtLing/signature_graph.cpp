@@ -65,7 +65,7 @@ void CLexicon::compute_sig_graph_edges()
                                                                 difference, pWord->get_key(), the_other_stem, this_stem);
                 }
                 m_SigGraphEdgeList.append(p_SigGraphEdge);
-                pWord->add_to_autobiography("multiple parse=" + this_stem + "=" +  this_sig + "=" + the_other_stem + "=" + the_other_sig);
+                pWord->add_to_autobiography("sig graph edge=" + this_stem + "=" +  this_sig + "=" + the_other_stem + "=" + the_other_sig);
             } // end of looking at stems longer than this_stem
         } //end of looking at each stem in this word.
     } // each word

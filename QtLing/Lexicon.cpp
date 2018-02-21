@@ -77,6 +77,14 @@ CLexicon::~CLexicon()
     delete m_PassiveSignatures;
 }
 
+CSignatureCollection* CLexicon::get_active_signature_collection(){
+    if (m_SuffixesFlag){
+        return m_Signatures;
+    }else{
+        return m_PrefixSignatures;
+    }
+
+}
 void CLexicon::clear_lexicon(){
     delete m_Signatures;
     m_Signatures = new CSignatureCollection(this, true);
@@ -134,7 +142,7 @@ void CLexicon::Crab_1()
 
     CreateStemAffixPairs();
 
-    AssignSuffixesToStems();
+    assign_suffixes_to_stems(QString("crab_1"));
 
     find_full_signatures();
 
@@ -213,14 +221,14 @@ void CLexicon::FindProtostems()
         {       // -->   Prefix case   <-- //
             this_word_length = this_word.length();
             previous_word_length = previous_word.length();
-            if (this_word == "kitabu") {qDebug()<< 213 << previous_word;}
+            //if (this_word == "kitabu") {qDebug()<< 213 << previous_word;}
 
             int end = qMin(this_word_length, previous_word_length);
             for (int i=1; i <=end; i++){
                 if (previous_word.right(i) != this_word.right(i)){
-                    if (this_word=="kitabu"){
-                        qDebug() << 217 <<  i << this_word.right(i);
-                    }
+                    //if (this_word=="kitabu"){
+                    //    qDebug() << 217 <<  i << this_word.right(i);
+                    //}
                     stem = previous_word.right(i-1);
                     DifferenceFoundFlag = true;
                     if (this_word == "kitabu"){qDebug() << stem << previous_word << 221;}
@@ -285,9 +293,9 @@ void CLexicon::CreateStemAffixPairs()
                 if (m_prefix_protostems.contains(stem)){
                     prefix_length = word.length() - letterno;
                     prefix = word.left(prefix_length);
-                    if (word == "kitabu") {
-                            qDebug() << "kitabu"<< 282 << stem;
-                    }
+                    //if (word == "kitabu") {
+                    //        qDebug() << "kitabu"<< 282 << stem;
+                    //}
                     m_Parses->append(QPair<QString,QString>(prefix,stem));
                     if (m_Words->contains(stem)){
                         m_Parses->append(QPair<QString,QString>(QString("NULL"),stem));
@@ -303,7 +311,7 @@ void CLexicon::CreateStemAffixPairs()
  * This is the third of the three initial parts of finding signatures.
  * This creates signatures, which in turn creates stems and affixes.
  */
-void   CLexicon::AssignSuffixesToStems()
+void   CLexicon::assign_suffixes_to_stems(QString name_of_calling_function)
 {   const int MINIMUM_NUMBER_OF_STEMS = 2;
 
     QPair<QString,QString>      this_pair;
@@ -405,7 +413,7 @@ void   CLexicon::AssignSuffixesToStems()
                 pSig->set_suffix_flag(false);
             }
 
-            pSig->add_memo("Pass 1");
+            pSig->add_memo(name_of_calling_function);
             QSetIterator<suffix_t> affix_iter(this_affix_set);
             while(affix_iter.hasNext()){
                   this_affix = affix_iter.next();
@@ -447,7 +455,7 @@ void   CLexicon::AssignSuffixesToStems()
                         pWord->add_parse_triple(this_stem_t, this_affix, pSig->get_key());
                         QString message = this_signature_string;
                         if (this_affix_set.size() > 50){message = "Super long signature";};
-                        pWord->add_to_autobiography("Pass1= " + this_stem_t + "=" + message);
+                        pWord->add_to_autobiography(name_of_calling_function + "=" + this_stem_t + "=" + message);
                     }
                  }
             }
@@ -567,7 +575,7 @@ void CLexicon::find_full_signatures()
     }
 
 
-    AssignSuffixesToStems();
+    assign_suffixes_to_stems("Finding full signatures");
 }
 
 

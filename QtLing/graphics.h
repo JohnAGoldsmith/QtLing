@@ -17,7 +17,7 @@ class MainWindow;
 class lxa_graphics_scene;
 class CSupersignature;
 class CHypothesis;
-
+class sig_circle;
 
 /////////////////////////////////////////////////////////////////////////////
 //          Graphic signature
@@ -33,6 +33,7 @@ protected:
 protected:
     bool                 m_focus_flag;
     Qt::GlobalColor      m_color;
+    double               m_score;
 
 public:
     graphic_signature2  ();
@@ -44,6 +45,9 @@ public:
         return QRectF(0,0,130,160);
     }
     sigstring_t         get_key()       {return m_signature->get_key();}
+    double              get_score()     { return m_score;}
+    void                increase_score(double amount) { m_score += amount;}
+    void                set_score (double amount) {m_score = amount;}
     CSignature*         get_signature() {return m_signature;}
     void                set_color(Qt::GlobalColor);
     void paint(QPainter, const QStyleOptionGraphicsItem *,
@@ -51,6 +55,30 @@ public:
     {
     }
 };
+
+
+
+class sig_circle : public graphic_signature2
+{
+protected:
+    double                      m_radius;
+
+public:
+                                sig_circle  (QGraphicsItem* parent );
+                                sig_circle   (QGraphicsScene * parent, CSignature*);
+    virtual QPointF             get_center() {return QPointF();};
+    QRectF                      boundingRect() const
+    {
+        return QRectF(-1*m_radius,-1*m_radius, m_radius, m_radius);
+    }
+    void                        set_color(Qt::GlobalColor);
+    void                        set_text();
+    void                        set_radius (double radius) {m_radius = radius;}
+    double                      get_radius() {return m_radius;}
+    void paint(QPainter *, const QStyleOptionGraphicsItem *,
+               QWidget * );
+};
+
 //--------------------->       <-----------------------------//
 class bar: public graphic_signature2
 {
@@ -309,11 +337,11 @@ class lxa_graphics_scene : public QGraphicsScene
 
     QList<QList<CSignature*>*>              m_signature_lattice;
     QList<QList<graphic_signature2*>*>      m_graphic_signature_lattice;
-
     QMap<CSignature*,graphic_signature2*>   m_map_from_sig_to_pgraphsig;
 
-    QVector<int>                            m_insertion_point_in_signature_lattice;
 
+
+    QVector<int>                            m_insertion_point_in_signature_lattice;
     QList<QPair<CSignature*,CSignature*>*>  m_signature_containment_edges;
     graphic_signature2 *                    m_top_graphic_signature;
     CSignature*                             m_focus_signature;
@@ -332,6 +360,9 @@ class lxa_graphics_scene : public QGraphicsScene
     int                                     m_maximum_y;
     int                                     m_bottom_left_x;
     int                                     m_bottom_left_y;
+    bool                                    m_signature_slide_flag; // if true, some functions slide signatures to the left for display.
+    bool                                    m_display_circles_for_signatures;
+
 private:
     void                                    mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent);
     int                                     m_calculate_column_in_scene_pos_coord( int column_no) {return m_border + column_no * m_row_delta;}
@@ -345,8 +376,10 @@ public:
 
     void                make_debug_report();
                         ~lxa_graphics_scene();
-                        lxa_graphics_scene(MainWindow *, CLexicon* );
-    void                ingest( CLexicon*, CSignatureCollection*, bool suffix_flag);
+
+                        lxa_graphics_scene(MainWindow *, CLexicon* , bool display_circles_flag = false);
+
+    void                ingest( CSignatureCollection*);
     void                add_signature_containment_edge (QPair<CSignature*, CSignature*>* pPair)
                                            {m_signature_containment_edges.append (pPair); }
     void                assign_lattice_positions_to_signatures(CSignatureCollection*, eDataType );
@@ -355,6 +388,7 @@ public:
     void                clear_all();
     void                create_and_place_signatures();
     void                display_focus_signature();
+    bool                get_display_circles_for_signatures() {return m_display_circles_for_signatures;}
     graphic_signature2* get_focus_signature();
     CLexicon*           get_lexicon()           {return m_lexicon;}
     void                move_rows_apart();
@@ -366,15 +400,19 @@ public:
     void                place_arrow(QPointF, QPointF, QColor = Qt::green);
     void                re_place_signatures();
     void                set_focus_signature_and_move(graphic_signature2* );
+    void                set_display_circles_for_signatures(bool bool_var) {m_display_circles_for_signatures = bool_var;}
     void                set_focus_graphic_signature_and_show_subsignatures(graphic_signature2 *);
     void                set_focus_signature(CSignature* pSig)       {m_focus_signature = pSig;}
     void                set_focus_signature_2(CSignature* pSig)       {m_focus_signature_2 = pSig;}
 //    void                set_graphics_view (lxa_graphics_view* );
+    void                set_signature_collection (CSignatureCollection* signatures )    {m_signature_collection = signatures;}
     void                show_hypothesis_1(CHypothesis*);
     void                set_column_delta (double s)                 {m_column_delta = s;}
     void                set_row_delta(double s)                     {m_row_delta = s;}
     void                show_subsignatures() ;
     void                show_subsignatures_and_move_them() ;
+    void                toggle_display_circles_for_signatures();
+    void                toggle_signature_slide_flag() {if (m_signature_slide_flag) {m_signature_slide_flag = false;} else {m_signature_slide_flag = true;}}
     void                update_signature_focus();
     void                widen_columns();
 

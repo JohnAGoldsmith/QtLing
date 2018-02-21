@@ -15,9 +15,10 @@
 #include "CompareFunc.h"
 
 /////////////////////////////////////////////////////////////////////////////
-//          Graphic signature
+//          Graphic signaturev
 //          the base class for specific shapes
 /////////////////////////////////////////////////////////////////////////////
+
 
 graphic_signature2::graphic_signature2  () {
     m_focus_flag = false;
@@ -41,9 +42,6 @@ void graphic_signature2::set_color(Qt::GlobalColor this_color){
     m_color = this_color;
 
 };
-
-
-
 
 // not currently used:
 graphic_super_signature::graphic_super_signature(int x, int y, CSupersignature* pSig, lxa_graphics_scene * scene)
@@ -110,7 +108,7 @@ void lxa_graphics_view::set_graphics_scene(lxa_graphics_scene*  pScene)
 
 
 //--------------------------------------------------------------------------//
-lxa_graphics_scene::lxa_graphics_scene(MainWindow * window, CLexicon * lexicon){
+lxa_graphics_scene::lxa_graphics_scene(MainWindow * window, CLexicon * lexicon, bool display_circles_flag ){
     m_main_window               = window;
     m_lexicon                   = lexicon;
     m_location_of_bottom_row    = 0;
@@ -124,6 +122,8 @@ lxa_graphics_scene::lxa_graphics_scene(MainWindow * window, CLexicon * lexicon){
     m_focus_signature_2         = NULL;
     m_focus_graphic_signature   = NULL;
     m_suffix_flag               = true;
+    m_signature_slide_flag      = false;
+    m_display_circles_for_signatures= display_circles_flag ;
 
     // click on a hypothesis, watch its effects on the signature lattice.
     connect(m_main_window->get_upper_right_tableview(),SIGNAL(clicked(const QModelIndex & )),
@@ -136,14 +136,6 @@ int lxa_graphics_scene::m_calculate_row_in_scene_pos_coord(int row_no)
    return  m_location_of_bottom_row - (row_no - 2) * m_row_delta;
 }
 
-//--------------------------------------------------------------------------//
-void lxa_graphics_scene::ingest( CLexicon* lexicon, CSignatureCollection* signatures, bool suffix_flag)
-{
-    m_lexicon                   = lexicon;
-    m_signature_collection      = signatures;
-    m_suffix_flag               = suffix_flag;
-
-};
 
 //--------------------------------------------------------------------------//
 void lxa_graphics_scene::place_arrow( QPointF start, QPointF end, QColor color )
@@ -243,9 +235,6 @@ void lxa_graphics_scene::assign_lattice_positions_to_signatures(CSignatureCollec
 
     clear_all();
 
-     //make_debug_report();
-
-
     //  -->  Find out what the largest number of affixes is in the signatures  <-- //
 
     QListIterator<CSignature*> sig_iter_1 (* signatures->get_signature_list());
@@ -333,6 +322,9 @@ void lxa_graphics_scene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
 void   lxa_graphics_scene::move_graphic_signature_to_the_left(graphic_signature2* graphic_sig)
 {
+    if (m_signature_slide_flag == false) {
+        return;
+    }
     int col_no(0);
     int row_no = graphic_sig->get_signature()->get_number_of_affixes();
     int row_pos = m_calculate_row_in_scene_pos_coord(row_no);
@@ -429,8 +421,35 @@ void lxa_graphics_scene::create_and_place_signatures()
     /*
      * We build up a list of lists of graphic-sigs, and a map, from sig to graphic-sig.
      */
-
     //  -->    Iterate through the rows of signatures    <--//
+
+
+
+    if (m_display_circles_for_signatures){
+        for (int row = 2; row < number_of_rows; row++){
+            CSignature_ptr_list_iterator sig_iter(*m_signature_lattice[row]);
+            int col = 0;
+            while (sig_iter.hasNext()){
+                CSignature* pSig = sig_iter.next();
+                int x = m_calculate_column_in_scene_pos_coord(col);
+                int y = m_calculate_row_in_scene_pos_coord(row);
+                sig_circle * this_sig_circle = new sig_circle(this, pSig);
+                addItem(this_sig_circle);
+                this_sig_circle->setPos(x,y+ this_sig_circle->get_radius());
+                qDebug() << 437 << x << y;
+                m_map_from_sig_to_pgraphsig[pSig]=this_sig_circle;
+                m_graphic_signature_lattice[row]->append(this_sig_circle);
+                col++;
+            }
+        }
+        update();
+        return;
+    }
+
+
+
+
+
     for (int row = 2; row < number_of_rows; row++){
         CSignature_ptr_list_iterator sig_iter(*m_signature_lattice[row]);
         int col = 0;
@@ -447,12 +466,10 @@ void lxa_graphics_scene::create_and_place_signatures()
                 m_map_from_sig_to_pgraphsig[pSig]=this_bar;
                 m_graphic_signature_lattice[row]->append(this_bar);
                 break;
-            }
-
+                }
             case 3:{
                 triangle2 *  this_triangle_2  = new triangle2 (pSig);
-                addItem(this_triangle_2);
-                this_triangle_2->setPos(x,y);
+                addItem(this_triangle_2);                this_triangle_2->setPos(x,y);
                 m_map_from_sig_to_pgraphsig[pSig]=this_triangle_2;
                 m_graphic_signature_lattice[row]->append(this_triangle_2);
                 break;
@@ -561,8 +578,6 @@ void lxa_graphics_scene::create_and_place_signatures()
             col++;
         }
     }
-    qDebug() << "end of create and place signatures";
-
 
     update();
 }
@@ -818,3 +833,14 @@ QColor colors[10] = {QColor("cyan"), QColor("magenta"), QColor("red"),
                       QColor("blue")};
 return colors[0];
 }
+/*
+void lxa_graphics_scene::toggle_display_circles_for_signatures()
+{
+    if (m_display_circles_for_signatures)
+        { clear_all();
+          m_display_circles_for_signatures = false;}
+    else {
+        clear_all();
+        m_display_circles_for_signatures = true;}
+}
+*/

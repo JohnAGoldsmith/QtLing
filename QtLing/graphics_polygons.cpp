@@ -9,6 +9,55 @@
 class CSignature;
 
 
+//-----------------------------------------------------------//
+
+sig_circle::sig_circle(QGraphicsScene* parent, CSignature* pSig): graphic_signature2(pSig)
+{
+    m_score = pSig->get_robustness();
+    set_text();
+
+}
+
+// --------------------------------->      <--------------------------------------------//
+
+
+void sig_circle::paint(QPainter *painter, const QStyleOptionGraphicsItem * , QWidget*)
+{
+    int m_radius = 10 + 10 *log(m_score);
+    QBrush brush(m_color, Qt::SolidPattern);
+    QPen pen (Qt::darkBlue, 3);
+    painter->setBrush(brush);
+    painter->setPen(pen);
+
+    painter->drawEllipse(QPointF(0,0), m_radius, m_radius);
+    boundingRect();
+}
+
+void sig_circle::set_text(){
+    QList<QRectF*> br_list;
+    QList<QGraphicsSimpleTextItem*> text_item_list;
+    QFont serifFont ("Times", 16, QFont::Bold);
+    QGraphicsSimpleTextItem * item_sig = new QGraphicsSimpleTextItem (this);
+    item_sig->setText(m_signature->get_key());
+    item_sig->setFont(serifFont);
+    br_list.append(new QRectF(item_sig->sceneBoundingRect()));
+    text_item_list.append(item_sig);
+    item_sig->setPos(10 - 0.5 *br_list[0]->width() ,10+ m_radius +  br_list[0]->height());
+
+
+
+    text_item_list.append(new QGraphicsSimpleTextItem(this));
+    text_item_list[1]->setText(QString::number(m_score));
+    text_item_list[1]->setFont(serifFont);
+    br_list.append(new QRectF(text_item_list[1]->sceneBoundingRect()));
+    text_item_list[1]->setPos(0,0);
+
+}
+
+
+
+
+//-----------------------------------------------------------//
 bar::bar(CSignature* pSig): graphic_signature2(  pSig){
          set_text(pSig->get_key(), pSig->get_number_of_stems());
 };

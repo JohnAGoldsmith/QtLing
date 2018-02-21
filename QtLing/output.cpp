@@ -2,10 +2,13 @@
 #include <QFile>
 #include <QTextStream>
 #include <QString>
+#include "iostream"
+#include "iomanip"
 #include "Lexicon.h"
 #include "mainwindow.h"
 #include "WordCollection.h"
 #include "Word.h"
+#include "graphics.h"
 
 void MainWindow::write_stems_and_words()
 {
@@ -23,6 +26,7 @@ void MainWindow::write_stems_and_words()
     }
 
     QTextStream out (&out_file);
+    out.setFieldAlignment(QTextStream::AlignRight);
 
     QMapIterator<QString,CWord*> word_iter (*lexicon->get_words()->get_map());
     while (word_iter.hasNext()){
@@ -30,6 +34,11 @@ void MainWindow::write_stems_and_words()
         QMapIterator<stem_t, Parse_triple*> edge_iter (*pWord->get_parse_triple_map());
         while (edge_iter.hasNext()){
                 Parse_triple *  this_triple = edge_iter.next().value();
+//                out << std::left<< std::setfill(' ');// << std::left;
+//                    << std::setw(20)<< pWord->get_key()
+//                    << std::setw(20)<< this_triple->p_suffix
+//                    << std::setw(15) << this_triple->p_stem;
+                out.setFieldWidth(20);
                 out << pWord->get_key() << "+" <<  this_triple->p_stem  << "+"<< this_triple->p_suffix << endl ;
         }
     }
@@ -56,11 +65,11 @@ void MainWindow::read_stems_and_words()
         lexicon->get_words()->add(words[0]);
     }
     lexicon->CreateStemAffixPairs();
-    lexicon->AssignSuffixesToStems();
+    lexicon->assign_suffixes_to_stems("Reading stems and words");
     load_models(lexicon);
     create_or_update_TreeModel(lexicon);
 
-    set_up_graphics_scene_and_view();
+    get_graphics_scene()->set_signature_collection(lexicon->get_active_signature_collection());
     m_leftTreeView->expandAll();
     m_leftTreeView->resizeColumnToContents(0);
 

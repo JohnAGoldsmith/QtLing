@@ -62,7 +62,7 @@ public:
     QList<CSignature*> *                    get_signature_list()            { return & m_signature_list;}
     QMap<QString, CSignature*> *            get_signature_map()             {  return & m_SignatureMap;}
     QListIterator<CSignature*>   *          get_sorted_list_iterator();
-
+    bool                                    get_suffix_flag()               { return m_suffix_flag;}
     void                                    sort(eSortStyle);
     void                                    sort_signatures_by_affix_count();
     void                                    sort_each_signatures_stems_alphabetically();

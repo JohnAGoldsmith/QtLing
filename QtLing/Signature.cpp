@@ -114,7 +114,7 @@ int CSignature::get_robustness() const
     for (int stem_no=0;stem_no<m_Stems->size();stem_no++){
         stem_letters += m_Stems->at(stem_no)->get_key().length();
     }
-    robustness = stem_letters + suffix_letters;
+    robustness = stem_letters * (get_number_of_affixes()-1)  +  suffix_letters * (get_number_of_stems()-1);
     return robustness;
 }
  int CSignature::get_number_of_affixes() const
@@ -244,7 +244,7 @@ sigstring_t restructure_signature(sigstring_t sig, QString morph, QStringList ne
     affix_t     affix;
     sigstring_t new_signature;
 
-    qDebug() << "restructuring 1: old signature" << sig << "morph:" << morph << "new affixes:" << new_affixes.join("=");
+    //qDebug() << "restructuring 1: old signature" << sig << "morph:" << morph << "new affixes:" << new_affixes.join("=");
     for (int i = 0; i < affixes.count(); i++){
         affix = affixes[i];
         if (! new_affixes.contains(affix)){
@@ -254,7 +254,7 @@ sigstring_t restructure_signature(sigstring_t sig, QString morph, QStringList ne
     new_sig.append(morph);
     new_sig.sort();
     new_signature = new_sig.join("=");
-    qDebug() <<"restructuring 2 old sig:" << sig << "new signature:"<< new_signature << morph;
+    //qDebug() <<"restructuring 2 old sig:" << sig << "new signature:"<< new_signature << morph;
     return new_signature;
 }
 
