@@ -47,8 +47,10 @@ class LxaStandardItemModel;
 MainWindow::MainWindow()
 {
 
-    m_lexicon_list.append ( new CLexicon() );
-    CLexicon * lexicon =  m_lexicon_list.last();
+
+    m_my_lexicon = new CLexicon();
+    m_lexicon_list.append ( m_my_lexicon );
+    CLexicon * lexicon =  m_my_lexicon;
 
     // models
     m_Models["Words"]                       = new LxaStandardItemModel("Words");
@@ -84,9 +86,6 @@ MainWindow::MainWindow()
     m_tableView_lower           = new LowerTableView (this);
     m_tableView_upper_left->setSortingEnabled(true);
     m_tableView_upper_right->setSortingEnabled(true);
-
-//    bool suffix_flag = true;
-
     m_graphics_scene            = new lxa_graphics_scene( this, lexicon);
     m_graphics_view             = new lxa_graphics_view(m_graphics_scene, this);
     m_graphic_display_flag      = false;             // toggle with Ctrl-G
@@ -190,12 +189,20 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         break;
     }
     case Qt::Key_5:{
-        CLexicon* sublexicon = get_lexicon()->build_sublexicon();
-        load_models(sublexicon);
+        MainWindow* new_window = new MainWindow();
+        CLexicon* sublexicon = get_lexicon()->build_sublexicon(new_window);
+        m_lexicon_list.append(sublexicon);
+        new_window->set_lexicon(sublexicon);
+        sublexicon->set_window(new_window);
+        new_window->resize(600, 400);
+        new_window->setWindowTitle("Sublexicon");
+        new_window->show();
+
+        new_window->load_models(sublexicon);
         if (sublexicon->get_suffix_flag()){
-            display_suffix_signatures(sublexicon);
+            new_window->display_suffix_signatures(sublexicon);
         } else{
-            display_prefix_signatures(sublexicon);
+            new_window->display_prefix_signatures(sublexicon);
         }
         break;
     }

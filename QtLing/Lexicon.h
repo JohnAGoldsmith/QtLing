@@ -10,7 +10,7 @@
 #include <QStatusBar>
 #include "SignatureCollection.h"
 #include "Typedefs.h"
-
+class MainWindow;
 class CWordCollection;
 class CStemCollection;
 class CSuffixCollection;
@@ -129,6 +129,7 @@ protected:
                                                         // as the principal way in which the Lexicon communicates
                                                         // with the GUI as far as architecture is concerned.
                                                         // Each entry in this must have a pointer to a real Collection (of the sort that follows here):
+    MainWindow*                     m_main_window;
     CWordCollection *               m_Words;
     CStemCollection *               m_suffixal_stems;
     CStemCollection *               m_prefixal_stems;
@@ -215,8 +216,8 @@ public:
     void                                        set_status_bar(QStatusBar* pBar) {m_StatusBar = pBar;}
     void                                        set_prefixes_flag()         { m_SuffixesFlag = false;}
     void                                        set_suffixes_flag()         { m_SuffixesFlag = true;}
-
-    CLexicon *                                  build_sublexicon();
+    void                                        set_window(MainWindow* window) { m_main_window = window; }
+    CLexicon *                                  build_sublexicon(MainWindow* = NULL);
 
 public:
     // insert functions here

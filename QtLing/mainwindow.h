@@ -73,12 +73,15 @@ class MainWindow : public QMainWindow
     friend class                            UpperTableView;
     friend class                            LowerTableView;
     friend class                            lxaWindow;
+    friend class                            CLexicon;
 
     QList<CLexicon*>                        m_lexicon_list;
+    CLexicon*                               m_my_lexicon;
     QStringList                             m_corpus;
     QString                                 m_name_of_data_file;
     QString                                 m_name_of_project_file;
     QProgressBar *                          m_ProgressBar;
+    QStatusBar *                            m_status_bar;
     QMap<QString, LxaStandardItemModel*>    m_Models;
     eDataType                               m_graphic_display_type;
     eDataType                               m_upper_table_left_data_type;
@@ -114,8 +117,9 @@ public:
     void                                    display_signature_graph_edges(CLexicon* );
     void                                    display_hypotheses();
 //    void                                    DisplaySignatures();
-    CLexicon*                               get_lexicon()                       {return m_lexicon_list.last();  }
-    bool                                    get_graphic_display_flag()        {return m_graphic_display_flag;}
+    CLexicon*                               get_lexicon()                       { return m_my_lexicon;  }
+    QList<CLexicon*>*                       get_lexica()                        { return& m_lexicon_list; }
+    bool                                    get_graphic_display_flag()          { return m_graphic_display_flag; }
     void                                    load_models(CLexicon* lexicon);
     void                                    read_corpus();
    // void                                    set_up_graphics_scene_and_view();
@@ -194,7 +198,7 @@ public:
     UpperTableView *        get_upper_left_tableview()                          { return m_tableView_upper_left;}
     UpperTableView *        get_upper_right_tableview()                         { return m_tableView_upper_right;}
     void                    set_graphics_scene(lxa_graphics_scene* this_scene)  { m_graphics_scene = this_scene;}
-
+    void                    set_lexicon(CLexicon* lexicon)                      { m_my_lexicon = lexicon;}
     void                    write_stems_and_affixes();
 
 protected:

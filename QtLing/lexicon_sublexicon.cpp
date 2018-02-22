@@ -2,13 +2,14 @@
 #include <QMap>
 #include <QDebug>
 #include <QMapIterator>
+#include "mainwindow.h"
 #include "Lexicon.h"
 #include "Stem.h"
 #include "StemCollection.h"
 #include "WordCollection.h"
 
 
-CLexicon* CLexicon::build_sublexicon()
+CLexicon* CLexicon::build_sublexicon(MainWindow* my_window)
 {
     CSignature* pSig;
     if (m_SuffixesFlag == false &&  m_PrefixSignatures->get_count() < 1) {
@@ -18,8 +19,8 @@ CLexicon* CLexicon::build_sublexicon()
         return NULL;
     }
     CLexicon*  sublexicon = new CLexicon(this);
-    sublexicon->set_progress_bar(m_ProgressBar);
-    sublexicon->set_status_bar(m_StatusBar);
+    sublexicon->set_progress_bar(my_window->m_ProgressBar);
+    sublexicon->set_status_bar(my_window->statusBar());
     if (m_SuffixesFlag){
         sublexicon->set_suffixes_flag();
     } else{
