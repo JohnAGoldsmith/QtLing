@@ -24,16 +24,16 @@ public:
     CStem(CStem&);
 public:
     //Accessors
+    void                add_memo (QString memo) {m_Autobiography.append(memo);}
+    void                add_signature(CSignature* pSig ) {m_Signatures.append(pSig); }
+    void                add_suffix_to_parasignature(CSuffix* pSuffix) { m_parasignature.append(pSuffix);}
+    QString             display();
     QString             get_key()       const{return m_key;}
     QString             get_stem()       const { return m_key; }
-    QList<CSignature*> *  GetSignatures()  { return &m_Signatures; }
+    QList<CSignature*> * GetSignatures()  { return &m_Signatures; }
     CSignature*         get_last_signature() { return m_Signatures.last(); }
-    void                add_signature(CSignature* pSig ) {m_Signatures.append(pSig); }
-    QString             display();
     int                 get_count() {return m_count;}
     void                set_count (int n) {m_count = n;}
-    void                add_suffix_to_parasignature(CSuffix* pSuffix) { m_parasignature.append(pSuffix);}
-    void                add_memo (QString memo) {m_Autobiography.append(memo);}
 };
 
 #endif // CSTEM_H

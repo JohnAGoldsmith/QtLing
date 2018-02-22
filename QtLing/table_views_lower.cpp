@@ -343,6 +343,17 @@ void LowerTableView::table_signature(CSignature* pSig ){
     if (item_list.size() > 0){
         m_my_current_model->appendRow(item_list);
     }
+    QList<int> count_list;
+    qDebug() << pSig->get_key();
+    for (int stemno = 0; stemno< pSig->get_number_of_stems(); stemno++){
+        count_list << pSig->get_stems()->at(stemno)->get_count();
+    }
+    qSort(count_list);
+    for (int stemno = 0; stemno< pSig->get_number_of_stems(); stemno++){
+        qDebug() << count_list[stemno];
+    }
+
+
     //resizeColumnsToContents();
 
 }
