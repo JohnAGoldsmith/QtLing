@@ -216,6 +216,7 @@ public:
     void                                        set_status_bar(QStatusBar* pBar) {m_StatusBar = pBar;}
     void                                        set_prefixes_flag()         { m_SuffixesFlag = false;}
     void                                        set_suffixes_flag()         { m_SuffixesFlag = true;}
+    void                                        set_suffix_flag(bool flag)  { m_SuffixesFlag = flag;}
     void                                        set_window(MainWindow* window) { m_main_window = window; }
     CLexicon *                                  build_sublexicon(MainWindow* = NULL);
 

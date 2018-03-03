@@ -12,19 +12,19 @@
 CLexicon* CLexicon::build_sublexicon(MainWindow* my_window)
 {
     CSignature* pSig;
+
+    CLexicon*  sublexicon = new CLexicon(this, get_suffix_flag());
+    my_window->set_lexicon(sublexicon);
+    set_window(my_window);
+
+    sublexicon->set_progress_bar(my_window->m_ProgressBar);
+    sublexicon->set_status_bar(my_window->statusBar());
+
     if (m_SuffixesFlag == false &&  m_PrefixSignatures->get_count() < 1) {
         return NULL;
     }
     if (m_SuffixesFlag == true &&  m_Signatures->get_count() < 1) {
         return NULL;
-    }
-    CLexicon*  sublexicon = new CLexicon(this);
-    sublexicon->set_progress_bar(my_window->m_ProgressBar);
-    sublexicon->set_status_bar(my_window->statusBar());
-    if (m_SuffixesFlag){
-        sublexicon->set_suffixes_flag();
-    } else{
-        sublexicon->set_prefixes_flag();
     }
 
     // Get a map of the full signatures (non-hollow), and then take only the stems
@@ -67,10 +67,7 @@ CLexicon* CLexicon::build_sublexicon(MainWindow* my_window)
             sublexicon->get_words()->add(stem);
         }
     }
-    sublexicon->get_word_collection()->sort_word_list();
-
-    sublexicon->Crab_1();
-
+    sublexicon->get_word_collection()->sort_word_list(); 
 
     return sublexicon;
 }

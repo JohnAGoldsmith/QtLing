@@ -112,8 +112,8 @@ public:
     void                                    display_suffixes();
     void                                    display_suffix_signatures(CLexicon*);
     void                                    display_prefix_signatures(CLexicon*);
-    void                                    display_epositive_suffix_signatures();
-    void                                    display_epositive_prefix_signatures();
+    void                                    display_epositive_suffix_signatures(CLexicon*);
+    void                                    display_epositive_prefix_signatures(CLexicon*);
     void                                    display_signature_graph_edges(CLexicon* );
     void                                    display_hypotheses();
 //    void                                    DisplaySignatures();

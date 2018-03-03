@@ -65,6 +65,7 @@ public:
     word_and_count_list *       get_word_and_count_vectors(word_and_count_list* );
 
     void                        sort_stems();
+    void                        sort_stems_by_count();
 
 
 };

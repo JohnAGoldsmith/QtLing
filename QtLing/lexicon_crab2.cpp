@@ -161,9 +161,10 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
 
            // --> We go through this sig's stems and reconstitute its words. <--//
            stem_list_iterator stem_iter(*p_this_stem_list);
+           int stem_count = 0;
            while (stem_iter.hasNext()){
                this_stem_t = stem_iter.next();
-
+               stem_count = 0;
                pStem = stems->find_or_add(this_stem_t);
                pStem->add_signature (pSig);
                pSig->add_stem_pointer(pStem);
@@ -178,15 +179,17 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
                            this_word = this_affix + this_stem_t ;
                    }
                    CWord* pWord = m_Words->get_word(this_word);
-                   //pWord->add_stem_and_signature(pStem,pSig);
                    pWord->add_parse_triple(this_stem_t, this_affix, this_signature_string);
-                   //qDebug() << pSig->get_key() << 594;
                    QString message = this_signature_string;
                    if (affixes.size()> 50){message = "very long signature";}
                    pWord->add_to_autobiography("Resignaturize= " + this_stem_t + "=" + message );
+                   stem_count += pWord->get_word_count();
                }
+               pStem->set_count(stem_count);
            }
-       }else{       // insufficient number of stems ...
+       }
+       else
+       {       // insufficient number of stems ...
            this_signature_string =  iter_sigstring_to_stems.key();
            pSig =  *m_ParaSignatures << this_signature_string;
            pStem = *m_ResidualStems << this_stem_t;

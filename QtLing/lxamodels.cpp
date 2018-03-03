@@ -96,10 +96,15 @@ void LxaStandardItemModel::load_stems(CStemCollection * p_stems)
     this->clear();
     while (iter.hasNext())
     {
+        QList<QStandardItem*> item_list;
+
         stem = iter.next().value();
         QStandardItem *item = new QStandardItem(stem->get_key());
-        QList<QStandardItem*> item_list;
         item_list.append(item);
+
+        QStandardItem *item2 = new QStandardItem(QString::number(stem->get_count()));
+        item_list.append(item2);
+
         QListIterator<CSignature*> sig_iter(*stem->GetSignatures());
         while (sig_iter.hasNext()){
            sigstring_t sig = sig_iter.next()->get_key();
@@ -177,6 +182,10 @@ void LxaStandardItemModel::load_positive_signatures(CSignatureCollection* p_sign
         items.append(item3);
         items.append(item4);
         appendRow(items);
+
+
+
+
     }
 }
 void LxaStandardItemModel::load_parasignatures(CSignatureCollection* p_signatures)

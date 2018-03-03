@@ -18,6 +18,11 @@ enum eGraphicsStatus{
     GS_one_focus_signature_some_satellites_others_grayed
 };
 
+enum eDirectionality{
+    Dir_left_to_right,
+    Dir_right_to_left
+};
+
 enum eDataType{
     e_data_words,
     e_suffixal_stems,

@@ -314,25 +314,24 @@ void LowerTableView::table_word(CWord* pWord ){
 }
 void LowerTableView::table_signature(CSignature* pSig ){
 
-    QStandardItem*             p_item;
+    QStandardItem*             pItem1, * pItem2;
     QList<QStandardItem*>      item_list;
 
     item_list.clear();
-    CStem*                p_Stem;
     CStem_ptr_list    *   sig_stems = pSig->get_stems();
     if (m_my_current_model) { delete m_my_current_model;}
     m_my_current_model = new QStandardItemModel();
 
-    p_item = new QStandardItem("Stem final letter entropy");
+    pItem1 = new QStandardItem("Stem final letter entropy");
 
     m_my_current_model->appendRow(item_list);
-    item_list.append(p_item);
-    p_item = new QStandardItem(QString::number(pSig->get_stem_entropy()));
-    item_list.append(p_item);
+    item_list.append(pItem1);
+    pItem1 = new QStandardItem(QString::number(pSig->get_stem_entropy()));
+    item_list.append(pItem1);
     m_my_current_model->appendRow(item_list);
 
     item_list.clear();
-    foreach (p_Stem, *sig_stems)  {
+/*    foreach (p_Stem, *sig_stems)  {
         p_item = new QStandardItem(p_Stem->get_key() );
         item_list.append(p_item);
         if (item_list.length() >= m_number_of_columns){
@@ -343,18 +342,28 @@ void LowerTableView::table_signature(CSignature* pSig ){
     if (item_list.size() > 0){
         m_my_current_model->appendRow(item_list);
     }
+
     QList<int> count_list;
     qDebug() << pSig->get_key();
     for (int stemno = 0; stemno< pSig->get_number_of_stems(); stemno++){
         count_list << pSig->get_stems()->at(stemno)->get_count();
     }
     qSort(count_list);
+*/
+
+    CStem* pStem;
+    pSig->sort_stems_by_count();
     for (int stemno = 0; stemno< pSig->get_number_of_stems(); stemno++){
-        qDebug() << count_list[stemno];
-    }
+        pStem = pSig->get_stems()->at(stemno);
+        pItem1 = new QStandardItem(pStem->get_key() );
+        item_list.append(pItem1);
+        pItem2 = new QStandardItem(QString::number(pStem->get_count() ));
+        item_list.append(pItem2);
+        m_my_current_model->appendRow(item_list);
+        item_list.clear();    }
 
 
-    //resizeColumnsToContents();
+    resizeColumnsToContents();
 
 }
 

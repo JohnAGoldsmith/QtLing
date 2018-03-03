@@ -59,8 +59,15 @@ bool compare_stems_of_sig(const CStem* pStem1, const CStem* pStem2)
 {
  return  pStem1->get_key() < pStem2->get_key();
 }
+bool compare_stems_of_sig_by_count(const CStem* pStem1, const CStem* pStem2)
+{
+ return  pStem1->get_count() >pStem2->get_count();
+}
 void CSignature::sort_stems(){
     qSort(m_Stems->begin(), m_Stems->end(), compare_stems_of_sig);
+}
+void CSignature::sort_stems_by_count(){
+    qSort(m_Stems->begin(), m_Stems->end(), compare_stems_of_sig_by_count);
 }
 
 bool CSignature::contains_affix_string(affix_t affix)

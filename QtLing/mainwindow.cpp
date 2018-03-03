@@ -192,18 +192,17 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         MainWindow* new_window = new MainWindow();
         CLexicon* sublexicon = get_lexicon()->build_sublexicon(new_window);
         m_lexicon_list.append(sublexicon);
-        new_window->set_lexicon(sublexicon);
-        sublexicon->set_window(new_window);
+        new_window->do_crab();
+        if (sublexicon->get_suffix_flag()){
+            new_window->display_epositive_suffix_signatures(sublexicon);
+        } else{
+            new_window->display_epositive_prefix_signatures(sublexicon);
+        }
+
         new_window->resize(600, 400);
         new_window->setWindowTitle("Sublexicon");
         new_window->show();
 
-        new_window->load_models(sublexicon);
-        if (sublexicon->get_suffix_flag()){
-            new_window->display_suffix_signatures(sublexicon);
-        } else{
-            new_window->display_prefix_signatures(sublexicon);
-        }
         break;
     }
     case Qt::Key_6:{
@@ -265,7 +264,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     {
         get_lexicon()->set_suffixes_flag();
         do_crab();
-        display_suffix_signatures(get_lexicon());
+        display_epositive_suffix_signatures(get_lexicon());
         break;
     }
     case Qt::Key_V:
@@ -296,7 +295,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
             m_graphics_scene->set_signature_collection(get_lexicon()->get_active_signature_collection());
             display_suffix_signatures(get_lexicon());
         }
-        display_epositive_suffix_signatures();
+        display_epositive_suffix_signatures(get_lexicon());
           break;
     }
     case Qt::Key_Semicolon:
@@ -346,6 +345,7 @@ void MainWindow::do_crab2()
 
     create_or_update_TreeModel(lexicon);
    // m_graphics_scene->clear_all();
+    print_prefix_signatures();
     m_leftTreeView->expandAll();
     m_leftTreeView->resizeColumnToContents(0);
     write_stems_and_words();
@@ -514,35 +514,36 @@ void MainWindow::print_prefix_signatures()
     CSignature* pSig;
     int count = 0;
     CStem *  pStem;
-
-    QString filename = "signatures.txt";
+    QString filename = "swahili-signatures.txt";
     QFile file (filename);
     if (file.open(QIODevice::ReadWrite)){
-
         QTextStream stream( &file);
-
-
-    map_sigstring_to_sig_ptr_iter sig_iter (*get_lexicon()->get_prefix_signatures()->get_map());
-    while (sig_iter.hasNext()){
-       pSig = sig_iter.next().value();
-       stream << pSig->get_key()<< endl;
-       CStem_ptr_list_iterator stem_iter (*pSig->get_stems());
-       while (stem_iter.hasNext()){
-           pStem = stem_iter.next();
-           stream << pStem->get_key() << "\t";
-           count++;
-           if (count ==5){
-               count = 0;
-               stream << endl;
-           }
-       }
-       stream << endl << endl;
-       count = 0;
-    }
-    stream << endl;
-
-    }
-    file.close();
+    QStringList labels;
+    labels  << tr("signature") << "stem count" << "robustness"<< "fullness";
+    CSignatureCollection * signatures = get_lexicon()->get_prefix_signatures();
+    CSignature*         pSig;
+    signatures->sort(SIG_BY_AFFIX_COUNT);
+    double threshold = signatures->get_lexicon()->get_entropy_threshold_for_positive_signatures();
+    for (int signo = 0; signo<signatures->get_count(); signo++)
+    {   pSig = signatures->get_at_sorted(signo);
+        if (pSig->get_stem_entropy() < threshold){continue;}
+        stream << pSig->get_key()    << endl << endl;
+        CStem_ptr_list_iterator stem_iter (*pSig->get_stems());
+        while (stem_iter.hasNext()){
+            pStem = stem_iter.next();
+            stream << pStem->get_key() << "\t";
+            count++;
+            if (count ==5){
+                count = 0;
+                stream << endl;
+            }
+        }
+        stream << endl << endl;
+        count = 0;
+     }
+     stream << endl;
+     }
+     file.close();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
