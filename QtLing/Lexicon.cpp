@@ -176,8 +176,6 @@ void CLexicon::FindProtostems()
     m_ProgressBar->setMinimum(0);
     m_ProgressBar->setMaximum(Words->size());
     m_StatusBar->showMessage("Proto-stems.");
-//    m_prefix_protostems.clear();
-//    m_suffix_protostems.clear();
     m_Parses->clear();
     m_Parse_map.clear();
     for (int wordno=0; wordno<Words->size(); wordno ++){
@@ -208,7 +206,8 @@ void CLexicon::FindProtostems()
                         for (wordno2 = wordno; wordno2 < m_Words->get_count(); wordno2++ ){
                             if ( ! Words->at(wordno2).startsWith(stem) ){
                                 end_word = wordno2 - 1;
-                                break;                            }
+                                break;
+                            }
                         } // add case for last word on list here.
                         protostem * this_protostem = new protostem(stem, wordno-1, end_word );
                         m_suffix_protostems_2[stem] = this_protostem;
@@ -221,18 +220,34 @@ void CLexicon::FindProtostems()
         {       // -->   Prefix case   <-- //
             this_word_length = this_word.length();
             previous_word_length = previous_word.length();
-            //if (this_word == "kitabu") {qDebug()<< 213 << previous_word;}
-
+            //if (this_word == "anafanya") {qDebug()<< 223 << previous_word;}
+            //qDebug() << 224 << previous_word <<  this_word;
             int end = qMin(this_word_length, previous_word_length);
+            //if (this_word.right(5) == "fanya"){qDebug() << 226 << this_word;}
             for (int i=1; i <=end; i++){
                 if (previous_word.right(i) != this_word.right(i)){
                     stem = previous_word.right(i-1);
+                    if (stem.length() == 0) {continue;}
+                    //qDebug() << 231 << stem;
+                    //if (stem=="fanya") qDebug() << 230 << "fanya" << stem << this_word;
                     DifferenceFoundFlag = true;
-                    if (this_word == "kitabu"){qDebug() << stem << previous_word << 221;}
-                    if (!m_prefix_protostems.contains(stem))                {
-                            m_prefix_protostems[stem] = 1;
-                     }
-                     break;
+                    //if (this_word == "anafanya"){qDebug() << stem << previous_word << 233;}
+                    if (!m_prefix_protostems_2.contains(stem)) {
+                        for (wordno2= wordno; wordno2 < m_Words->get_count(); wordno2++){
+                            word_t that_word = get_words()->get_reverse_sort_list()->at(wordno2);
+                            if ( that_word == "anafanya") qDebug() << 237 << stem << this_word <<  that_word;
+                            if (! that_word.endsWith(stem)){
+                                end_word = wordno2 - 1;
+                                break;
+                            }
+                        }
+                        protostem * this_protostem = new protostem (stem, wordno-1, end_word);
+                        //qDebug() << 242 << stem << get_words()->get_reverse_sort_list()->at(wordno-1)  << get_words()->get_reverse_sort_list()->at(end_word);
+                        m_prefix_protostems_2[stem] = this_protostem;
+                        m_prefix_protostems[stem] = 1;
+                        if (stem == "fanya") qDebug() << 246 << "fanya stem";
+                    }
+                    break;
                 }
             }
         }
@@ -287,7 +302,11 @@ void CLexicon::CreateStemAffixPairs()
                 }
             }else{
                 stem = word.right(letterno);
+                 if (stem=="fanya")qDebug() << 304 << "fanya" << word;
+                //if (stem == "fanya")qDebug() << 302 << stem ;
                 if (m_prefix_protostems.contains(stem)){
+                    //qDebug() << 307 << "proto stems includes fanya";
+                    if (stem=="fanya")qDebug() << 291 << "fanya" << word;
                     prefix_length = word.length() - letterno;
                     prefix = word.left(prefix_length);
                     m_Parses->append(QPair<QString,QString>(prefix,stem));
@@ -345,8 +364,10 @@ void   CLexicon::assign_suffixes_to_stems(QString name_of_calling_function)
                 pSet = new prefix_set();
             }
             temp_stems_to_affix_set.insert(this_stem_t,pSet);
+
         }
         temp_stems_to_affix_set.value(this_stem_t)->insert(this_affix);
+        //if (this_stem_t == "fanya") qDebug() << 351 << this_affix;
     }
     //-----------------------------------------------------------------------------------------------//
     qDebug() << "Step 1.";
@@ -378,6 +399,7 @@ void   CLexicon::assign_suffixes_to_stems(QString name_of_calling_function)
             temp_signatures_to_stems[this_signature_string] = pStemSet;
          }
          temp_signatures_to_stems.value(this_signature_string)->append(this_stem_t);
+         //if (this_stem_t == "fanya") qDebug() << this_signature_string << 386;
     }
     //-----------------------------------------------------------------------------------------------//
     //-->  create signatures, stems, affixes:  <--//
@@ -443,6 +465,7 @@ void   CLexicon::assign_suffixes_to_stems(QString name_of_calling_function)
                             this_word = this_stem_t + this_affix :
                             this_word = this_affix + this_stem_t ;
                     }
+                    if (this_word == "anafanya") qDebug() << 452 << this_affix + this_stem_t;
                     CWord* pWord = m_Words->get_word(this_word);
                     if (!pWord){
                         qDebug() << this_word <<  "Error: this_word not found among words.";
@@ -450,8 +473,11 @@ void   CLexicon::assign_suffixes_to_stems(QString name_of_calling_function)
                         stem_count += pWord->get_word_count();
                         pWord->add_parse_triple(this_stem_t, this_affix, pSig->get_key());
                         QString message = this_signature_string;
+                        //qDebug() << 471 << this_signature_string;
                         if (this_affix_set.size() > 50){message = "Super long signature";};
                         pWord->add_to_autobiography(name_of_calling_function + "=" + this_stem_t + "=" + message);
+                        if (this_word == "anafanya") qDebug() << 474 << "anafanya";
+
                     }
                  }
             pStem->set_count(stem_count);

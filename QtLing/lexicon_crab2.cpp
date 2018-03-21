@@ -27,7 +27,6 @@ extern bool contains(QList<QString> * list2, QList<QString> * list1);
 void CLexicon::Crab_2()
 {
     ReSignaturizeWithKnownAffixes();
-
     FindGoodSignaturesInsideParaSignatures();
 
      m_SuffixesFlag ?
@@ -59,7 +58,6 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
    CSignature*                 pSig;
    QString                     this_stem_t, this_suffix_t, this_prefix, this_affix, this_signature_string, this_word;
    stem_list *                 p_this_stem_list;
-//   suffix_set *                this_ptr_to_suffix_set;
    affix_set *                 this_ptr_to_affix_set;
    CStem*                      pStem;
    CStemCollection*            stems;
@@ -69,7 +67,6 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
    map_sigstring_to_suffix_set   temp_stems_to_affix_set;
    map_sigstring_to_morph_set  & ref_stems_to_affix_set (temp_stems_to_affix_set);
    map_sigstring_to_stem_list    temp_signatures_to_stems;
-   //map_sigstring_to_stem_list  & ref_temp_signatures_to_stems(temp_signatures_to_stems);
 
    m_StatusBar->showMessage("Resignaturize with known affixes");
    m_ProgressBar->reset();
@@ -98,8 +95,8 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
         m_ProgressBar->setValue(stem_count++);
         this_stem_t            = stem_iter.key();
         this_ptr_to_affix_set  = stem_iter.value();
-        if (this_stem_t == "thro"){
-            qDebug() << 607 << "thro" << this_ptr_to_affix_set ;
+        if (this_stem_t == "fanya"){
+            qDebug() << 101 << "fanya" << this_ptr_to_affix_set ;
         }
         if (this_ptr_to_affix_set->size() < 2){continue;}
         QStringList temp_presignature;
@@ -112,17 +109,17 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
 
         temp_presignature.sort();
         sigstring_t this_signature_string = temp_presignature.join("=");
-        if (this_stem_t == "thro"){
-            qDebug() << this_signature_string << 621;
+        if (this_stem_t == "fanya"){
+            qDebug() << this_signature_string << 115;
         }
         if ( ! temp_signatures_to_stems.contains(this_signature_string)){
            stem_list * pStemSet = new stem_list;
            temp_signatures_to_stems[this_signature_string] = pStemSet;
         }
         temp_signatures_to_stems.value(this_signature_string)->append(this_stem_t);
-//        if (this_stem_t == "school"){
-//            qDebug() << this_signature_string <<542;
-//        }
+        if (this_stem_t == "fanya"){
+            qDebug() << this_signature_string <<123;
+        }
    }
 
    //-->  create signatures, stems, affixes:  <--//
@@ -181,6 +178,7 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
                    CWord* pWord = m_Words->get_word(this_word);
                    pWord->add_parse_triple(this_stem_t, this_affix, this_signature_string);
                    QString message = this_signature_string;
+                   if ( this_word == "anafanya") qDebug() << message << 183;
                    if (affixes.size()> 50){message = "very long signature";}
                    pWord->add_to_autobiography("Resignaturize= " + this_stem_t + "=" + message );
                    stem_count += pWord->get_word_count();
@@ -206,6 +204,7 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
                QString message = this_signature_string;
                if (this_affix_set.size()> 50){message = "very long signature";}
                pWord->add_to_autobiography("*" + this_word + "=" + this_stem_t + "=" + message );
+               if (this_stem_t == "fanya") qDebug() << 209 << "fanya" << this_word;
            }
        }
    }
@@ -276,27 +275,19 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
     CStem*                      pStem;
     CWord*                      pWord;
     CSignature*                 p_proven_sig;
-    //CSuffix*                    pSuffix1;
-    //int                         suffix_no;
-    //int                         count_of_new_stems = 0;
-    //int                         count_of_new_words = 0;
-    //int                         signature_count (0);
     affix_list                  affixes_of_residual_sig;
-    //CSuffix_ptr_list  *         list_of_CSuffixes_of_proven_sig;
     CSuffix_ptr_list            this_residual_sig_suffix_pointer_list;
-    //bool                        success_flag;
     CSignatureCollection*       signatures;
     suffix_t                    Null_string ("NULL");
-    //CSuffix*                    pNullSuffix = *m_Suffixes << Null_string;
     CStemCollection*            stems;
     m_SuffixesFlag ?
                 stems = m_suffixal_stems:
                 stems = m_prefixal_stems;
 
-                                m_ProgressBar->reset();
-                                m_ProgressBar->setMinimum(0);
-                                m_ProgressBar->setMaximum(m_ParaSignatures->get_count());
-                                m_StatusBar->showMessage("Find good signatures inside bad.");
+    m_ProgressBar->reset();
+    m_ProgressBar->setMinimum(0);
+    m_ProgressBar->setMaximum(m_ParaSignatures->get_count());
+    m_StatusBar->showMessage("Find good signatures inside bad.");
 
     //---->   We iterate through the list of Residual Signatures <-------//
 
@@ -306,7 +297,6 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
          signatures = m_PrefixSignatures;
     }
     signatures->sort(SIG_BY_AFFIX_COUNT);
-    map_sigstring_to_sig_ptr_iter   sig_iter(*  m_ParaSignatures->get_map());
 
     QMap<QString, protostem*> * these_protostems_2;
     m_SuffixesFlag?
@@ -314,25 +304,40 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
                 these_protostems_2 = & m_prefix_protostems_2;
     int protostem_count = 0;
     m_ProgressBar->setMaximum(these_protostems_2->count());
+    qDebug() << "how many protostems"<< these_protostems_2->count();
     foreach (auto this_protostem, * these_protostems_2)
     {
         affixes_of_residual_sig.clear();
         m_ProgressBar->setValue(protostem_count++);
         stem_t this_stem = this_protostem->get_stem();
+        if (this_stem == "fanya")qDebug() << 323 << "fanya";
+        //qDebug() << 324 << this_stem;
         int stem_length = this_stem.length();
 
         for (int wordno= this_protostem->get_start_word(); wordno <= this_protostem->get_end_word(); wordno++){
-            QString this_word = m_Words->get_word_string(wordno);
-            QString ending = this_word.mid( stem_length );
-            affixes_of_residual_sig.append( ending );
+            QString this_word, affix;
+            if (m_SuffixesFlag){
+                this_word = m_Words->get_word_string(wordno);
+                affix = this_word.mid( stem_length );
+            } else{
+                this_word = m_Words->get_reverse_sort_list()->at(wordno);
+                affix = this_word.left(this_word.length()- stem_length);
+            }
+            affixes_of_residual_sig.append( affix );
+            //qDebug() << 327 << this_stem << m_Words->get_reverse_sort_list()->at(this_protostem->get_start_word()) <<
+                        //m_Words->get_reverse_sort_list()->at(this_protostem->get_end_word())<<affix;
         }
         if (m_Words->contains(this_stem)) {
                 affixes_of_residual_sig.append("NULL");
+        }
+        if (this_stem == "fanya"){
+            qDebug() << 333 << affixes_of_residual_sig ;
         }
         //--> Now we look for largest true signature inside this list of suffixes. <--//
         //--> Inner loop, over all good signatures. <--//
         for (int sig_no=0; sig_no < signatures->get_count(); sig_no++){
             p_proven_sig = signatures->get_at_sorted(sig_no);
+            if (this_stem== "fanya") qDebug() << 340 << p_proven_sig->get_key();
             QString p_proven_sigstring  = p_proven_sig->get_key();
             QList<QString> proven_sig_list = p_proven_sigstring.split("=");
             if ( contains(&affixes_of_residual_sig, &proven_sig_list) ){
@@ -340,7 +345,7 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
                 pStem = stems->find_or_add(this_stem);
                 pStem->add_signature(p_proven_sig);
                 p_proven_sig->add_stem_pointer(pStem);
-
+                qDebug() << 347 << this_stem << p_proven_sigstring;
                 //--> add to autobiographies <--//
 
                 for (int affixno = 0; affixno < proven_sig_list.length(); affixno++){

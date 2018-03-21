@@ -124,6 +124,7 @@ lxa_graphics_scene::lxa_graphics_scene(MainWindow * window, CLexicon * lexicon, 
     m_suffix_flag               = true;
     m_signature_slide_flag      = false;
     m_display_circles_for_signatures= display_circles_flag ;
+    m_graphics_view = NULL;
 
     // click on a hypothesis, watch its effects on the signature lattice.
     connect(m_main_window->get_upper_right_tableview(),SIGNAL(clicked(const QModelIndex & )),
@@ -234,7 +235,11 @@ void lxa_graphics_scene::assign_lattice_positions_to_signatures(CSignatureCollec
     CSignature * pSig;//, *qSig;
 
     clear_all();
-
+    if (m_graphics_view){
+        m_graphics_view->m_scale =1;
+        m_graphics_view->m_x_scale =1.0;
+        m_graphics_view->m_y_scale = 1.0;
+    }
     //  -->  Find out what the largest number of affixes is in the signatures  <-- //
 
     QListIterator<CSignature*> sig_iter_1 (* signatures->get_signature_list());

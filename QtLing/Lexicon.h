@@ -140,7 +140,7 @@ protected:
     CWordCollection *               m_Compounds;
     QList<QPair<QString,QString>> * m_Parses;
     QMap<QString,int>               m_Parse_map;
-    QMap<QString, int>              m_suffix_protostems;
+//    QMap<QString, int>              m_suffix_protostems;
     QMap<QString, int>              m_prefix_protostems;
 
     // m_protostems_2 is used in order to keep track of exactly which interval of words in the word list begins
@@ -199,9 +199,10 @@ public:
     CSignatureCollection *                      get_residual_signatures()   { return m_ParaSignatures;}
     CSignatureCollection *                      get_sequential_signatures() { return m_SequentialSignatures;}
     CSignatureCollection*                       get_signatures()            { return m_Signatures;}
+    CSignatureCollection*                       get_suffix_signatures()     { return m_Signatures;}
     CSuffixCollection*                          get_suffixes()              {return m_Suffixes;}
     CStemCollection *                           get_suffixal_stems()        { return m_suffixal_stems;}
-    QMap<QString,int>*                          get_protostems()            { return &m_suffix_protostems;}
+//    QMap<QString,int>*                          get_protostems()            { return &m_suffix_protostems;}
     QList<simple_sig_graph_edge*> *             get_sig_graph_edges()       { return &m_SigGraphEdgeList;}
     lxa_sig_graph_edge_map *                    get_sig_graph_edge_map()    { return & m_SigGraphEdgeMap;}
     sig_graph_edge*                             get_sig_graph_edge(QString label) {return m_SigGraphEdgeMap[label];}

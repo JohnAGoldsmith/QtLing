@@ -165,8 +165,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         if (get_lexicon()->get_prefixal_stems()->get_count() > 0){
             get_lexicon()->set_prefixes_flag();
             do_crab2();
-            display_prefix_signatures(get_lexicon());
-        }
+            display_epositive_prefix_signatures(get_lexicon());        }
         break;
      }
     case Qt::Key_2:
@@ -174,7 +173,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         if (get_lexicon()->get_suffixal_stems()->get_count() > 0){
            get_lexicon()->set_suffixes_flag();
            do_crab2();
-           display_suffix_signatures(get_lexicon());
+           display_epositive_suffix_signatures(get_lexicon());
         }
         break;
     }
@@ -230,6 +229,11 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
             sizes<< 500 << 200;
             m_rightSplitter->setSizes(sizes);
         }
+        break;
+    }
+    case Qt::Key_H:
+    {
+        QMainWindow::keyPressEvent(ke);
         break;
     }
     case Qt::Key_I: {
@@ -308,9 +312,14 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         m_graphics_view->reset_scale();
         break;
     }
-    case Qt::Key_H:
+    case Qt::Key_Comma:
     {
-        QMainWindow::keyPressEvent(ke);
+        display_epositive_suffix_signatures(get_lexicon());
+        break;
+    }
+    case Qt::Key_Period:
+    {
+        display_epositive_prefix_signatures(get_lexicon());
         break;
     }
     }
@@ -345,7 +354,10 @@ void MainWindow::do_crab2()
 
     create_or_update_TreeModel(lexicon);
    // m_graphics_scene->clear_all();
-    print_prefix_signatures();
+    if (lexicon->get_suffix_flag())
+        print_suffix_signatures();
+    else
+        print_prefix_signatures();
     m_leftTreeView->expandAll();
     m_leftTreeView->resizeColumnToContents(0);
     write_stems_and_words();
@@ -506,6 +518,43 @@ void MainWindow::documentWasModified()
 
 
 
+void MainWindow::print_suffix_signatures()
+{
+    CSignature* pSig;
+    int count = 0;
+    CStem *  pStem;
+    QString filename = "swahili-suffix-signatures.txt";
+    QFile file (filename);
+    if (file.open(QIODevice::ReadWrite)){
+        QTextStream stream( &file);
+    QStringList labels;
+    labels  << tr("signature") << "stem count" << "robustness"<< "fullness";
+    CSignatureCollection * signatures = get_lexicon()->get_suffix_signatures();
+    CSignature*         pSig;
+    signatures->sort(SIG_BY_AFFIX_COUNT);
+    double threshold = signatures->get_lexicon()->get_entropy_threshold_for_positive_signatures();
+    for (int signo = 0; signo<signatures->get_count(); signo++)
+    {   pSig = signatures->get_at_sorted(signo);
+        if (pSig->get_stem_entropy() < threshold){continue;}
+        stream << pSig->get_key()    << endl << endl;
+        CStem_ptr_list_iterator stem_iter (*pSig->get_stems());
+        while (stem_iter.hasNext()){
+            pStem = stem_iter.next();
+            stream << pStem->get_key() << "\t";
+            count++;
+            if (count ==5){
+                count = 0;
+                stream << endl;
+            }
+        }
+        stream << endl << endl;
+        count = 0;
+     }
+     stream << endl;
+     }
+     file.close();
+}
+
 
 
 
@@ -514,7 +563,7 @@ void MainWindow::print_prefix_signatures()
     CSignature* pSig;
     int count = 0;
     CStem *  pStem;
-    QString filename = "swahili-signatures.txt";
+    QString filename = "swahili-prefix-signatures.txt";
     QFile file (filename);
     if (file.open(QIODevice::ReadWrite)){
         QTextStream stream( &file);

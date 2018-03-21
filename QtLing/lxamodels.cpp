@@ -61,23 +61,18 @@ void LxaStandardItemModel::load_words(CWordCollection* p_words)
     QStringList labels;
     labels  << tr("word") << "word count" << "signatures";
     setHorizontalHeaderLabels(labels);
-
+    clear();
     m_Description = QString (" ");
     QMapIterator<word_t, CWord*> word_iter ( * p_words->get_map() );
     while (word_iter.hasNext())
     {   word_iter.next();
         CWord* pWord = word_iter.value();
         word_t this_word = word_iter.key();
-        //qDebug() << 69 << this_word;
-
         QList<QStandardItem*> item_list;
-
         QStandardItem* pItem = new QStandardItem(this_word);
         item_list.append(pItem);
-
         QStandardItem* pItem2 = new QStandardItem(QString::number(pWord->get_word_count()));
         item_list.append(pItem2);
-
         QMapIterator<stem_t, Parse_triple*> parse_3_iter(*pWord->get_parse_triple_map());
         while (parse_3_iter.hasNext()){
             QStandardItem* pItem3 = new QStandardItem(parse_3_iter.next().value()->p_sig_string) ;
@@ -93,7 +88,7 @@ void LxaStandardItemModel::load_stems(CStemCollection * p_stems)
     CStem*                          stem;
     QMapIterator<QString, CStem*>  iter ( * p_stems->get_map() ) ;
 
-    this->clear();
+    clear();
     while (iter.hasNext())
     {
         QList<QStandardItem*> item_list;
@@ -118,7 +113,7 @@ void LxaStandardItemModel::load_stems(CStemCollection * p_stems)
 
 void LxaStandardItemModel::load_suffixes(CSuffixCollection * p_suffixes)
 {
-    this->clear();
+    clear();
     //map_string_to_suffix_ptr_iter suffix_iter(*p_suffixes->get_map());
     CSuffix_ptr_list_iterator suffix_iter(*p_suffixes->get_sorted_list());
     while (suffix_iter.hasNext())
@@ -134,7 +129,7 @@ void LxaStandardItemModel::load_suffixes(CSuffixCollection * p_suffixes)
 }
 void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures, eSortStyle this_sort_style)
 {
-    this->clear();
+    clear();
     m_Signatures = p_signatures;
     CSignature*         sig;
     p_signatures->sort(this_sort_style);
@@ -160,7 +155,7 @@ void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures, e
 }
 void LxaStandardItemModel::load_positive_signatures(CSignatureCollection* p_signatures, eSortStyle this_sort_style)
 {
-    this->clear();
+    clear();
     QStringList labels;
     labels  << tr("signature") << "stem count" << "robustness"<< "fullness";
     setHorizontalHeaderLabels(labels);
@@ -190,7 +185,7 @@ void LxaStandardItemModel::load_positive_signatures(CSignatureCollection* p_sign
 }
 void LxaStandardItemModel::load_parasignatures(CSignatureCollection* p_signatures)
 {
-    this->clear();
+    clear();
     m_Description = " ";
     CSignature*         sig;
     p_signatures->sort(SIG_BY_AFFIX_COUNT);
@@ -226,7 +221,7 @@ bool sort_function_1(const QPair<QString ,int >  * a ,  QPair<QString , int >  *
 };
 void LxaStandardItemModel::load_hypotheses(QList<CHypothesis*>* p_hypotheses)
 {
-    this->clear();
+    clear();
     m_Description = " ";
     CHypothesis*         hypothesis;
     QMap<QString,QList<CHypothesis*> >  Hypothesis_map;
@@ -265,7 +260,7 @@ void LxaStandardItemModel::load_hypotheses(QList<CHypothesis*>* p_hypotheses)
 }
 void LxaStandardItemModel::load_hypotheses_2(QList<CHypothesis*>* p_hypotheses)
 {
-    this->clear();
+    clear();
     m_Description = " ";
     CHypothesis*         hypothesis;
     QMap<QString,QList<CHypothesis*> >  Hypothesis_map;

@@ -137,6 +137,7 @@ private slots:
     void                                    documentWasModified();
     void                                    newFile();
     void                                    print_prefix_signatures();
+    void                                    print_suffix_signatures();
     void                                    read_file_do_crab();
     bool                                    save();
     bool                                    saveAs();
