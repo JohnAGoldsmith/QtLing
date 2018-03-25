@@ -27,6 +27,8 @@ protected:
     QMap<CSignature*,QList<CSignature*>*>   m_ContainmentMap;
     bool                                    m_suffix_flag;
     CLexicon*                               m_Lexicon;
+    QList<CSignature*>                      m_minimal_cover;
+    int                                     m_minimum_number_of_stems_for_minimal_cover;
 public:
     CSignatureCollection(CLexicon*, bool suffix_flag = true);
     ~CSignatureCollection();
@@ -49,6 +51,7 @@ public:
     bool                                    contains (sigstring_t);
     CSignature*                             find_or_add ( QString);         // same as operatorˆ=
     CSignature *                            find_or_fail(QString);
+    void                                    find_minimal_cover();
     CSignature*                             get_at_sorted( uint n )         { return m_SortList[n];}
     QMap<CSignature*,QList<CSignature*>*> * get_containment_map()           {return & m_ContainmentMap;}
     QList<word_and_count_list*> *           get_count_vectors(QList<word_and_count_list*> * count_vectors);
@@ -56,7 +59,7 @@ public:
     void                                    get_epositive_signatures(QMap<CSignature*,int>);
     CLexicon*                               get_lexicon()                   { return m_Lexicon; }
     map_string_to_sig*                      get_map()                       { return & m_SignatureMap;}
-//    map_sigstring_to_sig_ptr_iter *         get_map_iterator() ;
+    QList<CSignature*> *                    get_minimal_cover()            {return & m_minimal_cover;}
     int                                     get_number_of_epositive_signatures();
     CSignature*                             get_signature(QString sig)      {return m_SignatureMap.value(sig); }
     QList<CSignature*> *                    get_signature_list()            { return & m_signature_list;}

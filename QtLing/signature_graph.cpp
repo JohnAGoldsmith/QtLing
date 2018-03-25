@@ -24,12 +24,15 @@ void CLexicon::compute_sig_graph_edges()
     CWord*                          pWord;
     morph_t                         difference;
     stem_t                          this_stem, the_other_stem;
+    int                             analysis_number = 0;
 
     while (word_iter.hasNext())   {
         pWord = word_iter.next().value();
         QMapIterator<stem_t, Parse_triple*> iter_triple_1 (*pWord->get_parse_triple_map());
+        analysis_number = 0;
         while (iter_triple_1.hasNext())
         {
+            analysis_number += 1;
             this_stem = iter_triple_1.next().key();
             int this_stem_length = this_stem.length();
             Parse_triple * this_triple = iter_triple_1.value();
@@ -65,7 +68,11 @@ void CLexicon::compute_sig_graph_edges()
                                                                 difference, pWord->get_key(), the_other_stem, this_stem);
                 }
                 m_SigGraphEdgeList.append(p_SigGraphEdge);
-                pWord->add_to_autobiography("sig graph edge=" + this_stem + "=" +  this_sig + "=" + the_other_stem + "=" + the_other_sig);
+                QString message1 = "sig graph edge #" + QString::number(analysis_number) + "=signature 1: ="
+                        + this_stem + "=" +  this_sig + "=" + "difference =" + "="  + difference;
+                pWord->add_to_autobiography(message1);
+                QString message2 = "=signature 2:   =" + the_other_stem + "=" + the_other_sig;
+                pWord->add_to_autobiography(message2);
             } // end of looking at stems longer than this_stem
         } //end of looking at each stem in this word.
     } // each word

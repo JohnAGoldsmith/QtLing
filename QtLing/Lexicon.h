@@ -219,7 +219,10 @@ public:
     void                                        set_suffixes_flag()         { m_SuffixesFlag = true;}
     void                                        set_suffix_flag(bool flag)  { m_SuffixesFlag = flag;}
     void                                        set_window(MainWindow* window) { m_main_window = window; }
+
     CLexicon *                                  build_sublexicon(MainWindow* = NULL);
+    void                                        link_signature_and_stem(stem_t , CSignature*, QString this_signature_string );
+    void                                        link_signature_and_affix(CSignature*, affix_t);
 
 public:
     // insert functions here

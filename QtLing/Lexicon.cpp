@@ -22,8 +22,8 @@ CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag)
     m_Signatures            = new CSignatureCollection(this, true);
     m_PrefixSignatures      = new CSignatureCollection(this,false);
     m_Words                 = new CWordCollection(this);
-    m_prefixal_stems          = new CStemCollection(this);
-    m_suffixal_stems          = new CStemCollection(this);
+    m_prefixal_stems        = new CStemCollection(this);
+    m_suffixal_stems        = new CStemCollection(this);
     m_Suffixes              = new CSuffixCollection(this);
     m_Prefixes              = new CPrefixCollection(this);
     m_Compounds             = new CWordCollection(this);
@@ -302,11 +302,11 @@ void CLexicon::CreateStemAffixPairs()
                 }
             }else{
                 stem = word.right(letterno);
-                 if (stem=="fanya")qDebug() << 304 << "fanya" << word;
+                // if (stem=="fanya")qDebug() << 304 << "fanya" << word;
                 //if (stem == "fanya")qDebug() << 302 << stem ;
                 if (m_prefix_protostems.contains(stem)){
                     //qDebug() << 307 << "proto stems includes fanya";
-                    if (stem=="fanya")qDebug() << 291 << "fanya" << word;
+                    //if (stem=="fanya")qDebug() << 291 << "fanya" << word;
                     prefix_length = word.length() - letterno;
                     prefix = word.left(prefix_length);
                     m_Parses->append(QPair<QString,QString>(prefix,stem));
@@ -367,7 +367,6 @@ void   CLexicon::assign_suffixes_to_stems(QString name_of_calling_function)
 
         }
         temp_stems_to_affix_set.value(this_stem_t)->insert(this_affix);
-        //if (this_stem_t == "fanya") qDebug() << 351 << this_affix;
     }
     //-----------------------------------------------------------------------------------------------//
     qDebug() << "Step 1.";
@@ -399,7 +398,6 @@ void   CLexicon::assign_suffixes_to_stems(QString name_of_calling_function)
             temp_signatures_to_stems[this_signature_string] = pStemSet;
          }
          temp_signatures_to_stems.value(this_signature_string)->append(this_stem_t);
-         //if (this_stem_t == "fanya") qDebug() << this_signature_string << 386;
     }
     //-----------------------------------------------------------------------------------------------//
     //-->  create signatures, stems, affixes:  <--//
@@ -418,8 +416,8 @@ void   CLexicon::assign_suffixes_to_stems(QString name_of_calling_function)
         iter_sigstring_to_stems.next();
         this_signature_string    = iter_sigstring_to_stems.key();
         p_this_stem_list         = iter_sigstring_to_stems.value();
+        affix_list this_affix_list = this_signature_string.split("=");
 
-        affix_set this_affix_set = QSet<QString>::fromList( this_signature_string.split("="));
         if (p_this_stem_list->size() >= MINIMUM_NUMBER_OF_STEMS)
         {
             if( m_SuffixesFlag) {
@@ -430,57 +428,17 @@ void   CLexicon::assign_suffixes_to_stems(QString name_of_calling_function)
             }
 
             pSig->add_memo(name_of_calling_function);
-            QSetIterator<suffix_t> affix_iter(this_affix_set);
-            while(affix_iter.hasNext()){
-                  this_affix = affix_iter.next();
-                  if (m_SuffixesFlag){
-                      CSuffix* pSuffix = m_Suffixes->find_or_add(this_affix);
-                      pSuffix->increment_count();
-                      pSig->add_affix_ptr(pSuffix);
-                  }else{
-                      CPrefix* pPrefix = m_Prefixes->find_or_add(this_affix);
-                      pPrefix->increment_count();
-                      pSig->add_affix_ptr(pPrefix);
-                  }
-            }
             m_StatusBar->showMessage("Form signatures: 3b");
-            // --> We go through this sig's stems and reconstitute its words. <--//
+
+            QListIterator<QString> affix_iter_2(this_affix_list);
+            while(affix_iter_2.hasNext()){
+                this_affix = affix_iter_2.next();
+                link_signature_and_affix(pSig,this_affix);
+            }
             stem_list_iterator stem_iter(*p_this_stem_list);
             while (stem_iter.hasNext()){
                 this_stem_t = stem_iter.next();
-                m_SuffixesFlag ?
-                    pStem = m_suffixal_stems->find_or_add(this_stem_t):
-                    pStem = m_prefixal_stems->find_or_add(this_stem_t);
-                pStem->add_signature (pSig);
-                pSig->add_stem_pointer(pStem);
-
-                int stem_count = 0;
-                QSetIterator<suffix_t> affix_iter(this_affix_set);
-                while(affix_iter.hasNext()){
-                    this_affix = affix_iter.next();
-                    if (this_affix == "NULL"){
-                        this_word = this_stem_t;
-                    } else{
-                        m_SuffixesFlag ?
-                            this_word = this_stem_t + this_affix :
-                            this_word = this_affix + this_stem_t ;
-                    }
-                    if (this_word == "anafanya") qDebug() << 452 << this_affix + this_stem_t;
-                    CWord* pWord = m_Words->get_word(this_word);
-                    if (!pWord){
-                        qDebug() << this_word <<  "Error: this_word not found among words.";
-                    } else{
-                        stem_count += pWord->get_word_count();
-                        pWord->add_parse_triple(this_stem_t, this_affix, pSig->get_key());
-                        QString message = this_signature_string;
-                        //qDebug() << 471 << this_signature_string;
-                        if (this_affix_set.size() > 50){message = "Super long signature";};
-                        pWord->add_to_autobiography(name_of_calling_function + "=" + this_stem_t + "=" + message);
-                        if (this_word == "anafanya") qDebug() << 474 << "anafanya";
-
-                    }
-                 }
-            pStem->set_count(stem_count);
+                link_signature_and_stem(this_stem_t, pSig, this_signature_string);
             }
         }
     }
@@ -490,7 +448,52 @@ void   CLexicon::assign_suffixes_to_stems(QString name_of_calling_function)
         m_PrefixSignatures->calculate_stem_entropy();
     m_StatusBar->showMessage("Computation of Crab 1 completed.");
 }
-
+void CLexicon::link_signature_and_affix(CSignature * pSig, affix_t this_affix)
+{
+    if (m_SuffixesFlag){
+        CSuffix* pSuffix = m_Suffixes->find_or_add(this_affix);
+        pSuffix->increment_count();
+        pSig->add_affix_ptr(pSuffix);
+    } else {
+        CPrefix* pPrefix = m_Prefixes->find_or_add(this_affix);
+        pPrefix->increment_count();
+        pSig->add_affix_ptr(pPrefix);
+    }
+}
+void CLexicon::link_signature_and_stem(stem_t this_stem_t , CSignature*  pSig,  QString this_signature_string)
+{
+    CStem* pStem;
+    QString this_affix, this_word;
+    m_SuffixesFlag ?
+            pStem = m_suffixal_stems->find_or_add(this_stem_t):
+            pStem = m_prefixal_stems->find_or_add(this_stem_t);
+    pStem->add_signature (pSig);
+    pSig->add_stem_pointer(pStem);
+    int stem_count = 0;
+    affix_list this_affix_list = this_signature_string.split("=");
+    QListIterator<suffix_t> affix_iter(this_affix_list);
+    while(affix_iter.hasNext()){
+        this_affix = affix_iter.next();
+        if (this_affix == "NULL"){
+            this_word = this_stem_t;
+        } else{
+            m_SuffixesFlag ?
+                this_word = this_stem_t + this_affix :
+                this_word = this_affix + this_stem_t ;
+        }
+        CWord* pWord = m_Words->get_word(this_word);
+        if (!pWord){
+               qDebug() << this_word <<  "Error: this_word not found among words. Line 486" << this_stem_t  << this_affix << pSig->get_key() << this_signature_string;
+        } else{
+               stem_count += pWord->get_word_count();
+               pWord->add_parse_triple(this_stem_t, this_affix, pSig->get_key());
+               QString message = this_signature_string;
+               if (this_affix_list.size() > 50){message = "Super long signature";};
+               pWord->add_to_autobiography(this_stem_t + "=" + message);
+        }
+    }
+    pStem->set_count(stem_count);
+}
 bool contains(QList<QString> * list2, QList<QString> * list1){
     for (int i=0; i < list1->length();i++){
         bool success = false;

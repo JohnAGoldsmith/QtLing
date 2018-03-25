@@ -10,10 +10,10 @@ CSignatureCollection::CSignatureCollection(CLexicon* p_lexicon, bool suffix_flag
     m_MemberName			= QString::null;
     m_SortValidFlag			= 0;
     m_SortStyle				= KEY;
-//    m_MapIterator           = new map_sigstring_to_sig_ptr_iter (m_SignatureMap);
     m_SortedListIterator    = new     QListIterator<CSignature*> (m_SortList);
     m_suffix_flag           = suffix_flag;
     m_Lexicon               = p_lexicon;
+    m_minimum_number_of_stems_for_minimal_cover = 5;
 }
 
 CSignatureCollection::~CSignatureCollection()
@@ -21,21 +21,13 @@ CSignatureCollection::~CSignatureCollection()
     foreach(CSignature* pSig, m_signature_list){
         delete pSig;
     }
-    //delete m_MapIterator;
-    //delete m_SortedListIterator;
 }
 
 void CSignatureCollection::clear(){
     m_SignatureMap.clear();
     m_SortList.clear();
 }
-/*
-map_sigstring_to_sig_ptr_iter * CSignatureCollection::get_map_iterator()
-{   qDebug() << "In signature collection, getting the map iterator.";
-    m_MapIterator->toFront();
-    return m_MapIterator ;
-}
-*/
+
 QListIterator<CSignature*> * CSignatureCollection::get_sorted_list_iterator()
 {
 
@@ -136,6 +128,9 @@ void CSignatureCollection::sort(eSortStyle sort_style)
           qSort(m_SortList.begin(), m_SortList.end(),  compare_stem_count);
     }
 
+//    for (int i = 0; i < m_SortList.size(); i++){
+//        qDebug() << 132 << i << m_SortList.at(i)->get_key();
+//    }
 }
 
 // ------->                                   <---------------------//
@@ -225,6 +220,43 @@ void CSignatureCollection::get_epositive_signatures(QMap<CSignature*, int> sig_m
         sig_iter.next();
         if (sig_iter.value()->get_stem_entropy() > get_lexicon()->get_entropy_threshold_for_positive_signatures()){
             sig_map.insert( sig_iter.value(), 1);
+        }
+    }
+}
+
+//This function find a small subset of the signatures with the property that each signature in the collection
+// (whose stem count is greater or equal to threshold) is a subsignature of one of the minimal covering signatures.
+
+void CSignatureCollection::find_minimal_cover()
+{
+    int STEM_THRESHOLD = 5;
+
+    sort(SIG_BY_AFFIX_COUNT);
+
+    QList<CSignature*> temporary_sig_list;
+    QList<CSignature*> minimal_sig_cover;
+    QListIterator<CSignature*> sig_iter_1(m_SortList);
+
+    //--> make a sorted copy of signatures with enough stems <---
+    while (sig_iter_1.hasNext()){
+        CSignature* pSig = sig_iter_1.next();
+        if (pSig->get_number_of_stems() >= STEM_THRESHOLD){
+            temporary_sig_list.append(pSig);
+        }
+    }
+
+
+    CSignature* pSig;
+    QMutableListIterator<CSignature*> sig_iter_2(temporary_sig_list);
+    while (! temporary_sig_list.isEmpty()){
+        pSig = temporary_sig_list.takeFirst();
+        m_minimal_cover.append(pSig);
+        sig_iter_2.toFront();
+        while(sig_iter_2.hasNext()){
+            CSignature* qSig = sig_iter_2.next();
+            if (pSig->contains(qSig)){
+                    sig_iter_2.remove();
+            }
         }
     }
 }

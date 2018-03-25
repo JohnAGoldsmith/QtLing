@@ -113,7 +113,7 @@ lxa_graphics_scene::lxa_graphics_scene(MainWindow * window, CLexicon * lexicon, 
     m_lexicon                   = lexicon;
     m_location_of_bottom_row    = 0;
     m_row_delta                 = 250;
-    m_column_delta              = 200;
+    m_column_delta              = 250;
     m_border                    = 0;
     m_normal_color              = Qt::green;
     m_focus_color               = Qt::red;
@@ -280,6 +280,7 @@ void lxa_graphics_scene::assign_lattice_positions_to_signatures(CSignatureCollec
             continue;
         }
         sig_size = pSig->get_number_of_affixes();
+        qDebug() << 283 << "graphics"<< pSig->get_key() << sig_size;
         m_signature_lattice[sig_size]->append(pSig);
     }
 
