@@ -45,6 +45,7 @@ public:
     void                        add_memo (QString memo)                 { m_Autobiography.append(memo);}
     void                        add_affix_ptr (CSuffix* pSuffix);       // { m_Suffixes->append(pSuffix);  }
     void                        add_affix_ptr (CPrefix* pPrefix);       // { m_Prefixes->append(pPrefix);  }
+    void                        add_affix_string (QString);
     double                      calculate_stem_entropy();
     QString                     display();
     QString                     display_stems() ;
@@ -64,6 +65,8 @@ public:
     void                        set_suffix_flag(bool flag)              { m_SuffixFlag = flag;}
     QList<CSuffix*>*            get_suffix_list()                       {return m_Suffixes;}
     word_and_count_list *       get_word_and_count_vectors(word_and_count_list* );
+    void                        remove_suffix(suffix_t);
+    void                        remove_prefix(prefix_t);
     void                        sort_stems();
     void                        sort_stems_by_count();
 

@@ -9,8 +9,8 @@ CHypothesis* CLexicon::get_hypothesis(QString hypothesis)
 void CLexicon::generate_hypotheses()
 {   sig_graph_edge * p_edge;
     lxa_sig_graph_edge_map_iter edge_iter (m_SigGraphEdgeMap);
-    QString affix, new_affix;
-    QStringList affixes1, affixes2, new_affixes, new_sig_2;
+    QString affix_1, doomed_affix;
+    QStringList affixes1, affixes2, doomed_affixes, new_pSig2;
     int MINIMUM_AFFIX_OVERLAP = 10;
     CSignatureCollection * signatures;
     m_SuffixesFlag ?
@@ -19,84 +19,95 @@ void CLexicon::generate_hypotheses()
     while (edge_iter.hasNext()){
         p_edge = edge_iter.next().value();
         QString this_morph = p_edge->get_morph();
-        CSignature* pSig1 = signatures->find_or_fail( p_edge->m_sig_string_1);
-        CSignature* pSig2 = signatures->find_or_fail( p_edge->m_sig_string_2);
-        //CSignature* pSig2 = p_edge->get_sig_2();
+        sigstring_t original_sig1_affixes_longer_stem = p_edge->m_sig_string_1;
+        sigstring_t original_sig2_affixes_shorter_stem = p_edge->m_sig_string_2;
 
-
+        CSignature* pSig1_longer_stem  = signatures->find_or_fail(original_sig1_affixes_longer_stem);
+        CSignature* pSig2_shorter_stem = signatures->find_or_fail(original_sig2_affixes_shorter_stem);
         if (this_morph.length() < 2){
             continue;
         }
-        //Debug() << this_morph << 19;
 
-        if (pSig1->get_stem_entropy() < m_entropy_threshold_for_stems ||
-            pSig2->get_stem_entropy() < m_entropy_threshold_for_stems  ){
-            //qDebug() << pSig1->get_key() << pSig1->get_stem_entropy() << pSig2->get_key() << pSig2->get_stem_entropy();
+        if (pSig1_longer_stem->get_stem_entropy() < m_entropy_threshold_for_stems ||
+            pSig2_shorter_stem->get_stem_entropy() < m_entropy_threshold_for_stems  ){
             continue;
         }
 
         affixes1.clear();
         affixes2.clear();
-        new_sig_2.clear();
-        new_affixes.clear();
-        pSig1->get_string_list(affixes1);
-        pSig2->get_string_list(affixes2);
-       // qDebug() << "number of words" << p_edge->get_number_of_words() << 37;
+        new_pSig2.clear();
+        doomed_affixes.clear();
+        pSig1_longer_stem->get_string_list(affixes1);
+        pSig2_shorter_stem->get_string_list(affixes2);
         if (p_edge->get_number_of_words() < 6 ){continue;}
 
-        //qDebug() << p_edge->get_number_of_words() << 34;
-        //--> new_affixes is the set of affixes that sig1 proposes to sig2  for retirement
+        qDebug()<<"*** 44" << this_morph <<  affixes2 << affixes1;
+        //--> doomed_affixes is the set of affixes that sig1 proposes to sig2  for retirement
         for (int affixno = 0; affixno < affixes1.count(); affixno++){
-            affix = affixes1[affixno];
-            if (affix == "NULL"){
-                new_affix = this_morph;
+            affix_1 = affixes1[affixno];
+            if (affix_1 == "NULL"){
+                doomed_affix = this_morph;
             } else{
-                new_affix = this_morph + affix;
+                doomed_affix = this_morph + affix_1;
             }
-            new_affixes.append(new_affix);
+            doomed_affixes.append(doomed_affix);
         }
-        for (int affixno = 0; affixno < affixes2.count(); affixno++){
-            affix = affixes2[affixno];
-            if (!new_affixes.contains(affix)){
-                new_sig_2.append(affix);
-            }
-        }
-        new_sig_2.append(this_morph);
-        new_sig_2.sort();
+        qDebug() << "doomed affixes " << doomed_affixes;
+//        for (int affixno = 0; affixno < affixes2.count(); affixno++){
+//            affix = affixes2[affixno];
+//            if (!doomed_affixes.contains(affix)){
+//                new_pSig2.append(affix);
+//            }
+//        }
 
         // we remove all of the newaffixes from pSig2, and replace them with this_morph, and
         // this_morph points directly to pSig1.
+        QStringList these_affixes = pSig2_shorter_stem->get_key().split("=");
+        foreach (QString this_affix, these_affixes){
+            if (doomed_affixes.contains(this_affix)){
+                qDebug() << 66 << "remove "<< this_affix;
+                m_SuffixesFlag?
+                    pSig2_shorter_stem->remove_suffix(this_affix):
+                    pSig2_shorter_stem->remove_prefix(this_affix);
+            }
+        }
+        qDebug()<< "70" << pSig2_shorter_stem->display();
+        pSig2_shorter_stem->add_affix_string(this_morph);
+        qDebug()<< 72 << pSig2_shorter_stem->display();
+        //new_pSig2.append(this_morph);
+        //new_pSig2.sort();
+        qDebug() << pSig2_shorter_stem->get_key() << 72;
         // Then pSig2 loses all of the stems that created the shared words here.
-        //newaffixes2 = replace(affixes2, newaffixes2);
+        // But that has not yet been implemented.
 
         eHypothesisType this_hypothesis_type = HT_affix_goes_to_signature;
         CHypothesis (this_hypothesis_type, p_edge);
         CHypothesis * this_hypothesis = new CHypothesis( this_hypothesis_type, this_morph,
-                                                         pSig1, pSig2, new_sig_2.join("="), new_affixes,
+                                                         original_sig1_affixes_longer_stem,
+                                                         original_sig2_affixes_shorter_stem,
+                                                         pSig2_shorter_stem->display(),
+                                                         doomed_affixes,
                                                          p_edge->get_number_of_words());
         m_Hypotheses->append(this_hypothesis);
         m_Hypothesis_map->insert (this_hypothesis->express_as_string(),  this_hypothesis);
-
-
     }
   //  qDebug() << "hypothesis count " <<m_Hypotheses->count() << 72;
-
 }
 CHypothesis::CHypothesis(eHypothesisType HypothesisT,   sig_graph_edge*  p_edge)
 {
     m_hypothesis_type  = HypothesisT;
     m_number_of_words_saved = 0;
-    m_signature_1       = p_edge->m_sig_string_1;
-    m_signature_2       = p_edge->m_sig_string_2;
+    m_signature_1_longer_stem       = p_edge->m_sig_string_1;
+    m_signature_2_shorter_stem       = p_edge->m_sig_string_2;
     m_morpheme          = p_edge->get_morph();
 
     affix_t             new_affix, affix;
-    QStringList         affixes1 = m_signature_1.split("=");
-    QStringList         affixes2 = m_signature_2.split("=");
+    QStringList         affixes1 = m_signature_1_longer_stem.split("=");
+    QStringList         affixes2 = m_signature_2_shorter_stem.split("=");
     QStringList         new_affixes;
     QStringList         new_sig_2;
 
-    m_new_edge          = new QPair<affix_t, sigstring_t>(new_affix,m_signature_1);
+    m_new_edge          = new QPair<affix_t, sigstring_t>(new_affix,m_signature_1_longer_stem);
 
     //--> new_affixes is the set of affixes that sig1 proposes to sig2  for retirement
     for (int affixno = 0; affixno < affixes1.count(); affixno++){
@@ -122,17 +133,19 @@ CHypothesis::CHypothesis(eHypothesisType HypothesisT,   sig_graph_edge*  p_edge)
 
 
 CHypothesis::CHypothesis (eHypothesisType HypothesisT, morph_t this_morph,
-                          CSignature* pSig1, CSignature* pSig2, sigstring_t new_sig,
+                          sigstring_t sig1,
+                          sigstring_t sig2,
+                          sigstring_t new_sig,
                           QStringList new_affixes, int number_of_words_saved)
 {
     if (HypothesisT == HT_affix_goes_to_signature){
         m_hypothesis_type   == HypothesisT;
         m_number_of_words_saved = 0;
-        m_signature_1       = pSig1->get_key();
-        m_signature_2       = pSig2->get_key();
+        m_signature_1_longer_stem       = sig1;
+        m_signature_2_shorter_stem       = sig2;
         m_new_signature_2   = new_sig;
         m_morpheme          = this_morph;
-        m_new_edge          = new QPair<QString, sigstring_t>(m_morpheme, m_signature_1);
+        m_new_edge          = new QPair<QString, sigstring_t>(m_morpheme, m_signature_1_longer_stem);
         m_number_of_words_saved = number_of_words_saved;
         //m_number_of_stems   =
     }
@@ -140,8 +153,11 @@ CHypothesis::CHypothesis (eHypothesisType HypothesisT, morph_t this_morph,
 
 QStringList CHypothesis::express(){
     QStringList output;
-    output <<m_morpheme << m_signature_1 << m_signature_2 << m_new_signature_2
-          <<  m_morpheme << "--> " << m_signature_1<< QString::number( get_number_of_words_saved());
+    output <<m_morpheme << "--> "
+           << m_signature_1_longer_stem
+           << m_signature_2_shorter_stem
+           << m_new_signature_2
+           << QString::number( get_number_of_words_saved());
     return output;
 }
 
@@ -160,5 +176,5 @@ int CHypothesis::get_number_of_words_saved()
     return m_number_of_words_saved;
 }
 QString CHypothesis::get_key(){
-    return m_morpheme + "@" + m_signature_1;
+    return m_morpheme + "@" + m_signature_1_longer_stem;
 }

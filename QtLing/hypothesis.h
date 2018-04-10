@@ -12,8 +12,8 @@ class CHypothesis
 
     QString                         m_key;
     eHypothesisType                 m_hypothesis_type;
-    sigstring_t                     m_signature_1;
-    sigstring_t                     m_signature_2;
+    sigstring_t                     m_signature_1_longer_stem;
+    sigstring_t                     m_signature_2_shorter_stem;
     sigstring_t                     m_new_signature_2;
     affix_t                         m_morpheme;
     QPair<affix_t, sigstring_t>*    m_new_edge; // an affix plus the signature it points to.
@@ -24,7 +24,7 @@ class CHypothesis
 public:
     CHypothesis (eHypothesisType  );
     CHypothesis (eHypothesisType, sig_graph_edge * );
-    CHypothesis (eHypothesisType, morph_t this_morph, CSignature* pSig1, CSignature* pSig2,
+    CHypothesis (eHypothesisType, morph_t this_morph, sigstring_t sigstring_1, sigstring_t sigstring_2,
                  sigstring_t new_sig, QStringList new_affixes, int number_of_words_saved);
     QString                         get_key();
     QStringList                     express();

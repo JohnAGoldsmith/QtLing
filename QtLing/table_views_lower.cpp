@@ -18,7 +18,7 @@ class sig_graph_edge;
 LowerTableView::LowerTableView()
 {
    m_my_current_model =new  QStandardItemModel();
-   m_number_of_columns = 20;
+   m_number_of_columns = 8;
    QFont sansFont("Ariel", 20);
    setFont(sansFont);
 
@@ -28,7 +28,7 @@ LowerTableView::LowerTableView(MainWindow * window)
 {
    m_my_current_model =new  QStandardItemModel();
    m_parent_window = window;
-   m_number_of_columns = 20;
+   m_number_of_columns = 8;
    m_lexicon = window->get_lexicon();
    m_current_sortstyle = 0;
    QFont sansFont("Ariel", 20);

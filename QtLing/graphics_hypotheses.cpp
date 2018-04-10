@@ -3,11 +3,12 @@
 #include "hypothesis.h"
 #include "mainwindow.h"
 
+// this is not currently being used; should probably be eliminated.
 void lxa_graphics_scene::show_hypothesis_1(CHypothesis* hypothesis)
 {
 
-    sigstring_t  sig1 = hypothesis->m_signature_1;
-    sigstring_t  sig2 = hypothesis->m_signature_2;
+    sigstring_t  sig1 = hypothesis->m_signature_1_longer_stem;
+    sigstring_t  sig2 = hypothesis->m_signature_2_shorter_stem;
 
     CSignature* pSig1 = m_lexicon->get_signatures()->get_signature(sig1);
     CSignature* pSig2 = m_lexicon->get_signatures()->get_signature(sig2);
@@ -23,14 +24,25 @@ void lxa_graphics_scene::show_hypothesis_1(CHypothesis* hypothesis)
 void  lxa_graphics_scene::implement_hypothesis(const QModelIndex &  index )
 {   int row, column;
 
-    Qt::GlobalColor color_target_1, color_target_2, color_target_3, color_target_old_1, color_target_old_2, color_target_old_3;
+    Qt::GlobalColor color_target_1,
+                    color_target_2,
+                    color_target_3,
+                    color_target_old_1,
+                    color_target_old_2,
+                    color_target_old_3;
     color_target_1 = Qt::white;
     color_target_old_1 = Qt::yellow;
     color_target_2 = Qt::blue;
     color_target_3 = Qt::green;
 
 
-    graphic_signature2 * original_graphic_sig, * lower_graphic_sig, * shortened_graphic_sig, * this_graphic_signature;
+    graphic_signature2  * original_graphic_sig,
+                        * lower_graphic_sig,
+                        * shortened_graphic_sig,
+                        * this_graphic_signature;
+
+
+
     bool    shortened_graphic_signature_already_existed (false);
 
     // this function should fire only if the hypotheses are being shown in the right tables,
@@ -39,16 +51,15 @@ void  lxa_graphics_scene::implement_hypothesis(const QModelIndex &  index )
     if (m_main_window->get_graphic_display_flag() == true &&
         m_main_window->get_upper_right_tableview()->get_data_type() == e_data_hypotheses)
     {
-        qDebug() << "implement hypothesis" << 25;
         if (index.isValid()) {
             row = index.row();
             column = index.column();
         }
-        affix_t morph   = index.sibling(row,0).data().toString();
-        sigstring_t  lower_sigstring        = index.sibling(row,1).data().toString();
-        sigstring_t  original_sigstring     = index.sibling(row,2).data().toString();
-        sigstring_t  shortened_sigstring    = index.sibling(row,3).data().toString();
-        QPointF original_point, lower_point, shortened_point;
+        affix_t     morph                  = index.sibling(row,0).data().toString();
+        sigstring_t lower_sigstring        = index.sibling(row,1).data().toString();
+        sigstring_t original_sigstring     = index.sibling(row,2).data().toString();
+        sigstring_t shortened_sigstring    = index.sibling(row,3).data().toString();
+        QPointF     original_point, lower_point, shortened_point;
 
 
         for (auto sig_iter : m_map_from_sig_to_pgraphsig.values()){

@@ -220,32 +220,23 @@ void CLexicon::FindProtostems()
         {       // -->   Prefix case   <-- //
             this_word_length = this_word.length();
             previous_word_length = previous_word.length();
-            //if (this_word == "anafanya") {qDebug()<< 223 << previous_word;}
-            //qDebug() << 224 << previous_word <<  this_word;
             int end = qMin(this_word_length, previous_word_length);
-            //if (this_word.right(5) == "fanya"){qDebug() << 226 << this_word;}
             for (int i=1; i <=end; i++){
                 if (previous_word.right(i) != this_word.right(i)){
                     stem = previous_word.right(i-1);
                     if (stem.length() == 0) {continue;}
-                    //qDebug() << 231 << stem;
-                    //if (stem=="fanya") qDebug() << 230 << "fanya" << stem << this_word;
                     DifferenceFoundFlag = true;
-                    //if (this_word == "anafanya"){qDebug() << stem << previous_word << 233;}
                     if (!m_prefix_protostems_2.contains(stem)) {
                         for (wordno2= wordno; wordno2 < m_Words->get_count(); wordno2++){
                             word_t that_word = get_words()->get_reverse_sort_list()->at(wordno2);
-                            if ( that_word == "anafanya") qDebug() << 237 << stem << this_word <<  that_word;
                             if (! that_word.endsWith(stem)){
                                 end_word = wordno2 - 1;
                                 break;
                             }
                         }
                         protostem * this_protostem = new protostem (stem, wordno-1, end_word);
-                        //qDebug() << 242 << stem << get_words()->get_reverse_sort_list()->at(wordno-1)  << get_words()->get_reverse_sort_list()->at(end_word);
                         m_prefix_protostems_2[stem] = this_protostem;
                         m_prefix_protostems[stem] = 1;
-                        if (stem == "fanya") qDebug() << 246 << "fanya stem";
                     }
                     break;
                 }
@@ -302,11 +293,7 @@ void CLexicon::CreateStemAffixPairs()
                 }
             }else{
                 stem = word.right(letterno);
-                // if (stem=="fanya")qDebug() << 304 << "fanya" << word;
-                //if (stem == "fanya")qDebug() << 302 << stem ;
                 if (m_prefix_protostems.contains(stem)){
-                    //qDebug() << 307 << "proto stems includes fanya";
-                    //if (stem=="fanya")qDebug() << 291 << "fanya" << word;
                     prefix_length = word.length() - letterno;
                     prefix = word.left(prefix_length);
                     m_Parses->append(QPair<QString,QString>(prefix,stem));
@@ -560,11 +547,6 @@ void CLexicon::find_full_signatures()
     QMapIterator<sigstring_t,CSignature*> * sig_iter = new QMapIterator<sigstring_t,CSignature*> (* signatures->get_map() );
     while (sig_iter->hasNext()){
         pSig = sig_iter->next().value();
-        //qDebug() << 495 << pSig->get_key() << pSig->get_stem_entropy();
-        //qDebug() << pSig->display();
-        //if (pSig->display() == "k=v") {
-        //    qDebug() << 496 << pSig->display() << pSig->get_stem_entropy();
-        // }
         if (pSig->get_stem_entropy() > 0){
             continue;
         }
@@ -579,17 +561,14 @@ void CLexicon::find_full_signatures()
 
         for (int i = 0; i < stem_list.size(); i++){
             stem = stem_list.at(i);
-            //qDebug() << 508 << stem;
             for (int affno = 0; affno < affix_list.size(); affno++){
                 affix = affix_list.at(affno);
                 if (m_SuffixesFlag){
                     m_Parses->append(QPair<QString, QString> (stem,affix));
-                    //qDebug() << 534 << stem << " "<< affix ;
                 } else{
-                    //qDebug() << affix <<  stem << 521;
                     m_Parses->append(QPair<QString, QString> (affix ,stem));
                     if (stem.length() == 0 ){
-                        //qDebug() << 523 << "null stem"   ;
+                        qDebug() << 523 << "null stem"   ;
                     }
 
                 }

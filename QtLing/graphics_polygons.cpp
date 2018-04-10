@@ -575,20 +575,20 @@ void nonagon2::set_text(sigstring_t this_sigstring, int stem_count){
     x = 0;
     y = 100;
     text_item_list[3]->setPos(x + 20 - br_list[3]->width()/2  , y - 30 -  br_list[3]->height()/2 );
-    text_item_list[4]->setPos(x + 47                          , y + 25 -  br_list[4]->height()/2 );
+    text_item_list[4]->setPos(x + 32                          , y + 1 -  br_list[4]->height()/2 );
     text_item_list[5]->setPos(x -  7 - br_list[5]->width()    , y + 25 -  br_list[5]->height()/2 );
 
     x = 130;
     y = 100;
     text_item_list[6]->setPos(x + 20 - br_list[6]->width()/2  , y - 30 -  br_list[6]->height()/2 );
-    text_item_list[7]->setPos(x + 47                          , y + 25 -  br_list[7]->height()/2 );
+    text_item_list[7]->setPos(x + 32                          , y + 1 -  br_list[7]->height()/2 );
     text_item_list[8]->setPos(x -  7 - br_list[8]->width()    , y + 25 -  br_list[8]->height()/2 );
 
-    text_item_list[9]->setPos(85      -br_list[9]->width()/2.0  , 65  );
+    text_item_list[9]->setPos(85      -br_list[9]->width()/2.0  , 55  );
 }
 QPointF nonagon2::get_center(){
     QPointF this_point = pos();
-    QPointF diff (55,35);
+    QPointF diff (55,25);
     return this_point + diff;
 }
 // --------------------------------->      <--------------------------------------------//

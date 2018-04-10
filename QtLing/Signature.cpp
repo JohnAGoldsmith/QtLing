@@ -94,6 +94,17 @@ void CSignature::intersection_with(affix_list &in, affix_list &intersection)
 
 // =============================================>  Functions involving string containment <===========================//
 
+void CSignature::add_affix_string(QString this_affix){
+    QStringList affixes;
+    if (m_Signature.length() > 0){
+        affixes = m_Signature.split("=");
+    }
+    affixes.append(this_affix);
+    affixes.sort();
+    m_Signature = affixes.join("=");
+    //if (affixes.count()==1) qDebug() << m_Signature << "only one element though";
+}
+
 void CSignature::add_stem_pointer(CStem* pStem)
 {
     if (m_Stems->contains(pStem)){
@@ -266,8 +277,28 @@ double CSignature::calculate_stem_entropy()
     return entropy;
 }
 
-
-
+void CSignature::remove_suffix(suffix_t this_suffix){
+    QStringList old_sig = m_Signature.split("=");
+    old_sig.removeOne(this_suffix);
+    m_Signature = old_sig.join("=");
+    foreach (CSuffix * psuffix, *m_Suffixes){
+        if (psuffix->get_key()==this_suffix){
+            m_Suffixes->removeOne(psuffix);
+            break;
+        }
+    }
+}
+void CSignature::remove_prefix(prefix_t this_prefix){
+    QStringList old_sig = m_Signature.split("=");
+    old_sig.removeOne(this_prefix);
+    m_Signature = old_sig.join("=");
+    foreach (CPrefix * pprefix, *m_Prefixes){
+        if (pprefix->get_key()==this_prefix){
+            m_Prefixes->removeOne(pprefix);
+            break;
+        }
+    }
+}
 /////////////////////////////////////////////////////////////////////////
 //
 //      non-class functions dealing with signatures

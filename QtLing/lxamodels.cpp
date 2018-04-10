@@ -7,6 +7,7 @@
 #include "QDebug"
 #include "hypothesis.h"
 #include "lxamodels.h"
+#include <QCoreApplication>
 
 LxaStandardItemModel::LxaStandardItemModel(MainWindow* main_window): QStandardItemModel(main_window)
 {
@@ -74,9 +75,11 @@ void LxaStandardItemModel::load_words(CWordCollection* p_words)
         QStandardItem* pItem2 = new QStandardItem(QString::number(pWord->get_word_count()));
         item_list.append(pItem2);
         QMapIterator<stem_t, Parse_triple*> parse_3_iter(*pWord->get_parse_triple_map());
+        int tempcount = 0;
         while (parse_3_iter.hasNext()){
             QStandardItem* pItem3 = new QStandardItem(parse_3_iter.next().value()->p_sig_string) ;
             item_list.append(pItem3);
+            tempcount++;
         }
         appendRow(item_list);
     }
@@ -228,6 +231,8 @@ void LxaStandardItemModel::load_hypotheses(QList<CHypothesis*>* p_hypotheses)
     QMap<QString,int>                   Key_counts;
     QList<QPair<QString,int>*>           pairs;
 
+
+
     for (int hypno = 0; hypno<p_hypotheses->count(); hypno++)
     {   hypothesis = p_hypotheses->at(hypno);
         QString key = hypothesis->get_key();
@@ -297,6 +302,13 @@ void LxaStandardItemModel::load_hypotheses_2(QList<CHypothesis*>* p_hypotheses)
         appendRow(items);
     }
 */
+    QStringList labels;
+    labels  <<  "rule input"<<"" << " rule output (orig sig 2)" << "original sig 1"
+             << "modified sig 1"
+             << "word count";
+    setHorizontalHeaderLabels(labels);
+
+
     for (int hypno = 0; hypno<p_hypotheses->count(); hypno++)
     {   hypothesis = p_hypotheses->at(hypno);
         QList<QStandardItem*> items;

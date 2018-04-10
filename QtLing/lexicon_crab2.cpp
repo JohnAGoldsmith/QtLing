@@ -95,9 +95,6 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
         m_ProgressBar->setValue(stem_count++);
         this_stem_t            = stem_iter.key();
         this_ptr_to_affix_set  = stem_iter.value();
-        if (this_stem_t == "fanya"){
-            qDebug() << 101 << "fanya" << this_ptr_to_affix_set ;
-        }
         if (this_ptr_to_affix_set->size() < 2){continue;}
         QStringList temp_presignature;
 
@@ -109,17 +106,12 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
 
         temp_presignature.sort();
         sigstring_t this_signature_string = temp_presignature.join("=");
-        if (this_stem_t == "fanya"){
-            qDebug() << this_signature_string << 115;
-        }
         if ( ! temp_signatures_to_stems.contains(this_signature_string)){
            stem_list * pStemSet = new stem_list;
            temp_signatures_to_stems[this_signature_string] = pStemSet;
         }
         temp_signatures_to_stems.value(this_signature_string)->append(this_stem_t);
-        if (this_stem_t == "fanya"){
-            qDebug() << this_signature_string <<123;
-        }
+
    }
 
    //-->  create signatures, stems, affixes:  <--//
@@ -134,9 +126,11 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
    while (iter_sigstring_to_stems.hasNext())
    {   iter_sigstring_to_stems.next();
        this_signature_string    = iter_sigstring_to_stems.key();
+       //if (this_signature_string.length()==0) qDebug () << "129 null signature" ;
        p_this_stem_list         = iter_sigstring_to_stems.value();
        this_stem_t              = p_this_stem_list->first();
        affix_set this_affix_set = QSet<QString>::fromList( this_signature_string.split("="));
+       //if (this_signature_string.length()==0) qDebug () << "133 null signature" ;
        if (p_this_stem_list->size() >= MINIMUM_NUMBER_OF_STEMS)
        {   m_SuffixesFlag ?
                pSig = *m_Signatures       << this_signature_string :
@@ -203,7 +197,6 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
                QString message = this_signature_string;
                if (this_affix_set.size()> 50){message = "very long signature";}
                pWord->add_to_autobiography("*singleton=" + this_stem_t + "=" + message );
-               if (this_stem_t == "fanya") qDebug() << 209 << "fanya" << this_word;
            }
        }
    }
@@ -270,7 +263,7 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
 {   stem_t                      this_stem;
     word_t                      this_word;
     affix_t                     this_affix;
-    sig_string                  this_signature_string;
+    //sig_string                  this_signature_string;
     CStem*                      pStem;
     CWord*                      pWord;
     CSignature*                 p_proven_sig;
@@ -290,8 +283,6 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
     m_ProgressBar->setMaximum(m_ParaSignatures->get_count());
     m_StatusBar->showMessage("Find good signatures inside bad.");
 
-    // NB Note to self: there are residual affix list with null strings (not "NULL" but ""). FIX THIS.
-
     //---->   We iterate through the list of Residual Signatures <-------//
 
     if (m_SuffixesFlag) {
@@ -301,7 +292,7 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
     }
     signatures->sort(SIG_BY_AFFIX_COUNT);
 
-    signatures->find_minimal_cover();
+    signatures->find_minimal_cover(); // the signature collection finds a "cover", which is a set of signatures which are a superset of all the other signatures.
 
     QMap<QString, protostem*> * these_protostems_2;
     m_SuffixesFlag?
@@ -343,7 +334,6 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
             if ( affix_intersection.length() > 1 &&
                  affix_intersection.size() > best_affix_list.size()){
                  best_affix_list = affix_intersection;
-                 qDebug() << best_affix_list << 346;
             }
         }
         if (best_affix_list.size() == 0) continue;
@@ -351,8 +341,6 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
         // 2. add the signature string to the signature collection:
         CSignature * pSig;
         QString best_affix_list_string = best_affix_list.join("=");
-
-        qDebug() << best_affix_list_string << 355;
 
         pSig = *signatures << best_affix_list_string;
         if (!m_SuffixesFlag){ pSig->set_suffix_flag(false);}
@@ -362,14 +350,15 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
             this_affix = affix_iter_2.next();
             link_signature_and_affix(pSig,this_affix);
         }
-        link_signature_and_stem(this_stem, pSig, this_signature_string);
+        link_signature_and_stem(this_stem, pSig, best_affix_list_string);
 
         // 3. This shouldn't happen: there are no affixes.
         if (best_affix_list.length() == 0){
-            qDebug() << 359 << this_stem << best_affix_list;
+            qDebug() << 359 << "affix list with no entries; this should not happen."<<this_stem << best_affix_list;
             continue;
         }
 // we shouldn't need 4 and 5:
+        if (false){
         // 4. Deal with this stem. Create a cstem if it did not already exist. Link the signature and the stem.
         pStem = stems->find_or_add(this_stem);
         pStem->add_signature(pSig);
@@ -407,51 +396,13 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
                   pSig  ->add_affix_ptr(pPrefix);
               }
         }
+        }
 
 
 
 
 
 
-
-
-
-
-        if (false) {
-
-
-        //--> Now we look for largest true signature inside this list of suffixes. <--//
-        //--> Inner loop, over all good signatures. <--//
-        for (int sig_no=0; sig_no < signatures->get_count(); sig_no++){
-            p_proven_sig = signatures->get_at_sorted(sig_no);
-            QString p_proven_sigstring  = p_proven_sig->get_key();
-            QList<QString> proven_sig_list = p_proven_sigstring.split("=");
-            if ( contains(&affixes_of_residual_sig, &proven_sig_list) ){
-                // We have found the longest signature contained in this_residual_suffix_set
-                pStem = stems->find_or_add(this_stem);
-                pStem->add_signature(p_proven_sig);
-                p_proven_sig->add_stem_pointer(pStem);
-                //--> add to autobiographies <--//
-
-                for (int affixno = 0; affixno < proven_sig_list.length(); affixno++){
-                    this_affix = proven_sig_list[affixno];
-                    if (this_affix == "NULL"){
-                        this_word= this_stem;
-                    }else{
-                        m_SuffixesFlag?
-                            this_word = this_stem + this_affix:
-                            this_word = this_affix + this_stem;
-                    }
-                    pWord = m_Words->find_or_fail(this_word);
-                    if (pWord){
-                        pWord->add_parse_triple(this_stem, this_affix, p_proven_sigstring);
-                        pWord->add_to_autobiography("Good sig found within bad: ="  + this_stem  + "=" +  p_proven_sigstring);
-                    }
-                }
-                break;
-            }
-        } // loop over proven signatures;
-        } // end of if false
     }
 
      signatures->sort_each_signatures_stems_alphabetically();

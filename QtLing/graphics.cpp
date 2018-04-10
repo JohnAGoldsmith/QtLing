@@ -280,7 +280,7 @@ void lxa_graphics_scene::assign_lattice_positions_to_signatures(CSignatureCollec
             continue;
         }
         sig_size = pSig->get_number_of_affixes();
-        qDebug() << 283 << "graphics"<< pSig->get_key() << sig_size;
+        //qDebug() << 283 << "graphics"<< pSig->get_key() << sig_size;
         m_signature_lattice[sig_size]->append(pSig);
     }
 

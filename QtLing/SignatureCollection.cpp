@@ -128,9 +128,6 @@ void CSignatureCollection::sort(eSortStyle sort_style)
           qSort(m_SortList.begin(), m_SortList.end(),  compare_stem_count);
     }
 
-//    for (int i = 0; i < m_SortList.size(); i++){
-//        qDebug() << 132 << i << m_SortList.at(i)->get_key();
-//    }
 }
 
 // ------->                                   <---------------------//
