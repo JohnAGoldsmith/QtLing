@@ -33,7 +33,13 @@ SOURCES += main.cpp\
     graphics_hypotheses.cpp \
     table_display_functions.cpp \
     table_views_lower.cpp \
-    table_views_upper.cpp
+    table_views_upper.cpp \
+    output.cpp \
+    corpus.cpp \
+    lexicon_sublexicon.cpp \
+    lexicon_crab2.cpp \
+    signature_graph.cpp \
+    parsings.cpp
 
 HEADERS  += mainwindow.h \
     CompareFunc.h \
@@ -54,7 +60,9 @@ HEADERS  += mainwindow.h \
     supersignature.h \
     hypothesis.h \
     lxamodels.h \
-    table_views.h
+    table_views.h\
+    mainwindow.h \
+    parsings.h
 
 FORMS    +=
 

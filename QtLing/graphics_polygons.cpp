@@ -15,7 +15,6 @@ sig_circle::sig_circle(QGraphicsScene* parent, CSignature* pSig): graphic_signat
 {
     m_score = pSig->get_robustness();
     set_text();
-
 }
 
 // --------------------------------->      <--------------------------------------------//
@@ -184,7 +183,7 @@ void bar::set_text(sigstring_t this_sigstring, int stem_count){
     QList<QRectF*> br_list;
     QList<QGraphicsSimpleTextItem*> text_item_list;
     QStringList affixes = this_sigstring.split("=");
-    QFont serifFont ("Times", 16, QFont::Bold);
+    QFont serifFont ("Times", 12, QFont::Bold);
 
     for (int i=0; i< 2; i++){
         text_item_list.append( new QGraphicsSimpleTextItem(this));
@@ -224,7 +223,7 @@ void triangle2::set_text(sigstring_t this_sigstring, int stem_count){
     QList<QRectF*> br_list;
     QList<QGraphicsSimpleTextItem*> text_item_list;
     QStringList affixes = this_sigstring.split("=");
-    QFont serifFont ("Times", 16, QFont::Bold);
+    QFont serifFont ("Times", 12, QFont::Bold);
 
     for (int i=0; i< 3; i++){
         text_item_list.append( new QGraphicsSimpleTextItem(this));
@@ -257,7 +256,7 @@ void square2::paint(QPainter *painter, const QStyleOptionGraphicsItem * ,QWidget
     QPen pen (Qt::blue, 3);
     painter->setBrush(brush);
     painter->setPen(pen);
-    QFont serifFont ("Times", 16, QFont::Bold);
+    QFont serifFont ("Times", 12, QFont::Bold);
 
     static const QPointF points[4] = {
         QPointF(20,50),
@@ -272,7 +271,7 @@ void square2::set_text(sigstring_t this_sigstring, int stem_count){
     QList<QRectF*> br_list;
     QList<QGraphicsSimpleTextItem*> text_item_list;
     QStringList affixes = this_sigstring.split("=");
-    QFont serifFont ("Times", 16, QFont::Bold);
+    QFont serifFont ("Times", 12, QFont::Bold);
 
     for (int i=0; i< 4; i++){
         text_item_list.append( new QGraphicsSimpleTextItem(this));
@@ -320,7 +319,7 @@ void pentagon2::set_text(sigstring_t this_sigstring, int stem_count){
     QList<QRectF*> br_list;
     QList<QGraphicsSimpleTextItem*> text_item_list;
     QStringList affixes = this_sigstring.split("=");
-    QFont serifFont ("Times", 16, QFont::Bold);
+    QFont serifFont ("Times", 12, QFont::Bold);
 
         for (int i=0; i< 5; i++){
         text_item_list.append( new QGraphicsSimpleTextItem(this));
@@ -371,7 +370,7 @@ void hexagon2::set_text(sigstring_t this_sigstring, int stem_count){
     QList<QRectF*> br_list;
     QList<QGraphicsSimpleTextItem*> text_item_list;
     QStringList affixes = this_sigstring.split("=");
-    QFont serifFont ("Times", 16, QFont::Bold);
+    QFont serifFont ("Times", 12, QFont::Bold);
 
     for (int i=0; i< 6; i++){
         text_item_list.append( new QGraphicsSimpleTextItem(this));
@@ -426,7 +425,7 @@ void septagon2::set_text(sigstring_t this_sigstring, int stem_count){
     QList<QRectF*> br_list;
     QList<QGraphicsSimpleTextItem*> text_item_list;
     QStringList affixes = this_sigstring.split("=");
-    QFont serifFont ("Times", 16, QFont::Bold);
+    QFont serifFont ("Times", 12, QFont::Bold);
 
     for (int i=0; i< 7; i++){
         text_item_list.append( new QGraphicsSimpleTextItem(this));
@@ -483,7 +482,7 @@ void octagon2::set_text(sigstring_t this_sigstring, int stem_count){
     QList<QRectF*> br_list;
     QList<QGraphicsSimpleTextItem*> text_item_list;
     QStringList affixes = this_sigstring.split("=");
-    QFont serifFont ("Times", 16, QFont::Bold);
+    QFont serifFont ("Times", 12, QFont::Bold);
 
     for (int i=0; i< 8; i++){
         text_item_list.append( new QGraphicsSimpleTextItem(this));
@@ -553,7 +552,7 @@ void nonagon2::set_text(sigstring_t this_sigstring, int stem_count){
     QList<QRectF*> br_list;
     QList<QGraphicsSimpleTextItem*> text_item_list;
     QStringList affixes = this_sigstring.split("=");
-    QFont serifFont ("Times", 16, QFont::Bold);
+    QFont serifFont ("Times", m_font_size, QFont::Bold);
 
     for (int i=0; i< 9; i++){
         text_item_list.append( new QGraphicsSimpleTextItem(this));
@@ -622,7 +621,7 @@ void decagon2::set_text(sigstring_t this_sigstring, int stem_count){
     QList<QRectF*> br_list;
     QList<QGraphicsSimpleTextItem*> text_item_list;
     QStringList affixes = this_sigstring.split("=");
-    QFont serifFont ("Times", 16, QFont::Bold);
+    QFont serifFont ("Times", 12, QFont::Bold);
     int delta = 80;
 
     for (int i=0; i< 10; i++){
@@ -700,7 +699,7 @@ void elevenagon2::set_text(sigstring_t this_sigstring, int stem_count)
     QList<QRectF*> br_list;
     QList<QGraphicsSimpleTextItem*> text_item_list;
     QStringList affixes = this_sigstring.split("=");
-    QFont serifFont ("Times", 16, QFont::Bold);
+    QFont serifFont ("Times", 12, QFont::Bold);
 
     for (int i=0; i< 11; i++){
         text_item_list.append( new QGraphicsSimpleTextItem(this));
@@ -781,7 +780,7 @@ void twelvagon2::set_text(sigstring_t this_sigstring, int stem_count)
     QList<QRectF*> br_list;
     QList<QGraphicsSimpleTextItem*> text_item_list;
     QStringList affixes = this_sigstring.split("=");
-    QFont serifFont ("Times", 16, QFont::Bold);
+    QFont serifFont ("Times", 12, QFont::Bold);
 
     for (int i=0; i< 12; i++){
         text_item_list.append( new QGraphicsSimpleTextItem(this));
@@ -880,7 +879,7 @@ void thirteenagon::set_text(sigstring_t this_sigstring, int stem_count)
     QList<QRectF*> br_list;
     QList<QGraphicsSimpleTextItem*> text_item_list;
     QStringList affixes = this_sigstring.split("=");
-    QFont serifFont ("Times", 16, QFont::Bold);
+    QFont serifFont ("Times", 12, QFont::Bold);
 
 
     for (int i=0; i< 13; i++){
@@ -986,7 +985,7 @@ void fourteenagon::set_text(sigstring_t this_sigstring, int stem_count)
     QList<QRectF*> br_list;
     QList<QGraphicsSimpleTextItem*> text_item_list;
     QStringList affixes = this_sigstring.split("=");
-    QFont serifFont ("Times", 16, QFont::Bold);
+    QFont serifFont ("Times", 12, QFont::Bold);
 
 
     for (int i=0; i< 14; i++){
@@ -1095,7 +1094,7 @@ void fifteenagon::set_text(sigstring_t this_sigstring, int stem_count)
     QList<QRectF*> br_list;
     QList<QGraphicsSimpleTextItem*> text_item_list;
     QStringList affixes = this_sigstring.split("=");
-    QFont serifFont ("Times", 16, QFont::Bold);
+    QFont serifFont ("Times", 12, QFont::Bold);
 
 
     for (int i=0; i< 15; i++){

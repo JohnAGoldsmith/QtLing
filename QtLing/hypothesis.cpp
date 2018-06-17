@@ -12,6 +12,7 @@ void CLexicon::generate_hypotheses()
     QString affix_1, doomed_affix;
     QStringList affixes1, affixes2, doomed_affixes, new_pSig2;
     int MINIMUM_AFFIX_OVERLAP = 10;
+    int MINIMUM_NUMBER_OF_WORDS = 6;
     CSignatureCollection * signatures;
     m_SuffixesFlag ?
         signatures = m_Signatures:
@@ -28,8 +29,9 @@ void CLexicon::generate_hypotheses()
             continue;
         }
 
-        if (pSig1_longer_stem->get_stem_entropy() < m_entropy_threshold_for_stems ||
+        if (pSig1_longer_stem ->get_stem_entropy() < m_entropy_threshold_for_stems ||
             pSig2_shorter_stem->get_stem_entropy() < m_entropy_threshold_for_stems  ){
+            // probably we should kill these rather than keep them around;
             continue;
         }
 
@@ -39,10 +41,10 @@ void CLexicon::generate_hypotheses()
         doomed_affixes.clear();
         pSig1_longer_stem->get_string_list(affixes1);
         pSig2_shorter_stem->get_string_list(affixes2);
-        if (p_edge->get_number_of_words() < 6 ){continue;}
-
-        qDebug()<<"*** 44" << this_morph <<  affixes2 << affixes1;
+        bool success_flag = true;
+        if (p_edge->get_number_of_words() < MINIMUM_NUMBER_OF_WORDS ){continue;}
         //--> doomed_affixes is the set of affixes that sig1 proposes to sig2  for retirement
+        int matching_affixes_count = 0;
         for (int affixno = 0; affixno < affixes1.count(); affixno++){
             affix_1 = affixes1[affixno];
             if (affix_1 == "NULL"){
@@ -51,32 +53,34 @@ void CLexicon::generate_hypotheses()
                 doomed_affix = this_morph + affix_1;
             }
             doomed_affixes.append(doomed_affix);
+            if (affixes2.contains(doomed_affix)){
+                //qDebug() << doomed_affix << affixes2;
+                matching_affixes_count++;
+                //qDebug() << "success" << this_morph << doomed_affix << pSig1_longer_stem->display() << pSig2_shorter_stem->display();
+            }else{
+                // not all of the first sig is continued in the second sig.
+                success_flag = false;
+                qDebug() << 59 << " failure " << this_morph << doomed_affix << pSig1_longer_stem->display() << pSig2_shorter_stem->display();
+                break;
+            }
         }
-        qDebug() << "doomed affixes " << doomed_affixes;
-//        for (int affixno = 0; affixno < affixes2.count(); affixno++){
-//            affix = affixes2[affixno];
-//            if (!doomed_affixes.contains(affix)){
-//                new_pSig2.append(affix);
-//            }
-//        }
+        // We only accept cases where the all of the "doomed" affixes were found in affixes2.
+        if (success_flag == false){
+            continue;
+        }
 
         // we remove all of the newaffixes from pSig2, and replace them with this_morph, and
         // this_morph points directly to pSig1.
-        QStringList these_affixes = pSig2_shorter_stem->get_key().split("=");
-        foreach (QString this_affix, these_affixes){
+        foreach (QString this_affix, affixes2){
             if (doomed_affixes.contains(this_affix)){
-                qDebug() << 66 << "remove "<< this_affix;
                 m_SuffixesFlag?
                     pSig2_shorter_stem->remove_suffix(this_affix):
                     pSig2_shorter_stem->remove_prefix(this_affix);
             }
         }
-        qDebug()<< "70" << pSig2_shorter_stem->display();
         pSig2_shorter_stem->add_affix_string(this_morph);
-        qDebug()<< 72 << pSig2_shorter_stem->display();
-        //new_pSig2.append(this_morph);
-        //new_pSig2.sort();
-        qDebug() << pSig2_shorter_stem->get_key() << 72;
+        // !! this signature needs to send itself to the Dict in Signatures to be updated.
+
         // Then pSig2 loses all of the stems that created the shared words here.
         // But that has not yet been implemented.
 
@@ -91,7 +95,6 @@ void CLexicon::generate_hypotheses()
         m_Hypotheses->append(this_hypothesis);
         m_Hypothesis_map->insert (this_hypothesis->express_as_string(),  this_hypothesis);
     }
-  //  qDebug() << "hypothesis count " <<m_Hypotheses->count() << 72;
 }
 CHypothesis::CHypothesis(eHypothesisType HypothesisT,   sig_graph_edge*  p_edge)
 {

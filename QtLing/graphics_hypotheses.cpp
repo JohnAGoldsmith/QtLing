@@ -30,20 +30,18 @@ void  lxa_graphics_scene::implement_hypothesis(const QModelIndex &  index )
                     color_target_old_1,
                     color_target_old_2,
                     color_target_old_3;
-    color_target_1 = Qt::white;
-    color_target_old_1 = Qt::yellow;
-    color_target_2 = Qt::blue;
-    color_target_3 = Qt::green;
+    color_target_1      = Qt::white;
+    color_target_old_1  = Qt::yellow;
+    color_target_2      = Qt::blue;
+    color_target_3      = Qt::green;
 
 
     graphic_signature2  * original_graphic_sig,
                         * lower_graphic_sig,
                         * shortened_graphic_sig,
                         * this_graphic_signature;
-
-
-
     bool    shortened_graphic_signature_already_existed (false);
+
 
     // this function should fire only if the hypotheses are being shown in the right tables,
     // and the main windows is in graphics mode, showing the lattice of signatures.
@@ -56,54 +54,16 @@ void  lxa_graphics_scene::implement_hypothesis(const QModelIndex &  index )
             column = index.column();
         }
         affix_t     morph                  = index.sibling(row,0).data().toString();
-        sigstring_t lower_sigstring        = index.sibling(row,1).data().toString();
-        sigstring_t original_sigstring     = index.sibling(row,2).data().toString();
-        sigstring_t shortened_sigstring    = index.sibling(row,3).data().toString();
+        sigstring_t lower_sigstring        = index.sibling(row,2).data().toString();
+        sigstring_t original_sigstring     = index.sibling(row,3).data().toString();
+        sigstring_t shortened_sigstring    = index.sibling(row,4).data().toString();
         QPointF     original_point, lower_point, shortened_point;
 
-
-        for (auto sig_iter : m_map_from_sig_to_pgraphsig.values()){
-            this_graphic_signature = sig_iter;
-            sigstring_t this_sig_string = this_graphic_signature->get_signature()->get_key();
-
-            if ( this_sig_string == original_sigstring ){
-                original_graphic_sig = this_graphic_signature;
-                original_graphic_sig ->set_color(color_target_1);
-                move_graphic_signature_to_the_left(this_graphic_signature);
-                original_point = original_graphic_sig->get_center() ;
-                m_target_1_list.append(original_graphic_sig);
-                //original_graphic_sig->set_score (10);
-            } else if (this_sig_string == lower_sigstring )
-            {
-                lower_graphic_sig = this_graphic_signature;
-                lower_graphic_sig->set_color(color_target_2);
-                move_graphic_signature_to_the_left(this_graphic_signature);
-                lower_point = lower_graphic_sig->get_center() ;
-
-            } else if (this_sig_string == shortened_sigstring)
-            {
-                shortened_graphic_sig =  this_graphic_signature;
-                if (shortened_graphic_sig){
-                    move_graphic_signature_to_the_left(this_graphic_signature);
-                    shortened_graphic_sig -> set_color(m_focus_color);
-                    shortened_point = shortened_graphic_sig->get_center() ;
-                    shortened_graphic_signature_already_existed = true;
-                    shortened_graphic_sig->increase_score(original_graphic_sig->get_score());
-                    original_graphic_sig->set_score (10);                } else{
-                    shortened_graphic_signature_already_existed = false;
-                }
-            } else
-            {
-                    //this_graphic_signature->set_color(m_out_of_focus_color);
-            }
-        }
-
-        //place_arrow(original_point, lower_point);
-        if (shortened_graphic_signature_already_existed){
-            //place_arrow(shortened_point, lower_point);
-            place_arrow(original_point, shortened_point);
-        }
-
+        qDebug() << 62 << shortened_sigstring << lower_sigstring;
+        CSignature*     start_sig = m_lexicon->get_signatures()->get_signature(shortened_sigstring);
+        CSignature*     end_sig   = m_lexicon->get_signatures()->get_signature(lower_sigstring);
+        lxa_arrow* this_arrow = new lxa_arrow(start_sig,end_sig);
+        m_arrows.append(this_arrow);
         re_place_signatures();
    }
 

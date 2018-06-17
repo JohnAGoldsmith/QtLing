@@ -34,6 +34,7 @@ protected:
     bool                 m_focus_flag;
     Qt::GlobalColor      m_color;
     double               m_score;
+    int                  m_font_size;
 
 public:
     graphic_signature2  ();
@@ -77,6 +78,29 @@ public:
     double                      get_radius() {return m_radius;}
     void paint(QPainter *, const QStyleOptionGraphicsItem *,
                QWidget * );
+};
+
+class lxa_arrow : public QGraphicsItem
+{
+    friend                      lxa_graphics_scene;
+protected:
+    CSignature*                 m_start_sig;
+    CSignature*                 m_end_sig;
+    QColor                      m_color;
+public:
+                                lxa_arrow  (){};
+                                ~lxa_arrow() {};
+                                lxa_arrow   (QGraphicsScene * parent,
+                                        CSignature* m_start_sig,
+                                        CSignature* m_end_sig);
+                                lxa_arrow (CSignature*, CSignature*);
+    QRectF                      boundingRect() const
+    {
+        return QRectF();
+    }
+    void                        set_color(Qt::GlobalColor);
+    void paint(QPainter *, const QStyleOptionGraphicsItem *,
+               QWidget * ){};
 };
 
 //--------------------->       <-----------------------------//
@@ -285,10 +309,9 @@ class lxa_graphics_view : public QGraphicsView
 
     QList<QList<CSignature*>*>      m_signature_lattice;
     MainWindow *                    m_main_window;
-//    lxa_graphics_scene*             m_graphics_scene;
     double                          m_scale;
-    double                             m_x_scale;
-    double                             m_y_scale;
+    double                          m_x_scale;
+    double                          m_y_scale;
     void                            mousePressEvent(QMouseEvent*);
 
 public:
@@ -311,7 +334,22 @@ public:
 //          lxa graphics scene
 //
 /////////////////////////////////////////////////////////////////////////////
+/*
+class lxa_arrow : public QGraphicsItem
+{
+    Q_OBJECT
 
+    CSignature*     m_sig_start;
+    CSignature*     m_sig_end;
+    QPointF         m_point_start;
+    QPointF         m_point_end;
+    QColor          m_color;
+public:
+    lxa_arrow (CSignature*, CSignature*);
+
+
+};
+*/
 class lxa_graphics_scene : public QGraphicsScene
 {
     Q_OBJECT
@@ -339,7 +377,7 @@ class lxa_graphics_scene : public QGraphicsScene
     QList<QList<graphic_signature2*>*>      m_graphic_signature_lattice;
     QMap<CSignature*,graphic_signature2*>   m_map_from_sig_to_pgraphsig;
 
-
+    QList<lxa_arrow*>                       m_arrows;
 
     QVector<int>                            m_insertion_point_in_signature_lattice;
     QList<QPair<CSignature*,CSignature*>*>  m_signature_containment_edges;
@@ -382,6 +420,7 @@ public:
     void                ingest( CSignatureCollection*);
     void                add_signature_containment_edge (QPair<CSignature*, CSignature*>* pPair)
                                            {m_signature_containment_edges.append (pPair); }
+    void                add_arrow(CSignature* start_sig, CSignature* end_sig);
     void                assign_lattice_positions_to_signatures(CSignatureCollection*, eDataType );
     eGraphicsStatus     change_graphics_status();
     void                clear_scene();
@@ -397,7 +436,8 @@ public:
     void                mouseMoveEvent(QGraphicsSceneMouseEvent * event);
     void                narrow_columns();
     void                place_containment_edges();
-    void                place_arrow(QPointF, QPointF, QColor = Qt::green);
+    void                place_arrow(lxa_arrow*);
+    void                place_arrows();
     void                re_place_signatures();
     void                set_focus_signature_and_move(graphic_signature2* );
     void                set_display_circles_for_signatures(bool bool_var) {m_display_circles_for_signatures = bool_var;}

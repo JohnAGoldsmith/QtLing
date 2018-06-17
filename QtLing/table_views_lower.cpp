@@ -199,17 +199,12 @@ LowerTableView::LowerTableView(MainWindow * window)
          break;}
     case  e_data_hypotheses:
           if (m_parent_window->m_graphic_display_flag){
-
-
-
                 if (index.isValid()) {row = index.row();}
-                QString hypothesis_label = index.sibling(row,0).data().toString();
+                QString hypothesis_label = index.sibling(row,6).data().toString();
                 CHypothesis*  pHypothesis = this_lexicon->get_hypothesis(hypothesis_label);
                 qDebug() << 207 << hypothesis_label;
-
-
-
-
+          }
+          else{ //tabular info, not graphics.
 
           }
           break;

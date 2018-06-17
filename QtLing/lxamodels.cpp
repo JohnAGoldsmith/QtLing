@@ -313,6 +313,8 @@ void LxaStandardItemModel::load_hypotheses_2(QList<CHypothesis*>* p_hypotheses)
     {   hypothesis = p_hypotheses->at(hypno);
         QList<QStandardItem*> items;
         QStringList pieces = hypothesis->express();
+        pieces << hypothesis->express_as_string();
+        //qDebug() << 316 <<"lxamodels"<< pieces;
         for (int i = 0; i < pieces.count(); i++){
              QStandardItem * item1 = new QStandardItem(pieces[i]);
              items.append(item1);
