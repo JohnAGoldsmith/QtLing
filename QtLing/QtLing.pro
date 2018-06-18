@@ -39,7 +39,8 @@ SOURCES += main.cpp\
     table_display_functions.cpp \
     table_views_lower.cpp \
     table_views_upper.cpp \
-    goldstandard.cpp
+    goldstandard.cpp \
+    mainmenu.cpp
 
 HEADERS  += mainwindow.h \
     CompareFunc.h \
@@ -61,7 +62,8 @@ HEADERS  += mainwindow.h \
     hypothesis.h \
     lxamodels.h \
     table_views.h \
-    goldstandard.h
+    goldstandard.h \
+    mainmenu.h
 
 FORMS    +=
 

@@ -38,6 +38,7 @@ class LxaStandardItemModel;
 class UpperTableView;
 class LowerTableView;
 class LeftSideTreeView;
+class MainMenu;
 
 QT_END_NAMESPACE
 
@@ -74,6 +75,9 @@ class MainWindow : public QMainWindow
     friend class                            LowerTableView;
     friend class                            lxaWindow;
     friend class                            CLexicon;
+    friend class                            MainMenu;
+
+    MainMenu*                               m_main_menu;
 
     QList<CLexicon*>                        m_lexicon_list;
     CLexicon*                               m_my_lexicon;
@@ -105,7 +109,6 @@ class MainWindow : public QMainWindow
     QString                                 curFile;
 
 
-
 public:
     void                                    analyze_corpus();
     MainWindow();
@@ -129,6 +132,9 @@ public:
 protected:
     void closeEvent(QCloseEvent *event) override;
 
+signals:
+    void                                    xml_parsed();
+
 private slots:
     void                                    about();
 
@@ -146,7 +152,8 @@ private slots:
     void                                    write_stems_and_words();
 
     // test for gold standard
-    void                                    read_and_parse_gs_xml();
+    void                                    gs_read_and_parse_xml();
+    void                                    gs_evaluate();
 
 #ifndef QT_NO_SESSIONMANAGER
     void                    commitData(QSessionManager &);

@@ -111,7 +111,8 @@ bool GoldStandard::m_openXML(MainWindow* p_main_window)
                                                    "Choose a gold standard file ot open",
                                                    m_XML_directory,
                                                    "XML Files (*.xml)");
-    return m_XML_file_name.isEmpty();
+    //qDebug() << 114 << "Goldstandard.cpp: xml file opened";
+    return !m_XML_file_name.isEmpty();
 }
 
 void GoldStandard::m_evaluate(CWordCollection *p_word_collection)
@@ -449,12 +450,12 @@ void GoldStandard::m_parseXML()
             QMessageBox::information( NULL, "Attention", "Unable to open " + m_XML_file_name + " .", "OK" );
             return;
         }
-
+        //qDebug() << 453 << "Goldstandard.cpp: gold standard parsed";
         goldStdFile.close();
     }
     else
     {
-        qDebug() << 456 << QString("GoldStandar::m_parse_XML: XML file not set");
+        qDebug() << 458 << QString("GoldStandar::m_parse_XML: XML file not set");
         return;
     }
 

@@ -35,9 +35,13 @@ public:
     GoldStandard& operator=(const GoldStandard& gs);
     ~GoldStandard();
 
-    void        m_openXML(MainWindow* p_main_window);
+    bool        m_openXML(MainWindow* p_main_window);
     void        m_parseXML();
     void        m_evaluate(CWordCollection* p_word_collection);
+
+    double      get_total_recall() { return m_total_recall; }
+    double      get_total_precision() { return m_total_precision; }
+
 
 };
 

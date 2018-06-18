@@ -40,6 +40,7 @@
 #include "graphics.h"
 #include "generaldefinitions.h"
 #include "lxamodels.h"
+#include "mainmenu.h"
 
 class LxaStandardItemModel;
 
@@ -120,7 +121,7 @@ MainWindow::MainWindow()
     statusBar()->addPermanentWidget(m_ProgressBar);
     get_lexicon()->set_progress_bar (m_ProgressBar);
 
-    createActions();
+    createActions(); // render the main menu
     createStatusBar();
     readSettings();
 
@@ -152,7 +153,7 @@ MainWindow::MainWindow()
             m_tableView_upper_right,SLOT(display_this_affixes_signatures(const QModelIndex &  )));
 
 
-
+    connect(this, SIGNAL(xml_parsed()), m_main_menu, SLOT(gs_loaded()));
 }
 
 void MainWindow::keyPressEvent(QKeyEvent* ke)
@@ -599,8 +600,12 @@ void MainWindow::gs_read_and_parse_xml()
 {
     CLexicon* lexicon = get_lexicon();
     GoldStandard* gs = lexicon->new_GoldStandard();
-    if (gs->m_openXML(this))
+
+    if (gs->m_openXML(this)) {
         gs->m_parseXML();
+        emit xml_parsed();
+        // qDebug() << 607 << "mainwindow.cpp: xml_parsed signal emitted";
+    }
 }
 
 void MainWindow::gs_evaluate()
@@ -616,126 +621,10 @@ void MainWindow::gs_evaluate()
 
 void MainWindow::createActions()
 {
-    // -------------------------------
-    // --- File menu and toolbar
-    // -------------------------------
-
-    QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
-    QToolBar *fileToolBar = addToolBar(tr("File"));    
-
-    QAction *openAct;
-    QAction *saveAsAct;
-    QAction *exitAct;
-
-//---------------------> --------------------------> -------------------------->
-//    QAction * suffix_signature_display_action = new QAction();
-//    CLexicon* lexicon = get_lexicon();
-//    connect(suffix_signature_display_action, &QAction::triggered, this,  &MainWindow::display_suffix_signatures );
-
-//    QAction * prefix_signature_display_action = new QAction();
-//    connect(prefix_signature_display_action, &QAction::triggered, this,  &MainWindow::display_prefix_signatures );
-//---------------------> --------------------------> -------------------------->
-
-
-    // Give a data file name, store the name, and read the file.
-    const QIcon openIcon = QIcon::fromTheme("document-open", QIcon("../../../../QtLing/images/open.png"));
-    openAct = new QAction(openIcon, tr("&Open..."), this);
-    openAct->setShortcuts(QKeySequence::Open);
-    openAct->setStatusTip(tr("Open an existing file"));
-    connect(openAct, &QAction::triggered, this, &MainWindow::ask_for_filename);
-    fileMenu->addAction(openAct);
-    fileToolBar->addAction(openAct);
-
-    // No action associated with this yet.
-    const QIcon saveAsIcon = QIcon::fromTheme("document-save-as");
-    saveAsAct = fileMenu->addAction(saveAsIcon, tr("Save &As..."), this, &MainWindow::saveAs);
-    saveAsAct->setShortcuts(QKeySequence::SaveAs);
-    saveAsAct->setStatusTip(tr("Save the document under a new name"));
-
-    fileMenu->addSeparator();
-
-    const QIcon exitIcon = QIcon::fromTheme("application-exit");
-    exitAct = fileMenu->addAction(exitIcon, tr("E&xit"), this, &QWidget::close);
-    exitAct->setShortcuts(QKeySequence::Quit);
-    exitAct->setStatusTip(tr("Exit the application"));
-
-    // -------------------------------
-    // --- edit menu and toolbar
-    // -------------------------------
-    QMenu *editMenu = menuBar()->addMenu(tr("&Edit"));
-    QToolBar *editToolBar = addToolBar(tr("Edit"));
-
-    QAction *cutAct;
-    QAction *copyAct;
-    QAction *pasteAct;
-
-#ifndef QT_NO_CLIPBOARD
-    const QIcon cutIcon = QIcon::fromTheme("edit-cut", QIcon("../../../../QtLing/images/cut.png"));
-    cutAct = new QAction(cutIcon, tr("Cu&t"), this);
-
-    cutAct->setShortcuts(QKeySequence::Cut);
-    cutAct->setStatusTip(tr("Cut the current selection's contents to the "
-                            "clipboard"));
-//    connect(cutAct, &QAction::triggered, textEdit, &QPlainTextEdit::cut);
-    editMenu->addAction(cutAct);
-    editToolBar->addAction(cutAct);
-
-    const QIcon copyIcon = QIcon::fromTheme("edit-copy", QIcon("../../../../QtLing/images/copy.png"));
-    copyAct = new QAction(copyIcon, tr("&Copy"), this);
-    copyAct->setShortcuts(QKeySequence::Copy);
-    copyAct->setStatusTip(tr("Copy the current selection's contents to the "
-                             "clipboard"));
-//    connect(copyAct, &QAction::triggered, textEdit, &QPlainTextEdit::copy);
-    editMenu->addAction(copyAct);
-    editToolBar->addAction(copyAct);
-
-    const QIcon pasteIcon = QIcon::fromTheme("edit-paste", QIcon("../../../../QtLing/images/paste.png"));
-    pasteAct = new QAction(pasteIcon, tr("&Paste"), this);
-    pasteAct->setShortcuts(QKeySequence::Paste);
-    pasteAct->setStatusTip(tr("Paste the clipboard's contents into the current "
-                              "selection"));
-//    connect(pasteAct, &QAction::triggered, textEdit, &QPlainTextEdit::paste);
-    editMenu->addAction(pasteAct);
-    editToolBar->addAction(pasteAct);
-
-    menuBar()->addSeparator();
-
-#endif // !QT_NO_CLIPBOARD
-    // -------------------------------
-    // --- Help menu
-    // -------------------------------
-    QMenu *helpMenu = menuBar()->addMenu(tr("&Help"));
-    QAction *aboutAct = helpMenu->addAction(tr("&About"), this, &MainWindow::about);
-    aboutAct->setStatusTip(tr("Show the application's About box"));
-
-    QAction *aboutQtAct = helpMenu->addAction(tr("About &Qt"), qApp, &QApplication::aboutQt);
-    aboutQtAct->setStatusTip(tr("Show the Qt library's About box"));
-
-
-    // beginning of experiment using goldstandard
-
-    // -------------------------------
-    // --- Evaluation Menu
-    // -------------------------------
-
-    QAction *importAct;
-    //QAction *evalAct;
-    QIcon importIcon;
-
-    importAct = new QAction(tr("Import &Gold Standard XML file"), this);
-    importAct->setStatusTip(tr("Import and Load Gold Standard XML file"));
-    importAct->setIcon(importIcon);
-
-
-    connect(importAct, &QAction::triggered, this, &MainWindow::read_and_parse_gs_xml);
-
-    QMenu *evalMenu = menuBar()->addMenu(tr("&Evaluate"));
-    evalMenu->addAction(importAct);
-    editToolBar->addAction(importAct);
-
-    // end of goldstandard experiment
-
-    //fileToolBar->addButton("Sort");
+    /* Removed code that was originally in this part to the
+     * constructor function of a new class called MainMenu
+     */
+    m_main_menu = new MainMenu(this);
 }
 void MainWindow::createStatusBar()
 {

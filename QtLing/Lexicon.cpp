@@ -137,6 +137,12 @@ void CLexicon::dump_signatures_to_debug()
 
 }
 
+/* Crab_1:
+ * Used after MainWindow::read_dx1_file, which parses the dx1 file and
+ * stores words and their counts into CWordCollection object in Lexicon,
+ * and generates the SortedStringArrays.
+ *
+ */
 void CLexicon::Crab_1()
 {
     FindProtostems();
@@ -165,6 +171,9 @@ void CLexicon::Crab_1()
  * This is the first of the three initial parts of finding signatures.
  * This makes a cut at every point in a word where the successor frequency
  * is greater than 1.
+ * Taking teh sorted string array as input, finds protoroots and stores them
+ * by modifying m_suffix_protostems_2 (for suffixes)
+ * or m_prefix_protostems_2 (for prefixes)
  */
 void CLexicon::FindProtostems()
 {   word_t          this_word, previous_word;
@@ -260,7 +269,9 @@ void CLexicon::FindProtostems()
 
 /*!
  * This is the second of the three initial parts of finding signatures.
- * This creates stem/affix pairs, which are put in a long list of "Parses".
+ * This creates stem/affix pairs, which are put in a long list of "Parses":
+ * QList<QPair<QString,QString>>* m_Parses
+ *
  */
 void CLexicon::CreateStemAffixPairs()
 {
@@ -321,8 +332,11 @@ void   CLexicon::assign_suffixes_to_stems(QString name_of_calling_function)
     stem_list *                 p_this_stem_list;
     affix_set *                 this_ptr_to_affix_set;
     CStem*                      pStem;
+    // Equivalent to QMap<QString, QSet<QString>>
     map_sigstring_to_suffix_set temp_stems_to_affix_set;
+    // Equivalent to QMap<QString, QList<QString>>
     map_sigstring_to_stem_list  temp_signatures_to_stems;
+    // Equivalent to QSet<QString>
     morph_set *                 pSet;
     m_ProgressBar->reset();
     m_ProgressBar->setMinimum(0);
@@ -334,6 +348,7 @@ void   CLexicon::assign_suffixes_to_stems(QString name_of_calling_function)
     //delete m_PrefixSignatures;
     //m_PrefixSignatures = new CSignatureCollection(this, m_SuffixesFlag);
 
+    // One entry per stem, in QMap<QString, QSet<QString>> temp_stems_to_affix_set
     //--> We establish a temporary map from stems to sets of affixes as we iterate through parses. <--//
     for (int parseno = 0; parseno < m_Parses->size(); parseno++){
         m_ProgressBar->setValue(parseno);
@@ -355,6 +370,7 @@ void   CLexicon::assign_suffixes_to_stems(QString name_of_calling_function)
 
         }
         temp_stems_to_affix_set.value(this_stem_t)->insert(this_affix);
+        // insert affixes into set
     }
     //-----------------------------------------------------------------------------------------------//
     qDebug() << "Step 1.";
@@ -366,6 +382,7 @@ void   CLexicon::assign_suffixes_to_stems(QString name_of_calling_function)
     m_StatusBar->showMessage("Form signatures: 2. tentative signatures.");
 
     int count= 0;
+    // equivalent to QMap<QString, QSet<String>>::iterator
     QMapIterator<QString, morph_set*>   stem_iter(temp_stems_to_affix_set);    // part 1
     while (stem_iter.hasNext())                                                // make a presignature for each stem.
     {    qApp->processEvents();
@@ -374,13 +391,19 @@ void   CLexicon::assign_suffixes_to_stems(QString name_of_calling_function)
          stem_iter.next();
          this_stem_t            = stem_iter.key();
          this_ptr_to_affix_set  = stem_iter.value();
+
+         // -- Create string representation of signature
          QStringList temp_presignature;
+         // equivalent to QSet<QString>::iterator
          affix_set_iter affix_iter (*this_ptr_to_affix_set);
          while (affix_iter.hasNext()){
                  temp_presignature.append ( affix_iter.next() );
          }
          temp_presignature.sort();
          sigstring_t this_signature_string = temp_presignature.join("=");
+         // -- finish creating string representation of signature
+
+         //
          if ( ! temp_signatures_to_stems.contains(this_signature_string)){
             stem_list * pStemSet = new stem_list;
             temp_signatures_to_stems[this_signature_string] = pStemSet;
