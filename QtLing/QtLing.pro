@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui xml
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -14,11 +14,16 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
+    corpus.cpp \
     CompareFunc.cpp \
+    lexicon_sublexicon.cpp \
+    lexicon_crab2.cpp \
     Word.cpp \
     WordCollection.cpp \
     Lexicon.cpp \
+    output.cpp \
     SignatureCollection.cpp \
+    signature_graph.cpp\
     Signature.cpp \
     StemCollection.cpp \
     Stem.cpp \
@@ -33,7 +38,8 @@ SOURCES += main.cpp\
     graphics_hypotheses.cpp \
     table_display_functions.cpp \
     table_views_lower.cpp \
-    table_views_upper.cpp
+    table_views_upper.cpp \
+    goldstandard.cpp
 
 HEADERS  += mainwindow.h \
     CompareFunc.h \
@@ -54,7 +60,8 @@ HEADERS  += mainwindow.h \
     supersignature.h \
     hypothesis.h \
     lxamodels.h \
-    table_views.h
+    table_views.h \
+    goldstandard.h
 
 FORMS    +=
 
