@@ -37,6 +37,7 @@ CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag)
     m_Hypothesis_map        = new QMap<QString, CHypothesis*>;
     m_entropy_threshold_for_stems = 1.2;
     m_parent_lexicon        = lexicon;
+    m_GoldStandard          = nullptr;
 
 //  This is part of an experiment.
     m_category_types["Words"]               = CT_word;

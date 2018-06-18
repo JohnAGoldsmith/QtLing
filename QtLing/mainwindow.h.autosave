@@ -146,8 +146,9 @@ private slots:
     void                                    write_stems_and_words();
 
     // test for gold standard
-    void                                    read_and_parse_gs_xml();
-
+    void                                    gs_read_and_parse_xml();
+    void                                    gs_evaluate();
+    
 #ifndef QT_NO_SESSIONMANAGER
     void                    commitData(QSessionManager &);
 #endif

@@ -719,13 +719,17 @@ void MainWindow::createActions()
     // -------------------------------
 
     QAction *importAct;
-    //QAction *evalAct;
+    QAction *evalAct;
     QIcon importIcon;
+    QIcon evalIcon;
 
     importAct = new QAction(tr("Import &Gold Standard XML file"), this);
     importAct->setStatusTip(tr("Import and Load Gold Standard XML file"));
     importAct->setIcon(importIcon);
-
+    
+    evalAct = new QAction(tr("&Evaluate using Gold Standard"), this);
+    evalAct->setStatusTip(tr("Evaluate output of linguistica using Gold Standard"));
+    evalAct->setIcon(evalIcon);
 
     connect(importAct, &QAction::triggered, this, &MainWindow::read_and_parse_gs_xml);
 

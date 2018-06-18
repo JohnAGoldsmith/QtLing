@@ -10,6 +10,8 @@
 #include <QStatusBar>
 #include "SignatureCollection.h"
 #include "Typedefs.h"
+#include "goldstandard.h"
+
 class MainWindow;
 class CWordCollection;
 class CStemCollection;
@@ -172,11 +174,20 @@ protected:
 
     double                          m_entropy_threshold_for_stems;
 
+    // experiment for gold standard evaluation code
+    GoldStandard*                   m_GoldStandard;
+    // end of experiment
+
 public:
     CLexicon(CLexicon* parent_lexicon = NULL, bool suffix_flag = true);
 public:
 
     ~CLexicon();
+
+    // experiment for gold standard evaluation code
+    GoldStandard*                               get_GoldStandard()          { return m_GoldStandard; }
+    GoldStandard*                               new_GoldStandard()          { m_GoldStandard = new GoldStandard(); return m_GoldStandard;}
+
 
     void                                        dump_signatures_to_debug();
     // accessors and protostems
