@@ -171,7 +171,7 @@ void CLexicon::Crab_1()
  * This is the first of the three initial parts of finding signatures.
  * This makes a cut at every point in a word where the successor frequency
  * is greater than 1.
- * Taking teh sorted string array as input, finds protoroots and stores them
+ * Taking the sorted string array as input, finds protoroots and stores them
  * by modifying m_suffix_protostems_2 (for suffixes)
  * or m_prefix_protostems_2 (for prefixes)
  */
@@ -382,7 +382,7 @@ void   CLexicon::assign_suffixes_to_stems(QString name_of_calling_function)
     m_StatusBar->showMessage("Form signatures: 2. tentative signatures.");
 
     int count= 0;
-    // equivalent to QMap<QString, QSet<String>>::iterator
+    // equivalent to QMap<QString, QSet<String>*>::iterator
     QMapIterator<QString, morph_set*>   stem_iter(temp_stems_to_affix_set);    // part 1
     while (stem_iter.hasNext())                                                // make a presignature for each stem.
     {    qApp->processEvents();
@@ -403,7 +403,8 @@ void   CLexicon::assign_suffixes_to_stems(QString name_of_calling_function)
          sigstring_t this_signature_string = temp_presignature.join("=");
          // -- finish creating string representation of signature
 
-         //
+         // modify temp_signatures_to_stems map (type: QMap<QString, QList<QString>*>),
+         // with string representation of signature as key
          if ( ! temp_signatures_to_stems.contains(this_signature_string)){
             stem_list * pStemSet = new stem_list;
             temp_signatures_to_stems[this_signature_string] = pStemSet;
@@ -417,6 +418,7 @@ void   CLexicon::assign_suffixes_to_stems(QString name_of_calling_function)
     m_ProgressBar->setMaximum(temp_signatures_to_stems. count());
     m_StatusBar->showMessage("Form signatures: 3. final step.");
     count = 0;
+    // Equivalent to  QMap<QString, QList<QString>*>::iterator
     QMapIterator<sigstring_t, stem_list*> iter_sigstring_to_stems ( temp_signatures_to_stems);
      // -->  Iterate through tentative signatures.    <-- //
     while (iter_sigstring_to_stems.hasNext())
@@ -431,7 +433,9 @@ void   CLexicon::assign_suffixes_to_stems(QString name_of_calling_function)
 
         if (p_this_stem_list->size() >= MINIMUM_NUMBER_OF_STEMS)
         {
+            // put signature strings into m_Signatures
             if( m_SuffixesFlag) {
+                // CSignature* pSig;
                 pSig = *m_Signatures       << this_signature_string;
             } else {
                 pSig = *m_PrefixSignatures << this_signature_string;
@@ -441,11 +445,14 @@ void   CLexicon::assign_suffixes_to_stems(QString name_of_calling_function)
             pSig->add_memo(name_of_calling_function);
             m_StatusBar->showMessage("Form signatures: 3b");
 
+            // add each affix in the signature to CSuffix/CPrefix objects in m_Suffixes
             QListIterator<QString> affix_iter_2(this_affix_list);
             while(affix_iter_2.hasNext()){
                 this_affix = affix_iter_2.next();
                 link_signature_and_affix(pSig,this_affix);
             }
+            // for each stem in the list of stems in the map of signatures,
+            // use the function link_signature_and_stem()
             stem_list_iterator stem_iter(*p_this_stem_list);
             while (stem_iter.hasNext()){
                 this_stem_t = stem_iter.next();
@@ -453,6 +460,7 @@ void   CLexicon::assign_suffixes_to_stems(QString name_of_calling_function)
             }
         }
     }
+    // Sort suffixes by count into sorted list
     m_Suffixes->sort_by_count();
     m_SuffixesFlag ?
         m_Signatures->calculate_stem_entropy():
@@ -473,6 +481,9 @@ void CLexicon::link_signature_and_affix(CSignature * pSig, affix_t this_affix)
 }
 void CLexicon::link_signature_and_stem(stem_t this_stem_t , CSignature*  pSig,  QString this_signature_string)
 {
+    // add a CStem object into m_suffixal_stems/m_prefixal_stems:
+    //   - add CSignature pointer to that CStem object
+    //   - add CStem pointer to CSignature object
     CStem* pStem;
     QString this_affix, this_word;
     m_SuffixesFlag ?
@@ -494,7 +505,7 @@ void CLexicon::link_signature_and_stem(stem_t this_stem_t , CSignature*  pSig,  
         }
         CWord* pWord = m_Words->get_word(this_word);
         if (!pWord){
-               qDebug() << this_word <<  "Error: this_word not found among words. Line 486" << this_stem_t  << this_affix << pSig->get_key() << this_signature_string;
+               qDebug() << this_word <<  "Error: this_word not found among words. Line 505" << this_stem_t  << this_affix << pSig->get_key() << this_signature_string;
         } else{
                stem_count += pWord->get_word_count();
                pWord->add_parse_triple(this_stem_t, this_affix, pSig->get_key());
@@ -743,8 +754,3 @@ void CLexicon::collect_parasuffixes()
     }
     m_ParaSuffixes->sort_by_count();
 };
-
-
-
-
-
