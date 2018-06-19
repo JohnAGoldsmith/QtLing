@@ -187,6 +187,7 @@ public:
     // experiment for gold standard evaluation code
     GoldStandard*                               get_GoldStandard()          { return m_GoldStandard; }
     GoldStandard*                               new_GoldStandard()          { m_GoldStandard = new GoldStandard(); return m_GoldStandard;}
+    bool                                        do_gs_evaluation();
 
 
     void                                        dump_signatures_to_debug();

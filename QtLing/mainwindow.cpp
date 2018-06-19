@@ -604,13 +604,21 @@ void MainWindow::gs_read_and_parse_xml()
     if (gs->m_openXML(this)) {
         gs->m_parseXML();
         emit xml_parsed();
-        // qDebug() << 607 << "mainwindow.cpp: xml_parsed signal emitted";
+        qDebug() << 607 << "mainwindow.cpp: xml_parsed signal emitted";
     }
 }
 
-void MainWindow::gs_evaluate()
+void MainWindow::gs_evaluate() // move to lexicon
 {
-
+    CLexicon* lexicon = get_lexicon();
+    bool eval_succeeded = lexicon->do_gs_evaluation();
+    if (eval_succeeded) {
+        qDebug() << 616 << "Mainwindow.cpp: evaluation succeeded\n" ;
+        qDebug() << "Precision: " << lexicon->get_GoldStandard()->get_total_precision()
+                 << "Recall: " << lexicon->get_GoldStandard()->get_total_recall();
+    } else {
+        qDebug() << 618 << "Mainwindow.cpp: evaluation failed";
+    }
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

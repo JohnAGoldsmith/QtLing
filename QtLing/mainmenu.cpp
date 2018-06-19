@@ -121,6 +121,7 @@ MainMenu::MainMenu(MainWindow *parent) : QObject(parent)
     evalAct->setDisabled(true);
 
     connect(importAct, &QAction::triggered, parent, &MainWindow::gs_read_and_parse_xml);
+    connect(evalAct, &QAction::triggered, parent, &MainWindow::gs_evaluate);
 
     evalMenu = parent->menuBar()->addMenu(tr("&Evaluate"));
     evalMenu->addAction(importAct);

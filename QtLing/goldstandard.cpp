@@ -21,10 +21,10 @@
 // typedef QList<CStem*> CStemList;
 // typedef QMap<QString,CStemList> StringToCStemList;
 
-/* Things to modify in other source code files to make this work:
- * - in QtLing.pro, add xml to the list after QT +=
- * - add compareGoldStdSlot as a member function of MainWindow
- * - add QString m_projectDirectory as a member variable of MainWindow
+/* Things modified in other source code files:
+ * - in QtLing.pro, added "xml" to the list after QT +=
+ * - Modified Lexicon.h
+ * - Modified mainwindow.h
  */
 
 GoldStandard::GoldStandard()
@@ -115,11 +115,18 @@ bool GoldStandard::m_openXML(MainWindow* p_main_window)
     return !m_XML_file_name.isEmpty();
 }
 
-void GoldStandard::m_evaluate(CWordCollection *p_word_collection)
+bool GoldStandard::m_evaluate(CWordCollection *p_word_collection)
 {
+    if (p_word_collection->get_count() == 0) {
+        QString errorMsg = "Did not find analysis Lexicon given by Linguistica.\n Please load file and analyse using Ctrl+S.";
+        QMessageBox::information(nullptr, "Gold Standard: Error", errorMsg, QMessageBox::Ok);
+        return false;
+    }
     int correct_retrieved = 0; // the total number of correct parses found by lxa
     int total_retrieved = 0; // the total number of parses found by lxa
     int total_correct = 0; // the total number of parses in gold standard
+    int temp_overlap_word_count = 0;
+    int temp_gs_word_count = 0;
 
     GSMap::const_iterator gs_iter;
     Parse_triple_map::const_iterator gs_ptm_iter, lxa_ptm_iter;
@@ -129,13 +136,16 @@ void GoldStandard::m_evaluate(CWordCollection *p_word_collection)
     for (gs_iter = m_GS->constBegin();
          gs_iter != m_GS->constEnd();
          gs_iter++) {
+        temp_gs_word_count++;
         const QString& str_word = gs_iter.key();
         p_word = p_word_collection->get_word(str_word);
 
-        if (p_word == NULL)
+        if (p_word == NULL) {
             continue;
+        }
         // only consider words that appear both in gold standard and lxa output result
         // ptm stands for parse_triple_map
+        temp_overlap_word_count++;
         p_lxa_ptm = p_word->get_parse_triple_map();
         p_gs_ptm = gs_iter.value();
 
@@ -159,8 +169,27 @@ void GoldStandard::m_evaluate(CWordCollection *p_word_collection)
         }
     }
 
-    m_total_recall = correct_retrieved / total_correct;
-    m_total_precision = correct_retrieved / total_retrieved;
+    if (total_correct == 0) {
+        QString errorMsg = "Did not find any parses in gold standard!";
+        QMessageBox::information(nullptr, "Gold Standard: Error", errorMsg, QMessageBox::Ok);
+        return false;
+    }
+
+    if (total_retrieved == 0) {
+        QString errorMsg = "Did not find any parses in Linguistica's analysis\n"
+                           "that are identical to a parse given by the Gold Standard";
+        QMessageBox::information(nullptr, "Gold Standard: Error", errorMsg, QMessageBox::Ok);
+        return false;
+    }
+
+    m_total_recall = (double) correct_retrieved / (double) total_correct;
+    m_total_precision = (double) correct_retrieved / (double) total_retrieved;
+    m_gs_word_count = temp_gs_word_count;
+    m_overlap_word_count = temp_overlap_word_count;
+
+    qDebug() << "True positives: " << correct_retrieved;
+    qDebug() << "Total # of correct parses in GS: " << total_correct;
+    qDebug() << "Total # retrieved: " << total_retrieved;
 }
 
 void GoldStandard::m_parseXML()
@@ -196,7 +225,6 @@ void GoldStandard::m_parseXML()
 
                 return;
             }
-
             QDomElement alchemist_doc, morph, piece, string, wordnode
                         /* gloss, element, notes, morpheme, allomorph,
                         lmnt, feature, name, feature_id, instance_id */;
@@ -269,7 +297,6 @@ void GoldStandard::m_parseXML()
                 node1 = node1.nextSibling();
             }
 
-
             // Word list last.. this is what we need!
             if( node1.isNull() || !node1.isElement() || node1.nodeName() != "word-list" )
             {
@@ -277,6 +304,7 @@ void GoldStandard::m_parseXML()
             }
             else
             {
+                //qDebug() << 288 << "Reached word list";
                 node2 = node1.firstChild();
 
                 while( !node2.isNull() &&
@@ -319,6 +347,7 @@ void GoldStandard::m_parseXML()
                         wordIter = m_GS->insert(word, new Parse_triple_map());
                         newWord = true;
                     }
+
                     // gloss element
                     node3 = string.nextSibling();
                     if( node3.isElement() && node3.nodeName() == "gloss" )
@@ -329,6 +358,7 @@ void GoldStandard::m_parseXML()
 
                     // affix, root, and piece elements
                     skipWord = false;
+                    lastEnd = -1;
                     while( !node3.isNull() &&
                            node3.isElement() &&
                            ( node3.nodeName() == "piece" ||
@@ -342,23 +372,18 @@ void GoldStandard::m_parseXML()
 
                             // string element
                             node4 = morph.firstChild();
-                            if( node4.isElement() && node4.nodeName() == "string" )
-                            {
+                            if( node4.isElement() && node4.nodeName() == "string" ) {
                                 string = node4.toElement();
-
                                 // no need to do anything with this string
                                 node4 = string.nextSibling();
                             }
-                            else
-                            {
+                            else {
                                 // TODO: add to error string
                             }
-
 
                             while( !node4.isNull() && node4.isElement() && node4.nodeName() == "piece" )
                             {
                                 piece = node4.toElement();
-
                                 if( !piece.hasAttribute( "start" ) ||
                                     !piece.hasAttribute( "length" ) )
                                 {

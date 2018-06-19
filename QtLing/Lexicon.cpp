@@ -76,6 +76,7 @@ CLexicon::~CLexicon()
     delete m_PrefixSignatures;
     delete m_ParaSignatures;
     delete m_PassiveSignatures;
+    delete m_GoldStandard;
 }
 
 CSignatureCollection* CLexicon::get_active_signature_collection(){
@@ -111,8 +112,22 @@ void CLexicon::clear_lexicon(){
     m_Hypotheses = new QList<CHypothesis*>;
 
 
+}
 
-
+// for gold standard
+// Return true if evaluation succeeded
+// Return false if it did not
+bool CLexicon::do_gs_evaluation()
+{
+    if (m_GoldStandard == nullptr) {
+        qDebug() << 123 << "Lexicon.cpp: evaluation failed: GoldStandard not loaded";
+        return false;
+    }
+    bool evaluation_succeeded = m_GoldStandard->m_evaluate(m_Words);
+    if (evaluation_succeeded) {
+        qDebug() << 127 << "Lexicon.cpp: evaluation completed";
+        return true;
+    } else return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -491,6 +506,7 @@ void CLexicon::link_signature_and_stem(stem_t this_stem_t , CSignature*  pSig,  
             pStem = m_prefixal_stems->find_or_add(this_stem_t);
     pStem->add_signature (pSig);
     pSig->add_stem_pointer(pStem);
+
     int stem_count = 0;
     affix_list this_affix_list = this_signature_string.split("=");
     QListIterator<suffix_t> affix_iter(this_affix_list);
@@ -516,6 +532,8 @@ void CLexicon::link_signature_and_stem(stem_t this_stem_t , CSignature*  pSig,  
     }
     pStem->set_count(stem_count);
 }
+
+
 bool contains(QList<QString> * list2, QList<QString> * list1){
     for (int i=0; i < list1->length();i++){
         bool success = false;
