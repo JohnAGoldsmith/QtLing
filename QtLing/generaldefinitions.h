@@ -1,9 +1,9 @@
 #ifndef GENERALDEFINITIONS_H
 #define GENERALDEFINITIONS_H
-#include "Signature.h"
+//#include "Signature.h"
 
 //class CStem;
-//class CSignature;
+class CSignature;
 
 
 enum eHypothesisType{

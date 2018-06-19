@@ -41,6 +41,8 @@
 #include "generaldefinitions.h"
 #include "lxamodels.h"
 
+#include "string_group.h"
+
 class LxaStandardItemModel;
 
 
@@ -483,6 +485,18 @@ void MainWindow::read_dx1_file()
     Words->sort_word_list();
     setCurrentFile(m_name_of_data_file);
     statusBar()->showMessage(tr("File loaded"), 5000);
+    QStringList word_pair;
+    QString common;
+
+    for (int i = 500; i < 600; i++){
+        word_pair.clear();
+        word_pair.append(Words->get_reverse_sort_list()->at(i-1));
+        word_pair.append(Words->get_reverse_sort_list()->at(i));
+
+        left_string_diff(word_pair,common);
+        qDebug() << Words->get_reverse_sort_list()->at(i-1) << Words->get_reverse_sort_list()->at(i);
+        qDebug() << word_pair.first() << word_pair.last() << common << 494;
+    }
 }
 
 
@@ -520,7 +534,7 @@ void MainWindow::documentWasModified()
 
 void MainWindow::print_suffix_signatures()
 {
-    CSignature* pSig;
+    //CSignature* pSig;
     int count = 0;
     CStem *  pStem;
     QString filename = "swahili-suffix-signatures.txt";

@@ -7,7 +7,6 @@
 #include <QGraphicsScene>
 #include <QPoint>
 #include <QColor>
-#include "supersignature.h"
 #include <QGraphicsItem>
 #include "Lexicon.h"
 
@@ -15,7 +14,6 @@ class CSignature;
 class CSignatureCollection;
 class MainWindow;
 class lxa_graphics_scene;
-class CSupersignature;
 class CHypothesis;
 class sig_circle;
 
@@ -283,19 +281,6 @@ public:
 };
 
 //--------------------->       <-----------------------------//
-
-// not currently used.
-class graphic_super_signature : public QRect
-{
-    lxa_graphics_scene *    m_graphics_scene;
-    CSupersignature *       m_super_signature;
-    Qt::GlobalColor         m_color;
-    public:
-    graphic_super_signature(int x, int y, CSupersignature*, lxa_graphics_scene* scene);
-    void                    mousePressEvent (QGraphicsSceneMouseEvent*);
-    void                    set_color(Qt::GlobalColor this_color) { m_color = this_color;}
-    CSupersignature*        get_super_signature() {return m_super_signature;}
-};
 
 
 /////////////////////////////////////////////////////////////////////////////
