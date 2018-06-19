@@ -41,13 +41,12 @@ protected:
 
     void        add_parse_triple(QString& word, QString& stem, QString& affix);
 public:
-
     GoldStandard();
     GoldStandard(const GoldStandard& gs);
+    explicit GoldStandard(QString& XML_file_name);
     GoldStandard& operator=(const GoldStandard& gs);
     ~GoldStandard();
 
-    bool        m_openXML(MainWindow* p_main_window);
     void        m_parseXML();
     bool        m_evaluate(CWordCollection* p_word_collection);
 

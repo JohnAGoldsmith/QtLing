@@ -32,6 +32,12 @@ GoldStandard::GoldStandard()
     m_GS = new GoldStandard::GSMap();
 }
 
+GoldStandard::GoldStandard(QString& XML_file_name):
+    m_XML_file_name(XML_file_name)
+{
+    m_GS = new GoldStandard::GSMap();
+}
+
 GoldStandard::GoldStandard(const GoldStandard &gs):
     m_GS(gs.m_clone_GS_map()),
     m_total_recall(gs.m_total_recall),
@@ -103,16 +109,6 @@ void GoldStandard::add_parse_triple(QString &word, QString &stem, QString &affix
     }
     Parse_triple* this_triple = new Parse_triple(stem, affix, QString());
     wordIter.value()->insert(stem, this_triple);
-}
-
-bool GoldStandard::m_openXML(MainWindow* p_main_window)
-{
-    m_XML_file_name = QFileDialog::getOpenFileName(p_main_window,
-                                                   "Choose a gold standard file ot open",
-                                                   m_XML_directory,
-                                                   "XML Files (*.xml)");
-    //qDebug() << 114 << "Goldstandard.cpp: xml file opened";
-    return !m_XML_file_name.isEmpty();
 }
 
 bool GoldStandard::m_evaluate(CWordCollection *p_word_collection)

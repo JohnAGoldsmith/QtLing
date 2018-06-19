@@ -599,12 +599,19 @@ void MainWindow::print_prefix_signatures()
 void MainWindow::gs_read_and_parse_xml()
 {
     CLexicon* lexicon = get_lexicon();
-    GoldStandard* gs = lexicon->new_GoldStandard();
 
-    if (gs->m_openXML(this)) {
+    QString file_name = QFileDialog::getOpenFileName(this,
+                                                     "Choose a gold standard file ot open",
+                                                     QString(),
+                                                     "XML Files (*.xml)");
+    //qDebug() << 114 << "Goldstandard.cpp: xml file opened";
+    if (!file_name.isEmpty()) {
+        GoldStandard* gs = lexicon->new_GoldStandard_from_xml(file_name);
         gs->m_parseXML();
         emit xml_parsed();
-        qDebug() << 607 << "mainwindow.cpp: xml_parsed signal emitted";
+        //qDebug() << 607 << "mainwindow.cpp: xml_parsed signal emitted";
+    } else {
+        qDebug() << 616 << "mainwindow.cpp: file cannot be opened!";
     }
 }
 

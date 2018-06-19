@@ -60,9 +60,9 @@ void  LxaStandardItemModel::load_category(QString , eComponentType)
 void LxaStandardItemModel::load_words(CWordCollection* p_words)
 {
     QStringList labels;
+    clear();
     labels  << tr("word") << "word count" << "signatures";
     setHorizontalHeaderLabels(labels);
-    clear();
     m_Description = QString (" ");
     QMapIterator<word_t, CWord*> word_iter ( * p_words->get_map() );
     while (word_iter.hasNext())

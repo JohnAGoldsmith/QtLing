@@ -16,6 +16,7 @@
 #include "SuffixCollection.h"
 #include "WordCollection.h"
 #include "Word.h"
+#include "goldstandard.h"
 
 CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag)
 {
@@ -117,6 +118,12 @@ void CLexicon::clear_lexicon(){
 // for gold standard
 // Return true if evaluation succeeded
 // Return false if it did not
+GoldStandard* CLexicon::new_GoldStandard_from_xml(QString& file_name)
+{
+    m_GoldStandard = new GoldStandard(file_name);
+    return m_GoldStandard;
+}
+
 bool CLexicon::do_gs_evaluation()
 {
     if (m_GoldStandard == nullptr) {

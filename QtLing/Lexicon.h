@@ -186,7 +186,7 @@ public:
 
     // experiment for gold standard evaluation code
     GoldStandard*                               get_GoldStandard()          { return m_GoldStandard; }
-    GoldStandard*                               new_GoldStandard()          { m_GoldStandard = new GoldStandard(); return m_GoldStandard;}
+    GoldStandard*                               new_GoldStandard_from_xml(QString& file_name);
     bool                                        do_gs_evaluation();
 
 
