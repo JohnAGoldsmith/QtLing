@@ -130,7 +130,7 @@ bool CLexicon::do_gs_evaluation()
         qDebug() << 123 << "Lexicon.cpp: evaluation failed: GoldStandard not loaded";
         return false;
     }
-    bool evaluation_succeeded = m_GoldStandard->m_evaluate(m_Words);
+    bool evaluation_succeeded = m_GoldStandard->evaluate(m_Words);
     if (evaluation_succeeded) {
         qDebug() << 127 << "Lexicon.cpp: evaluation completed";
         return true;

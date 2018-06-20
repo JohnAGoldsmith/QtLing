@@ -7,6 +7,7 @@
 #include "QDebug"
 #include "hypothesis.h"
 #include "lxamodels.h"
+#include "goldstandard.h"
 #include <QCoreApplication>
 
 LxaStandardItemModel::LxaStandardItemModel(MainWindow* main_window): QStandardItemModel(main_window)
@@ -402,10 +403,105 @@ void LxaStandardItemModel::load_sig_graph_edges( QMap<QString, sig_graph_edge*> 
      }
 
 
-};
+}
+
+void LxaStandardItemModel::load_GSMap(GoldStandard::GSMap* p_gs)
+{
+    clear();
+    typedef QStandardItem QSI;
+    GoldStandard::GSMap::ConstIterator gs_iter;
+    GoldStandard::Parse_triple_map::ConstIterator ptm_iter;
+    for (gs_iter = p_gs->constBegin(); gs_iter != p_gs->constEnd(); gs_iter++) {
+        QList<QSI*> items;
+        QSI* word = new QSI(gs_iter.key());
+        items.append(word);
+        GoldStandard::Parse_triple_map* ptm = gs_iter.value();
+        for (ptm_iter = ptm->constBegin(); ptm_iter != ptm->constEnd(); ptm_iter++) {
+            Parse_triple* this_pt = ptm_iter.value();
+            QString this_parse = this_pt->p_stem + "=" + this_pt->p_suffix;
+            items.append(new QStandardItem(this_parse));
+        }
+        appendRow(items);
+    }
+}
+
+void MainWindow::update_TreeModel_for_gs(CLexicon* lexicon)
+{
+    typedef QStandardItem QSI;
+    QSI* parent = m_treeModel->invisibleRootItem();
+    int parent_row_count = parent->rowCount();
+    QSI* curr_lexicon_item = parent->child(parent_row_count-1, 0);
+
+    // Remove pre-existing gold standard items in the tree view
+    /*
+    for (int row_i = 0; row_i < curr_lexicon_item->rowCount(); ) {
+        QString data = curr_lexicon_item->child(row_i, 0)->data(Qt::DisplayRole).toString();
+        if (data == QString("Gold Standard")) {
+            curr_lexicon_item->removeRow(row_i);
+        } else {
+            row_i++;
+        }
+    }
+    */
+
+    QSI* gs_item = new QSI(QString("Gold Standard"));
+    QList<QSI*> word_items;
+    QSI* word_item = new QSI(QString("Words"));
+    int gs_word_count = lexicon->get_GoldStandard()->get_gs_word_count();
+    QSI* word_count_item = new QSI(QString::number(gs_word_count));
+    word_items.append(word_item);
+    word_items.append(word_count_item);
+
+    QList<QSI*> precision_items;
+    QSI* precision_item = new QSI(QString("Precision"));
+    double precision = lexicon->get_GoldStandard()->get_total_precision();
+    QSI* precision_value_item = new QSI(QString::number(precision));
+    precision_items.append(precision_item);
+    precision_items.append(precision_value_item);
+
+    QList<QSI*> recall_items;
+    QSI* recall_item = new QSI(QString("Recall"));
+    double recall = lexicon->get_GoldStandard()->get_total_recall();
+    QSI* recall_value_item = new QSI(QString::number(recall));
+    recall_items.append(recall_item);
+    recall_items.append(recall_value_item);
+
+    QList<QSI*> true_positive_items;
+    QSI* true_positive_item = new QSI(QString("True positive parses"));
+    int true_positive_count = lexicon->get_GoldStandard()->get_true_positive_count();
+    QSI* true_positive_count_item = new QSI(QString::number(true_positive_count));
+    true_positive_items.append(true_positive_item);
+    true_positive_items.append(true_positive_count_item);
+
+    QList<QSI*> correct_items;
+    QSI* correct_item = new QSI(QString("Parses given by Gold Standard"));
+    int correct_count = lexicon->get_GoldStandard()->get_correct_count();
+    QSI* correct_count_item = new QSI(QString::number(correct_count));
+    correct_items.append(correct_item);
+    correct_items.append(correct_count_item);
+
+    QList<QSI*> retrieved_items;
+    QSI* retrieved_item = new QSI(QString("Parses retrieved"));
+    int retrieved_count = lexicon->get_GoldStandard()->get_retrieved_count();
+    QSI* retrieved_count_item = new QSI(QString::number(retrieved_count));
+    retrieved_items.append(retrieved_item);
+    retrieved_items.append(retrieved_count_item);
+
+
+    gs_item->appendRow(word_items);
+    gs_item->appendRow(precision_items);
+    gs_item->appendRow(recall_items);
+    gs_item->appendRow(true_positive_items);
+    gs_item->appendRow(correct_items);
+    gs_item->appendRow(retrieved_items);
+
+    curr_lexicon_item->appendRow(gs_item);
+
+}
 
 void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
 {
+    // possible take them out
      QStandardItem * parent = m_treeModel->invisibleRootItem();
 
      QStandardItem * command_item = new QStandardItem(QString("Keyboard commands"));

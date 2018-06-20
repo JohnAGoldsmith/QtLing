@@ -3,6 +3,7 @@
 #include <QSortFilterProxyModel>
 #include <QStandardItemModel>
 #include "generaldefinitions.h"
+#include "goldstandard.h"
 class CWordCollection;
 class CStemCollection;
 class CSuffixCollection;
@@ -42,6 +43,8 @@ public:
     void        load_hypotheses_2(QList<CHypothesis*>*);
 // add component 11
     void        load_category(QString component_name, eComponentType);
+
+    void        load_GSMap(GoldStandard::GSMap* p_gs);
 };
 
 class LxaSortFilterProxyModel : public QSortFilterProxyModel

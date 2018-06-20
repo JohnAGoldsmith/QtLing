@@ -183,6 +183,7 @@ public:
     void                    load_subsignature_model();
     void                    load_word_model();
     void                    create_or_update_TreeModel(CLexicon* lexicon);
+    void                    update_TreeModel_for_gs(CLexicon* lexicon);
 
     void                    sort_upper_table();
 

@@ -75,6 +75,10 @@ MainWindow::MainWindow()
     m_Models["Hypotheses"]                  = new LxaStandardItemModel("Hypotheses");
     m_Models["Hypotheses 2"]                = new LxaStandardItemModel("Hypotheses 2");
 
+    // for gold standard
+
+    m_Models["Gold Standard"]               = new LxaStandardItemModel("Gold Standard");
+
 
     m_treeModel     = new QStandardItemModel();
 
@@ -607,7 +611,7 @@ void MainWindow::gs_read_and_parse_xml()
     //qDebug() << 114 << "Goldstandard.cpp: xml file opened";
     if (!file_name.isEmpty()) {
         GoldStandard* gs = lexicon->new_GoldStandard_from_xml(file_name);
-        gs->m_parseXML();
+        gs->read_XML();
         emit xml_parsed();
         //qDebug() << 607 << "mainwindow.cpp: xml_parsed signal emitted";
     } else {
@@ -623,6 +627,10 @@ void MainWindow::gs_evaluate() // move to lexicon
         qDebug() << 616 << "Mainwindow.cpp: evaluation succeeded\n" ;
         qDebug() << "Precision: " << lexicon->get_GoldStandard()->get_total_precision()
                  << "Recall: " << lexicon->get_GoldStandard()->get_total_recall();
+        update_TreeModel_for_gs(lexicon);
+
+        QCoreApplication::processEvents();
+
     } else {
         qDebug() << 618 << "Mainwindow.cpp: evaluation failed";
     }
