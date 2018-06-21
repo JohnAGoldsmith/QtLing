@@ -60,7 +60,7 @@ void CLexicon::generate_hypotheses()
             }else{
                 // not all of the first sig is continued in the second sig.
                 success_flag = false;
-                qDebug() << 59 << " failure " << this_morph << doomed_affix << pSig1_longer_stem->display() << pSig2_shorter_stem->display();
+                //qDebug() << 59 << " failure " << this_morph << doomed_affix << pSig1_longer_stem->display() << pSig2_shorter_stem->display();
                 break;
             }
         }

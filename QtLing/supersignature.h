@@ -2,7 +2,9 @@
 #define SUPERSIGNATURE_H
 
 #include "generaldefinitions.h"
+#include "Typedefs.h"
 
+class CSuffix;
 class CSignature;
 class suffix_array;
 
