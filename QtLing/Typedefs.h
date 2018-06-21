@@ -1,10 +1,13 @@
 #ifndef TYPEDEFS_H
 #define TYPEDEFS_H
 #include <QSetIterator>
-//class CStem;
+#include <QMapIterator>
+class CStem;
 class CWord;
 class CPrefix;
 class sig_graph_edge;
+class CSuffix;
+
 //class CSignature;
 
 // These typedefs make it easier to write types with long names.

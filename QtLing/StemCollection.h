@@ -5,7 +5,7 @@
 #include <iterator>
 #include "generaldefinitions.h"
 #include "Stem.h"
-
+#include "Typedefs.h"
 
 class CLexicon;
 

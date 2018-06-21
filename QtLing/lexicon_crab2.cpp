@@ -80,7 +80,7 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
        pWord->clear_parse_triple_map();
    }
    //--> We establish a temporary map from stems to sets of affixes as we iterate through parses. <--//
-
+   //--> THIS is where the continuations that are not affixes are eliminated.
    create_temporary_map_from_stems_to_affix_sets( ref_stems_to_affix_set);//, ref_temp_signatures_to_stems);
 
    //--> We iterate through these stems and for each stem, create QStringLists of their affixes. <--//
@@ -305,6 +305,10 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
         affixes_of_residual_sig.clear();
         m_ProgressBar->setValue(protostem_count++);
         stem_t this_stem = this_protostem->get_stem();
+        qDebug() << 308 << this_stem;
+        if (this_stem=="toto"){
+               int z = 1;
+        }
         int stem_length = this_stem.length();
 
         for (int wordno= this_protostem->get_start_word(); wordno <= this_protostem->get_end_word(); wordno++){

@@ -26,7 +26,6 @@ SOURCES += main.cpp\
     Suffix.cpp \
     graphics.cpp \
     lxamodels.cpp \
-    supersignature.cpp \
     display_collections.cpp \
     hypothesis.cpp \
     graphics_polygons.cpp \
@@ -39,7 +38,7 @@ SOURCES += main.cpp\
     lexicon_sublexicon.cpp \
     lexicon_crab2.cpp \
     signature_graph.cpp \
-    parsings.cpp
+    string_group.cpp
 
 HEADERS  += mainwindow.h \
     CompareFunc.h \
@@ -57,12 +56,11 @@ HEADERS  += mainwindow.h \
     Suffix.h \
     graphics.h \
     ui_mainwindow.h \
-    supersignature.h \
     hypothesis.h \
     lxamodels.h \
     table_views.h\
     mainwindow.h \
-    parsings.h
+    string_group.h
 
 FORMS    +=
 
