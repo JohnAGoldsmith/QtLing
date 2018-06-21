@@ -209,6 +209,7 @@ bool GoldStandard::evaluate(CWordCollection *p_word_collection)
     //qDebug() << "True positives: " << true_positives;
     //qDebug() << "Total # of correct parses in GS: " << total_correct;
     //qDebug() << "Total # retrieved: " << total_retrieved;
+    return true;
 }
 
 void GoldStandard::read_XML()

@@ -407,21 +407,30 @@ void LxaStandardItemModel::load_sig_graph_edges( QMap<QString, sig_graph_edge*> 
 
 }
 
-void LxaStandardItemModel::load_GSMap(GoldStandard::GSMap* p_gs)
+void LxaStandardItemModel::load_GSMap(GoldStandard* p_gs, GoldStandard::GSMap* p_gsm, const QString& type)
 {
     clear();
+    QStringList labels;
+    labels << type << "parses";
+    setHorizontalHeaderLabels(labels);
+
     typedef QStandardItem QSI;
     GoldStandard::GSMap::ConstIterator gs_iter;
     GoldStandard::Parse_triple_map::ConstIterator ptm_iter;
-    for (gs_iter = p_gs->constBegin(); gs_iter != p_gs->constEnd(); gs_iter++) {
+    GoldStandard::GSMap* p_all_word_gsm = p_gs->get_gold_standard_words();
+
+    for (gs_iter = p_all_word_gsm->constBegin(); gs_iter != p_all_word_gsm->constEnd(); gs_iter++) {
         QList<QSI*> items;
-        QSI* word = new QSI(gs_iter.key());
-        items.append(word);
-        GoldStandard::Parse_triple_map* ptm = gs_iter.value();
-        for (ptm_iter = ptm->constBegin(); ptm_iter != ptm->constEnd(); ptm_iter++) {
-            Parse_triple* this_pt = ptm_iter.value();
-            QString this_parse = this_pt->p_stem + "=" + this_pt->p_suffix;
-            items.append(new QStandardItem(this_parse));
+        QString this_word = gs_iter.key();
+        QSI* word_item = new QSI(this_word);
+        items.append(word_item);
+        GoldStandard::Parse_triple_map* ptm = (*p_gsm)[this_word];
+        if (ptm != NULL) {
+            for (ptm_iter = ptm->constBegin(); ptm_iter != ptm->constEnd(); ptm_iter++) {
+                Parse_triple* this_pt = ptm_iter.value();
+                QString this_parse = this_pt->p_stem + "=" + this_pt->p_suffix;
+                items.append(new QStandardItem(this_parse));
+            }
         }
         appendRow(items);
     }
@@ -448,7 +457,7 @@ void MainWindow::update_TreeModel_for_gs(CLexicon* lexicon)
 
     QSI* gs_item = new QSI(QString("Gold Standard"));
     QList<QSI*> word_items;
-    QSI* word_item = new QSI(QString("Words"));
+    QSI* word_item = new QSI(QString("Gold Standard Words"));
     int gs_word_count = lexicon->get_GoldStandard()->get_gs_word_count();
     QSI* word_count_item = new QSI(QString::number(gs_word_count));
     word_items.append(word_item);
@@ -469,21 +478,21 @@ void MainWindow::update_TreeModel_for_gs(CLexicon* lexicon)
     recall_items.append(recall_value_item);
 
     QList<QSI*> true_positive_items;
-    QSI* true_positive_item = new QSI(QString("True positive parses"));
+    QSI* true_positive_item = new QSI(QString("True Positive Parses"));
     int true_positive_count = lexicon->get_GoldStandard()->get_true_positive_count();
     QSI* true_positive_count_item = new QSI(QString::number(true_positive_count));
     true_positive_items.append(true_positive_item);
     true_positive_items.append(true_positive_count_item);
 
     QList<QSI*> correct_items;
-    QSI* correct_item = new QSI(QString("Parses given by Gold Standard"));
+    QSI* correct_item = new QSI(QString("Gold Standard Parses"));
     int correct_count = lexicon->get_GoldStandard()->get_correct_count();
     QSI* correct_count_item = new QSI(QString::number(correct_count));
     correct_items.append(correct_item);
     correct_items.append(correct_count_item);
 
     QList<QSI*> retrieved_items;
-    QSI* retrieved_item = new QSI(QString("Parses retrieved"));
+    QSI* retrieved_item = new QSI(QString("Retrieved Parses"));
     int retrieved_count = lexicon->get_GoldStandard()->get_retrieved_count();
     QSI* retrieved_count_item = new QSI(QString::number(retrieved_count));
     retrieved_items.append(retrieved_item);

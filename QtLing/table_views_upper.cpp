@@ -13,8 +13,10 @@ UpperTableView::UpperTableView (MainWindow* window, eSortStyle this_sort_style)
 {
        m_parent_window = window;
        m_signature_sort_style = this_sort_style;
-       QFont sansFont("Ariel", 20);
+       m_gold_standard_display_order = 0;
+       QFont sansFont("Ariel", 18);
        setFont(sansFont);
+       setEditTriggers(QAbstractItemView::NoEditTriggers);
 
 }
 
@@ -42,59 +44,118 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
 {
     CLexicon* lexicon = m_parent_window->get_lexicon();
     QString component;
+
+    // -- used for displaying gold standard information
+    UpperTableView* left_table = m_parent_window->get_upper_left_tableview();
+    UpperTableView* right_table = m_parent_window->get_upper_right_tableview();
+    int& left_order = left_table->m_gold_standard_display_order;
+    int& right_order = right_table->m_gold_standard_display_order;
+    // --
+
     if (index.isValid()){
         component = index.data().toString();
     }
-    if (component == "Words"){
-        setModel(m_parent_window->m_Models["Words"]);
-        set_data_type( e_data_words );
-    }
-    else     if (component == "Prefixal stems"){
-        setModel(m_parent_window->m_Models["Prefixal stems"]);
-        set_data_type(e_prefixal_stems);
-    }
-    else     if (component == "Suffixal stems"){
-        setModel(m_parent_window->m_Models["Suffixal stems"]);
-        set_data_type(e_suffixal_stems);
-    }
-    else     if (component == "Suffixes"){
-        m_parent_window->display_suffixes();
-        set_data_type(e_data_suffixes);
-    }
-    else     if (component == "Signatures"){
-        m_parent_window->display_suffix_signatures(lexicon);
-    }
-    else     if (component == "EPositive signatures"){
-        m_parent_window->display_epositive_suffix_signatures(lexicon);
-    }
-    else     if (component == "Prefix signatures"){
-        m_parent_window->display_prefix_signatures(lexicon);
-    }
-    else     if (component == "EPositive prefix signatures"){
-        m_parent_window->display_epositive_prefix_signatures(lexicon);
-    }
-    else     if (component == "Signature graph edges"){
-        m_parent_window->display_signature_graph_edges(lexicon);
-    }
-    else     if (component == "Residual parasignatures"){
 
-    }
-    else     if (component == "Parasuffixes"){
-        setModel(m_parent_window->m_Models["Parasuffixes"]);
-        set_data_type ( e_data_suffixes );
-        sortByColumn(1);
-    }
-    else     if (component == "Singleton signatures"){
+    // Show gold standard information in tables
+    if (component == "True Positive Parses"
+     || component == "Gold Standard Parses"
+     || component == "Retrieved Parses"
+     || component == "Gold Standard Words") {
 
+        if (component == "True Positive Parses") {
+            set_data_type(e_data_gs_true_positive_parses);
+        } else if (component == "Retrieved Parses") {
+            set_data_type(e_data_gs_retrieved_parses);
+        } else if (component == "Gold Standard Parses") {
+            set_data_type(e_data_gs_gold_standard_parses);
+        } else if (component == "Gold Standard Words") {
+            component = "Gold Standard Parses";
+            set_data_type(e_data_gs_gold_standard_parses);
+        }
+
+        if (left_order == 0 && right_order == 0) {
+            setModel(m_parent_window->m_Models[component]);
+            if (this == right_table)
+                left_order = 1;
+        } else if (left_order == 1 && right_order == 0) {
+            if (this == right_table) {
+                //qDebug() << "Showing " << component << "on the right";
+                setModel(m_parent_window->m_Models[component]);
+                left_order = 0;
+                right_order = 1;
+            }
+        } else if (left_order == 0 && right_order == 1) {
+            if (this == left_table) {
+                setModel(m_parent_window->m_Models[component]);
+                //qDebug() << "Showing " << component << "on the left";
+            }
+            if (this == right_table) {
+                left_order = 1;
+                right_order = 0;
+            }
+        } else {
+            qDebug() << "UpperTableView::ShowModelsUpperTableView:"
+                        "wrong case of gs display order!";
+            left_order = 0;
+            right_order = 0;
+        }
     }
-    else     if (component == "Passive signatures"){
-        setModel(m_parent_window->m_Models["Passive signatures"]);
-        set_data_type ( e_data_hollow_suffixal_signatures );
-        sortByColumn(1);    }
-    else     if (component == "Hypotheses"){
-        m_parent_window->display_hypotheses();
+    // showing information in other tables
+    else {
+        left_table->m_gold_standard_display_order = 0;
+        right_table->m_gold_standard_display_order = 0;
+
+        if (component == "Words"){
+            setModel(m_parent_window->m_Models["Words"]);
+            set_data_type( e_data_words );
+        }
+        else     if (component == "Prefixal stems"){
+            setModel(m_parent_window->m_Models["Prefixal stems"]);
+            set_data_type(e_prefixal_stems);
+        }
+        else     if (component == "Suffixal stems"){
+            setModel(m_parent_window->m_Models["Suffixal stems"]);
+            set_data_type(e_suffixal_stems);
+        }
+        else     if (component == "Suffixes"){
+            m_parent_window->display_suffixes();
+            set_data_type(e_data_suffixes);
+        }
+        else     if (component == "Signatures"){
+            m_parent_window->display_suffix_signatures(lexicon);
+        }
+        else     if (component == "EPositive signatures"){
+            m_parent_window->display_epositive_suffix_signatures(lexicon);
+        }
+        else     if (component == "Prefix signatures"){
+            m_parent_window->display_prefix_signatures(lexicon);
+        }
+        else     if (component == "EPositive prefix signatures"){
+            m_parent_window->display_epositive_prefix_signatures(lexicon);
+        }
+        else     if (component == "Signature graph edges"){
+            m_parent_window->display_signature_graph_edges(lexicon);
+        }
+        else     if (component == "Residual parasignatures"){
+
+        }
+        else     if (component == "Parasuffixes"){
+            setModel(m_parent_window->m_Models["Parasuffixes"]);
+            set_data_type ( e_data_suffixes );
+            sortByColumn(1);
+        }
+        else     if (component == "Singleton signatures"){
+
+        }
+        else     if (component == "Passive signatures"){
+            setModel(m_parent_window->m_Models["Passive signatures"]);
+            set_data_type ( e_data_hollow_suffixal_signatures );
+            sortByColumn(1);    }
+        else     if (component == "Hypotheses"){
+            m_parent_window->display_hypotheses();
+        }
+        // add component 10
     }
-    // add component 10
 
 
 

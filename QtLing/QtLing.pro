@@ -40,11 +40,6 @@ SOURCES += main.cpp\
     table_views_upper.cpp \
     goldstandard.cpp \
     mainmenu.cpp \
-    output.cpp \
-    corpus.cpp \
-    lexicon_sublexicon.cpp \
-    lexicon_crab2.cpp \
-    signature_graph.cpp \
     string_group.cpp
 
 HEADERS  += mainwindow.h \

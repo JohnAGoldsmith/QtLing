@@ -13,6 +13,9 @@ class UpperTableView : public QTableView
 
     eSortStyle              m_signature_sort_style;
 
+    int                     m_gold_standard_display_order;
+
+
 public:
     UpperTableView ();
     UpperTableView (MainWindow*, eSortStyle = DEFAULT);

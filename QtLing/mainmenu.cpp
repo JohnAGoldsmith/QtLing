@@ -136,7 +136,20 @@ MainMenu::MainMenu(MainWindow *parent) : QObject(parent)
 void MainMenu::gs_loaded()
 {
     // qDebug() << 136 << "MainMenu.cpp: gs_loaded";
-    if (!evalAct->isEnabled()) {
-        evalAct->setEnabled(true);
+    gs_is_loaded = true;
+    if (lexicon_is_ready && gs_is_loaded) {
+        if (!evalAct->isEnabled()) {
+            evalAct->setEnabled(true);
+        }
+    }
+}
+
+void MainMenu::lexicon_ready()
+{
+    lexicon_is_ready = true;
+    if (lexicon_is_ready && gs_is_loaded) {
+        if (!evalAct->isEnabled()) {
+            evalAct->setEnabled(true);
+        }
     }
 }

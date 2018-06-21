@@ -226,6 +226,7 @@ LowerTableView::LowerTableView(MainWindow * window)
  LeftSideTreeView::LeftSideTreeView(MainWindow* window)
  {
      m_parent_window = window;
+     setEditTriggers(QAbstractItemView::NoEditTriggers);
  }
 
 

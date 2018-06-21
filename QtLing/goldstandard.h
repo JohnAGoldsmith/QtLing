@@ -61,6 +61,9 @@ public:
     int         get_true_positive_count() { return m_true_positive_count; }
     int         get_correct_count() { return m_correct_count; }
     int         get_retrieved_count() { return m_retrieved_count; }
+    GSMap*      get_true_positive_parses() { return m_true_positive_parses; }
+    GSMap*      get_retrieved_parses() { return m_retrieved_parses; }
+    GSMap*      get_gold_standard_words() { return m_GS; }
 
 };
 

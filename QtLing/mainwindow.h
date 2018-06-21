@@ -134,6 +134,7 @@ protected:
 
 signals:
     void                                    xml_parsed();
+    void                                    lexicon_ready();
 
 private slots:
     void                                    about();

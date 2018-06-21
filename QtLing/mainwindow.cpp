@@ -77,9 +77,6 @@ MainWindow::MainWindow()
     m_Models["Hypotheses"]                  = new LxaStandardItemModel("Hypotheses");
     m_Models["Hypotheses 2"]                = new LxaStandardItemModel("Hypotheses 2");
 
-    // for gold standard
-
-    m_Models["Gold Standard"]               = new LxaStandardItemModel("Gold Standard");
 
 
     m_treeModel     = new QStandardItemModel();
@@ -89,7 +86,7 @@ MainWindow::MainWindow()
     // views
     m_leftTreeView              = new LeftSideTreeView(this);
     m_tableView_upper_left      = new UpperTableView (this);
-    m_tableView_upper_right     = new UpperTableView (this,  SIG_BY_AFFIX_COUNT);
+    m_tableView_upper_right     = new UpperTableView (this, SIG_BY_AFFIX_COUNT);
     m_tableView_lower           = new LowerTableView (this);
     m_tableView_upper_left->setSortingEnabled(true);
     m_tableView_upper_right->setSortingEnabled(true);
@@ -138,6 +135,7 @@ MainWindow::MainWindow()
     setCurrentFile(QString());
     setUnifiedTitleAndToolBarOnMac(true);
 
+    // clicking on certain items in the tree view displays tables on the upper left and upper right
     connect(m_leftTreeView, SIGNAL(clicked(const QModelIndex&)),
             m_tableView_upper_left, SLOT(ShowModelsUpperTableView(const QModelIndex&)));
     connect(m_leftTreeView, SIGNAL(clicked(const QModelIndex&)),
@@ -150,16 +148,15 @@ MainWindow::MainWindow()
 //    connect(m_tableView_upper_left,SIGNAL(clicked(const QModelIndex & )),
 //            m_current_graphics_scene,SLOT(display_this_item(const QModelIndex &  )));
 
-
-
     connect(m_tableView_upper_right,SIGNAL(clicked(const QModelIndex & )),
             m_tableView_lower,SLOT(display_this_item(const QModelIndex &  )));
 
     connect(m_tableView_upper_left,SIGNAL(clicked(const QModelIndex & )),
             m_tableView_upper_right,SLOT(display_this_affixes_signatures(const QModelIndex &  )));
 
-
+    // These two signals allow the "Evaluate" option in main window to be enabled
     connect(this, SIGNAL(xml_parsed()), m_main_menu, SLOT(gs_loaded()));
+    connect(this, SIGNAL(lexicon_ready()), m_main_menu, SLOT(lexicon_ready()));
 }
 
 void MainWindow::keyPressEvent(QKeyEvent* ke)
@@ -349,6 +346,7 @@ void MainWindow::do_crab()
     m_leftTreeView->expandAll();
     m_leftTreeView->resizeColumnToContents(0);
     statusBar()->showMessage("All models are loaded.");
+    emit lexicon_ready();
 }
 
 void MainWindow::do_crab2()
@@ -640,9 +638,20 @@ void MainWindow::gs_evaluate() // move to lexicon
     CLexicon* lexicon = get_lexicon();
     bool eval_succeeded = lexicon->do_gs_evaluation();
     if (eval_succeeded) {
+        GoldStandard* p_gs = lexicon->get_GoldStandard();
         qDebug() << 616 << "Mainwindow.cpp: evaluation succeeded\n" ;
-        qDebug() << "Precision: " << lexicon->get_GoldStandard()->get_total_precision()
-                 << "Recall: " << lexicon->get_GoldStandard()->get_total_recall();
+        qDebug() << "Precision: " << p_gs->get_total_precision()
+                 << "Recall: " << p_gs->get_total_recall();
+        // create new model
+        //m_Models["Gold Standard Words"] = new LxaStandardItemModel("Gold Standard Words");
+        m_Models["True Positive Parses"] = new LxaStandardItemModel("True Positive Parses");
+        m_Models["Gold Standard Parses"] = new LxaStandardItemModel("Gold Standard Parses");
+        m_Models["Retrieved Parses"] = new LxaStandardItemModel("Retrieved Parses");
+        //m_Models["Gold Standard Words"]->load_GSMap(p_gs->get_gold_standard_parses(), "Gold Standard Words");
+        m_Models["True Positive Parses"]->load_GSMap(p_gs, p_gs->get_true_positive_parses(), "True Positives");
+        m_Models["Gold Standard Parses"]->load_GSMap(p_gs, p_gs->get_gold_standard_words(), "Gold Standard");
+        m_Models["Retrieved Parses"]->load_GSMap(p_gs, p_gs->get_retrieved_parses(), "Retrieved");
+
         update_TreeModel_for_gs(lexicon);
 
         QCoreApplication::processEvents();
