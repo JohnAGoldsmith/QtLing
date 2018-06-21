@@ -7,9 +7,10 @@
 class CWordCollection;
 class CStemCollection;
 class CSuffixCollection;
+class CSignatureCollection;
 class CHypothesis;
 class MainWindow;
-
+class sig_graph_edge;
 
 class LxaStandardItemModel : public QStandardItemModel
 {

@@ -80,7 +80,7 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
        pWord->clear_parse_triple_map();
    }
    //--> We establish a temporary map from stems to sets of affixes as we iterate through parses. <--//
-
+   //--> THIS is where the continuations that are not affixes are eliminated.
    create_temporary_map_from_stems_to_affix_sets( ref_stems_to_affix_set);//, ref_temp_signatures_to_stems);
 
    //--> We iterate through these stems and for each stem, create QStringLists of their affixes. <--//
@@ -97,6 +97,7 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
         this_ptr_to_affix_set  = stem_iter.value();
         if (this_ptr_to_affix_set->size() < 2){continue;}
         QStringList temp_presignature;
+
 
 
         affix_set_iter affix_iter (*this_ptr_to_affix_set);
@@ -126,11 +127,9 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
    while (iter_sigstring_to_stems.hasNext())
    {   iter_sigstring_to_stems.next();
        this_signature_string    = iter_sigstring_to_stems.key();
-       //if (this_signature_string.length()==0) qDebug () << "129 null signature" ;
        p_this_stem_list         = iter_sigstring_to_stems.value();
        this_stem_t              = p_this_stem_list->first();
        affix_set this_affix_set = QSet<QString>::fromList( this_signature_string.split("="));
-       //if (this_signature_string.length()==0) qDebug () << "133 null signature" ;
        if (p_this_stem_list->size() >= MINIMUM_NUMBER_OF_STEMS)
        {   m_SuffixesFlag ?
                pSig = *m_Signatures       << this_signature_string :
@@ -184,6 +183,7 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
            this_signature_string =  iter_sigstring_to_stems.key();
            pSig =  *m_ParaSignatures << this_signature_string;
            pStem = *m_ResidualStems << this_stem_t;
+           //qDebug() << this_stem_t << this_signature_string;
            pSig->add_stem_pointer(pStem);
            foreach (this_affix, this_affix_set){
                if (this_affix == "NULL"){
@@ -219,7 +219,7 @@ void CLexicon::create_temporary_map_from_stems_to_affix_sets(map_sigstring_to_mo
                 stems = m_suffixal_stems:
                 stems = m_prefixal_stems;
 
-    // iterate through parselist, and assign to stem cand affix collections;
+    // iterate through parselist, and assign to stem and affix collections;
     for (int parseno = 0; parseno < m_Parses->size(); parseno++){
         this_pair = m_Parses->at(parseno);
         m_ProgressBar->setValue(parseno);
@@ -305,6 +305,10 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
         affixes_of_residual_sig.clear();
         m_ProgressBar->setValue(protostem_count++);
         stem_t this_stem = this_protostem->get_stem();
+        qDebug() << 308 << this_stem;
+        if (this_stem=="toto"){
+               int z = 1;
+        }
         int stem_length = this_stem.length();
 
         for (int wordno= this_protostem->get_start_word(); wordno <= this_protostem->get_end_word(); wordno++){
@@ -336,7 +340,10 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
                  best_affix_list = affix_intersection;
             }
         }
-        if (best_affix_list.size() == 0) continue;
+        if (best_affix_list.size() == 0) {
+            //qDebug() << this_stem << affixes_of_residual_sig << "\n";
+            continue;
+        }
 
         // 2. add the signature string to the signature collection:
         CSignature * pSig;
@@ -352,7 +359,7 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
         }
         link_signature_and_stem(this_stem, pSig, best_affix_list_string);
 
-        // 3. This shouldn't happen: there are no affixes.
+        // . This shouldn't happen: there are no affixes.
         if (best_affix_list.length() == 0){
             qDebug() << 359 << "affix list with no entries; this should not happen."<<this_stem << best_affix_list;
             continue;

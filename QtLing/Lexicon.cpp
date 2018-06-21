@@ -242,6 +242,7 @@ void CLexicon::FindProtostems()
                             }
                         } // add case for last word on list here.
                         protostem * this_protostem = new protostem(stem, wordno-1, end_word );
+                        qDebug() << stem << Words->at(wordno-1) << Words->at(end_word);
                         m_suffix_protostems_2[stem] = this_protostem;
                     }
                     break;
@@ -251,13 +252,16 @@ void CLexicon::FindProtostems()
         else
         {       // -->   Prefix case   <-- //
             this_word_length = this_word.length();
+            //qDebug() << 222 << this_word;
             previous_word_length = previous_word.length();
             int end = qMin(this_word_length, previous_word_length);
+            //if (this_word.mid(this_word.length()-4,4) == "toto")  qDebug() << 224 << this_word << previous_word;
             for (int i=1; i <=end; i++){
                 if (previous_word.right(i) != this_word.right(i)){
                     stem = previous_word.right(i-1);
                     if (stem.length() == 0) {continue;}
                     DifferenceFoundFlag = true;
+                    if (stem == "toto"){qDebug() << 229 << "toto"<< this_word;}
                     if (!m_prefix_protostems_2.contains(stem)) {
                         for (wordno2= wordno; wordno2 < m_Words->get_count(); wordno2++){
                             word_t that_word = get_words()->get_reverse_sort_list()->at(wordno2);
@@ -266,9 +270,13 @@ void CLexicon::FindProtostems()
                                 break;
                             }
                         }
+                        QString first_word = get_words()->get_reverse_sort_list()->at(wordno-1);
+                        QString last_word = get_words()->get_reverse_sort_list()->at(end_word);
                         protostem * this_protostem = new protostem (stem, wordno-1, end_word);
+                        //qDebug() << 241 << stem << first_word <<  last_word;
                         m_prefix_protostems_2[stem] = this_protostem;
                         m_prefix_protostems[stem] = 1;
+                        if (stem == "toto") qDebug() << 244 << this_word  << first_word << last_word;
                     }
                     break;
                 }
@@ -327,12 +335,15 @@ void CLexicon::CreateStemAffixPairs()
                 }
             }else{
                 stem = word.right(letterno);
+                if (stem== "toto") qDebug() << 304 << stem;
                 if (m_prefix_protostems.contains(stem)){
                     prefix_length = word.length() - letterno;
                     prefix = word.left(prefix_length);
                     m_Parses->append(QPair<QString,QString>(prefix,stem));
+                    if (stem=="toto") qDebug() << prefix << stem  << 309;
                     if (m_Words->contains(stem)){
                         m_Parses->append(QPair<QString,QString>(QString("NULL"),stem));
+                        //if (stem == "toto") qDebug() << 311 << word;
 
                     }
                 }
@@ -367,10 +378,6 @@ void   CLexicon::assign_suffixes_to_stems(QString name_of_calling_function)
 
     clear_lexicon();
 
-    //delete m_PrefixSignatures;
-    //m_PrefixSignatures = new CSignatureCollection(this, m_SuffixesFlag);
-
-    // One entry per stem, in QMap<QString, QSet<QString>> temp_stems_to_affix_set
     //--> We establish a temporary map from stems to sets of affixes as we iterate through parses. <--//
     for (int parseno = 0; parseno < m_Parses->size(); parseno++){
         m_ProgressBar->setValue(parseno);
@@ -389,7 +396,6 @@ void   CLexicon::assign_suffixes_to_stems(QString name_of_calling_function)
                 pSet = new prefix_set();
             }
             temp_stems_to_affix_set.insert(this_stem_t,pSet);
-
         }
         temp_stems_to_affix_set.value(this_stem_t)->insert(this_affix);
         // insert affixes into set
@@ -465,9 +471,6 @@ void   CLexicon::assign_suffixes_to_stems(QString name_of_calling_function)
             }
 
             pSig->add_memo(name_of_calling_function);
-            m_StatusBar->showMessage("Form signatures: 3b");
-
-            // add each affix in the signature to CSuffix/CPrefix objects in m_Suffixes
             QListIterator<QString> affix_iter_2(this_affix_list);
             while(affix_iter_2.hasNext()){
                 this_affix = affix_iter_2.next();

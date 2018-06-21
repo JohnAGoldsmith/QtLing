@@ -23,6 +23,7 @@
 graphic_signature2::graphic_signature2  () {
     m_focus_flag = false;
     m_color = Qt::green;
+    m_font_size = 12;
 };
 
 graphic_signature2::graphic_signature2   (CSignature* this_signature,   QColor, bool )
@@ -30,12 +31,14 @@ graphic_signature2::graphic_signature2   (CSignature* this_signature,   QColor, 
     m_focus_flag =false;
     m_color = Qt::green;
     m_signature = this_signature;
+        m_font_size = 12;
 };
 graphic_signature2::graphic_signature2   (CSignature* this_signature )
 {
     m_signature = this_signature;
     m_color = Qt::green;
     m_focus_flag = false;
+        m_font_size = 12;
 };
 
 void graphic_signature2::set_color(Qt::GlobalColor this_color){
@@ -43,30 +46,7 @@ void graphic_signature2::set_color(Qt::GlobalColor this_color){
 
 };
 
-// not currently used:
-graphic_super_signature::graphic_super_signature(int x, int y, CSupersignature* pSig, lxa_graphics_scene * scene)
-{
-    m_graphics_scene = scene;
-    m_super_signature = pSig;
-    m_color = Qt::red;
-    int row_delta = 40;
 
-    int my_x = 100;
-    int my_y = 100;
-    int my_width= 20;
-    int my_height = 30;
-    scene->addRect(my_x,my_y,my_width, my_height ,QPen(),QBrush(m_color));
-
-    QGraphicsTextItem * p_text_item = new QGraphicsTextItem;
-    int text_width = p_text_item->textWidth();
-    p_text_item->setPos (x - 0.5 * text_width,y + 0.3* row_delta);
-
-    QGraphicsTextItem * q_text_item = new QGraphicsTextItem;
-    q_text_item->setPos (x - 0.5 * text_width,y + 0.3* row_delta + 20);
-
-    scene->addItem(p_text_item);
-    scene->addItem(q_text_item);
-};
 /////////////////////////////////////////////////////////////////////////////
 //
 //          lxa graphics view
@@ -137,14 +117,25 @@ int lxa_graphics_scene::m_calculate_row_in_scene_pos_coord(int row_no)
    return  m_location_of_bottom_row - (row_no - 2) * m_row_delta;
 }
 
-
-//--------------------------------------------------------------------------//
-void lxa_graphics_scene::place_arrow( QPointF start, QPointF end, QColor color )
+void lxa_graphics_scene::add_arrow(CSignature* start_sig, CSignature* end_sig)
 {
+    //lxa_arrow* new_arrow = new lxa_arrow(start_sig,end_sig);
+}
+
+
+
+lxa_arrow::lxa_arrow(CSignature* start_sig, CSignature* end_sig){
+    m_start_sig = start_sig;
+    m_end_sig = end_sig;
+    m_color = Qt::blue;
+}
+
+void lxa_graphics_scene::place_arrow(lxa_arrow* this_arrow)
+{
+    QPointF start = m_map_from_sig_to_pgraphsig[this_arrow->m_start_sig]->get_center();
+    QPointF end   = m_map_from_sig_to_pgraphsig[this_arrow->m_end_sig]->get_center();
     double slope = (end.ry() - start.ry()) / (end.rx() - start.rx());
     double delta_x = end.rx() - start.rx();
-    //double delta_y = end.ry() - start.ry();
-    qDebug() << slope  << "slope";
     double margin = 0;
     double real_start_x = start.rx() + margin;
     double real_start_y = start.ry() + margin * slope;
@@ -157,11 +148,10 @@ void lxa_graphics_scene::place_arrow( QPointF start, QPointF end, QColor color )
     QLineF line_1 (start_point, end_point);
 
     QPen pen;
-    pen.setColor(color);
+    pen.setColor(this_arrow->m_color);
     pen.setWidth(5);
     addLine(line_1, pen);
 };
-
 
 //--------------------------------------------------------------------------//
 lxa_graphics_scene::~lxa_graphics_scene ()
@@ -374,27 +364,31 @@ int convert_count_to_radius(int count)
     }   else {
         return  75  + 10.0 * log(count -205);
     }
-
 }
 //--------------------------------------------------------------------------//
 void    lxa_graphics_scene::re_place_signatures()
 {
     int number_of_rows  = m_graphic_signature_lattice.size();
     for (int row = 2; row < number_of_rows; row++){
-
         for (int col = 0; col < m_graphic_signature_lattice[row]->size(); col++  ){
             graphic_signature2* this_graphic_signature = m_graphic_signature_lattice.at(row)->at(col);
             int x = m_calculate_column_in_scene_pos_coord(col);
             int y = m_location_of_bottom_row - (row-2) * m_row_delta;
             this_graphic_signature -> setPos(x,y);
          }
-
     }
-
+    place_arrows();
 }
-
-
 //--------------------------------------------------------------------------//
+void lxa_graphics_scene::place_arrows()
+{
+    for (int arrow_no = 0; arrow_no < m_arrows.count(); arrow_no++){
+        lxa_arrow * this_arrow = m_arrows.at(arrow_no);
+        place_arrow(this_arrow);
+    }
+}
+//--------------------------------------------------------------------------//
+
 void lxa_graphics_scene::create_and_place_signatures()
 {
     m_signature_radius  = 30;
@@ -584,7 +578,7 @@ void lxa_graphics_scene::create_and_place_signatures()
             col++;
         }
     }
-
+    place_arrows();
     update();
 }
 
