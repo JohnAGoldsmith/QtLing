@@ -248,11 +248,13 @@ void CSignatureCollection::find_minimal_cover()
     while (! temporary_sig_list.isEmpty()){
         pSig = temporary_sig_list.takeFirst();
         m_minimal_cover.append(pSig);
+        //qDebug() << 251 << pSig->display();
         sig_iter_2.toFront();
         while(sig_iter_2.hasNext()){
             CSignature* qSig = sig_iter_2.next();
             if (pSig->contains(qSig)){
                     sig_iter_2.remove();
+                    //qDebug() << 256 << pSig->display() << qSig->display();
             }
         }
     }

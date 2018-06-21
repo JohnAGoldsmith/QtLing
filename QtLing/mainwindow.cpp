@@ -488,6 +488,7 @@ void MainWindow::read_dx1_file()
     QStringList word_pair;
     QString common;
 
+    if (false){
     for (int i = 500; i < 600; i++){
         word_pair.clear();
         word_pair.append(Words->get_reverse_sort_list()->at(i-1));
@@ -496,6 +497,7 @@ void MainWindow::read_dx1_file()
         left_string_diff(word_pair,common);
         qDebug() << Words->get_reverse_sort_list()->at(i-1) << Words->get_reverse_sort_list()->at(i);
         qDebug() << word_pair.first() << word_pair.last() << common << 494;
+    }
     }
 }
 
