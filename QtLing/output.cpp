@@ -9,6 +9,7 @@
 #include "WordCollection.h"
 #include "Word.h"
 #include "graphics.h"
+#include "cparse.h"
 
 void MainWindow::write_stems_and_words()
 {
@@ -60,7 +61,8 @@ void MainWindow::read_stems_and_words()
         line = line.trimmed();
         QStringList words = line.split("+");
         if (words.size() == 3){
-            lexicon->get_parses()->append(QPair<QString,QString>(words[1], words[2]));
+            CParse* pParse = new CParse(words[1], words[2]);
+            lexicon->get_parses()->append(pParse);
         }
         lexicon->get_words()->add(words[0]);
     }

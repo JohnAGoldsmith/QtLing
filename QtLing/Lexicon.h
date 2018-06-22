@@ -20,6 +20,8 @@ class CPrefixCollection;
 class QProgressBar;
 class CHypothesis;
 
+class CParse;
+
 //  part of an experiment:
 class Collection
 {
@@ -140,7 +142,9 @@ protected:
     CSignatureCollection *          m_Signatures;
     CSignatureCollection *          m_PrefixSignatures;
     CWordCollection *               m_Compounds;
-    QList<QPair<QString,QString>> * m_Parses;
+    //QList<QPair<QString,QString>> * m_Parses;
+    QList<CParse*> *                 m_Parses;
+
     QMap<QString,int>               m_Parse_map;
 //    QMap<QString, int>              m_suffix_protostems;
     QMap<QString, int>              m_prefix_protostems;
@@ -203,7 +207,8 @@ public:
     QList<CHypothesis*>*                        get_hypotheses ()           {return m_Hypotheses;}
     QMap<QString, CHypothesis*>  *              get_hypothesis_map()        { return m_Hypothesis_map;}
     CHypothesis*                                get_hypothesis(QString hypothesis_label);
-    QList<QPair<QString,QString> > *            get_parses()                {return m_Parses;}
+//    QList<QPair<QString,QString> > *            get_parses()                {return m_Parses;}
+    QList<CParse* > *                           get_parses()                {return m_Parses;}
     CSuffixCollection*                          get_parasuffixes()          { return m_ParaSuffixes;}
     CSignatureCollection*                       get_passive_signatures()    { return m_PassiveSignatures;}
     CSignatureCollection*                       get_prefix_signatures()     { return m_PrefixSignatures;}

@@ -14,16 +14,11 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    corpus.cpp \
     CompareFunc.cpp \
-    lexicon_sublexicon.cpp \
-    lexicon_crab2.cpp \
     Word.cpp \
     WordCollection.cpp \
     Lexicon.cpp \
-    output.cpp \
     SignatureCollection.cpp \
-    signature_graph.cpp\
     Signature.cpp \
     StemCollection.cpp \
     Stem.cpp \
@@ -40,7 +35,13 @@ SOURCES += main.cpp\
     table_views_upper.cpp \
     goldstandard.cpp \
     mainmenu.cpp \
-    string_group.cpp
+    output.cpp \
+    corpus.cpp \
+    lexicon_sublexicon.cpp \
+    lexicon_crab2.cpp \
+    signature_graph.cpp \
+    string_group.cpp \
+    cparse.cpp
 
 HEADERS  += mainwindow.h \
     CompareFunc.h \
@@ -60,10 +61,12 @@ HEADERS  += mainwindow.h \
     ui_mainwindow.h \
     hypothesis.h \
     lxamodels.h \
+    table_views.h\
+    mainwindow.h \
+    string_group.h \
+    cparse.h \
     goldstandard.h \
-    mainmenu.h \
-    table_views.h \
-    string_group.h
+    mainmenu.h
 
 FORMS    +=
 
