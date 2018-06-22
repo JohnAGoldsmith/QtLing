@@ -16,6 +16,7 @@
 #include "SuffixCollection.h"
 #include "WordCollection.h"
 #include "Word.h"
+#include "cparse.h"
 
 extern bool contains(QList<QString> * list2, QList<QString> * list1);
 
@@ -80,8 +81,17 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
        pWord->clear_parse_triple_map();
    }
    //--> We establish a temporary map from stems to sets of affixes as we iterate through parses. <--//
-   //--> THIS is where the continuations that are not affixes are eliminated.
+   //--> THIS is where the continuations that are not affixes are eliminated -- well, they are not
+   //    eliminated, but they are not copied into ref_stems_to_affix_set.
+
    create_temporary_map_from_stems_to_affix_sets( ref_stems_to_affix_set);//, ref_temp_signatures_to_stems);
+
+   assign_suffixes_to_stems("re-signaturize to good affixes only");
+
+
+
+
+if (false) {
 
    //--> We iterate through these stems and for each stem, create QStringLists of their affixes. <--//
    //--> then we create a "pre-signature" in a map that points to lists of stems. <--//
@@ -201,8 +211,9 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
        }
    }
    m_Signatures->sort_each_signatures_stems_alphabetically();
-}
+} // end of if false...
 
+}
 /**
  * helper function for preceeding function.
  *
@@ -211,7 +222,8 @@ void CLexicon::create_temporary_map_from_stems_to_affix_sets(map_sigstring_to_mo
                                                              //map_sigstring_to_stem_list & ref_temp_signatures_to_stems
                                                              )
 {
-    QPair<QString,QString>      this_pair;
+    CParse*                     this_parse;
+   // QPair<QString,QString>      this_pair;
     QString                     this_stem_t, this_suffix_t;
     morph_set *                 pSet;
     CStemCollection *           stems;
@@ -221,17 +233,17 @@ void CLexicon::create_temporary_map_from_stems_to_affix_sets(map_sigstring_to_mo
 
     // iterate through parselist, and assign to stem and affix collections;
     for (int parseno = 0; parseno < m_Parses->size(); parseno++){
-        this_pair = m_Parses->at(parseno);
+        this_parse = m_Parses->at(parseno);
         m_ProgressBar->setValue(parseno);
         if (m_SuffixesFlag){
-            this_stem_t = this_pair.first;
-            this_suffix_t = this_pair.second;
+            this_stem_t = this_parse->get_string1();
+            this_suffix_t = this_parse->get_string2();
             if (! m_Suffixes->contains(this_suffix_t)){
                 continue;
             }
         } else{
-            this_stem_t = this_pair.second;
-            this_suffix_t = this_pair.first;
+            this_stem_t = this_parse->get_string2();
+            this_suffix_t = this_parse->get_string1();
             if (! m_Prefixes->contains(this_suffix_t)){
                 continue;
             }
