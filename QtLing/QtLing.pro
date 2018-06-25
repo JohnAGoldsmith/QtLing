@@ -41,7 +41,8 @@ SOURCES += main.cpp\
     lexicon_crab2.cpp \
     signature_graph.cpp \
     string_group.cpp \
-    cparse.cpp
+    cparse.cpp \
+    lexicon_json.cpp
 
 HEADERS  += mainwindow.h \
     CompareFunc.h \

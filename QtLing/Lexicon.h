@@ -141,9 +141,9 @@ protected:
     CPrefixCollection *             m_Prefixes;
     CSignatureCollection *          m_Signatures;
     CSignatureCollection *          m_PrefixSignatures;
-    CWordCollection *               m_Compounds;
+    CWordCollection *               m_Compounds; // nothing done yet
     //QList<QPair<QString,QString>> * m_Parses;
-    QList<CParse*> *                 m_Parses;
+    QList<CParse*> *                 m_Parses; //
 
     QMap<QString,int>               m_Parse_map;
 //    QMap<QString, int>              m_suffix_protostems;
@@ -153,22 +153,27 @@ protected:
     // with a particular proto-stem (i.e., a word-beginning). This replaces using a huge signature to store
     // that same information.
     QMap<QString, protostem*>        m_suffix_protostems_2;
-    QMap<QString, protostem*>        m_prefix_protostems_2;
+    QMap<QString, protostem*>        m_prefix_protostems_2; // temporary data structures for crab1
 
 
     bool                            m_SuffixesFlag;
     CLexicon*                       m_parent_lexicon;
 
+    // all of the possible continuations
+    // affixes that are "thrown out" in Crab2
     CSignatureCollection*           m_ParaSignatures;   /*!<  the information we have about stems which we have not yet integrated into a morphological system. */
     CSuffixCollection *             m_ParaSuffixes;
     CStemCollection *               m_ResidualStems;
     CSignatureCollection *          m_ResidualPrefixSignatures;
     CStemCollection *               m_StemsFromSubsignatures;
     CSignatureCollection*           m_Subsignatures;
+
+    // Finds the difference between signatures, e.g. {ed, es, er, e, ing} vs {d, s, r, NULL}
     QList<simple_sig_graph_edge*>   m_SigGraphEdgeList; /*!< the sig_graph_edges in here contain only one word associated with each. */
     lxa_sig_graph_edge_map          m_SigGraphEdgeMap;  /*!< the sig_graph_edges in here contain lists of words associated with them. */
     CSignatureCollection *          m_PassiveSignatures;  /*!< these signatures have stems one letter off from another signature. */
     CSignatureCollection *          m_SequentialSignatures; /*! signatures where one affix leads to another signature. */
+    // Generalizes repeating
     QList<CHypothesis*> *            m_Hypotheses;
     QMap<QString, CHypothesis*> *            m_Hypothesis_map;
 // add component 1

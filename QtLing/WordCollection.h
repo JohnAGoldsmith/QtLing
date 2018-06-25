@@ -50,6 +50,8 @@ public:
     QMap<QString, CWord*>*  get_map() { return & m_WordMap; }
     void                    sort_word_list();
 
+    void                    assign_json_id();
+
     QMapIterator<QString,CWord*> *  get_iterator();
     QMap<word_t, CWord*>::iterator  begin()                    { return m_WordMap.begin();}
     QMap<word_t, CWord*>::iterator  end()                      { return m_WordMap.end();}
