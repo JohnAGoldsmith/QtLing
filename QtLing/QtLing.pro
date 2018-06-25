@@ -39,7 +39,9 @@ SOURCES += main.cpp\
     lexicon_crab2.cpp \
     signature_graph.cpp \
     string_group.cpp \
-    cparse.cpp
+    cparse.cpp \
+    stringalignment.cpp \
+    allosignatures.cpp
 
 HEADERS  += mainwindow.h \
     CompareFunc.h \
@@ -62,7 +64,9 @@ HEADERS  += mainwindow.h \
     table_views.h\
     mainwindow.h \
     string_group.h \
-    cparse.h
+    cparse.h \
+    stringalignment.h \
+    allosignatures.h
 
 FORMS    +=
 

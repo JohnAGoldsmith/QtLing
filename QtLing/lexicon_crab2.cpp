@@ -317,7 +317,7 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
         affixes_of_residual_sig.clear();
         m_ProgressBar->setValue(protostem_count++);
         stem_t this_stem = this_protostem->get_stem();
-        qDebug() << 308 << this_stem;
+        //`qDebug() << 308 << this_stem;
         if (this_stem=="toto"){
                int z = 1;
         }

@@ -440,8 +440,6 @@ void   CLexicon::assign_suffixes_to_stems(QString name_of_calling_function)
                 pSig = *m_PrefixSignatures << this_signature_string;
                 pSig->set_suffix_flag(false);
             }
-
-            pSig->add_memo(name_of_calling_function);
             QListIterator<QString> affix_iter_2(this_affix_list);
             while(affix_iter_2.hasNext()){
                 this_affix_t = affix_iter_2.next();
@@ -454,7 +452,6 @@ void   CLexicon::assign_suffixes_to_stems(QString name_of_calling_function)
                 affix_iter_2.toFront();
                 while(affix_iter_2.hasNext()){
                     this_affix_t = affix_iter_2.next();
-                    qDebug() << 458 << this_affix_t;
                     if (this_affix_t == "NULL"){ this_affix_t = "";}
                     if (m_SuffixesFlag){ this_word = this_stem_t + this_affix_t;}
                     else { this_word = this_affix_t + this_stem_t;}
