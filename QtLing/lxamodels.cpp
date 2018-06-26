@@ -407,7 +407,7 @@ void LxaStandardItemModel::load_sig_graph_edges( QMap<QString, sig_graph_edge*> 
 
 }
 
-void LxaStandardItemModel::load_GSMap(GoldStandard* p_gs, GoldStandard::GSMap* p_gsm, const QString& type)
+void LxaStandardItemModel::load_parsemap_from_gs(GoldStandard* p_gs, ParseMapHandler parsemap, const QString& type)
 {
     clear();
     QStringList labels;
@@ -415,17 +415,18 @@ void LxaStandardItemModel::load_GSMap(GoldStandard* p_gs, GoldStandard::GSMap* p
     setHorizontalHeaderLabels(labels);
 
     typedef QStandardItem QSI;
-    GoldStandard::GSMap::ConstIterator gs_iter;
+    GoldStandard::ParseMap::ConstIterator gs_iter, pm_iter;
     GoldStandard::Parse_triple_map::ConstIterator ptm_iter;
-    GoldStandard::GSMap* p_all_word_gsm = p_gs->get_gold_standard_words();
+    ParseMapHandler p_all_word_gsm = p_gs->get_gs_parses();
 
     for (gs_iter = p_all_word_gsm->constBegin(); gs_iter != p_all_word_gsm->constEnd(); gs_iter++) {
         QList<QSI*> items;
         QString this_word = gs_iter.key();
         QSI* word_item = new QSI(this_word);
         items.append(word_item);
-        GoldStandard::Parse_triple_map* ptm = (*p_gsm)[this_word];
-        if (ptm != NULL) {
+        pm_iter = parsemap->find(this_word);
+        if (pm_iter != parsemap->constEnd()) {
+            GoldStandard::Parse_triple_map* ptm = pm_iter.value();
             for (ptm_iter = ptm->constBegin(); ptm_iter != ptm->constEnd(); ptm_iter++) {
                 Parse_triple* this_pt = ptm_iter.value();
                 QString this_parse = this_pt->p_stem + "=" + this_pt->p_suffix;
@@ -436,12 +437,12 @@ void LxaStandardItemModel::load_GSMap(GoldStandard* p_gs, GoldStandard::GSMap* p
     }
 }
 
-void remove_item_from_tree(QString& name, QStandardItem* item)
+void remove_item_from_tree(QString name, QStandardItem* item)
 {
     for (int row_i = 0; row_i < item->rowCount(); ) {
         QString data = item->child(row_i, 0)->data(Qt::DisplayRole).toString();
-        if (data == QString("Gold Standard")) {
-            curr_lexicon_item->removeRow(row_i);
+        if (data == name) {
+            item->removeRow(row_i);
         } else {
             row_i++;
         }

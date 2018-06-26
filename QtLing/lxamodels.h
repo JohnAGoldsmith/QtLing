@@ -45,7 +45,7 @@ public:
 // add component 11
     void        load_category(QString component_name, eComponentType);
 
-    void        load_GSMap(GoldStandard* p_gs, GoldStandard::GSMap* p_gsm, const QString &type);
+    void        load_parsemap_from_gs(GoldStandard* p_gs, ParseMapHandler parsemap, const QString &type);
 };
 
 class LxaSortFilterProxyModel : public QSortFilterProxyModel

@@ -17,13 +17,16 @@ protected:
     int             m_word_count;
     int             m_parse_count;
 
-    ParseMap*              clone_map();
+    ParseMap*              clone_map() const;
     void                   destroy_map();
 public:
     ParseMapHandler();
     ParseMapHandler(const ParseMapHandler& parsemap);
     ParseMapHandler& operator=(const ParseMapHandler& parsemap);
     ~ParseMapHandler();
+
+    ParseMap&       operator*()             { return *m_map; }
+    ParseMap*       operator->()            { return m_map; }
 
     int             get_word_count()        { return m_word_count; }
     int             get_parse_count()       { return m_parse_count; }

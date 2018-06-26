@@ -11,9 +11,9 @@ class EvalParses
     friend class GoldStandard;
 public:
     typedef QMap<QString, Parse_triple*> Parse_triple_map;
-    typedef QMap<QString, Parse_triple_map*> GSMap;
+    typedef QMap<QString, Parse_triple_map*> ParseMap;
 protected:
-    GSMap*                  m_parses;
+    ParseMapHandler         m_parses;
     int                     m_word_count;
     int                     m_true_positive_count;
     int                     m_correct_count;
@@ -27,9 +27,6 @@ protected:
 
     bool                    m_evaluated;
 
-    GSMap*                  clone_GSMap(GSMap* map) const { return ::clone_GSMap(map); }
-    void                    delete_GSMap(GSMap* map) { ::delete_GSMap(map); }
-
 
 public:
     EvalParses();
@@ -39,7 +36,7 @@ public:
     ~EvalParses();
 
 
-    GSMap*                  get_parses()                {return m_parses;}
+    ParseMapHandler         get_parses()                {return m_parses;}
     int                     get_word_count()            {return m_word_count;}
     int                     get_true_positive_count()   {return m_true_positive_count;}
     int                     get_retrieved_count()       {return m_retrieved_count;}

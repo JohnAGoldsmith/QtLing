@@ -656,9 +656,9 @@ void MainWindow::gs_evaluate() // move to lexicon
         m_Models["Gold Standard Parses"] = new LxaStandardItemModel("Gold Standard Parses");
         m_Models["Retrieved Parses"] = new LxaStandardItemModel("Retrieved Parses");
         //m_Models["Gold Standard Words"]->load_GSMap(p_gs->get_gold_standard_parses(), "Gold Standard Words");
-        m_Models["True Positive Parses"]->load_GSMap(p_gs, p_gs->get_true_positive_parses(), "True Positives");
-        m_Models["Gold Standard Parses"]->load_GSMap(p_gs, p_gs->get_gold_standard_words(), "Gold Standard");
-        m_Models["Retrieved Parses"]->load_GSMap(p_gs, p_gs->get_retrieved_parses(), "Retrieved");
+        m_Models["True Positive Parses"]->load_parsemap_from_gs(p_gs, p_gs->get_true_positive_parses(), "True Positives");
+        m_Models["Gold Standard Parses"]->load_parsemap_from_gs(p_gs, p_gs->get_gs_parses(), "Gold Standard");
+        m_Models["Retrieved Parses"]->load_parsemap_from_gs(p_gs, p_gs->get_retrieved_parses(), "Retrieved");
 
         update_TreeModel_for_gs(lexicon);
 

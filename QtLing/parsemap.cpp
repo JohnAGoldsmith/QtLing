@@ -34,10 +34,10 @@ ParseMapHandler::~ParseMapHandler()
  *
  * \return Pointer to a newly copied ParseMap
  */
-ParseMapHandler::ParseMap *ParseMapHandler::clone_map()
+ParseMapHandler::ParseMap *ParseMapHandler::clone_map() const
 {
     if (m_map == NULL)
-        return;
+        return NULL;
     ParseMap *newmap = new ParseMap();
     for (ParseMap::const_iterator gsIter = m_map->constBegin();
          gsIter != m_map->constEnd(); gsIter++) {
@@ -60,8 +60,8 @@ void ParseMapHandler::destroy_map()
 {
     if (m_map == NULL)
         return;
-    for (ParseMap::iterator gsIter = map->begin();
-         gsIter != map->end(); gsIter++) {
+    for (ParseMap::iterator gsIter = m_map->begin();
+         gsIter != m_map->end(); gsIter++) {
         Parse_triple_map ptm = *(gsIter.value());
         for (Parse_triple_map::iterator ptmIter = ptm.begin();
              ptmIter != ptm.end(); ptmIter++) {
