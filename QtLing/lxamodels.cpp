@@ -437,7 +437,7 @@ void LxaStandardItemModel::load_parsemap_from_gs(GoldStandard* p_gs, ParseMapHan
     }
 }
 
-void remove_item_from_tree(QString name, QStandardItem* item)
+void remove_item_from_tree(const QString name, QStandardItem* item)
 {
     for (int row_i = 0; row_i < item->rowCount(); ) {
         QString data = item->child(row_i, 0)->data(Qt::DisplayRole).toString();
@@ -535,13 +535,55 @@ void MainWindow::update_TreeModel_for_eval(CLexicon *lexicon)
     word_items.append(word_item);
     word_items.append(word_count_item);
 
-    if (!lexicon->get_eval_parses()->is_evaluated())
-        return;
+    eval_item->appendRow(word_items);
 
-    QSI* gs_results_item = new QSI(QString("Evaluation results from gold standard:"));
+    if (lexicon->get_eval_parses()->is_evaluated()) {
+        QSI* eval_results_item = new QSI(QString("Evaluation results from gold standard:"));
 
+        QList<QSI*> precision_items;
+        QSI* precision_item = new QSI(QString("Precision"));
+        double precision = lexicon->get_eval_parses()->get_total_precision();
+        QSI* precision_value_item = new QSI(QString::number(precision));
+        precision_items.append(precision_item);
+        precision_items.append(precision_value_item);
 
+        QList<QSI*> recall_items;
+        QSI* recall_item = new QSI(QString("Recall"));
+        double recall = lexicon->get_eval_parses()->get_total_recall();
+        QSI* recall_value_item = new QSI(QString::number(recall));
+        recall_items.append(recall_item);
+        recall_items.append(recall_value_item);
 
+        QList<QSI*> true_positive_items;
+        QSI* true_positive_item = new QSI(QString("True Positive Parses"));
+        int true_positive_count = lexicon->get_eval_parses()->get_true_positive_count();
+        QSI* true_positive_count_item = new QSI(QString::number(true_positive_count));
+        true_positive_items.append(true_positive_item);
+        true_positive_items.append(true_positive_count_item);
+
+        QList<QSI*> correct_items;
+        QSI* correct_item = new QSI(QString("Gold Standard Parses"));
+        int correct_count = lexicon->get_eval_parses()->get_correct_count();
+        QSI* correct_count_item = new QSI(QString::number(correct_count));
+        correct_items.append(correct_item);
+        correct_items.append(correct_count_item);
+
+        QList<QSI*> retrieved_items;
+        QSI* retrieved_item = new QSI(QString("Retrieved Parses"));
+        int retrieved_count = lexicon->get_eval_parses()->get_retrieved_count();
+        QSI* retrieved_count_item = new QSI(QString::number(retrieved_count));
+        retrieved_items.append(retrieved_item);
+        retrieved_items.append(retrieved_count_item);
+
+        eval_item->appendRow(eval_results_item);
+        eval_item->appendRow(precision_items);
+        eval_item->appendRow(recall_items);
+        eval_item->appendRow(true_positive_items);
+        eval_item->appendRow(correct_items);
+        eval_item->appendRow(retrieved_items);
+    }
+
+    curr_lexicon_item->appendRow(eval_item);
 }
 
 void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
@@ -755,9 +797,3 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
     lexicon_item->appendRow(hypothesis_items);
 // add component 8
 }
-
-
-
-
-
-

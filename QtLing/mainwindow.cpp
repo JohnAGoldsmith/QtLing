@@ -701,6 +701,8 @@ void MainWindow::gs_evaluate_morfessor()
         qDebug() << 701 << "Mainwindow.cpp: evaluation of Morfessor txt file succeeded" ;
         qDebug() << "Precision: " << p_eval->get_total_precision()
                  << "Recall: " << p_eval->get_total_recall();
+        update_TreeModel_for_eval(lexicon);
+        QCoreApplication::processEvents();
     }
 
 }

@@ -51,6 +51,8 @@ bool EvalParses::read_morfessor_txt_file()
 
     QTextStream parse_input(&parse_file);
 
+    m_word_count = 0;
+
     while (!parse_input.atEnd()) {
         QString line = parse_input.readLine();
         if (line[0] == "#")
