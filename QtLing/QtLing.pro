@@ -43,7 +43,8 @@ SOURCES += main.cpp\
     string_group.cpp \
     cparse.cpp \
     lexicon_json.cpp \
-    EvalParses.cpp
+    EvalParses.cpp \
+    parsemap.cpp
 
 HEADERS  += mainwindow.h \
     CompareFunc.h \
@@ -69,7 +70,8 @@ HEADERS  += mainwindow.h \
     cparse.h \
     goldstandard.h \
     mainmenu.h \
-    EvalParses.h
+    EvalParses.h \
+    parsemap.h
 
 FORMS    +=
 
