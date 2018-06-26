@@ -42,7 +42,8 @@ SOURCES += main.cpp\
     signature_graph.cpp \
     string_group.cpp \
     cparse.cpp \
-    lexicon_json.cpp
+    lexicon_json.cpp \
+    EvalParses.cpp
 
 HEADERS  += mainwindow.h \
     CompareFunc.h \
@@ -67,7 +68,8 @@ HEADERS  += mainwindow.h \
     string_group.h \
     cparse.h \
     goldstandard.h \
-    mainmenu.h
+    mainmenu.h \
+    EvalParses.h
 
 FORMS    +=
 

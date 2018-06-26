@@ -9,6 +9,7 @@
 #include "mainwindow.h"
 //#include "CorpusWord.h"
 #include "goldstandard.h"
+#include "EvalParses.h"
 //#include "CorpusWordCollection.h"
 //#include "TemplateCollection.h"
 //#include "Typedefs.h"
@@ -45,14 +46,14 @@ GoldStandard::GoldStandard(const GoldStandard &gs):
     m_total_precision(gs.m_total_precision),
     m_XML_directory(gs.m_XML_directory),
     m_XML_file_name(gs.m_XML_file_name),
-    m_GS(gs.clone_GSMap(gs.m_GS)) {}
+    m_GS(clone_GSMap(gs.m_GS)) {}
 
 GoldStandard& GoldStandard::operator=(const GoldStandard & gs)
 {
     if (&gs != this) {
         delete_GSMap(m_GS);
         if (gs.m_GS)
-            m_GS = gs.clone_GSMap(gs.m_GS);
+            m_GS = clone_GSMap(gs.m_GS);
         else
             m_GS = nullptr;
         m_total_recall = gs.m_total_recall;
@@ -71,8 +72,11 @@ GoldStandard::~GoldStandard()
     delete_GSMap(m_retrieved_parses);
 }
 
-GoldStandard::GSMap* GoldStandard::clone_GSMap(GoldStandard::GSMap* map) const
+GoldStandard::GSMap* clone_GSMap(GoldStandard::GSMap* map)
 {
+    typedef GoldStandard::GSMap GSMap;
+    typedef GoldStandard::Parse_triple_map Parse_triple_map;
+
     GSMap* newmap = new GSMap();
     for (GSMap::iterator gsIter = map->begin();
          gsIter != map->end(); gsIter++) {
@@ -88,8 +92,11 @@ GoldStandard::GSMap* GoldStandard::clone_GSMap(GoldStandard::GSMap* map) const
     return newmap;
 }
 
-void GoldStandard::delete_GSMap(GoldStandard::GSMap* map)
+void delete_GSMap(GoldStandard::GSMap* map)
 {
+    typedef GoldStandard::GSMap GSMap;
+    typedef GoldStandard::Parse_triple_map Parse_triple_map;
+
     if (map) {
         for (GSMap::iterator gsIter = map->begin();
              gsIter != map->end(); gsIter++) {
@@ -104,8 +111,10 @@ void GoldStandard::delete_GSMap(GoldStandard::GSMap* map)
     }
 }
 
-void GoldStandard::add_parse_triple(GoldStandard::GSMap *map, const QString &word, const QString &stem, const QString &affix)
+void add_parse_triple(GoldStandard::GSMap *map, const QString &word, const QString &stem, const QString &affix)
 {
+    typedef GoldStandard::GSMap GSMap;
+    typedef GoldStandard::Parse_triple_map Parse_triple_map;
     GSMap::iterator wordIter = map->find(word);
     if (wordIter == map->end()) {
         Parse_triple_map* this_ptm = new Parse_triple_map();
@@ -212,7 +221,100 @@ bool GoldStandard::evaluate(CWordCollection *p_word_collection)
     return true;
 }
 
-void GoldStandard::read_XML()
+/* Evaluates parses stored in an EvalParse object.
+ * Stores precision and recall in that object instead of teh goldstandard object.
+ *
+ */
+bool GoldStandard::evaluate(EvalParses* p_eval)
+{
+    GSMap* p_map = p_eval->m_parses;
+    if (p_map->size() == 0 || p_map == NULL) {
+        QString errorMsg = "Parses are not loaded";
+        QMessageBox::information(nullptr, "Gold Standard: Error", errorMsg, QMessageBox::Ok);
+        return false;
+    }
+    int true_positives = 0; // the total number of correct parses found by lxa
+    int total_retrieved = 0; // the total number of parses found by lxa
+    int total_correct = 0; // the total number of parses in gold standard
+    int temp_overlap_word_count = 0;
+    // int temp_gs_word_count = 0;
+    /*
+    m_true_positive_parses = new GSMap();
+    m_retrieved_parses = new GSMap();
+    */
+    GSMap::const_iterator gs_iter;
+    GSMap::const_iterator map_iter;
+    Parse_triple_map::const_iterator gs_ptm_iter, map_ptm_iter;
+    const Parse_triple_map *p_map_ptm, *p_gs_ptm;
+
+    for (gs_iter = m_GS->constBegin();
+         gs_iter != m_GS->constEnd();
+         gs_iter++) {
+        // temp_gs_word_count++;
+        const QString& str_word = gs_iter.key();
+        map_iter = p_map->find(str_word);
+
+        if (map_iter == p_map->constEnd()) {
+            continue;
+        }
+
+        // only consider words that appear both in gold standard and lxa output result
+        // ptm stands for parse_triple_map
+        temp_overlap_word_count++;
+        p_map_ptm = map_iter.value();
+        p_gs_ptm = gs_iter.value();
+
+        // increment correct retrieved and total correct by iterating through ptm of gs
+        for (gs_ptm_iter = p_gs_ptm->constBegin();
+             gs_ptm_iter != p_gs_ptm->constEnd();
+             gs_ptm_iter++) {
+            total_correct++;
+            const QString& stem = gs_ptm_iter.key();
+            if (p_map_ptm->contains(stem)) {
+                true_positives++;
+            }
+        }
+
+        // increment total_retrived
+        for (map_ptm_iter = p_map_ptm->constBegin();
+             map_ptm_iter != p_map_ptm->constEnd();
+             map_ptm_iter++) {
+            const QString& stem = map_ptm_iter.key();
+            if (stem != str_word) {// only count parses with non-null suffixes
+                total_retrieved++;
+            }
+        }
+    }
+
+    if (total_correct == 0) {
+        QString errorMsg = "Did not find any parses in gold standard!";
+        QMessageBox::information(nullptr, "Gold Standard: Error", errorMsg, QMessageBox::Ok);
+        return false;
+    }
+
+    if (total_retrieved == 0) {
+        QString errorMsg = "Did not find any parses in Linguistica's analysis\n"
+                           "that are identical to a parse given by the Gold Standard";
+        QMessageBox::information(nullptr, "Gold Standard: Error", errorMsg, QMessageBox::Ok);
+        return false;
+    }
+
+    p_eval->m_total_recall = (double) true_positives / (double) total_correct;
+    p_eval->m_total_precision = (double) true_positives / (double) total_retrieved;
+    p_eval->m_true_positive_count = true_positives;
+    p_eval->m_retrieved_count = total_retrieved;
+    p_eval->m_correct_count = total_correct;
+    //m_gs_word_count = temp_gs_word_count;
+    p_eval->m_overlap_word_count = temp_overlap_word_count;
+    p_eval->m_evaluated = true;
+
+    //qDebug() << "True positives: " << true_positives;
+    //qDebug() << "Total # of correct parses in GS: " << total_correct;
+    //qDebug() << "Total # retrieved: " << total_retrieved;
+    return true;
+}
+
+bool GoldStandard::read_XML()
 {
 // XML file must be first opend to use this function
 /* old code
@@ -225,230 +327,219 @@ void GoldStandard::read_XML()
 */
     // The below is the new version
 
-    if( !m_XML_file_name.isEmpty() )
+    if (m_XML_file_name.isEmpty())
+        return false;
+
+    delete_GSMap(m_GS);
+    m_GS = new GSMap();
+    QFile goldStdFile( m_XML_file_name );
+
+    if (!goldStdFile.open(QIODevice::ReadOnly))
+        return false;
+
+    QDomDocument doc( "Alchemist" ) /* author_data, document_data */;
+
+    QString errorMsg;
+    int errorLine, errorColumn;
+    if( !doc.setContent( &goldStdFile, &errorMsg, &errorLine, &errorColumn ) )
     {
-        delete_GSMap(m_GS);
-        m_GS = new GSMap();
-        QFile goldStdFile( m_XML_file_name );
-        if( goldStdFile.open( QIODevice::ReadOnly ) )
-        {
-
-            QDomDocument doc( "Alchemist" ) /* author_data, document_data */;
-
-            QString errorMsg;
-            int errorLine, errorColumn;
-            if( !doc.setContent( &goldStdFile, &errorMsg, &errorLine, &errorColumn ) )
-            {
 //Maybe we should put this back in.
 //				QMessageBox::warning( this, "Gold Standard : XML Error",
 //				  QString( errorMsg + "\nLine: %1" + "Col: %2" ).arg( errorLine ).arg( errorColumn ), QMessageBox::Ok, NULL, NULL );
 
-                return;
-            }
-            QDomElement alchemist_doc, morph, piece, string, wordnode
-                        /* gloss, element, notes, morpheme, allomorph,
-                        lmnt, feature, name, feature_id, instance_id */;
-            //
-            QDomNode node1, node2, node3, node4;
-            /*
-            QString feature_name;
-            QDomText text;
-            QDomNodeList nodes;
-            CStem* pStem;
-            */
+        return false;
+    }
+    QDomElement alchemist_doc, morph, piece, string, wordnode
+                /* gloss, element, notes, morpheme, allomorph,
+                lmnt, feature, name, feature_id, instance_id */;
+    //
+    QDomNode node1, node2, node3, node4;
 
-            QString word, stem, affix;
-            GSMap::iterator wordIter;
+    QString word, stem, affix;
+    GSMap::iterator wordIter;
 
-            bool skipWord = false;
-            bool newWord = false;
-            int lastEnd, start, length, pieceLength;
+    bool skipWord = false;
+    bool newWord = false;
+    int lastEnd, start, length, pieceLength;
 
-            alchemist_doc = doc.documentElement();
+    alchemist_doc = doc.documentElement();
 
-            if( alchemist_doc.tagName() != "alchemist-doc" ) {
-                errorMsg = "The XML document \"" + alchemist_doc.tagName() + "\" is not an alchemist document.";
-                /* old version
-                QMessageBox::information( NULL, "Gold Standard : XML Error", errorMsg, "OK" );
-                */
-                QMessageBox::information(nullptr, "Gold Standard : XML Error", errorMsg, QMessageBox::Ok);
-                return;
-            }
+    if( alchemist_doc.tagName() != "alchemist-doc" ) {
+        errorMsg = "The XML document \"" + alchemist_doc.tagName() + "\" is not an alchemist document.";
+        /* old version
+        QMessageBox::information( NULL, "Gold Standard : XML Error", errorMsg, "OK" );
+        */
+        QMessageBox::information(nullptr, "Gold Standard : XML Error", errorMsg, QMessageBox::Ok);
+        return false;
+    }
 
-            // Author data (optional)
-            node1 = alchemist_doc.firstChild();
-            if ( !node1.isNull() && node1.isElement() && node1.nodeName() == "author-data" ) {
-                // Skip...
-                node1 = node1.nextSibling();
-            }
-            // Document data (optional)
-            if ( !node1.isNull() && node1.isElement() && node1.nodeName() == "document-data" ) {
-                // Skip...
-                node1 = node1.nextSibling();
-            }
-            // Feature list first of morphology description
-            if ( node1.isNull() || !node1.isElement() || node1.nodeName() != "feature-list" ) {
+    // Author data (optional)
+    node1 = alchemist_doc.firstChild();
+    if ( !node1.isNull() && node1.isElement() && node1.nodeName() == "author-data" ) {
+        // Skip...
+        node1 = node1.nextSibling();
+    }
+    // Document data (optional)
+    if ( !node1.isNull() && node1.isElement() && node1.nodeName() == "document-data" ) {
+        // Skip...
+        node1 = node1.nextSibling();
+    }
+    // Feature list first of morphology description
+    if ( node1.isNull() || !node1.isElement() || node1.nodeName() != "feature-list" ) {
+        // TODO: add to error string
+    } else {
+        // Skip...
+        node1 = node1.nextSibling();
+    }
+    // Morpheme list second
+    if( node1.isNull() || !node1.isElement() || node1.nodeName() != "morpheme-list" ) {
+        // TODO: add to error string
+    } else {
+        // Skip...
+        node1 = node1.nextSibling();
+    }
+
+    // Word list last.. this is what we need!
+    if( node1.isNull() || !node1.isElement() || node1.nodeName() != "word-list" ) {
+        // TODO: add to error string
+    } else {
+        //qDebug() << 288 << "Reached word list";
+        node2 = node1.firstChild();
+
+        while( !node2.isNull() &&
+               node2.isElement() &&
+               node2.nodeName() == "word" )
+        {
+            wordnode = node2.toElement();
+            node2 = node2.nextSibling();
+
+            // score attribute
+            if( !wordnode.hasAttribute( "score" ) ) {
                 // TODO: add to error string
+                continue;
             } else {
-                // Skip...
-                node1 = node1.nextSibling();
+                if( wordnode.attribute( "score" ) == "Not Scored" ) continue;
+                else if( wordnode.attribute( "score" ) == "Certain" ); // we want to look at these words
+                else if( wordnode.attribute( "score" ) == "Somewhat Certain" ) continue;
+                else if( wordnode.attribute( "score" ) == "Uncertain" ) continue;
             }
-            // Morpheme list second
-            if( node1.isNull() || !node1.isElement() || node1.nodeName() != "morpheme-list" ) {
-                // TODO: add to error string
-            } else {
-                // Skip...
-                node1 = node1.nextSibling();
+            // string element
+            node3 = wordnode.firstChild();
+            if( !node3.isElement() || node3.nodeName() != "string" ) {
+                // TODO: add to error message
+                continue;
+            }
+            string = node3.toElement();
+
+            // Make new gold standard word
+            word = string.text();
+            length = word.length();
+            // pStem = new CStem( strStem ); //-- from old code
+            newWord = false;
+            wordIter = m_GS->find(word);
+
+            if (wordIter == m_GS->end()) {
+                wordIter = m_GS->insert(word, new Parse_triple_map());
+                newWord = true;
             }
 
-            // Word list last.. this is what we need!
-            if( node1.isNull() || !node1.isElement() || node1.nodeName() != "word-list" ) {
-                // TODO: add to error string
-            } else {
-                //qDebug() << 288 << "Reached word list";
-                node2 = node1.firstChild();
+            // gloss element
+            node3 = string.nextSibling();
+            if( node3.isElement() && node3.nodeName() == "gloss" ) {
+                // Skip...
+                node3 = node3.nextSibling();
+            }
 
-                while( !node2.isNull() &&
-                       node2.isElement() &&
-                       node2.nodeName() == "word" )
-                {
-                    wordnode = node2.toElement();
-                    node2 = node2.nextSibling();
-
-                    // score attribute
-                    if( !wordnode.hasAttribute( "score" ) ) {
-                        // TODO: add to error string
-                        continue;
-                    } else {
-                        if( wordnode.attribute( "score" ) == "Not Scored" ) continue;
-                        else if( wordnode.attribute( "score" ) == "Certain" ); // we want to look at these words
-                        else if( wordnode.attribute( "score" ) == "Somewhat Certain" ) continue;
-                        else if( wordnode.attribute( "score" ) == "Uncertain" ) continue;
-                    }
+            // affix, root, and piece elements
+            skipWord = false;
+            lastEnd = 0;
+            while( !node3.isNull() &&
+                   node3.isElement() &&
+                   ( node3.nodeName() == "piece" ||
+                     node3.nodeName() == "affix" ||
+                     node3.nodeName() == "root" ) &&
+                   !skipWord ) {
+                if( node3.nodeName() == "affix" || node3.nodeName() == "root" ) {
+                    morph = node3.toElement();
                     // string element
-                    node3 = wordnode.firstChild();
-                    if( !node3.isElement() || node3.nodeName() != "string" ) {
-                        // TODO: add to error message
-                        continue;
+                    node4 = morph.firstChild();
+                    if( node4.isElement() && node4.nodeName() == "string" ) {
+                        string = node4.toElement();
+                        // no need to do anything with this string
+                        node4 = string.nextSibling();
+                    } else {
+                        // TODO: add to error string
                     }
-                    string = node3.toElement();
-
-                    // Make new gold standard word
-                    word = string.text();
-                    length = word.length();
-                    // pStem = new CStem( strStem ); //-- from old code
-                    newWord = false;
-                    wordIter = m_GS->find(word);
-
-                    if (wordIter == m_GS->end()) {
-                        wordIter = m_GS->insert(word, new Parse_triple_map());
-                        newWord = true;
-                    }
-
-                    // gloss element
-                    node3 = string.nextSibling();
-                    if( node3.isElement() && node3.nodeName() == "gloss" ) {
-                        // Skip...
-                        node3 = node3.nextSibling();
-                    }
-
-                    // affix, root, and piece elements
-                    skipWord = false;
-                    lastEnd = 0;
-                    while( !node3.isNull() &&
-                           node3.isElement() &&
-                           ( node3.nodeName() == "piece" ||
-                             node3.nodeName() == "affix" ||
-                             node3.nodeName() == "root" ) &&
-                           !skipWord ) {
-                        if( node3.nodeName() == "affix" || node3.nodeName() == "root" ) {
-                            morph = node3.toElement();
-                            // string element
-                            node4 = morph.firstChild();
-                            if( node4.isElement() && node4.nodeName() == "string" ) {
-                                string = node4.toElement();
-                                // no need to do anything with this string
-                                node4 = string.nextSibling();
-                            } else {
-                                // TODO: add to error string
-                            }
-                            while( !node4.isNull() && node4.isElement() && node4.nodeName() == "piece" ) {
-                                piece = node4.toElement();
-                                if( !piece.hasAttribute( "start" ) ||
-                                    !piece.hasAttribute( "length" ) ) {
-                                    // TODO: add to error string
-                                    skipWord = true;
-                                    //delete pStem; pStem = NULL; //-- from old code
-                                    if (newWord) {
-                                        delete wordIter.value();
-                                        m_GS->erase(wordIter);
-                                    }
-                                    break;
-                                }
-                                if ( morph.tagName() == "affix" || morph.tagName() == "root" ) {
-                                    start = piece.attribute( "start" ).toInt();
-                                    pieceLength = piece.attribute("length").toInt();
-
-                                    if (start != 0) {
-                                        stem = word.left(start);
-                                        affix = word.right(length - start);
-                                        add_parse_triple(m_GS, word, stem, affix);
-                                        if ( start < lastEnd ) {
-                                            stem = word.left(lastEnd);
-                                            affix = word.right(length - lastEnd);
-                                            add_parse_triple(m_GS, word, stem, affix);
-                                        }
-                                    }
-                                    lastEnd = start + pieceLength;
-                                    //pStem->CutRightBeforeHere( start ); //-- from old code
-                                }
-                                node4 = node4.nextSibling();
-                            }
-                        } else {
-                            // Word has unassigned pieces, skip...
+                    while( !node4.isNull() && node4.isElement() && node4.nodeName() == "piece" ) {
+                        piece = node4.toElement();
+                        if( !piece.hasAttribute( "start" ) ||
+                            !piece.hasAttribute( "length" ) ) {
+                            // TODO: add to error string
                             skipWord = true;
+                            //delete pStem; pStem = NULL; //-- from old code
                             if (newWord) {
                                 delete wordIter.value();
                                 m_GS->erase(wordIter);
                             }
+                            break;
                         }
-                        node3 = node3.nextSibling();
-                    }
-                    if( skipWord ) continue;
+                        if ( morph.tagName() == "affix" || morph.tagName() == "root" ) {
+                            start = piece.attribute( "start" ).toInt();
+                            pieceLength = piece.attribute("length").toInt();
 
-                    /* old code
-                    // Add word to gold standard words
-                    goldStdWordsIt = goldStdWords.find( word );
-                    if( goldStdWordsIt == goldStdWords.end() )
-                    {
-                        // New word...
-                        goldStdWordsIt = goldStdWords.insert( word, stemList );
-                                                //goldStdWordsIt.data().setAutoDelete( true );    @@@ fix this, make sure there are no memory leaks created here.
+                            if (start != 0) {
+                                stem = word.left(start);
+                                affix = word.right(length - start);
+                                add_parse_triple(m_GS, word, stem, affix);
+                                if ( start < lastEnd ) {
+                                    stem = word.left(lastEnd);
+                                    affix = word.right(length - lastEnd);
+                                    add_parse_triple(m_GS, word, stem, affix);
+                                }
+                            }
+                            lastEnd = start + pieceLength;
+                            //pStem->CutRightBeforeHere( start ); //-- from old code
+                        }
+                        node4 = node4.nextSibling();
                     }
-                    goldStdWordsIt.value().append( pStem );
-                    */
-
-
-                    // notes element
-                    if( !node3.isNull() && node3.isElement() && node3.nodeName() == "notes" ) {
-                        // Skip...
-                        node3 = node3.nextSibling();
-                    }
-                    if ( !node3.isNull() ) {
-                        // TODO: add to error string
+                } else {
+                    // Word has unassigned pieces, skip...
+                    skipWord = true;
+                    if (newWord) {
+                        delete wordIter.value();
+                        m_GS->erase(wordIter);
                     }
                 }
+                node3 = node3.nextSibling();
             }
-        } else {
-            QMessageBox::information( NULL, "Attention", "Unable to open " + m_XML_file_name + " .", "OK" );
-            return;
+            if( skipWord ) continue;
+
+            /* old code
+            // Add word to gold standard words
+            goldStdWordsIt = goldStdWords.find( word );
+            if( goldStdWordsIt == goldStdWords.end() )
+            {
+                // New word...
+                goldStdWordsIt = goldStdWords.insert( word, stemList );
+                                        //goldStdWordsIt.data().setAutoDelete( true );    @@@ fix this, make sure there are no memory leaks created here.
+            }
+            goldStdWordsIt.value().append( pStem );
+            */
+
+
+            // notes element
+            if( !node3.isNull() && node3.isElement() && node3.nodeName() == "notes" ) {
+                // Skip...
+                node3 = node3.nextSibling();
+            }
+            if ( !node3.isNull() ) {
+                // TODO: add to error string
+            }
         }
-        //qDebug() << 453 << "Goldstandard.cpp: gold standard parsed";
-        goldStdFile.close();
-    } else {
-        qDebug() << 458 << QString("GoldStandar::m_parse_XML: XML file not set");
-        return;
     }
+    //qDebug() << 453 << "Goldstandard.cpp: gold standard parsed";
+    goldStdFile.close();
+    return true;
 
 /* BEGINNING OF YU HU's CODE
 // Yu Hu's code

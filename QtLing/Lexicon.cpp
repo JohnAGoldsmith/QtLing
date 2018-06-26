@@ -18,6 +18,7 @@
 #include "Word.h"
 #include "goldstandard.h"
 #include "cparse.h"
+#include "EvalParses.h"
 
 CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag)
 {
@@ -40,7 +41,8 @@ CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag)
     m_Hypothesis_map        = new QMap<QString, CHypothesis*>;
     m_entropy_threshold_for_stems = 1.2;
     m_parent_lexicon        = lexicon;
-    m_GoldStandard          = nullptr;
+    m_goldstandard          = NULL;
+    m_eval_parses      = NULL;
 
 //  This is part of an experiment.
     m_category_types["Words"]               = CT_word;
@@ -79,7 +81,7 @@ CLexicon::~CLexicon()
     delete m_PrefixSignatures;
     delete m_ParaSignatures;
     delete m_PassiveSignatures;
-    delete m_GoldStandard;
+    delete m_goldstandard;
 }
 
 CSignatureCollection* CLexicon::get_active_signature_collection(){
@@ -120,24 +122,50 @@ void CLexicon::clear_lexicon(){
 // for gold standard
 // Return true if evaluation succeeded
 // Return false if it did not
-GoldStandard* CLexicon::new_GoldStandard_from_xml(QString& file_name)
+GoldStandard* CLexicon::new_goldstandard_from_xml(QString& file_name)
 {
-    m_GoldStandard = new GoldStandard(file_name);
-    return m_GoldStandard;
+    m_goldstandard = new GoldStandard(file_name);
+    return m_goldstandard;
 }
 
 bool CLexicon::do_gs_evaluation()
 {
-    if (m_GoldStandard == nullptr) {
-        qDebug() << 123 << "Lexicon.cpp: evaluation failed: GoldStandard not loaded";
+    if (m_goldstandard == nullptr) {
+        qDebug() << 134 << "Lexicon.cpp: evaluation failed: GoldStandard not loaded";
         return false;
     }
-    bool evaluation_succeeded = m_GoldStandard->evaluate(m_Words);
+    bool evaluation_succeeded = m_goldstandard->evaluate(m_Words);
     if (evaluation_succeeded) {
-        qDebug() << 127 << "Lexicon.cpp: evaluation completed";
+        qDebug() << 139 << "Lexicon.cpp: evaluation completed";
         return true;
     } else return false;
 }
+
+EvalParses* CLexicon::new_eval_parses_from_txt(QString& file_name)
+{
+    m_eval_parses = new EvalParses(file_name);
+    return m_eval_parses;
+}
+
+void CLexicon::delete_eval_parses()
+{
+    delete m_eval_parses;
+    m_eval_parses = NULL;
+}
+
+bool CLexicon::do_gs_evaluation_on_eval_parses()
+{
+    if (m_goldstandard == NULL || m_eval_parses == NULL) {
+        qDebug() << 153 << "Lexicon.cpp: evaluation failed: GoldStandard or evaluation file not loaded";
+        return false;
+    }
+    bool evaluation_succeeded = m_goldstandard->evaluate(m_eval_parses);
+    if (evaluation_succeeded) {
+        qDebug() << 158 << "Lexicon.cpp: evaluation on imported parses completed";
+        return true;
+    } else return false;
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //linguistic methods

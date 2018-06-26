@@ -135,6 +135,7 @@ protected:
 signals:
     void                                    xml_parsed();
     void                                    lexicon_ready();
+    void                                    morfessor_parsed();
 
 private slots:
     void                                    about();
@@ -155,6 +156,8 @@ private slots:
     // test for gold standard
     void                                    gs_read_and_parse_xml();
     void                                    gs_evaluate();
+    void                                    read_morfessor_txt_file();
+    void                                    gs_evaluate_morfessor();
 
 #ifndef QT_NO_SESSIONMANAGER
     void                    commitData(QSessionManager &);
@@ -184,7 +187,10 @@ public:
     void                    load_subsignature_model();
     void                    load_word_model();
     void                    create_or_update_TreeModel(CLexicon* lexicon);
+    //                      update tree model after gs evaluation is completed
     void                    update_TreeModel_for_gs(CLexicon* lexicon);
+
+    void                    update_TreeModel_for_eval(CLexicon* lexicon);
 
     void                    sort_upper_table();
 

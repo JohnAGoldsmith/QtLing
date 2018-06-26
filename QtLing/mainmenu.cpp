@@ -13,7 +13,9 @@ MainMenu::MainMenu(MainWindow *parent) : QObject(parent)
     // -------------------------------
     // --- File menu and toolbar
     // -------------------------------
-
+    gs_is_ready = false;
+    lexicon_is_ready = false;
+    eval_parse_is_ready = false;
     fileMenu = parent->menuBar()->addMenu(tr("&File"));
     fileToolBar = parent->addToolBar(tr("File"));
 
@@ -108,48 +110,74 @@ MainMenu::MainMenu(MainWindow *parent) : QObject(parent)
     // --- Evaluation Menu
     // -------------------------------
 
-    QIcon importIcon;
-    QIcon evalIcon;
-
     importAct = new QAction(tr("Import &Gold Standard XML file"), this);
     importAct->setStatusTip(tr("Import and Load Gold Standard XML file"));
-    importAct->setIcon(importIcon);
 
-    evalAct = new QAction(tr("&Evaluate using Gold Standard"), this);
+    evalAct = new QAction(tr("&Evaluate current lexicon using Gold Standard"), this);
     evalAct->setStatusTip(tr("Evaluate output of linguistica using Gold Standard"));
-    evalAct->setIcon(evalIcon);
     evalAct->setDisabled(true);
+
+    importMorfessorAct = new QAction(tr("Import &Morfessor parses"), this);
+    importMorfessorAct->setStatusTip(tr("Import Morfessor output file of word parses in txt format"));
+
+    evalMorfessorAct = new QAction(tr("Evaluate Morfessor parses"), this);
+    evalMorfessorAct->setStatusTip(tr("Evaluate imported parses using gold standard"));
+    evalMorfessorAct->setDisabled(true);
 
     connect(importAct, &QAction::triggered, parent, &MainWindow::gs_read_and_parse_xml);
     connect(evalAct, &QAction::triggered, parent, &MainWindow::gs_evaluate);
+    connect(importMorfessorAct, &QAction::triggered, parent, &MainWindow::read_morfessor_txt_file);
+    connect(evalMorfessorAct, &QAction::triggered, parent, &MainWindow::gs_evaluate_morfessor);
 
     evalMenu = parent->menuBar()->addMenu(tr("&Evaluate"));
     evalMenu->addAction(importAct);
     evalMenu->addAction(evalAct);
-    editToolBar->addAction(importAct);
+    evalMenu->addAction(importMorfessorAct);
+    evalMenu->addAction(evalMorfessorAct);
+    //editToolBar->addAction(importAct);
 
     // end of goldstandard experiment
 
     //fileToolBar->addButton("Sort");
 }
 
-void MainMenu::gs_loaded()
+void MainMenu::check_and_enable_evalAct()
 {
-    // qDebug() << 136 << "MainMenu.cpp: gs_loaded";
-    gs_is_loaded = true;
-    if (lexicon_is_ready && gs_is_loaded) {
+    if (lexicon_is_ready && gs_is_ready) {
         if (!evalAct->isEnabled()) {
             evalAct->setEnabled(true);
         }
     }
 }
 
-void MainMenu::lexicon_ready()
+void MainMenu::check_and_enable_evalMorfessorAct()
 {
-    lexicon_is_ready = true;
-    if (lexicon_is_ready && gs_is_loaded) {
-        if (!evalAct->isEnabled()) {
-            evalAct->setEnabled(true);
+    if (lexicon_is_ready && gs_is_ready && eval_parse_is_ready) {
+        if (!evalMorfessorAct->isEnabled()) {
+            evalMorfessorAct->setEnabled(true);
         }
     }
 }
+
+void MainMenu::gs_ready()
+{
+    // qDebug() << 136 << "MainMenu.cpp: gs_loaded";
+    gs_is_ready = true;
+    check_and_enable_evalAct();
+    check_and_enable_evalMorfessorAct();
+}
+
+void MainMenu::lexicon_ready()
+{
+    lexicon_is_ready = true;
+    check_and_enable_evalAct();
+    check_and_enable_evalMorfessorAct();
+}
+
+void MainMenu::eval_parse_ready()
+{
+    eval_parse_is_ready = true;
+    check_and_enable_evalMorfessorAct();
+}
+
+

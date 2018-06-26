@@ -11,6 +11,7 @@
 #include "SignatureCollection.h"
 #include "Typedefs.h"
 #include "goldstandard.h"
+#include "EvalParses.h"
 
 class MainWindow;
 class CWordCollection;
@@ -19,7 +20,6 @@ class CSuffixCollection;
 class CPrefixCollection;
 class QProgressBar;
 class CHypothesis;
-
 class CParse;
 
 //  part of an experiment:
@@ -184,7 +184,8 @@ protected:
     double                          m_entropy_threshold_for_stems;
 
     // experiment for gold standard evaluation code
-    GoldStandard*                   m_GoldStandard;
+    GoldStandard*                   m_goldstandard;
+    EvalParses*                     m_eval_parses;
     // end of experiment
 
 public:
@@ -194,9 +195,15 @@ public:
     ~CLexicon();
 
     // experiment for gold standard evaluation code
-    GoldStandard*                               get_GoldStandard()          { return m_GoldStandard; }
-    GoldStandard*                               new_GoldStandard_from_xml(QString& file_name);
+    GoldStandard*                               get_goldstandard()          { return m_goldstandard; }
+    GoldStandard*                               new_goldstandard_from_xml(QString& file_name);
+    void                                        delete_goldstandard()       { delete m_goldstandard; m_goldstandard = NULL; }
     bool                                        do_gs_evaluation();
+
+    EvalParses*                                 get_eval_parses()      { return m_eval_parses; }
+    EvalParses*                                 new_eval_parses_from_txt(QString& file_name);
+    void                                        delete_eval_parses();
+    bool                                        do_gs_evaluation_on_eval_parses();
 
 
     void                                        dump_signatures_to_debug();

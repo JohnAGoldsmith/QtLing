@@ -42,6 +42,9 @@
 #include "lxamodels.h"
 #include "mainmenu.h"
 
+#include "goldstandard.h"
+#include "EvalParses.h"
+
 #include "string_group.h"
 
 class LxaStandardItemModel;
@@ -155,8 +158,9 @@ MainWindow::MainWindow()
             m_tableView_upper_right,SLOT(display_this_affixes_signatures(const QModelIndex &  )));
 
     // These two signals allow the "Evaluate" option in main window to be enabled
-    connect(this, SIGNAL(xml_parsed()), m_main_menu, SLOT(gs_loaded()));
+    connect(this, SIGNAL(xml_parsed()), m_main_menu, SLOT(gs_ready()));
     connect(this, SIGNAL(lexicon_ready()), m_main_menu, SLOT(lexicon_ready()));
+    connect(this, SIGNAL(morfessor_parsed()), m_main_menu, SLOT(eval_parse_ready()));
 }
 
 void MainWindow::keyPressEvent(QKeyEvent* ke)
@@ -619,17 +623,21 @@ void MainWindow::gs_read_and_parse_xml()
     CLexicon* lexicon = get_lexicon();
 
     QString file_name = QFileDialog::getOpenFileName(this,
-                                                     "Choose a gold standard file ot open",
+                                                     "Choose a gold standard file to open",
                                                      QString(),
                                                      "XML Files (*.xml)");
     //qDebug() << 114 << "Goldstandard.cpp: xml file opened";
     if (!file_name.isEmpty()) {
-        GoldStandard* gs = lexicon->new_GoldStandard_from_xml(file_name);
-        gs->read_XML();
-        emit xml_parsed();
-        //qDebug() << 607 << "mainwindow.cpp: xml_parsed signal emitted";
+        GoldStandard* gs = lexicon->new_goldstandard_from_xml(file_name);
+        if(gs->read_XML()) {
+            emit xml_parsed();
+            qDebug() << 633 << "mainwindow.cpp: xml_parsed signal emitted";
+        } else {
+            lexicon->delete_goldstandard();
+            qDebug() << 636 << "mainwindow.cpp: error in opening xml file";
+        }
     } else {
-        qDebug() << 616 << "mainwindow.cpp: file cannot be opened!";
+        qDebug() << 639 << "mainwindow.cpp: file cannot be opened!";
     }
 }
 
@@ -638,7 +646,7 @@ void MainWindow::gs_evaluate() // move to lexicon
     CLexicon* lexicon = get_lexicon();
     bool eval_succeeded = lexicon->do_gs_evaluation();
     if (eval_succeeded) {
-        GoldStandard* p_gs = lexicon->get_GoldStandard();
+        GoldStandard* p_gs = lexicon->get_goldstandard();
         qDebug() << 616 << "Mainwindow.cpp: evaluation succeeded\n" ;
         qDebug() << "Precision: " << p_gs->get_total_precision()
                  << "Recall: " << p_gs->get_total_recall();
@@ -657,8 +665,44 @@ void MainWindow::gs_evaluate() // move to lexicon
         QCoreApplication::processEvents();
 
     } else {
-        qDebug() << 618 << "Mainwindow.cpp: evaluation failed";
+        qDebug() << 663 << "Mainwindow.cpp: evaluation failed";
     }
+}
+
+void MainWindow::read_morfessor_txt_file()
+{
+    CLexicon* lexicon = get_lexicon();
+
+    QString file_name = QFileDialog::getOpenFileName(this,
+                                                     "Choose a Morfessor output file to open",
+                                                     QString(),
+                                                     "Morfessor Output Files (*.txt)");
+    //qDebug() << 114 << "Goldstandard.cpp: xml file opened";
+    if (!file_name.isEmpty()) {
+        EvalParses* eval = lexicon->new_eval_parses_from_txt(file_name);
+        if (eval->read_morfessor_txt_file()) {
+            emit morfessor_parsed();
+            qDebug() << 685 << "mainwindow.cpp: successfully read in morfessor txt file";
+        } else {
+            lexicon->delete_eval_parses();
+            qDebug() << 688 << "mainwindow.cpp: error in reading morfessor txt file";
+        }
+    } else {
+        qDebug() << 691 << "mainwindow.cpp: file cannot be opened!";
+    }
+}
+
+void MainWindow::gs_evaluate_morfessor()
+{
+    CLexicon* lexicon = get_lexicon();
+    bool eval_succeded = lexicon->do_gs_evaluation_on_eval_parses();
+    if (eval_succeded) {
+        EvalParses* p_eval = lexicon->get_eval_parses();
+        qDebug() << 701 << "Mainwindow.cpp: evaluation of Morfessor txt file succeeded" ;
+        qDebug() << "Precision: " << p_eval->get_total_precision()
+                 << "Recall: " << p_eval->get_total_recall();
+    }
+
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

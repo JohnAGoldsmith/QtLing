@@ -32,9 +32,15 @@ class MainMenu : public QObject
 
     QAction         *importAct;
     QAction         *evalAct;
+    QAction         *importMorfessorAct;
+    QAction         *evalMorfessorAct;
 
-    bool            gs_is_loaded;
+    bool            gs_is_ready;
     bool            lexicon_is_ready;
+    bool            eval_parse_is_ready;
+
+    void            check_and_enable_evalAct();
+    void            check_and_enable_evalMorfessorAct();
 
 public:
     explicit MainMenu(MainWindow *parent = nullptr);
@@ -42,8 +48,9 @@ public:
 signals:
 
 public slots:
-    void            gs_loaded();
+    void            gs_ready();
     void            lexicon_ready();
+    void            eval_parse_ready();
 };
 
 #endif // MAINMENU_H

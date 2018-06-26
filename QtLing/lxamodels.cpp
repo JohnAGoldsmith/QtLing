@@ -436,6 +436,18 @@ void LxaStandardItemModel::load_GSMap(GoldStandard* p_gs, GoldStandard::GSMap* p
     }
 }
 
+void remove_item_from_tree(QString& name, QStandardItem* item)
+{
+    for (int row_i = 0; row_i < item->rowCount(); ) {
+        QString data = item->child(row_i, 0)->data(Qt::DisplayRole).toString();
+        if (data == QString("Gold Standard")) {
+            curr_lexicon_item->removeRow(row_i);
+        } else {
+            row_i++;
+        }
+    }
+}
+
 void MainWindow::update_TreeModel_for_gs(CLexicon* lexicon)
 {
     typedef QStandardItem QSI;
@@ -443,57 +455,48 @@ void MainWindow::update_TreeModel_for_gs(CLexicon* lexicon)
     int parent_row_count = parent->rowCount();
     QSI* curr_lexicon_item = parent->child(parent_row_count-1, 0);
 
-    // Remove pre-existing gold standard items in the tree view
-    /*
-    for (int row_i = 0; row_i < curr_lexicon_item->rowCount(); ) {
-        QString data = curr_lexicon_item->child(row_i, 0)->data(Qt::DisplayRole).toString();
-        if (data == QString("Gold Standard")) {
-            curr_lexicon_item->removeRow(row_i);
-        } else {
-            row_i++;
-        }
-    }
-    */
+    remove_item_from_tree("Gold Standard", curr_lexicon_item);
 
     QSI* gs_item = new QSI(QString("Gold Standard"));
+
     QList<QSI*> word_items;
     QSI* word_item = new QSI(QString("Gold Standard Words"));
-    int gs_word_count = lexicon->get_GoldStandard()->get_gs_word_count();
+    int gs_word_count = lexicon->get_goldstandard()->get_gs_word_count();
     QSI* word_count_item = new QSI(QString::number(gs_word_count));
     word_items.append(word_item);
     word_items.append(word_count_item);
 
     QList<QSI*> precision_items;
     QSI* precision_item = new QSI(QString("Precision"));
-    double precision = lexicon->get_GoldStandard()->get_total_precision();
+    double precision = lexicon->get_goldstandard()->get_total_precision();
     QSI* precision_value_item = new QSI(QString::number(precision));
     precision_items.append(precision_item);
     precision_items.append(precision_value_item);
 
     QList<QSI*> recall_items;
     QSI* recall_item = new QSI(QString("Recall"));
-    double recall = lexicon->get_GoldStandard()->get_total_recall();
+    double recall = lexicon->get_goldstandard()->get_total_recall();
     QSI* recall_value_item = new QSI(QString::number(recall));
     recall_items.append(recall_item);
     recall_items.append(recall_value_item);
 
     QList<QSI*> true_positive_items;
     QSI* true_positive_item = new QSI(QString("True Positive Parses"));
-    int true_positive_count = lexicon->get_GoldStandard()->get_true_positive_count();
+    int true_positive_count = lexicon->get_goldstandard()->get_true_positive_count();
     QSI* true_positive_count_item = new QSI(QString::number(true_positive_count));
     true_positive_items.append(true_positive_item);
     true_positive_items.append(true_positive_count_item);
 
     QList<QSI*> correct_items;
     QSI* correct_item = new QSI(QString("Gold Standard Parses"));
-    int correct_count = lexicon->get_GoldStandard()->get_correct_count();
+    int correct_count = lexicon->get_goldstandard()->get_correct_count();
     QSI* correct_count_item = new QSI(QString::number(correct_count));
     correct_items.append(correct_item);
     correct_items.append(correct_count_item);
 
     QList<QSI*> retrieved_items;
     QSI* retrieved_item = new QSI(QString("Retrieved Parses"));
-    int retrieved_count = lexicon->get_GoldStandard()->get_retrieved_count();
+    int retrieved_count = lexicon->get_goldstandard()->get_retrieved_count();
     QSI* retrieved_count_item = new QSI(QString::number(retrieved_count));
     retrieved_items.append(retrieved_item);
     retrieved_items.append(retrieved_count_item);
@@ -507,6 +510,36 @@ void MainWindow::update_TreeModel_for_gs(CLexicon* lexicon)
     gs_item->appendRow(retrieved_items);
 
     curr_lexicon_item->appendRow(gs_item);
+}
+
+void MainWindow::update_TreeModel_for_eval(CLexicon *lexicon)
+{
+    if (lexicon->get_eval_parses() == NULL) {
+        qDebug() << "MainWindow::update_TreeModel_for_eval: "
+                    "EvalParses not loaded";
+        return;
+    }
+
+    typedef QStandardItem QSI;
+    QSI* parent = m_treeModel->invisibleRootItem();
+    int parent_row_count = parent->rowCount();
+    QSI* curr_lexicon_item = parent->child(parent_row_count-1, 0);
+
+    QSI* eval_item = new QSI(QString("Morfessor Parses"));
+
+    QList<QSI*> word_items;
+    QSI* word_item = new QSI(QString("Morfessor parses by word"));
+    int word_count = lexicon->get_eval_parses()->get_word_count();
+    QSI* word_count_item = new QSI(QString::number(word_count) + QString(" words"));
+    word_items.append(word_item);
+    word_items.append(word_count_item);
+
+    if (!lexicon->get_eval_parses()->is_evaluated())
+        return;
+
+    QSI* gs_results_item = new QSI(QString("Evaluation results from gold standard:"));
+
+
 
 }
 

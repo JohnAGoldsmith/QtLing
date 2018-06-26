@@ -9,9 +9,11 @@
 class MainWindow;
 class Lexicon;
 class CWordCollection;
+class EvalParses;
 
 class GoldStandard
 {
+friend class EvalParses;
 public:
     typedef QMap<QString, Parse_triple*> Parse_triple_map;
     typedef QMap<QString, Parse_triple_map*> GSMap;
@@ -40,10 +42,6 @@ protected:
 
     GSMap*      m_GS;
 
-    GSMap*      clone_GSMap(GSMap* map) const;
-    void        delete_GSMap(GSMap* map);
-
-    void        add_parse_triple(GSMap* map, const QString& word, const QString& stem, const QString& affix);
 public:
     GoldStandard();
     GoldStandard(const GoldStandard& gs);
@@ -51,8 +49,9 @@ public:
     GoldStandard& operator=(const GoldStandard& gs);
     ~GoldStandard();
 
-    void        read_XML();
+    bool        read_XML();
     bool        evaluate(CWordCollection* p_word_collection);
+    bool        evaluate(EvalParses* p_eval_parses);
 
     double      get_total_recall() { return m_total_recall; }
     double      get_total_precision() { return m_total_precision; }
@@ -66,5 +65,11 @@ public:
     GSMap*      get_gold_standard_words() { return m_GS; }
 
 };
+
+// non-member functions
+GoldStandard::GSMap*        clone_GSMap(GoldStandard::GSMap* map);
+void                        delete_GSMap(GoldStandard::GSMap* map);
+void                        add_parse_triple(GoldStandard::GSMap* map, const QString& word, const QString& stem, const QString& affix);
+
 
 #endif // GOLDSTANDARD_H
