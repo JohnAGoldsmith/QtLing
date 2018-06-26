@@ -5,6 +5,7 @@
 #include <QList>
 #include <QMap>
 #include "Word.h"
+#include "parsemap.h"
 
 class MainWindow;
 class Lexicon;
@@ -41,6 +42,7 @@ protected:
     QString     m_XML_file_name;
 
     GSMap*      m_GS;
+    ParseMapHandler m_gs_parses;
 
 public:
     GoldStandard();
@@ -63,13 +65,11 @@ public:
     GSMap*      get_true_positive_parses() { return m_true_positive_parses; }
     GSMap*      get_retrieved_parses() { return m_retrieved_parses; }
     GSMap*      get_gold_standard_words() { return m_GS; }
+    ParseMapHandler get_gold_standard_parses() { return m_gs_parses; }
 
 };
 
 // non-member functions
-GoldStandard::GSMap*        clone_GSMap(GoldStandard::GSMap* map);
-void                        delete_GSMap(GoldStandard::GSMap* map);
-void                        add_parse_triple(GoldStandard::GSMap* map, const QString& word, const QString& stem, const QString& affix);
 
 
 #endif // GOLDSTANDARD_H
