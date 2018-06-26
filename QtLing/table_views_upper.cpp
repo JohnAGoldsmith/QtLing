@@ -52,16 +52,20 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
     int& right_order = right_table->m_gold_standard_display_order;
     // --
 
+    bool is_child_of_gs = false;
+
     if (index.isValid()){
         component = index.data().toString();
-    }
+        QString parent_component = index.parent().data().toString();
+        if (parent_component == "Gold Standard")
+            is_child_of_gs = true;
+    } else return;
 
     // Show gold standard information in tables
-    if (component == "True Positive Parses"
+    if (is_child_of_gs && (component == "True Positive Parses"
      || component == "Gold Standard Parses"
      || component == "Retrieved Parses"
-     || component == "Gold Standard Words") {
-
+     || component == "Gold Standard Words")) {
         if (component == "True Positive Parses") {
             set_data_type(e_data_gs_true_positive_parses);
         } else if (component == "Retrieved Parses") {
