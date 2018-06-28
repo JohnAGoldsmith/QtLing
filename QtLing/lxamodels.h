@@ -50,7 +50,7 @@ class LxaSortFilterProxyModel : public QSortFilterProxyModel
     Q_OBJECT;
 public:
     LxaSortFilterProxyModel(QObject*);
-    void  sort() {QSortFilterProxyModel::sort(-1);}
+    void  sort(int, Qt::SortOrder order = Qt::AscendingOrder) override {QSortFilterProxyModel::sort(-1, order);}
 
 private:
     bool lessThan(const QModelIndex & left, const QModelIndex & right) const override;

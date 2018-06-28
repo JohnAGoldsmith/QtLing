@@ -3,7 +3,7 @@
 #include <QGraphicsScene>
 #include "graphics.h"
 #include <QPainter>
-
+#include <math.h>
 
 
 class CSignature;

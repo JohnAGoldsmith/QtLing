@@ -18,7 +18,7 @@
     /**
      * @brief MainWindow::display_epositive_suffix_signatures
      */
-    void MainWindow::display_epositive_suffix_signatures(CLexicon* lexicon)
+    void MainWindow::display_epositive_suffix_signatures(CLexicon*  )
     {
         if (m_Models["EPositive signatures"]->rowCount() > 0){
             m_tableView_upper_left->setModel(m_Models["EPositive signatures"]);
@@ -94,7 +94,7 @@
         m_graphics_scene->create_and_place_signatures();
     }
 
-    void MainWindow::display_signature_graph_edges(CLexicon* lexicon){
+    void MainWindow::display_signature_graph_edges(CLexicon* ){
         m_tableView_upper_left->setModel(m_Models["SigGraphEdges_1"]);
         m_tableView_upper_left->set_data_type( e_data_signatures_graph_edges );
         m_tableView_upper_left->resizeColumnsToContents();

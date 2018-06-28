@@ -576,7 +576,7 @@ void MainWindow::print_suffix_signatures()
 
 void MainWindow::print_prefix_signatures()
 {
-    CSignature* pSig;
+    //CSignature* pSig;
     int count = 0;
     CStem *  pStem;
     QString filename = "swahili-prefix-signatures.txt";

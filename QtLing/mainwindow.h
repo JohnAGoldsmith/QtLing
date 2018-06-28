@@ -203,7 +203,7 @@ public:
     void                    write_stems_and_affixes();
 
 protected:
-   void keyPressEvent(QKeyEvent *e);
+   void keyPressEvent(QKeyEvent *e) override;
 
 };
 

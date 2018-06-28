@@ -50,8 +50,8 @@ LowerTableView::LowerTableView(MainWindow * window)
      eDataType                  UpperView_data_type = m_parent_window->m_tableView_upper_left->get_data_type();
      QString                    word, stem, prefix, suffix, signature;
      CLexicon *                 this_lexicon = get_parent_window()->get_lexicon();
-     int                        row, column;
-     QStandardItem*             p_item;
+     int                        row(0), column;
+     //QStandardItem*             p_item;
      QList<QStandardItem*>      item_list;
 
      if (m_parent_window->m_graphic_display_flag == true){
@@ -142,12 +142,12 @@ LowerTableView::LowerTableView(MainWindow * window)
             }
             QString               edge_key = index.sibling(row,6).data().toString();
             sig_graph_edge*       this_edge = this_lexicon->get_sig_graph_edge_map()->value(edge_key);
-            sig_graph_edge *      psig_graph_edge;
+            //sig_graph_edge *      psig_graph_edge;
             CSignature*           pSig;
             CSignature*           pSig1 = this_edge->m_sig_1;
             CSignature*           pSig2 = this_edge->m_sig_2;
             QStandardItem*        p_item;
-            CStem*                p_Stem;
+            //CStem*                p_Stem;
             QStringList           sig1_stems;
             QStringList           sig2_stems;
             QStringList           words;
@@ -201,7 +201,7 @@ LowerTableView::LowerTableView(MainWindow * window)
           if (m_parent_window->m_graphic_display_flag){
                 if (index.isValid()) {row = index.row();}
                 QString hypothesis_label = index.sibling(row,6).data().toString();
-                CHypothesis*  pHypothesis = this_lexicon->get_hypothesis(hypothesis_label);
+                //CHypothesis*  pHypothesis = this_lexicon->get_hypothesis(hypothesis_label);
                 qDebug() << 207 << hypothesis_label;
           }
           else{ //tabular info, not graphics.
@@ -313,7 +313,7 @@ void LowerTableView::table_signature(CSignature* pSig ){
     QList<QStandardItem*>      item_list;
 
     item_list.clear();
-    CStem_ptr_list    *   sig_stems = pSig->get_stems();
+    //CStem_ptr_list    *   sig_stems = pSig->get_stems();
     if (m_my_current_model) { delete m_my_current_model;}
     m_my_current_model = new QStandardItemModel();
 
@@ -406,7 +406,7 @@ void LowerTableView::table_passive_signature(CSignature *p_this_sig)
 {
     QStandardItem*              p_item;
     QList<QStandardItem*>       item_list;
-    sig_graph_edge *             p_edge;
+    //sig_graph_edge *             p_edge;
     QMap<CSignature*, int>      stem_counter; // key is signature, value is number of stems shared with p_this_sig;
     QList<CSignature*>          sig_list;
     m_my_current_model =        new QStandardItemModel();

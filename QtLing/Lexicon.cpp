@@ -195,7 +195,7 @@ void CLexicon::FindProtostems()
             continue;
         }
         DifferenceFoundFlag = false;
-        int end_word;
+        int end_word(0);
         int wordno2;
         if (m_SuffixesFlag){
             int end = qMin(this_word_length, previous_word_length);
@@ -371,11 +371,11 @@ QString convert_set_to_qstring(affix_set* this_affix_set){
 void   CLexicon::assign_suffixes_to_stems(QString name_of_calling_function)
 {   const int MINIMUM_NUMBER_OF_STEMS = 2;
 
-    CParse *                    this_parse;
+    //CParse *                    this_parse;
     CSignature*                 pSig;
     QString                     this_stem_t, this_suffix, this_prefix, this_affix_t, this_signature_string, this_word;
     stem_list *                 p_this_stem_list;
-    affix_set *                 this_ptr_to_affix_set;
+    //affix_set *                 this_ptr_to_affix_set(NULL);
     map_sigstring_to_suffix_set temp_stems_to_affix_set;
     map_sigstring_to_stem_list  temp_signatures_to_stems;
     morph_set *                 pSet;
@@ -639,7 +639,7 @@ struct{
  * parse-pairs that exactly describe the current signature structure.
  */
 
-void CLexicon::replace_parse_pairs_from_current_signature_structure(bool FindSuffixesFlag) {
+void CLexicon::replace_parse_pairs_from_current_signature_structure(bool  ) {
     m_Parses->clear();
     m_Parse_map.clear();
     QString                         sig_string;

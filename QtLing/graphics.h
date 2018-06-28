@@ -49,10 +49,9 @@ public:
     void                set_score (double amount) {m_score = amount;}
     CSignature*         get_signature() {return m_signature;}
     void                set_color(Qt::GlobalColor);
-    void paint(QPainter, const QStyleOptionGraphicsItem *,
-               QWidget )
-    {
-    }
+//    void paint(QPainter*, const QStyleOptionGraphicsItem *, QWidget* ) // is this used?
+//    {
+//    }
 };
 
 
