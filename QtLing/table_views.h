@@ -31,6 +31,10 @@ public slots:
     void                    ShowModelsUpperTableView(const QModelIndex& );
     void                    display_this_affixes_signatures(const QModelIndex & index);
 
+    // for search functionality //
+    bool                    find_prev_and_highlight(QString& s);
+    bool                    find_next_and_highlight(QString& s);
+    // for search functionality //
     signals:
     void                    please_display_this_signature(QString sig);
 };

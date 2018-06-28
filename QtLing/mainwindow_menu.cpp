@@ -6,7 +6,7 @@
 #include <QDebug>
 
 #include "mainwindow.h"
-#include "mainmenu.h"
+#include "mainwindow_menu.h"
 
 MainMenu::MainMenu(MainWindow *parent) : QObject(parent)
 {

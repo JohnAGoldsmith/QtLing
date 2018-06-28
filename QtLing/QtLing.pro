@@ -33,7 +33,6 @@ SOURCES += main.cpp\
     table_display_functions.cpp \
     table_views_lower.cpp \
     table_views_upper.cpp \
-    mainmenu.cpp \
     output.cpp \
     corpus.cpp \
     lexicon_sublexicon.cpp \
@@ -45,7 +44,9 @@ SOURCES += main.cpp\
     evaluation.cpp \
     evaluation_goldstandard.cpp \
     evaluation_evalparses.cpp \
-    evaluation_parsemap.cpp
+    evaluation_parsemap.cpp \
+    mainwindow_menu.cpp \
+    mainwindow_find.cpp
 
 HEADERS  += mainwindow.h \
     CompareFunc.h \
@@ -69,8 +70,9 @@ HEADERS  += mainwindow.h \
     mainwindow.h \
     string_group.h \
     cparse.h \
-    mainmenu.h \
-    evaluation.h
+    evaluation.h \
+    mainwindow_menu.h \
+    mainwindow_find.h
 
 FORMS    +=
 

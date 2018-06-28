@@ -40,10 +40,10 @@
 #include "graphics.h"
 #include "generaldefinitions.h"
 #include "lxamodels.h"
-#include "mainmenu.h"
+#include "mainwindow_menu.h"
+#include "mainwindow_find.h"
 
 #include "evaluation.h"
-
 #include "string_group.h"
 
 class LxaStandardItemModel;
@@ -97,6 +97,8 @@ MainWindow::MainWindow()
     m_graphic_display_flag      = false;             // toggle with Ctrl-G
     m_graphics_scene->set_signature_collection(get_lexicon()->get_signatures());
 
+    // Status bars on top of each table view
+
     //<--------------     set up main window widget ------------------------->
     // set model for tree view
     m_leftTreeView->setModel(m_treeModel);
@@ -130,12 +132,19 @@ MainWindow::MainWindow()
     createStatusBar();
     readSettings();
 
-
+    // resize the main window
     resize(QDesktopWidget().availableGeometry(this).size() * 0.7);
+    // set sizes of children of main splitter, i.e. left tree view and tables on the right
     m_mainSplitter->setSizes(QList<int>() << 1000 <<4000);
 
     setCurrentFile(QString());
     setUnifiedTitleAndToolBarOnMac(true);
+
+    // ------- experiment to see QDockWidget
+    FindDockWidget* find_dock_widget = new FindDockWidget(this);
+    addDockWidget(Qt::BottomDockWidgetArea, find_dock_widget);
+
+    // ------ end of experiment
 
     // clicking on certain items in the tree view displays tables on the upper left and upper right
     connect(m_leftTreeView, SIGNAL(clicked(const QModelIndex&)),

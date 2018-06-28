@@ -172,6 +172,8 @@ public:
     void read_dx1_file();
     void read_text_file();
 
+    void                    createFindDockWidget(UpperTableView* p_tableview);
+
 //          Qt-style modesl
     void                    load_stem_model();
     void                    load_affix_model();

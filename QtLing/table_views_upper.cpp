@@ -166,7 +166,17 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
     resizeColumnsToContents();
 }
 
+bool UpperTableView::find_next_and_highlight(QString &s)
+{
+    qDebug() << "Signal to find next received; string to find: \"" + s + "\"";
+    return false;
+}
 
+bool UpperTableView::find_prev_and_highlight(QString &s)
+{
+    qDebug() << "Signal to find next received; string to find: \"" + s + "\"";
+    return false;
+}
 
 
 
