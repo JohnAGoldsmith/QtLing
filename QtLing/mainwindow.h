@@ -188,8 +188,8 @@ public:
     void                    load_word_model();
     void                    create_or_update_TreeModel(CLexicon* lexicon);
     //                      update tree model after gs evaluation is completed
+    void                    append_eval_results(EvaluationResults& results, QStandardItem* parent_item);
     void                    update_TreeModel_for_gs(CLexicon* lexicon);
-
     void                    update_TreeModel_for_eval(CLexicon* lexicon);
 
     void                    sort_upper_table();

@@ -3,6 +3,7 @@
 #include <QGraphicsScene>
 #include "graphics.h"
 #include <QPainter>
+#include "log2.h"
 
 
 

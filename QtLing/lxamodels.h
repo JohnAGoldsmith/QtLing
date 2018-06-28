@@ -3,7 +3,7 @@
 #include <QSortFilterProxyModel>
 #include <QStandardItemModel>
 #include "generaldefinitions.h"
-#include "goldstandard.h"
+#include "evaluation.h"
 class CWordCollection;
 class CStemCollection;
 class CSuffixCollection;

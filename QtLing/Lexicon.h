@@ -10,8 +10,7 @@
 #include <QStatusBar>
 #include "SignatureCollection.h"
 #include "Typedefs.h"
-#include "goldstandard.h"
-#include "EvalParses.h"
+#include "evaluation.h"
 
 class MainWindow;
 class CWordCollection;

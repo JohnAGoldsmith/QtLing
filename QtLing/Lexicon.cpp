@@ -16,9 +16,8 @@
 #include "SuffixCollection.h"
 #include "WordCollection.h"
 #include "Word.h"
-#include "goldstandard.h"
+#include "evaluation.h"
 #include "cparse.h"
-#include "EvalParses.h"
 
 CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag)
 {

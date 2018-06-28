@@ -42,8 +42,7 @@
 #include "lxamodels.h"
 #include "mainmenu.h"
 
-#include "goldstandard.h"
-#include "EvalParses.h"
+#include "evaluation.h"
 
 #include "string_group.h"
 

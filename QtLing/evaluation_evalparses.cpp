@@ -1,5 +1,4 @@
-#include "EvalParses.h"
-#include "goldstandard.h"
+#include "evaluation.h"
 #include <QTextStream>
 #include <QRegularExpression>
 
@@ -11,19 +10,16 @@ EvalParses::EvalParses(QString& file_name):
 EvalParses::EvalParses(const EvalParses& eval)
 {
     m_parses = eval.m_parses;
+    m_results = eval.m_results;
+    m_file_name = eval.m_file_name;
+    m_evaluated = eval.m_evaluated;
 }
 
 EvalParses& EvalParses::operator=(const EvalParses& eval)
 {
     if (&eval != this) {
         m_parses = eval.m_parses;
-        m_word_count = eval.m_word_count;
-        m_true_positive_count = eval.m_true_positive_count;
-        m_correct_count = eval.m_correct_count;
-        m_retrieved_count = eval.m_retrieved_count;
-        m_overlap_word_count = eval.m_overlap_word_count;
-        m_total_precision = eval.m_total_precision;
-        m_total_recall = eval.m_total_recall;
+        m_results = eval.m_results;
         m_file_name = eval.m_file_name;
         m_evaluated = eval.m_evaluated;
     }
@@ -51,13 +47,13 @@ bool EvalParses::read_morfessor_txt_file()
 
     QTextStream parse_input(&parse_file);
 
-    m_word_count = 0;
+    int word_count = 0;
 
     while (!parse_input.atEnd()) {
         QString line = parse_input.readLine();
         if (line[0] == "#")
             continue;
-        m_word_count++;
+        word_count++;
         QStringList tokens = line.split(QRegularExpression("\\s\\+\\s|1\\s"));
         QString str_word = tokens.join("");
         int word_len = str_word.length();
@@ -70,5 +66,6 @@ bool EvalParses::read_morfessor_txt_file()
             m_parses.add_parse_triple(str_word, stem, suffix);
         }
     }
+    m_results.set_retrieved_word_count(word_count);
     return true;
 }

@@ -1,14 +1,10 @@
-#include "parsemap.h"
+#include "evaluation.h"
 
-ParseMapHandler::ParseMapHandler(): m_word_count(0), m_parse_count(0)
-{
-    m_map = new ParseMap();
-}
+ParseMapHandler::ParseMapHandler():
+    m_map(new ParseMap()) { }
 
 ParseMapHandler::ParseMapHandler(const ParseMapHandler &parsemap):
-    m_map(parsemap.clone_map()),
-    m_word_count(parsemap.m_word_count),
-    m_parse_count(parsemap.m_parse_count) { }
+    m_map(parsemap.clone_map()) { }
 
 ParseMapHandler& ParseMapHandler::operator=(const ParseMapHandler& parsemap)
 {
@@ -18,9 +14,8 @@ ParseMapHandler& ParseMapHandler::operator=(const ParseMapHandler& parsemap)
             m_map = parsemap.clone_map();
         else
             m_map = NULL;
-        m_word_count = parsemap.m_word_count;
-        m_parse_count = parsemap.m_parse_count;
     }
+    return *this;
 }
 
 ParseMapHandler::~ParseMapHandler()
@@ -74,14 +69,14 @@ void ParseMapHandler::destroy_map()
 
 void ParseMapHandler::add_parse_triple(const QString& word, const QString& stem, const QString& affix)
 {
-    ParseMap::iterator wordIter = m_map->find(word);
-    if (wordIter == m_map->end()) {
+    ParseMap::iterator word_iter = m_map->find(word);
+    if (word_iter == m_map->end()) {
         Parse_triple_map* this_ptm = new Parse_triple_map();
         Parse_triple* this_triple = new Parse_triple(stem, affix, QString());
         this_ptm->insert(stem, this_triple);
         m_map->insert(word, this_ptm);
     } else {
         Parse_triple* this_triple = new Parse_triple(stem, affix, QString());
-        wordIter.value()->insert(stem, this_triple);
+        word_iter.value()->insert(stem, this_triple);
     }
 }

@@ -33,7 +33,6 @@ SOURCES += main.cpp\
     table_display_functions.cpp \
     table_views_lower.cpp \
     table_views_upper.cpp \
-    goldstandard.cpp \
     mainmenu.cpp \
     output.cpp \
     corpus.cpp \
@@ -43,8 +42,10 @@ SOURCES += main.cpp\
     string_group.cpp \
     cparse.cpp \
     lexicon_json.cpp \
-    EvalParses.cpp \
-    parsemap.cpp
+    evaluation.cpp \
+    evaluation_goldstandard.cpp \
+    evaluation_evalparses.cpp \
+    evaluation_parsemap.cpp
 
 HEADERS  += mainwindow.h \
     CompareFunc.h \
@@ -68,10 +69,8 @@ HEADERS  += mainwindow.h \
     mainwindow.h \
     string_group.h \
     cparse.h \
-    goldstandard.h \
     mainmenu.h \
-    EvalParses.h \
-    parsemap.h
+    evaluation.h
 
 FORMS    +=
 
