@@ -20,7 +20,7 @@ void CLexicon::compute_sig_graph_edges()
     map_string_to_word *            WordMap = m_Words->GetMap();
     map_string_to_word_ptr_iter     word_iter(*WordMap);
     simple_sig_graph_edge *          p_SigGraphEdge;
-    CSignature *                    pSig, * this_sig_ptr, *the_other_sig_ptr;
+    CSignature *                    this_sig_ptr, *the_other_sig_ptr;
     CWord*                          pWord;
     morph_t                         difference;
     stem_t                          this_stem, the_other_stem;
