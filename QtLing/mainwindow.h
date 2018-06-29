@@ -110,6 +110,7 @@ public:
     void                                    analyze_corpus();
     MainWindow();
     void                                    display_suffixes();
+    void                                    display_prefixes();
     void                                    display_suffix_signatures(CLexicon*);
     void                                    display_prefix_signatures(CLexicon*);
     void                                    display_epositive_suffix_signatures(CLexicon*);

@@ -61,6 +61,10 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         m_parent_window->display_suffixes();
         set_data_type(e_data_suffixes);
     }
+    else     if (component == "Prefixes"){
+        m_parent_window->display_prefixes();
+        set_data_type(e_data_prefixes);
+    }
     else     if (component == "Signatures"){
         m_parent_window->display_suffix_signatures(lexicon);
     }

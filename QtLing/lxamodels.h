@@ -6,6 +6,7 @@
 class CWordCollection;
 class CStemCollection;
 class CSuffixCollection;
+class CPrefixCollection;
 class CSignatureCollection;
 class CHypothesis;
 class MainWindow;
@@ -31,6 +32,7 @@ public:
     void        sort(int column_no, Qt::SortOrder order);
     void        load_words(CWordCollection*);
     void        load_stems(CStemCollection * p_stems);
+    void        load_prefixes(CPrefixCollection * p_prefixes);
     void        load_suffixes(CSuffixCollection * p_suffixes);
     void        load_signatures(CSignatureCollection * p_signatures, eSortStyle = SIG_BY_STEM_COUNT);
     void        load_parasignatures(CSignatureCollection * p_signatures);

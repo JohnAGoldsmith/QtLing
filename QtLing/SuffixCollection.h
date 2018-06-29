@@ -48,7 +48,7 @@ class CPrefixCollection
 protected:
     QMap<QString, CPrefix*> m_PrefixMap;
     CLexicon*               m_Lexicon;
-
+    CPrefix_ptr_list         m_SortedList;
 public:
     //construction/destruction
     CPrefixCollection(CLexicon* );
@@ -70,7 +70,9 @@ public:
     QMap<QString,CPrefix*>* GetMap()               { return & m_PrefixMap;         }
     QMap<QString,CPrefix*>* get_map()              { return & m_PrefixMap;         }
     void                    get_prefixes(QList<QString>*);
-    bool                    contains(suffix_t this_prefix) {return m_PrefixMap.contains(this_prefix);}
+    bool                    contains(prefix_t this_prefix) {return m_PrefixMap.contains(this_prefix);}
+    void                    sort_by_count();
+    CPrefix_ptr_list*       get_sorted_list()               {return & m_SortedList;}
 
 };
 

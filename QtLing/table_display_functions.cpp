@@ -5,7 +5,7 @@
     #include "lxamodels.h"
 
     /**
-     * @brief MainWindow::display_suffix_signatures
+     * @brief MainWindow::display_suffixes
      * This is called by a QAction.
      */
     void MainWindow::display_suffixes()
@@ -15,6 +15,16 @@
         m_tableView_upper_left->resizeColumnsToContents();
      }
 
+    /**
+     * @brief MainWindow::display_prefixes
+     * This is called by a QAction.
+     */
+    void MainWindow::display_prefixes()
+    {
+        m_tableView_upper_left->setModel(m_Models["Prefixes"]);
+        m_tableView_upper_left->set_data_type ( e_data_prefixes );
+        m_tableView_upper_left->resizeColumnsToContents();
+     }
     /**
      * @brief MainWindow::display_epositive_suffix_signatures
      */

@@ -465,6 +465,7 @@ void   CLexicon::assign_suffixes_to_stems(QString name_of_calling_function)
 
 
     m_Suffixes->sort_by_count();
+    m_Prefixes->sort_by_count();
     m_SuffixesFlag ?
         m_Signatures->calculate_stem_entropy():
         m_PrefixSignatures->calculate_stem_entropy();

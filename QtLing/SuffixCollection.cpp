@@ -59,7 +59,7 @@ void  CSuffixCollection::get_suffixes(QList<QString>* pList)
     }
 }
 
-bool count_compare(CSuffix* pSuff1, CSuffix* pSuff2){
+bool count_compare_suffixes(CSuffix* pSuff1, CSuffix* pSuff2){
     if (pSuff1->get_count() > pSuff2->get_count()) return true;
     return false;
 }
@@ -71,7 +71,7 @@ void CSuffixCollection::sort_by_count()
         suffix_iter.next();
         m_SortedList.append(suffix_iter.value());
     }
-    std::sort(m_SortedList.begin(), m_SortedList.end(), count_compare);
+    std::sort(m_SortedList.begin(), m_SortedList.end(), count_compare_suffixes);
 
 }
 
@@ -95,13 +95,13 @@ CPrefixCollection::~CPrefixCollection() {
 }
 
 
-CPrefix* CPrefixCollection::operator ^=(QString suffix)
+CPrefix* CPrefixCollection::operator ^=(QString prefix)
 {
-      return this->find_or_fail ( suffix );
+      return this->find_or_fail ( prefix );
 }
-CPrefix* CPrefixCollection::find_or_fail(QString suffix)
+CPrefix* CPrefixCollection::find_or_fail(QString prefix)
 {
-    QMap<QString,CPrefix*>::iterator prefix_iter = m_PrefixMap.find(suffix);
+    QMap<QString,CPrefix*>::iterator prefix_iter = m_PrefixMap.find(prefix);
     //map_string_to_suffix_iter suffix_iter = m_SuffixMap.find(suffix);
     if (prefix_iter == m_PrefixMap.end()){
         return NULL;
@@ -124,6 +124,7 @@ CPrefix* CPrefixCollection::find_or_add(QString prefix)
 }
 
 
+
 CPrefix* CPrefixCollection::operator << (QString prefix)
 {
     return this->find_or_add(prefix);
@@ -140,3 +141,19 @@ void  CPrefixCollection::get_prefixes(QList<QString>* pList)
         pList->append(iter.value()->get_key());
     }
 }
+bool count_compare_prefixes(CPrefix* pPrefix1, CPrefix* pPrefix2){
+    if (pPrefix1->get_count() > pPrefix2->get_count()) return true;
+    return false;
+}
+
+void CPrefixCollection::sort_by_count()
+{
+    QMapIterator<QString, CPrefix*> prefix_iter (m_PrefixMap);
+    while (prefix_iter.hasNext()){
+        prefix_iter.next();
+        m_SortedList.append(prefix_iter.value());
+    }
+    std::sort(m_SortedList.begin(), m_SortedList.end(), count_compare_prefixes);
+
+}
+

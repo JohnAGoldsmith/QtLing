@@ -59,6 +59,7 @@ MainWindow::MainWindow()
     m_Models["Suffixal stems"]              = new LxaStandardItemModel("Suffixal stems");
     m_Models["Prefixal stems"]              = new LxaStandardItemModel("Prefixal stems");
     m_Models["Suffixes"]                    = new LxaStandardItemModel("Suffixes");
+    m_Models["Prefixes"]                    = new LxaStandardItemModel("Prefixes");
     m_Models["Signatures"]                  = new LxaStandardItemModel("Signatures");
     m_Models["Signatures 2"]                = new LxaStandardItemModel("Signatures");// sorted by affix count;
     m_Models["Signatures 3"]                = new LxaStandardItemModel("Signatures");// used temporarily;
@@ -407,6 +408,10 @@ void MainWindow::load_models(CLexicon* lexicon)
 
     m_Models["Suffixes"]            ->load_suffixes(lexicon->get_suffixes());
     statusBar()->showMessage("Suffixes.");
+    QCoreApplication::processEvents();
+
+    m_Models["Prefixes"]            ->load_prefixes(lexicon->get_prefixes());
+    statusBar()->showMessage("Prefixes.");
     QCoreApplication::processEvents();
 
     m_Models["Signatures"]          ->load_signatures(lexicon->get_signatures());
