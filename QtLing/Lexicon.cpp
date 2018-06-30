@@ -426,7 +426,10 @@ void   CLexicon::assign_suffixes_to_stems(QString name_of_calling_function)
         m_Suffixes->clear();
         m_Signatures->clear();
         }
-
+    else {
+        m_Prefixes->clear();
+        m_PrefixSignatures->clear();
+    }
      // -->  Iterate through tentative signatures.    <-- //
     while (iter_sigstring_to_stems.hasNext())
     {
