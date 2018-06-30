@@ -422,6 +422,11 @@ void   CLexicon::assign_suffixes_to_stems(QString name_of_calling_function)
     m_StatusBar->showMessage("Form signatures: 3. final step.");
     QMapIterator<sigstring_t, stem_list*> iter_sigstring_to_stems ( temp_signatures_to_stems);
 
+    if (m_SuffixesFlag){
+        m_Suffixes->clear();
+        m_Signatures->clear();
+        }
+
      // -->  Iterate through tentative signatures.    <-- //
     while (iter_sigstring_to_stems.hasNext())
     {

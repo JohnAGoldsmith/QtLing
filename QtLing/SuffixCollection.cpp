@@ -12,6 +12,10 @@ CSuffixCollection::~CSuffixCollection() {
 
 }
 
+void CSuffixCollection::clear(){
+    m_SuffixMap.clear();
+    m_SortedList.clear();
+}
 
 CSuffix* CSuffixCollection::operator ^=(QString suffix)
 {
@@ -93,7 +97,10 @@ CPrefixCollection::CPrefixCollection(CLexicon* lexicon)
 CPrefixCollection::~CPrefixCollection() {
 
 }
-
+void CPrefixCollection::clear(){
+    m_PrefixMap.clear();
+    m_SortedList.clear();
+}
 
 CPrefix* CPrefixCollection::operator ^=(QString prefix)
 {

@@ -41,6 +41,7 @@ public:
     bool                    contains(suffix_t this_suffix)  {return m_SuffixMap.contains(this_suffix);}
     void                    sort_by_count();
     CSuffix_ptr_list*       get_sorted_list()               {return & m_SortedList;}
+    void                    clear();
 };
 
 class CPrefixCollection
@@ -73,6 +74,7 @@ public:
     bool                    contains(prefix_t this_prefix) {return m_PrefixMap.contains(this_prefix);}
     void                    sort_by_count();
     CPrefix_ptr_list*       get_sorted_list()               {return & m_SortedList;}
+    void                    clear();
 
 };
 
