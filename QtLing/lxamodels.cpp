@@ -134,15 +134,26 @@ void LxaStandardItemModel::load_prefixes(CPrefixCollection * p_prefixes)
 {
     clear();
     //map_string_to_suffix_ptr_iter suffix_iter(*p_suffixes->get_map());
+
+    double totalcount = 0;
+    CPrefix_ptr_list_iterator prefix_iter1(*p_prefixes->get_sorted_list());
+    while (prefix_iter1.hasNext())
+    {
+        CPrefix* pPrefix = prefix_iter1.next();
+        totalcount += pPrefix->get_count();
+    }
+
     CPrefix_ptr_list_iterator prefix_iter(*p_prefixes->get_sorted_list());
     while (prefix_iter.hasNext())
     {
         CPrefix* pPrefix = prefix_iter.next();
         QStandardItem *item = new QStandardItem(pPrefix->GetPrefix());
         QStandardItem *item2 = new QStandardItem(QString::number(pPrefix->get_count()));
+        QStandardItem *item3 = new QStandardItem(QString::number(pPrefix->get_count()/totalcount));
         QList<QStandardItem*> item_list;
         item_list.append(item);
         item_list.append(item2);
+        item_list.append(item3);
         appendRow(item_list);
     }
 }
