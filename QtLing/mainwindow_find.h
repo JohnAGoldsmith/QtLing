@@ -40,10 +40,18 @@ class FindDialog : public QWidget
     QLineEdit*          m_line_edit;
     QPushButton*        m_button_find_next;
     QPushButton*        m_button_find_prev;
+    QPushButton*        m_clear_search;
     QPushButton*        m_close_button;
+
+    QLabel*             m_items_found_label;
+    bool                m_items_found_label_displayed;
+    int                 m_left_items_found;
+    int                 m_right_items_found;
 
 private:
     void                connect_button_signals();
+    void                connect_left_signals();
+    void                connect_right_signals();
     void                connect_search_signals();
 
 public:
@@ -52,9 +60,11 @@ public:
 signals:
     void                search_for_next(QString& s);
     void                search_for_prev(QString& s);
+    void                clear_search();
 public slots:
     void                do_next_search();
     void                do_prev_search();
-
+    void                item_found(int n);
+    void                do_clear_search();
 
 };
