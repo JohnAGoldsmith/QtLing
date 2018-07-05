@@ -38,7 +38,8 @@ class LxaStandardItemModel;
 class UpperTableView;
 class LowerTableView;
 class LeftSideTreeView;
-class MainMenu;
+class MainMenuBar;
+class FindDockWidget;
 
 QT_END_NAMESPACE
 
@@ -76,8 +77,7 @@ class MainWindow : public QMainWindow
     friend class                            lxaWindow;
     friend class                            CLexicon;
     friend class                            MainMenu;
-
-    MainMenu*                               m_main_menu;
+    friend class                            MainMenuBar;
 
     QList<CLexicon*>                        m_lexicon_list;
     CLexicon*                               m_my_lexicon;
@@ -107,6 +107,28 @@ class MainWindow : public QMainWindow
     QGroupBox *                             horizontalGroupBox;
     QGroupBox *                             verticalGroupBox;
     QString                                 curFile;
+    FindDockWidget *                        m_find_dock_widget;
+
+    // ACTIONS, see mainwindow_actions.cpp
+    MainMenuBar *                           m_main_menu_bar;
+    QAction *                               openAct;
+    QAction *                               saveAsAct;
+    QAction *                               exitAct;
+
+    QAction *                               cutAct;
+    QAction *                               copyAct;
+    QAction *                               pasteAct;
+    QAction *                               findAct;
+    QAction *                               findLeftAct;
+    QAction *                               findRightAct;
+
+    QAction *                               aboutAct;
+    QAction *                               aboutQtAct;
+
+    QAction *                               importAct;
+    QAction *                               evalAct;
+    QAction *                               importMorfessorAct;
+    QAction *                               evalMorfessorAct;
 
 
 public:
@@ -126,8 +148,6 @@ public:
     void                                    load_models(CLexicon* lexicon);
     void                                    read_corpus();
    // void                                    set_up_graphics_scene_and_view();
-
-
 
 protected:
     void closeEvent(QCloseEvent *event) override;
@@ -152,6 +172,9 @@ private slots:
 
     void                                    read_stems_and_words();
     void                                    write_stems_and_words();
+
+    // for find functionality
+    void                                    launch_find_dock();
 
     // test for gold standard
     void                                    gs_read_and_parse_xml();

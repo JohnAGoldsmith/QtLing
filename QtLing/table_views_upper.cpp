@@ -14,11 +14,14 @@ UpperTableView::UpperTableView (MainWindow* window, eSortStyle this_sort_style)
 {
        m_parent_window = window;
        m_signature_sort_style = this_sort_style;
-       m_gold_standard_display_order = 0;
+
        QFont sansFont("Ariel", 18);
        setFont(sansFont);
        setEditTriggers(QAbstractItemView::NoEditTriggers);
+       setSortingEnabled(true);
+
        m_row_recently_selected = -2;
+       m_gold_standard_display_order = 0;
 }
 
 
@@ -45,6 +48,7 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
 {
     CLexicon* lexicon = m_parent_window->get_lexicon();
     QString component;
+    eDataType curr_data_type;
 
     // -- used for displaying gold standard information
     UpperTableView* left_table = m_parent_window->get_upper_left_tableview();
@@ -68,15 +72,16 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
      || component == "Retrieved Parses"
      || component == "Gold Standard Words")) {
         if (component == "True Positive Parses") {
-            set_data_type(e_data_gs_true_positive_parses);
+            curr_data_type = e_data_gs_true_positive_parses;
         } else if (component == "Retrieved Parses") {
-            set_data_type(e_data_gs_retrieved_parses);
+            curr_data_type = e_data_gs_retrieved_parses;
         } else if (component == "Gold Standard Parses") {
-            set_data_type(e_data_gs_gold_standard_parses);
+            curr_data_type = e_data_gs_gold_standard_parses;
         } else if (component == "Gold Standard Words") {
             component = "Gold Standard Parses";
-            set_data_type(e_data_gs_gold_standard_parses);
+            curr_data_type = e_data_gs_gold_standard_parses;
         }
+        set_data_type(curr_data_type);
 
         if (left_order == 0 && right_order == 0) {
             setModel(m_parent_window->m_Models[component]);
@@ -162,9 +167,12 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         // add component 10
     }
 
-
-
     resizeColumnsToContents();
+
+    // Steps for making a sorted proxy model:
+    // Using the model that is already set as the base model for a QSortFilterProxyModel
+    // Reset proxy model as model of TableView
+
 }
 
 bool rows_less_than (const QStandardItem* item1, const QStandardItem* item2)

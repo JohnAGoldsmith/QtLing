@@ -45,8 +45,9 @@ SOURCES += main.cpp\
     evaluation_goldstandard.cpp \
     evaluation_evalparses.cpp \
     evaluation_parsemap.cpp \
-    mainwindow_menu.cpp \
-    mainwindow_find.cpp
+    mainwindow_find.cpp \
+    mainwindow_menubar.cpp \
+    mainwindow_actions.cpp
 
 HEADERS  += mainwindow.h \
     CompareFunc.h \
@@ -71,8 +72,8 @@ HEADERS  += mainwindow.h \
     string_group.h \
     cparse.h \
     evaluation.h \
-    mainwindow_menu.h \
-    mainwindow_find.h
+    mainwindow_find.h \
+    mainwindow_menubar.h
 
 FORMS    +=
 

@@ -40,9 +40,8 @@
 #include "graphics.h"
 #include "generaldefinitions.h"
 #include "lxamodels.h"
-#include "mainwindow_menu.h"
 #include "mainwindow_find.h"
-
+#include "mainwindow_menubar.h"
 #include "evaluation.h"
 #include "string_group.h"
 
@@ -128,6 +127,11 @@ MainWindow::MainWindow()
     statusBar()->addPermanentWidget(m_ProgressBar);
     get_lexicon()->set_progress_bar (m_ProgressBar);
 
+    // Set dock-widget for find functionality, but not showing it yet
+    m_find_dock_widget = new FindDockWidget(this);
+    addDockWidget(Qt::BottomDockWidgetArea, m_find_dock_widget);
+    m_find_dock_widget->setVisible(false);
+
     createActions(); // render the main menu
     createStatusBar();
     readSettings();
@@ -139,12 +143,6 @@ MainWindow::MainWindow()
 
     setCurrentFile(QString());
     setUnifiedTitleAndToolBarOnMac(true);
-
-    // ------- experiment to see QDockWidget
-    FindDockWidget* find_dock_widget = new FindDockWidget(this);
-    addDockWidget(Qt::BottomDockWidgetArea, find_dock_widget);
-
-    // ------ end of experiment
 
     // clicking on certain items in the tree view displays tables on the upper left and upper right
     connect(m_leftTreeView, SIGNAL(clicked(const QModelIndex&)),
@@ -166,9 +164,9 @@ MainWindow::MainWindow()
             m_tableView_upper_right,SLOT(display_this_affixes_signatures(const QModelIndex &  )));
 
     // These two signals allow the "Evaluate" option in main window to be enabled
-    connect(this, SIGNAL(xml_parsed()), m_main_menu, SLOT(gs_ready()));
-    connect(this, SIGNAL(lexicon_ready()), m_main_menu, SLOT(lexicon_ready()));
-    connect(this, SIGNAL(morfessor_parsed()), m_main_menu, SLOT(eval_parse_ready()));
+    connect(this, SIGNAL(xml_parsed()), m_main_menu_bar, SLOT(gs_ready()));
+    connect(this, SIGNAL(lexicon_ready()), m_main_menu_bar, SLOT(lexicon_ready()));
+    connect(this, SIGNAL(morfessor_parsed()), m_main_menu_bar, SLOT(eval_parse_ready()));
 }
 
 void MainWindow::keyPressEvent(QKeyEvent* ke)
@@ -625,6 +623,18 @@ void MainWindow::print_prefix_signatures()
      file.close();
 }
 
+void MainWindow::launch_find_dock()
+{
+    FindDialog* find_dialog = m_find_dock_widget->get_child_dialog();
+    if (sender() == findLeftAct)
+        find_dialog->set_search_selection(QString("Upper-left table"));
+    else if (sender() == findRightAct)
+        find_dialog->set_search_selection(QString("Upper-right table"));
+    else
+        find_dialog->set_search_selection(QString("Both upper tables"));
+    m_find_dock_widget->setVisible(true);
+}
+
 // experiment for gold standard
 void MainWindow::gs_read_and_parse_xml()
 {
@@ -721,13 +731,6 @@ void MainWindow::gs_evaluate_morfessor()
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void MainWindow::createActions()
-{
-    /* Removed code that was originally in this part to the
-     * constructor function of a new class called MainMenu
-     */
-    m_main_menu = new MainMenu(this);
-}
 void MainWindow::createStatusBar()
 {
     statusBar()->showMessage(tr("Ready"));

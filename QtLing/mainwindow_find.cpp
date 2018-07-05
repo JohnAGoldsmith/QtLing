@@ -3,56 +3,64 @@
 
 #include <QDockWidget>
 #include <QLayout>
+#include <QComboBox>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
 #include <QIcon>
 #include <QDebug>
 
-FindDockWidget::FindDockWidget(MainWindow* p_main_window, UpperTableView* p_tableview_searched)
+#include "mainwindow.h"
+
+FindDockWidget::FindDockWidget(MainWindow* p_main_window)
 {
     setAllowedAreas(Qt::BottomDockWidgetArea);
-    setFeatures(QDockWidget::DockWidgetMovable |
-                QDockWidget::DockWidgetFloatable |
+    setFeatures(QDockWidget::DockWidgetClosable |
                 QDockWidget::DockWidgetVerticalTitleBar);
-    m_child_dialog = new FindDialog(p_main_window, p_tableview_searched);
+    m_parent_window = p_main_window;
+    m_child_dialog = new FindDialog(p_main_window);
 
     connect(m_child_dialog->m_close_button, SIGNAL(clicked(bool)),
             this, SLOT(close()));
     setWidget(m_child_dialog);
 }
 
-FindDialog::FindDialog(MainWindow *p_main_window, UpperTableView *p_tableview_searched):
-    m_tableview_searched(p_tableview_searched),
+void FindDockWidget::closeEvent(QCloseEvent *event)
+{
+    m_child_dialog->do_clear_search();
+    event->accept();
+}
+
+FindDialog::FindDialog(MainWindow *p_main_window):
     m_search_range(FindDialog::e_tableview_upper_all),
     m_mainwindow(p_main_window),
-    m_items_found_label(NULL),
-    m_items_found_label_displayed(false)
+    m_items_found_label(NULL)
 {
-    if (p_tableview_searched == p_main_window->get_upper_left_tableview()) {
-        m_search_range = FindDialog::e_tableview_upper_left;
-    } else if (p_tableview_searched == p_main_window->get_upper_right_tableview()) {
-        m_search_range = FindDialog::e_tableview_upper_right;
-    } else {
-        m_search_range = FindDialog::e_tableview_upper_all;
-    }
-
     m_layout = new QHBoxLayout(this);
 
-    m_label = new QLabel(this);
+    m_search_label = new QLabel(tr("Find in:"), this);
+
+    m_search_selection = new QComboBox(this);
+    m_search_selection->addItem(tr("Both upper tables"));
+    m_search_selection->addItem(tr("Upper-left table"));
+    m_search_selection->addItem(tr("Upper-right table"));
+
+    int search_sel_init_index;
     switch (m_search_range) {
         case FindDialog::e_tableview_upper_all:
-            m_label->setText(tr("Find in both upper tables:")); break;
+            search_sel_init_index = 0; break;
         case FindDialog::e_tableview_upper_left:
-            m_label->setText(tr("Find in upper left table:")); break;
+            search_sel_init_index = 1; break;
         case FindDialog::e_tableview_upper_right:
-            m_label->setText(tr("Find in upper right table:")); break;
+            search_sel_init_index = 2; break;
         default:
             qDebug() << "mainwindow_find.cpp: FindDialog() - invalid search range!";
     }
 
     m_line_edit = new QLineEdit(this);
     m_line_edit->setMaximumWidth(300);
+
+    m_items_found_label = new QLabel(this);
 
     m_button_find_next = new QPushButton(tr("Find Next"));
 
@@ -67,8 +75,11 @@ FindDialog::FindDialog(MainWindow *p_main_window, UpperTableView *p_tableview_se
     m_close_button = new QPushButton(this);
     m_close_button->setIcon(close_icon);
 
-    m_layout->addWidget(m_label);
+    m_layout->addWidget(m_search_label);
+    m_layout->addWidget(m_search_selection);
     m_layout->addWidget(m_line_edit);
+    m_layout->addWidget(m_items_found_label);
+    m_items_found_label->hide();
     m_layout->addWidget(m_button_find_next);
     m_layout->addWidget(m_button_find_prev);
     m_layout->addWidget(m_clear_search);
@@ -82,108 +93,136 @@ FindDialog::FindDialog(MainWindow *p_main_window, UpperTableView *p_tableview_se
 
 void FindDialog::connect_button_signals()
 {
+    connect(m_search_selection, SIGNAL(currentIndexChanged(QString)), this, SLOT(change_search_range(QString)));
     connect(m_line_edit, SIGNAL(returnPressed()), this, SLOT(do_next_search()));
     connect(m_button_find_next, SIGNAL(clicked(bool)), this, SLOT(do_next_search()));
     connect(m_button_find_prev, SIGNAL(clicked(bool)), this, SLOT(do_prev_search()));
     connect(m_clear_search, SIGNAL(clicked(bool)), this, SLOT(do_clear_search()));
+    connect(m_line_edit, SIGNAL(textChanged(QString)), this, SLOT(do_clear_search()));
 }
 
-void FindDialog::connect_left_signals()
+void FindDialog::connect_search_signals()
 {
-    connect(this, SIGNAL(search_for_next(QString&)),
+    connect(this, SIGNAL(search_for_left_next(QString&)),
             m_mainwindow->get_upper_left_tableview(),
             SLOT(find_next_and_highlight(QString&)));
-    connect(this, SIGNAL(search_for_prev(QString&)),
+    connect(this, SIGNAL(search_for_left_prev(QString&)),
             m_mainwindow->get_upper_left_tableview(),
             SLOT(find_prev_and_highlight(QString&)));
     connect(m_mainwindow->get_upper_left_tableview(),
             SIGNAL(num_items_found(int)),
             this, SLOT(item_found(int)));
-    connect(this, SIGNAL(clear_search()),
+    connect(this, SIGNAL(clear_left_search()),
             m_mainwindow->get_upper_left_tableview(),
             SLOT(clear_search()));
-}
 
-void FindDialog::connect_right_signals()
-{
-    connect(this, SIGNAL(search_for_next(QString&)),
+    connect(this, SIGNAL(search_for_right_next(QString&)),
             m_mainwindow->get_upper_right_tableview(),
             SLOT(find_next_and_highlight(QString&)));
-    connect(this, SIGNAL(search_for_prev(QString&)),
+    connect(this, SIGNAL(search_for_right_prev(QString&)),
             m_mainwindow->get_upper_right_tableview(),
             SLOT(find_prev_and_highlight(QString&)));
     connect(m_mainwindow->get_upper_right_tableview(),
             SIGNAL(num_items_found(int)),
             this, SLOT(item_found(int)));
-    connect(this, SIGNAL(clear_search()),
+    connect(this, SIGNAL(clear_right_search()),
             m_mainwindow->get_upper_right_tableview(),
             SLOT(clear_search()));
 }
 
-void FindDialog::connect_search_signals()
+void FindDialog::change_search_range(QString s)
 {
-    switch (m_search_range) {
-        case e_tableview_upper_all:
-            connect_right_signals();
-        case e_tableview_upper_left:
-            connect_left_signals();
-            break;
-        case e_tableview_upper_right:
-            connect_right_signals();
-            break;
-        default:
-        qDebug() << "mainwindow_find.cpp: connect_signals() - invalid search range!";
-    }
+    // qDebug() << "FindDialog::change_search_range: received change search range signal - " << s;
+    if (s == "Both upper tables")
+        m_search_range = e_tableview_upper_all;
+    else if (s == "Upper-left table")
+        m_search_range = e_tableview_upper_left;
+    else if (s == "Upper-right table")
+        m_search_range = e_tableview_upper_right;
+    else
+        qDebug() << "FindDialog::change_search_range: wrong text in combobox!";
 }
 
 void FindDialog::do_next_search()
 {
     QString search_text = m_line_edit->text();
-    emit search_for_next(search_text);
+    switch (m_search_range) {
+        case e_tableview_upper_all:
+            emit search_for_right_next(search_text);
+        case e_tableview_upper_left:
+            emit search_for_left_next(search_text);
+            break;
+        case e_tableview_upper_right:
+            emit search_for_right_next(search_text);
+            break;
+        default:
+        qDebug() << "mainwindow_find.cpp: connect_signals() - invalid search range!";
+    }
+
     //qDebug() << "FindDialog: search_for_next(" + search_text + ") emitted!";
 }
 
 void FindDialog::do_prev_search()
 {
     QString search_text = m_line_edit->text();
-    emit search_for_prev(search_text);
+    switch (m_search_range) {
+        case e_tableview_upper_all:
+            emit search_for_right_prev(search_text);
+        case e_tableview_upper_left:
+            emit search_for_left_prev(search_text);
+            break;
+        case e_tableview_upper_right:
+            emit search_for_right_prev(search_text);
+            break;
+        default:
+        qDebug() << "mainwindow_find.cpp: connect_signals() - invalid search range!";
+    }
     //qDebug() << "FindDialog: search_for_prev(" + search_text + ") emitted!";
 }
 
 void FindDialog::do_clear_search()
 {
-    if (m_items_found_label != NULL) {
-        m_layout->removeWidget(m_items_found_label);
-        m_items_found_label->hide();
-        m_items_found_label_displayed = false;
+    m_items_found_label->hide();
+    if (sender() == m_clear_search) {
+        m_line_edit->setText(QString());
+        emit clear_left_search();
+        emit clear_right_search();
+    } else if (sender() == m_line_edit) {
+        switch (m_search_range) {
+            case e_tableview_upper_all:
+                emit clear_right_search();
+            case e_tableview_upper_left:
+                emit clear_left_search();
+                break;
+            case e_tableview_upper_right:
+                emit clear_right_search();
+                break;
+            default:
+            qDebug() << "mainwindow_find.cpp:do_clear_search() - invalid search range!";
+        }
     }
-    m_line_edit->setText(QString());
-    emit clear_search();
 }
 
 void FindDialog::item_found(int n)
 {
-    qDebug() << "item_found slot recieved signal with int n =" << n;
+    //qDebug() << "item_found slot recieved signal with int n =" << n;
     if (sender() == m_mainwindow->get_upper_left_tableview())
         m_left_items_found = n;
     if (sender() == m_mainwindow->get_upper_right_tableview())
         m_right_items_found = n;
 
-    if (m_items_found_label == NULL)
-        m_items_found_label = new QLabel(this);
-
     QString label;
     switch (m_search_range) {
         case e_tableview_upper_all:
-            label = QString("Occurrences found: Left - %1, Right - %2")
+            label = QString("Occurrences found: [Left] %1, [Right] %2")
                     .arg(m_left_items_found).arg(m_right_items_found);
             break;
         case e_tableview_upper_left:
-            label = QString("Occurrences found: Left - %1")
+            label = QString("Occurrences found: [Left] %1")
                     .arg(m_left_items_found);
             break;
         case e_tableview_upper_right:
-            label = QString("Occurrences found: Right - %2")
+            label = QString("Occurrences found: [Right] %2")
                     .arg(m_right_items_found);
             break;
         default:
@@ -191,10 +230,7 @@ void FindDialog::item_found(int n)
     }
 
     m_items_found_label->setText(label);
-
-    if (!m_items_found_label_displayed)
-        m_layout->insertWidget(2, m_items_found_label);
-    m_items_found_label_displayed = true;
+    m_items_found_label->show();
 
 }
 

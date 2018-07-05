@@ -48,6 +48,7 @@ public:
     void        load_parsemap_from_gs(GoldStandard* p_gs, ParseMapHandler parsemap, const QString &type);
 };
 
+
 class LxaSortFilterProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT;
