@@ -164,7 +164,21 @@ MainWindow::MainWindow()
     connect(m_tableView_upper_left,SIGNAL(clicked(const QModelIndex & )),
             m_tableView_upper_right,SLOT(display_this_affixes_signatures(const QModelIndex &  )));
 
-    // These two signals allow the "Evaluate" option in main window to be enabled
+    /* Explanation for these signal-slot connections:
+     * A signal is sent to the m_main_menu_bar object after the following
+     * events are completed:
+     * 1. lexicon_ready(): A lexicon is read into linguistica and analysed
+     *    by pressing ctrl_S or ctrl_P (see MainWindow::do_crab())
+     * 2. xml_parsed(): An Alchemist XML file is read into linguistica and
+     *    successfully parsed (see MainWindow::gs_read_and_parse_xml())
+     * 3. morfessor_parsed(): A Morfessor txt file that contains morphological
+     *    cuts of words is read and parsed (see MainWindow::read_morfessor_txt_file())
+     * Then menu bar records whether it has received these signals and will
+     * change the availability of certain QActions depending on whether it has
+     * received the signals, e.g. for the "Evaluate current lexicon using Gold
+     * Standard" action to be enabled, the menu bar must have receive both the
+     * "lexicon_ready" signal and the "xml_parsed" signal.
+     */
     connect(this, SIGNAL(xml_parsed()), m_main_menu_bar, SLOT(gs_ready()));
     connect(this, SIGNAL(lexicon_ready()), m_main_menu_bar, SLOT(lexicon_ready()));
     connect(this, SIGNAL(morfessor_parsed()), m_main_menu_bar, SLOT(eval_parse_ready()));
@@ -641,7 +655,10 @@ void MainWindow::launch_find_dock()
     m_find_dock_widget->setVisible(true);
 }
 
-// experiment for gold standard
+/*!
+ * \brief Opens up a dialogue to get directory for a Gold Standard xml file.
+ * Parses that file and stores parse results in a GoldStandard object.
+ */
 void MainWindow::gs_read_and_parse_xml()
 {
     CLexicon* lexicon = get_lexicon();
@@ -665,15 +682,22 @@ void MainWindow::gs_read_and_parse_xml()
     }
 }
 
-void MainWindow::gs_evaluate() // move to lexicon
+/*!
+ * \brief Does evaluation on the current lexicon with a loaded and parsed
+ * Gold Standard. Loads resulting parses and data from the evaluation into
+ * models to be shown in the TableViews and TreeView.
+ */
+void MainWindow::gs_evaluate()
 {
     CLexicon* lexicon = get_lexicon();
     bool eval_succeeded = lexicon->do_gs_evaluation();
     if (eval_succeeded) {
         GoldStandard* p_gs = lexicon->get_goldstandard();
+        /*
         qDebug() << 616 << "Mainwindow.cpp: evaluation succeeded\n" ;
         qDebug() << "Precision: " << p_gs->get_total_precision()
                  << "Recall: " << p_gs->get_total_recall();
+        */
         // create new model
         //m_Models["Gold Standard Words"] = new LxaStandardItemModel("Gold Standard Words");
         m_Models["True Positive Parses"] = new LxaStandardItemModel("True Positive Parses");
@@ -693,6 +717,10 @@ void MainWindow::gs_evaluate() // move to lexicon
     }
 }
 
+/*!
+ * \brief Opens up a dialogue to get directory for a Morfessor output txt file.
+ * Parses that txt file and stores parse results in an EvalParses object.
+ */
 void MainWindow::read_morfessor_txt_file()
 {
     CLexicon* lexicon = get_lexicon();
@@ -716,6 +744,11 @@ void MainWindow::read_morfessor_txt_file()
     }
 }
 
+/*!
+ * \brief Evaluates the morphological parses by Morfessor with the currently
+ * loaded Gold Standard. Loads resulting parses and data from the evaluation into
+ * models to be shown in the TreeView.
+ */
 void MainWindow::gs_evaluate_morfessor()
 {
     CLexicon* lexicon = get_lexicon();

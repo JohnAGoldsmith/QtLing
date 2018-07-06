@@ -47,7 +47,7 @@ SOURCES += main.cpp\
     evaluation_parsemap.cpp \
     mainwindow_find.cpp \
     mainwindow_menubar.cpp \
-    mainwindow_actions.cpp
+    mainwindow_actions.cpp \
     stringalignment.cpp \
     allosignatures.cpp
 
@@ -75,7 +75,7 @@ HEADERS  += mainwindow.h \
     cparse.h \
     evaluation.h \
     mainwindow_find.h \
-    mainwindow_menubar.h
+    mainwindow_menubar.h \
     stringalignment.h \
     allosignatures.h
 

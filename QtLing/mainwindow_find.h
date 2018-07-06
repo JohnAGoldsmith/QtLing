@@ -13,6 +13,12 @@ class FindDialog;
 class MainWindow;
 class QCloseEvent;
 
+/*!
+ * \brief The FindDockWidget class. A wrapper object that contains a FindDialog.
+ *
+ * A QDockWidget is a small window-like interface that can be attached to the
+ * margins of a QMainWindow object.
+ */
 class FindDockWidget : public QDockWidget
 {
     Q_OBJECT
@@ -28,6 +34,16 @@ public slots:
 
 #endif // MAINWINDOW_FINDDOCKWIDGET_H
 
+/*!
+ * \brief The FindDialog class. The main widget for implementing the search
+ * functionality.
+ *
+ * The FindDialog object detects if its interactive components (buttons, etc.)
+ * are activated through detecting signals from them to the FindDialog object's
+ * slots. These slots then send signals to the UpperTableView objects so that
+ * the TableView objects change their appearance in accordance with the search
+ * request.
+ */
 class FindDialog : public QWidget
 {
     Q_OBJECT

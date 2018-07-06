@@ -1,6 +1,16 @@
 #ifndef EVALUATION_H
 #define EVALUATION_H
 
+/* evaluation.h:
+ * Contains definitions for the following classes, used for implementing
+ * evaluation functionality for a gold standard in Linguistica.
+ *
+ * EvaluationResults    evaluation.cpp
+ * ParseMapHandler      evaluation_parsemap.cpp
+ * GoldStandard         evaluation_goldstandard.cpp
+ * EvalParses           evaluation_evalparses.cpp
+ */
+
 #include "Word.h"
 class MainWindow;
 class Lexicon;
@@ -9,7 +19,7 @@ class EvalParses;
 
 
 /*!
- * \brief A class that stores the output results of evaluation using
+ * \brief A object that stores the numerical output results of evaluation using
  * a Gold Standard.
  *
  * Source code for functions in evaluation.cpp.
@@ -53,7 +63,11 @@ public:
 /*!
  * \brief A handler class for `QMap<QString, QMap<QString, Parse_triple*>*>`.
  *
- * Source code for functions in evaluation_parsemap.cpp.
+ * The handler class is a "smart pointer" to the QMap structure. When a
+ * ParseMapHandler object is instantiated, space is automatically allocated
+ * for the QMap, similarly when this object is deleted, or copied, the data
+ * structure pointed to by the Handler is deleted or deep-copied accordingly.
+ * Source code for this class is in evaluation_parsemap.cpp.
  */
 class ParseMapHandler
 {

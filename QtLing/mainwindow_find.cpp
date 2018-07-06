@@ -240,14 +240,3 @@ void FindDialog::item_found(int n)
     m_label_items_found->show();
 
 }
-
-/*
-   if (!m_left_item_not_found && !m_right_item_not_found) {
-        if (m_item_not_found_label != NULL) {
-            m_layout->removeWidget(m_item_not_found_label);
-            m_item_not_found_label->hide();
-            m_item_not_found_label = NULL;
-            m_item_not_found_label_displayed = false;
-        }
-    }
-    */

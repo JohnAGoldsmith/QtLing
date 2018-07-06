@@ -5,6 +5,17 @@
 #include <QDebug>
 #include "mainwindow_menubar.h"
 
+/* mainwindow_actions.cpp:
+ * contains the createActions() function that is used in the constructor
+ * function of the MainWindow object. Initiates QActions such as open, saveAs,
+ * evaluation, etc. Pointers to these actions are stored as member variables in
+ * the MainWindow class (see mainwindow.h:114-131) so that these actions may
+ * be used in different parts of the main window, including the menubar and
+ * toolbar. The implementation of the menubar is separated from this part of
+ * code to a newly defined class called MainMenuBar (see
+ * mainwindow_menubar.h/cpp).
+ */
+
 void MainWindow::createActions()
 {
     /* --- FILE --- */
