@@ -15,13 +15,14 @@ class UpperTableView : public QTableView
 
     int                     m_gold_standard_display_order;
 
-    // for search functionality
+    // for search functionality //
     int                     find_all_strings(const QString& str, bool exact_match);
     void                    clear_items_found();
     QList<QStandardItem*>   m_items_found;
     int                     m_row_recently_selected;
 signals:
     void                    num_items_found(int);
+    // for search functionality //
 
 
 public:
@@ -44,6 +45,7 @@ public slots:
     bool                    find_next_and_highlight(QString& s);
     void                    clear_search();
     // for search functionality //
+
     signals:
     void                    please_display_this_signature(QString sig);
 };
