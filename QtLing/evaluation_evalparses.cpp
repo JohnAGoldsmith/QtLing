@@ -54,6 +54,7 @@ bool EvalParses::read_morfessor_txt_file()
         if (line[0] == "#")
             continue;
         word_count++;
+        line.remove(QRegularExpression("\\/[A-Z]+"));
         QStringList tokens = line.split(QRegularExpression("\\s\\+\\s|1\\s"));
         QString str_word = tokens.join("");
         int word_len = str_word.length();
