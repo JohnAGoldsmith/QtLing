@@ -34,9 +34,9 @@ void CLexicon::Crab_2()
         m_Signatures->calculate_stem_entropy():
         m_PrefixSignatures->calculate_stem_entropy();
 
-    compute_sig_graph_edges();
-    compute_sig_graph_edge_map();
-    generate_hypotheses();
+   compute_sig_graph_edges();
+   compute_sig_graph_edge_map();
+   generate_hypotheses();
 
 
     qDebug() << "finished crab 2.";
@@ -278,7 +278,7 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
     //sig_string                  this_signature_string;
     CStem*                      pStem;
     CWord*                      pWord;
-    CSignature*                 p_proven_sig;
+    //CSignature*                 p_proven_sig;
     affix_list                  affixes_of_residual_sig;
     CSuffix_ptr_list            this_residual_sig_suffix_pointer_list;
     CSignatureCollection*       signatures;
@@ -317,10 +317,6 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
         affixes_of_residual_sig.clear();
         m_ProgressBar->setValue(protostem_count++);
         stem_t this_stem = this_protostem->get_stem();
-        qDebug() << 308 << this_stem;
-        if (this_stem=="toto"){
-               int z = 1;
-        }
         int stem_length = this_stem.length();
 
         for (int wordno= this_protostem->get_start_word(); wordno <= this_protostem->get_end_word(); wordno++){
@@ -353,7 +349,6 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
             }
         }
         if (best_affix_list.size() == 0) {
-            //qDebug() << this_stem << affixes_of_residual_sig << "\n";
             continue;
         }
 

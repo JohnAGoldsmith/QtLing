@@ -550,6 +550,15 @@ void lxa_graphics_scene::create_and_place_signatures()
 
                 break;
            }
+            case 13:{
+                thirteenagon * this_thirteenagon  = new thirteenagon (pSig);
+                addItem(this_thirteenagon);
+                this_thirteenagon->setPos(x,y);
+                m_map_from_sig_to_pgraphsig[pSig]=this_thirteenagon;
+                m_graphic_signature_lattice[row]->append(this_thirteenagon);
+
+                break;
+           }
             case 14:{
                 fourteenagon * this_fourteenagon  = new fourteenagon (pSig);
                 addItem(this_fourteenagon);

@@ -48,6 +48,8 @@ SOURCES += main.cpp\
     mainwindow_find.cpp \
     mainwindow_menubar.cpp \
     mainwindow_actions.cpp
+    stringalignment.cpp \
+    allosignatures.cpp
 
 HEADERS  += mainwindow.h \
     CompareFunc.h \
@@ -74,6 +76,8 @@ HEADERS  += mainwindow.h \
     evaluation.h \
     mainwindow_find.h \
     mainwindow_menubar.h
+    stringalignment.h \
+    allosignatures.h
 
 FORMS    +=
 

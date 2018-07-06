@@ -131,6 +131,33 @@ void LxaStandardItemModel::load_suffixes(CSuffixCollection * p_suffixes)
         appendRow(item_list);
     }
 }
+void LxaStandardItemModel::load_prefixes(CPrefixCollection * p_prefixes)
+{
+    clear();
+    //map_string_to_suffix_ptr_iter suffix_iter(*p_suffixes->get_map());
+
+    double totalcount = 0;
+    CPrefix_ptr_list_iterator prefix_iter1(*p_prefixes->get_sorted_list());
+    while (prefix_iter1.hasNext())
+    {
+        CPrefix* pPrefix = prefix_iter1.next();
+        totalcount += pPrefix->get_count();
+    }
+
+    CPrefix_ptr_list_iterator prefix_iter(*p_prefixes->get_sorted_list());
+    while (prefix_iter.hasNext())
+    {
+        CPrefix* pPrefix = prefix_iter.next();
+        QStandardItem *item = new QStandardItem(pPrefix->GetPrefix());
+        QStandardItem *item2 = new QStandardItem(QString::number(pPrefix->get_count()));
+        QStandardItem *item3 = new QStandardItem(QString::number(pPrefix->get_count()/totalcount));
+        QList<QStandardItem*> item_list;
+        item_list.append(item);
+        item_list.append(item2);
+        item_list.append(item3);
+        appendRow(item_list);
+    }
+}
 void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures, eSortStyle this_sort_style)
 {
     clear();
@@ -595,6 +622,10 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
     QStandardItem * suffix_item = new QStandardItem(QString("Suffixes"));
     QStandardItem * suffix_count_item = new QStandardItem(QString::number(lexicon->get_suffixes()->get_count()));
 
+    QStandardItem * prefix_item = new QStandardItem(QString("Prefixes"));
+    QStandardItem * prefix_count_item = new QStandardItem(QString::number(lexicon->get_prefixes()->get_count()));
+
+
     QStandardItem * sig_item = new QStandardItem(QString("Signatures"));
     QStandardItem * sig_count_item = new QStandardItem(QString::number(lexicon->get_signatures()->get_count()));
 
@@ -690,6 +721,9 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
     prefixal_stem_items.append(prefixal_stem_item);
     prefixal_stem_items.append(prefixal_stem_count_item);
 
+    QList<QStandardItem*> prefix_items;
+    prefix_items.append(prefix_item);
+    prefix_items.append(prefix_count_item);
 
     QList<QStandardItem*> suffix_items;
     suffix_items.append(suffix_item);
@@ -741,7 +775,7 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
     lexicon_item->appendRow(keyboard_3);
     lexicon_item->appendRow(keyboard_4);
     lexicon_item->appendRow(keyboard_5);
-    lexicon_item->appendRow(suffix_flag_item);
+    lexicon_item->appendRow(prefix_items);
     lexicon_item->appendRow(word_items);
     lexicon_item->appendRow(suffixal_stem_items);
     lexicon_item->appendRow(prefixal_stem_items);

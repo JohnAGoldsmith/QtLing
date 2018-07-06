@@ -7,6 +7,7 @@
 class CWordCollection;
 class CStemCollection;
 class CSuffixCollection;
+class CPrefixCollection;
 class CSignatureCollection;
 class CHypothesis;
 class MainWindow;
@@ -32,6 +33,7 @@ public:
     void        sort(int column_no, Qt::SortOrder order);
     void        load_words(CWordCollection*);
     void        load_stems(CStemCollection * p_stems);
+    void        load_prefixes(CPrefixCollection * p_prefixes);
     void        load_suffixes(CSuffixCollection * p_suffixes);
     void        load_signatures(CSignatureCollection * p_signatures, eSortStyle = SIG_BY_STEM_COUNT);
     void        load_parasignatures(CSignatureCollection * p_signatures);
@@ -54,7 +56,7 @@ class LxaSortFilterProxyModel : public QSortFilterProxyModel
     Q_OBJECT;
 public:
     LxaSortFilterProxyModel(QObject*);
-    void  sort() {QSortFilterProxyModel::sort(-1);}
+    void  sort(int, Qt::SortOrder order = Qt::AscendingOrder) override {QSortFilterProxyModel::sort(-1, order);}
 
 private:
     bool lessThan(const QModelIndex & left, const QModelIndex & right) const override;

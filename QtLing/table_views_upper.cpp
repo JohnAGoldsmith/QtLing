@@ -128,6 +128,10 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
             setModel(m_parent_window->m_Models["Suffixal stems"]);
             set_data_type(e_suffixal_stems);
         }
+        else     if (component == "Prefixes"){
+            m_parent_window->display_prefixes();
+            set_data_type(e_data_prefixes);
+        }
         else     if (component == "Suffixes"){
             m_parent_window->display_suffixes();
             set_data_type(e_data_suffixes);
@@ -432,4 +436,3 @@ void  UpperTableView::display_this_affixes_signatures(const QModelIndex & index)
    get_parent_window()->get
 }
 */
-

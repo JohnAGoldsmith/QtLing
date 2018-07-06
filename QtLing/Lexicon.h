@@ -224,6 +224,7 @@ public:
     CSignatureCollection*                       get_passive_signatures()    { return m_PassiveSignatures;}
     CSignatureCollection*                       get_prefix_signatures()     { return m_PrefixSignatures;}
     CStemCollection *                           get_prefixal_stems()        { return m_prefixal_stems;}
+    CPrefixCollection *                         get_prefixes()              { return m_Prefixes; }
     CSignatureCollection *                      get_residual_signatures()   { return m_ParaSignatures;}
     CSignatureCollection *                      get_sequential_signatures() { return m_SequentialSignatures;}
     CSignatureCollection*                       get_signatures()            { return m_Signatures;}

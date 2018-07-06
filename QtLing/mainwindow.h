@@ -135,6 +135,7 @@ public:
     void                                    analyze_corpus();
     MainWindow();
     void                                    display_suffixes();
+    void                                    display_prefixes();
     void                                    display_suffix_signatures(CLexicon*);
     void                                    display_prefix_signatures(CLexicon*);
     void                                    display_epositive_suffix_signatures(CLexicon*);
@@ -246,7 +247,7 @@ public:
     void                    write_stems_and_affixes();
 
 protected:
-   void keyPressEvent(QKeyEvent *e);
+   void keyPressEvent(QKeyEvent *e) override;
 
 };
 

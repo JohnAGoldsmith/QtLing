@@ -41,6 +41,7 @@ void CLexicon::generate_hypotheses()
         doomed_affixes.clear();
         pSig1_longer_stem->get_string_list(affixes1);
         pSig2_shorter_stem->get_string_list(affixes2);
+        //qDebug() << 44 << original_sig1_affixes_longer_stem << original_sig2_affixes_shorter_stem;
         bool success_flag = true;
         if (p_edge->get_number_of_words() < MINIMUM_NUMBER_OF_WORDS ){continue;}
         //--> doomed_affixes is the set of affixes that sig1 proposes to sig2  for retirement
@@ -50,25 +51,31 @@ void CLexicon::generate_hypotheses()
             if (affix_1 == "NULL"){
                 doomed_affix = this_morph;
             } else{
-                doomed_affix = this_morph + affix_1;
+                if (m_SuffixesFlag){
+                    doomed_affix = this_morph + affix_1;
+                } else {
+                    doomed_affix = affix_1 + this_morph;
+                }
             }
             doomed_affixes.append(doomed_affix);
             if (affixes2.contains(doomed_affix)){
-                //qDebug() << doomed_affix << affixes2;
+                qDebug() << 58 << doomed_affix << affixes2;
                 matching_affixes_count++;
-                //qDebug() << "success" << this_morph << doomed_affix << pSig1_longer_stem->display() << pSig2_shorter_stem->display();
+                qDebug() << "success" << this_morph << doomed_affix << this_morph <<  pSig1_longer_stem->display() << pSig2_shorter_stem->display();
             }else{
                 // not all of the first sig is continued in the second sig.
                 success_flag = false;
-                //qDebug() << 59 << " failure " << this_morph << doomed_affix << pSig1_longer_stem->display() << pSig2_shorter_stem->display();
+                qDebug() << 59 << " failure " << this_morph << doomed_affix << pSig1_longer_stem->display() << pSig2_shorter_stem->display() << "matches so far " << matching_affixes_count;
                 break;
             }
         }
         // We only accept cases where the all of the "doomed" affixes were found in affixes2.
-        if (success_flag == false){
+        if (success_flag == false ){
             continue;
         }
-
+        else{
+           // qDebug() << 72 << this_morph << original_sig1_affixes_longer_stem;
+        }
         // we remove all of the newaffixes from pSig2, and replace them with this_morph, and
         // this_morph points directly to pSig1.
         foreach (QString this_affix, affixes2){

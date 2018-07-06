@@ -164,3 +164,38 @@ void SortQStringListFromRight(QStringList& ThisStringList)
     }
 }
 //----------------------------------------------------------------------------------------------//
+int find_length_of_longest_common_right_substring(QString string1, QString string2){
+    int i = 0;
+    int len1 = string1.length();
+    int len2 = string2.length();
+    while ( i < len1 && i < len2 ){
+        if (string1[len1 - i] != string2[len2 - i]){
+            break;
+        }
+        i--;
+    }
+    return i;
+}
+//----------------------------------------------------------------------------------------------//
+int find_length_of_longest_common_lef_substring(QString string1, QString string2){
+    int i = 0;
+    int len1 = string1.length();
+    int len2 = string2.length();
+    while ( i < len1 && i < len2 ){
+        if (string1[i] != string2[i]){
+            break;
+        }
+        i++;
+    }
+    return i;
+}
+//----------------------------------------------------------------------------------------------//
+void invert(QStringList list){
+    QStringList this_string_list;
+    QStringList these_letters;
+    foreach (QString this_string,list){
+        these_letters = this_string.split("");
+        std::reverse(these_letters.begin(),these_letters.end());
+        this_string = these_letters.join("");
+    }
+}
