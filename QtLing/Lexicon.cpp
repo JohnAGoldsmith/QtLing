@@ -457,6 +457,8 @@ void   CLexicon::assign_suffixes_to_stems(QString name_of_calling_function)
             while (stem_iter.hasNext()){
                 this_stem_t = stem_iter.next();
                 link_signature_and_stem(this_stem_t, pSig, this_signature_string);
+                // I think that all of the work of the next loop is already done inside "link_signature_and_stem";
+                if (false) {
                 affix_iter_2.toFront();
                 while(affix_iter_2.hasNext()){
                     this_affix_t = affix_iter_2.next();
@@ -466,8 +468,27 @@ void   CLexicon::assign_suffixes_to_stems(QString name_of_calling_function)
                     pWord = m_Words->find_or_fail(this_word);
                     pWord->add_to_autobiography(name_of_calling_function + "=" + this_stem_t );
                 }
-
+                }
             }
+        } // end of condition of having enough stems in the signature.
+        else{   // if there are not enough stems for this signature: this is here just for words ability to remember where they were and how they were analyzed.
+            stem_list_iterator stem_iter(*p_this_stem_list);
+            QListIterator<QString> affix_iter_2(this_affix_list);
+            while (stem_iter.hasNext()){
+                this_stem_t = stem_iter.next();
+                //link_signature_and_stem(this_stem_t, pSig, this_signature_string);
+                affix_iter_2.toFront();
+                while(affix_iter_2.hasNext()){
+                    this_affix_t = affix_iter_2.next();
+                    if (this_affix_t == "NULL"){ this_affix_t = "";}
+                    if (m_SuffixesFlag){ this_word = this_stem_t + this_affix_t;}
+                    else { this_word = this_affix_t + this_stem_t;}
+                    pWord = m_Words->find_or_fail(this_word);
+                    pWord->add_to_autobiography("failure of " + name_of_calling_function + "=" + this_stem_t + "=" + this_signature_string );
+                }
+            }
+
+
         }
     }
 
@@ -520,7 +541,7 @@ void CLexicon::link_signature_and_stem(stem_t this_stem_t , CSignature*  pSig,  
                pWord->add_parse_triple(this_stem_t, this_affix, pSig->get_key());
                QString message = this_signature_string;
                if (this_affix_list.size() > 50){message = "Super long signature";};
-               pWord->add_to_autobiography("=" + this_stem_t + "=" + message);
+               pWord->add_to_autobiography(QString("Normal formation") + "=" + this_stem_t + "=" + message);
         }
     }
     pStem->set_count(stem_count);

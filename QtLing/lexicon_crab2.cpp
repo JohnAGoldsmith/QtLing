@@ -349,7 +349,6 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
             }
         }
         if (best_affix_list.size() == 0) {
-            //qDebug() << this_stem << affixes_of_residual_sig << "\n";
             continue;
         }
 
