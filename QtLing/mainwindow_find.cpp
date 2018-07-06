@@ -4,6 +4,7 @@
 #include <QDockWidget>
 #include <QLayout>
 #include <QComboBox>
+#include <QCheckBox>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
@@ -20,7 +21,7 @@ FindDockWidget::FindDockWidget(MainWindow* p_main_window)
     m_parent_window = p_main_window;
     m_child_dialog = new FindDialog(p_main_window);
 
-    connect(m_child_dialog->m_close_button, SIGNAL(clicked(bool)),
+    connect(m_child_dialog->m_button_close, SIGNAL(clicked(bool)),
             this, SLOT(close()));
     setWidget(m_child_dialog);
 }
@@ -34,16 +35,16 @@ void FindDockWidget::closeEvent(QCloseEvent *event)
 FindDialog::FindDialog(MainWindow *p_main_window):
     m_search_range(FindDialog::e_tableview_upper_all),
     m_mainwindow(p_main_window),
-    m_items_found_label(NULL)
+    m_label_items_found(NULL)
 {
     m_layout = new QHBoxLayout(this);
 
-    m_search_label = new QLabel(tr("Find in:"), this);
+    m_label_selection = new QLabel(tr("Find in:"), this);
 
-    m_search_selection = new QComboBox(this);
-    m_search_selection->addItem(tr("Both upper tables"));
-    m_search_selection->addItem(tr("Upper-left table"));
-    m_search_selection->addItem(tr("Upper-right table"));
+    m_combobox_selection = new QComboBox(this);
+    m_combobox_selection->addItem(tr("Both upper tables"));
+    m_combobox_selection->addItem(tr("Upper-left table"));
+    m_combobox_selection->addItem(tr("Upper-right table"));
 
     int search_sel_init_index;
     switch (m_search_range) {
@@ -56,34 +57,37 @@ FindDialog::FindDialog(MainWindow *p_main_window):
         default:
             qDebug() << "mainwindow_find.cpp: FindDialog() - invalid search range!";
     }
+    m_checkbox_exact_match = new QCheckBox(tr("Exact Match?"),this);
+    m_checkbox_exact_match->setChecked(false);
 
     m_line_edit = new QLineEdit(this);
     m_line_edit->setMaximumWidth(300);
 
-    m_items_found_label = new QLabel(this);
+    m_label_items_found = new QLabel(this);
 
     m_button_find_next = new QPushButton(tr("Find Next"));
 
     m_button_find_prev = new QPushButton(tr("Find Previous"));
 
-    m_clear_search = new QPushButton(tr("Clear Search"));
+    m_button_clear_search = new QPushButton(tr("Clear Search"));
 
     //-- implementing close button
     // getting standard "x" icon fron style
     QStyle* style = qApp->style();
     QIcon close_icon = style->standardIcon(QStyle::SP_TitleBarCloseButton);
-    m_close_button = new QPushButton(this);
-    m_close_button->setIcon(close_icon);
+    m_button_close = new QPushButton(this);
+    m_button_close->setIcon(close_icon);
 
-    m_layout->addWidget(m_search_label);
-    m_layout->addWidget(m_search_selection);
+    m_layout->addWidget(m_label_selection);
+    m_layout->addWidget(m_combobox_selection);
+    m_layout->addWidget(m_checkbox_exact_match);
     m_layout->addWidget(m_line_edit);
-    m_layout->addWidget(m_items_found_label);
-    m_items_found_label->hide();
+    m_layout->addWidget(m_label_items_found);
+    m_label_items_found->hide();
     m_layout->addWidget(m_button_find_next);
     m_layout->addWidget(m_button_find_prev);
-    m_layout->addWidget(m_clear_search);
-    m_layout->addWidget(m_close_button);
+    m_layout->addWidget(m_button_clear_search);
+    m_layout->addWidget(m_button_close);
     m_layout->addStretch();
 
     setLayout(m_layout);
@@ -93,11 +97,11 @@ FindDialog::FindDialog(MainWindow *p_main_window):
 
 void FindDialog::connect_button_signals()
 {
-    connect(m_search_selection, SIGNAL(currentIndexChanged(QString)), this, SLOT(change_search_range(QString)));
+    connect(m_combobox_selection, SIGNAL(currentIndexChanged(QString)), this, SLOT(change_search_range(QString)));
     connect(m_line_edit, SIGNAL(returnPressed()), this, SLOT(do_next_search()));
     connect(m_button_find_next, SIGNAL(clicked(bool)), this, SLOT(do_next_search()));
     connect(m_button_find_prev, SIGNAL(clicked(bool)), this, SLOT(do_prev_search()));
-    connect(m_clear_search, SIGNAL(clicked(bool)), this, SLOT(do_clear_search()));
+    connect(m_button_clear_search, SIGNAL(clicked(bool)), this, SLOT(do_clear_search()));
     connect(m_line_edit, SIGNAL(textChanged(QString)), this, SLOT(do_clear_search()));
 }
 
@@ -182,8 +186,8 @@ void FindDialog::do_prev_search()
 
 void FindDialog::do_clear_search()
 {
-    m_items_found_label->hide();
-    if (sender() == m_clear_search) {
+    m_label_items_found->hide();
+    if (sender() == m_button_clear_search) {
         m_line_edit->setText(QString());
         emit clear_left_search();
         emit clear_right_search();
@@ -193,13 +197,16 @@ void FindDialog::do_clear_search()
                 emit clear_right_search();
             case e_tableview_upper_left:
                 emit clear_left_search();
-                break;
+                return;
             case e_tableview_upper_right:
                 emit clear_right_search();
-                break;
+                return;
             default:
             qDebug() << "mainwindow_find.cpp:do_clear_search() - invalid search range!";
         }
+    } else {
+        emit clear_left_search();
+        emit clear_right_search();
     }
 }
 
@@ -229,8 +236,8 @@ void FindDialog::item_found(int n)
             qDebug() << "mainwindow_find.cpp: FindDialog::item_found - wrong switch case!";
     }
 
-    m_items_found_label->setText(label);
-    m_items_found_label->show();
+    m_label_items_found->setText(label);
+    m_label_items_found->show();
 
 }
 

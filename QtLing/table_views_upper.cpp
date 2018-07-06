@@ -2,6 +2,7 @@
 #include <QMessageBox>
 #include "table_views.h"
 #include "lxamodels.h"
+#include "mainwindow_find.h"
 
 
 
@@ -180,7 +181,7 @@ bool rows_less_than (const QStandardItem* item1, const QStandardItem* item2)
     return item1->row() < item2->row();
 }
 
-int UpperTableView::find_all_strings(const QString& str)
+int UpperTableView::find_all_strings(const QString& str, bool exact_match)
 {
     // qDebug() << "Finding strings";
     QStandardItemModel* p_model = (QStandardItemModel*) model();
@@ -189,14 +190,14 @@ int UpperTableView::find_all_strings(const QString& str)
         return 0;
     }
     m_items_found = QList<QStandardItem*>();
-    m_items_found = p_model->findItems(str, Qt::MatchContains, 0);
+    m_items_found = p_model->findItems(str, exact_match? Qt::MatchExactly : Qt::MatchContains, 0);
     int num_items_found = m_items_found.length();
     if (num_items_found == 0) {
         // qDebug() << str << "was not found";
         return 0;
     } else {
         qSort(m_items_found.begin(), m_items_found.end(), rows_less_than);
-        qDebug() << "Found" << num_items_found << "occurrences of" << str;
+        //Debug() << "Found" << num_items_found << "occurrences of" << str;
         QBrush brush_item_found(QColor(57, 197, 187));
         QStandardItem* p_item_found;
         foreach (p_item_found, m_items_found) {
@@ -222,12 +223,15 @@ bool UpperTableView::find_next_and_highlight(QString &s)
 {
     // qDebug() << "Signal to find next received; string to find:" + s;
     QStandardItemModel* p_model = (QStandardItemModel*) model();
+    FindDialog* p_find_dialog = (FindDialog*) sender();
+
     if (p_model == NULL) {
         qDebug() << "Model not loaded";
         m_row_recently_selected = -2;
         return false;
     }
-    int num_found = find_all_strings(s);
+
+    int num_found = find_all_strings(s, p_find_dialog->is_exact_match());
     if (num_found == 0) {
         emit num_items_found(0);
         m_row_recently_selected = -2;
@@ -251,7 +255,7 @@ bool UpperTableView::find_next_and_highlight(QString &s)
         m_row_recently_selected = lowest_row;
     } else {
         // The user did not select anything; start from the beginning
-        if (m_row_recently_selected = -2)
+        if (m_row_recently_selected == -2)
             m_row_recently_selected = -1;
     }
 
@@ -305,12 +309,15 @@ bool UpperTableView::find_next_and_highlight(QString &s)
 bool UpperTableView::find_prev_and_highlight(QString &s)
 {
     QStandardItemModel* p_model = (QStandardItemModel*) model();
+    FindDialog* p_find_dialog = (FindDialog*) sender();
+
     if (p_model == NULL) {
         qDebug() << "Model not loaded";
         m_row_recently_selected = -2;
         return false;
     }
-    int num_found = find_all_strings(s);
+
+    int num_found = find_all_strings(s, p_find_dialog->is_exact_match());
     if (num_found == 0) {
         emit num_items_found(0);
         m_row_recently_selected = -2;
@@ -334,7 +341,7 @@ bool UpperTableView::find_prev_and_highlight(QString &s)
         m_row_recently_selected = highest_row;
     } else {
         // The user did not select anything; start from the beginning
-        if (m_row_recently_selected = -2)
+        if (m_row_recently_selected == -2)
             m_row_recently_selected = p_model->rowCount();
     }
 

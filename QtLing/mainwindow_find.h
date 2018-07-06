@@ -6,6 +6,7 @@
 #include <QDockWidget>
 #include <QLayout>
 #include <QComboBox>
+#include <QCheckBox>
 #include "table_views.h"
 
 class FindDialog;
@@ -42,15 +43,17 @@ class FindDialog : public QWidget
     SearchRange         m_search_range;
     MainWindow*         m_mainwindow;
 
-    QLabel*             m_search_label;
-    QComboBox*          m_search_selection;
+    QLabel*             m_label_selection;
+    QComboBox*          m_combobox_selection;
+    QCheckBox*          m_checkbox_exact_match;
     QLineEdit*          m_line_edit;
+    QLabel*             m_label_items_found;
     QPushButton*        m_button_find_next;
     QPushButton*        m_button_find_prev;
-    QPushButton*        m_clear_search;
-    QPushButton*        m_close_button;
+    QPushButton*        m_button_clear_search;
+    QPushButton*        m_button_close;
 
-    QLabel*             m_items_found_label;
+
     int                 m_left_items_found;
     int                 m_right_items_found;
 
@@ -60,7 +63,8 @@ private:
 
 public:
     FindDialog(MainWindow* p_main_window);
-    void                set_search_selection(QString s) {m_search_selection->setCurrentText(s);}
+    void                set_search_selection(QString s) {m_combobox_selection->setCurrentText(s);}
+    bool                is_exact_match() { return m_checkbox_exact_match->isChecked(); }
 
 signals:
     void                search_for_left_next(QString& s);

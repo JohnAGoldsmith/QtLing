@@ -16,7 +16,7 @@ class UpperTableView : public QTableView
     int                     m_gold_standard_display_order;
 
     // for search functionality
-    int                     find_all_strings(const QString& str);
+    int                     find_all_strings(const QString& str, bool exact_match);
     void                    clear_items_found();
     QList<QStandardItem*>   m_items_found;
     int                     m_row_recently_selected;
