@@ -58,6 +58,7 @@ public slots:
         void                table_word (CWord*);
         void                table_one_signature(CSignature*, QStringList stem_list);
         void                table_passive_signature(CSignature*);
+        void                table_stem(stem_t, CLexicon*);
 
 signals:
 };

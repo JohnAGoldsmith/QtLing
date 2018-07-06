@@ -77,11 +77,11 @@
          m_graphics_scene->clear_all();
          m_graphics_scene->assign_lattice_positions_to_signatures(lexicon->get_signatures(), e_data_suffixal_signatures);
          m_graphics_scene->create_and_place_signatures();
-
-
-
-
     }
+
+
+
+
 
 
 

@@ -65,8 +65,19 @@ LowerTableView::LowerTableView(MainWindow * window)
             CWord* pWord = this_lexicon->get_words()->get_word(word);
             table_word(pWord);
             setModel( m_my_current_model);
+            qDebug() << 68 ;
             break;
         }
+     case e_data_stems:
+     case e_suffixal_stems:
+     case e_prefixal_stems:{
+         if (index.isValid()) {row = index.row();}
+         QString stem = index.sibling(row,0).data().toString();
+         table_stem(stem, this_lexicon);
+         setModel( m_my_current_model);
+         qDebug() << 76;
+         break;
+     }
          //  ---------------------------------------------------//
         case  e_data_suffixal_signatures:
         case  e_data_epositive_suffixal_signatures:{
@@ -295,7 +306,6 @@ void LowerTableView::table_word(CWord* pWord ){
     }
     // Display the signatures this word bears:
     for (int signo = 0; signo < pWord->m_Signatures.size(); signo++){
-        //qDebug() << signo;
         QString sig = pWord->get_signatures()->at(signo)->second->get_key();
         QString stem = pWord->get_signatures()->at(signo)->first->get_key();
         item_list.clear();
@@ -307,6 +317,46 @@ void LowerTableView::table_word(CWord* pWord ){
     }
 
 }
+
+
+/**
+ * @brief LowerTableView::table_stem
+ * @param pWord
+ * What follows is a set of functions that display different kinds of user-requested information on the Lower Table View.
+ */
+void LowerTableView::table_stem(stem_t stem, CLexicon* Lexicon){
+    QList<QStandardItem*>      item_list;
+    QStandardItem *            p_item, *q_item;
+
+    // Create a clean model.
+    if (m_my_current_model){
+        delete m_my_current_model;
+    }
+    m_my_current_model = new QStandardItemModel();
+
+    // Find the word's autobiography and set it, line by line, in the lower TableView.
+    QListIterator<QString> line_iter(*Lexicon->get_stem_autobiography(stem));
+    while (line_iter.hasNext()){
+        QString report_line = line_iter.next();
+        item_list.clear();
+        QStringList report_line_items = report_line.split("=");
+        for (int i = 0; i < report_line_items.size(); i++){
+            p_item = new QStandardItem(report_line_items[i]);
+            if (i == 0 && report_line_items[i][0] == "*"){
+                p_item->setBackground(Qt::red);
+            } else{
+                p_item->setBackground(Qt::white);
+            }
+            item_list.append(p_item);
+        }
+        m_my_current_model->appendRow(item_list);
+    }
+
+
+}
+
+
+
 void LowerTableView::table_signature(CSignature* pSig ){
 
     QStandardItem*             pItem1, * pItem2;

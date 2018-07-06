@@ -8,8 +8,10 @@
 #include <QPair>
 #include <QSet>
 #include <QStatusBar>
+#include <QStringList>
 #include "SignatureCollection.h"
 #include "Typedefs.h"
+
 class MainWindow;
 class CWordCollection;
 class CStemCollection;
@@ -173,6 +175,7 @@ protected:
 
     QProgressBar*                   m_ProgressBar;
     QStatusBar *                      m_StatusBar;
+    QMap<QString, QStringList*>        m_stem_autobiographies;
 
     double                          m_entropy_threshold_for_stems;
 
@@ -218,6 +221,8 @@ public:
     bool                                        get_suffix_flag()           { return m_SuffixesFlag; }
     CWordCollection*                            get_word_collection()       { return m_Words; }
     CWordCollection *                           get_words()                 { return m_Words;}
+    QList<QString> *                            get_stem_autobiography(stem_t stem)   { return m_stem_autobiographies[stem];}
+    void                                        add_to_stem_autobiographies (QString stem, QString message);
 
     void                                        set_progress_bar (QProgressBar * pPB) { m_ProgressBar = pPB;}
     void                                        set_status_bar(QStatusBar* pBar) {m_StatusBar = pBar;}

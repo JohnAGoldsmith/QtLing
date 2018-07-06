@@ -25,6 +25,7 @@ enum eDirectionality{
 
 enum eDataType{
     e_data_words,
+    e_data_stems,
     e_suffixal_stems,
     e_prefixal_stems,
     e_data_suffixal_signatures,
