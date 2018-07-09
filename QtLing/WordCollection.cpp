@@ -75,7 +75,8 @@ CWord* CWordCollection::operator ^=(QString word)
 
 //-->  Reverse string sorting comparator <--//
 // -->  returns true if string1 precedes string2 in reverse alphabetical order  <-- //
-bool reverse_string_compare(QString string1, QString string2){    if (string1.length() == 0) {return true;}
+bool reverse_string_compare(QString string1, QString string2){
+    if (string1.length() == 0) {return true;}
     if (string2.length() == 0) {return false;}
     int len1 = string1.length();
     int len2 = string2.length();

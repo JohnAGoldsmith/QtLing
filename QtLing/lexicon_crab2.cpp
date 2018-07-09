@@ -34,9 +34,9 @@ void CLexicon::Crab_2()
         m_Signatures->calculate_stem_entropy():
         m_PrefixSignatures->calculate_stem_entropy();
 
-   compute_sig_graph_edges();
-   compute_sig_graph_edge_map();
-   generate_hypotheses();
+    compute_sig_graph_edges();
+    compute_sig_graph_edge_map();
+    generate_hypotheses();
 
 
     qDebug() << "finished crab 2.";
@@ -54,43 +54,47 @@ void CLexicon::Crab_2()
 */
 void CLexicon::ReSignaturizeWithKnownAffixes()
 
-{   const int MINIMUM_NUMBER_OF_STEMS = 2;
-   CWord *                     pWord;
-   CSignature*                 pSig;
-   QString                     this_stem_t, this_suffix_t, this_prefix, this_affix, this_signature_string, this_word;
-   stem_list *                 p_this_stem_list;
-   affix_set *                 this_ptr_to_affix_set;
-   CStem*                      pStem;
-   CStemCollection*            stems;
-   m_SuffixesFlag ?
+{
+    /* const int MINIMUM_NUMBER_OF_STEMS = 2;
+    CSignature*                 pSig;
+    QString                     this_stem_t, this_suffix_t, this_prefix, this_affix, this_signature_string, this_word;
+    stem_list *                 p_this_stem_list;
+    affix_set *                 this_ptr_to_affix_set;
+    CStem*                      pStem; */
+    CWord *                     pWord;
+    CStemCollection*            stems;
+    m_SuffixesFlag ?
                stems = m_suffixal_stems:
                stems = m_prefixal_stems;
-   map_sigstring_to_suffix_set   temp_stems_to_affix_set;
-   map_sigstring_to_morph_set  & ref_stems_to_affix_set (temp_stems_to_affix_set);
-   map_sigstring_to_stem_list    temp_signatures_to_stems;
+    // QMap<QString, QSet<QString>*>
+    map_sigstring_to_suffix_set   temp_stems_to_affix_set;
+    map_sigstring_to_morph_set& ref_stems_to_affix_set = temp_stems_to_affix_set;
+    // QMap<QString, QList<QString>*>
+    map_sigstring_to_stem_list    temp_signatures_to_stems;
 
-   m_StatusBar->showMessage("Resignaturize with known affixes");
-   m_ProgressBar->reset();
-   m_ProgressBar->setMinimum(0);
-   m_ProgressBar->setMaximum(m_Parses->size());
+    m_StatusBar->showMessage("Resignaturize with known affixes");
+    m_ProgressBar->reset();
+    m_ProgressBar->setMinimum(0);
+    m_ProgressBar->setMaximum(m_Parses->size());
 
-   map_string_to_word_ptr_iter word_iter (*m_Words->get_map());
-   while(word_iter.hasNext()){
+    // clear signatures and parse_triple_map stored in each word
+    map_string_to_word_ptr_iter word_iter (*m_Words->get_map());
+    while(word_iter.hasNext()){
        pWord = word_iter.next().value();
        pWord->clear_signatures();
        pWord->clear_parse_triple_map();
-   }
-   //--> We establish a temporary map from stems to sets of affixes as we iterate through parses. <--//
-   //--> THIS is where the continuations that are not affixes are eliminated -- well, they are not
-   //    eliminated, but they are not copied into ref_stems_to_affix_set.
+    }
+    //--> We establish a temporary map from stems to sets of affixes as we iterate through m_Parses. <--//
+    //--> THIS is where the continuations that are not affixes are eliminated -- well, they are not
+    //    eliminated, but they are not copied into ref_stems_to_affix_set.
 
-   create_temporary_map_from_stems_to_affix_sets( ref_stems_to_affix_set);//, ref_temp_signatures_to_stems);
+    create_temporary_map_from_stems_to_affix_sets( ref_stems_to_affix_set);//, ref_temp_signatures_to_stems);
 
-   assign_suffixes_to_stems("re-signaturize to good affixes only");
-
-
+    assign_suffixes_to_stems("re-signaturize to good affixes only");
 
 
+
+/*
 if (false) {
 
    //--> We iterate through these stems and for each stem, create QStringLists of their affixes. <--//
@@ -211,7 +215,7 @@ if (false) {
        }
    }
    m_Signatures->sort_each_signatures_stems_alphabetically();
-} // end of if false...
+} */ // end of if false...
 
 }
 /**
@@ -233,8 +237,10 @@ void CLexicon::create_temporary_map_from_stems_to_affix_sets(map_sigstring_to_mo
 
     // iterate through parselist, and assign to stem and affix collections;
     for (int parseno = 0; parseno < m_Parses->size(); parseno++){
+        // iterate through each parse stored in CLexicon::m_Parses
         this_parse = m_Parses->at(parseno);
         m_ProgressBar->setValue(parseno);
+
         if (m_SuffixesFlag){
             this_stem_t = this_parse->get_string1();
             this_suffix_t = this_parse->get_string2();
@@ -250,6 +256,7 @@ void CLexicon::create_temporary_map_from_stems_to_affix_sets(map_sigstring_to_mo
         }
 
         if (! ref_stems_to_affix_set.contains(this_stem_t)){
+            // for a newly occurring stem, create a new set of affixes for it
             if (m_SuffixesFlag){
                 pSet = new suffix_set();
             } else{
@@ -257,8 +264,9 @@ void CLexicon::create_temporary_map_from_stems_to_affix_sets(map_sigstring_to_mo
             }
             ref_stems_to_affix_set.insert(this_stem_t,pSet);
         }
+        // add that affix to that set
         ref_stems_to_affix_set.value(this_stem_t)->insert(this_suffix_t);
-        }
+    }
 }
 
 /*!
@@ -411,11 +419,6 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
               }
         }
         }
-
-
-
-
-
 
     }
 

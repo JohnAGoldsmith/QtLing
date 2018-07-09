@@ -30,7 +30,7 @@ private:
 
 public:
 
-    void        sort(int column_no, Qt::SortOrder order);
+    //void        sort(int column_no, Qt::SortOrder order);
     void        load_words(CWordCollection*);
     void        load_stems(CStemCollection * p_stems);
     void        load_prefixes(CPrefixCollection * p_prefixes);
@@ -56,7 +56,7 @@ class LxaSortFilterProxyModel : public QSortFilterProxyModel
     Q_OBJECT;
 public:
     LxaSortFilterProxyModel(QObject*);
-    void  sort(int, Qt::SortOrder order = Qt::AscendingOrder) override {QSortFilterProxyModel::sort(-1, order);}
+    //void  sort(int, Qt::SortOrder order = Qt::AscendingOrder) override {QSortFilterProxyModel::sort(-1, order);}
 
 private:
     bool lessThan(const QModelIndex & left, const QModelIndex & right) const override;

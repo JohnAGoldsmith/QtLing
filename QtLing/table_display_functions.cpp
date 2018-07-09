@@ -1,8 +1,8 @@
-          #include <QStandardItemModel>
+#include <QStandardItemModel>
 
-    #include "mainwindow.h"
-    #include "graphics.h"
-    #include "lxamodels.h"
+#include "mainwindow.h"
+#include "graphics.h"
+#include "lxamodels.h"
 
     /**
      * @brief MainWindow::display_suffixes

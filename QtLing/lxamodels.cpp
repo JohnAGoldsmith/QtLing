@@ -24,17 +24,6 @@ LxaStandardItemModel::~LxaStandardItemModel()
 {
 }
 
-
-void LxaStandardItemModel::sort(int column_no, Qt::SortOrder)
-{
-    if (column_no ==0  ){
-        QStandardItemModel::sort(column_no);
-    }
-    else{
-
-    }
-}
-
 LxaSortFilterProxyModel::LxaSortFilterProxyModel(QObject * parent) : QSortFilterProxyModel (parent)
 {
     //nothing here.
@@ -73,8 +62,11 @@ void LxaStandardItemModel::load_words(CWordCollection* p_words)
         QList<QStandardItem*> item_list;
         QStandardItem* pItem = new QStandardItem(this_word);
         item_list.append(pItem);
-        QStandardItem* pItem2 = new QStandardItem(QString::number(pWord->get_word_count()));
+        // changed here: let data have type int //
+        QStandardItem* pItem2 = new QStandardItem();
+        pItem2->setData(pWord->get_word_count(), Qt::DisplayRole);
         item_list.append(pItem2);
+        // changed here //
         QMapIterator<stem_t, Parse_triple*> parse_3_iter(*pWord->get_parse_triple_map());
         int tempcount = 0;
         while (parse_3_iter.hasNext()){
@@ -101,7 +93,9 @@ void LxaStandardItemModel::load_stems(CStemCollection * p_stems)
         QStandardItem *item = new QStandardItem(stem->get_key());
         item_list.append(item);
 
-        QStandardItem *item2 = new QStandardItem(QString::number(stem->get_count()));
+        QStandardItem *item2 = new QStandardItem();
+        item2->setData(stem->get_count(), Qt::DisplayRole);
+        // changed: let data have type int //
         item_list.append(item2);
 
         QListIterator<CSignature*> sig_iter(*stem->GetSignatures());
@@ -124,7 +118,8 @@ void LxaStandardItemModel::load_suffixes(CSuffixCollection * p_suffixes)
     {
         CSuffix* pSuffix = suffix_iter.next();
         QStandardItem *item = new QStandardItem(pSuffix->GetSuffix());
-        QStandardItem *item2 = new QStandardItem(QString::number(pSuffix->get_count()));
+        QStandardItem *item2 = new QStandardItem();
+        item2->setData(pSuffix->get_count(), Qt::DisplayRole);
         QList<QStandardItem*> item_list;
         item_list.append(item);
         item_list.append(item2);
@@ -149,8 +144,10 @@ void LxaStandardItemModel::load_prefixes(CPrefixCollection * p_prefixes)
     {
         CPrefix* pPrefix = prefix_iter.next();
         QStandardItem *item = new QStandardItem(pPrefix->GetPrefix());
-        QStandardItem *item2 = new QStandardItem(QString::number(pPrefix->get_count()));
-        QStandardItem *item3 = new QStandardItem(QString::number(pPrefix->get_count()/totalcount));
+        QStandardItem *item2 = new QStandardItem();
+        item2->setData(pPrefix->get_count(), Qt::DisplayRole);
+        QStandardItem *item3 = new QStandardItem();
+        item3->setData(pPrefix->get_count()/totalcount, Qt::DisplayRole);
         QList<QStandardItem*> item_list;
         item_list.append(item);
         item_list.append(item2);
@@ -172,11 +169,17 @@ void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures, e
 
     //qDebug() << 133 << "number of signatures"<< p_signatures->get_count() <<  "in Models file";
     for (int signo = 0; signo<p_signatures->get_count(); signo++)
-    {   sig = p_signatures->get_at_sorted(signo);
+    {
+        sig = p_signatures->get_at_sorted(signo);
         QList<QStandardItem*> items;
-        QStandardItem * item2 = new QStandardItem(QString::number(sig->get_number_of_stems()));
-        QStandardItem * item3 = new QStandardItem(QString::number(sig->get_robustness()));
-        QStandardItem * item4 = new QStandardItem(QString::number(sig->get_stem_entropy()));
+
+        QStandardItem * item2 = new QStandardItem();
+        QStandardItem * item3 = new QStandardItem();
+        QStandardItem * item4 = new QStandardItem();
+        item2->setData(sig->get_number_of_stems(), Qt::DisplayRole);
+        item3->setData(sig->get_robustness(), Qt::DisplayRole);
+        item4->setData(sig->get_stem_entropy(), Qt::DisplayRole);
+
         items.append(new QStandardItem(sig->GetSignature()));
         items.append(item2);
         items.append(item3);
@@ -199,10 +202,15 @@ void LxaStandardItemModel::load_positive_signatures(CSignatureCollection* p_sign
     for (int signo = 0; signo<p_signatures->get_count(); signo++)
     {   sig = p_signatures->get_at_sorted(signo);
         if (sig->get_stem_entropy() < threshold){continue;}
+
         QList<QStandardItem*> items;
-        QStandardItem * item2 = new QStandardItem(QString::number(sig->get_number_of_stems()));
-        QStandardItem * item3 = new QStandardItem(QString::number(sig->get_robustness()));
-        QStandardItem * item4 = new QStandardItem(QString::number(sig->get_stem_entropy()));
+        QStandardItem * item2 = new QStandardItem();
+        QStandardItem * item3 = new QStandardItem();
+        QStandardItem * item4 = new QStandardItem();
+        item2->setData(sig->get_number_of_stems(), Qt::DisplayRole);
+        item3->setData(sig->get_robustness(), Qt::DisplayRole);
+        item4->setData(sig->get_stem_entropy(), Qt::DisplayRole);
+
         items.append(new QStandardItem(sig->GetSignature()));
         items.append(item2);
         items.append(item3);
@@ -235,7 +243,8 @@ void LxaStandardItemModel::load_parasignatures(CSignatureCollection* p_signature
     {   sig = p_signatures->get_at_sorted(signo);
         QList<QStandardItem*> items;
         QStandardItem * item1 = new QStandardItem(sig->get_stems()->first()->get_key());
-        QStandardItem * item3 = new QStandardItem(QString::number(sig->get_robustness()));
+        QStandardItem * item3 = new QStandardItem();
+        item3->setData(sig->get_robustness(), Qt::DisplayRole);
         items.append(item1);
         items.append(item3);
         items.append(new QStandardItem(sig->GetSignature()));
@@ -279,7 +288,8 @@ void LxaStandardItemModel::load_hypotheses(QList<CHypothesis*>* p_hypotheses)
     while (iter.hasNext()){
         QList<QStandardItem*> items;
         QPair<QString,int>* pPair = iter.next();
-        QStandardItem* item1 = new QStandardItem(QString::number(pPair->second));
+        QStandardItem* item1 = new QStandardItem();
+        item1->setData(pPair->second, Qt::DisplayRole);
         items.append(item1);
 
         QString this_key = pPair->first;
@@ -392,7 +402,8 @@ struct{
 }custom_compare_2;
 
 void LxaStandardItemModel::load_sig_graph_edges( QMap<QString, sig_graph_edge*> * this_sig_graph_edge_map, int size )
-{   QList<sig_graph_edge*>               temp_list;
+{
+    QList<sig_graph_edge*>               temp_list;
     int MINIMUM_NUMBER_OF_SHARED_WORDS = 3;
     QMapIterator<word_t, sig_graph_edge*> * this_sig_graph_edge_iter = new QMapIterator<word_t, sig_graph_edge*>( * this_sig_graph_edge_map );
     while (this_sig_graph_edge_iter->hasNext())    {
@@ -414,10 +425,13 @@ void LxaStandardItemModel::load_sig_graph_edges( QMap<QString, sig_graph_edge*> 
         }
         QStandardItem * item1 = new QStandardItem(p_sig_graph_edge->morph);
         QStandardItem * item2 = new QStandardItem(p_sig_graph_edge->m_sig_1->get_key());
-        QStandardItem * item3 = new QStandardItem(QString::number(p_sig_graph_edge->m_sig_1->get_stem_entropy()));
+        QStandardItem * item3 = new QStandardItem();
+        item3->setData(p_sig_graph_edge->m_sig_1->get_stem_entropy(), Qt::DisplayRole);
         QStandardItem * item4 = new QStandardItem(p_sig_graph_edge->m_sig_2->get_key());
-        QStandardItem * item5 = new QStandardItem(QString::number(p_sig_graph_edge->m_sig_2->get_stem_entropy()));
-        QStandardItem * item6 = new QStandardItem(QString::number(p_sig_graph_edge->shared_word_stems.size()));
+        QStandardItem * item5 = new QStandardItem();
+        item5->setData(p_sig_graph_edge->m_sig_2->get_stem_entropy(), Qt::DisplayRole);
+        QStandardItem * item6 = new QStandardItem();
+        item6->setData(p_sig_graph_edge->shared_word_stems.size());
         QStandardItem * item7 = new QStandardItem(p_sig_graph_edge->label());
         QList<QStandardItem*> items;
         items.append(item1);

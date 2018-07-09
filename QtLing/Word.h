@@ -30,7 +30,8 @@ struct Parse_triple {
 
 
 class CWord
-{ friend LowerTableView;
+{
+    friend class LowerTableView;
 protected:
     QString                             m_Word;
     int                                 m_WordCount;

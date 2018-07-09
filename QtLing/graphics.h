@@ -38,7 +38,7 @@ public:
     graphic_signature2  ();
     graphic_signature2  (CSignature* );
     graphic_signature2   (CSignature*,   QColor, bool);
-    virtual QPointF     get_center() {return QPointF();};
+    virtual QPointF     get_center() {return QPointF();}
     QRectF              boundingRect() const
     {
         return QRectF(0,0,130,160);
