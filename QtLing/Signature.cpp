@@ -49,23 +49,23 @@ QStringList& CSignature::get_stem_strings(QStringList & stem_list)
 
 // =============================================>  Functions involving string containment <===========================//
 bool CSignature::contains(CSignature *other) {
-   if (m_SuffixFlag){
-       for (int i  = 0; i < other->get_number_of_affixes(); i++){
+    if (m_SuffixFlag){
+       for (int i = 0; i < other->get_number_of_affixes(); i++){
            CSuffix* pSuffix = other->get_suffix_list()->at(i);
            if (! get_suffix_list()->contains (pSuffix)){
                return false;
            }
        }
-   return true; }
-   else {            // -->  prefixes <-- //
-   for (int i  = 0; i < other->get_number_of_affixes(); i++){
+       return true;
+    } else {            // -->  prefixes <-- //
+        for (int i = 0; i < other->get_number_of_affixes(); i++){
            CPrefix* pPrefix = other->get_prefix_list()->at(i);
            if (! get_prefix_list()->contains (pPrefix)){
                return false;
            }
-   }
-   return true;
-   }
+        }
+        return true;
+    }
 }
 bool CSignature::contains_affix_string(affix_t affix)
 {

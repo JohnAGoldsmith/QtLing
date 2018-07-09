@@ -221,14 +221,21 @@ void CSignatureCollection::get_epositive_signatures(QMap<CSignature*, int> sig_m
     }
 }
 
-//This function find a small subset of the signatures with the property that each signature in the collection
-// (whose stem count is greater or equal to threshold) is a subsignature of one of the minimal covering signatures.
-
+/*!
+ * \brief CSignatureCollection::find_minimal_cover
+ *
+ * 1. Find all signatures that have more than 5 stems corresponding to each of
+ *    them.
+ * 2. Among these signatures, make a comparison between each two signatures.
+ *    If a signature A "contains" signature B, signature B is removed from the
+ *    list.
+ */
 void CSignatureCollection::find_minimal_cover()
 {
     int STEM_THRESHOLD = 5;
 
     sort(SIG_BY_AFFIX_COUNT);
+    // important!! Sort signatures by descending affix count
 
     QList<CSignature*> temporary_sig_list;
     QList<CSignature*> minimal_sig_cover;

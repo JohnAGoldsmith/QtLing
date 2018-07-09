@@ -12,6 +12,7 @@ class CSignatureCollection;
 class CHypothesis;
 class MainWindow;
 class sig_graph_edge;
+class protostem;
 
 class LxaStandardItemModel : public QStandardItemModel
 {
@@ -46,6 +47,9 @@ public:
     void        load_hypotheses_2(QList<CHypothesis*>*);
 // add component 11
     void        load_category(QString component_name, eComponentType);
+
+    // for displaying protostems
+    void        load_protostems(QMap<QString, protostem*>* p_protostems);
 
     void        load_parsemap_from_gs(GoldStandard* p_gs, ParseMapHandler parsemap, const QString &type);
 };

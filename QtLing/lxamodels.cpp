@@ -78,6 +78,29 @@ void LxaStandardItemModel::load_words(CWordCollection* p_words)
     }
 }
 
+void LxaStandardItemModel::load_protostems(QMap<QString, protostem *>* p_protostems)
+{
+    typedef QStandardItem QSI;
+    clear();
+    protostem* curr_protostem;
+    QMapIterator<QString, protostem*> iter(*p_protostems);
+    QStringList labels;
+    labels << "Protostem" << "Word Count";
+    setHorizontalHeaderLabels(labels);
+
+    while (iter.hasNext()) {
+        curr_protostem = iter.next().value();
+        QList<QSI*> item_list;
+        QSI* item1 = new QSI(curr_protostem->get_stem());
+        item_list.append(item1);
+        QSI* item2 = new QSI();
+        int word_count = curr_protostem->get_end_word()
+                - curr_protostem->get_start_word() + 1;
+        item2->setData(word_count, Qt::DisplayRole);
+        item_list.append(item2);
+        appendRow(item_list);
+    }
+}
 
 void LxaStandardItemModel::load_stems(CStemCollection * p_stems)
 {
@@ -626,6 +649,12 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
     QStandardItem * word_item = new QStandardItem(QString("Words"));
     QStandardItem * word_count_item = new QStandardItem(QString::number(lexicon->get_word_collection()->get_count()));
 
+    QStandardItem * suffixal_protostem_item = new QStandardItem(QString("Suffixal protostems"));
+    QStandardItem * suffixal_protostem_count_item = new QStandardItem(QString::number(lexicon->get_suffixal_protostems()->size()));
+
+    QStandardItem * prefixal_protostem_item = new QStandardItem(QString("Prefixal protostems"));
+    QStandardItem * prefixal_protostem_count_item = new QStandardItem(QString::number(lexicon->get_prefixal_protostems()->size()));
+
     QStandardItem * suffixal_stem_item = new QStandardItem(QString("Suffixal stems"));
     QStandardItem * suffixal_stem_count_item = new QStandardItem(QString::number(lexicon->get_suffixal_stems()->get_count()));
 
@@ -727,6 +756,15 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
     word_items.append(word_item);
     word_items.append(word_count_item);
 
+    // Displaying Protostems
+    QList<QStandardItem*> suffixal_protostem_items;
+    suffixal_protostem_items.append(suffixal_protostem_item);
+    suffixal_protostem_items.append(suffixal_protostem_count_item);
+
+    QList<QStandardItem*> prefixal_protostem_items;
+    prefixal_protostem_items.append(prefixal_protostem_item);
+    prefixal_protostem_items.append(prefixal_protostem_count_item);
+
     QList<QStandardItem*> suffixal_stem_items;
     suffixal_stem_items.append(suffixal_stem_item);
     suffixal_stem_items.append(suffixal_stem_count_item);
@@ -791,6 +829,8 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
     lexicon_item->appendRow(keyboard_5);
     lexicon_item->appendRow(prefix_items);
     lexicon_item->appendRow(word_items);
+    lexicon_item->appendRow(suffixal_protostem_items);
+    lexicon_item->appendRow(prefixal_protostem_items);
     lexicon_item->appendRow(suffixal_stem_items);
     lexicon_item->appendRow(prefixal_stem_items);
     lexicon_item->appendRow(suffix_items);

@@ -227,12 +227,14 @@ public:
     CSignatureCollection*                       get_prefix_signatures()     { return m_PrefixSignatures;}
     CStemCollection *                           get_prefixal_stems()        { return m_prefixal_stems;}
     CPrefixCollection *                         get_prefixes()              { return m_Prefixes; }
+    QMap<QString, protostem*>*                  get_prefixal_protostems()    { return &m_prefix_protostems_2; }
     CSignatureCollection *                      get_residual_signatures()   { return m_ParaSignatures;}
     CSignatureCollection *                      get_sequential_signatures() { return m_SequentialSignatures;}
     CSignatureCollection*                       get_signatures()            { return m_Signatures;}
     CSignatureCollection*                       get_suffix_signatures()     { return m_Signatures;}
     CSuffixCollection*                          get_suffixes()              {return m_Suffixes;}
     CStemCollection *                           get_suffixal_stems()        { return m_suffixal_stems;}
+    QMap<QString, protostem*>*                   get_suffixal_protostems()  { return &m_suffix_protostems_2; }
 //    QMap<QString,int>*                          get_protostems()            { return &m_suffix_protostems;}
     QList<simple_sig_graph_edge*> *             get_sig_graph_edges()       { return &m_SigGraphEdgeList;}
     lxa_sig_graph_edge_map *                    get_sig_graph_edge_map()    { return & m_SigGraphEdgeMap;}

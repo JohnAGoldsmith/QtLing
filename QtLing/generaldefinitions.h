@@ -43,7 +43,10 @@ enum eDataType{
     // for gold standard
     e_data_gs_true_positive_parses,
     e_data_gs_retrieved_parses,
-    e_data_gs_gold_standard_parses
+    e_data_gs_gold_standard_parses,
+    // for protostem display
+    e_data_suffixal_protostems,
+    e_data_prefixal_protostems
 };
 
 enum eDocumentType  // for the Collection View

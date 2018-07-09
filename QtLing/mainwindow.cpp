@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 //#include "generaldefinitions.h"
 #include "ui_mainwindow.h"
 #include <QBrush>
@@ -78,6 +78,9 @@ MainWindow::MainWindow()
     m_Models["Passive signatures"]          = new LxaStandardItemModel("Passive signatures");
     m_Models["Hypotheses"]                  = new LxaStandardItemModel("Hypotheses");
     m_Models["Hypotheses 2"]                = new LxaStandardItemModel("Hypotheses 2");
+    // for displaying protostems
+    m_Models["Suffixal protostems"]         = new LxaStandardItemModel("Suffixal protostems");
+    m_Models["Prefixal protostems"]         = new LxaStandardItemModel("Prefixal protostems");
 
 
 
@@ -476,6 +479,8 @@ void MainWindow::load_models(CLexicon* lexicon)
     m_Models["SigGraphEdges_1"]        ->load_sig_graph_edges(lexicon->get_sig_graph_edge_map(),1);
     m_Models["SigGraphEdges_2"]        ->load_sig_graph_edges(lexicon->get_sig_graph_edge_map(),2);
 
+    m_Models["Suffixal protostems"]->load_protostems(lexicon->get_suffixal_protostems());
+    m_Models["Prefixal protostems"]->load_protostems(lexicon->get_prefixal_protostems());
 
 }
 void MainWindow::read_file_do_crab()

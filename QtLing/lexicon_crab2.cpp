@@ -55,12 +55,12 @@ void CLexicon::Crab_2()
 void CLexicon::ReSignaturizeWithKnownAffixes()
 
 {
-    /* const int MINIMUM_NUMBER_OF_STEMS = 2;
+    const int MINIMUM_NUMBER_OF_STEMS = 2;
     CSignature*                 pSig;
     QString                     this_stem_t, this_suffix_t, this_prefix, this_affix, this_signature_string, this_word;
     stem_list *                 p_this_stem_list;
     affix_set *                 this_ptr_to_affix_set;
-    CStem*                      pStem; */
+    CStem*                      pStem;
     CWord *                     pWord;
     CStemCollection*            stems;
     m_SuffixesFlag ?
@@ -94,7 +94,7 @@ void CLexicon::ReSignaturizeWithKnownAffixes()
 
 
 
-/*
+
 if (false) {
 
    //--> We iterate through these stems and for each stem, create QStringLists of their affixes. <--//
@@ -215,7 +215,7 @@ if (false) {
        }
    }
    m_Signatures->sort_each_signatures_stems_alphabetically();
-} */ // end of if false...
+}  // end of if false...
 
 }
 /**
@@ -312,8 +312,14 @@ void   CLexicon::FindGoodSignaturesInsideParaSignatures()
     }
     signatures->sort(SIG_BY_AFFIX_COUNT);
 
-    signatures->find_minimal_cover(); // the signature collection finds a "cover", which is a set of signatures which are a superset of all the other signatures.
+    signatures->find_minimal_cover();
+    // the signature collection finds a "cover", which is a set of signatures
+    // which are a superset of all the other signatures.
 
+    /* Iterate through each protostem in a list of protostems:
+     * QMap<QString, protostem*> m_suffix/prefix_protostems_2;
+     *
+     */
     QMap<QString, protostem*> * these_protostems_2;
     m_SuffixesFlag?
                 these_protostems_2 = & m_suffix_protostems_2:

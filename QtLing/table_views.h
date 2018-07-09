@@ -77,6 +77,7 @@ public slots:
         void                table_one_signature(CSignature*, QStringList stem_list);
         void                table_passive_signature(CSignature*);
         void                table_stem(stem_t, CLexicon*);
+        void                table_protostem(protostem* p_protostem);
 
 signals:
 };

@@ -169,6 +169,16 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         else     if (component == "Hypotheses"){
             m_parent_window->display_hypotheses();
         }
+        else     if (component == "Suffixal protostems"){
+            setModel(m_parent_window->m_Models["Suffixal protostems"]);
+            set_data_type(e_data_suffixal_protostems);
+            sortByColumn(1);
+        }
+        else     if (component == "Prefixal protostems"){
+            setModel(m_parent_window->m_Models["Prefixal protostems"]);
+            set_data_type(e_data_prefixal_protostems);
+            sortByColumn(1);
+        }
         // add component 10
     }
 
@@ -215,6 +225,10 @@ void UpperTableView::clear_search()
 {
     QBrush brush(QColor(255, 255, 255));
     QStandardItemModel* p_model = (QStandardItemModel*) model();
+    if (p_model == NULL) {
+        qDebug() << "UpperTableView::clear_search(): model not loaded!";
+        return;
+    }
     for (int row_i = 0; row_i < p_model->rowCount(); row_i++) {
         p_model->item(row_i)->setBackground(brush);
     }
