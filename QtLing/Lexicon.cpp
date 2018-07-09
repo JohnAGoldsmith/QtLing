@@ -165,6 +165,14 @@ bool CLexicon::do_gs_evaluation_on_eval_parses()
     } else return false;
 }
 
+void CLexicon::add_to_stem_autobiographies(QString stem, QString message)
+{
+    if (! m_stem_autobiographies.contains(stem)){
+            m_stem_autobiographies[stem] = new QStringList;
+    }
+    m_stem_autobiographies[stem]->append(message);
+
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //linguistic methods
@@ -653,7 +661,7 @@ void CLexicon::link_signature_and_stem(stem_t this_stem_t , CSignature*  pSig,  
             pStem = m_prefixal_stems->find_or_add(this_stem_t);
     pStem->add_signature (pSig);
     pSig->add_stem_pointer(pStem);
-
+    add_to_stem_autobiographies(this_stem_t, this_signature_string );
     int stem_count = 0;
     affix_list this_affix_list = this_signature_string.split("=");
     QListIterator<suffix_t> affix_iter(this_affix_list);
