@@ -42,7 +42,7 @@ public:
     CWord*                  find_or_null (QString);
     CWord*                  find_or_fail(QString word_t);
     int                     get_count() const       { return m_WordMap.size(); }
-    CWord*                  get_word (QString);     // returns false if the string is not in the word collection
+    CWord*                  get_word (const QString&);     // returns false if the string is not in the word collection
     QString                 get_word_string (int n) {return m_SortedStringArray[n];}
     QStringList*            get_reverse_sort_list() {return & m_reverse_sort_list;}
     QStringList*            GetSortedStringArray() {return & m_SortedStringArray;}

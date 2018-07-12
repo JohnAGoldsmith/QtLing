@@ -18,6 +18,7 @@
 #include "Word.h"
 #include "evaluation.h"
 #include "cparse.h"
+#include "compound.h"
 
 CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag)
 {
@@ -28,7 +29,7 @@ CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag)
     m_suffixal_stems        = new CStemCollection(this);
     m_Suffixes              = new CSuffixCollection(this);
     m_Prefixes              = new CPrefixCollection(this);
-    m_Compounds             = new CWordCollection(this);
+    m_Compounds             = new CompoundWordCollection(this);
 //    m_Parses                = new QList<QPair<QString,QString>>();
     m_Parses                = new QList<CParse*>();
     m_ParaSignatures        =  new CSignatureCollection(this, true);
@@ -81,6 +82,7 @@ CLexicon::~CLexicon()
     delete m_ParaSignatures;
     delete m_PassiveSignatures;
     delete m_goldstandard;
+    delete m_Compounds;
 }
 
 CSignatureCollection* CLexicon::get_active_signature_collection(){
@@ -206,6 +208,8 @@ void CLexicon::Crab_1()
 {
     FindProtostems();
 
+    find_compounds();
+
     CreateStemAffixPairs();
 
     assign_suffixes_to_stems(QString("crab_1"));
@@ -305,8 +309,8 @@ void CLexicon::FindProtostems()
                                 break;
                             }
                         }
-                        QString first_word = get_words()->get_reverse_sort_list()->at(wordno-1);
-                        QString last_word = get_words()->get_reverse_sort_list()->at(end_word);
+                        //QString first_word = get_words()->get_reverse_sort_list()->at(wordno-1);
+                        //QString last_word = get_words()->get_reverse_sort_list()->at(end_word);
                         protostem * this_protostem = new protostem (stem, wordno-1, end_word);
                         m_prefix_protostems_2[stem] = this_protostem;
                         m_prefix_protostems[stem] = 1;
@@ -330,7 +334,44 @@ void CLexicon::FindProtostems()
     return;
 }
 
+void CLexicon::find_compounds()
+{
+    QMap<QString, protostem*>& protostems = m_SuffixesFlag ?
+                m_suffix_protostems_2 : m_prefix_protostems_2;
 
+    int progresscount = 0;
+    m_ProgressBar->reset();
+    m_ProgressBar->setMinimum(0);
+    m_ProgressBar->setMaximum(protostems.size());
+    m_StatusBar->showMessage("Finding compounds.");
+
+    QMap<QString, protostem*>::ConstIterator protostem_iter;
+    for (protostem_iter = protostems.constBegin();
+         protostem_iter != protostems.constEnd();
+         protostem_iter++) {
+        m_ProgressBar->setValue(progresscount++);
+        const QString& str_stem = protostem_iter.key();
+        CWord* cword_stem = m_Words->get_word(str_stem);
+        if (cword_stem == NULL)
+            continue;
+
+        // current stem is a word
+        int curr_stem_len = str_stem.length();
+        protostem* curr_protostem = protostem_iter.value();
+        for (int wordno = curr_protostem->get_start_word();
+             wordno <= curr_protostem->get_end_word();
+             wordno++) {
+            QString str_compound = m_Words->get_word_string(wordno);
+            QString str_continuation = str_compound.mid(curr_stem_len);
+            CWord* cword_continuation = m_Words->get_word(str_continuation);
+            if (cword_continuation == NULL)
+                continue;
+
+            CWord* cword_compound = m_Words->get_word(str_compound);
+            m_Compounds->add_compound_word(cword_compound, cword_stem, cword_continuation);
+        }
+    }
+}
 
 
 /*!
@@ -350,9 +391,9 @@ void CLexicon::CreateStemAffixPairs()
     map_string_to_word_ptr_iter *   word_iter = m_Words->get_iterator();
     bool                        DoNotParseCompoundsFlag = true;
     while (word_iter->hasNext())   {
-        word = word_iter->next().value()->GetWord();
+        word = word_iter->next().value()->get_word();
         if (DoNotParseCompoundsFlag and word.contains("-")){
-            *m_Compounds << word;
+            //*m_Compounds << word;
             continue;
         }
         wordno++;
@@ -923,7 +964,8 @@ void CLexicon::collect_parasuffixes()
     QStringList     suffixes;
     map_sigstring_to_sig_ptr_iter sig_iter (* m_ParaSignatures->get_map());
     while (sig_iter.hasNext())
-    { pSig = sig_iter.next().value();
+    {
+        pSig = sig_iter.next().value();
         sigstring = pSig->get_key();
         suffixes = sigstring.split("=");
         foreach (suffix, suffixes){

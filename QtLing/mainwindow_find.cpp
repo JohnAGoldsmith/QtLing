@@ -46,7 +46,7 @@ FindDialog::FindDialog(MainWindow *p_main_window):
     m_combobox_selection->addItem(tr("Upper-left table"));
     m_combobox_selection->addItem(tr("Upper-right table"));
 
-    int search_sel_init_index;
+    int search_sel_init_index = 0;
     switch (m_search_range) {
         case FindDialog::e_tableview_upper_all:
             search_sel_init_index = 0; break;

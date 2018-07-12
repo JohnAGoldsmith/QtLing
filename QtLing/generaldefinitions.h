@@ -46,7 +46,9 @@ enum eDataType{
     e_data_gs_gold_standard_parses,
     // for protostem display
     e_data_suffixal_protostems,
-    e_data_prefixal_protostems
+    e_data_prefixal_protostems,
+    // for compound words
+    e_data_compound_words
 };
 
 enum eDocumentType  // for the Collection View

@@ -21,6 +21,7 @@ class CPrefixCollection;
 class QProgressBar;
 class CHypothesis;
 class CParse;
+class CompoundWordCollection;
 
 //  part of an experiment:
 class Collection
@@ -141,7 +142,8 @@ protected:
     CPrefixCollection *             m_Prefixes;
     CSignatureCollection *          m_Signatures;
     CSignatureCollection *          m_PrefixSignatures;
-    CWordCollection *               m_Compounds; // nothing done yet
+    //CWordCollection *               m_Compounds; // nothing done yet
+    CompoundWordCollection *            m_Compounds;
     //QList<QPair<QString,QString>> * m_Parses;
     QList<CParse*> *                 m_Parses; //
 
@@ -215,6 +217,7 @@ public:
     void                                        generate_hypotheses();
     CSignatureCollection*                       get_active_signature_collection();
     QMap<QString, eComponentType> &             get_category_types()        { return m_category_types;}
+    CompoundWordCollection*                     get_compounds()             { return m_Compounds; }
     double                                      get_entropy_threshold_for_positive_signatures() {return m_entropy_threshold_for_stems;}
     //void                                        get_epositive_signatures(QList<CSignature*> *);
     QList<CHypothesis*>*                        get_hypotheses ()           {return m_Hypotheses;}
@@ -276,6 +279,8 @@ public:
     void replace_parse_pairs_from_current_signature_structure(bool FindSuffixesFlag=true);
     void ReSignaturizeWithKnownAffixes();
     void test_for_phonological_relations_between_signatures();
+
+    void find_compounds();
 };
 
 #endif // CLEXICON_H

@@ -23,6 +23,9 @@ UpperTableView::UpperTableView (MainWindow* window, eSortStyle this_sort_style)
 
        m_row_recently_selected = -2;
        m_gold_standard_display_order = 0;
+
+       m_proxy_model = new LxaSortFilterProxyModel(this);
+       setModel(m_proxy_model);
 }
 
 
@@ -85,19 +88,19 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         set_data_type(curr_data_type);
 
         if (left_order == 0 && right_order == 0) {
-            setModel(m_parent_window->m_Models[component]);
+            m_proxy_model->setSourceModel(m_parent_window->m_Models[component]);
             if (this == right_table)
                 left_order = 1;
         } else if (left_order == 1 && right_order == 0) {
             if (this == right_table) {
                 //qDebug() << "Showing " << component << "on the right";
-                setModel(m_parent_window->m_Models[component]);
+                m_proxy_model->setSourceModel(m_parent_window->m_Models[component]);
                 left_order = 0;
                 right_order = 1;
             }
         } else if (left_order == 0 && right_order == 1) {
             if (this == left_table) {
-                setModel(m_parent_window->m_Models[component]);
+                m_proxy_model->setSourceModel(m_parent_window->m_Models[component]);
                 //qDebug() << "Showing " << component << "on the left";
             }
             if (this == right_table) {
@@ -117,15 +120,15 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         right_table->m_gold_standard_display_order = 0;
 
         if (component == "Words"){
-            setModel(m_parent_window->m_Models["Words"]);
+            m_proxy_model->setSourceModel(m_parent_window->m_Models["Words"]);
             set_data_type( e_data_words );
         }
         else     if (component == "Prefixal stems"){
-            setModel(m_parent_window->m_Models["Prefixal stems"]);
+            m_proxy_model->setSourceModel(m_parent_window->m_Models["Prefixal stems"]);
             set_data_type(e_prefixal_stems);
         }
         else     if (component == "Suffixal stems"){
-            setModel(m_parent_window->m_Models["Suffixal stems"]);
+            m_proxy_model->setSourceModel(m_parent_window->m_Models["Suffixal stems"]);
             set_data_type(e_suffixal_stems);
         }
         else     if (component == "Prefixes"){
@@ -155,7 +158,7 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
 
         }
         else     if (component == "Parasuffixes"){
-            setModel(m_parent_window->m_Models["Parasuffixes"]);
+            m_proxy_model->setSourceModel(m_parent_window->m_Models["Parasuffixes"]);
             set_data_type ( e_data_suffixes );
             sortByColumn(1);
         }
@@ -163,60 +166,75 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
 
         }
         else     if (component == "Passive signatures"){
-            setModel(m_parent_window->m_Models["Passive signatures"]);
+            m_proxy_model->setSourceModel(m_parent_window->m_Models["Passive signatures"]);
             set_data_type ( e_data_hollow_suffixal_signatures );
             sortByColumn(1);    }
         else     if (component == "Hypotheses"){
             m_parent_window->display_hypotheses();
         }
         else     if (component == "Suffixal protostems"){
-            setModel(m_parent_window->m_Models["Suffixal protostems"]);
+            m_proxy_model->setSourceModel(m_parent_window->m_Models["Suffixal protostems"]);
             set_data_type(e_data_suffixal_protostems);
             sortByColumn(1);
         }
         else     if (component == "Prefixal protostems"){
-            setModel(m_parent_window->m_Models["Prefixal protostems"]);
+            m_proxy_model->setSourceModel(m_parent_window->m_Models["Prefixal protostems"]);
             set_data_type(e_data_prefixal_protostems);
+            sortByColumn(1);
+        }
+        else     if (component == "Compound words"){
+            m_proxy_model->setSourceModel(m_parent_window->m_Models["Compound words"]);
+            set_data_type(e_data_compound_words);
             sortByColumn(1);
         }
         // add component 10
     }
 
     resizeColumnsToContents();
-
-    // Steps for making a sorted proxy model:
-    // Using the model that is already set as the base model for a QSortFilterProxyModel
-    // Reset proxy model as model of TableView
-
 }
 
-bool rows_less_than (const QStandardItem* item1, const QStandardItem* item2)
+bool UpperTableView::qsi_row_less_than (const QStandardItem* item1, const QStandardItem* item2)
 {
     return item1->row() < item2->row();
+}
+
+bool UpperTableView::index_row_less_than(const QModelIndex& i1, const QModelIndex& i2)
+{
+    return i1.row() < i2.row();
+}
+
+void UpperTableView::remap_indeces_and_highlight()
+{
+    m_indeces_found.clear();
+    QStandardItem* item_found;
+    QBrush brush_item_found(QColor(57, 197, 187));
+    foreach (item_found, m_items_found) {
+        item_found->setBackground(brush_item_found);
+        m_indeces_found.append(m_proxy_model->mapFromSource(item_found->index()));
+    }
+
+    qSort(m_indeces_found.begin(), m_indeces_found.end(), index_row_less_than);
+    //Debug() << "Found" << num_items_found << "occurrences of" << str;
 }
 
 int UpperTableView::find_all_strings(const QString& str, bool exact_match)
 {
     // qDebug() << "Finding strings";
-    QStandardItemModel* p_model = (QStandardItemModel*) model();
+    QStandardItemModel* p_model = (QStandardItemModel*) m_proxy_model->sourceModel();
     if (p_model == NULL) {
         // qDebug() << "Model not loaded";
         return 0;
     }
     m_items_found = QList<QStandardItem*>();
     m_items_found = p_model->findItems(str, exact_match? Qt::MatchExactly : Qt::MatchContains, 0);
+
     int num_items_found = m_items_found.length();
     if (num_items_found == 0) {
         // qDebug() << str << "was not found";
         return 0;
     } else {
-        qSort(m_items_found.begin(), m_items_found.end(), rows_less_than);
-        //Debug() << "Found" << num_items_found << "occurrences of" << str;
-        QBrush brush_item_found(QColor(57, 197, 187));
-        QStandardItem* p_item_found;
-        foreach (p_item_found, m_items_found) {
-            p_item_found->setBackground(brush_item_found);
-        }
+        qSort(m_items_found.begin(), m_items_found.end(), qsi_row_less_than);
+        remap_indeces_and_highlight();
         return num_items_found;
     }
 }
@@ -224,7 +242,7 @@ int UpperTableView::find_all_strings(const QString& str, bool exact_match)
 void UpperTableView::clear_search()
 {
     QBrush brush(QColor(255, 255, 255));
-    QStandardItemModel* p_model = (QStandardItemModel*) model();
+    QStandardItemModel* p_model = (QStandardItemModel*) m_proxy_model->sourceModel();
     if (p_model == NULL) {
         qDebug() << "UpperTableView::clear_search(): model not loaded!";
         return;
@@ -232,7 +250,8 @@ void UpperTableView::clear_search()
     for (int row_i = 0; row_i < p_model->rowCount(); row_i++) {
         p_model->item(row_i)->setBackground(brush);
     }
-    m_items_found = QList<QStandardItem*>();
+    m_items_found.clear();
+    m_indeces_found.clear();
     clearSelection();
     m_row_recently_selected = -2;
 }
@@ -240,7 +259,7 @@ void UpperTableView::clear_search()
 bool UpperTableView::find_next_and_highlight(QString &s)
 {
     // qDebug() << "Signal to find next received; string to find:" + s;
-    QStandardItemModel* p_model = (QStandardItemModel*) model();
+    QStandardItemModel* p_model = (QStandardItemModel*) m_proxy_model->sourceModel();
     FindDialog* p_find_dialog = (FindDialog*) sender();
 
     if (p_model == NULL) {
@@ -280,18 +299,19 @@ bool UpperTableView::find_next_and_highlight(QString &s)
     // Highlight an item among the list of items found, this item may follow
     // after the user's selection or may be the first item in that list
     bool next_item_found = false;
-    QList<QStandardItem*>::ConstIterator iter_item_found;
+    QModelIndexList::ConstIterator iter_index_found;
     int curr_row;
-    for (iter_item_found = m_items_found.constBegin();
-         iter_item_found != m_items_found.constEnd(); ) {
-        curr_row = (*iter_item_found)->row();
+    for (iter_index_found = m_indeces_found.constBegin();
+         iter_index_found != m_indeces_found.constEnd(); ) {
+        const QModelIndex& curr_index = *iter_index_found;
+        curr_row = curr_index.row();
         if (curr_row > m_row_recently_selected) {
             m_row_recently_selected = curr_row;
             next_item_found = true;
             break;
         }
         else
-            iter_item_found++;
+            iter_index_found++;
     }
 
     if (next_item_found) {
@@ -326,7 +346,7 @@ bool UpperTableView::find_next_and_highlight(QString &s)
 
 bool UpperTableView::find_prev_and_highlight(QString &s)
 {
-    QStandardItemModel* p_model = (QStandardItemModel*) model();
+    QStandardItemModel* p_model = (QStandardItemModel*) m_proxy_model->sourceModel();
     FindDialog* p_find_dialog = (FindDialog*) sender();
 
     if (p_model == NULL) {
@@ -366,18 +386,19 @@ bool UpperTableView::find_prev_and_highlight(QString &s)
     // Highlight an item among the list of items found, this item may follow
     // after the user's selection or may be the first item in that list
     bool next_item_found = false;
-    QList<QStandardItem*>::const_reverse_iterator iter_item_found;
+    QModelIndexList::ConstIterator iter_index_found;
     int curr_row;
-    for (iter_item_found = m_items_found.crbegin();
-         iter_item_found != m_items_found.crend(); ) {
-        curr_row = (*iter_item_found)->row();
-        if (curr_row < m_row_recently_selected) {
+    for (iter_index_found = m_indeces_found.constBegin();
+         iter_index_found != m_indeces_found.constEnd(); ) {
+        const QModelIndex& curr_index = *iter_index_found;
+        curr_row = curr_index.row();
+        if (curr_row > m_row_recently_selected) {
             m_row_recently_selected = curr_row;
             next_item_found = true;
             break;
         }
         else
-            iter_item_found++;
+            iter_index_found++;
     }
 
     if (next_item_found) {

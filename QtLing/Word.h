@@ -58,7 +58,7 @@ public:
     int                                 get_word_count() const  { return m_WordCount; }
     const QMap<stem_t,Parse_triple*>*          get_parse_triple_map()     const  { return & m_Parse_triple_map; }
     QList<QPair<CStem*,CSignature*>*> * get_signatures ()   {return &m_Signatures;}
-    QString                             GetWord()      const { return m_Word; }
+    QString                             get_word()      const { return m_Word; }
     void                                IncrementWordCount(int n = 1);
     void                                SetWordCount(int count) { m_WordCount = count;}
 

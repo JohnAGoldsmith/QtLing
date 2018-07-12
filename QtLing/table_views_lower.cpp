@@ -8,6 +8,7 @@
 #include "WordCollection.h"
 #include "graphics.h"
 #include "lxamodels.h"
+#include "compound.h"
 class sig_graph_edge;
 
 /**
@@ -231,6 +232,27 @@ void LowerTableView::display_this_item( const  QModelIndex & index )
         table_protostem(p_protostem);
         setModel(m_my_current_model);
         break;
+    }
+
+    case e_data_compound_words: {
+        if (index.isValid()) {
+            row = index.row();
+            column = index.column();
+            if (column == 0)
+                column = 1;
+        }
+        QString str_compound = index.sibling(row, 0).data().toString();
+        CompoundWord* p_compound = this_lexicon->get_compounds()
+                ->get_compound_word(str_compound);
+        if (p_compound == NULL) {
+            qDebug() << "LowerTableView::display_this_item: "
+                        "Cannot find compound word!";
+            break;
+        }
+        table_compound_composition(p_compound, column-1);
+        setModel(m_my_current_model);
+        break;
+
     }
 
     default:
@@ -541,4 +563,34 @@ void LowerTableView::table_protostem(protostem *p_protostem)
         m_my_current_model->appendRow(item_list);
     }
 
+}
+
+void LowerTableView::table_compound_composition(CompoundWord* p_compound, int composition_i)
+{
+    typedef  QStandardItem QSI;
+    typedef  CompoundWord::CompoundComposition CompoundComposition;
+    typedef  CompoundComponent::CompoundConnectionMap ConnectionMap;
+    m_my_current_model = new QStandardItemModel();
+
+    QStringList labels;
+    labels << "Component of compound";
+
+    CompoundComposition* p_composition
+            = p_compound->get_compositions()[composition_i];
+    CompoundComponent* p_component;
+    foreach (p_component, *p_composition) {
+        QList<QSI*> item_list;
+        QSI* item0 = new QSI(p_component->get_word());
+        item0->setBackground(QBrush(QColor(200, 200, 200)));
+        item_list.append(item0);
+        ConnectionMap::ConstIterator connection_iter;
+        const ConnectionMap& connection_map = p_component->get_connections();
+        for (connection_iter = connection_map.constBegin();
+             connection_iter != connection_map.constEnd();
+             connection_iter++) {
+            QSI* connection_item = new QSI(connection_iter.key());
+            item_list.append(connection_item);
+        }
+        m_my_current_model->appendColumn(item_list);
+    }
 }

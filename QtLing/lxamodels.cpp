@@ -8,6 +8,7 @@
 #include "hypothesis.h"
 #include "lxamodels.h"
 #include "evaluation.h"
+#include "compound.h"
 #include <QCoreApplication>
 
 LxaStandardItemModel::LxaStandardItemModel(MainWindow* main_window): QStandardItemModel(main_window)
@@ -35,11 +36,17 @@ bool LxaSortFilterProxyModel::lessThan(const QModelIndex & left, const QModelInd
     QVariant leftdata = sourceModel()->data(left);
     QVariant rightdata = sourceModel()->data(right);
 
-    QString sig1 = leftdata.toString();
-    QString sig2 = leftdata.toString();
-
-   return sig1.split("=").length() > sig2.split("=").length();
-
+    if (leftdata.type() == QVariant::String && rightdata.type() == QVariant::String) {
+        QString sig1 = leftdata.toString();
+        QString sig2 = rightdata.toString();
+        int len1 = sig1.split('=').length();
+        int len2 = sig2.split('=').length();
+        if (len1 != len2)
+            return len1 < len2;
+        else
+            return sig1 < sig2;
+    }
+    return QSortFilterProxyModel::lessThan(left, right);
 };
 
 void  LxaStandardItemModel::load_category(QString , eComponentType)
@@ -73,6 +80,37 @@ void LxaStandardItemModel::load_words(CWordCollection* p_words)
             QStandardItem* pItem3 = new QStandardItem(parse_3_iter.next().value()->p_sig_string) ;
             item_list.append(pItem3);
             tempcount++;
+        }
+        appendRow(item_list);
+    }
+}
+
+void LxaStandardItemModel::load_compounds(CompoundWordCollection *p_compounds)
+{
+    typedef QStandardItem QSI;
+    typedef CompoundWord::CompoundComposition CompoundComposition;
+
+    QStringList labels;
+    labels << "Compound word" << "Possible Compositions";
+    setHorizontalHeaderLabels(labels);
+
+    QMap<QString, CompoundWord*>::ConstIterator compound_iter;
+    const QMap<QString, CompoundWord*>& ref_map = p_compounds->get_map();
+    for (compound_iter = ref_map.constBegin();
+         compound_iter != ref_map.constEnd();
+         compound_iter++) {
+        QList<QSI*> item_list;
+        QSI* item0 = new QSI(compound_iter.key());
+        item_list.append(item0);
+
+        CompoundWord* p_compoundword = compound_iter.value();
+        const QList<CompoundComposition*>& composition_list = p_compoundword->get_compositions();
+        QList<CompoundComposition*>::ConstIterator composition_iter;
+        for (composition_iter = composition_list.constBegin();
+             composition_iter != composition_list.constEnd();
+             composition_iter++) {
+            QSI* composition_item = new QSI(p_compoundword->composition_to_str(*composition_iter));
+            item_list.append(composition_item);
         }
         appendRow(item_list);
     }
@@ -649,6 +687,9 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
     QStandardItem * word_item = new QStandardItem(QString("Words"));
     QStandardItem * word_count_item = new QStandardItem(QString::number(lexicon->get_word_collection()->get_count()));
 
+    QStandardItem * compound_item = new QStandardItem(QString("Compound words"));
+    QStandardItem * compound_count_item = new QStandardItem(QString::number(lexicon->get_compounds()->get_count()));
+
     QStandardItem * suffixal_protostem_item = new QStandardItem(QString("Suffixal protostems"));
     QStandardItem * suffixal_protostem_count_item = new QStandardItem(QString::number(lexicon->get_suffixal_protostems()->size()));
 
@@ -756,6 +797,11 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
     word_items.append(word_item);
     word_items.append(word_count_item);
 
+    // Displaying compound words
+    QList<QStandardItem*> compound_items;
+    compound_items.append(compound_item);
+    compound_items.append(compound_count_item);
+
     // Displaying Protostems
     QList<QStandardItem*> suffixal_protostem_items;
     suffixal_protostem_items.append(suffixal_protostem_item);
@@ -829,6 +875,7 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
     lexicon_item->appendRow(keyboard_5);
     lexicon_item->appendRow(prefix_items);
     lexicon_item->appendRow(word_items);
+    lexicon_item->appendRow(compound_items);
     lexicon_item->appendRow(suffixal_protostem_items);
     lexicon_item->appendRow(prefixal_protostem_items);
     lexicon_item->appendRow(suffixal_stem_items);

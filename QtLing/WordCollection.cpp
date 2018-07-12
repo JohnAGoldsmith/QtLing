@@ -22,7 +22,7 @@ QMapIterator<QString,CWord*> *  CWordCollection::get_iterator(){
     return iter;
 }
 
-CWord* CWordCollection::get_word(QString word){
+CWord* CWordCollection::get_word(const QString& word){
     QMap<QString,CWord*>::const_iterator word_iter = m_WordMap.find(word);
     if (word_iter == m_WordMap.end()){
         return NULL;
