@@ -22,6 +22,23 @@ class CHypothesis;
 
 class CParse;
 
+
+/* The principal objects we use on the way to morphological analysis are:
+ *
+ * Parse: a pair of strings, typically stem and affix;
+ * Protostem: a triple, one string and two integers, showing the stem and the beginning and end point on the list of words where it appears.
+ * Protosig: A pair consisting of a stem and a set of affixes
+ * Protosigs: a map from a stem to the set of affixes in a protosig
+ * Sig_to_stems:  a map from sigstrings to a set of stems.
+ *
+ * Also:
+ * Parse_list
+ */
+
+
+
+
+
 //  part of an experiment:
 class Collection
 {
@@ -115,11 +132,16 @@ class protostem{
         QString     m_protostem;
         int         m_start_word;
         int         m_end_word;
+        bool        m_suffix_flag;
 public:
-        protostem(QString stem, int start_word, int end_word=-1) { m_protostem = stem; m_start_word = start_word; m_end_word = end_word;}
+        protostem(QString stem, int start_word, int end_word=-1, bool m_suffix_flag = true);
+        protostem(QString stem, bool m_suffix_flag = true);
+        ~protostem();
+
         QString     get_stem() { return m_protostem;}
         int         get_start_word() { return m_start_word;}
         int         get_end_word()   {return m_end_word;}
+        void        set_start_and_end_word(int a, int b) {m_start_word = a; m_end_word = b;}
 };
 
 //-----------------------------------------------------------------------//
@@ -145,15 +167,15 @@ protected:
     //QList<QPair<QString,QString>> * m_Parses;
     QList<CParse*> *                 m_Parses;
 
-    QMap<QString,int>               m_Parse_map;
-//    QMap<QString, int>              m_suffix_protostems;
-    QMap<QString, int>              m_prefix_protostems;
+   // QMap<QString,int>               m_Parse_map;
+    QMap<QString, protostem*>              m_suffix_protostems;
+    QMap<QString, protostem*>              m_prefix_protostems;
 
     // m_protostems_2 is used in order to keep track of exactly which interval of words in the word list begins
     // with a particular proto-stem (i.e., a word-beginning). This replaces using a huge signature to store
     // that same information.
-    QMap<QString, protostem*>        m_suffix_protostems_2;
-    QMap<QString, protostem*>        m_prefix_protostems_2;
+    //QMap<QString, protostem*>        m_suffix_protostems_2;
+    //QMap<QString, protostem*>        m_prefix_protostems_2;
 
 
     bool                            m_SuffixesFlag;
@@ -173,9 +195,12 @@ protected:
     QMap<QString, CHypothesis*> *            m_Hypothesis_map;
 // add component 1
 
+    Sig_to_stems                    m_intermediate_signature_to_stems_map; // used during computation, not permanent.
+
     QProgressBar*                   m_ProgressBar;
     QStatusBar *                      m_StatusBar;
     QMap<QString, QStringList*>        m_stem_autobiographies;
+    QMap<QString, QStringList*>         m_word_autobiographies;
 
     double                          m_entropy_threshold_for_stems;
 
@@ -223,6 +248,10 @@ public:
     CWordCollection *                           get_words()                 { return m_Words;}
     QList<QString> *                            get_stem_autobiography(stem_t stem)   { return m_stem_autobiographies[stem];}
     void                                        add_to_stem_autobiographies (QString stem, QString message);
+    bool                                        stem_autobiographies_contains(QString stem);
+    QList<QString> *                            get_word_autobiography(word_t word);
+    void                                        add_to_word_autobiographies (QString word, QString message);
+    bool                                        word_autobiographies_contains(QString word);
 
     void                                        set_progress_bar (QProgressBar * pPB) { m_ProgressBar = pPB;}
     void                                        set_status_bar(QStatusBar* pBar) {m_StatusBar = pBar;}
@@ -232,25 +261,33 @@ public:
     void                                        set_window(MainWindow* window) { m_main_window = window; }
 
     CLexicon *                                  build_sublexicon(MainWindow* = NULL);
-    void                                        link_signature_and_stem(stem_t , CSignature*, QString this_signature_string );
-    void                                        link_signature_and_affix(CSignature*, affix_t);
+
+
+    void                                        time_stamp(QString message);
 
 public:
     // insert functions here
-    void assign_suffixes_to_stems(QString name_of_calling_function);
+    void step1_find_protostems();
+    void step2_create_stem_affix_parses();
+    void step3_assign_affixes_to_stems(QString name_of_calling_function);
+    void step3a_take_stem_affix_parses_and_create_protosigs(QList<CParse*> * parses, bool suffix_flag,Protosigs* these_protosigs);
+    void step4_create_signatures(QString name_of_calling_function);
+    void step4a_link_signature_and_affix(CSignature*, affix_t);
+    void step4b_link_signature_and_stem_and_word(stem_t , CSignature*, QString this_signature_string );
+    void step6_ReSignaturizeWithKnownAffixes();
+    void step6a_create_temporary_map_from_stems_to_affix_sets(Protosigs   &); //map_sigstring_to_stem_list &);
+    void step7_FindGoodSignaturesInsideParaSignatures();
+   void step7_take_protosigs_create_xxx(QString, Protosigs ) {return;}
+
     void clear_lexicon();
     void compare_opposite_sets_of_signatures(QSet<CSignature*>* sig_set_1, QSet<CSignature*>* sig_set_2,QString letter);
     void compute_sig_graph_edge_map();
     void Crab_1();
     void Crab_2();
-    void CreateStemAffixPairs();
-    void create_temporary_map_from_stems_to_affix_sets(map_sigstring_to_morph_set   &); //map_sigstring_to_stem_list &);
     void create_sublexicon ();
     void find_full_signatures();
-    void FindGoodSignaturesInsideParaSignatures();
-    void FindProtostems();
+
     void replace_parse_pairs_from_current_signature_structure(bool FindSuffixesFlag=true);
-    void ReSignaturizeWithKnownAffixes();
     void test_for_phonological_relations_between_signatures();
 };
 

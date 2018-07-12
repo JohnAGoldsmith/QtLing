@@ -6,6 +6,7 @@
 #include <QStringList>
 #include <QString>
 #include <QChar>
+#include <QDebug>
 
 bool signature_1_contains_signature_2(QString sig1, QString sig2)
 {
@@ -75,8 +76,9 @@ namespace {
 
     int compare_reversed_string(const QString& a, const QString& b)
     {
-        if (a.size() > b.size())
-            return -compare_reversed_string(b, a);
+        // the following has been in here for years...but it's wrong. July 2018.
+//        if (a.size() > b.size())
+//            return -compare_reversed_string(b, a);
 
         typedef std::reverse_iterator<QString::const_iterator>
             riterator;
@@ -190,7 +192,7 @@ int find_length_of_longest_common_lef_substring(QString string1, QString string2
     return i;
 }
 //----------------------------------------------------------------------------------------------//
-void invert(QStringList list){
+void invert(QStringList list){    // this is not currently used.
     QStringList this_string_list;
     QStringList these_letters;
     foreach (QString this_string,list){

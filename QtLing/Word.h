@@ -1,4 +1,4 @@
-#ifndef CWORD_H
+    #ifndef CWORD_H
 #define CWORD_H
 
 #include <QString>
