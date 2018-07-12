@@ -12,8 +12,8 @@ CSignature::CSignature(QString signature_string, bool suffix_flag, CSignatureCol
 {
   m_Signature = signature_string;
   m_Stems = new CStem_ptr_list();
-  m_Suffixes = new CSuffix_ptr_list;
-  m_Prefixes = new CPrefix_ptr_list;
+  m_Suffixes = new CSuffix_ptr_list();
+  m_Prefixes = new CPrefix_ptr_list();
   m_SuffixFlag = suffix_flag;
   m_SignatureCollection = Signatures;
   m_stem_entropy = -1;
@@ -29,10 +29,25 @@ CSignature::CSignature(CSignature& signature) {
 }
 CSignature::~CSignature()
 {
+    for (int i = 0; i < m_Stems->size();i++){
+        if (m_Stems->at(i)){
+            //delete m_Stems->at(i);
+            (*m_Stems)[i] = nullptr;}
+    }
+    for (int i = 0; i < m_Prefixes->size();i++){
+        if (m_Prefixes->at(i)){
+            //delete m_Prefixes->at(i);
+            (*m_Prefixes)[i] = nullptr;
+        }
+    }
+    for (int i = 0; i < m_Suffixes->size();i++){
+        //delete m_Suffixes->at(i);
+    }
+
   delete m_Stems;
   delete m_Prefixes;
   delete m_Suffixes;
-}
+};
 QStringList& CSignature::get_string_list(QStringList& affix_string_list){
     affix_string_list.clear();
     affix_string_list = m_Signature.split("=");
@@ -44,6 +59,7 @@ QStringList& CSignature::get_stem_strings(QStringList & stem_list)
     for (int stemno = 0; stemno < m_Stems->size(); stemno++){
         stem_list.append(m_Stems->at(stemno)->get_key());
     }
+
     return stem_list;
 }
 

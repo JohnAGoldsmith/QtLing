@@ -59,13 +59,13 @@ void CLexicon::generate_hypotheses()
             }
             doomed_affixes.append(doomed_affix);
             if (affixes2.contains(doomed_affix)){
-                qDebug() << 58 << doomed_affix << affixes2;
+                //qDebug() << 58 << doomed_affix << affixes2;
                 matching_affixes_count++;
-                qDebug() << "success" << this_morph << doomed_affix << this_morph <<  pSig1_longer_stem->display() << pSig2_shorter_stem->display();
+                //qDebug() << "success" << this_morph << doomed_affix << this_morph <<  pSig1_longer_stem->display() << pSig2_shorter_stem->display();
             }else{
                 // not all of the first sig is continued in the second sig.
                 success_flag = false;
-                qDebug() << 59 << " failure " << this_morph << doomed_affix << pSig1_longer_stem->display() << pSig2_shorter_stem->display() << "matches so far " << matching_affixes_count;
+               // qDebug() << 59 << " failure " << this_morph << doomed_affix << pSig1_longer_stem->display() << pSig2_shorter_stem->display() << "matches so far " << matching_affixes_count;
                 break;
             }
         }
