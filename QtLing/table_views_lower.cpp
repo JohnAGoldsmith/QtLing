@@ -74,32 +74,32 @@ void LowerTableView::display_this_item( const  QModelIndex & index )
          break;
      }
          //  ---------------------------------------------------//
-        case  e_data_suffixal_signatures:
-        case  e_data_epositive_suffixal_signatures:{
-            if (index.isValid()) {row = index.row();}
-            signature = index.sibling(row,0).data().toString();
-            CSignature*  pSig = this_lexicon->get_signatures()->get_signature(signature);
-            table_signature(pSig);
-            setModel( m_my_current_model);
-            break;}
-         //  ---------------------------------------------------//
-        case e_data_prefixal_signatures:
-        case e_data_epositive_prefixal_signatures:{
-              item_list.clear();
-              if (index.isValid()) {row = index.row();}
-              signature = index.sibling(row,0).data().toString();
-              CSignature*           pSig = this_lexicon->get_prefix_signatures()->get_signature(signature);
-              table_signature(pSig);
-              setModel( m_my_current_model);
-              break;}
-         //  ---------------------------------------------------//
-        case e_data_residual_signatures:{
-              if (index.isValid()){row = index.row();}
-                item_list.clear();
-            }
-        }
+    case  e_data_suffixal_signatures:
+    case  e_data_epositive_suffixal_signatures:{
+        if (index.isValid()) {row = index.row();}
+        signature = index.sibling(row,0).data().toString();
+        CSignature*  pSig = this_lexicon->get_signatures()->get_signature(signature);
+        table_signature(pSig);
         setModel( m_my_current_model);
         break;}
+     //  ---------------------------------------------------//
+    case e_data_prefixal_signatures:
+    case e_data_epositive_prefixal_signatures:{
+          item_list.clear();
+          if (index.isValid()) {row = index.row();}
+          signature = index.sibling(row,0).data().toString();
+          CSignature*           pSig = this_lexicon->get_prefix_signatures()->get_signature(signature);
+          table_signature(pSig);
+          setModel( m_my_current_model);
+          break;}
+     //  ---------------------------------------------------//
+    case e_data_residual_signatures:{
+          if (index.isValid()){row = index.row();}
+            item_list.clear();
+        }
+    }
+    setModel( m_my_current_model);
+    break;
         //  ---------------------------------------------------//
     case e_data_hollow_signatures:{
         item_list.clear();
