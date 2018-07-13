@@ -304,7 +304,7 @@ public:
     void step6_ReSignaturizeWithKnownAffixes();
     void step6a_create_temporary_map_from_stems_to_affix_sets(Protosigs   &); //map_sigstring_to_stem_list &);
     void step7_FindGoodSignaturesInsideParaSignatures();
-   void step7_take_protosigs_create_xxx(QString, Protosigs ) {return;}
+    void step7_take_protosigs_create_xxx(QString, Protosigs ) {return;}
 
     void clear_lexicon();
     void compare_opposite_sets_of_signatures(QSet<CSignature*>* sig_set_1, QSet<CSignature*>* sig_set_2,QString letter);

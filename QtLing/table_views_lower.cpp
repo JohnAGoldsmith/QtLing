@@ -55,25 +55,25 @@ void LowerTableView::display_this_item( const  QModelIndex & index )
     //QStandardItem*             p_item;
     QList<QStandardItem*>      item_list;
 
-     switch (UpperView_data_type){
-        case e_data_words:{
-            if (index.isValid()) {row = index.row();}
-            QString word = index.sibling(row,0).data().toString();
-            CWord* pWord = this_lexicon->get_words()->get_word(word);
-            table_word(pWord);
-            setModel( m_my_current_model);
-            break;
-        }
-     case e_data_stems:
-     case e_suffixal_stems:
-     case e_prefixal_stems:{
-         if (index.isValid()) {row = index.row();}
-         QString stem = index.sibling(row,0).data().toString();
-         table_stem(stem, this_lexicon);
-         setModel( m_my_current_model);
-         break;
-     }
-         //  ---------------------------------------------------//
+    switch (UpperView_data_type){
+    case e_data_words:{
+        if (index.isValid()) {row = index.row();}
+        QString word = index.sibling(row,0).data().toString();
+        CWord* pWord = this_lexicon->get_words()->get_word(word);
+        table_word(pWord);
+        setModel( m_my_current_model);
+        break;
+    }
+    case e_data_stems:
+    case e_suffixal_stems:
+    case e_prefixal_stems:{
+        if (index.isValid()) {row = index.row();}
+        QString stem = index.sibling(row,0).data().toString();
+        table_stem(stem, this_lexicon);
+        setModel( m_my_current_model);
+        break;
+    }
+        //  ---------------------------------------------------//
     case  e_data_suffixal_signatures:
     case  e_data_epositive_suffixal_signatures:{
         if (index.isValid()) {row = index.row();}
@@ -82,24 +82,39 @@ void LowerTableView::display_this_item( const  QModelIndex & index )
         table_signature(pSig);
         setModel( m_my_current_model);
         break;}
-     //  ---------------------------------------------------//
+        //  ---------------------------------------------------//
     case e_data_prefixal_signatures:
     case e_data_epositive_prefixal_signatures:{
-          item_list.clear();
-          if (index.isValid()) {row = index.row();}
-          signature = index.sibling(row,0).data().toString();
-          CSignature*           pSig = this_lexicon->get_prefix_signatures()->get_signature(signature);
-          table_signature(pSig);
-          setModel( m_my_current_model);
-          break;}
-     //  ---------------------------------------------------//
+        item_list.clear();
+        if (index.isValid()) {row = index.row();}
+        signature = index.sibling(row,0).data().toString();
+        CSignature*           pSig = this_lexicon->get_prefix_signatures()->get_signature(signature);
+        table_signature(pSig);
+        setModel( m_my_current_model);
+        break;}
+        //  ---------------------------------------------------//
     case e_data_residual_signatures:{
-          if (index.isValid()){row = index.row();}
-            item_list.clear();
+        if (index.isValid()){row = index.row();}
+        item_list.clear();
+        signature = index.sibling(row,0).data().toString();
+        CSignature*           pSig = this_lexicon->get_signatures()->get_signature(signature);
+        CStem*                p_Stem;
+        CStem_ptr_list     *  sig_stems = pSig->get_stems();
+        QStandardItem*        p_item;
+        if (m_my_current_model) {
+            delete m_my_current_model;
         }
-    }
-    setModel( m_my_current_model);
-    break;
+        m_my_current_model = new QStandardItemModel();
+        foreach (p_Stem, *sig_stems)  {
+            p_item = new QStandardItem(p_Stem->get_key() );
+            item_list.append(p_item);
+            if (item_list.length() >= m_number_of_columns){
+                m_my_current_model->appendRow(item_list);
+                item_list.clear();
+            }
+        }
+        setModel( m_my_current_model);
+        break;}
         //  ---------------------------------------------------//
     case e_data_hollow_signatures:{
         item_list.clear();
@@ -189,16 +204,16 @@ void LowerTableView::display_this_item( const  QModelIndex & index )
         } // end of tabular display, lower right window
         break;}
     case  e_data_hypotheses:
-          if (m_parent_window->m_graphic_display_flag){
-                if (index.isValid()) {row = index.row();}
-                QString hypothesis_label = index.sibling(row,6).data().toString();
-          }
-          else{ //tabular info, not graphics.
+        if (m_parent_window->m_graphic_display_flag){
+            if (index.isValid()) {row = index.row();}
+            QString hypothesis_label = index.sibling(row,6).data().toString();
+        }
+        else{ //tabular info, not graphics.
 
-          }
-          break;
+        }
+        break;
 
-    // add component 9
+        // add component 9
         if (m_parent_window->m_graphic_display_flag){
             if (index.isValid()) {row = index.row();}
             QString hypothesis_label = index.sibling(row,6).data().toString();
