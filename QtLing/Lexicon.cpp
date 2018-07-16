@@ -322,7 +322,7 @@ void CLexicon::step1_find_protostems()
     bool            DifferenceFoundFlag = false;
     stem_t          potential_stem;
     int             this_word_length(0), previous_word_length(0);
-    int             MINIMUM_STEM_LENGTH = 2;
+    int             MINIMUM_STEM_LENGTH = 4;
 
     QStringList *  Words;
     if (m_SuffixesFlag){
@@ -777,6 +777,7 @@ bool contains(QList<QString> * list2, QList<QString> * list1){
 
 void CLexicon::find_compounds()
 {
+    int MIN_STEM_LENGTH = 2;
     CStemCollection* p_stems = m_SuffixesFlag ? m_suffixal_stems : m_prefixal_stems;
     const QMap<QString, protostem*>& ref_protostem_map
             = m_SuffixesFlag ? m_suffix_protostems : m_prefix_protostems;
@@ -801,6 +802,8 @@ void CLexicon::find_compounds()
         protostem* p_protostem = ref_protostem_map[str_stem];
         int stem_length = str_stem.length();
 
+        if (stem_length < MIN_STEM_LENGTH) continue;
+
         // iterate through all words in the protostem
         int wordno;
         int end_word = p_protostem->get_end_word();
@@ -816,23 +819,25 @@ void CLexicon::find_compounds()
             bool continuation_valid = true;
             // determine if the continuation is already in stem's signature,
             // skip if it is.
-            CSignature* p_signature = p_stem->get_last_signature();
-            if (m_SuffixesFlag) {
-                QList<CSuffix*>* p_suffixes = p_signature->get_suffix_list();
-                CSuffix* p_suffix;
-                foreach (p_suffix, *p_suffixes) {
-                    if (p_suffix->get_key() == str_continuation) {
-                        continuation_valid = false;
-                        break;
+            CSignature* p_signature;
+            foreach (p_signature, *(p_stem->GetSignatures())) {
+                if (m_SuffixesFlag) {
+                    QList<CSuffix*>* p_suffixes = p_signature->get_suffix_list();
+                    CSuffix* p_suffix;
+                    foreach (p_suffix, *p_suffixes) {
+                        if (p_suffix->get_key() == str_continuation) {
+                            continuation_valid = false;
+                            break;
+                        }
                     }
-                }
-            } else {
-                QList<CPrefix*>* p_prefixes = p_signature->get_prefix_list();
-                CPrefix* p_prefix;
-                foreach (p_prefix, *p_prefixes) {
-                    if (p_prefix->get_key() == str_continuation) {
-                        continuation_valid = false;
-                        break;
+                } else {
+                    QList<CPrefix*>* p_prefixes = p_signature->get_prefix_list();
+                    CPrefix* p_prefix;
+                    foreach (p_prefix, *p_prefixes) {
+                        if (p_prefix->get_key() == str_continuation) {
+                            continuation_valid = false;
+                            break;
+                        }
                     }
                 }
             }
@@ -851,7 +856,7 @@ void CLexicon::find_compounds()
         }
     }
     // finished part 1
-    /*
+
     // starting part 2
     m_ProgressBar->reset();
     m_ProgressBar->setMinimum(0);
@@ -860,22 +865,29 @@ void CLexicon::find_compounds()
                              "removing invalid components.");
     itercount = 0;
 
+    QList<CompoundComponent*> list_to_remove;
     CompoundComponentCollection* p_components = m_Compounds->get_components();
     QMap<QString, CompoundComponent*>& ref_components_map = p_components->get_map();
     qDebug() << QString("Found %1 components").arg(ref_components_map.size());
     QMap<QString, CompoundComponent*>::iterator components_iter;
     for (components_iter = ref_components_map.begin();
-         components_iter != ref_components_map.end(); ) {
+         components_iter != ref_components_map.end();
+         components_iter++) {
         m_ProgressBar->setValue(itercount++);
         CompoundComponent* p_component = components_iter.value();
         qDebug() << QString("Checking validity of component: [%1]").arg(p_component->get_word());
         if (!p_component->check_valid()) {
-            p_components->remove_component(p_component);
+            qDebug() << "\tinvalid.";
+            list_to_remove.append(p_component);
         } else {
-            components_iter++;
+            qDebug() << "\tvalid.";
         }
     }
-    */
+    CompoundComponent* p_component_to_remove;
+    qDebug() << "Removing invalid components";
+    foreach (p_component_to_remove, list_to_remove) {
+        p_components->remove_component(p_component_to_remove);
+    }
 
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////

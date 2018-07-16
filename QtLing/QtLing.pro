@@ -50,7 +50,8 @@ SOURCES += main.cpp\
     mainwindow_actions.cpp \
     stringalignment.cpp \
     allosignatures.cpp \
-    compound.cpp
+    compound.cpp \
+    mainwindow_treeview.cpp
 
 HEADERS  += mainwindow.h \
     CompareFunc.h \

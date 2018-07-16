@@ -13,7 +13,11 @@ class CompoundWord;
 class CompoundComponentCollection;
 class CompoundWordCollection;
 
-
+/*!
+ * \brief The CompoundComponent class.
+ *
+ *
+ */
 class CompoundComponent
 {
 public:
