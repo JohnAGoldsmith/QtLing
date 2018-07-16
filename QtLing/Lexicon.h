@@ -301,6 +301,9 @@ public:
     void step4_create_signatures(QString name_of_calling_function);
     void step4a_link_signature_and_affix(CSignature*, affix_t);
     void step4b_link_signature_and_stem_and_word(stem_t , CSignature*, QString this_signature_string );
+
+    void find_compounds();
+
     void step6_ReSignaturizeWithKnownAffixes();
     void step6a_create_temporary_map_from_stems_to_affix_sets(Protosigs   &); //map_sigstring_to_stem_list &);
     void step7_FindGoodSignaturesInsideParaSignatures();
@@ -316,8 +319,6 @@ public:
 
     void replace_parse_pairs_from_current_signature_structure(bool FindSuffixesFlag=true);
     void test_for_phonological_relations_between_signatures();
-
-    void find_compounds();
 };
 
 #endif // CLEXICON_H

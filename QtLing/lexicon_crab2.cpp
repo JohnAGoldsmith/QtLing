@@ -30,6 +30,8 @@ void CLexicon::Crab_2()
     step6_ReSignaturizeWithKnownAffixes();
     step7_FindGoodSignaturesInsideParaSignatures();
 
+    find_compounds();
+
      m_SuffixesFlag ?
         m_Signatures->calculate_stem_entropy():
         m_PrefixSignatures->calculate_stem_entropy();

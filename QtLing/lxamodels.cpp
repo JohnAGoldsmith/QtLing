@@ -45,8 +45,7 @@ bool LxaSortFilterProxyModel::lessThan(const QModelIndex & left, const QModelInd
             return len1 < len2;
         else
             return sig1 < sig2;
-    }
-    return QSortFilterProxyModel::lessThan(left, right);
+    } else return QSortFilterProxyModel::lessThan(left, right);
 };
 
 void  LxaStandardItemModel::load_category(QString , eComponentType)

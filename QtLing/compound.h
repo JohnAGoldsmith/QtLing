@@ -13,6 +13,7 @@ class CompoundWord;
 class CompoundComponentCollection;
 class CompoundWordCollection;
 
+
 class CompoundComponent
 {
 public:
@@ -21,15 +22,14 @@ protected:
     friend class CompoundComponentCollection;
     QString                                     m_word;
     QMap<QString, QPair<int, CompoundWord*>>    m_connections;
-    CWord*                                      m_cword_ptr;
 
 public:
     CompoundComponent();
-    CompoundComponent(QString& word, CWord* p_cword);
+    CompoundComponent(const QString& word);
     void                                        add_connection(CompoundWord* compword, int position);
     const CompoundConnectionMap&                get_connections() const { return m_connections; }
-    CWord*                                      get_cword_ptr() const { return m_cword_ptr; }
     const QString&                              get_word() const {return m_word;}
+    bool                                        check_valid();
 };
 
 class CompoundWord
@@ -40,17 +40,16 @@ protected:
     friend class CompoundWordCollection;
     QString                                     m_word;
     QList<CompoundComposition*>                 m_compositions;
-    CWord*                                      m_cword_ptr;
 
 public:
     CompoundWord();
     ~CompoundWord();
-    CompoundWord(QString& word, CWord* p_cword);
-    CompoundWord(CWord* p_cword);
-    QString                                     get_word() { return m_word; }
-    const QList<QList<CompoundComponent*>*>&    get_compositions() const { return m_compositions; }
+    CompoundWord(const QString& word);
+    const QString &                             get_word() const { return m_word; }
+    const QList<CompoundComposition*>&          get_compositions() const { return m_compositions; }
     //void                                        add_component(CompoundComponent* p_part);
     void                                        add_composition(const CompoundComposition&);
+    bool                                        remove_composition_if_contains(CompoundComponent* p_comp);
     QString                                     composition_to_str(CompoundComposition* p_comp);
 
 };
@@ -65,7 +64,9 @@ public:
     CompoundComponentCollection(CompoundWordCollection* p_word_collection, CLexicon* p_lexicon);
     ~CompoundComponentCollection();
 
-    CompoundComponent*                  add_or_find_compound_component(CWord* p_word);
+    QMap<QString, CompoundComponent*>&  get_map() { return m_map; }
+    CompoundComponent*                  add_or_find_compound_component(const QString& str_word);
+    void                                remove_component(CompoundComponent* p_component);
 };
 
 class CompoundWordCollection
@@ -82,9 +83,11 @@ public:
 
     const QMap<QString, CompoundWord*>& get_map() const { return m_map; }
     int                                 get_count() const { return m_map.size(); }
-    CompoundWord*                       add_compound_word(CWord* word, QList<CWord*>& composition);
-    CompoundWord*                       add_compound_word(CWord* whole, CWord* part0, CWord* part1);
+    CompoundComponentCollection*        get_components() const { return m_component_collection; }
+    CompoundWord*                       add_compound_word(const QString& word, const QStringList& composition);
+    CompoundWord*                       add_compound_word(const QString& whole, const QString& part0, const QString& part1);
     CompoundWord*                       get_compound_word(const QString& word) const;
+    void                                remove_compound_word(CompoundWord* p_word);
 
 };
 

@@ -7,23 +7,33 @@
 #include <QDebug>
 
 // -------------- CompoundComponent ---------------- //
-CompoundComponent::CompoundComponent(QString &word, CWord* p_cword):
-    m_word(word), m_cword_ptr(p_cword)
-{
-
-}
+CompoundComponent::CompoundComponent(const QString &word):
+    m_word(word) { }
 
 void CompoundComponent::add_connection(CompoundWord *p_compword, int position)
 {
     m_connections[p_compword->get_word()] = QPair<int, CompoundWord*>(position, p_compword);
 }
 
-// -------------- CompoundWord ---------------- //
-CompoundWord::CompoundWord(QString &word, CWord *p_cword):
-    m_word(word), m_cword_ptr(p_cword) { }
+bool CompoundComponent::check_valid()
+{
+    if (m_connections.size() == 0)
+        return false;
+    int first_position = m_connections.begin().value().first;
+    CompoundConnectionMap::ConstIterator map_iter;
+    for (map_iter = m_connections.constBegin();
+         map_iter != m_connections.constEnd();
+         map_iter++) {
+        if (map_iter.value().first != first_position)
+            return true;
+    }
+    return false;
+}
 
-CompoundWord::CompoundWord(CWord* p_cword):
-    m_word(p_cword->get_word()), m_cword_ptr(p_cword) { }
+// -------------- CompoundWord ---------------- //
+CompoundWord::CompoundWord(const QString &word):
+    m_word(word){ }
+
 
 CompoundWord::~CompoundWord()
 {
@@ -40,6 +50,22 @@ void CompoundWord::add_composition(const CompoundComposition& composition)
     m_compositions.append(new_composition);
 }
 
+bool CompoundWord::remove_composition_if_contains(CompoundComponent* p_comp)
+{
+    QList<CompoundComposition*>::iterator comp_list_iter;
+    for (comp_list_iter = m_compositions.begin();
+         comp_list_iter != m_compositions.end();) {
+        CompoundComposition* p_comp_list = *comp_list_iter;
+        if (p_comp_list->contains(p_comp)) {
+            delete p_comp_list;
+            m_compositions.erase(comp_list_iter);
+        } else {
+            comp_list_iter++;
+        }
+    }
+    return m_compositions.size() == 0;
+}
+
 QString CompoundWord::composition_to_str(CompoundComposition *p_composition)
 {
     QStringList comp_list;
@@ -52,8 +78,8 @@ QString CompoundWord::composition_to_str(CompoundComposition *p_composition)
 // -------------- CompoundComponentCollection ---------------- //
 
 CompoundComponentCollection::CompoundComponentCollection
-(CompoundWordCollection *p_word_collection, CLexicon *p_lexicon):
-    m_word_collection(p_word_collection), m_lexicon(p_lexicon) {}
+(CompoundWordCollection *p_compword_collection, CLexicon *p_lexicon):
+    m_word_collection(p_compword_collection), m_lexicon(p_lexicon) {}
 
 CompoundComponentCollection::~CompoundComponentCollection()
 {
@@ -64,18 +90,46 @@ CompoundComponentCollection::~CompoundComponentCollection()
 }
 
 CompoundComponent* CompoundComponentCollection::add_or_find_compound_component
-(CWord* p_word)
+(const QString& str_word)
 {
-    QString str_word = p_word->get_word();
     QMap<QString, CompoundComponent*>::ConstIterator comp_iter;
     comp_iter = m_map.find(str_word);
     if (comp_iter == m_map.constEnd()) {
-        CompoundComponent* new_component = new CompoundComponent(str_word, p_word);
+        CompoundComponent* new_component = new CompoundComponent(str_word);
         m_map.insert(str_word, new_component);
         return new_component;
     } else {
         return comp_iter.value();
     }
+}
+
+void CompoundComponentCollection::remove_component
+(CompoundComponent *p_component)
+{
+    typedef QMap<QString, QPair<int, CompoundWord*>> CompoundConnectionMap;
+    // iterate through compound words containing that component
+    CompoundConnectionMap::ConstIterator conn_map_iter;
+    const CompoundConnectionMap& ref_connections_map = p_component->get_connections();
+    for (conn_map_iter = ref_connections_map.constBegin();
+         conn_map_iter != ref_connections_map.constEnd();
+         conn_map_iter++) {
+        // skip if that word has already been removed
+        const QString& str_word = conn_map_iter.key();
+        if (!m_word_collection->get_map().contains(str_word))
+            continue;
+
+        // for each word, remove the composition containing that component
+        CompoundWord* p_word = conn_map_iter.value().second;
+        bool remove_word = p_word->remove_composition_if_contains(p_component);
+        // if that is the last composition in the list, remove that word
+        // from the list of compound wordsd
+        if (remove_word)
+            m_word_collection->remove_compound_word(p_word);
+    }
+
+    const QString& str_component = p_component->get_word();
+    m_map.remove(str_component);
+    delete p_component;
 }
 
 // -------------- CompoundWordCollection ---------------- //
@@ -109,14 +163,14 @@ CompoundWordCollection::CompoundWordCollection(const CompoundWordCollection &oth
     QMap<QString, CompoundWord*>::ConstIterator iter;
     for (iter = other.m_map.constBegin(); iter != other.m_map.constEnd(); iter++) {
         CompoundWord* other_word = iter.value();
-        CWord* other_cword = other_word->m_cword_ptr;
+        const QString& other_str_word = other_word->get_word();
         QList<CompoundComponent*>* other_composition;
         foreach (other_composition, other_word->m_compositions) {
-            QList<CWord*> other_cword_list;
+            QStringList other_component_str_list;
             CompoundComponent* p_component;
             foreach (p_component, *other_composition)
-                other_cword_list.append(p_component->get_cword_ptr());
-            add_compound_word(other_cword, other_cword_list);
+                other_component_str_list.append(p_component->get_word());
+            add_compound_word(other_str_word, other_component_str_list);
         }
     }
 }
@@ -124,25 +178,21 @@ CompoundWordCollection::CompoundWordCollection(const CompoundWordCollection &oth
 CompoundWord* CompoundWordCollection::get_compound_word(const QString &word) const
 {
     QMap<QString, CompoundWord*>::ConstIterator iter = m_map.find(word);
-    if (iter == m_map.constEnd()) {
-        return NULL;
-    } else {
-        return iter.value();
-    }
+    return iter == m_map.constEnd() ? NULL : iter.value();
 }
 
 CompoundWord* CompoundWordCollection::add_compound_word
-(CWord* p_word, QList<CWord*> &composition)
+(const QString& str_word, const QStringList& composition)
 {
-    QString str_word = p_word->get_word();
     QMap<QString, CompoundWord*>::iterator iter = m_map.find(str_word);
     CompoundWord* curr_word;
     if (iter == m_map.end()) {
-        curr_word = new CompoundWord(str_word, p_word);
+        curr_word = new CompoundWord(str_word);
         m_map.insert(str_word, curr_word);
     } else {
         curr_word = iter.value();
     }
+
     int composition_len = composition.length();
     QList<CompoundComponent*> curr_composition;
     for (int i = 0; i < composition_len; i++)
@@ -157,8 +207,16 @@ CompoundWord* CompoundWordCollection::add_compound_word
 }
 
 CompoundWord* CompoundWordCollection::add_compound_word
-(CWord* whole, CWord *part0, CWord *part1)
+(const QString& whole, const QString& part0, const QString& part1)
 {
-    QList<CWord*> composition_list = {part0, part1};
+    QStringList composition_list = {part0, part1};
     return add_compound_word(whole, composition_list);
+}
+
+void CompoundWordCollection::remove_compound_word(CompoundWord* p_word)
+{
+    const QString& str_word = p_word->get_word();
+    m_map.remove(str_word);
+    delete p_word;
+
 }
