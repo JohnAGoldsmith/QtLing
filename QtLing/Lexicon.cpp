@@ -626,6 +626,7 @@ void CLexicon::step4_create_signatures(QString name_of_calling_function)
            foreach (this_stem_t, *this_stem_set){
                 step4b_link_signature_and_stem_and_word(this_stem_t,pSig, this_signature_string);
             }
+
         } // end of condition of having enough stems in the signature.
         else
         {   // if there are not enough stems for this signature: this is here just for words ability to remember where they were and how they were analyzed.
