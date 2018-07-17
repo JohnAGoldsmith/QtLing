@@ -31,7 +31,7 @@ void CLexicon::Crab_2()
     step6_ReSignaturizeWithKnownAffixes();
     step7_FindGoodSignaturesInsideParaSignatures();
 
-    //find_compounds();
+    find_compounds();
 
      m_SuffixesFlag ?
         m_Signatures->calculate_stem_entropy():
@@ -316,7 +316,6 @@ void CLexicon::find_compounds()
         m_ProgressBar->setValue(itercount++);
         // for each stem, find its corresponding protostem
         const QString& str_stem = stem_map_iter.key();
-        qDebug() << "    Stem:" << str_stem;
 
         CStem* p_stem = stem_map_iter.value();
         protostem* p_protostem = ref_protostem_map[str_stem];
@@ -378,33 +377,28 @@ void CLexicon::find_compounds()
     // finished part 1
 
     // starting part 2
-    m_ProgressBar->reset();
-    m_ProgressBar->setMinimum(0);
-    m_ProgressBar->setMaximum(p_stems->get_count());
-    m_StatusBar->showMessage("9: Finding Compounds - part 2: "
-                             "removing invalid components.");
-    itercount = 0;
 
     QList<CompoundComponent*> list_to_remove;
     CompoundComponentCollection* p_components = m_Compounds->get_components();
     QMap<QString, CompoundComponent*>& ref_components_map = p_components->get_map();
-    qDebug() << QString("Found %1 components").arg(ref_components_map.size());
+
+    m_ProgressBar->reset();
+    m_ProgressBar->setMinimum(0);
+    m_ProgressBar->setMaximum(ref_components_map.size());
+    m_StatusBar->showMessage("9: Finding Compounds - part 2: "
+                             "removing invalid components.");
+    itercount = 0;
     QMap<QString, CompoundComponent*>::iterator components_iter;
     for (components_iter = ref_components_map.begin();
          components_iter != ref_components_map.end();
          components_iter++) {
         m_ProgressBar->setValue(itercount++);
         CompoundComponent* p_component = components_iter.value();
-        qDebug() << QString("Checking validity of component: [%1]").arg(p_component->get_word());
         if (!p_component->check_valid()) {
-            qDebug() << "\tinvalid.";
             list_to_remove.append(p_component);
-        } else {
-            qDebug() << "\tvalid.";
         }
     }
     CompoundComponent* p_component_to_remove;
-    qDebug() << "Removing invalid components";
     foreach (p_component_to_remove, list_to_remove) {
         p_components->remove_component(p_component_to_remove);
     }

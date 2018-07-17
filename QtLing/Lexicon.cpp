@@ -346,12 +346,7 @@ void CLexicon::step1_find_protostems()
     for (int wordno=0; wordno<Words->size(); wordno ++){
 
         temp_j++; if (temp_j++ == 5000) {temp_j = 0; m_ProgressBar->setValue(wordno); qApp->processEvents();}
-
-        if (m_SuffixesFlag){
-            this_word = Words->at(wordno);
-        } else{
-            this_word = get_words()->get_reverse_sort_list()->at(wordno);
-        }
+        this_word = Words->at(wordno);
         this_word_length = this_word.length();
         if (StartFlag){
             StartFlag = false;
@@ -914,7 +909,7 @@ void CLexicon::find_full_signatures()
             int words_length = words->length();
             if (!ref_protostem_map.contains(stem)) {
                 protostem* p_protostem = new protostem(stem);
-                qDebug() << "find_full_signatures: creating new protostem" << stem;
+                // qDebug() << "find_full_signatures: creating new protostem" << stem;
                 ref_protostem_map[stem] = p_protostem;
                 int i, j;
                 if (m_SuffixesFlag) {

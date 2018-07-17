@@ -638,6 +638,12 @@ void LowerTableView::table_compound_composition(CompoundWord* p_compound, int co
     typedef  QStandardItem QSI;
     typedef  CompoundWord::CompoundComposition CompoundComposition;
     typedef  CompoundComponent::CompoundConnectionMap ConnectionMap;
+
+    const QList<CompoundComposition*>& ref_composition_list
+            = p_compound->get_compositions();
+    if (composition_i >= ref_composition_list.length())
+        return;
+
     m_my_current_model = new QStandardItemModel();
 
     QStringList labels;
