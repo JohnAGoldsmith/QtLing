@@ -44,7 +44,9 @@ protostem::~protostem()
 
 }
 
-CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag)
+CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag):
+    M_MINIMUM_STEM_COUNT(2),
+    M_MINIMUM_STEM_LENGTH(4)
 {
     m_Signatures            = new CSignatureCollection(this, true);
     m_PrefixSignatures      = new CSignatureCollection(this,false);
@@ -199,28 +201,28 @@ bool CLexicon::do_gs_evaluation_on_eval_parses()
 }
 
 
-bool CLexicon::stem_autobiographies_contains(QString stem) {
+bool CLexicon::stem_autobiographies_contains(const QString& stem) {
     //qDebug() << 121 << stem << m_stem_autobiographies.contains(stem);
     return m_stem_autobiographies.contains(stem);
 }
 
-void CLexicon::add_to_stem_autobiographies(QString stem, QString message)
+void CLexicon::add_to_stem_autobiographies(const QString& stem, const QString& message)
 {
     if (! m_stem_autobiographies.contains(stem)){
         //qDebug() << 128 << stem << message;
         m_stem_autobiographies[stem] = new QStringList;
     }
-    m_stem_autobiographies[stem]->append("=" + message);
+    m_stem_autobiographies[stem]->append(message);
     //qDebug() << 125 << stem << message;
 
 }
 
-bool CLexicon::word_autobiographies_contains(QString word) {
+bool CLexicon::word_autobiographies_contains(const QString& word) {
     //qDebug() << 121 << stem << m_stem_autobiographies.contains(stem);
     return m_word_autobiographies.contains(word);
 }
 
-void CLexicon::add_to_word_autobiographies(QString word, QString message)
+void CLexicon::add_to_word_autobiographies(const QString& word, const QString& message)
 {
     if (! m_word_autobiographies.contains(word)){
         //qDebug() << 128 << stem << message;
@@ -231,7 +233,7 @@ void CLexicon::add_to_word_autobiographies(QString word, QString message)
 
 }
 
-void CLexicon::time_stamp(QString message)
+void CLexicon::time_stamp(const QString& message)
 {
     QMapIterator<QString, CStem*> stem_iter (*m_suffixal_stems->get_map());
     while (stem_iter.hasNext()){
@@ -284,17 +286,18 @@ void CLexicon::dump_signatures_to_debug()
  */
 void CLexicon::Crab_1()
 {
-    step1_find_protostems();
+    step1_find_protostems(); // from_words_to_protostems
 
-    step2_create_stem_affix_parses();
+    step2_create_stem_affix_parses(); // from_protostems_to_parses
 
     time_stamp("crab 1");
+    // time_stamp does not work here because the stem collection is empty before step 4.
 
-    step3_assign_affixes_to_stems(QString("crab_1"));
+    step3_assign_affixes_to_stems(QString("Crab1")); // step3 from_parses_to_stem-protosig-map
+                                                     // step4 from_stem-protosig-map_to_protosig-stem-map
+    step4_create_signatures(QString("Crab1"));       // step5 from_protosig-stem-map_to_signatures
 
-    step4_create_signatures(QString("Crab1"));
-
-    replace_parse_pairs_from_current_signature_structure();
+    replace_parse_pairs_from_current_signature_structure(); // from_
 
     find_full_signatures();
 
@@ -322,7 +325,7 @@ void CLexicon::step1_find_protostems()
     bool            DifferenceFoundFlag = false;
     stem_t          potential_stem;
     int             this_word_length(0), previous_word_length(0);
-    int             MINIMUM_STEM_LENGTH = 4;
+    //int             MINIMUM_STEM_LENGTH = 4;
 
     QStringList *  Words;
     if (m_SuffixesFlag){
@@ -360,7 +363,7 @@ void CLexicon::step1_find_protostems()
         int end = qMin(this_word_length, previous_word_length);
         if (m_SuffixesFlag){   // -->   Suffix case   <-- //
             for (int i=0; i <end; i++){
-                if (i < MINIMUM_STEM_LENGTH ) continue;
+                if (i < M_MINIMUM_STEM_LENGTH ) continue;
                 if (previous_word[i] != this_word[i]){
                     potential_stem = previous_word.left(i);
                     if (potential_stem.length()== 0){continue;}
@@ -381,7 +384,7 @@ void CLexicon::step1_find_protostems()
         {       // -->   Prefix case   <-- //
             for (int i=1; i <=end; i++){
                 if (previous_word.right(i) != this_word.right(i)){
-                    if (i-1 < MINIMUM_STEM_LENGTH) continue;
+                    if (i-1 < M_MINIMUM_STEM_LENGTH) continue;
                     potential_stem = previous_word.right(i-1);
                     if (potential_stem.length() == 0) {continue;}
                     DifferenceFoundFlag = true;
@@ -479,8 +482,8 @@ void CLexicon::step2_create_stem_affix_parses()
         wordno++;
         qApp->processEvents();
         m_ProgressBar->setValue(wordno);
-        int MinimumStemLength = 5;
-        for (int letterno = MinimumStemLength; letterno < word.length(); letterno++){
+        // int MinimumStemLength = 4;
+        for (int letterno = M_MINIMUM_STEM_LENGTH; letterno < word.length(); letterno++){
             if (m_SuffixesFlag){
                 stem = word.left(letterno);
                 if(m_suffix_protostems.contains(stem))  {
@@ -541,6 +544,7 @@ void   CLexicon::step3_assign_affixes_to_stems(QString name_of_calling_function)
 {  // const int MINIMUM_NUMBER_OF_STEMS = 2;
 
     QString                     this_stem_t, this_suffix, this_prefix, this_affix_t, this_signature_string, this_word;
+    // typedef QMap<stem_t , QSet<affix_t>* > Protosigs;
     Protosigs                   these_protosigs;
     m_intermediate_signature_to_stems_map.clear();   //replaces "this_signature_to_stems_map"
 
@@ -588,35 +592,36 @@ void   CLexicon::step3_assign_affixes_to_stems(QString name_of_calling_function)
  */
 
 void CLexicon::step3a_take_stem_affix_parses_and_create_protosigs(QList<CParse*> * parses, bool suffix_flag,Protosigs* these_protosigs )
-{       QString this_stem_t, this_affix_t;
-        suffix_set * pSet;
-            int i = 0;
-                for (int parseno = 0; parseno < parses->size(); parseno++){
-                    CParse * this_pair = parses->at(parseno);
-                    if (suffix_flag){
-                        this_stem_t = this_pair->get_string1();
-                        this_affix_t = this_pair->get_string2();
-                    } else{
-                        this_stem_t = this_pair->get_string2();
-                        this_affix_t = this_pair->get_string1();
-                    }
-                    i++;
-                    if (i == 100000){i = 0;
-                        m_StatusBar->showMessage("3a: "+ this_stem_t + this_affix_t);
-                        qApp->processEvents();
+{
+    QString this_stem_t, this_affix_t;
+    suffix_set * pSet;
+    int i = 0;
+    for (int parseno = 0; parseno < parses->size(); parseno++){
+        CParse * this_pair = parses->at(parseno);
+        if (suffix_flag){
+            this_stem_t = this_pair->get_string1();
+            this_affix_t = this_pair->get_string2();
+        } else{
+            this_stem_t = this_pair->get_string2();
+            this_affix_t = this_pair->get_string1();
+        }
+        i++;
+        if (i == 100000){i = 0;
+            m_StatusBar->showMessage("3a: "+ this_stem_t + this_affix_t);
+            qApp->processEvents();
 
-                    }
+        }
 
-                    if (! these_protosigs->contains(this_stem_t)){
-                        if (suffix_flag){
-                            pSet = new suffix_set();
-                        } else{
-                            pSet = new prefix_set();
-                        }
-                        these_protosigs->insert(this_stem_t, pSet);
-                    }
-                    these_protosigs->value(this_stem_t)->insert(this_affix_t);
-                }
+        if (! these_protosigs->contains(this_stem_t)){
+            if (suffix_flag){
+                pSet = new suffix_set();
+            } else{
+                pSet = new prefix_set();
+            }
+            these_protosigs->insert(this_stem_t, pSet);
+        }
+        these_protosigs->value(this_stem_t)->insert(this_affix_t);
+    }
 };
 // ==========================================================================  //
 
@@ -629,7 +634,7 @@ void CLexicon::step4_create_signatures(QString name_of_calling_function)
     word_t                  this_word_t;
     CWord*                  pWord;
 
-    const int               MINIMUM_NUMBER_OF_STEMS = 8;
+    //const int               MINIMUM_NUMBER_OF_STEMS = 2;
     CSignature*             pSig;
 
     //-->  create signatures, stems, affixes:  <--//
@@ -665,7 +670,7 @@ void CLexicon::step4_create_signatures(QString name_of_calling_function)
         QSet<stem_t> * this_stem_set = m_intermediate_signature_to_stems_map.get_stem_set(this_signature_string);
 
         affix_list this_affix_list = this_signature_string.split("=");
-        if (this_stem_set->size() >= MINIMUM_NUMBER_OF_STEMS)
+        if (this_stem_set->size() >= M_MINIMUM_STEM_COUNT)
         {
             /* [1] Create CSignature object
              * Add signature to m_Signatures
@@ -681,20 +686,37 @@ void CLexicon::step4_create_signatures(QString name_of_calling_function)
                 step4a_link_signature_and_affix(pSig,this_affix_t);
             }
             foreach (this_stem_t, *this_stem_set){
-                step4b_link_signature_and_stem_and_word(this_stem_t,pSig, this_signature_string);
+                step4b_link_signature_and_stem_and_word(this_stem_t,pSig, this_signature_string, name_of_calling_function);
             }
         } // end of condition of having enough stems in the signature.
         else
         {   // if there are not enough stems for this signature: this is here just for words ability to remember where they were and how they were analyzed.
 
             foreach(this_stem_t, *this_stem_set){
+                QString message = this_affix_list.size() <= 50 ?
+                            this_signature_string:
+                            QString("Super long list of affixes");
+                add_to_stem_autobiographies(this_stem_t,
+                                            QString("[%1]=Set of affixes"
+                                                    " not qualified as a signature=%2")
+                                            .arg(name_of_calling_function)
+                                            .arg(message));
+
                 foreach (this_affix_t,this_affix_list){
                     if (this_affix_t == "NULL"){
                         this_affix_t = "";
                     }
                     m_SuffixesFlag?
-                                this_word_t = this_stem_t + this_affix_t:
+                            this_word_t = this_stem_t + this_affix_t:
                             this_word_t = this_affix_t + this_stem_t;
+                    add_to_word_autobiographies(this_word_t,
+                                                QString("[%1]=Set of affixes"
+                                                        " not qualified as a signature=Stem: %2=%3")
+                                                .arg(name_of_calling_function)
+                                                .arg(this_stem_t)
+                                                .arg(message));
+
+                    // old autobiography code
                     pWord = m_Words->find_or_fail(this_word_t);
                     pWord->add_to_autobiography("failure of " + name_of_calling_function + "=" + this_stem_t + "=" + this_signature_string );
                 }
@@ -722,17 +744,21 @@ void CLexicon::step4a_link_signature_and_affix(CSignature * pSig, affix_t this_a
         pSig->add_affix_ptr(pPrefix);
     }
 }
-void CLexicon::step4b_link_signature_and_stem_and_word(stem_t this_stem_t , CSignature*  pSig,  QString this_signature_string)
+void CLexicon::step4b_link_signature_and_stem_and_word
+(stem_t this_stem_t, CSignature* pSig, QString this_signature_string, const QString& name_of_calling_function)
 {
     CStem* pStem;
     QString this_affix, this_word;
     m_SuffixesFlag ?
-                pStem = m_suffixal_stems->find_or_add(this_stem_t):
+            pStem = m_suffixal_stems->find_or_add(this_stem_t):
             pStem = m_prefixal_stems->find_or_add(this_stem_t);
     pStem->add_signature (pSig);
     pSig->add_stem_pointer(pStem);
-    add_to_stem_autobiographies(this_stem_t, this_signature_string);
 
+    add_to_stem_autobiographies(this_stem_t,
+                                QString("[%1]=Found signature=%2")
+                                .arg(name_of_calling_function)
+                                .arg(this_signature_string));
 
     int stem_count = 0;
     affix_list this_affix_list = this_signature_string.split("=");
@@ -750,9 +776,15 @@ void CLexicon::step4b_link_signature_and_stem_and_word(stem_t this_stem_t , CSig
         } else{
             stem_count += pWord->get_word_count();
             pWord->add_parse_triple(this_stem_t, this_affix, pSig->get_key());
-            QString message = this_signature_string;
-            if (this_affix_list.size() > 50){message = "Super long signature";};
-            pWord->add_to_autobiography(QString("Normal formation") + "=" + this_stem_t + "=" + message);
+            QString message = this_affix_list.size() <= 50 ?
+                        this_signature_string:
+                        QString("Super long signature");
+            add_to_word_autobiographies(this_word,
+                                        QString("[%1]=Found signature=Stem: %2=%3")
+                                        .arg(name_of_calling_function)
+                                        .arg(this_stem_t)
+                                        .arg(message));
+            pWord->add_to_autobiography(QString("Found signature") + "=" + this_stem_t + "=" + message);
         }
     }
     pStem->set_count(stem_count);
@@ -775,121 +807,7 @@ bool contains(QList<QString> * list2, QList<QString> * list1){
     return true;
 }
 
-void CLexicon::find_compounds()
-{
-    int MIN_STEM_LENGTH = 2;
-    CStemCollection* p_stems = m_SuffixesFlag ? m_suffixal_stems : m_prefixal_stems;
-    const QMap<QString, protostem*>& ref_protostem_map
-            = m_SuffixesFlag ? m_suffix_protostems : m_prefix_protostems;
 
-    m_ProgressBar->reset();
-    m_ProgressBar->setMinimum(0);
-    m_ProgressBar->setMaximum(p_stems->get_count());
-    m_StatusBar->showMessage("5: Finding Compounds - part 1.");
-    int itercount = 0;
-
-    // iterate through stems
-    QMap<QString, CStem*>* p_stem_map = p_stems->get_map();
-    QMap<QString, CStem*>::ConstIterator stem_map_iter;
-    for (stem_map_iter = p_stem_map->constBegin();
-         stem_map_iter != p_stem_map->constEnd();
-         stem_map_iter++) {
-        m_ProgressBar->setValue(itercount++);
-
-        // for each stem, find its corresponding protostem
-        const QString& str_stem = stem_map_iter.key();
-        CStem* p_stem = stem_map_iter.value();
-        protostem* p_protostem = ref_protostem_map[str_stem];
-        int stem_length = str_stem.length();
-
-        if (stem_length < MIN_STEM_LENGTH) continue;
-
-        // iterate through all words in the protostem
-        int wordno;
-        int end_word = p_protostem->get_end_word();
-        for (wordno = p_protostem->get_start_word();
-             wordno <= end_word;
-             wordno++) {
-            // find the continuation of a word, i.e. the part of the word
-            // left over after stem part is removed
-            const QString& str_word = m_Words->get_word_string(wordno);
-            const QString str_continuation = m_SuffixesFlag ?
-                        str_word.mid(stem_length) :
-                        str_word.left(str_word.length()-stem_length);
-            bool continuation_valid = true;
-            // determine if the continuation is already in stem's signature,
-            // skip if it is.
-            CSignature* p_signature;
-            foreach (p_signature, *(p_stem->GetSignatures())) {
-                if (m_SuffixesFlag) {
-                    QList<CSuffix*>* p_suffixes = p_signature->get_suffix_list();
-                    CSuffix* p_suffix;
-                    foreach (p_suffix, *p_suffixes) {
-                        if (p_suffix->get_key() == str_continuation) {
-                            continuation_valid = false;
-                            break;
-                        }
-                    }
-                } else {
-                    QList<CPrefix*>* p_prefixes = p_signature->get_prefix_list();
-                    CPrefix* p_prefix;
-                    foreach (p_prefix, *p_prefixes) {
-                        if (p_prefix->get_key() == str_continuation) {
-                            continuation_valid = false;
-                            break;
-                        }
-                    }
-                }
-            }
-            if (!continuation_valid) continue;
-
-            // determine if the continuation is a word or a stem,
-            // skip if it is not.
-            if (m_Words->get_word(str_continuation) == NULL) {
-                continuation_valid = (p_stems->find_or_fail(str_continuation) != NULL);
-            } else {
-                continuation_valid = true;
-            }
-            if (!continuation_valid) continue;
-
-            m_Compounds->add_compound_word(str_word, str_stem, str_continuation);
-        }
-    }
-    // finished part 1
-
-    // starting part 2
-    m_ProgressBar->reset();
-    m_ProgressBar->setMinimum(0);
-    m_ProgressBar->setMaximum(p_stems->get_count());
-    m_StatusBar->showMessage("9: Finding Compounds - part 2: "
-                             "removing invalid components.");
-    itercount = 0;
-
-    QList<CompoundComponent*> list_to_remove;
-    CompoundComponentCollection* p_components = m_Compounds->get_components();
-    QMap<QString, CompoundComponent*>& ref_components_map = p_components->get_map();
-    qDebug() << QString("Found %1 components").arg(ref_components_map.size());
-    QMap<QString, CompoundComponent*>::iterator components_iter;
-    for (components_iter = ref_components_map.begin();
-         components_iter != ref_components_map.end();
-         components_iter++) {
-        m_ProgressBar->setValue(itercount++);
-        CompoundComponent* p_component = components_iter.value();
-        qDebug() << QString("Checking validity of component: [%1]").arg(p_component->get_word());
-        if (!p_component->check_valid()) {
-            qDebug() << "\tinvalid.";
-            list_to_remove.append(p_component);
-        } else {
-            qDebug() << "\tvalid.";
-        }
-    }
-    CompoundComponent* p_component_to_remove;
-    qDebug() << "Removing invalid components";
-    foreach (p_component_to_remove, list_to_remove) {
-        p_components->remove_component(p_component_to_remove);
-    }
-
-}
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //      End of Crab 1
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -957,8 +875,10 @@ void CLexicon::find_full_signatures()
 
         //qDebug() << 774 << pSig->display();
         if (pSig->get_stem_entropy() > 0){
-            continue;
+            continue; // skip if the stem-entropy of the stem is greater than 0
         }
+        // get last letter of stems; the last letter of all corresponding
+        // stems of a signature with 0 entropy should be the same
         m_SuffixesFlag?
                     letter = pSig->get_stems()->at(0)->get_key().right(1):
                 letter = pSig->get_stems()->at(0)->get_key().left(1);
@@ -968,25 +888,59 @@ void CLexicon::find_full_signatures()
         pSig->get_string_list(affix_list);
         add_initial_letter (affix_list, letter, m_SuffixesFlag);
 
-        CParse* pParse;
         for (int i = 0; i < stem_list.size(); i++){
             stem = stem_list.at(i);
             for (int affno = 0; affno < affix_list.size(); affno++){
                 affix = affix_list.at(affno);
                 if (m_SuffixesFlag){
-                    pParse = new CParse(stem,affix);
+                    CParse* pParse = new CParse(stem, affix);
                     m_Parses->append(pParse);
                 } else{
-                    pParse = new CParse(affix, stem);
+                    CParse* pParse = new CParse(affix, stem);
                     m_Parses->append(pParse);
                     if (stem.length() == 0 ){
                         qDebug() << 523 << "null stem"   ;
                     }
                 }
             }
+            /*
+            // create new protostem object for that stem in list of protostems
+            QMap<QString, protostem*>& ref_protostem_map = m_SuffixesFlag ?
+                        m_suffix_protostems : m_prefix_protostems;
+            QStringList* words = m_SuffixesFlag?
+                        get_word_collection()->GetSortedStringArray():
+                        get_word_collection()->get_reverse_sort_list();
+            int stem_length = stem.length();
+            int words_length = words->length();
+            if (!ref_protostem_map.contains(stem)) {
+                protostem* p_protostem = new protostem(stem);
+                qDebug() << "find_full_signatures: creating new protostem" << stem;
+                ref_protostem_map[stem] = p_protostem;
+                int i, j;
+                if (m_SuffixesFlag) {
+                    i = 0;
+                    while (words->at(i).left(stem_length) != stem)
+                        i++;
+                    j = i;
+                    while (words->at(j).left(stem_length) == stem && j < words_length)
+                        j++;
+                } else {
+                    i = 0;
+                    while (words->at(i).right(stem_length) != stem)
+                        i++;
+                    j = i;
+                    while (words->at(j).right(stem_length) == stem && j < words_length)
+                        j++;
+                }
+                p_protostem->set_start_and_end_word(i, j-1);
+
+            }
+            */
+
         }
     }
-
+    // need to apply step 3 here?
+    step3_assign_affixes_to_stems("Finding full signatures");
     step4_create_signatures("Finding full signatures");
 
 }
@@ -1009,7 +963,7 @@ struct{
  * parse-pairs that exactly describe the current signature structure.
  */
 
-void CLexicon::replace_parse_pairs_from_current_signature_structure(bool  ) {
+void CLexicon::replace_parse_pairs_from_current_signature_structure() {
 
 
     m_Parses->clear();
@@ -1034,9 +988,9 @@ void CLexicon::replace_parse_pairs_from_current_signature_structure(bool  ) {
         foreach (pStem, *stem_list){
             this_stem = pStem->display();
             foreach (this_affix, affixes){
-                if (this_affix == "NULL") this_affix = "";
+                //if (this_affix == "NULL") this_affix = "";
                 m_SuffixesFlag?
-                            this_parse = new CParse(this_stem, this_affix, true):
+                        this_parse = new CParse(this_stem, this_affix, true):
                         this_parse = new CParse(this_affix, this_stem, false);
                 m_Parses->append(this_parse);
 
@@ -1052,9 +1006,9 @@ void CLexicon::replace_parse_pairs_from_current_signature_structure(bool  ) {
         stem_list =  pSig->get_stems();
         foreach (CStem* p_this_stem, *stem_list){
             foreach (this_affix, affixes){
-                if (this_affix == "NULL") this_affix = "";
+                //if (this_affix == "NULL") this_affix = "";
                 m_SuffixesFlag?
-                            this_parse = new CParse(this_stem, this_affix, true):
+                        this_parse = new CParse(this_stem, this_affix, true):
                         this_parse = new CParse(this_affix, this_stem, false);
             }
         }

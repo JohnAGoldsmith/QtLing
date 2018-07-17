@@ -17,6 +17,7 @@
 #include "WordCollection.h"
 #include "Word.h"
 #include "cparse.h"
+#include "compound.h"
 
 extern bool contains(QList<QString> * list2, QList<QString> * list1);
 
@@ -30,7 +31,7 @@ void CLexicon::Crab_2()
     step6_ReSignaturizeWithKnownAffixes();
     step7_FindGoodSignaturesInsideParaSignatures();
 
-    find_compounds();
+    //find_compounds();
 
      m_SuffixesFlag ?
         m_Signatures->calculate_stem_entropy():
@@ -210,7 +211,8 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
     int protostem_count = 0;
     int temp_i = 0;
     foreach (auto this_protostem, * these_protostems)
-    {   m_ProgressBar->setValue(protostem_count++);
+    {
+        m_ProgressBar->setValue(protostem_count++);
         qApp->processEvents();
 
         affixes_of_residual_sig.clear();
@@ -224,7 +226,7 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
             qApp->processEvents();
         }
 
-        for (int wordno= this_protostem->get_start_word(); wordno < this_protostem->get_end_word(); wordno++){
+        for (int wordno= this_protostem->get_start_word(); wordno <= this_protostem->get_end_word(); wordno++){
             QString this_word, affix;
             if (m_SuffixesFlag){
                 this_word = m_Words->get_word_string(wordno);
@@ -233,7 +235,7 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
                 this_word = m_Words->get_reverse_sort_list()->at(wordno);
                 affix = this_word.left(this_word.length()- stem_length);
             }
-            affixes_of_residual_sig.append( affix );
+            affixes_of_residual_sig.append( affix ); // what if affix is NULL?
         }
         if (m_Words->contains(this_stem)) {
                 affixes_of_residual_sig.append("NULL");
@@ -266,7 +268,7 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
             this_affix = affix_iter_2.next();
             step4a_link_signature_and_affix(pSig,this_affix);
         }
-        step4b_link_signature_and_stem_and_word(this_stem, pSig, best_affix_list_string);
+        step4b_link_signature_and_stem_and_word(this_stem, pSig, best_affix_list_string, "Crab2");
 
         // . This shouldn't happen: there are no affixes.
         if (best_affix_list.length() == 0){
@@ -288,4 +290,123 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
         } // end of best-affix loop
    } // end of protostem loop
    signatures->sort_each_signatures_stems_alphabetically();
+}
+
+
+void CLexicon::find_compounds()
+{
+    const int MIN_STEM_LENGTH = 2;
+    CStemCollection* p_stems = m_SuffixesFlag ? m_suffixal_stems : m_prefixal_stems;
+    const QMap<QString, protostem*>& ref_protostem_map
+            = m_SuffixesFlag ? m_suffix_protostems : m_prefix_protostems;
+
+    m_ProgressBar->reset();
+    m_ProgressBar->setMinimum(0);
+    m_ProgressBar->setMaximum(p_stems->get_count());
+    m_StatusBar->showMessage("5: Finding Compounds - part 1.");
+    int itercount = 0;
+
+    // iterate through stems
+    qDebug() << "Finding compounds, iterating thru stems";
+    QMap<QString, CStem*>* p_stem_map = p_stems->get_map();
+    QMap<QString, CStem*>::ConstIterator stem_map_iter;
+    for (stem_map_iter = p_stem_map->constBegin();
+         stem_map_iter != p_stem_map->constEnd();
+         stem_map_iter++) {
+        m_ProgressBar->setValue(itercount++);
+        // for each stem, find its corresponding protostem
+        const QString& str_stem = stem_map_iter.key();
+        qDebug() << "    Stem:" << str_stem;
+
+        CStem* p_stem = stem_map_iter.value();
+        protostem* p_protostem = ref_protostem_map[str_stem];
+        int stem_length = str_stem.length();
+
+        if (stem_length < MIN_STEM_LENGTH) continue;
+
+        // iterate through all words in the protostem
+        int wordno;
+        int end_word = p_protostem->get_end_word();
+        for (wordno = p_protostem->get_start_word();
+             wordno <= end_word;
+             wordno++) {
+            // find the continuation of a word, i.e. the part of the word
+            // left over after stem part is removed
+            const QString& str_word = m_Words->get_word_string(wordno);
+            const QString str_continuation = m_SuffixesFlag ?
+                        str_word.mid(stem_length) :
+                        str_word.left(str_word.length()-stem_length);
+            bool continuation_valid = true;
+            // determine if the continuation is already in stem's signature,
+            // skip if it is.
+            CSignature* p_signature;
+            foreach (p_signature, *(p_stem->GetSignatures())) {
+                if (m_SuffixesFlag) {
+                    QList<CSuffix*>* p_suffixes = p_signature->get_suffix_list();
+                    CSuffix* p_suffix;
+                    foreach (p_suffix, *p_suffixes) {
+                        if (p_suffix->get_key() == str_continuation) {
+                            continuation_valid = false;
+                            break;
+                        }
+                    }
+                } else {
+                    QList<CPrefix*>* p_prefixes = p_signature->get_prefix_list();
+                    CPrefix* p_prefix;
+                    foreach (p_prefix, *p_prefixes) {
+                        if (p_prefix->get_key() == str_continuation) {
+                            continuation_valid = false;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (!continuation_valid) continue;
+
+            // determine if the continuation is a word or a stem,
+            // skip if it is not.
+            if (m_Words->get_word(str_continuation) == NULL) {
+                continuation_valid = (p_stems->find_or_fail(str_continuation) != NULL);
+            } else {
+                continuation_valid = true;
+            }
+            if (!continuation_valid) continue;
+
+            m_Compounds->add_compound_word(str_word, str_stem, str_continuation);
+        }
+    }
+    // finished part 1
+
+    // starting part 2
+    m_ProgressBar->reset();
+    m_ProgressBar->setMinimum(0);
+    m_ProgressBar->setMaximum(p_stems->get_count());
+    m_StatusBar->showMessage("9: Finding Compounds - part 2: "
+                             "removing invalid components.");
+    itercount = 0;
+
+    QList<CompoundComponent*> list_to_remove;
+    CompoundComponentCollection* p_components = m_Compounds->get_components();
+    QMap<QString, CompoundComponent*>& ref_components_map = p_components->get_map();
+    qDebug() << QString("Found %1 components").arg(ref_components_map.size());
+    QMap<QString, CompoundComponent*>::iterator components_iter;
+    for (components_iter = ref_components_map.begin();
+         components_iter != ref_components_map.end();
+         components_iter++) {
+        m_ProgressBar->setValue(itercount++);
+        CompoundComponent* p_component = components_iter.value();
+        qDebug() << QString("Checking validity of component: [%1]").arg(p_component->get_word());
+        if (!p_component->check_valid()) {
+            qDebug() << "\tinvalid.";
+            list_to_remove.append(p_component);
+        } else {
+            qDebug() << "\tvalid.";
+        }
+    }
+    CompoundComponent* p_component_to_remove;
+    qDebug() << "Removing invalid components";
+    foreach (p_component_to_remove, list_to_remove) {
+        p_components->remove_component(p_component_to_remove);
+    }
+
 }

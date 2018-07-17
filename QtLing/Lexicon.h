@@ -151,6 +151,8 @@ class CLexicon
 
 {
 protected:
+    const int                       M_MINIMUM_STEM_LENGTH;
+    const int                       M_MINIMUM_STEM_COUNT;
                                                          // this is part of an experiment.
     QMap<QString,eComponentType>    m_category_types;    // part of the experiment. It serves
                                                         // as the principal way in which the Lexicon communicates
@@ -206,6 +208,7 @@ protected:
 
     QProgressBar*                   m_ProgressBar;
     QStatusBar *                      m_StatusBar;
+
     QMap<QString, QStringList*>        m_stem_autobiographies;
     QMap<QString, QStringList*>         m_word_autobiographies;
 
@@ -273,12 +276,13 @@ public:
     bool                                        get_suffix_flag()           { return m_SuffixesFlag; }
     CWordCollection*                            get_word_collection()       { return m_Words; }
     CWordCollection *                           get_words()                 { return m_Words;}
-    QList<QString> *                            get_stem_autobiography(stem_t stem)   { return m_stem_autobiographies[stem];}
-    void                                        add_to_stem_autobiographies (QString stem, QString message);
-    bool                                        stem_autobiographies_contains(QString stem);
-    QList<QString> *                            get_word_autobiography(word_t word);
-    void                                        add_to_word_autobiographies (QString word, QString message);
-    bool                                        word_autobiographies_contains(QString word);
+
+    QList<QString> *                            get_stem_autobiography(const stem_t& stem)   { return m_stem_autobiographies[stem];}
+    void                                        add_to_stem_autobiographies (const QString& stem, const QString& message);
+    bool                                        stem_autobiographies_contains(const QString& stem);
+    QList<QString> *                            get_word_autobiography(const word_t& word) { return m_word_autobiographies[word];}
+    void                                        add_to_word_autobiographies (const QString& word, const QString& message);
+    bool                                        word_autobiographies_contains(const QString& word);
 
     void                                        set_progress_bar (QProgressBar * pPB) { m_ProgressBar = pPB;}
     void                                        set_status_bar(QStatusBar* pBar) {m_StatusBar = pBar;}
@@ -290,7 +294,7 @@ public:
     CLexicon *                                  build_sublexicon(MainWindow* = NULL);
 
 
-    void                                        time_stamp(QString message);
+    void                                        time_stamp(const QString& message);
 
 public:
     // insert functions here
@@ -300,14 +304,13 @@ public:
     void step3a_take_stem_affix_parses_and_create_protosigs(QList<CParse*> * parses, bool suffix_flag,Protosigs* these_protosigs);
     void step4_create_signatures(QString name_of_calling_function);
     void step4a_link_signature_and_affix(CSignature*, affix_t);
-    void step4b_link_signature_and_stem_and_word(stem_t , CSignature*, QString this_signature_string );
-
-    void find_compounds();
-
+    void step4b_link_signature_and_stem_and_word(stem_t , CSignature*, QString this_signature_string, const QString& name_of_calling_function);
     void step6_ReSignaturizeWithKnownAffixes();
     void step6a_create_temporary_map_from_stems_to_affix_sets(Protosigs   &); //map_sigstring_to_stem_list &);
     void step7_FindGoodSignaturesInsideParaSignatures();
     void step7_take_protosigs_create_xxx(QString, Protosigs ) {return;}
+
+    void find_compounds();
 
     void clear_lexicon();
     void compare_opposite_sets_of_signatures(QSet<CSignature*>* sig_set_1, QSet<CSignature*>* sig_set_2,QString letter);
@@ -317,7 +320,7 @@ public:
     void create_sublexicon ();
     void find_full_signatures();
 
-    void replace_parse_pairs_from_current_signature_structure(bool FindSuffixesFlag=true);
+    void replace_parse_pairs_from_current_signature_structure();
     void test_for_phonological_relations_between_signatures();
 };
 
