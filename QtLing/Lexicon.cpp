@@ -903,7 +903,7 @@ void CLexicon::find_full_signatures()
                     }
                 }
             }
-            /*
+
             // create new protostem object for that stem in list of protostems
             QMap<QString, protostem*>& ref_protostem_map = m_SuffixesFlag ?
                         m_suffix_protostems : m_prefix_protostems;
@@ -935,7 +935,7 @@ void CLexicon::find_full_signatures()
                 p_protostem->set_start_and_end_word(i, j-1);
 
             }
-            */
+
 
         }
     }
