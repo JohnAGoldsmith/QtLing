@@ -231,8 +231,9 @@ void LowerTableView::display_this_item( const  QModelIndex & index )
         if (index.isValid()) {row = index.row();}
         QString str_protostem = index.sibling(row,0).data().toString();
         protostem* p_protostem = UpperView_data_type == e_data_suffixal_protostems ?
-                    this_lexicon->get_suffixal_protostems()->value(str_protostem):
-                    this_lexicon->get_prefixal_protostems()->value(str_protostem);
+                    this_lexicon->get_suffixal_protostems()->value(str_protostem, NULL):
+                    this_lexicon->get_prefixal_protostems()->value(str_protostem, NULL);
+        if (p_protostem == NULL) break;
         table_protostem(p_protostem);
         setModel(m_my_current_model);
         break;

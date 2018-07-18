@@ -235,7 +235,8 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
                 this_word = m_Words->get_reverse_sort_list()->at(wordno);
                 affix = this_word.left(this_word.length()- stem_length);
             }
-            affixes_of_residual_sig.append( affix ); // what if affix is NULL?
+            if (!affix.isEmpty())
+                affixes_of_residual_sig.append( affix ); // what if affix is NULL?
         }
         if (m_Words->contains(this_stem)) {
                 affixes_of_residual_sig.append("NULL");
@@ -295,19 +296,41 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
 
 void CLexicon::find_compounds()
 {
-    const int MIN_STEM_LENGTH = 2;
+    // PART 1a: go through list of words to find hyphenated compounds
     CStemCollection* p_stems = m_SuffixesFlag ? m_suffixal_stems : m_prefixal_stems;
     const QMap<QString, protostem*>& ref_protostem_map
             = m_SuffixesFlag ? m_suffix_protostems : m_prefix_protostems;
 
     m_ProgressBar->reset();
     m_ProgressBar->setMinimum(0);
-    m_ProgressBar->setMaximum(p_stems->get_count());
-    m_StatusBar->showMessage("5: Finding Compounds - part 1.");
+    m_ProgressBar->setMaximum(m_Words->get_count() + p_stems->get_count());
+    m_StatusBar->showMessage("8: Finding Compounds - part 1.");
     int itercount = 0;
 
-    // iterate through stems
-    qDebug() << "Finding compounds, iterating thru stems";
+    QMap<QString, CWord*>::ConstIterator word_iter;
+    for (word_iter = m_Words->get_map()->constBegin();
+         word_iter != m_Words->get_map()->constEnd();
+         word_iter++) {
+        m_ProgressBar->setValue(itercount++);
+        const QString& word = word_iter.key();
+
+        QStringList components = word.split('-');
+        bool compound_valid = true;
+        foreach (QString curr_component, components) {
+            if (curr_component.length() < M_MINIMUM_STEM_LENGTH
+                    || m_Words->get_word(curr_component) == NULL
+                    || p_stems->find_or_fail(curr_component) == NULL) {
+                compound_valid = false;
+                break;
+            }
+        }
+        if (components.length() == 2 && compound_valid) {
+            m_Compounds->add_compound_word(word, components);
+        }
+    }
+    // END OF PART 1a
+    // PART 1b: go through list of stems and protostems to find potential
+    // non-hyphenated compound words
     QMap<QString, CStem*>* p_stem_map = p_stems->get_map();
     QMap<QString, CStem*>::ConstIterator stem_map_iter;
     for (stem_map_iter = p_stem_map->constBegin();
@@ -321,7 +344,7 @@ void CLexicon::find_compounds()
         protostem* p_protostem = ref_protostem_map[str_stem];
         int stem_length = str_stem.length();
 
-        if (stem_length < MIN_STEM_LENGTH) continue;
+        if (stem_length < M_MINIMUM_STEM_LENGTH) continue;
 
         // iterate through all words in the protostem
         int wordno;
@@ -374,33 +397,11 @@ void CLexicon::find_compounds()
             m_Compounds->add_compound_word(str_word, str_stem, str_continuation);
         }
     }
-    // finished part 1
+    // END OF PART 1b
 
-    // starting part 2
-
-    QList<CompoundComponent*> list_to_remove;
-    CompoundComponentCollection* p_components = m_Compounds->get_components();
-    QMap<QString, CompoundComponent*>& ref_components_map = p_components->get_map();
-
-    m_ProgressBar->reset();
-    m_ProgressBar->setMinimum(0);
-    m_ProgressBar->setMaximum(ref_components_map.size());
-    m_StatusBar->showMessage("9: Finding Compounds - part 2: "
+    // PART 2: remove invalid components
+    m_StatusBar->showMessage("8: Finding Compounds - part 2: "
                              "removing invalid components.");
-    itercount = 0;
-    QMap<QString, CompoundComponent*>::iterator components_iter;
-    for (components_iter = ref_components_map.begin();
-         components_iter != ref_components_map.end();
-         components_iter++) {
-        m_ProgressBar->setValue(itercount++);
-        CompoundComponent* p_component = components_iter.value();
-        if (!p_component->check_valid()) {
-            list_to_remove.append(p_component);
-        }
-    }
-    CompoundComponent* p_component_to_remove;
-    foreach (p_component_to_remove, list_to_remove) {
-        p_components->remove_component(p_component_to_remove);
-    }
+    m_Compounds->remove_invalid_components(m_ProgressBar);
 
 }

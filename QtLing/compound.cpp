@@ -5,6 +5,7 @@
 #include <QMap>
 #include <QPair>
 #include <QDebug>
+#include <QProgressBar>
 
 // -------------- CompoundComponent ---------------- //
 CompoundComponent::CompoundComponent(const QString &word):
@@ -17,7 +18,7 @@ void CompoundComponent::add_connection(CompoundWord *p_compword, int position)
 
 bool CompoundComponent::check_valid()
 {
-    if (m_connections.size() == 0)
+    if (m_connections.size() < 2)
         return false;
     int first_position = m_connections.begin().value().first;
     CompoundConnectionMap::ConstIterator map_iter;
@@ -185,12 +186,12 @@ CompoundWord* CompoundWordCollection::add_compound_word
 (const QString& str_word, const QStringList& composition)
 {
     QMap<QString, CompoundWord*>::iterator iter = m_map.find(str_word);
-    CompoundWord* curr_word;
+    CompoundWord* p_curr_word;
     if (iter == m_map.end()) {
-        curr_word = new CompoundWord(str_word);
-        m_map.insert(str_word, curr_word);
+        p_curr_word = new CompoundWord(str_word);
+        m_map.insert(str_word, p_curr_word);
     } else {
-        curr_word = iter.value();
+        p_curr_word = iter.value();
     }
 
     int composition_len = composition.length();
@@ -200,10 +201,10 @@ CompoundWord* CompoundWordCollection::add_compound_word
         CompoundComponent* curr_comp;
         curr_comp = m_component_collection->add_or_find_compound_component(composition[i]);
         curr_composition.append(curr_comp);
-        curr_comp->add_connection(curr_word, i);
+        curr_comp->add_connection(p_curr_word, i);
     }
-    curr_word->add_composition(curr_composition);
-    return curr_word;
+    p_curr_word->add_composition(curr_composition);
+    return p_curr_word;
 }
 
 CompoundWord* CompoundWordCollection::add_compound_word
@@ -219,4 +220,33 @@ void CompoundWordCollection::remove_compound_word(CompoundWord* p_word)
     m_map.remove(str_word);
     delete p_word;
 
+}
+
+void CompoundWordCollection::remove_invalid_components(QProgressBar *p_progressbar)
+{
+    QList<CompoundComponent*> list_to_remove;
+    QMap<QString, CompoundComponent*>& ref_components_map
+            = m_component_collection->get_map();
+    int itercount;
+    if (p_progressbar != NULL) {
+        p_progressbar->reset();
+        p_progressbar->setMinimum(0);
+        p_progressbar->setMaximum(ref_components_map.size());
+        itercount = 0;
+    }
+    QMap<QString, CompoundComponent*>::iterator components_iter;
+    for (components_iter = ref_components_map.begin();
+         components_iter != ref_components_map.end();
+         components_iter++) {
+        if (p_progressbar != NULL)
+            p_progressbar->setValue(itercount++);
+        CompoundComponent* p_component = components_iter.value();
+        if (!p_component->check_valid()) {
+            list_to_remove.append(p_component);
+        }
+    }
+    CompoundComponent* p_component_to_remove;
+    foreach (p_component_to_remove, list_to_remove) {
+        m_component_collection->remove_component(p_component_to_remove);
+    }
 }

@@ -300,6 +300,7 @@ public:
 
     void                                        time_stamp(const QString& message);
 
+
 public:
     // insert functions here
     void step1_from_words_to_protostems();

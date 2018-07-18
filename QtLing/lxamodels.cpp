@@ -233,6 +233,8 @@ void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures, e
         sig = p_signatures->get_at_sorted(signo);
         QList<QStandardItem*> items;
 
+        const QString& str_sig = sig->GetSignature();
+        QStandardItem * item1 = new QStandardItem(str_sig);
         QStandardItem * item2 = new QStandardItem();
         QStandardItem * item3 = new QStandardItem();
         QStandardItem * item4 = new QStandardItem();
@@ -240,7 +242,7 @@ void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures, e
         item3->setData(sig->get_robustness(), Qt::DisplayRole);
         item4->setData(sig->get_stem_entropy(), Qt::DisplayRole);
 
-        items.append(new QStandardItem(sig->GetSignature()));
+        items.append(item1);
         items.append(item2);
         items.append(item3);
         items.append(item4);

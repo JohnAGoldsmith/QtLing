@@ -72,5 +72,6 @@ public:
     void                                    sort_each_signatures_stems_alphabetically();
 
     void                                    assign_json_id();
+    void                                    check_singleton_signatures(const QString& message);
 };
 #endif // CSIGNATURECOLLECTION_H

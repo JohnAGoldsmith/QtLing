@@ -269,3 +269,21 @@ void CSignatureCollection::find_minimal_cover()
         }
     }
 }
+
+void CSignatureCollection::check_singleton_signatures(const QString &message)
+{
+    QMap<QString, CSignature*>::ConstIterator sig_map_iter;
+    qDebug() << message << "Checking for singleton signatures";
+    for (sig_map_iter = m_SignatureMap.constBegin();
+         sig_map_iter != m_SignatureMap.constEnd();
+         sig_map_iter++) {
+        const QString& str_sig = sig_map_iter.key();
+        if (!str_sig.contains('='))
+            qDebug() << message << "found singleton signature in key:" << str_sig;
+        CSignature* p_sig = sig_map_iter.value();
+        if (!p_sig->get_key().contains('='))
+            qDebug() << message << "found singleton signature in CSignature object:" << str_sig;
+        if (p_sig->get_number_of_affixes() == 1)
+            qDebug() << message << "found singleton signature in CSignature object:" << str_sig;
+    }
+}

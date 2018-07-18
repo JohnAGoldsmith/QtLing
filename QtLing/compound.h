@@ -12,10 +12,21 @@ class CompoundComponent;
 class CompoundWord;
 class CompoundComponentCollection;
 class CompoundWordCollection;
+class QProgressBar;
 
 /*!
- * \brief The CompoundComponent class.
+ * \brief CompoundComponent is a class that contains information about a word
+ * that can be considered a part (or "components") of compound words.
  *
+ * For instance, the word "lighthouse" is composed of two parts, "light" and
+ * "house". "light" and "house" are each represented by a CompoundComponent
+ * object. Each compound word has a list of connections, i.e. a list that keeps
+ * track which words this component appeared in, and what position in that
+ * word. e.g. the CompoundComponent object of "light" would have in its
+ * m_connections the following entry in its m_connections map:
+ *   key: "lighthouse", value: (0, <ptr>)
+ * where 0 represents the leftmost position in a compound word, and <ptr>
+ * is a pointer to the corresponding CompoundWord object for "lighthouse".
  *
  */
 class CompoundComponent
@@ -36,6 +47,19 @@ public:
     bool                                        check_valid();
 };
 
+/*!
+ * \brief CompoundWord is a class that contains information about a compound
+ * word.
+ *
+ * Each compound word found has a corresponding Compound Word object, which
+ * contains a list of compositions. A "CompoundComposition" is a list of
+ * pointers to CompoundComponents, and represents a possible combination
+ * of compound components to form the compound word, in left-to-right order.
+ * e.g. the word "lighthouse" has the composition "light" + "house" which is
+ * represented by a QList containing pointers to the CompoundComponent objects
+ * of these two words. A list of compositions is stored because Linguistica
+ * may find multiple possible compositions for one word.
+ */
 class CompoundWord
 {
 public:
@@ -58,6 +82,11 @@ public:
 
 };
 
+/*!
+ * \brief The CompoundComponentCollection class is a wrapper class for a QMap
+ * data structure containing pointers to all CompoundComponent objects created
+ * during compound discovery.
+ */
 class CompoundComponentCollection
 {
     QMap<QString, CompoundComponent*>   m_map;
@@ -73,6 +102,12 @@ public:
     void                                remove_component(CompoundComponent* p_component);
 };
 
+/*!
+ * \brief The CompoundComponentCollection class is a wrapper class for a QMap
+ * data structure containing pointers to all CompoundWord objects created
+ * during compound discovery. This class serves as the primary interface for
+ * accessing and storing data related to compound discovery.
+ */
 class CompoundWordCollection
 {
     QMap<QString, CompoundWord*>        m_map;
@@ -92,6 +127,7 @@ public:
     CompoundWord*                       add_compound_word(const QString& whole, const QString& part0, const QString& part1);
     CompoundWord*                       get_compound_word(const QString& word) const;
     void                                remove_compound_word(CompoundWord* p_word);
+    void                                remove_invalid_components(QProgressBar* p_progressbar = NULL);
 
 };
 

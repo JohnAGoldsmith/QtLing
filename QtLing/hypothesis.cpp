@@ -7,7 +7,8 @@ CHypothesis* CLexicon::get_hypothesis(QString hypothesis)
     return m_Hypothesis_map->value( hypothesis );
 }
 void CLexicon::generate_hypotheses()
-{   sig_graph_edge * p_edge;
+{
+    sig_graph_edge * p_edge;
     lxa_sig_graph_edge_map_iter edge_iter (m_SigGraphEdgeMap);
     QString affix_1, doomed_affix;
     QStringList affixes1, affixes2, doomed_affixes, new_pSig2;
