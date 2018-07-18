@@ -29,8 +29,11 @@ class CompoundWordCollection;
  * Parse: a pair of strings, typically stem and affix;
  * Protostem: a triple, one string and two integers, showing the stem and the beginning and end point on the list of words where it appears.
  * Protosig: A pair consisting of a stem and a set of affixes
- * Protosigs: a map from a stem to the set of affixes in a protosig
- * Sig_to_stems:  a map from sigstrings to a set of stems.
+ * eliminate: Protosigs: a map from a stem to the set of affixes in a protosig
+ * eliminate: Sig_to_stems:  a map from sigstrings to a set of stems.
+ *
+ * Stem_to_sig_map: a map from a stem to a set of affixes (or to a string representation of affixes?). Was "Protosigs".
+ * Sig_to_stem-map: a map from a sig-string to a set of stems. Was "Sig_to_stems".
  *
  * Also:
  * Parse_list
@@ -298,19 +301,20 @@ public:
 
 public:
     // insert functions here
-    void step1_find_protostems();
-    void step2_create_stem_affix_parses();
-    void step3_assign_affixes_to_stems(QString name_of_calling_function);
-    void step3a_take_stem_affix_parses_and_create_protosigs(QList<CParse*> * parses, bool suffix_flag,Protosigs* these_protosigs);
+    void step1_from_words_to_protostems();
+    void step2_from_protostems_to_parses();
+    void step3_from_parses_to_stem_to_sig_maps(QString name_of_calling_function);
+    void step3a_from_parses_to_stem_to_sig_maps(QList<CParse*> * parses, bool suffix_flag,Stem_to_sig_map* these_stem_to_sig_maps);
+    //void step4_assign_affixes_to_stems(QString name_of_calling_function);
     void step4_create_signatures(QString name_of_calling_function);
     void step4a_link_signature_and_affix(CSignature*, affix_t);
     void step4b_link_signature_and_stem_and_word(stem_t , CSignature*, QString this_signature_string, const QString& name_of_calling_function);
     void step6_ReSignaturizeWithKnownAffixes();
-    void step6a_create_temporary_map_from_stems_to_affix_sets(Protosigs   &); //map_sigstring_to_stem_list &);
+    void step6a_create_temporary_map_from_stems_to_affix_sets(Stem_to_sig_map&); //map_sigstring_to_stem_list &);
     void step7_FindGoodSignaturesInsideParaSignatures();
-    void step7_take_protosigs_create_xxx(QString, Protosigs ) {return;}
 
     void find_compounds();
+    void step7_from_stem_to_sig_maps_to_xxx(QString, Stem_to_sig_map ) {return;}
 
     void clear_lexicon();
     void compare_opposite_sets_of_signatures(QSet<CSignature*>* sig_set_1, QSet<CSignature*>* sig_set_2,QString letter);

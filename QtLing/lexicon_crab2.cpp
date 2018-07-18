@@ -69,7 +69,7 @@ void CLexicon::step6_ReSignaturizeWithKnownAffixes()
     m_SuffixesFlag ?
                stems = m_suffixal_stems:
                stems = m_prefixal_stems;
-   Protosigs                    these_protosigs;
+   Stem_to_sig_map                    these_stem_to_sig_maps;
    map_sigstring_to_stem_list    temp_signatures_to_stems;
 
    m_StatusBar->showMessage("6: resignaturize with known affixes");
@@ -89,17 +89,17 @@ void CLexicon::step6_ReSignaturizeWithKnownAffixes()
    //--> THIS is where the continuations that are not affixes are eliminated -- well, they are not
    //    eliminated, but they are not copied into ref_stems_to_affix_set. Changing that to a Protosigs.
 
-    step6a_create_temporary_map_from_stems_to_affix_sets( these_protosigs );                   // ref_stems_to_affix_set);
+    step6a_create_temporary_map_from_stems_to_affix_sets( these_stem_to_sig_maps );                   // ref_stems_to_affix_set);
 
 
-   step7_take_protosigs_create_xxx("re-signaturize to good affixes only", these_protosigs );      //ref_stems_to_affix_set);
+   step7_from_stem_to_sig_maps_to_xxx("re-signaturize to good affixes only", these_stem_to_sig_maps );      //ref_stems_to_affix_set);
 
 }
 /**
  * helper function for preceeding function.
  *
  */
-void CLexicon::step6a_create_temporary_map_from_stems_to_affix_sets(Protosigs  & these_protosigs//,
+void CLexicon::step6a_create_temporary_map_from_stems_to_affix_sets(Stem_to_sig_map  & these_stem_to_sig_maps//,
                                                              //map_sigstring_to_stem_list & ref_temp_signatures_to_stems
                                                              )
 {
@@ -140,16 +140,16 @@ void CLexicon::step6a_create_temporary_map_from_stems_to_affix_sets(Protosigs  &
             }
         }
 
-        if (! these_protosigs.contains(this_stem_t)){
-            if (m_SuffixesFlag) {
-                    pSet = new suffix_set();
-                } else{
-                    pSet = new prefix_set();
-                }
-                these_protosigs.insert(this_stem_t,pSet);
+        if (! these_stem_to_sig_maps.contains(this_stem_t)){
+            if (m_SuffixesFlag){
+                pSet = new suffix_set();
+            } else{
+                pSet = new prefix_set();
             }
-        these_protosigs.value(this_stem_t)->insert(this_affix_t);
+            these_stem_to_sig_maps.insert(this_stem_t,pSet);
         }
+        these_stem_to_sig_maps.value(this_stem_t)->insert(this_affix_t);
+    }
 }
 
 /*!
@@ -226,7 +226,7 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
             qApp->processEvents();
         }
 
-        for (int wordno= this_protostem->get_start_word(); wordno <= this_protostem->get_end_word(); wordno++){
+        for (int wordno= this_protostem->get_start_word(); wordno <= this_protostem->get_end_word(); wordno++){ //corrected error here july 2018, hanson.
             QString this_word, affix;
             if (m_SuffixesFlag){
                 this_word = m_Words->get_word_string(wordno);

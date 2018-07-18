@@ -91,7 +91,7 @@ typedef QMapIterator<QString, CStem*>       map_string_to_stem_ptr_iter;
 typedef QMap<QString,sig_graph_edge*>        lxa_sig_graph_edge_map;
 typedef QMapIterator<QString,sig_graph_edge*>        lxa_sig_graph_edge_map_iter;
 
-typedef  QMap<stem_t , QSet<affix_t>* >     Protosigs;
+typedef  QMap<stem_t , QSet<affix_t>* >      Stem_to_sig_map;// was Protosigs;
 
 struct Sig_to_stems
 {
