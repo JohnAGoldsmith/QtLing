@@ -42,6 +42,8 @@ public:
     void                    sort_by_count();
     CSuffix_ptr_list*       get_sorted_list()               {return & m_SortedList;}
     void                    clear();
+
+    void                    assing_json_id();
 };
 
 class CPrefixCollection
@@ -75,6 +77,8 @@ public:
     void                    sort_by_count();
     CPrefix_ptr_list*       get_sorted_list()               {return & m_SortedList;}
     void                    clear();
+
+    void                    assing_json_id();
 
 };
 

@@ -79,7 +79,17 @@ void CSuffixCollection::sort_by_count()
 
 }
 
-
+void CSuffixCollection::assing_json_id()
+{
+    QMap<QString, CSuffix*>::ConstIterator map_iter;
+    int curr_json_id = 0;
+    for (map_iter = m_SuffixMap.constBegin();
+         map_iter != m_SuffixMap.constEnd();
+         map_iter++) {
+        CSuffix* p_suffix = map_iter.value();
+        p_suffix->set_json_id(curr_json_id);
+    }
+}
 
 
 
@@ -164,3 +174,14 @@ void CPrefixCollection::sort_by_count()
 
 }
 
+void CSuffixCollection::assing_json_id()
+{
+    QMap<QString, CPrefix*>::ConstIterator map_iter;
+    int curr_json_id = 0;
+    for (map_iter = m_PrefixMap.constBegin();
+         map_iter != m_PrefixMap.constEnd();
+         map_iter++) {
+        CPrefix* p_prefix = map_iter.value();
+        p_prefix->set_json_id(curr_json_id);
+    }
+}
