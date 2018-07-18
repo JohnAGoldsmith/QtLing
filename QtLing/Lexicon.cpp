@@ -45,8 +45,9 @@ protostem::~protostem()
 }
 
 CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag):
+    M_MINIMUM_STEM_LENGTH(4),
     M_MINIMUM_STEM_COUNT(2),
-    M_MINIMUM_STEM_LENGTH(4)
+    M_MAXIMUM_AFFIX_LENGTH(10)
 {
     m_Signatures            = new CSignatureCollection(this, true);
     m_PrefixSignatures      = new CSignatureCollection(this,false);
@@ -347,9 +348,14 @@ void CLexicon::step1_from_words_to_protostems()
 
 
     int temp_j = 0;
-    for (int wordno=0; wordno<Words->size(); wordno ++){
+    for (int wordno=0; wordno<Words->size(); wordno ++) {
+        temp_j++;
+        if (temp_j++ == 5000) {
+            temp_j = 0;
+            m_ProgressBar->setValue(wordno);
+            qApp->processEvents();
+        }
 
-        temp_j++; if (temp_j++ == 5000) {temp_j = 0; m_ProgressBar->setValue(wordno); qApp->processEvents();}
         this_word = Words->at(wordno);
         this_word_length = this_word.length();
         if (StartFlag){
@@ -412,6 +418,7 @@ void CLexicon::step1_from_words_to_protostems()
         int alpha = 0;
         int omega = 0; int start_index = 0;
 
+        qDebug() << "Step 1, part 2" << alphabetized_protostems.length() << "protostems found";
         for (int p = 0; p<alphabetized_protostems.length(); p++){
             QString this_protostem_t = alphabetized_protostems[p];
             int protostem_length = this_protostem_t.length();
@@ -425,26 +432,26 @@ void CLexicon::step1_from_words_to_protostems()
                 j++;
             }
             m_suffix_protostems[this_protostem_t]->set_start_and_end_word(i,j-1);
-           }
-       } // end of suffix case
-   else { // beginning of prefix case
-       m_ProgressBar->reset();
-       m_ProgressBar->setMinimum(0);
-       m_ProgressBar->setMaximum(m_prefix_protostems.size());
-       QStringList alphabetized_protostems = m_prefix_protostems.keys();
-       SortQStringListFromRight(alphabetized_protostems);
-       int alpha = 0;
-       int omega = 0; int start_index = 0;
-       for (int p = 0; p<alphabetized_protostems.length(); p++){
-           QString this_protostem_t = alphabetized_protostems[p];
-           int protostem_length = this_protostem_t.length();
-           int i = alpha;
-           while (Words->at(i).right(protostem_length) != this_protostem_t){
-               i++;
-           }
-           int j = i;
-           alpha = i;
-           while (j < Words->length() && Words->at(j).right(protostem_length) == this_protostem_t){
+        }
+    } // end of suffix case
+    else { // beginning of prefix case
+        m_ProgressBar->reset();
+        m_ProgressBar->setMinimum(0);
+        m_ProgressBar->setMaximum(m_prefix_protostems.size());
+        QStringList alphabetized_protostems = m_prefix_protostems.keys();
+        SortQStringListFromRight(alphabetized_protostems);
+        int alpha = 0;
+        int omega = 0; int start_index = 0;
+        for (int p = 0; p<alphabetized_protostems.length(); p++){
+            QString this_protostem_t = alphabetized_protostems[p];
+            int protostem_length = this_protostem_t.length();
+            int i = alpha;
+            while (Words->at(i).right(protostem_length) != this_protostem_t){
+                i++;
+            }
+            int j = i;
+            alpha = i;
+            while (j < Words->length() && Words->at(j).right(protostem_length) == this_protostem_t){
                 j++;
             }
             m_prefix_protostems[this_protostem_t]->set_start_and_end_word(i,j-1);
@@ -594,36 +601,35 @@ void   CLexicon::step3_from_parses_to_stem_to_sig_maps(QString name_of_calling_f
  */
 
 void CLexicon::step3a_from_parses_to_stem_to_sig_maps(QList<CParse*> * parses, bool suffix_flag,Stem_to_sig_map* these_stem_to_sig_maps )
-{       QString this_stem_t, this_affix_t;
-        suffix_set * pSet;
-        int i = 0;
-        for (int parseno = 0; parseno < parses->size(); parseno++){
-            CParse * this_pair = parses->at(parseno);
+{
+    QString this_stem_t, this_affix_t;
+    suffix_set * pSet;
+    int i = 0;
+    for (int parseno = 0; parseno < parses->size(); parseno++){
+        CParse * this_pair = parses->at(parseno);
+        if (suffix_flag){
+            this_stem_t = this_pair->get_string1();
+            this_affix_t = this_pair->get_string2();
+        } else{
+            this_stem_t = this_pair->get_string2();
+            this_affix_t = this_pair->get_string1();
+        }
+        i++;
+        if (i == 100000){i = 0;
+            m_StatusBar->showMessage("3a: "+ this_stem_t + this_affix_t);
+            qApp->processEvents();
+
+        }
+
+        if (! these_stem_to_sig_maps->contains(this_stem_t)){
             if (suffix_flag){
-                this_stem_t = this_pair->get_string1();
-                this_affix_t = this_pair->get_string2();
+                pSet = new suffix_set();
             } else{
-                this_stem_t = this_pair->get_string2();
-                this_affix_t = this_pair->get_string1();
+                pSet = new prefix_set();
             }
-            i++;
-            if (i == 100000){i = 0;
-                 m_StatusBar->showMessage("3a: "+ this_stem_t + this_affix_t);
-                 qApp->processEvents();
-
+            these_stem_to_sig_maps->insert(this_stem_t, pSet);
         }
-
-            if (! these_stem_to_sig_maps->contains(this_stem_t)){
-                if (suffix_flag){
-                    pSet = new suffix_set();
-                } else{
-                    pSet = new prefix_set();
-                }
-                these_stem_to_sig_maps->insert(this_stem_t, pSet);
-            }
-            these_stem_to_sig_maps->value(this_stem_t)->insert(this_affix_t);
-        }
-        these_protosigs->value(this_stem_t)->insert(this_affix_t);
+        these_stem_to_sig_maps->value(this_stem_t)->insert(this_affix_t);
     }
 };
 // ==========================================================================  //

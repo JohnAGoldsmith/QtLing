@@ -156,6 +156,7 @@ class CLexicon
 protected:
     const int                       M_MINIMUM_STEM_LENGTH;
     const int                       M_MINIMUM_STEM_COUNT;
+    const int                       M_MAXIMUM_AFFIX_LENGTH;
                                                          // this is part of an experiment.
     QMap<QString,eComponentType>    m_category_types;    // part of the experiment. It serves
                                                         // as the principal way in which the Lexicon communicates
