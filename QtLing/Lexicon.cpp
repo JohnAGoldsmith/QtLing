@@ -239,7 +239,10 @@ void CLexicon::Crab_1()
 
     replace_parse_pairs_from_current_signature_structure();
 
-   // find_full_signatures();
+    find_full_signatures();
+    step3_from_parses_to_stem_to_sig_maps(QString("crab_1"));
+    step4_create_signatures(QString("Crab1"));
+
 
     collect_parasuffixes();
 
@@ -514,7 +517,6 @@ void   CLexicon::step3_from_parses_to_stem_to_sig_maps(QString name_of_calling_f
         count++; m_ProgressBar->setValue(count);
 
         this_signature_string = convert_set_to_qstring( these_stem_to_sig_maps[this_stem_t] );
-        //qDebug() << 517 << this_signature_string;
 
         m_intermediate_signature_to_stems_map.attach_stem_to_signature(this_stem_t, this_signature_string);
     }
@@ -665,7 +667,6 @@ void CLexicon::step4a_link_signature_and_affix(CSignature * pSig, affix_t this_a
         CSuffix* pSuffix = m_Suffixes->find_or_add(this_affix);
         pSuffix->increment_count();
         pSig->add_affix_ptr(pSuffix);
-        //qDebug() << 686 << this_affix;
     } else {
         CPrefix* pPrefix = m_Prefixes->find_or_add(this_affix);
         pPrefix->increment_count();
@@ -806,6 +807,7 @@ void CLexicon::find_full_signatures()
                 if (m_SuffixesFlag){
                     pParse = new CParse(stem,affix);
                     m_Parses->append(pParse);
+                    //qDebug() << stem << affix;
                 } else{
                     pParse = new CParse(affix, stem);
                     m_Parses->append(pParse);
@@ -816,7 +818,6 @@ void CLexicon::find_full_signatures()
             }
         }
     }
-    step3_from_parses_to_stem_to_sig_maps("Find full signatures");
 }
 
 
