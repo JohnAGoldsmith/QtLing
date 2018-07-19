@@ -67,6 +67,15 @@ LowerTableView::LowerTableView(MainWindow * window)
             setModel( m_my_current_model);
             break;
         }
+     case e_data_stems:
+     case e_suffixal_stems:
+     case e_prefixal_stems:{
+         if (index.isValid()) {row = index.row();}
+         QString stem = index.sibling(row,0).data().toString();
+         table_stem(stem, this_lexicon);
+         setModel( m_my_current_model);
+         break;
+     }
          //  ---------------------------------------------------//
         case  e_data_suffixal_signatures:
         case  e_data_epositive_suffixal_signatures:{
@@ -201,8 +210,6 @@ LowerTableView::LowerTableView(MainWindow * window)
           if (m_parent_window->m_graphic_display_flag){
                 if (index.isValid()) {row = index.row();}
                 QString hypothesis_label = index.sibling(row,6).data().toString();
-                //CHypothesis*  pHypothesis = this_lexicon->get_hypothesis(hypothesis_label);
-                qDebug() << 207 << hypothesis_label;
           }
           else{ //tabular info, not graphics.
 
@@ -267,9 +274,11 @@ void LowerTableView::graphics_sig_graph_edges(CSignature* pSig, CLexicon* p_lexi
  * @param pWord
  * What follows is a set of functions that display different kinds of user-requested information on the Lower Table View.
  */
-void LowerTableView::table_word(CWord* pWord ){
+
+void LowerTableView::table_word(CWord* pWord){
     QList<QStandardItem*>      item_list;
     QStandardItem *            p_item, *q_item;
+    QString                     word_t = pWord->get_key();
 
     // Create a clean model.
     if (m_my_current_model){
@@ -296,7 +305,6 @@ void LowerTableView::table_word(CWord* pWord ){
     }
     // Display the signatures this word bears:
     for (int signo = 0; signo < pWord->m_Signatures.size(); signo++){
-        //qDebug() << signo;
         QString sig = pWord->get_signatures()->at(signo)->second->get_key();
         QString stem = pWord->get_signatures()->at(signo)->first->get_key();
         item_list.clear();
@@ -308,6 +316,86 @@ void LowerTableView::table_word(CWord* pWord ){
     }
 
 }
+
+/**
+ * @brief LowerTableView::table_word
+ * @param pWord
+ * What follows is a set of functions that display different kinds of user-requested information on the Lower Table View.
+ */
+/*
+void LowerTableView::table_word(QString word, CLexicon* Lexicon){
+    QList<QStandardItem*>      item_list;
+    QStandardItem *            p_item, *q_item;
+
+    // Create a clean model.
+    if (m_my_current_model){
+        delete m_my_current_model;
+    }
+    m_my_current_model = new QStandardItemModel();
+
+    // Find the word's autobiography and set it, line by line, in the lower TableView.
+    if (Lexicon->word_autobiographies_contains(word)){
+        QListIterator<QString> line_iter(*Lexicon->get_word_autobiography(word));
+        while (line_iter.hasNext()){
+            QString report_line = line_iter.next();
+            item_list.clear();
+            QStringList report_line_items = report_line.split("=");
+            for (int i = 0; i < report_line_items.size(); i++){
+                p_item = new QStandardItem(report_line_items[i]);
+                if (i == 0 && report_line_items[i][0] == "*"){
+                    p_item->setBackground(Qt::red);
+                } else{
+                    p_item->setBackground(Qt::white);
+                }
+                item_list.append(p_item);
+            }
+            m_my_current_model->appendRow(item_list);
+        }
+    }
+
+}
+*/
+/**
+ * @brief LowerTableView::table_stem
+ * @param pWord
+ * What follows is a set of functions that display different kinds of user-requested information on the Lower Table View.
+ */
+void LowerTableView::table_stem(stem_t stem, CLexicon* Lexicon){
+    QList<QStandardItem*>      item_list;
+    QStandardItem *            p_item, *q_item;
+
+    // Create a clean model.
+    if (m_my_current_model){
+        delete m_my_current_model;
+    }
+    m_my_current_model = new QStandardItemModel();
+
+    // Find the stem's autobiography and set it, line by line, in the lower TableView.
+    if (Lexicon->stem_autobiographies_contains(stem)) {
+        qDebug() << 339 << "true";
+        QListIterator<QString> line_iter(*Lexicon->get_stem_autobiography(stem));
+        while (line_iter.hasNext()){
+            QString report_line = line_iter.next();
+            item_list.clear();
+            QStringList report_line_items = report_line.split("=");
+            for (int i = 0; i < report_line_items.size(); i++){
+                p_item = new QStandardItem(report_line_items[i]);
+                if (i == 0 && report_line_items[i][0] == "*"){
+                    p_item->setBackground(Qt::red);
+                } else{
+                    p_item->setBackground(Qt::white);
+                }
+                item_list.append(p_item);
+
+            }
+            m_my_current_model->appendRow(item_list);
+        }
+    }
+
+}
+
+
+
 void LowerTableView::table_signature(CSignature* pSig ){
 
     QStandardItem*             pItem1, * pItem2;

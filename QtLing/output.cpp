@@ -66,8 +66,8 @@ void MainWindow::read_stems_and_words()
         }
         lexicon->get_words()->add(words[0]);
     }
-    lexicon->CreateStemAffixPairs();
-    lexicon->assign_suffixes_to_stems("Reading stems and words");
+    lexicon->step2_from_protostems_to_parses();
+    lexicon->step3_from_parses_to_stem_to_sig_maps("Reading stems and words");
     load_models(lexicon);
     create_or_update_TreeModel(lexicon);
 

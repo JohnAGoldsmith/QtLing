@@ -74,8 +74,10 @@ public slots:
         void                graphics_sig_graph_edges(CSignature* , CLexicon*);
         void                table_signature(CSignature*) ;
         void                table_word (CWord*);
+        //void                table_word(QString word, CLexicon* );
         void                table_one_signature(CSignature*, QStringList stem_list);
         void                table_passive_signature(CSignature*);
+        void                table_stem(stem_t, CLexicon*);
 
 signals:
 };

@@ -16,6 +16,16 @@ CStemCollection::CStemCollection(CLexicon* lexicon)
 CStemCollection::~CStemCollection()
 {
     // delete each stem individually, and then...
+
+   map_string_to_stem_ptr_iter iter (*m_StringToStemMap);
+   while (iter.hasNext()){
+       iter.next();
+       delete iter.value();
+   }
+   for (int i = 0; i < m_SortList.size(); i++){
+    delete m_SortList.at(i);
+   }
+
     delete m_StringToStemMap;
 }
 
