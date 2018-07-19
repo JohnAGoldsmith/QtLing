@@ -2,6 +2,7 @@
 #define TYPEDEFS_H
 #include <QSetIterator>
 #include <QMapIterator>
+#include "CParse.h"
 class CStem;
 class CWord;
 class CPrefix;
@@ -24,7 +25,6 @@ template<class V> class Q3Dict;
 typedef  QPair<QString, int>        word_and_count;
 typedef  QList<word_and_count*>     word_and_count_list;
 
-//typedef  QPair<sig_string, pair_of_stem_sig_pairs*> five_tuple_sig_diffs;
 
 // Home-style type-specifications. "_t" stands for "type".
 typedef QString                             word_t;
@@ -41,6 +41,7 @@ typedef  QPair<stem_sig_pair*,                      stem_sig_pair*> pair_of_stem
 typedef  QPair<stem_t,stem_t>                       stem_string_pair;
 typedef  QPair<word_t, stem_string_pair*>           word_stem_pair_pair;
 
+typedef QList<CParse>                      parse_list;
 typedef QList<stem_t>                       stem_list;
 typedef QList<suffix_t>                     suffix_list;
 typedef QList<affix_t>                      affix_list;
@@ -69,6 +70,8 @@ typedef QSetIterator<affix_t>               affix_set_iter;
 
 typedef QMap<suffix_t, int>                 map_suffix_to_int;
 typedef QMap<stem_t,suffix_set>             map_stem_t_to_suffix_set;
+typedef QMap<stem_t,affix_set*>              map_stem_t_to_affix_set;
+typedef QMap<stem_t, int>                   map_stem_to_int;
 typedef QMap<sigstring_t, suffix_set*>      map_sigstring_to_suffix_set;
 typedef QMap<sigstring_t, morph_set*>       map_sigstring_to_morph_set;
 typedef QMap<sigstring_t, suffix_list*>     map_sigstring_to_suffix_list;
@@ -87,6 +90,30 @@ typedef QMapIterator<QString, CStem*>       map_string_to_stem_ptr_iter;
 
 typedef QMap<QString,sig_graph_edge*>        lxa_sig_graph_edge_map;
 typedef QMapIterator<QString,sig_graph_edge*>        lxa_sig_graph_edge_map_iter;
+
+typedef  QMap<stem_t , QSet<affix_t>* >      Stem_to_sig_map;// was Protosigs;
+
+struct Sig_to_stems
+{
+    QMap<sigstring_t,QSet<stem_t>*>    m_core;
+    QSet<stem_t>*  get_stem_set (sigstring_t this_sigstring) { return m_core[this_sigstring]; }
+    bool contains_signature (sig_string sig) { return m_core.contains(sig); }
+    bool contains_sig_and_stem (sig_string sig, stem_t this_stem) {
+        if (m_core[sig]->contains(this_stem)){
+            return true;
+        }
+        else{return false;}
+    }
+    void attach_stem_to_signature(stem_t this_stem, sigstring_t this_sig){
+        if (! m_core.contains(this_sig)){
+            m_core[this_sig] = new QSet<QString>;
+        }
+        m_core[this_sig]->insert(this_stem);
+    }
+    void clear() {m_core.clear();}
+};
+
+
 
 struct word_stem_struct
 {

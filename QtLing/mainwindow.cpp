@@ -515,8 +515,11 @@ void MainWindow::read_dx1_file()
             QString word = words[0];
             word = word.toLower();
             CWord* pWord = *Words <<  word;
+            //qDebug() << 486 << word<< 486;
             if (words.size()> 1) {
                 pWord->SetWordCount(words[1].toInt());
+                //if (words[1].toInt() > 1000)
+                   // qDebug() << 489 << words[0] << words[1];
             }
      }
     Words->sort_word_list();
