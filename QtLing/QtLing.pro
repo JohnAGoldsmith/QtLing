@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui xml
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -40,6 +40,14 @@ SOURCES += main.cpp\
     signature_graph.cpp \
     string_group.cpp \
     cparse.cpp \
+    lexicon_json.cpp \
+    evaluation.cpp \
+    evaluation_goldstandard.cpp \
+    evaluation_evalparses.cpp \
+    evaluation_parsemap.cpp \
+    mainwindow_find.cpp \
+    mainwindow_menubar.cpp \
+    mainwindow_actions.cpp \
     stringalignment.cpp \
     allosignatures.cpp
 
@@ -65,6 +73,9 @@ HEADERS  += mainwindow.h \
     mainwindow.h \
     string_group.h \
     cparse.h \
+    evaluation.h \
+    mainwindow_find.h \
+    mainwindow_menubar.h \
     stringalignment.h \
     allosignatures.h
 

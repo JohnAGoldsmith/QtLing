@@ -124,3 +124,13 @@ void CWordCollection::sort_word_list()
     std::sort(m_reverse_sort_list.begin(),m_reverse_sort_list.end(), reverse_string_compare);
 
 }
+
+void CWordCollection::assign_json_id()
+{
+    QMap<QString, CWord*>::iterator wm_iter;
+    int id = 0;
+    for (wm_iter = m_WordMap.begin(); wm_iter != m_WordMap.end(); wm_iter++) {
+        wm_iter.value()->set_json_id(id);
+        id++;
+    }
+}

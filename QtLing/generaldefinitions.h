@@ -39,7 +39,11 @@ enum eDataType{
     e_data_signatures_graph_edges,
     e_data_hypotheses,
     e_data_hollow_suffixal_signatures,
-    e_data_hollow_prefixal_signatures
+    e_data_hollow_prefixal_signatures,
+    // for gold standard
+    e_data_gs_true_positive_parses,
+    e_data_gs_retrieved_parses,
+    e_data_gs_gold_standard_parses
 };
 
 enum eDocumentType  // for the Collection View
@@ -221,7 +225,6 @@ enum eComponentType
    CT_hypothesis,
    CT_hypothesis2
 };
-
 
 
 /*

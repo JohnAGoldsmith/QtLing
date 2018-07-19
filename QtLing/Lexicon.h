@@ -11,6 +11,8 @@
 #include <QStringList>
 #include "SignatureCollection.h"
 #include "Typedefs.h"
+#include "evaluation.h"
+
 
 class MainWindow;
 class CWordCollection;
@@ -19,7 +21,6 @@ class CSuffixCollection;
 class CPrefixCollection;
 class QProgressBar;
 class CHypothesis;
-
 class CParse;
 
 
@@ -166,9 +167,9 @@ protected:
     CPrefixCollection *             m_Prefixes;
     CSignatureCollection *          m_Signatures;
     CSignatureCollection *          m_PrefixSignatures;
-    CWordCollection *               m_Compounds;
+    CWordCollection *               m_Compounds; // nothing done yet
     //QList<QPair<QString,QString>> * m_Parses;
-    QList<CParse*> *                 m_Parses;
+    QList<CParse*> *                 m_Parses; //
 
    // QMap<QString,int>               m_Parse_map;
     QMap<QString, protostem*>              m_suffix_protostems;
@@ -177,23 +178,33 @@ protected:
     // m_protostems_2 is used in order to keep track of exactly which interval of words in the word list begins
     // with a particular proto-stem (i.e., a word-beginning). This replaces using a huge signature to store
     // that same information.
+
+    //QMap<QString, protostem*>        m_suffix_protostems_2;
+    //QMap<QString, protostem*>        m_prefix_protostems_2; // temporary data structures for crab1
+
     //QMap<QString, protostem*>        m_suffix_protostems_2;
     //QMap<QString, protostem*>        m_prefix_protostems_2;
+
 
 
     bool                            m_SuffixesFlag;
     CLexicon*                       m_parent_lexicon;
 
+    // all of the possible continuations
+    // affixes that are "thrown out" in Crab2
     CSignatureCollection*           m_ParaSignatures;   /*!<  the information we have about stems which we have not yet integrated into a morphological system. */
     CSuffixCollection *             m_ParaSuffixes;
     CStemCollection *               m_ResidualStems;
     CSignatureCollection *          m_ResidualPrefixSignatures;
     CStemCollection *               m_StemsFromSubsignatures;
     CSignatureCollection*           m_Subsignatures;
+
+    // Finds the difference between signatures, e.g. {ed, es, er, e, ing} vs {d, s, r, NULL}
     QList<simple_sig_graph_edge*>   m_SigGraphEdgeList; /*!< the sig_graph_edges in here contain only one word associated with each. */
     lxa_sig_graph_edge_map          m_SigGraphEdgeMap;  /*!< the sig_graph_edges in here contain lists of words associated with them. */
     CSignatureCollection *          m_PassiveSignatures;  /*!< these signatures have stems one letter off from another signature. */
     CSignatureCollection *          m_SequentialSignatures; /*! signatures where one affix leads to another signature. */
+    // Generalizes repeating
     QList<CHypothesis*> *            m_Hypotheses;
     QMap<QString, CHypothesis*> *            m_Hypothesis_map;
 // add component 1
@@ -207,11 +218,28 @@ protected:
 
     double                          m_entropy_threshold_for_stems;
 
+    // experiment for gold standard evaluation code
+    GoldStandard*                   m_goldstandard;
+    EvalParses*                     m_eval_parses;
+    // end of experiment
+
 public:
     CLexicon(CLexicon* parent_lexicon = NULL, bool suffix_flag = true);
 public:
 
     ~CLexicon();
+
+    // experiment for gold standard evaluation code
+    GoldStandard*                               get_goldstandard()          { return m_goldstandard; }
+    GoldStandard*                               new_goldstandard_from_xml(QString& file_name);
+    void                                        delete_goldstandard()       { delete m_goldstandard; m_goldstandard = NULL; }
+    bool                                        do_gs_evaluation();
+
+    EvalParses*                                 get_eval_parses()      { return m_eval_parses; }
+    EvalParses*                                 new_eval_parses_from_txt(QString& file_name);
+    void                                        delete_eval_parses();
+    bool                                        do_gs_evaluation_on_eval_parses();
+
 
     void                                        dump_signatures_to_debug();
     // accessors and protostems

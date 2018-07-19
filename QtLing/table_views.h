@@ -13,6 +13,18 @@ class UpperTableView : public QTableView
 
     eSortStyle              m_signature_sort_style;
 
+    int                     m_gold_standard_display_order;
+
+    // for search functionality //
+    int                     find_all_strings(const QString& str, bool exact_match);
+    void                    clear_items_found();
+    QList<QStandardItem*>   m_items_found;
+    int                     m_row_recently_selected;
+signals:
+    void                    num_items_found(int);
+    // for search functionality //
+
+
 public:
     UpperTableView ();
     UpperTableView (MainWindow*, eSortStyle = DEFAULT);
@@ -27,6 +39,12 @@ public slots:
     void                    set_signature_sort_style (eSortStyle style) {m_signature_sort_style = style;}
     void                    ShowModelsUpperTableView(const QModelIndex& );
     void                    display_this_affixes_signatures(const QModelIndex & index);
+
+    // for search functionality //
+    bool                    find_prev_and_highlight(QString& s);
+    bool                    find_next_and_highlight(QString& s);
+    void                    clear_search();
+    // for search functionality //
 
     signals:
     void                    please_display_this_signature(QString sig);
