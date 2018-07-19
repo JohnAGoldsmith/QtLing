@@ -382,7 +382,7 @@ void CLexicon::step1_from_words_to_protostems()
             if (DifferenceFoundFlag == false){
                 if (!m_suffix_protostems.contains(previous_word)
                         && previous_word_length >= M_MINIMUM_STEM_LENGTH){
-                    m_suffix_protostems[previous_word] = new protostem(previous_word, false);
+                    m_suffix_protostems[previous_word] = new protostem(previous_word, true);
                 }
             }
         }  // end of suffix case.
@@ -395,7 +395,7 @@ void CLexicon::step1_from_words_to_protostems()
                     if (potential_stem.length() == 0) {continue;}
                     DifferenceFoundFlag = true;
                     if (!m_prefix_protostems.contains(potential_stem)) {
-                        m_prefix_protostems[potential_stem] = new protostem(potential_stem);
+                        m_prefix_protostems[potential_stem] = new protostem(potential_stem, false);
                     }
                     break;
                 }// end of having found a difference.
@@ -403,7 +403,7 @@ void CLexicon::step1_from_words_to_protostems()
             if (DifferenceFoundFlag == false){
                 if (!m_prefix_protostems.contains(previous_word)
                         && previous_word_length >= M_MINIMUM_STEM_LENGTH){
-                    m_prefix_protostems[previous_word] = new protostem(previous_word);
+                    m_prefix_protostems[previous_word] = new protostem(previous_word, false);
                 }
             }
         } // end of prefix case.
@@ -597,7 +597,7 @@ void   CLexicon::step3_from_parses_to_stem_to_sig_maps(QString name_of_calling_f
         count++; m_ProgressBar->setValue(count);
         QSet<affix_t>* p_affix_set = these_stem_to_sig_maps[this_stem_t];
 
-        if (p_affix_set->size() == 1) continue; // discard singleton signatures
+        // if (p_affix_set->size() == 1) continue; // discard singleton signatures
 
         this_signature_string = convert_set_to_qstring(p_affix_set);
         m_intermediate_signature_to_stems_map.attach_stem_to_signature(this_stem_t, this_signature_string);
