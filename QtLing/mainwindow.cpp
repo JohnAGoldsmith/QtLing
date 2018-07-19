@@ -407,7 +407,7 @@ void MainWindow::newFile()
 
 void MainWindow::ask_for_filename()
 {
-    qDebug() << " ask for filename" ;
+    // qDebug() << " ask for filename" ;
     m_name_of_data_file = QFileDialog::getOpenFileName(this);
     qDebug() << m_name_of_data_file;
     read_dx1_file();
