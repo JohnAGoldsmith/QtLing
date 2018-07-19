@@ -31,19 +31,19 @@ private:
     CStemCollection& operator=(const CStemCollection& x);
 
 public:
-    CStem*                          add (QString);  // deprecated
+    CStem*                          add (const QString&);  // deprecated
     void                            add_stem_pointer (CStem* pStem);
     void                            clear();
-    CStem*                          find_or_add (QString);  // same as <<
-    CStem*                          find_or_fail (QString); // same as ^=
+    CStem*                          find_or_add (const QString&);  // same as <<
+    CStem*                          find_or_fail (const QString&); // same as ^=
     CStem*                          GetAtKey( QString);
     int                             get_count() const { return m_StringToStemMap->size(); }
     map_string_to_stem *            get_map() { return m_StringToStemMap;}         //       FIX THIS< DO IT RIGHT;
     QListIterator<CStem*> *         get_sorted_list_iterator();
     map_string_to_stem *            get_stem_map() { return m_StringToStemMap;}
 
-    CStem*                          operator<< ( QString );
-    CStem*                          operator^= ( QString );
+    CStem*                          operator<< (const QString& );
+    CStem*                          operator^= (const QString& );
 };
 
 #endif // CSTEMCOLLECTION_H

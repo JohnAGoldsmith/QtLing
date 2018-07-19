@@ -11,6 +11,7 @@
 #include <QStringList>
 #include "SignatureCollection.h"
 #include "Typedefs.h"
+#include "evaluation.h"
 
 class MainWindow;
 class CWordCollection;
@@ -19,8 +20,8 @@ class CSuffixCollection;
 class CPrefixCollection;
 class QProgressBar;
 class CHypothesis;
-
 class CParse;
+class CompoundWordCollection;
 
 
 /* The principal objects we use on the way to morphological analysis are:
@@ -153,6 +154,9 @@ class CLexicon
 
 {
 protected:
+    const int                       M_MINIMUM_STEM_LENGTH;
+    const int                       M_MINIMUM_STEM_COUNT;
+    const int                       M_MAXIMUM_AFFIX_LENGTH;
                                                          // this is part of an experiment.
     QMap<QString,eComponentType>    m_category_types;    // part of the experiment. It serves
                                                         // as the principal way in which the Lexicon communicates
@@ -166,9 +170,10 @@ protected:
     CPrefixCollection *             m_Prefixes;
     CSignatureCollection *          m_Signatures;
     CSignatureCollection *          m_PrefixSignatures;
-    CWordCollection *               m_Compounds;
+    //CWordCollection *               m_Compounds; // nothing done yet
+    CompoundWordCollection *            m_Compounds;
     //QList<QPair<QString,QString>> * m_Parses;
-    QList<CParse*> *                 m_Parses;
+    QList<CParse*> *                 m_Parses; //
 
    // QMap<QString,int>               m_Parse_map;
     QMap<QString, protostem*>              m_suffix_protostems;
@@ -184,16 +189,21 @@ protected:
     bool                            m_SuffixesFlag;
     CLexicon*                       m_parent_lexicon;
 
+    // all of the possible continuations
+    // affixes that are "thrown out" in Crab2
     CSignatureCollection*           m_ParaSignatures;   /*!<  the information we have about stems which we have not yet integrated into a morphological system. */
     CSuffixCollection *             m_ParaSuffixes;
     CStemCollection *               m_ResidualStems;
     CSignatureCollection *          m_ResidualPrefixSignatures;
     CStemCollection *               m_StemsFromSubsignatures;
     CSignatureCollection*           m_Subsignatures;
+
+    // Finds the difference between signatures, e.g. {ed, es, er, e, ing} vs {d, s, r, NULL}
     QList<simple_sig_graph_edge*>   m_SigGraphEdgeList; /*!< the sig_graph_edges in here contain only one word associated with each. */
     lxa_sig_graph_edge_map          m_SigGraphEdgeMap;  /*!< the sig_graph_edges in here contain lists of words associated with them. */
     CSignatureCollection *          m_PassiveSignatures;  /*!< these signatures have stems one letter off from another signature. */
     CSignatureCollection *          m_SequentialSignatures; /*! signatures where one affix leads to another signature. */
+    // Generalizes repeating
     QList<CHypothesis*> *            m_Hypotheses;
     QMap<QString, CHypothesis*> *            m_Hypothesis_map;
 // add component 1
@@ -202,16 +212,34 @@ protected:
 
     QProgressBar*                   m_ProgressBar;
     QStatusBar *                      m_StatusBar;
+
     QMap<QString, QStringList*>        m_stem_autobiographies;
     QMap<QString, QStringList*>         m_word_autobiographies;
 
     double                          m_entropy_threshold_for_stems;
+
+    // experiment for gold standard evaluation code
+    GoldStandard*                   m_goldstandard;
+    EvalParses*                     m_eval_parses;
+    // end of experiment
 
 public:
     CLexicon(CLexicon* parent_lexicon = NULL, bool suffix_flag = true);
 public:
 
     ~CLexicon();
+
+    // experiment for gold standard evaluation code
+    GoldStandard*                               get_goldstandard()          { return m_goldstandard; }
+    GoldStandard*                               new_goldstandard_from_xml(QString& file_name);
+    void                                        delete_goldstandard()       { delete m_goldstandard; m_goldstandard = NULL; }
+    bool                                        do_gs_evaluation();
+
+    EvalParses*                                 get_eval_parses()      { return m_eval_parses; }
+    EvalParses*                                 new_eval_parses_from_txt(QString& file_name);
+    void                                        delete_eval_parses();
+    bool                                        do_gs_evaluation_on_eval_parses();
+
 
     void                                        dump_signatures_to_debug();
     // accessors and protostems
@@ -221,6 +249,7 @@ public:
     void                                        generate_hypotheses();
     CSignatureCollection*                       get_active_signature_collection();
     QMap<QString, eComponentType> &             get_category_types()        { return m_category_types;}
+    CompoundWordCollection*                     get_compounds()             { return m_Compounds; }
     double                                      get_entropy_threshold_for_positive_signatures() {return m_entropy_threshold_for_stems;}
     //void                                        get_epositive_signatures(QList<CSignature*> *);
     QList<CHypothesis*>*                        get_hypotheses ()           {return m_Hypotheses;}
@@ -233,12 +262,14 @@ public:
     CSignatureCollection*                       get_prefix_signatures()     { return m_PrefixSignatures;}
     CStemCollection *                           get_prefixal_stems()        { return m_prefixal_stems;}
     CPrefixCollection *                         get_prefixes()              { return m_Prefixes; }
+    QMap<QString, protostem*>*                  get_prefixal_protostems()    { return &m_prefix_protostems; }
     CSignatureCollection *                      get_residual_signatures()   { return m_ParaSignatures;}
     CSignatureCollection *                      get_sequential_signatures() { return m_SequentialSignatures;}
     CSignatureCollection*                       get_signatures()            { return m_Signatures;}
     CSignatureCollection*                       get_suffix_signatures()     { return m_Signatures;}
     CSuffixCollection*                          get_suffixes()              {return m_Suffixes;}
     CStemCollection *                           get_suffixal_stems()        { return m_suffixal_stems;}
+    QMap<QString, protostem*>*                   get_suffixal_protostems()  { return &m_suffix_protostems; }
 //    QMap<QString,int>*                          get_protostems()            { return &m_suffix_protostems;}
     QList<simple_sig_graph_edge*> *             get_sig_graph_edges()       { return &m_SigGraphEdgeList;}
     lxa_sig_graph_edge_map *                    get_sig_graph_edge_map()    { return & m_SigGraphEdgeMap;}
@@ -249,12 +280,13 @@ public:
     bool                                        get_suffix_flag()           { return m_SuffixesFlag; }
     CWordCollection*                            get_word_collection()       { return m_Words; }
     CWordCollection *                           get_words()                 { return m_Words;}
-    QList<QString> *                            get_stem_autobiography(stem_t stem)   { return m_stem_autobiographies[stem];}
-    void                                        add_to_stem_autobiographies (QString stem, QString message);
-    bool                                        stem_autobiographies_contains(QString stem);
-    QList<QString> *                            get_word_autobiography(word_t word);
-    void                                        add_to_word_autobiographies (QString word, QString message);
-    bool                                        word_autobiographies_contains(QString word);
+
+    QList<QString> *                            get_stem_autobiography(const stem_t& stem)   { return m_stem_autobiographies[stem];}
+    void                                        add_to_stem_autobiographies (const QString& stem, const QString& message);
+    bool                                        stem_autobiographies_contains(const QString& stem);
+    QList<QString> *                            get_word_autobiography(const word_t& word) { return m_word_autobiographies[word];}
+    void                                        add_to_word_autobiographies (const QString& word, const QString& message);
+    bool                                        word_autobiographies_contains(const QString& word);
 
     void                                        set_progress_bar (QProgressBar * pPB) { m_ProgressBar = pPB;}
     void                                        set_status_bar(QStatusBar* pBar) {m_StatusBar = pBar;}
@@ -266,7 +298,8 @@ public:
     CLexicon *                                  build_sublexicon(MainWindow* = NULL);
 
 
-    void                                        time_stamp(QString message);
+    void                                        time_stamp(const QString& message);
+
 
 public:
     // insert functions here
@@ -277,11 +310,13 @@ public:
     //void step4_assign_affixes_to_stems(QString name_of_calling_function);
     void step4_create_signatures(QString name_of_calling_function);
     void step4a_link_signature_and_affix(CSignature*, affix_t);
-    void step4b_link_signature_and_stem_and_word(stem_t , CSignature*, QString this_signature_string );
+    void step4b_link_signature_and_stem_and_word(stem_t , CSignature*, QString this_signature_string, const QString& name_of_calling_function);
     void step6_ReSignaturizeWithKnownAffixes();
     void step6a_create_temporary_map_from_stems_to_affix_sets(Stem_to_sig_map&); //map_sigstring_to_stem_list &);
     void step7_FindGoodSignaturesInsideParaSignatures();
-   void step7_from_stem_to_sig_maps_to_xxx(QString, Stem_to_sig_map ) {return;}
+
+    void find_compounds();
+    void step7_from_stem_to_sig_maps_to_xxx(QString, Stem_to_sig_map ) {return;}
 
     void clear_lexicon();
     void compare_opposite_sets_of_signatures(QSet<CSignature*>* sig_set_1, QSet<CSignature*>* sig_set_2,QString letter);
@@ -291,7 +326,7 @@ public:
     void create_sublexicon ();
     void find_full_signatures();
 
-    void replace_parse_pairs_from_current_signature_structure(bool FindSuffixesFlag=true);
+    void replace_parse_pairs_from_current_signature_structure();
     void test_for_phonological_relations_between_signatures();
 };
 

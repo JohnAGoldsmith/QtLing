@@ -65,23 +65,23 @@ QStringList& CSignature::get_stem_strings(QStringList & stem_list)
 
 // =============================================>  Functions involving string containment <===========================//
 bool CSignature::contains(CSignature *other) {
-   if (m_SuffixFlag){
-       for (int i  = 0; i < other->get_number_of_affixes(); i++){
+    if (m_SuffixFlag){
+       for (int i = 0; i < other->get_number_of_affixes(); i++){
            CSuffix* pSuffix = other->get_suffix_list()->at(i);
            if (! get_suffix_list()->contains (pSuffix)){
                return false;
            }
        }
-   return true; }
-   else {            // -->  prefixes <-- //
-   for (int i  = 0; i < other->get_number_of_affixes(); i++){
+       return true;
+    } else {            // -->  prefixes <-- //
+        for (int i = 0; i < other->get_number_of_affixes(); i++){
            CPrefix* pPrefix = other->get_prefix_list()->at(i);
            if (! get_prefix_list()->contains (pPrefix)){
                return false;
            }
-   }
-   return true;
-   }
+        }
+        return true;
+    }
 }
 bool CSignature::contains_affix_string(affix_t affix)
 {
@@ -269,6 +269,7 @@ double CSignature::calculate_stem_entropy()
     double entropy =0.0;
     foreach (pStem, *m_Stems){
         stem_t this_stem = pStem->get_key();
+        // check for only the first/last letter
         m_SuffixFlag?
             letter = this_stem.at(this_stem.length()-1):
             letter = this_stem.at(0);

@@ -8,6 +8,7 @@
 #include "WordCollection.h"
 #include "graphics.h"
 #include "lxamodels.h"
+#include "compound.h"
 class sig_graph_edge;
 
 /**
@@ -45,185 +46,227 @@ LowerTableView::LowerTableView(MainWindow * window)
   * NB: This View can either by a Table or a Graphical View.
   * The choice of these two options is controlled by keypress: Ctrl-G (for Graphics).
   */
- void LowerTableView::display_this_item( const  QModelIndex & index )
- {
-     eDataType                  UpperView_data_type = m_parent_window->m_tableView_upper_left->get_data_type();
-     QString                    word, stem, prefix, suffix, signature;
-     CLexicon *                 this_lexicon = get_parent_window()->get_lexicon();
-     int                        row(0), column;
-     //QStandardItem*             p_item;
-     QList<QStandardItem*>      item_list;
+void LowerTableView::display_this_item( const  QModelIndex & index )
+{
+    eDataType                  UpperView_data_type = m_parent_window->m_tableView_upper_left->get_data_type();
+    QString                    word, stem, prefix, suffix, signature;
+    CLexicon *                 this_lexicon = get_parent_window()->get_lexicon();
+    int                        row(0), column;
+    //QStandardItem*             p_item;
+    QList<QStandardItem*>      item_list;
 
-     if (m_parent_window->m_graphic_display_flag == true){
-         return;
-     }
-
-     switch (UpperView_data_type){
-        case e_data_words:{
-            if (index.isValid()) {row = index.row();}
-            QString word = index.sibling(row,0).data().toString();
-            CWord* pWord = this_lexicon->get_words()->get_word(word);
-            table_word(pWord);
-            setModel( m_my_current_model);
-            break;
+    switch (UpperView_data_type){
+    case e_data_words:{
+        if (index.isValid()) {row = index.row();}
+        QString word = index.sibling(row,0).data().toString();
+        CWord* pWord = this_lexicon->get_words()->get_word(word);
+        table_word(pWord);
+        setModel( m_my_current_model);
+        break;
+    }
+    case e_data_stems:
+    case e_suffixal_stems:
+    case e_prefixal_stems:{
+        if (index.isValid()) {row = index.row();}
+        QString stem = index.sibling(row,0).data().toString();
+        table_stem(stem, this_lexicon);
+        setModel( m_my_current_model);
+        break;
+    }
+        //  ---------------------------------------------------//
+    case  e_data_suffixal_signatures:
+    case  e_data_epositive_suffixal_signatures:{
+        if (index.isValid()) {row = index.row();}
+        signature = index.sibling(row,0).data().toString();
+        CSignature*  pSig = this_lexicon->get_signatures()->get_signature(signature);
+        table_signature(pSig);
+        setModel( m_my_current_model);
+        break;}
+        //  ---------------------------------------------------//
+    case e_data_prefixal_signatures:
+    case e_data_epositive_prefixal_signatures:{
+        item_list.clear();
+        if (index.isValid()) {row = index.row();}
+        signature = index.sibling(row,0).data().toString();
+        CSignature*           pSig = this_lexicon->get_prefix_signatures()->get_signature(signature);
+        table_signature(pSig);
+        setModel( m_my_current_model);
+        break;}
+        //  ---------------------------------------------------//
+    case e_data_residual_signatures:{
+        if (index.isValid()){row = index.row();}
+        item_list.clear();
+        signature = index.sibling(row,0).data().toString();
+        CSignature*           pSig = this_lexicon->get_signatures()->get_signature(signature);
+        CStem*                p_Stem;
+        CStem_ptr_list     *  sig_stems = pSig->get_stems();
+        QStandardItem*        p_item;
+        if (m_my_current_model) {
+            delete m_my_current_model;
         }
-     case e_data_stems:
-     case e_suffixal_stems:
-     case e_prefixal_stems:{
-         if (index.isValid()) {row = index.row();}
-         QString stem = index.sibling(row,0).data().toString();
-         table_stem(stem, this_lexicon);
-         setModel( m_my_current_model);
-         break;
-     }
-         //  ---------------------------------------------------//
-        case  e_data_suffixal_signatures:
-        case  e_data_epositive_suffixal_signatures:{
-            if (index.isValid()) {row = index.row();}
-            signature = index.sibling(row,0).data().toString();
-            CSignature*  pSig = this_lexicon->get_signatures()->get_signature(signature);
-            table_signature(pSig);
-            setModel( m_my_current_model);
-            break;}
-         //  ---------------------------------------------------//
-        case e_data_prefixal_signatures:
-        case e_data_epositive_prefixal_signatures:{
-              item_list.clear();
-              if (index.isValid()) {row = index.row();}
-              signature = index.sibling(row,0).data().toString();
-              CSignature*           pSig = this_lexicon->get_prefix_signatures()->get_signature(signature);
-              table_signature(pSig);
-              setModel( m_my_current_model);
-              break;}
-         //  ---------------------------------------------------//
-        case e_data_residual_signatures:{
-              if (index.isValid()){row = index.row();}
+        m_my_current_model = new QStandardItemModel();
+        foreach (p_Stem, *sig_stems)  {
+            p_item = new QStandardItem(p_Stem->get_key() );
+            item_list.append(p_item);
+            if (item_list.length() >= m_number_of_columns){
+                m_my_current_model->appendRow(item_list);
                 item_list.clear();
-              signature = index.sibling(row,0).data().toString();
-              CSignature*           pSig = this_lexicon->get_signatures()->get_signature(signature);
-              CStem*                p_Stem;
-              CStem_ptr_list     *  sig_stems = pSig->get_stems();
-              QStandardItem*        p_item;
-              if (m_my_current_model) {
-                  delete m_my_current_model;
-              }
-              m_my_current_model = new QStandardItemModel();
-              foreach (p_Stem, *sig_stems)  {
-              p_item = new QStandardItem(p_Stem->get_key() );
-              item_list.append(p_item);
-              if (item_list.length() >= m_number_of_columns){
-                         m_my_current_model->appendRow(item_list);
-                         item_list.clear();
-                }
-              }
-              setModel( m_my_current_model);
-              break;}
-         //  ---------------------------------------------------//
-        case e_data_hollow_signatures:{
-            item_list.clear();
-            if (index.isValid()){
-                row = index.row();
-                column = index.column();
+            }
+        }
+        setModel( m_my_current_model);
+        break;}
+        //  ---------------------------------------------------//
+    case e_data_hollow_signatures:{
+        item_list.clear();
+        if (index.isValid()){
+            row = index.row();
+            column = index.column();
+        }
+        if (m_my_current_model) {
+            delete m_my_current_model;
+        }
+        m_my_current_model = new QStandardItemModel();
+        sig_string sig = index.sibling(row,0).data().toString();
+        CSignature* pSig;
+        this_lexicon->get_suffix_flag()?
+                    pSig = this_lexicon->get_signatures()->get_signature(sig):
+                pSig = this_lexicon->get_prefix_signatures()->get_signature(sig);
+        table_passive_signature(pSig);
+        setModel( m_my_current_model);
+        break;}
+        //  ---------------------------------------------------//
+    case e_data_suffixes:{
+        break;
+    }
+        //  ---------------------------------------------------//
+
+    case  e_data_signatures_graph_edges:{
+        item_list.clear();
+        if (index.isValid()){
+            row = index.row();
+            column = index.column();
+        }
+        QString               edge_key = index.sibling(row,6).data().toString();
+        sig_graph_edge*       this_edge = this_lexicon->get_sig_graph_edge_map()->value(edge_key);
+        //sig_graph_edge *      psig_graph_edge;
+        CSignature*           pSig;
+        CSignature*           pSig1 = this_edge->m_sig_1;
+        CSignature*           pSig2 = this_edge->m_sig_2;
+        QStandardItem*        p_item;
+        //CStem*                p_Stem;
+        QStringList           sig1_stems;
+        QStringList           sig2_stems;
+        QStringList           words;
+        word_stem_struct *    this_word_stem_item;
+
+
+        if (m_parent_window->m_graphic_display_flag){
+            //-->  Graphic display in lower right window <--//
+            if (column == 1){
+                pSig = pSig1;
+            } else { pSig = pSig2;}
+            graphics_sig_graph_edges(pSig, this_lexicon );
+        } else
+            // -->   Tabular display in lower right window <--//
+        {   foreach (this_word_stem_item, this_edge->shared_word_stems){
+                words.append(     this_word_stem_item->word);
+                sig1_stems.append(this_word_stem_item->stem_1);
+                sig2_stems.append(this_word_stem_item->stem_2);
             }
             if (m_my_current_model) {
                 delete m_my_current_model;
             }
             m_my_current_model = new QStandardItemModel();
-            sig_string sig = index.sibling(row,0).data().toString();
-            CSignature* pSig;
-            this_lexicon->get_suffix_flag()?
-                     pSig = this_lexicon->get_signatures()->get_signature(sig):
-                     pSig = this_lexicon->get_prefix_signatures()->get_signature(sig);
-            table_passive_signature(pSig);
-            setModel( m_my_current_model);
-            break;}
-           //  ---------------------------------------------------//
-     case e_data_suffixes:{
-            break;
-             }
-         //  ---------------------------------------------------//
-
-     case  e_data_signatures_graph_edges:{
+            // --> first signature <-- //
+            table_one_signature(pSig1, sig1_stems );
+            // --> second signature <-- //
+            table_one_signature(pSig2, sig2_stems );
+            // --> words <-- //
+            m_my_current_model->appendRow(item_list);    // blank row in table.
             item_list.clear();
-            if (index.isValid()){
-                 row = index.row();
-                 column = index.column();
-            }
-            QString               edge_key = index.sibling(row,6).data().toString();
-            sig_graph_edge*       this_edge = this_lexicon->get_sig_graph_edge_map()->value(edge_key);
-            //sig_graph_edge *      psig_graph_edge;
-            CSignature*           pSig;
-            CSignature*           pSig1 = this_edge->m_sig_1;
-            CSignature*           pSig2 = this_edge->m_sig_2;
-            QStandardItem*        p_item;
-            //CStem*                p_Stem;
-            QStringList           sig1_stems;
-            QStringList           sig2_stems;
-            QStringList           words;
-            word_stem_struct *    this_word_stem_item;
-
-
-            if (m_parent_window->m_graphic_display_flag){
-                //-->  Graphic display in lower right window <--//
-                if (column == 1){
-                    pSig = pSig1;
-                } else { pSig = pSig2;}
-                graphics_sig_graph_edges(pSig, this_lexicon );
-            } else
-             // -->   Tabular display in lower right window <--//
-            {   foreach (this_word_stem_item, this_edge->shared_word_stems){
-                    words.append(     this_word_stem_item->word);
-                    sig1_stems.append(this_word_stem_item->stem_1);
-                    sig2_stems.append(this_word_stem_item->stem_2);
-                }
-                if (m_my_current_model) {
-                    delete m_my_current_model;
-                }
-                m_my_current_model = new QStandardItemModel();
-                // --> first signature <-- //
-                table_one_signature(pSig1, sig1_stems );
-                // --> second signature <-- //
-                table_one_signature(pSig2, sig2_stems );
-                // --> words <-- //
-                m_my_current_model->appendRow(item_list);    // blank row in table.
-                item_list.clear();
-                m_my_current_model->appendRow(item_list);
-                item_list.clear();
-                for (int wordno= 0; wordno< words.size();wordno++)  {
-                    p_item = new QStandardItem(words[wordno]);
-                    item_list.append(p_item);
-                    if (item_list.length() >= m_number_of_columns){
-                        m_my_current_model->appendRow(item_list);
-                        item_list.clear();
-                    }
-                }
-                if (item_list.size() > 0 ){
+            m_my_current_model->appendRow(item_list);
+            item_list.clear();
+            for (int wordno= 0; wordno< words.size();wordno++)  {
+                p_item = new QStandardItem(words[wordno]);
+                item_list.append(p_item);
+                if (item_list.length() >= m_number_of_columns){
                     m_my_current_model->appendRow(item_list);
                     item_list.clear();
                 }
-                // --> end of words <-- //
-                setModel( m_my_current_model);
-                resizeColumnsToContents();
-            } // end of tabular display, lower right window
-         break;}
+            }
+            if (item_list.size() > 0 ){
+                m_my_current_model->appendRow(item_list);
+                item_list.clear();
+            }
+            // --> end of words <-- //
+            setModel( m_my_current_model);
+            resizeColumnsToContents();
+        } // end of tabular display, lower right window
+        break;}
     case  e_data_hypotheses:
-          if (m_parent_window->m_graphic_display_flag){
-                if (index.isValid()) {row = index.row();}
-                QString hypothesis_label = index.sibling(row,6).data().toString();
-          }
-          else{ //tabular info, not graphics.
+        if (m_parent_window->m_graphic_display_flag){
+            if (index.isValid()) {row = index.row();}
+            QString hypothesis_label = index.sibling(row,6).data().toString();
+        }
+        else{ //tabular info, not graphics.
 
-          }
-          break;
+        }
+        break;
 
-    // add component 9
+        // add component 9
+        if (m_parent_window->m_graphic_display_flag){
+            if (index.isValid()) {row = index.row();}
+            QString hypothesis_label = index.sibling(row,6).data().toString();
+            //CHypothesis*  pHypothesis = this_lexicon->get_hypothesis(hypothesis_label);
+            qDebug() << 207 << hypothesis_label;
+        }
+        else{ //tabular info, not graphics.
+
+        }
+        break;
+
+        // add component 9
+    case e_data_suffixal_protostems:
+    case e_data_prefixal_protostems: {
+        if (index.isValid()) {row = index.row();}
+        QString str_protostem = index.sibling(row,0).data().toString();
+        protostem* p_protostem = UpperView_data_type == e_data_suffixal_protostems ?
+                    this_lexicon->get_suffixal_protostems()->value(str_protostem, NULL):
+                    this_lexicon->get_prefixal_protostems()->value(str_protostem, NULL);
+        if (p_protostem == NULL) break;
+        table_protostem(p_protostem);
+        setModel(m_my_current_model);
+        break;
+    }
+
+    case e_data_compound_words: {
+        if (index.isValid()) {
+            row = index.row();
+            column = index.column();
+            if (column == 0)
+                column = 1;
+        }
+        QString str_compound = index.sibling(row, 0).data().toString();
+        CompoundWord* p_compound = this_lexicon->get_compounds()
+                ->get_compound_word(str_compound);
+        if (p_compound == NULL) {
+            qDebug() << "LowerTableView::display_this_item: "
+                        "Cannot find compound word!";
+            break;
+        }
+        table_compound_composition(p_compound, column-1);
+        setModel(m_my_current_model);
+        break;
+
+    }
+
     default:
-         break;
-     }
+        break;
+    }
 
 
     resizeColumnsToContents();
- }
+}
 //------------------->         <---------------------------------------------------//
  /**
   * @brief LeftSideTreeView::LeftSideTreeView
@@ -233,6 +276,7 @@ LowerTableView::LowerTableView(MainWindow * window)
  LeftSideTreeView::LeftSideTreeView(MainWindow* window)
  {
      m_parent_window = window;
+     setEditTriggers(QAbstractItemView::NoEditTriggers);
  }
 
 
@@ -284,7 +328,7 @@ void LowerTableView::table_word(CWord* pWord){
         delete m_my_current_model;
     }
     m_my_current_model = new QStandardItemModel();
-
+    /*
     // Find the word's autobiography and set it, line by line, in the lower TableView.
     QListIterator<QString> line_iter(*pWord->get_autobiography());
     while (line_iter.hasNext()){
@@ -312,6 +356,28 @@ void LowerTableView::table_word(CWord* pWord){
         q_item = new QStandardItem(sig);
         item_list.append(q_item);
         m_my_current_model->appendRow(item_list);
+    }
+    */
+    CLexicon* lexicon = m_lexicon;
+    if (lexicon->word_autobiographies_contains(word_t)) {
+        //qDebug() << 339 << "true";
+        QListIterator<QString> line_iter(*(lexicon->get_word_autobiography(word_t)));
+        while (line_iter.hasNext()){
+            QString report_line = line_iter.next();
+            item_list.clear();
+            QStringList report_line_items = report_line.split("=");
+            for (int i = 0; i < report_line_items.size(); i++){
+                p_item = new QStandardItem(report_line_items[i]);
+                if (i == 0 && report_line_items[i][0] == "*"){
+                    p_item->setBackground(Qt::red);
+                } else{
+                    p_item->setBackground(Qt::white);
+                }
+                item_list.append(p_item);
+
+            }
+            m_my_current_model->appendRow(item_list);
+        }
     }
 
 }
@@ -371,7 +437,7 @@ void LowerTableView::table_stem(stem_t stem, CLexicon* Lexicon){
 
     // Find the stem's autobiography and set it, line by line, in the lower TableView.
     if (Lexicon->stem_autobiographies_contains(stem)) {
-        qDebug() << 339 << "true";
+        //qDebug() << 339 << "true";
         QListIterator<QString> line_iter(*Lexicon->get_stem_autobiography(stem));
         while (line_iter.hasNext()){
             QString report_line = line_iter.next();
@@ -539,4 +605,67 @@ void LowerTableView::table_passive_signature(CSignature *p_this_sig)
         item_list.append(p_item);
         m_my_current_model->appendRow(item_list);
         }
+}
+
+// for protostem display
+void LowerTableView::table_protostem(protostem *p_protostem)
+{
+    typedef QStandardItem QSI;
+    CLexicon* this_lexicon = get_parent_window()->get_lexicon();
+    m_my_current_model = new QStandardItemModel();
+
+    QString str_protostem = p_protostem->get_stem();
+    int start_word_index = p_protostem->get_start_word();
+    int end_word_index = p_protostem->get_end_word();
+    QStringList labels;
+    labels << "" << str_protostem;
+    m_my_current_model->setHorizontalHeaderLabels(labels);
+
+    for (int wordno = start_word_index; wordno <= end_word_index; wordno++) {
+        QList<QSI*> item_list;
+        QSI* item1 = new QSI();
+        item1->setData(wordno, Qt::DisplayRole);
+        QString str_word = this_lexicon->get_words()->get_word_string(wordno);
+        QSI* item2 = new QSI(str_word);
+        item_list.append(item1);
+        item_list.append(item2);
+        m_my_current_model->appendRow(item_list);
+    }
+
+}
+
+void LowerTableView::table_compound_composition(CompoundWord* p_compound, int composition_i)
+{
+    typedef  QStandardItem QSI;
+    typedef  CompoundWord::CompoundComposition CompoundComposition;
+    typedef  CompoundComponent::CompoundConnectionMap ConnectionMap;
+
+    const QList<CompoundComposition*>& ref_composition_list
+            = p_compound->get_compositions();
+    if (composition_i >= ref_composition_list.length())
+        return;
+
+    m_my_current_model = new QStandardItemModel();
+
+    QStringList labels;
+    labels << "Component of compound";
+
+    CompoundComposition* p_composition
+            = p_compound->get_compositions()[composition_i];
+    CompoundComponent* p_component;
+    foreach (p_component, *p_composition) {
+        QList<QSI*> item_list;
+        QSI* item0 = new QSI(p_component->get_word());
+        item0->setBackground(QBrush(QColor(200, 200, 200)));
+        item_list.append(item0);
+        ConnectionMap::ConstIterator connection_iter;
+        const ConnectionMap& connection_map = p_component->get_connections();
+        for (connection_iter = connection_map.constBegin();
+             connection_iter != connection_map.constEnd();
+             connection_iter++) {
+            QSI* connection_item = new QSI(connection_iter.key());
+            item_list.append(connection_item);
+        }
+        m_my_current_model->appendColumn(item_list);
+    }
 }

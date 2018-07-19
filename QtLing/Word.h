@@ -30,7 +30,8 @@ struct Parse_triple {
 
 
 class CWord
-{ friend LowerTableView;
+{
+    friend class LowerTableView;
 protected:
     QString                             m_Word;
     int                                 m_WordCount;
@@ -39,6 +40,7 @@ protected:
     QMap<stem_t, Parse_triple*>         m_Parse_triple_map;
     QList<ptr_to_stem_sig_pair>         m_Signatures;
     QList<QString>                      m_Autobiography;
+    int                                 m_json_id;
 public:
     CWord(QString  Word);
     CWord(CWord&);
@@ -56,9 +58,12 @@ public:
     int                                 get_word_count() const  { return m_WordCount; }
     const QMap<stem_t,Parse_triple*>*          get_parse_triple_map()     const  { return & m_Parse_triple_map; }
     QList<QPair<CStem*,CSignature*>*> * get_signatures ()   {return &m_Signatures;}
-    QString                             GetWord()      const { return m_Word; }
+    QString                             get_word()      const { return m_Word; }
     void                                IncrementWordCount(int n = 1);
     void                                SetWordCount(int count) { m_WordCount = count;}
+
+    void                                set_json_id(int id) { m_json_id = id; }
+    int                                 get_json_id() { return m_json_id; }
 
 };
 
