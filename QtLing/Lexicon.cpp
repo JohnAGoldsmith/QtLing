@@ -45,8 +45,8 @@ protostem::~protostem()
 }
 
 CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag):
-    M_MINIMUM_STEM_LENGTH(3),
-    M_MINIMUM_STEM_COUNT(2),
+    M_MINIMUM_STEM_LENGTH(4),
+    M_MINIMUM_STEM_COUNT(8),
     M_MAXIMUM_AFFIX_LENGTH(10)
 {
     m_Signatures            = new CSignatureCollection(this, true);
@@ -470,7 +470,6 @@ void CLexicon::step1_from_words_to_protostems()
  */
 void CLexicon::step2_from_protostems_to_parses()
 {
-    int MAXIMUM_AFFIX_LENGTH = 10;
     m_ProgressBar->reset();
     m_ProgressBar->setMinimum(0);
     m_ProgressBar->setMaximum(m_Words->get_count());
@@ -495,7 +494,7 @@ void CLexicon::step2_from_protostems_to_parses()
                 stem = word.left(letterno);
                 if(m_suffix_protostems.contains(stem))  {
                     suffix_length = word.length() - letterno;
-                    if (suffix_length > MAXIMUM_AFFIX_LENGTH){
+                    if (suffix_length > M_MAXIMUM_AFFIX_LENGTH){
                         continue;
                     }
                     suffix = word.right(suffix_length);
@@ -510,7 +509,7 @@ void CLexicon::step2_from_protostems_to_parses()
                 stem = word.right(letterno);
                 if (m_prefix_protostems.contains(stem)){
                     prefix_length = word.length() - letterno;
-                    if (prefix_length > MAXIMUM_AFFIX_LENGTH){
+                    if (prefix_length > M_MAXIMUM_AFFIX_LENGTH){
                         continue;
                     }
                     prefix = word.left(prefix_length);
@@ -689,7 +688,7 @@ void CLexicon::step4_create_signatures(QString name_of_calling_function)
         count++;
         m_ProgressBar->setValue(count);
         temp_i++;
-        if (temp_i == 1000){
+        if (temp_i == 100){
             temp_i = 0;
             m_StatusBar->showMessage("4: create signatures: " + this_signature_string);
             qApp->processEvents();

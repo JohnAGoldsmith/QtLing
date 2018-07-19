@@ -613,10 +613,11 @@ void LowerTableView::table_protostem(protostem *p_protostem)
     typedef QStandardItem QSI;
     CLexicon* this_lexicon = get_parent_window()->get_lexicon();
     m_my_current_model = new QStandardItemModel();
+    const bool suffixes_flag = this_lexicon->get_suffix_flag();
 
-    QString str_protostem = p_protostem->get_stem();
-    int start_word_index = p_protostem->get_start_word();
-    int end_word_index = p_protostem->get_end_word();
+    const QString& str_protostem = p_protostem->get_stem();
+    const int start_word_index = p_protostem->get_start_word();
+    const int end_word_index = p_protostem->get_end_word();
     QStringList labels;
     labels << "" << str_protostem;
     m_my_current_model->setHorizontalHeaderLabels(labels);
@@ -625,7 +626,9 @@ void LowerTableView::table_protostem(protostem *p_protostem)
         QList<QSI*> item_list;
         QSI* item1 = new QSI();
         item1->setData(wordno, Qt::DisplayRole);
-        QString str_word = this_lexicon->get_words()->get_word_string(wordno);
+        const QString& str_word = suffixes_flag?
+                    this_lexicon->get_words()->get_word_string(wordno):
+                    this_lexicon->get_words()->get_reverse_sort_list()->at(wordno);
         QSI* item2 = new QSI(str_word);
         item_list.append(item1);
         item_list.append(item2);

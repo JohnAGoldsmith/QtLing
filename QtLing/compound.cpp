@@ -1,11 +1,13 @@
 #include "compound.h"
 #include "Lexicon.h"
+#include "StemCollection.h"
 #include "WordCollection.h"
 #include "Word.h"
 #include <QMap>
 #include <QPair>
 #include <QDebug>
 #include <QProgressBar>
+
 
 // -------------- CompoundComponent ---------------- //
 CompoundComponent::CompoundComponent(const QString &word):
@@ -217,6 +219,9 @@ CompoundWord* CompoundWordCollection::add_compound_word
 void CompoundWordCollection::remove_compound_word(CompoundWord* p_word)
 {
     const QString& str_word = p_word->get_word();
+    /*
+    m_lexicon->add_to_word_autobiographies(str_word,
+        QString("[Compound]=I am removed."));*/
     m_map.remove(str_word);
     delete p_word;
 
@@ -245,8 +250,24 @@ void CompoundWordCollection::remove_invalid_components(QProgressBar *p_progressb
             list_to_remove.append(p_component);
         }
     }
+    /*
+    QMap<QString, CStem*>* p_stem_map = m_lexicon->get_suffix_flag()?
+                m_lexicon->get_suffixal_stems()->get_map():
+                m_lexicon->get_prefixal_stems()->get_map();*/
     CompoundComponent* p_component_to_remove;
     foreach (p_component_to_remove, list_to_remove) {
+        /*
+        const QString& str_component = p_component_to_remove->get_word();
+        if (m_lexicon->get_words()->contains(str_component)) {
+            m_lexicon->add_to_word_autobiographies(str_component,
+                QString("[Compound]=I am removed because I am invalid."));
+        }
+        if (p_stem_map->contains(str_component)) {
+            m_lexicon->add_to_stem_autobiographies(str_component,
+                QString("[Compound]=I am removed because I am invalid."));
+        }*/
+
         m_component_collection->remove_component(p_component_to_remove);
+
     }
 }

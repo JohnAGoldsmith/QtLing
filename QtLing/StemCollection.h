@@ -13,7 +13,7 @@ class CLexicon;
 class CStemCollection
 {
 protected:
-
+    //QMap<stem_t, CStem*>
     map_string_to_stem *        m_StringToStemMap;
     int                         m_CorpusCount;
     QString                     m_MemberName;
