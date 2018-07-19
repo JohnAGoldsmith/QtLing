@@ -374,7 +374,7 @@ void CLexicon::step1_from_words_to_protostems()
             }// end of loop over this word;
             if (DifferenceFoundFlag == false){
                 if (!m_suffix_protostems.contains(previous_word)){
-                    m_suffix_protostems[previous_word] = new protostem(previous_word, false);
+                    m_suffix_protostems[previous_word] = new protostem(previous_word, true);
                 }
             }
         }  // end of suffix case.
@@ -387,14 +387,14 @@ void CLexicon::step1_from_words_to_protostems()
                     if (potential_stem.length() == 0) {continue;}
                     DifferenceFoundFlag = true;
                     if (!m_prefix_protostems.contains(potential_stem)) {
-                        m_prefix_protostems[potential_stem] = new protostem(potential_stem);
+                        m_prefix_protostems[potential_stem] = new protostem(potential_stem, false);
                     }
                     break;
                 }// end of having found a difference.
             } // end of loop over this word;
             if (DifferenceFoundFlag == false){
                 if (!m_prefix_protostems.contains(previous_word)){
-                    m_prefix_protostems[previous_word] = new protostem(previous_word);
+                    m_prefix_protostems[previous_word] = new protostem(previous_word, false);
                 }
             }
         } // end of prefix case.
