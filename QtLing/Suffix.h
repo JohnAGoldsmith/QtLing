@@ -11,10 +11,10 @@
 class CSuffix
 {
 protected:
-    QString m_key;
-    int m_frequency;
-    int m_count;
-    int m_json_id;
+    QString m_key;      // json tag: "suffix"
+    int m_frequency;    // json tag: "frequency"
+    int m_count;        // json tag: "count"
+    int m_json_id;      // json tag: "id"
 public:
     CSuffix(QString ssWord);
     CSuffix(CSuffix&);
@@ -27,17 +27,19 @@ public:
     int     get_count() const               { return m_count;}
     int     increment_count()               { m_count+= 1; return m_count;}
 
-    void    to_json(QJsonObject& ref_json);
-    void    set_json_id(int id) { m_json_id = id; }
+    void    write_json(QJsonObject& ref_json) const;
+    void    read_json(const QJsonObject& ref_json);
+    int     get_json_id() const { return m_json_id; }
+    void    set_json_id(const int id) { m_json_id = id; }
 };
 
 class CPrefix
 {
 protected:
-    QString m_key;
-    int m_frequency;
-    int m_count;
-    int m_json_id;
+    QString m_key;      // json tag: "suffix"
+    int m_frequency;    // json tag: "frequency"
+    int m_count;        // json tag: "count"
+    int m_json_id;      // json tag: "id"
 public:
     CPrefix(QString ssWord);
     CPrefix(CPrefix&);
@@ -50,8 +52,10 @@ public:
     int     get_count() const               { return m_count;}
     int     increment_count()               { m_count+= 1; return m_count;}
 
-    void    to_json(QJsonObject& ref_json);
-    void    set_json_id(int id) { m_json_id = id; }
+    void    write_json(QJsonObject& ref_json) const;
+    void    read_json(const QJsonObject& ref_json);
+    int     get_json_id() const { return m_json_id; }
+    void    set_json_id(const int id) { m_json_id = id; }
 };
 
 

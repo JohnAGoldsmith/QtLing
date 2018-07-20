@@ -1,5 +1,6 @@
 #include "SuffixCollection.h"
 #include <QDebug>
+#include <QJsonArray>
 
 class CLexicon;
 
@@ -79,7 +80,7 @@ void CSuffixCollection::sort_by_count()
 
 }
 
-void CSuffixCollection::assing_json_id()
+void CSuffixCollection::assign_json_id()
 {
     QMap<QString, CSuffix*>::ConstIterator map_iter;
     int curr_json_id = 0;
@@ -91,7 +92,53 @@ void CSuffixCollection::assing_json_id()
     }
 }
 
+void CSuffixCollection::write_json(QJsonObject &ref_json)
+{
+    ref_json["count"] = m_SuffixMap.size();
 
+    assign_json_id();
+    QJsonArray arr_suffixes;
+    QMap<QString, CSuffix*>::ConstIterator suffix_iter;
+    for (suffix_iter = m_SuffixMap.constBegin();
+         suffix_iter != m_SuffixMap.constEnd();
+         suffix_iter++) {
+        CSuffix* p_suffix = suffix_iter.value();
+        QJsonObject json_suffix;
+        p_suffix->write_json(json_suffix);
+        arr_suffixes.append(json_suffix);
+    }
+    QJsonArray arr_sorted_suffixes;
+    QList<CSuffix*>::ConstIterator sorted_iter;
+    for (sorted_iter = m_SortedList.constBegin();
+         sorted_iter != m_SortedList.constEnd();
+         sorted_iter++) {
+        CSuffix* p_suffix = *sorted_iter;
+        arr_sorted_suffixes.append(p_suffix->get_json_id());
+    }
+
+    ref_json["suffixes"] = arr_suffixes;
+    ref_json["sortedSuffixes"] = arr_sorted_suffixes;
+}
+
+void CSuffixCollection::read_json(const QJsonObject &ref_json)
+{
+    m_SuffixMap.clear();
+    m_SortedList.clear();
+    m_SortedList.reserve(ref_json["count"].toInt());
+    QJsonArray::ConstIterator iter;
+    const QJsonArray& ref_suffixes = ref_json["suffixes"].toArray();
+    const QJsonArray& ref_sorted_suffixes = ref_json["sortedSuffixes"].toArray();
+    for (iter = ref_suffixes.constBegin();
+         iter != ref_suffixes.constEnd();
+         iter++) {
+        const QJsonObject& obj_suffix = iter->toObject();
+        const QString& str_suffix = obj_suffix["suffix"].toString();
+        CSuffix* p_suffix = new CSuffix(str_suffix);
+        p_suffix->read_json(obj_suffix);
+        m_SuffixMap.insert(str_suffix, p_suffix);
+    }
+    sort_by_count();
+}
 
 
 
@@ -174,7 +221,7 @@ void CPrefixCollection::sort_by_count()
 
 }
 
-void CSuffixCollection::assing_json_id()
+void CPrefixCollection::assign_json_id()
 {
     QMap<QString, CPrefix*>::ConstIterator map_iter;
     int curr_json_id = 0;
@@ -184,4 +231,52 @@ void CSuffixCollection::assing_json_id()
         CPrefix* p_prefix = map_iter.value();
         p_prefix->set_json_id(curr_json_id);
     }
+}
+
+void CPrefixCollection::write_json(QJsonObject &ref_json)
+{
+    ref_json["count"] = m_PrefixMap.size();
+
+    assign_json_id();
+    QJsonArray arr_prefixes;
+    QMap<QString, CPrefix*>::ConstIterator prefix_iter;
+    for (prefix_iter = m_PrefixMap.constBegin();
+         prefix_iter != m_PrefixMap.constEnd();
+         prefix_iter++) {
+        CPrefix* p_prefix = prefix_iter.value();
+        QJsonObject json_prefix;
+        p_prefix->write_json(json_prefix);
+        arr_prefixes.append(json_prefix);
+    }
+    QJsonArray arr_sorted_prefixes;
+    QList<CPrefix*>::ConstIterator sorted_iter;
+    for (sorted_iter = m_SortedList.constBegin();
+         sorted_iter != m_SortedList.constEnd();
+         sorted_iter++) {
+        CPrefix* p_prefix = *sorted_iter;
+        arr_sorted_prefixes.append(p_prefix->get_json_id());
+    }
+
+    ref_json["prefixes"] = arr_prefixes;
+    ref_json["sortedPrefixes"] = arr_sorted_prefixes;
+}
+
+void CPrefixCollection::read_json(const QJsonObject &ref_json)
+{
+    m_PrefixMap.clear();
+    m_SortedList.clear();
+    m_SortedList.reserve(ref_json["count"].toInt());
+    QJsonArray::ConstIterator iter;
+    const QJsonArray& ref_prefixes = ref_json["prefixes"].toArray();
+    const QJsonArray& ref_sorted_prefixes = ref_json["sortedPrefixes"].toArray();
+    for (iter = ref_prefixes.constBegin();
+         iter != ref_prefixes.constEnd();
+         iter++) {
+        const QJsonObject& obj_prefix = iter->toObject();
+        const QString& str_prefix = obj_prefix["prefix"].toString();
+        CPrefix* p_prefix = new CPrefix(str_prefix);
+        p_prefix->read_json(obj_prefix);
+        m_PrefixMap.insert(str_prefix, p_prefix);
+    }
+    sort_by_count();
 }
