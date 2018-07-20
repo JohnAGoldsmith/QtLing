@@ -9,6 +9,7 @@
 #include "Typedefs.h"
 
 class CLexicon;
+class CJsonInfo;
 
 
 class CSuffixCollection
@@ -46,7 +47,7 @@ public:
 
     void                    assign_json_id();
     void                    write_json(QJsonObject& ref_json);
-    void                    read_json(const QJsonObject& ref_json);
+    void                    read_json(const QJsonObject& ref_json, CJsonInfo& ref_pointers);
 };
 
 class CPrefixCollection
@@ -81,9 +82,9 @@ public:
     CPrefix_ptr_list*       get_sorted_list()               {return & m_SortedList;}
     void                    clear();
 
-    void                    assing_json_id();
+    void                    assign_json_id();
     void                    write_json(QJsonObject& ref_json);
-    void                    read_json(const QJsonObject& ref_json);
+    void                    read_json(const QJsonObject &ref_json, CJsonInfo& ref_pointers);
 
 };
 

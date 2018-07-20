@@ -1,4 +1,5 @@
 #include "SuffixCollection.h"
+#include "Lexicon.h"
 #include <QDebug>
 #include <QJsonArray>
 
@@ -94,9 +95,9 @@ void CSuffixCollection::assign_json_id()
 
 void CSuffixCollection::write_json(QJsonObject &ref_json)
 {
+    // need to use assign_json before using this function.
     ref_json["count"] = m_SuffixMap.size();
 
-    assign_json_id();
     QJsonArray arr_suffixes;
     QMap<QString, CSuffix*>::ConstIterator suffix_iter;
     for (suffix_iter = m_SuffixMap.constBegin();
@@ -120,14 +121,17 @@ void CSuffixCollection::write_json(QJsonObject &ref_json)
     ref_json["sortedSuffixes"] = arr_sorted_suffixes;
 }
 
-void CSuffixCollection::read_json(const QJsonObject &ref_json)
+void CSuffixCollection::read_json(const QJsonObject &ref_json, CJsonInfo& ref_pointers)
 {
+    int count = ref_json["count"].toInt();
     m_SuffixMap.clear();
     m_SortedList.clear();
-    m_SortedList.reserve(ref_json["count"].toInt());
+    m_SortedList.reserve(count);
+    QList<CSuffix*>& id_list = ref_pointers.suffixes;
+    id_list.clear();
+    id_list.reserve(count);
     QJsonArray::ConstIterator iter;
     const QJsonArray& ref_suffixes = ref_json["suffixes"].toArray();
-    const QJsonArray& ref_sorted_suffixes = ref_json["sortedSuffixes"].toArray();
     for (iter = ref_suffixes.constBegin();
          iter != ref_suffixes.constEnd();
          iter++) {
@@ -136,6 +140,7 @@ void CSuffixCollection::read_json(const QJsonObject &ref_json)
         CSuffix* p_suffix = new CSuffix(str_suffix);
         p_suffix->read_json(obj_suffix);
         m_SuffixMap.insert(str_suffix, p_suffix);
+        id_list[obj_suffix["id"].toInt()] = p_suffix;
     }
     sort_by_count();
 }
@@ -261,14 +266,17 @@ void CPrefixCollection::write_json(QJsonObject &ref_json)
     ref_json["sortedPrefixes"] = arr_sorted_prefixes;
 }
 
-void CPrefixCollection::read_json(const QJsonObject &ref_json)
+void CPrefixCollection::read_json(const QJsonObject &ref_json, CJsonInfo& ref_pointers)
 {
+    int count = ref_json["count"].toInt();
     m_PrefixMap.clear();
     m_SortedList.clear();
-    m_SortedList.reserve(ref_json["count"].toInt());
+    m_SortedList.reserve(count);
+    QList<CPrefix*>& id_list = ref_pointers.prefixes;
+    id_list.clear();
+    id_list.reserve(count);
     QJsonArray::ConstIterator iter;
     const QJsonArray& ref_prefixes = ref_json["prefixes"].toArray();
-    const QJsonArray& ref_sorted_prefixes = ref_json["sortedPrefixes"].toArray();
     for (iter = ref_prefixes.constBegin();
          iter != ref_prefixes.constEnd();
          iter++) {
@@ -277,6 +285,7 @@ void CPrefixCollection::read_json(const QJsonObject &ref_json)
         CPrefix* p_prefix = new CPrefix(str_prefix);
         p_prefix->read_json(obj_prefix);
         m_PrefixMap.insert(str_prefix, p_prefix);
+        id_list[obj_prefix["id"].toInt()] = p_prefix;
     }
     sort_by_count();
 }

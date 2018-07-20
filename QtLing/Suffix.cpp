@@ -1,4 +1,7 @@
 #include "Suffix.h"
+#include "Lexicon.h"
+#include <QJsonValue>
+#include <QDebug>
 
 CSuffix::CSuffix(QString  suffix): m_key(suffix)
 {m_count = 0;
@@ -22,6 +25,17 @@ void CSuffix::write_json(QJsonObject &ref_json) const
 
 void CSuffix::read_json(const QJsonObject &ref_json)
 {
+    CJsonInfo::TagList tag_list =
+    {
+        QPair(QJsonValue::String, "suffix"),
+        QPair(QJsonValue::Double, "frequency"),
+        QPair(QJsonValue::Double, "count"),
+        QPair(QJsonValue::Double, "id")
+    };
+    if (!CJsonInfo::check_tags(ref_json, tag_list)) {
+        qDebug() << "Invalid json object read!";
+        return;
+    }
     m_key = ref_json["suffix"].toString();
     m_frequency = ref_json["frequency"].toInt();
     m_count = ref_json["count"].toInt();

@@ -12,6 +12,7 @@
 #include "SignatureCollection.h"
 #include "Typedefs.h"
 #include "evaluation.h"
+#include <QJsonValue>
 
 class MainWindow;
 class CWordCollection;
@@ -40,7 +41,18 @@ class CompoundWordCollection;
  */
 
 
-
+struct CJsonInfo {
+    bool suffix_flag;
+    QList<CWord*> words;
+    QList<CStem*> suffix_stems;
+    QList<CStem*> prefix_stems;
+    QList<CSignature*> suffix_signatures;
+    QList<CSignature*> prefix_signatures;
+    QList<CSuffix*> suffixes;
+    QList<CPrefix*> prefixes;
+    typedef QList<QPair<QJsonValue::Type, QString>> TagList;
+    static bool check_tags(const QJsonObject& ref_json, const QList<QPair<QJsonValue::Type, QString>>& tags);
+};
 
 
 //  part of an experiment:
