@@ -26,6 +26,7 @@ protected:
     bool                            m_SuffixFlag;
     CSignatureCollection*           m_SignatureCollection;
     double                          m_stem_entropy;
+    int                             m_json_id;
 
 public:
 
@@ -69,6 +70,9 @@ public:
     void                        remove_prefix(prefix_t);
     void                        sort_stems();
     void                        sort_stems_by_count();
+
+    void                        set_json_id(int id) {m_json_id = id;}
+    int                         get_json_id() {return m_json_id;}
 
 
 };

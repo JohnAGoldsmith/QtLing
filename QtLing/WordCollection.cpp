@@ -22,7 +22,7 @@ QMapIterator<QString,CWord*> *  CWordCollection::get_iterator(){
     return iter;
 }
 
-CWord* CWordCollection::get_word(QString word){
+CWord* CWordCollection::get_word(const QString& word){
     QMap<QString,CWord*>::const_iterator word_iter = m_WordMap.find(word);
     if (word_iter == m_WordMap.end()){
         return NULL;
@@ -108,7 +108,12 @@ bool reverse_string_compare(QString string1, QString string2){
     return false;
 }
 
-
+bool new_reverse_string_compare(QString s1, QString s2)
+{
+    std::reverse(s1.begin(), s1.end());
+    std::reverse(s2.begin(), s2.end());
+    return s1 < s2;
+}
 
 void CWordCollection::sort_word_list()
 {
@@ -121,6 +126,16 @@ void CWordCollection::sort_word_list()
     foreach(QString word, m_WordMap.keys()){
         m_reverse_sort_list.append(word);
     }
-    std::sort(m_reverse_sort_list.begin(),m_reverse_sort_list.end(), reverse_string_compare);
+    std::sort(m_reverse_sort_list.begin(),m_reverse_sort_list.end(), new_reverse_string_compare);
 
+}
+
+void CWordCollection::assign_json_id()
+{
+    QMap<QString, CWord*>::iterator wm_iter;
+    int id = 0;
+    for (wm_iter = m_WordMap.begin(); wm_iter != m_WordMap.end(); wm_iter++) {
+        wm_iter.value()->set_json_id(id);
+        id++;
+    }
 }

@@ -8,7 +8,8 @@
 
 
 class CHypothesis
-{   friend lxa_graphics_scene;
+{
+    friend class lxa_graphics_scene;
 
     QString                         m_key;
     eHypothesisType                 m_hypothesis_type;

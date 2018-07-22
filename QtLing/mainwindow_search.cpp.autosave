@@ -1,0 +1,11 @@
+#include "mainwindow_search.h"
+
+FindDockWidget::FindDockWidget(UpperTableView* tableview_searched):
+    m_tableview_searched(tableview_searched)
+{
+    setAllowedAreas(Qt::BottomDockWidgetArea);
+    setFeatures(QDockWidget::DockWidgetClosable |
+                QDockWidget::DockWidgetMovable |
+                QDockWidget::DockWidgetFloatable);
+
+}
