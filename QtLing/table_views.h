@@ -87,7 +87,6 @@ public slots:
         void                table_passive_signature(CSignature*);
         void                table_stem(stem_t, CLexicon*);
         void                table_protostem(protostem* p_protostem);
-        void                table_compound_composition(CompoundWord* p_compound, int composition_i);
 
 signals:
 };

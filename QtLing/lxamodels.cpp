@@ -8,7 +8,6 @@
 #include "hypothesis.h"
 #include "lxamodels.h"
 #include "evaluation.h"
-#include "compound.h"
 #include <QCoreApplication>
 
 LxaStandardItemModel::LxaStandardItemModel(MainWindow* main_window): QStandardItemModel(main_window)
@@ -79,37 +78,6 @@ void LxaStandardItemModel::load_words(CWordCollection* p_words)
             QStandardItem* pItem3 = new QStandardItem(parse_3_iter.next().value()->p_sig_string) ;
             item_list.append(pItem3);
             tempcount++;
-        }
-        appendRow(item_list);
-    }
-}
-
-void LxaStandardItemModel::load_compounds(CompoundWordCollection *p_compounds)
-{
-    typedef QStandardItem QSI;
-    typedef CompoundWord::CompoundComposition CompoundComposition;
-
-    QStringList labels;
-    labels << "Compound word" << "Possible Compositions";
-    setHorizontalHeaderLabels(labels);
-
-    QMap<QString, CompoundWord*>::ConstIterator compound_iter;
-    const QMap<QString, CompoundWord*>& ref_map = p_compounds->get_map();
-    for (compound_iter = ref_map.constBegin();
-         compound_iter != ref_map.constEnd();
-         compound_iter++) {
-        QList<QSI*> item_list;
-        QSI* item0 = new QSI(compound_iter.key());
-        item_list.append(item0);
-
-        CompoundWord* p_compoundword = compound_iter.value();
-        const QList<CompoundComposition*>& composition_list = p_compoundword->get_compositions();
-        QList<CompoundComposition*>::ConstIterator composition_iter;
-        for (composition_iter = composition_list.constBegin();
-             composition_iter != composition_list.constEnd();
-             composition_iter++) {
-            QSI* composition_item = new QSI(p_compoundword->composition_to_str(*composition_iter));
-            item_list.append(composition_item);
         }
         appendRow(item_list);
     }

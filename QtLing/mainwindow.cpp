@@ -482,7 +482,6 @@ void MainWindow::load_models(CLexicon* lexicon)
 
     m_Models["Suffixal protostems"]->load_protostems(lexicon->get_suffixal_protostems());
     m_Models["Prefixal protostems"]->load_protostems(lexicon->get_prefixal_protostems());
-    m_Models["Compound words"]->load_compounds(lexicon->get_compounds());
 
 }
 void MainWindow::read_file_do_crab()

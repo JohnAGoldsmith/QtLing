@@ -182,12 +182,6 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
             set_data_type(e_data_prefixal_protostems);
             sortByColumn(1);
         }
-        else     if (component == "Compound words"){
-            m_proxy_model->setSourceModel(m_parent_window->m_Models["Compound words"]);
-            set_data_type(e_data_compound_words);
-            sortByColumn(1);
-        }
-        // add component 10
     }
 
     resizeColumnsToContents();

@@ -21,7 +21,6 @@ class CPrefixCollection;
 class QProgressBar;
 class CHypothesis;
 class CParse;
-class CompoundWordCollection;
 
 
 /* The principal objects we use on the way to morphological analysis are:
@@ -170,8 +169,7 @@ protected:
     CPrefixCollection *             m_Prefixes;
     CSignatureCollection *          m_Signatures;
     CSignatureCollection *          m_PrefixSignatures;
-    //CWordCollection *               m_Compounds; // nothing done yet
-    CompoundWordCollection *            m_Compounds;
+
     //QList<QPair<QString,QString>> * m_Parses;
     QList<CParse*> *                 m_Parses; //
 
@@ -249,7 +247,6 @@ public:
     void                                        generate_hypotheses();
     CSignatureCollection*                       get_active_signature_collection();
     QMap<QString, eComponentType> &             get_category_types()        { return m_category_types;}
-    CompoundWordCollection*                     get_compounds()             { return m_Compounds; }
     double                                      get_entropy_threshold_for_positive_signatures() {return m_entropy_threshold_for_stems;}
     //void                                        get_epositive_signatures(QList<CSignature*> *);
     QList<CHypothesis*>*                        get_hypotheses ()           {return m_Hypotheses;}
