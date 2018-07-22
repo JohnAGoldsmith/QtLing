@@ -8,7 +8,7 @@ CWord::CWord(QString word) :  m_Word(word), m_WordCount(0)
 CWord::CWord(CWord& word)
 {
     m_WordCount = word.get_word_count();
-    m_Word      = word.GetWord();
+    m_Word      = word.get_word();
     m_Signatures.clear();
  }
 

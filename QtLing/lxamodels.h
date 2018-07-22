@@ -3,6 +3,7 @@
 #include <QSortFilterProxyModel>
 #include <QStandardItemModel>
 #include "generaldefinitions.h"
+#include "evaluation.h"
 class CWordCollection;
 class CStemCollection;
 class CSuffixCollection;
@@ -11,6 +12,8 @@ class CSignatureCollection;
 class CHypothesis;
 class MainWindow;
 class sig_graph_edge;
+class protostem;
+class CompoundWordCollection;
 
 class LxaStandardItemModel : public QStandardItemModel
 {
@@ -29,7 +32,7 @@ private:
 
 public:
 
-    void        sort(int column_no, Qt::SortOrder order);
+    //void        sort(int column_no, Qt::SortOrder order);
     void        load_words(CWordCollection*);
     void        load_stems(CStemCollection * p_stems);
     void        load_prefixes(CPrefixCollection * p_prefixes);
@@ -45,14 +48,21 @@ public:
     void        load_hypotheses_2(QList<CHypothesis*>*);
 // add component 11
     void        load_category(QString component_name, eComponentType);
+
+    // for displaying protostems
+    void        load_protostems(QMap<QString, protostem*>* p_protostems);
+    void        load_compounds(CompoundWordCollection* p_compounds);
+
+    void        load_parsemap_from_gs(GoldStandard* p_gs, ParseMapHandler parsemap, const QString &type);
 };
+
 
 class LxaSortFilterProxyModel : public QSortFilterProxyModel
 {
-    Q_OBJECT;
+    Q_OBJECT
 public:
     LxaSortFilterProxyModel(QObject*);
-    void  sort(int, Qt::SortOrder order = Qt::AscendingOrder) override {QSortFilterProxyModel::sort(-1, order);}
+    //void  sort(int, Qt::SortOrder order = Qt::AscendingOrder) override {QSortFilterProxyModel::sort(-1, order);}
 
 private:
     bool lessThan(const QModelIndex & left, const QModelIndex & right) const override;
