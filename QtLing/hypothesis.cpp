@@ -78,7 +78,7 @@ void CLexicon::generate_hypotheses()
            // qDebug() << 72 << this_morph << original_sig1_affixes_longer_stem;
         }
         // we remove all of the newaffixes from pSig2, and replace them with this_morph, and
-        // this_morph points directly to pSig1.
+        // this_morph poiznts directly to pSig1.
         foreach (QString this_affix, affixes2){
             if (doomed_affixes.contains(this_affix)){
                 m_SuffixesFlag?
