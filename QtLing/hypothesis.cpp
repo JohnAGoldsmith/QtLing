@@ -78,8 +78,8 @@ void CLexicon::generate_hypotheses()
         else{
            // qDebug() << 72 << this_morph << original_sig1_affixes_longer_stem;
         }
-        /*
-        pSig2_shorter_stem->add_affix_string(this_morph);
+
+
         const QString& str_affected_signature = pSig2_shorter_stem->display();
         const QString& str_affected_signature1 = pSig1_longer_stem->display();
         qDebug() << "Affected signatures:" << str_affected_signature << str_affected_signature1
@@ -91,6 +91,7 @@ void CLexicon::generate_hypotheses()
             affected_signatures.append(str_affected_signature);
         // we remove all of the newaffixes from pSig2, and replace them with this_morph, and
         // this_morph poiznts directly to pSig1.
+
         foreach (QString this_affix, affixes2){
             if (doomed_affixes.contains(this_affix)){
                 m_SuffixesFlag?
@@ -98,7 +99,8 @@ void CLexicon::generate_hypotheses()
                     pSig2_shorter_stem->remove_prefix(this_affix);
             }
         }
-        */
+        pSig2_shorter_stem->add_affix_string(this_morph);
+
 
         // !! this signature needs to send itself to the Dict in Signatures to be updated.
 
