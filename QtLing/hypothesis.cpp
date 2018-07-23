@@ -25,9 +25,10 @@ void CLexicon::step9_generate_hypotheses()
     lxa_sig_graph_edge_map_iter edge_iter (m_SigGraphEdgeMap);
     QString affix_1, doomed_affix;
     QStringList affixes1, affixes2, doomed_affixes;
-    // Map from string representation of doomed affix (e.g. ation)
+    // Map from string representation of signature containing doomed affixes
     //     to   sig_graph_edge object
-    QMap<QString, sig_graph_edge*> doomed_affix_map;
+    QMap<QString, sig_graph_edge*> doomed_signature_edge_map;
+    QMap<QString, QList<QString>> doomed_signature_affixes_map;
     int MINIMUM_AFFIX_OVERLAP = 10;
     int MINIMUM_NUMBER_OF_WORDS = M_MINIMUM_HYPOTHESIS_WORD_COUNT;
     CSignatureCollection * signatures;
