@@ -39,7 +39,7 @@ void CLexicon::Crab_2()
 
     compute_sig_graph_edges();
     compute_sig_graph_edge_map();
-    //generate_hypotheses();
+    generate_hypotheses();
 
 
     qDebug() << "finished crab 2.";

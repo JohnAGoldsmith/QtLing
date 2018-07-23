@@ -14,6 +14,7 @@ void CLexicon::generate_hypotheses()
     QStringList affixes1, affixes2, doomed_affixes, new_pSig2;
     int MINIMUM_AFFIX_OVERLAP = 10;
     int MINIMUM_NUMBER_OF_WORDS = 6;
+    QStringList affected_signatures;
     CSignatureCollection * signatures;
     m_SuffixesFlag ?
         signatures = m_Signatures:
@@ -77,6 +78,17 @@ void CLexicon::generate_hypotheses()
         else{
            // qDebug() << 72 << this_morph << original_sig1_affixes_longer_stem;
         }
+        /*
+        pSig2_shorter_stem->add_affix_string(this_morph);
+        const QString& str_affected_signature = pSig2_shorter_stem->display();
+        const QString& str_affected_signature1 = pSig1_longer_stem->display();
+        qDebug() << "Affected signatures:" << str_affected_signature << str_affected_signature1
+                 << "| Doomed affixes:" << doomed_affixes.join(",")
+                 << "| Num of affected stems:" << pSig2_shorter_stem->get_number_of_stems();
+        if (affected_signatures.contains(str_affected_signature))
+            qDebug() << "  This signature is not unique!";
+        else
+            affected_signatures.append(str_affected_signature);
         // we remove all of the newaffixes from pSig2, and replace them with this_morph, and
         // this_morph poiznts directly to pSig1.
         foreach (QString this_affix, affixes2){
@@ -86,7 +98,8 @@ void CLexicon::generate_hypotheses()
                     pSig2_shorter_stem->remove_prefix(this_affix);
             }
         }
-        pSig2_shorter_stem->add_affix_string(this_morph);
+        */
+
         // !! this signature needs to send itself to the Dict in Signatures to be updated.
 
         // Then pSig2 loses all of the stems that created the shared words here.
