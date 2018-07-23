@@ -31,7 +31,7 @@ void CLexicon::Crab_2()
     step6_ReSignaturizeWithKnownAffixes();
     step7_FindGoodSignaturesInsideParaSignatures();
 
-    find_compounds();
+    step10_find_compounds();
 
      m_SuffixesFlag ?
         m_Signatures->calculate_stem_entropy():
@@ -39,7 +39,7 @@ void CLexicon::Crab_2()
 
     step8a_compute_sig_graph_edges();
     step8b_compute_sig_graph_edge_map();
-    //generate_hypotheses();
+    step9_from_sig_graph_edges_map_to_hypotheses();
 
 
     qDebug() << "finished crab 2.";
@@ -294,7 +294,7 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
 }
 
 
-void CLexicon::find_compounds()
+void CLexicon::step10_find_compounds()
 {
     // PART 1a: go through list of words to find hyphenated compounds
     CStemCollection* p_stems = m_SuffixesFlag ? m_suffixal_stems : m_prefixal_stems;

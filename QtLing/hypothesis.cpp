@@ -19,16 +19,16 @@ CHypothesis* CLexicon::get_hypothesis(QString hypothesis)
  * consultation=consultation=consult
  * consultations=consultation=consult
  */
-void CLexicon::step9_generate_hypotheses()
+void CLexicon::step9_from_sig_graph_edges_map_to_hypotheses()
 {
     sig_graph_edge * p_edge;
     lxa_sig_graph_edge_map_iter edge_iter (m_SigGraphEdgeMap);
     QString affix_1, doomed_affix;
     QStringList affixes1, affixes2, doomed_affixes;
     // Map from string representation of signature containing doomed affixes
-    //     to   sig_graph_edge object
-    QMap<QString, sig_graph_edge*> doomed_signature_edge_map;
-    QMap<QString, QList<QString>> doomed_signature_affixes_map;
+    //     to pointer to a signature graph edge
+    //     and to a list of doomed affixes
+    QMap<QString, QPair<sig_graph_edge*, QStringList>> doomed_signature_info_map;
     int MINIMUM_AFFIX_OVERLAP = 10;
     int MINIMUM_NUMBER_OF_WORDS = M_MINIMUM_HYPOTHESIS_WORD_COUNT;
     CSignatureCollection * signatures;
@@ -56,7 +56,6 @@ void CLexicon::step9_generate_hypotheses()
 
         affixes1.clear();
         affixes2.clear();
-        new_pSig2.clear();
         doomed_affixes.clear();
         pSig1_longer_stem->get_string_list(affixes1);
         pSig2_shorter_stem->get_string_list(affixes2);
@@ -93,13 +92,9 @@ void CLexicon::step9_generate_hypotheses()
            // qDebug() << 72 << this_morph << original_sig1_affixes_longer_stem;
 
         // from now on the doomed affixes in the list are all valid ones.
-        /*
-        foreach (doomed_affix, doomed_affixes) {
-            if (!doomed_affix_map.contains(doomed_affix)) {
-                doomed_affix_map.insert
-            }
-        }
-        */
+        doomed_signature_info_map[original_sig2_affixes_shorter_stem]
+                = QPair<sig_graph_edge*, QStringList>(p_edge, doomed_affixes);
+
         // --- Beginning of code that needs to be fixed ---
         /*
             // we remove all of the newaffixes from pSig2, and replace them with this_morph, and
@@ -116,7 +111,7 @@ void CLexicon::step9_generate_hypotheses()
 
             // Then pSig2 loses all of the stems that created the shared words here.
             // But that has not yet been implemented.
-        */
+
             eHypothesisType this_hypothesis_type = HT_affix_goes_to_signature;
             CHypothesis (this_hypothesis_type, p_edge);
             CHypothesis * this_hypothesis = new CHypothesis( this_hypothesis_type, this_morph,
@@ -127,14 +122,20 @@ void CLexicon::step9_generate_hypotheses()
                                                              p_edge->get_number_of_words());
             m_Hypotheses->append(this_hypothesis);
             m_Hypothesis_map->insert (this_hypothesis->express_as_string(),  this_hypothesis);
-
+        */
         // --- End of code that needs to be fixed --- //
-
     }
+    step9a_from_doomed_info_map_to_parses(doomed_signature_info_map);
+    step3_from_parses_to_stem_to_sig_maps(QString("Hypotheses"));
+    step4_create_signatures(QString("Hypotheses"));
+    step9b_redirect_ptrs_in_sig_graph_edges_map(doomed_signature_info_map);
+
+
 }
 
-void CLexicon::step9a_update_parse_pairs_for_hypotheses()
+void CLexicon::step9a_from_doomed_info_map_to_parses(const DoomedInfoMap& ref_doomed_info_map)
 {
+    // QMap<QString, QPair<sig_graph_edge*, QStringList>> = DoomedInfoMap
     clear_parses();
 
     QList<CSignature*>* p_old_signature_list;
@@ -142,8 +143,32 @@ void CLexicon::step9a_update_parse_pairs_for_hypotheses()
             p_old_signature_list = m_Signatures->get_signature_list():
             p_old_signature_list = m_PrefixSignatures->get_signature_list();
     CSignature* pSig;
+    QStringList affixes;
     foreach (pSig, *p_old_signature_list){
-        const QStringList affixes = pSig->display().split("=");
+        const QString& str_old_signature = pSig->display();
+        DoomedInfoMap::ConstIterator iter
+                = ref_doomed_info_map.find(str_old_signature);
+        affixes = str_old_signature.split('=');
+        if (iter != ref_doomed_info_map.constEnd()) {
+            // signature contains doomed affixes
+            sig_graph_edge* p_edge = iter.value().first;
+            const QStringList& ref_doomed_affixes = iter.value().second;
+            // remove doomed affixes from signatures
+            QStringList::iterator aff_iter;
+            for (aff_iter = affixes.begin(); aff_iter != affixes.end(); ) {
+                const QString& curr_affix = *aff_iter;
+                if (ref_doomed_affixes.contains(curr_affix))
+                    affixes.erase(aff_iter);
+                else
+                    aff_iter++;
+            }
+            // add into new affix representation
+            // e.g. NULL=s=ed=ation=ations --> NULL=s=ed=ation[NULL~s]
+            QString secondary_sig = p_edge->get_sig1_string();
+            secondary_sig.replace('=','~');
+            const QString new_affix = p_edge->get_morph() + "[" + secondary_sig + "]";
+            affixes.append(new_affix);
+        }
         QList<CStem*>* stem_list = pSig->get_stems();
         CStem* pStem;
         foreach (pStem, *stem_list){
@@ -151,7 +176,7 @@ void CLexicon::step9a_update_parse_pairs_for_hypotheses()
             QString this_affix;
             foreach (this_affix, affixes){
                 //if (this_affix == "NULL") this_affix = "";
-                CParse*                         this_parse;
+                CParse* this_parse;
                 m_SuffixesFlag?
                         this_parse = new CParse(this_stem, this_affix, true):
                         this_parse = new CParse(this_affix, this_stem, false);
@@ -159,8 +184,19 @@ void CLexicon::step9a_update_parse_pairs_for_hypotheses()
 
             }
         }
-
     }
+}
+
+void CLexicon::step9b_redirect_ptrs_in_sig_graph_edges_map(const DoomedInfoMap &ref_doomed_info_map)
+{
+    /*
+    QMap<QString,sig_graph_edge*>::iterator edge_map_iter;
+    for (edge_map_iter = m_SigGraphEdgeMap.begin();
+         edge_map_iter != m_SigGraphEdgeMap.end();
+         edge_map_iter++) {
+    // NOT FINISHED...
+    }
+    */
 }
 
 

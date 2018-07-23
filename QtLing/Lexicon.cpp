@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <QChar>
 #include <QSet>
+#include <QRegularExpression>
 
 #include "Lexicon.h"
 #include "SignatureCollection.h"
@@ -745,9 +746,11 @@ void CLexicon::step4_create_signatures(QString name_of_calling_function)
                     if (this_affix_t == "NULL"){
                         this_affix_t = "";
                     }
+                    QString reduced_affix = this_affix_t;
+                    reduced_affix.replace(QRegularExpression("\\[.*\\]"),"");
                     m_SuffixesFlag?
-                            this_word_t = this_stem_t + this_affix_t:
-                            this_word_t = this_affix_t + this_stem_t;
+                            this_word_t = this_stem_t + reduced_affix:
+                            this_word_t = reduced_affix + this_stem_t;
                     add_to_word_autobiographies(this_word_t,
                                                 QString("[%1]=Set of affixes"
                                                         " not qualified as a signature=Stem: %2=%3")
@@ -804,10 +807,12 @@ void CLexicon::step4b_link_signature_and_stem_and_word
     foreach (this_affix, this_affix_list){
         if (this_affix == "NULL"){
             this_word = this_stem_t;
-        } else{
+        } else {
+            QString reduced_affix = this_affix;
+            reduced_affix.replace(QRegularExpression("\\[.*\\]"),"");
             m_SuffixesFlag ?
-                    this_word = this_stem_t + this_affix :
-                    this_word = this_affix + this_stem_t ;
+                    this_word = this_stem_t + reduced_affix :
+                    this_word = reduced_affix + this_stem_t ;
         }
         CWord* pWord = m_Words->get_word(this_word);
         if (!pWord){

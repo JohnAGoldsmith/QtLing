@@ -322,13 +322,13 @@ public:
 
     void step8a_compute_sig_graph_edges();
     void step8b_compute_sig_graph_edge_map();
-    void step9_generate_hypotheses();
-    void step9a_update_parse_pairs_for_hypotheses();
 
-    void find_compounds();
+    typedef QMap<QString, QPair<sig_graph_edge*, QStringList>> DoomedInfoMap;
+    void step9_from_sig_graph_edges_map_to_hypotheses();
+    void step9a_from_doomed_info_map_to_parses(const DoomedInfoMap& ref_doomed_info_map);
+    void step9b_redirect_ptrs_in_sig_graph_edges_map(const DoomedInfoMap& ref_doomed_info_map); // not implemented yet
 
-
-
+    void step10_find_compounds();
 
     void clear_lexicon();
     void compare_opposite_sets_of_signatures(QSet<CSignature*>* sig_set_1, QSet<CSignature*>* sig_set_2,QString letter);
