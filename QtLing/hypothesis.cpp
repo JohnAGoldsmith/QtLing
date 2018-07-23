@@ -36,6 +36,8 @@ void CLexicon::step9_from_sig_graph_edges_map_to_hypotheses()
         signatures = m_Signatures:
         signatures = m_PrefixSignatures;
 
+    QStringList affected_signatures;
+
     while (edge_iter.hasNext()){
         p_edge = edge_iter.next().value();
         QString this_morph = p_edge->get_morph();
@@ -89,9 +91,19 @@ void CLexicon::step9_from_sig_graph_edges_map_to_hypotheses()
         }
         // We only accept cases where the all of the "doomed" affixes were found in affixes2.
         if (success_flag == false) continue;
-           // qDebug() << 72 << this_morph << original_sig1_affixes_longer_stem;
-
         // from now on the doomed affixes in the list are all valid ones.
+
+        const QString& str_affected_signature = pSig2_shorter_stem->display();
+        const QString& str_affected_signature1 = pSig1_longer_stem->display();
+        qDebug() << "Affected signatures:" << str_affected_signature << str_affected_signature1
+                 << "| Doomed affixes:" << doomed_affixes.join(",")
+                 << "| Num of affected stems:" << pSig2_shorter_stem->get_number_of_stems();
+        if (affected_signatures.contains(str_affected_signature))
+            qDebug() << "  This signature is not unique!";
+        else
+            affected_signatures.append(str_affected_signature);
+
+
         doomed_signature_info_map[original_sig2_affixes_shorter_stem]
                 = QPair<sig_graph_edge*, QStringList>(p_edge, doomed_affixes);
 
@@ -149,8 +161,11 @@ void CLexicon::step9a_from_doomed_info_map_to_parses(const DoomedInfoMap& ref_do
         DoomedInfoMap::ConstIterator iter
                 = ref_doomed_info_map.find(str_old_signature);
         affixes = str_old_signature.split('=');
+        bool sig_is_doomed = false;
+
+        // test if signature contains doomed affixes, i.e. find if signature
+        // exists in keys of ref_doomed_info_map
         if (iter != ref_doomed_info_map.constEnd()) {
-            // signature contains doomed affixes
             sig_graph_edge* p_edge = iter.value().first;
             const QStringList& ref_doomed_affixes = iter.value().second;
             // remove doomed affixes from signatures
@@ -168,14 +183,22 @@ void CLexicon::step9a_from_doomed_info_map_to_parses(const DoomedInfoMap& ref_do
             secondary_sig.replace('=','~');
             const QString new_affix = p_edge->get_morph() + "[" + secondary_sig + "]";
             affixes.append(new_affix);
+            sig_is_doomed = true;
         }
+
         QList<CStem*>* stem_list = pSig->get_stems();
         CStem* pStem;
         foreach (pStem, *stem_list){
             const QString& this_stem = pStem->display();
             QString this_affix;
+            if (this_stem == "call") {
+                qDebug() << "Found affixes for [call]:" << affixes.join(",");
+                if (sig_is_doomed)
+                    qDebug() << "Generated from a doomed signature";
+                else
+                    qDebug() << "Not generated from a doomed signature";
+            }
             foreach (this_affix, affixes){
-                //if (this_affix == "NULL") this_affix = "";
                 CParse* this_parse;
                 m_SuffixesFlag?
                         this_parse = new CParse(this_stem, this_affix, true):
