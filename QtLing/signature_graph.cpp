@@ -15,7 +15,7 @@
  *
  * This is Part 1 of the 3rd major function of Crab 2.
  */
-void CLexicon::compute_sig_graph_edges()
+void CLexicon::step8a_compute_sig_graph_edges()
 {
     map_string_to_word *            WordMap = m_Words->GetMap();
     map_string_to_word_ptr_iter     word_iter(*WordMap);
@@ -59,7 +59,7 @@ void CLexicon::compute_sig_graph_edges()
                                 difference = this_stem.left(length_of_difference);
                             p_SigGraphEdge = new simple_sig_graph_edge (this, this_sig_ptr, the_other_sig_ptr, this_sig,the_other_sig,
                                                                         difference, pWord->get_key(), this_stem, the_other_stem);
-                 } else{
+                 } else{ // this_stem_length <= the_other_stem_length
                      int length_of_difference = the_other_stem_length - this_stem_length;
                      m_SuffixesFlag?
                            difference = the_other_stem.mid(this_stem_length):
@@ -86,7 +86,7 @@ void CLexicon::compute_sig_graph_edges()
  *
  * This is Part 2 of the 3rd major function of Crab 2.
  */
-void CLexicon::compute_sig_graph_edge_map() {
+void CLexicon::step8b_compute_sig_graph_edge_map() {
 morph_t         edge_label;
 word_t          this_word;
 simple_sig_graph_edge * p_sig_graph_edge;

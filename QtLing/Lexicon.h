@@ -68,7 +68,7 @@ public:
     double              m_sig_2_entropy = -1;
     morph_t             morph;
     word_t              word;
-    stem_t              stem_1;
+    stem_t              stem_1; // the longer stem
     stem_t              stem_2;
     simple_sig_graph_edge();
     simple_sig_graph_edge(CLexicon* lexicon, CSignature* pSig1, CSignature* pSig2, sigstring_t sig_string_1, sigstring_t sig_string_2,morph_t m,word_t w, stem_t stem1, stem_t stem2)
@@ -157,6 +157,7 @@ protected:
     const int                       M_MINIMUM_STEM_LENGTH;
     const int                       M_MINIMUM_STEM_COUNT;
     const int                       M_MAXIMUM_AFFIX_LENGTH;
+    const int                       M_MINIMUM_HYPOTHESIS_WORD_COUNT;
                                                          // this is part of an experiment.
     QMap<QString,eComponentType>    m_category_types;    // part of the experiment. It serves
                                                         // as the principal way in which the Lexicon communicates
@@ -244,9 +245,7 @@ public:
     void                                        dump_signatures_to_debug();
     // accessors and protostems
     void                                        dump_suffixes(QList<QString>*);
-    void                                        collect_parasuffixes();
-    void                                        compute_sig_graph_edges();
-    void                                        generate_hypotheses();
+
     CSignatureCollection*                       get_active_signature_collection();
     QMap<QString, eComponentType> &             get_category_types()        { return m_category_types;}
     CompoundWordCollection*                     get_compounds()             { return m_Compounds; }
@@ -311,23 +310,38 @@ public:
     void step4_create_signatures(QString name_of_calling_function);
     void step4a_link_signature_and_affix(CSignature*, affix_t);
     void step4b_link_signature_and_stem_and_word(stem_t , CSignature*, QString this_signature_string, const QString& name_of_calling_function);
+
+    void step5a_replace_parse_pairs_from_current_signature_structure();
+    void step5b_find_full_signatures();
+    void collect_parasuffixes();
+
     void step6_ReSignaturizeWithKnownAffixes();
     void step6a_create_temporary_map_from_stems_to_affix_sets(Stem_to_sig_map&); //map_sigstring_to_stem_list &);
     void step7_FindGoodSignaturesInsideParaSignatures();
+    void step7_from_stem_to_sig_maps_to_xxx(QString, Stem_to_sig_map ) {return;}
+
+    void step8a_compute_sig_graph_edges();
+    void step8b_compute_sig_graph_edge_map();
+    void step9_generate_hypotheses();
+    void step9a_update_parse_pairs_for_hypotheses();
 
     void find_compounds();
-    void step7_from_stem_to_sig_maps_to_xxx(QString, Stem_to_sig_map ) {return;}
+
+
+
 
     void clear_lexicon();
     void compare_opposite_sets_of_signatures(QSet<CSignature*>* sig_set_1, QSet<CSignature*>* sig_set_2,QString letter);
-    void compute_sig_graph_edge_map();
+
     void Crab_1();
     void Crab_2();
     void create_sublexicon ();
-    void find_full_signatures();
 
-    void replace_parse_pairs_from_current_signature_structure();
+
+
     void test_for_phonological_relations_between_signatures();
+
+    void clear_parses();
 };
 
 #endif // CLEXICON_H

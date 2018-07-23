@@ -6,18 +6,35 @@ CHypothesis* CLexicon::get_hypothesis(QString hypothesis)
 {
     return m_Hypothesis_map->value( hypothesis );
 }
-void CLexicon::generate_hypotheses()
+/* e.g.
+ * transform transforms transformed transformation transformations
+ * consult   consults   consulted   consultation   consultations
+ * sig1_longer_stem is "NULL=s", with the stems "transformation" and "consultation"
+ * sig2_shorter_stem is "NULL=s=ed=ation=ations", with the stems "transform" and "consult"
+ * the edge would be:
+ * "NULL=s" ---[ation]--- "NULL=s=ed=ation=ations"
+ * shared_word_stems:
+ * transformation=transformation=transform
+ * transformations=transformation=transform
+ * consultation=consultation=consult
+ * consultations=consultation=consult
+ */
+void CLexicon::step9_generate_hypotheses()
 {
     sig_graph_edge * p_edge;
     lxa_sig_graph_edge_map_iter edge_iter (m_SigGraphEdgeMap);
     QString affix_1, doomed_affix;
-    QStringList affixes1, affixes2, doomed_affixes, new_pSig2;
+    QStringList affixes1, affixes2, doomed_affixes;
+    // Map from string representation of doomed affix (e.g. ation)
+    //     to   sig_graph_edge object
+    QMap<QString, sig_graph_edge*> doomed_affix_map;
     int MINIMUM_AFFIX_OVERLAP = 10;
-    int MINIMUM_NUMBER_OF_WORDS = 6;
+    int MINIMUM_NUMBER_OF_WORDS = M_MINIMUM_HYPOTHESIS_WORD_COUNT;
     CSignatureCollection * signatures;
     m_SuffixesFlag ?
         signatures = m_Signatures:
         signatures = m_PrefixSignatures;
+
     while (edge_iter.hasNext()){
         p_edge = edge_iter.next().value();
         QString this_morph = p_edge->get_morph();
@@ -71,39 +88,81 @@ void CLexicon::generate_hypotheses()
             }
         }
         // We only accept cases where the all of the "doomed" affixes were found in affixes2.
-        if (success_flag == false ){
-            continue;
-        }
-        else{
+        if (success_flag == false) continue;
            // qDebug() << 72 << this_morph << original_sig1_affixes_longer_stem;
-        }
-        // we remove all of the newaffixes from pSig2, and replace them with this_morph, and
-        // this_morph poiznts directly to pSig1.
-        foreach (QString this_affix, affixes2){
-            if (doomed_affixes.contains(this_affix)){
-                m_SuffixesFlag?
-                    pSig2_shorter_stem->remove_suffix(this_affix):
-                    pSig2_shorter_stem->remove_prefix(this_affix);
+
+        // from now on the doomed affixes in the list are all valid ones.
+        /*
+        foreach (doomed_affix, doomed_affixes) {
+            if (!doomed_affix_map.contains(doomed_affix)) {
+                doomed_affix_map.insert
             }
         }
-        pSig2_shorter_stem->add_affix_string(this_morph);
-        // !! this signature needs to send itself to the Dict in Signatures to be updated.
+        */
+        // --- Beginning of code that needs to be fixed ---
+        /*
+            // we remove all of the newaffixes from pSig2, and replace them with this_morph, and
+            // this_morph poiznts directly to pSig1.
+            foreach (QString this_affix, affixes2){
+                if (doomed_affixes.contains(this_affix)){
+                    m_SuffixesFlag?
+                        pSig2_shorter_stem->remove_suffix(this_affix):
+                        pSig2_shorter_stem->remove_prefix(this_affix);
+                }
+            }
+            pSig2_shorter_stem->add_affix_string(this_morph);
+            // !! this signature needs to send itself to the Dict in Signatures to be updated.
 
-        // Then pSig2 loses all of the stems that created the shared words here.
-        // But that has not yet been implemented.
+            // Then pSig2 loses all of the stems that created the shared words here.
+            // But that has not yet been implemented.
+        */
+            eHypothesisType this_hypothesis_type = HT_affix_goes_to_signature;
+            CHypothesis (this_hypothesis_type, p_edge);
+            CHypothesis * this_hypothesis = new CHypothesis( this_hypothesis_type, this_morph,
+                                                             original_sig1_affixes_longer_stem,
+                                                             original_sig2_affixes_shorter_stem,
+                                                             pSig2_shorter_stem->display(),
+                                                             doomed_affixes,
+                                                             p_edge->get_number_of_words());
+            m_Hypotheses->append(this_hypothesis);
+            m_Hypothesis_map->insert (this_hypothesis->express_as_string(),  this_hypothesis);
 
-        eHypothesisType this_hypothesis_type = HT_affix_goes_to_signature;
-        CHypothesis (this_hypothesis_type, p_edge);
-        CHypothesis * this_hypothesis = new CHypothesis( this_hypothesis_type, this_morph,
-                                                         original_sig1_affixes_longer_stem,
-                                                         original_sig2_affixes_shorter_stem,
-                                                         pSig2_shorter_stem->display(),
-                                                         doomed_affixes,
-                                                         p_edge->get_number_of_words());
-        m_Hypotheses->append(this_hypothesis);
-        m_Hypothesis_map->insert (this_hypothesis->express_as_string(),  this_hypothesis);
+        // --- End of code that needs to be fixed --- //
+
     }
 }
+
+void CLexicon::step9a_update_parse_pairs_for_hypotheses()
+{
+    clear_parses();
+
+    QList<CSignature*>* p_old_signature_list;
+    m_SuffixesFlag?
+            p_old_signature_list = m_Signatures->get_signature_list():
+            p_old_signature_list = m_PrefixSignatures->get_signature_list();
+    CSignature* pSig;
+    foreach (pSig, *p_old_signature_list){
+        const QStringList affixes = pSig->display().split("=");
+        QList<CStem*>* stem_list = pSig->get_stems();
+        CStem* pStem;
+        foreach (pStem, *stem_list){
+            const QString& this_stem = pStem->display();
+            QString this_affix;
+            foreach (this_affix, affixes){
+                //if (this_affix == "NULL") this_affix = "";
+                CParse*                         this_parse;
+                m_SuffixesFlag?
+                        this_parse = new CParse(this_stem, this_affix, true):
+                        this_parse = new CParse(this_affix, this_stem, false);
+                m_Parses->append(this_parse);
+
+            }
+        }
+
+    }
+}
+
+
 CHypothesis::CHypothesis(eHypothesisType HypothesisT,   sig_graph_edge*  p_edge)
 {
     m_hypothesis_type  = HypothesisT;

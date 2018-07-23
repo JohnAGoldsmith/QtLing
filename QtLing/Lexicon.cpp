@@ -47,7 +47,8 @@ protostem::~protostem()
 CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag):
     M_MINIMUM_STEM_LENGTH(4),
     M_MINIMUM_STEM_COUNT(8),
-    M_MAXIMUM_AFFIX_LENGTH(10)
+    M_MAXIMUM_AFFIX_LENGTH(10),
+    M_MINIMUM_HYPOTHESIS_WORD_COUNT(6)
 {
     m_Signatures            = new CSignatureCollection(this, true);
     m_PrefixSignatures      = new CSignatureCollection(this,false);
@@ -120,6 +121,15 @@ CSignatureCollection* CLexicon::get_active_signature_collection(){
     }
 
 }
+
+void CLexicon::clear_parses()
+{
+    CParse* p_parse;
+    foreach (p_parse, *m_Parses)
+        delete p_parse;
+    m_Parses->clear();
+}
+
 void CLexicon::clear_lexicon(){
 
     QMapIterator<QString, protostem*> stem_iter(m_prefix_protostems);
@@ -298,9 +308,9 @@ void CLexicon::Crab_1()
 
     step4_create_signatures(QString("Crab1"));
 
-    replace_parse_pairs_from_current_signature_structure(); // from_
+    step5a_replace_parse_pairs_from_current_signature_structure(); // from_
 
-    find_full_signatures();
+    step5b_find_full_signatures();
 
     step3_from_parses_to_stem_to_sig_maps(QString("Finding full signatures"));
     step4_create_signatures(QString("Finding full signatures"));
@@ -866,7 +876,53 @@ void add_initial_letter (QStringList & affix_list, QString letter, bool suffix_f
     }
 }
 
-void CLexicon::find_full_signatures()
+void CLexicon::step5a_replace_parse_pairs_from_current_signature_structure()
+{
+    clear_parses();
+
+    QList<CSignature*> *           these_signatures;
+    m_SuffixesFlag?
+            these_signatures = m_Signatures->get_signature_list():
+            these_signatures = m_PrefixSignatures->get_signature_list();
+    CSignature*                     pSig;
+    foreach (pSig, *these_signatures ){
+        const QStringList affixes = pSig->display().split("=");
+        QList<CStem*>* stem_list = pSig->get_stems();
+        CStem* pStem;
+        foreach (pStem, *stem_list){
+            const QString& this_stem = pStem->display();
+            QString this_affix;
+            foreach (this_affix, affixes){
+                //if (this_affix == "NULL") this_affix = "";
+                CParse*                         this_parse;
+                m_SuffixesFlag?
+                        this_parse = new CParse(this_stem, this_affix, true):
+                        this_parse = new CParse(this_affix, this_stem, false);
+                m_Parses->append(this_parse);
+
+            }
+        }
+
+    }
+    /*
+    while (sig_iter->hasNext()){
+        pSig = sig_iter->next().value();
+        affixes = pSig->display().split("=");
+
+        stem_list =  pSig->get_stems();
+        foreach (CStem* p_this_stem, *stem_list){
+            foreach (this_affix, affixes){
+                //if (this_affix == "NULL") this_affix = "";
+                m_SuffixesFlag?
+                        this_parse = new CParse(this_stem, this_affix, true):
+                        this_parse = new CParse(this_affix, this_stem, false);
+            }
+        }
+    }*/
+}
+
+
+void CLexicon::step5b_find_full_signatures()
 {
 /*  1. iterate through signatures.
         a. if the edge has zero-entropy, make a shorter stem, add the stem-affix pair to Parses, for all stems in sig.
@@ -992,50 +1048,6 @@ struct{
  * parse-pairs that exactly describe the current signature structure.
  */
 
-void CLexicon::replace_parse_pairs_from_current_signature_structure()
-{
-    m_Parses->clear();
-
-    QList<CSignature*> *           these_signatures;
-    m_SuffixesFlag?
-            these_signatures = m_Signatures->get_signature_list():
-            these_signatures = m_PrefixSignatures->get_signature_list();
-    CSignature*                     pSig;
-    foreach (pSig, *these_signatures ){
-        const QStringList affixes = pSig->display().split("=");
-        QList<CStem*>* stem_list = pSig->get_stems();
-        CStem* pStem;
-        foreach (pStem, *stem_list){
-            const QString& this_stem = pStem->display();
-            QString this_affix;
-            foreach (this_affix, affixes){
-                //if (this_affix == "NULL") this_affix = "";
-                CParse*                         this_parse;
-                m_SuffixesFlag?
-                        this_parse = new CParse(this_stem, this_affix, true):
-                        this_parse = new CParse(this_affix, this_stem, false);
-                m_Parses->append(this_parse);
-
-            }
-        }
-
-    }
-    /*
-    while (sig_iter->hasNext()){
-        pSig = sig_iter->next().value();
-        affixes = pSig->display().split("=");
-
-        stem_list =  pSig->get_stems();
-        foreach (CStem* p_this_stem, *stem_list){
-            foreach (this_affix, affixes){
-                //if (this_affix == "NULL") this_affix = "";
-                m_SuffixesFlag?
-                        this_parse = new CParse(this_stem, this_affix, true):
-                        this_parse = new CParse(this_affix, this_stem, false);
-            }
-        }
-    }*/
-}
 
 
 
@@ -1143,3 +1155,5 @@ void CLexicon::collect_parasuffixes()
     }
     m_ParaSuffixes->sort_by_count();
 }
+
+
