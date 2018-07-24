@@ -608,6 +608,18 @@ void   CLexicon::step3_from_parses_to_stem_to_sig_maps(QString name_of_calling_f
         QSet<affix_t>* p_affix_set = these_stem_to_sig_maps[this_stem_t];
 
         // if (p_affix_set->size() == 1) continue; // discard singleton signatures
+        // check for repetition, prevent cases like "NULL=ed=er=er[NULL~s]"
+        foreach (QString affix, *p_affix_set) {
+            if (affix.contains('[')) {
+                int left_bracket_i = affix.indexOf('[');
+                if (affix.mid(left_bracket_i).contains("NULL")) {
+                    const QString reduced_affix = affix.left(left_bracket_i);
+                    QSet<affix_t>::iterator iter = p_affix_set->find(reduced_affix);
+                    if (iter != p_affix_set->end())
+                        p_affix_set->erase(iter);
+                }
+            }
+        }
 
         this_signature_string = convert_set_to_qstring(p_affix_set);
         m_intermediate_signature_to_stems_map.attach_stem_to_signature(this_stem_t, this_signature_string);
@@ -660,7 +672,7 @@ void CLexicon::step3a_from_parses_to_stem_to_sig_maps(QList<CParse*> * parses, b
         }
         these_stem_to_sig_maps->value(this_stem_t)->insert(this_affix_t);
     }
-};
+}
 // ==========================================================================  //
 
 
@@ -712,7 +724,9 @@ void CLexicon::step4_create_signatures(QString name_of_calling_function)
                      << "with" << this_stem_set->size() << "stems"; */
 
         affix_list this_affix_list = this_signature_string.split("=");
-        if (this_stem_set->size() >= M_MINIMUM_STEM_COUNT)
+
+        // allow any signatures with secondary affixes, no matter the stem count
+        if (this_stem_set->size() >= M_MINIMUM_STEM_COUNT || this_signature_string.contains('['))
         {
             if( m_SuffixesFlag) {
                 // CSignature* pSig;
@@ -753,14 +767,16 @@ void CLexicon::step4_create_signatures(QString name_of_calling_function)
                             this_word_t = reduced_affix + this_stem_t;
                     add_to_word_autobiographies(this_word_t,
                                                 QString("[%1]=Set of affixes"
-                                                        " not qualified as a signature=Stem: %2=%3")
+                                                        " not qualified as signature=Stem: %2=%3")
                                                 .arg(name_of_calling_function)
                                                 .arg(this_stem_t)
                                                 .arg(message));
 
                     // old autobiography code
+                    /*
                     pWord = m_Words->find_or_fail(this_word_t);
                     pWord->add_to_autobiography("failure of " + name_of_calling_function + "=" + this_stem_t + "=" + this_signature_string );
+                    */
                 }
             }
         }
@@ -805,36 +821,80 @@ void CLexicon::step4b_link_signature_and_stem_and_word
     int stem_count = 0;
     affix_list this_affix_list = this_signature_string.split("=");
     foreach (this_affix, this_affix_list){
-        if (this_affix == "NULL"){
-            this_word = this_stem_t;
+        if (!this_affix.contains('[')) {
+            // word does not contain secondary affixes
+            if (this_affix == "NULL"){
+                this_word = this_stem_t;
+            } else {
+                m_SuffixesFlag ?
+                    this_word = this_stem_t + this_affix :
+                    this_word = this_affix + this_stem_t ;
+            }
+
+            // connecting word and signature
+            CWord* pWord = m_Words->get_word(this_word);
+            if (!pWord){
+                qDebug() << this_word <<  "Step4: this_word not found among words."
+                         << this_stem_t  << this_affix;
+            } else {
+                stem_count += pWord->get_word_count();
+                pWord->add_parse_triple(this_stem_t, this_affix, pSig->get_key());
+                QString message = this_affix_list.size() <= 50 ?
+                            this_signature_string:
+                            QString("Super long signature");
+                add_to_word_autobiographies(this_word,
+                                            QString("[%1]=Found signature=Stem: %2=%3")
+                                            .arg(name_of_calling_function)
+                                            .arg(this_stem_t)
+                                            .arg(message));
+                /*
+                pWord->add_to_autobiography(QString("Found signature")
+                                            + "=" + this_stem_t + "=" + message); */
+            }
         } else {
-            QString reduced_affix = this_affix;
-            reduced_affix.replace(QRegularExpression("\\[.*\\]"),"");
-            m_SuffixesFlag ?
-                    this_word = this_stem_t + reduced_affix :
-                    this_word = reduced_affix + this_stem_t ;
-        }
-        CWord* pWord = m_Words->get_word(this_word);
-        if (!pWord){
-            qDebug() << this_word <<  "Error: this_word not found among words. Line 577" << this_stem_t  << this_affix << pSig->get_key() << this_signature_string;
-        } else{
-            stem_count += pWord->get_word_count();
-            pWord->add_parse_triple(this_stem_t, this_affix, pSig->get_key());
-            QString message = this_affix_list.size() <= 50 ?
-                        this_signature_string:
-                        QString("Super long signature");
-            add_to_word_autobiographies(this_word,
-                                        QString("[%1]=Found signature=Stem: %2=%3")
-                                        .arg(name_of_calling_function)
-                                        .arg(this_stem_t)
-                                        .arg(message));
-            pWord->add_to_autobiography(QString("Found signature") + "=" + this_stem_t + "=" + message);
+            // word contains secondary suffixes
+            int bracket_start_i = this_affix.indexOf('[');
+            const QString reduced_affix = this_affix.left(bracket_start_i);
+            const QString str_secondary_affixes =
+                    this_affix.mid(bracket_start_i+1, this_affix.length()-bracket_start_i-2);
+            const QStringList secondary_affixes = str_secondary_affixes.split('~');
+            foreach (QString secondary_affix, secondary_affixes) {
+                // iterate through list of secondary suffixes, and
+                // get string of whole word using concatenation
+                if (secondary_affix == "NULL")
+                    secondary_affix = "";
+                m_SuffixesFlag ?
+                        this_affix = reduced_affix + secondary_affix:
+                        this_affix = secondary_affix + reduced_affix;
+                m_SuffixesFlag ?
+                        this_word = this_stem_t + this_affix:
+                        this_word = this_affix + this_stem_t;
+
+                // connecting word and signature
+                CWord* pWord = m_Words->get_word(this_word);
+                if (!pWord){
+                    qDebug() << this_word <<  "Step4: this_word not found among words."
+                             << this_stem_t  << this_affix;
+                } else {
+                    stem_count += pWord->get_word_count();
+                    pWord->add_parse_triple(this_stem_t, this_affix, pSig->get_key());
+                    QString message = this_affix_list.size() <= 50 ?
+                                this_signature_string:
+                                QString("Super long signature");
+                    add_to_word_autobiographies(this_word,
+                                                QString("[%1]=Found signature=Stem: %2=%3")
+                                                .arg(name_of_calling_function)
+                                                .arg(this_stem_t)
+                                                .arg(message));
+
+                    //pWord->add_to_autobiography(QString("Found signature")
+                     //                          + "=" + this_stem_t + "=" + message);
+                }
+            }
         }
     }
     pStem->set_count(stem_count);
-
 }
-
 
 bool contains(QList<QString> * list2, QList<QString> * list1){
     for (int i=0; i < list1->length();i++){

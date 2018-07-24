@@ -28,7 +28,7 @@ void CLexicon::step9_from_sig_graph_edges_map_to_hypotheses()
     // Map from string representation of signature containing doomed affixes
     //     to pointer to a signature graph edge
     //     and to a list of doomed affixes
-    QMap<QString, QPair<sig_graph_edge*, QStringList>> doomed_signature_info_map;
+    DoomedSignatureInfoMap doomed_signature_info_map;
     int MINIMUM_AFFIX_OVERLAP = 10;
     int MINIMUM_NUMBER_OF_WORDS = M_MINIMUM_HYPOTHESIS_WORD_COUNT;
     CSignatureCollection * signatures;
@@ -93,6 +93,7 @@ void CLexicon::step9_from_sig_graph_edges_map_to_hypotheses()
         if (success_flag == false) continue;
         // from now on the doomed affixes in the list are all valid ones.
 
+         // Test code for checking valid doomed signatures that are found
         const QString& str_affected_signature = pSig2_shorter_stem->display();
         const QString& str_affected_signature1 = pSig1_longer_stem->display();
         qDebug() << "Affected signatures:" << str_affected_signature << str_affected_signature1
@@ -103,9 +104,8 @@ void CLexicon::step9_from_sig_graph_edges_map_to_hypotheses()
         else
             affected_signatures.append(str_affected_signature);
 
-
         doomed_signature_info_map[original_sig2_affixes_shorter_stem]
-                = QPair<sig_graph_edge*, QStringList>(p_edge, doomed_affixes);
+                = DoomedSignatureInfo(p_edge, doomed_affixes);
 
         // --- Beginning of code that needs to be fixed ---
         /*
@@ -118,12 +118,12 @@ void CLexicon::step9_from_sig_graph_edges_map_to_hypotheses()
                         pSig2_shorter_stem->remove_prefix(this_affix);
                 }
             }
-            pSig2_shorter_stem->add_affix_string(this_morph);
+            pSig2_shorter_stem->add_affix_string(this_morph); */
             // !! this signature needs to send itself to the Dict in Signatures to be updated.
 
             // Then pSig2 loses all of the stems that created the shared words here.
             // But that has not yet been implemented.
-
+            /*
             eHypothesisType this_hypothesis_type = HT_affix_goes_to_signature;
             CHypothesis (this_hypothesis_type, p_edge);
             CHypothesis * this_hypothesis = new CHypothesis( this_hypothesis_type, this_morph,
@@ -134,18 +134,19 @@ void CLexicon::step9_from_sig_graph_edges_map_to_hypotheses()
                                                              p_edge->get_number_of_words());
             m_Hypotheses->append(this_hypothesis);
             m_Hypothesis_map->insert (this_hypothesis->express_as_string(),  this_hypothesis);
-        */
+            */
         // --- End of code that needs to be fixed --- //
     }
     step9a_from_doomed_info_map_to_parses(doomed_signature_info_map);
     step3_from_parses_to_stem_to_sig_maps(QString("Hypotheses"));
     step4_create_signatures(QString("Hypotheses"));
     step9b_redirect_ptrs_in_sig_graph_edges_map(doomed_signature_info_map);
+    step9c_from_doomed_info_map_to_hypotheses(doomed_signature_info_map);
 
 
 }
 
-void CLexicon::step9a_from_doomed_info_map_to_parses(const DoomedInfoMap& ref_doomed_info_map)
+void CLexicon::step9a_from_doomed_info_map_to_parses(DoomedSignatureInfoMap& ref_doomed_info_map)
 {
     // QMap<QString, QPair<sig_graph_edge*, QStringList>> = DoomedInfoMap
     clear_parses();
@@ -158,16 +159,16 @@ void CLexicon::step9a_from_doomed_info_map_to_parses(const DoomedInfoMap& ref_do
     QStringList affixes;
     foreach (pSig, *p_old_signature_list){
         const QString& str_old_signature = pSig->display();
-        DoomedInfoMap::ConstIterator iter
+        DoomedSignatureInfoMap::iterator iter
                 = ref_doomed_info_map.find(str_old_signature);
         affixes = str_old_signature.split('=');
-        bool sig_is_doomed = false;
 
         // test if signature contains doomed affixes, i.e. find if signature
         // exists in keys of ref_doomed_info_map
-        if (iter != ref_doomed_info_map.constEnd()) {
-            sig_graph_edge* p_edge = iter.value().first;
-            const QStringList& ref_doomed_affixes = iter.value().second;
+        if (iter != ref_doomed_info_map.end()) {
+            DoomedSignatureInfo& ref_info = iter.value();
+            sig_graph_edge* p_edge = ref_info.m_edge_ptr;
+            const QStringList& ref_doomed_affixes = ref_info.m_doomed_affixes;
             // remove doomed affixes from signatures
             QStringList::iterator aff_iter;
             for (aff_iter = affixes.begin(); aff_iter != affixes.end(); ) {
@@ -183,7 +184,8 @@ void CLexicon::step9a_from_doomed_info_map_to_parses(const DoomedInfoMap& ref_do
             secondary_sig.replace('=','~');
             const QString new_affix = p_edge->get_morph() + "[" + secondary_sig + "]";
             affixes.append(new_affix);
-            sig_is_doomed = true;
+            std::sort(affixes.begin(), affixes.end());
+            ref_info.m_str_revised_sig = affixes.join('=');
         }
 
         QList<CStem*>* stem_list = pSig->get_stems();
@@ -211,16 +213,90 @@ void CLexicon::step9a_from_doomed_info_map_to_parses(const DoomedInfoMap& ref_do
     }
 }
 
-void CLexicon::step9b_redirect_ptrs_in_sig_graph_edges_map(const DoomedInfoMap &ref_doomed_info_map)
+void CLexicon::step9b_redirect_ptrs_in_sig_graph_edges_map(const DoomedSignatureInfoMap &ref_doomed_info_map)
 {
-
+    CSignatureCollection* p_signatures = m_SuffixesFlag ?
+                m_Signatures : m_PrefixSignatures;
     QMap<QString,sig_graph_edge*>::iterator edge_map_iter;
     for (edge_map_iter = m_SigGraphEdgeMap.begin();
          edge_map_iter != m_SigGraphEdgeMap.end();
          edge_map_iter++) {
         sig_graph_edge* p_edge = edge_map_iter.value();
+        const QString& str_sig_1 = p_edge->get_sig1_string();
+        const QString& str_sig_2 = p_edge->get_sig2_string();
+        // QString message("Checking edge: " + p_edge->label());
+        CSignature *new_sig_1, *new_sig_2;
+        //bool not_found_flag = false;
+        new_sig_1 = p_signatures->find_or_fail(str_sig_1);
+        p_edge->m_sig_1 = new_sig_1;
+        /*
+        if (new_sig_1 != NULL) {
+            message += " | Sig_1 found.";
+        } else {
+            message += " | Sig_1 not found.";
+            not_found_flag = true;
+        }*/
 
+        if (ref_doomed_info_map.contains(str_sig_2)) {
+            const QString& str_new_sig_2
+                    = ref_doomed_info_map[str_sig_2].m_str_revised_sig;
+            new_sig_2 = p_signatures->find_or_fail(str_new_sig_2);
+            if (new_sig_2) {
+                qDebug() << "Found" << str_new_sig_2 << "in new sigs";
+            } else {
+                qDebug() << "Didn't find" << str_new_sig_2 << "in new sigs";
+            }
+            p_edge->m_sig_2 = new_sig_2;
+        } else {
+            new_sig_2 = p_signatures->find_or_fail(str_sig_2);
+            p_edge->m_sig_2 = new_sig_2;
+            /*if (new_sig_2 != NULL) {
+                message += " | Sig_2 found.";
+            } else {
+                message += " | Sig_2 not found.";
+                not_found_flag = true;
+            }*/
+        }
+        /*if (not_found_flag)
+            qDebug() << message;*/
     }
+
+}
+
+void CLexicon::check_autobiography_consistency()
+{
+    QMap<QString, QStringList*>::ConstIterator iter;
+    for (iter = m_word_autobiographies.constBegin();
+         iter != m_word_autobiographies.constEnd();
+         iter++) {
+        const QString& str_stem = iter.key();
+        QStringList* p_curr_str_list = iter.value();
+        bool sig_found_in_crab2 = false;
+        QString str_sig_found_in_crab2;
+        foreach (QString curr_string, *p_curr_str_list) {
+            if (curr_string.contains("[Crab2]")) {
+                if (curr_string.contains("Found signature")) {
+                    sig_found_in_crab2 = true;
+                    str_sig_found_in_crab2 = curr_string.split("=")[3];
+                    break;
+                }
+            }
+        }
+        if (!sig_found_in_crab2) continue;
+        foreach (QString curr_string, *p_curr_str_list) {
+            if (curr_string.contains("[Hypotheses]")) {
+                if (!curr_string.contains("Found signature")) {
+                    QString str_sig_found_in_hypotheses = curr_string.split('=')[3];
+                    qDebug() << "For word" << str_stem << ", Sig" << str_sig_found_in_crab2
+                             << "rejected in hypotheses:" << str_sig_found_in_hypotheses;
+                }
+            }
+        }
+    }
+}
+
+void CLexicon::step9c_from_doomed_info_map_to_hypotheses(const DoomedSignatureInfoMap& ref_doomed_info_map)
+{
 
 }
 

@@ -126,8 +126,24 @@ public:
     sig_string      get_sig1_string() { return m_sig_string_1;}
     sig_string      get_sig2_string() { return m_sig_string_2;}
     morph_t         get_morph() {return morph;}
+};
 
+struct DoomedSignatureInfo {
+    sig_graph_edge* m_edge_ptr;
+    QStringList m_doomed_affixes;
+    QString m_str_revised_sig;
 
+    DoomedSignatureInfo() {
+        m_edge_ptr = NULL;
+        m_doomed_affixes = QStringList();
+        m_str_revised_sig = QString();
+    }
+
+    DoomedSignatureInfo(sig_graph_edge* p_edge, QStringList& affixes) {
+        m_edge_ptr = p_edge;
+        m_doomed_affixes = affixes;
+        m_str_revised_sig = QString();
+    }
 };
 
 //-----------------------------------------------------------------------//
@@ -305,7 +321,7 @@ public:
     void step1_from_words_to_protostems();
     void step2_from_protostems_to_parses();
     void step3_from_parses_to_stem_to_sig_maps(QString name_of_calling_function);
-    void step3a_from_parses_to_stem_to_sig_maps(QList<CParse*> * parses, bool suffix_flag,Stem_to_sig_map* these_stem_to_sig_maps);
+    void step3a_from_parses_to_stem_to_sig_maps(QList<CParse*> * parses, bool suffix_flag, Stem_to_sig_map* these_stem_to_sig_maps);
     //void step4_assign_affixes_to_stems(QString name_of_calling_function);
     void step4_create_signatures(QString name_of_calling_function);
     void step4a_link_signature_and_affix(CSignature*, affix_t);
@@ -323,10 +339,11 @@ public:
     void step8a_compute_sig_graph_edges();
     void step8b_compute_sig_graph_edge_map();
 
-    typedef QMap<QString, QPair<sig_graph_edge*, QStringList>> DoomedInfoMap;
+    typedef QMap<QString, DoomedSignatureInfo> DoomedSignatureInfoMap;
     void step9_from_sig_graph_edges_map_to_hypotheses();
-    void step9a_from_doomed_info_map_to_parses(const DoomedInfoMap& ref_doomed_info_map);
-    void step9b_redirect_ptrs_in_sig_graph_edges_map(const DoomedInfoMap& ref_doomed_info_map); // not implemented yet
+    void step9a_from_doomed_info_map_to_parses(DoomedSignatureInfoMap& ref_doomed_info_map);
+    void step9b_redirect_ptrs_in_sig_graph_edges_map(const DoomedSignatureInfoMap& ref_doomed_info_map);
+    void step9c_from_doomed_info_map_to_hypotheses(const DoomedSignatureInfoMap& ref_doomed_info_map);
 
     void step10_find_compounds();
 
@@ -336,6 +353,8 @@ public:
     void Crab_1();
     void Crab_2();
     void create_sublexicon ();
+
+    void check_autobiography_consistency();
 
 
 

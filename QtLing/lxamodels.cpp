@@ -489,10 +489,16 @@ void LxaStandardItemModel::load_sig_graph_edges( QMap<QString, sig_graph_edge*> 
         QStandardItem * item1 = new QStandardItem(p_sig_graph_edge->morph);
         QStandardItem * item2 = new QStandardItem(p_sig_graph_edge->m_sig_string_1); // changed here
         QStandardItem * item3 = new QStandardItem();
-        item3->setData(p_sig_graph_edge->m_sig_1->get_stem_entropy(), Qt::DisplayRole);
+        if (p_sig_graph_edge->m_sig_1)
+            item3->setData(p_sig_graph_edge->m_sig_1->get_stem_entropy(), Qt::DisplayRole);
+        else
+            item3->setData("N/A", Qt::DisplayRole);
         QStandardItem * item4 = new QStandardItem(p_sig_graph_edge->m_sig_string_2);
         QStandardItem * item5 = new QStandardItem();
-        item5->setData(p_sig_graph_edge->m_sig_2->get_stem_entropy(), Qt::DisplayRole);
+        if (p_sig_graph_edge->m_sig_2)
+            item5->setData(p_sig_graph_edge->m_sig_2->get_stem_entropy(), Qt::DisplayRole);
+        else
+            item5->setData("N/A", Qt::DisplayRole);
         QStandardItem * item6 = new QStandardItem();
         item6->setData(p_sig_graph_edge->shared_word_stems.size(), Qt::DisplayRole);
         QStandardItem * item7 = new QStandardItem(p_sig_graph_edge->label());
