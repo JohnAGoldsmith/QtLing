@@ -191,13 +191,14 @@ void CLexicon::step9a_from_doomed_info_map_to_parses(const DoomedInfoMap& ref_do
         foreach (pStem, *stem_list){
             const QString& this_stem = pStem->display();
             QString this_affix;
+            /*
             if (this_stem == "call") {
                 qDebug() << "Found affixes for [call]:" << affixes.join(",");
                 if (sig_is_doomed)
                     qDebug() << "Generated from a doomed signature";
                 else
                     qDebug() << "Not generated from a doomed signature";
-            }
+            }*/
             foreach (this_affix, affixes){
                 CParse* this_parse;
                 m_SuffixesFlag?
@@ -212,14 +213,15 @@ void CLexicon::step9a_from_doomed_info_map_to_parses(const DoomedInfoMap& ref_do
 
 void CLexicon::step9b_redirect_ptrs_in_sig_graph_edges_map(const DoomedInfoMap &ref_doomed_info_map)
 {
-    /*
+
     QMap<QString,sig_graph_edge*>::iterator edge_map_iter;
     for (edge_map_iter = m_SigGraphEdgeMap.begin();
          edge_map_iter != m_SigGraphEdgeMap.end();
          edge_map_iter++) {
-    // NOT FINISHED...
+        sig_graph_edge* p_edge = edge_map_iter.value();
+
     }
-    */
+
 }
 
 
