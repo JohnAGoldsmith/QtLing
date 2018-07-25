@@ -261,6 +261,12 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
         CSignature * pSig;
         QString best_affix_list_string = best_affix_list.join("=");
 
+        // . This shouldn't happen: there are no affixes.
+        if (best_affix_list.length() == 0){
+            qDebug() << 359 << "affix list with no entries; this should not happen."<<this_stem << best_affix_list;
+            continue;
+        }
+
         pSig = *signatures << best_affix_list_string;
         if (!m_SuffixesFlag){ pSig->set_suffix_flag(false);}
 
@@ -271,24 +277,21 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
         }
         step4b_link_signature_and_stem_and_word(this_stem, pSig, best_affix_list_string, "Crab2");
 
-        // . This shouldn't happen: there are no affixes.
-        if (best_affix_list.length() == 0){
-            qDebug() << 359 << "affix list with no entries; this should not happen."<<this_stem << best_affix_list;
-            continue;
-        }
-        // 6. Make sure each affix has a c_affix.
 
+        // 6. Make sure each affix has a c_affix.
+        /*
         foreach (this_affix,best_affix_list){
               if (m_SuffixesFlag){
                   CSuffix* pSuffix = m_Suffixes->find_or_add(this_affix);
-                  pSuffix->increment_count();
+                  pSuffix->increment_sig_count();
                   pSig->add_affix_ptr(pSuffix);
               } else {
                   CPrefix* pPrefix = m_Prefixes->find_or_add(this_affix);
-                  pPrefix->increment_count();
+                  pPrefix->increment_sig_count();
                   pSig  ->add_affix_ptr(pPrefix);
               }
         } // end of best-affix loop
+        */
    } // end of protostem loop
    signatures->sort_each_signatures_stems_alphabetically();
 }

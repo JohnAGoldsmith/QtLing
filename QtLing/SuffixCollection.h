@@ -28,10 +28,10 @@ private:
     CSuffixCollection& operator=(const CSuffixCollection& x);
 public:
 
-    CSuffix*                operator<< ( QString );
-    CSuffix*                operator^= ( QString );
-    CSuffix*                find_or_add( QString ); //same as << (find if it is there, else add)
-    CSuffix*                find_or_fail( QString ); //same as ˆ= (find if it is there, else void)
+    CSuffix*                operator<< (const QString&);
+    CSuffix*                operator^= (const QString&);
+    CSuffix*                find_or_add(const QString&); //same as << (find if it is there, else add)
+    CSuffix*                find_or_fail(const QString&); //same as ˆ= (find if it is there, else void)
     CSuffix*                GetAt( uint );
     int                     get_count() const               { return m_SuffixMap.size(); }
     void                    get_set_of_suffixes (QSet<QString> * p_string_set);
@@ -42,6 +42,7 @@ public:
     void                    sort_by_count();
     CSuffix_ptr_list*       get_sorted_list()               {return & m_SortedList;}
     void                    clear();
+    void                    remove_suffix(CSuffix* p_suffix);
 };
 
 class CPrefixCollection
@@ -61,10 +62,10 @@ private:
     CPrefixCollection& operator=(const CPrefixCollection& x);
 public:
 
-    CPrefix*                operator<< ( QString );
-    CPrefix*                operator^= ( QString );
-    CPrefix*                find_or_add        ( QString ); //same as << (find if it is there, else add)
-    CPrefix*                find_or_fail        ( QString ); //same as ˆ= (find if it is there, else void)
+    CPrefix*                operator<< (const QString&);
+    CPrefix*                operator^= (const QString&);
+    CPrefix*                find_or_add        (const QString&); //same as << (find if it is there, else add)
+    CPrefix*                find_or_fail        (const QString&); //same as ˆ= (find if it is there, else void)
     CPrefix*                GetAt( uint );
     int                     get_count() const { return m_PrefixMap.size(); }
     void                    get_set_of_prefixes (QSet<QString> * p_string_set);
@@ -75,6 +76,7 @@ public:
     void                    sort_by_count();
     CPrefix_ptr_list*       get_sorted_list()               {return & m_SortedList;}
     void                    clear();
+    void                    remove_prefix(CPrefix* p_prefix);
 
 };
 

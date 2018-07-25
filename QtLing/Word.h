@@ -56,7 +56,7 @@ public:
     QList<QString>*                     get_autobiography() {return & m_Autobiography;}
     QString                             get_key() {return m_Word;}
     int                                 get_word_count() const  { return m_WordCount; }
-    const QMap<stem_t,Parse_triple*>*          get_parse_triple_map()     const  { return & m_Parse_triple_map; }
+    QMap<stem_t,Parse_triple*>*         get_parse_triple_map()     { return & m_Parse_triple_map; }
     QList<QPair<CStem*,CSignature*>*> * get_signatures ()   {return &m_Signatures;}
     QString                             get_word()      const { return m_Word; }
     void                                IncrementWordCount(int n = 1);

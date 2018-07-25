@@ -314,8 +314,6 @@ public:
 
 
     void                                        time_stamp(const QString& message);
-    void                                        remove_signature(const QString& str_sig);
-    void                                        remove_signature(CSignature* p_sig);
 
 
 public:
@@ -343,9 +341,8 @@ public:
 
     typedef QMap<QString, DoomedSignatureInfo> DoomedSignatureInfoMap;
     void step9_from_sig_graph_edges_map_to_hypotheses();
-    void step9a_from_doomed_info_map_to_parses(DoomedSignatureInfoMap& ref_doomed_info_map);
-    void step9b_redirect_ptrs_in_sig_graph_edges_map(const DoomedSignatureInfoMap& ref_doomed_info_map);
-    void step9c_from_doomed_info_map_to_hypotheses(const DoomedSignatureInfoMap& ref_doomed_info_map);
+    void remove_signature(CSignature* p_sig, const QString& name_of_calling_function);
+    void update_pointer_in_edge_map(const QString& str_old_sig, CSignature* p_new_sig);
 
     void step10_find_compounds();
 

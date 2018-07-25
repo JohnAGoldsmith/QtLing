@@ -162,12 +162,12 @@ void LowerTableView::display_this_item( const  QModelIndex & index )
 
         if (m_parent_window->m_graphic_display_flag){
             //-->  Graphic display in lower right window <--//
-            /*
+
             if (column == 1){
                 pSig = pSig1;
             } else { pSig = pSig2;}
             graphics_sig_graph_edges(pSig, this_lexicon );
-            */
+
         } else
             // -->   Tabular display in lower right window <--//
         {   foreach (this_word_stem_item, this_edge->shared_word_stems){
@@ -180,9 +180,9 @@ void LowerTableView::display_this_item( const  QModelIndex & index )
             }
             m_my_current_model = new QStandardItemModel();
             // --> first signature <-- //
-            table_one_signature(pSig1, sig1_stems, this_edge->get_sig1_string());
+            table_one_signature(pSig1, sig1_stems, pSig1->get_key());
             // --> second signature <-- //
-            table_one_signature(pSig2, sig2_stems, this_edge->get_sig2_string());
+            table_one_signature(pSig2, sig2_stems, pSig2->get_key());
             // --> words <-- //
             m_my_current_model->appendRow(item_list);    // blank row in table.
             item_list.clear();
