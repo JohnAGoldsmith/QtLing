@@ -467,7 +467,8 @@ void LxaStandardItemModel::load_sig_graph_edges( QMap<QString, sig_graph_edge*> 
 {
     QList<sig_graph_edge*>               temp_list;
     int MINIMUM_NUMBER_OF_SHARED_WORDS = 3;
-    QMapIterator<word_t, sig_graph_edge*> * this_sig_graph_edge_iter = new QMapIterator<word_t, sig_graph_edge*>( * this_sig_graph_edge_map );
+    QMapIterator<word_t, sig_graph_edge*> * this_sig_graph_edge_iter
+            = new QMapIterator<word_t, sig_graph_edge*>( * this_sig_graph_edge_map );
     while (this_sig_graph_edge_iter->hasNext())    {
         this_sig_graph_edge_iter->next();
 
@@ -486,14 +487,20 @@ void LxaStandardItemModel::load_sig_graph_edges( QMap<QString, sig_graph_edge*> 
             continue;
         }
         QStandardItem * item1 = new QStandardItem(p_sig_graph_edge->morph);
-        QStandardItem * item2 = new QStandardItem(p_sig_graph_edge->m_sig_1->get_key());
+        QStandardItem * item2 = new QStandardItem(p_sig_graph_edge->m_sig_string_1); // changed here
         QStandardItem * item3 = new QStandardItem();
-        item3->setData(p_sig_graph_edge->m_sig_1->get_stem_entropy(), Qt::DisplayRole);
-        QStandardItem * item4 = new QStandardItem(p_sig_graph_edge->m_sig_2->get_key());
+        if (p_sig_graph_edge->m_sig_1)
+            item3->setData(p_sig_graph_edge->m_sig_1->get_stem_entropy(), Qt::DisplayRole);
+        else
+            item3->setData("N/A", Qt::DisplayRole);
+        QStandardItem * item4 = new QStandardItem(p_sig_graph_edge->m_sig_string_2);
         QStandardItem * item5 = new QStandardItem();
-        item5->setData(p_sig_graph_edge->m_sig_2->get_stem_entropy(), Qt::DisplayRole);
+        if (p_sig_graph_edge->m_sig_2)
+            item5->setData(p_sig_graph_edge->m_sig_2->get_stem_entropy(), Qt::DisplayRole);
+        else
+            item5->setData("N/A", Qt::DisplayRole);
         QStandardItem * item6 = new QStandardItem();
-        item6->setData(p_sig_graph_edge->shared_word_stems.size());
+        item6->setData(p_sig_graph_edge->shared_word_stems.size(), Qt::DisplayRole);
         QStandardItem * item7 = new QStandardItem(p_sig_graph_edge->label());
         QList<QStandardItem*> items;
         items.append(item1);
