@@ -299,6 +299,8 @@ public:
 
 
     void                                        time_stamp(const QString& message);
+    void                                        remove_signature(const QString& str_sig);
+    void                                        remove_signature(CSignature* p_sig);
 
 
 public:
