@@ -2,7 +2,7 @@
 #define TYPEDEFS_H
 #include <QSetIterator>
 #include <QMapIterator>
-#include "CParse.h"
+#include "cparse.h"
 class CStem;
 class CWord;
 class CPrefix;

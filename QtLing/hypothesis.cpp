@@ -7,7 +7,8 @@ CHypothesis* CLexicon::get_hypothesis(QString hypothesis)
     return m_Hypothesis_map->value( hypothesis );
 }
 void CLexicon::generate_hypotheses()
-{   sig_graph_edge * p_edge;
+{
+    sig_graph_edge * p_edge;
     lxa_sig_graph_edge_map_iter edge_iter (m_SigGraphEdgeMap);
     QString affix_1, doomed_affix;
     QStringList affixes1, affixes2, doomed_affixes, new_pSig2;
@@ -149,7 +150,7 @@ CHypothesis::CHypothesis (eHypothesisType HypothesisT, morph_t this_morph,
                           QStringList new_affixes, int number_of_words_saved)
 {
     if (HypothesisT == HT_affix_goes_to_signature){
-        m_hypothesis_type   == HypothesisT;
+        m_hypothesis_type   = HypothesisT;
         m_number_of_words_saved = 0;
         m_signature_1_longer_stem       = sig1;
         m_signature_2_shorter_stem       = sig2;

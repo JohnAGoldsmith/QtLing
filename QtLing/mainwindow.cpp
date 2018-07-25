@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 //#include "generaldefinitions.h"
 #include "ui_mainwindow.h"
 #include <QBrush>
@@ -40,7 +40,9 @@
 #include "graphics.h"
 #include "generaldefinitions.h"
 #include "lxamodels.h"
-
+#include "mainwindow_find.h"
+#include "mainwindow_menubar.h"
+#include "evaluation.h"
 #include "string_group.h"
 
 class LxaStandardItemModel;
@@ -76,6 +78,11 @@ MainWindow::MainWindow()
     m_Models["Passive signatures"]          = new LxaStandardItemModel("Passive signatures");
     m_Models["Hypotheses"]                  = new LxaStandardItemModel("Hypotheses");
     m_Models["Hypotheses 2"]                = new LxaStandardItemModel("Hypotheses 2");
+    // for displaying protostems
+    m_Models["Suffixal protostems"]         = new LxaStandardItemModel("Suffixal protostems");
+    m_Models["Prefixal protostems"]         = new LxaStandardItemModel("Prefixal protostems");
+    m_Models["Compound words"]              = new LxaStandardItemModel("Compound words");
+
 
 
     m_treeModel     = new QStandardItemModel();
@@ -85,7 +92,7 @@ MainWindow::MainWindow()
     // views
     m_leftTreeView              = new LeftSideTreeView(this);
     m_tableView_upper_left      = new UpperTableView (this);
-    m_tableView_upper_right     = new UpperTableView (this,  SIG_BY_AFFIX_COUNT);
+    m_tableView_upper_right     = new UpperTableView (this, SIG_BY_AFFIX_COUNT);
     m_tableView_lower           = new LowerTableView (this);
     m_tableView_upper_left->setSortingEnabled(true);
     m_tableView_upper_right->setSortingEnabled(true);
@@ -93,6 +100,8 @@ MainWindow::MainWindow()
     m_graphics_view             = new lxa_graphics_view(m_graphics_scene, this);
     m_graphic_display_flag      = false;             // toggle with Ctrl-G
     m_graphics_scene->set_signature_collection(get_lexicon()->get_signatures());
+
+    // Status bars on top of each table view
 
     //<--------------     set up main window widget ------------------------->
     // set model for tree view
@@ -123,17 +132,24 @@ MainWindow::MainWindow()
     statusBar()->addPermanentWidget(m_ProgressBar);
     get_lexicon()->set_progress_bar (m_ProgressBar);
 
-    createActions();
+    // Set dock-widget for find functionality, but not showing it yet
+    m_find_dock_widget = new FindDockWidget(this);
+    addDockWidget(Qt::BottomDockWidgetArea, m_find_dock_widget);
+    m_find_dock_widget->setVisible(false);
+
+    createActions(); // render the main menu
     createStatusBar();
     readSettings();
 
-
+    // resize the main window
     resize(QDesktopWidget().availableGeometry(this).size() * 0.7);
+    // set sizes of children of main splitter, i.e. left tree view and tables on the right
     m_mainSplitter->setSizes(QList<int>() << 1000 <<4000);
 
     setCurrentFile(QString());
     setUnifiedTitleAndToolBarOnMac(true);
 
+    // clicking on certain items in the tree view displays tables on the upper left and upper right
     connect(m_leftTreeView, SIGNAL(clicked(const QModelIndex&)),
             m_tableView_upper_left, SLOT(ShowModelsUpperTableView(const QModelIndex&)));
     connect(m_leftTreeView, SIGNAL(clicked(const QModelIndex&)),
@@ -146,16 +162,30 @@ MainWindow::MainWindow()
 //    connect(m_tableView_upper_left,SIGNAL(clicked(const QModelIndex & )),
 //            m_current_graphics_scene,SLOT(display_this_item(const QModelIndex &  )));
 
-
-
     connect(m_tableView_upper_right,SIGNAL(clicked(const QModelIndex & )),
             m_tableView_lower,SLOT(display_this_item(const QModelIndex &  )));
 
     connect(m_tableView_upper_left,SIGNAL(clicked(const QModelIndex & )),
             m_tableView_upper_right,SLOT(display_this_affixes_signatures(const QModelIndex &  )));
 
-
-
+    /* Explanation for these signal-slot connections:
+     * A signal is sent to the m_main_menu_bar object after the following
+     * events are completed:
+     * 1. lexicon_ready(): A lexicon is read into linguistica and analysed
+     *    by pressing ctrl_S or ctrl_P (see MainWindow::do_crab())
+     * 2. xml_parsed(): An Alchemist XML file is read into linguistica and
+     *    successfully parsed (see MainWindow::gs_read_and_parse_xml())
+     * 3. morfessor_parsed(): A Morfessor txt file that contains morphological
+     *    cuts of words is read and parsed (see MainWindow::read_morfessor_txt_file())
+     * Then menu bar records whether it has received these signals and will
+     * change the availability of certain QActions depending on whether it has
+     * received the signals, e.g. for the "Evaluate current lexicon using Gold
+     * Standard" action to be enabled, the menu bar must have receive both the
+     * "lexicon_ready" signal and the "xml_parsed" signal.
+     */
+    connect(this, SIGNAL(xml_parsed()), m_main_menu_bar, SLOT(gs_ready()));
+    connect(this, SIGNAL(lexicon_ready()), m_main_menu_bar, SLOT(lexicon_ready()));
+    connect(this, SIGNAL(morfessor_parsed()), m_main_menu_bar, SLOT(eval_parse_ready()));
 }
 
 void MainWindow::keyPressEvent(QKeyEvent* ke)
@@ -345,6 +375,7 @@ void MainWindow::do_crab()
     m_leftTreeView->expandAll();
     m_leftTreeView->resizeColumnToContents(0);
     statusBar()->showMessage("All models are loaded.");
+    emit lexicon_ready();
 }
 
 void MainWindow::do_crab2()
@@ -449,6 +480,8 @@ void MainWindow::load_models(CLexicon* lexicon)
     m_Models["SigGraphEdges_1"]        ->load_sig_graph_edges(lexicon->get_sig_graph_edge_map(),1);
     m_Models["SigGraphEdges_2"]        ->load_sig_graph_edges(lexicon->get_sig_graph_edge_map(),2);
 
+    m_Models["Suffixal protostems"]->load_protostems(lexicon->get_suffixal_protostems());
+    m_Models["Prefixal protostems"]->load_protostems(lexicon->get_prefixal_protostems());
 
 }
 void MainWindow::read_file_do_crab()
@@ -619,95 +652,133 @@ void MainWindow::print_prefix_signatures()
      file.close();
 }
 
+void MainWindow::launch_find_dock()
+{
+    FindDialog* find_dialog = m_find_dock_widget->get_child_dialog();
+    if (sender() == findLeftAct)
+        find_dialog->set_search_selection(QString("Upper-left table"));
+    else if (sender() == findRightAct)
+        find_dialog->set_search_selection(QString("Upper-right table"));
+    else
+        find_dialog->set_search_selection(QString("Both upper tables"));
+    m_find_dock_widget->setVisible(true);
+}
+
+/*!
+ * \brief Opens up a dialogue to get directory for a Gold Standard xml file.
+ * Parses that file and stores parse results in a GoldStandard object.
+ */
+void MainWindow::gs_read_and_parse_xml()
+{
+    CLexicon* lexicon = get_lexicon();
+
+    QString file_name = QFileDialog::getOpenFileName(this,
+                                                     "Choose a gold standard file to open",
+                                                     QString(),
+                                                     "XML Files (*.xml)");
+    //qDebug() << 114 << "Goldstandard.cpp: xml file opened";
+    if (!file_name.isEmpty()) {
+        GoldStandard* gs = lexicon->new_goldstandard_from_xml(file_name);
+        if(gs->read_XML()) {
+            emit xml_parsed();
+            qDebug() << 633 << "mainwindow.cpp: xml_parsed signal emitted";
+        } else {
+            lexicon->delete_goldstandard();
+            qDebug() << 636 << "mainwindow.cpp: error in opening xml file";
+        }
+    } else {
+        qDebug() << 639 << "mainwindow.cpp: file cannot be opened!";
+    }
+}
+
+/*!
+ * \brief Does evaluation on the current lexicon with a loaded and parsed
+ * Gold Standard. Loads resulting parses and data from the evaluation into
+ * models to be shown in the TableViews and TreeView.
+ */
+void MainWindow::gs_evaluate()
+{
+    CLexicon* lexicon = get_lexicon();
+    bool eval_succeeded = lexicon->do_gs_evaluation();
+    if (eval_succeeded) {
+        GoldStandard* p_gs = lexicon->get_goldstandard();
+        /*
+        qDebug() << 616 << "Mainwindow.cpp: evaluation succeeded\n" ;
+        qDebug() << "Precision: " << p_gs->get_total_precision()
+                 << "Recall: " << p_gs->get_total_recall();
+        */
+        // create new model
+        //m_Models["Gold Standard Words"] = new LxaStandardItemModel("Gold Standard Words");
+        m_Models["True Positive Parses"] = new LxaStandardItemModel("True Positive Parses");
+        m_Models["Gold Standard Parses"] = new LxaStandardItemModel("Gold Standard Parses");
+        m_Models["Retrieved Parses"] = new LxaStandardItemModel("Retrieved Parses");
+        //m_Models["Gold Standard Words"]->load_GSMap(p_gs->get_gold_standard_parses(), "Gold Standard Words");
+        m_Models["True Positive Parses"]->load_parsemap_from_gs(p_gs, p_gs->get_true_positive_parses(), "True Positives");
+        m_Models["Gold Standard Parses"]->load_parsemap_from_gs(p_gs, p_gs->get_gs_parses(), "Gold Standard");
+        m_Models["Retrieved Parses"]->load_parsemap_from_gs(p_gs, p_gs->get_retrieved_parses(), "Retrieved");
+
+        update_TreeModel_for_gs(lexicon);
+
+        QCoreApplication::processEvents();
+
+    } else {
+        qDebug() << 663 << "Mainwindow.cpp: evaluation failed";
+    }
+}
+
+/*!
+ * \brief Opens up a dialogue to get directory for a Morfessor output txt file.
+ * Parses that txt file and stores parse results in an EvalParses object.
+ */
+void MainWindow::read_morfessor_txt_file()
+{
+    CLexicon* lexicon = get_lexicon();
+
+    QString file_name = QFileDialog::getOpenFileName(this,
+                                                     "Choose a Morfessor output file to open",
+                                                     QString(),
+                                                     "Morfessor Output Files (*.txt)");
+    //qDebug() << 114 << "Goldstandard.cpp: xml file opened";
+    if (!file_name.isEmpty()) {
+        EvalParses* eval = lexicon->new_eval_parses_from_txt(file_name);
+        if (eval->read_morfessor_txt_file()) {
+            emit morfessor_parsed();
+            qDebug() << 685 << "mainwindow.cpp: successfully read in morfessor txt file";
+        } else {
+            lexicon->delete_eval_parses();
+            qDebug() << 688 << "mainwindow.cpp: error in reading morfessor txt file";
+        }
+    } else {
+        qDebug() << 691 << "mainwindow.cpp: file cannot be opened!";
+    }
+}
+
+/*!
+ * \brief Evaluates the morphological parses by Morfessor with the currently
+ * loaded Gold Standard. Loads resulting parses and data from the evaluation into
+ * models to be shown in the TreeView.
+ */
+void MainWindow::gs_evaluate_morfessor()
+{
+    CLexicon* lexicon = get_lexicon();
+    bool eval_succeded = lexicon->do_gs_evaluation_on_eval_parses();
+    if (eval_succeded) {
+        EvalParses* p_eval = lexicon->get_eval_parses();
+        qDebug() << 701 << "Mainwindow.cpp: evaluation of Morfessor txt file succeeded" ;
+        qDebug() << "Precision: " << p_eval->get_total_precision()
+                 << "Recall: " << p_eval->get_total_recall();
+        update_TreeModel_for_eval(lexicon);
+        QCoreApplication::processEvents();
+    }
+
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //        Infra- and super-structure
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void MainWindow::createActions()
-{
-
-    QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
-    QToolBar *fileToolBar = addToolBar(tr("File"));
-//---------------------> --------------------------> -------------------------->
-//    QAction * suffix_signature_display_action = new QAction();
-//    CLexicon* lexicon = get_lexicon();
-//    connect(suffix_signature_display_action, &QAction::triggered, this,  &MainWindow::display_suffix_signatures );
-
-//    QAction * prefix_signature_display_action = new QAction();
-//    connect(prefix_signature_display_action, &QAction::triggered, this,  &MainWindow::display_prefix_signatures );
-//---------------------> --------------------------> -------------------------->
-
-
-    // Give a data file name, store the name, and read the file.
-    const QIcon openIcon = QIcon::fromTheme("document-open", QIcon("../../../../QtLing/images/open.png"));
-    QAction *openAct = new QAction(openIcon, tr("&Open..."), this);
-    openAct->setShortcuts(QKeySequence::Open);
-    openAct->setStatusTip(tr("Open an existing file"));
-    connect(openAct, &QAction::triggered, this, &MainWindow::ask_for_filename);
-    fileMenu->addAction(openAct);
-    fileToolBar->addAction(openAct);
-
-    // No action associated with this yet.
-    const QIcon saveAsIcon = QIcon::fromTheme("document-save-as");
-    QAction *saveAsAct = fileMenu->addAction(saveAsIcon, tr("Save &As..."), this, &MainWindow::saveAs);
-    saveAsAct->setShortcuts(QKeySequence::SaveAs);
-    saveAsAct->setStatusTip(tr("Save the document under a new name"));
-
-    fileMenu->addSeparator();
-
-    const QIcon exitIcon = QIcon::fromTheme("application-exit");
-    QAction *exitAct = fileMenu->addAction(exitIcon, tr("E&xit"), this, &QWidget::close);
-    exitAct->setShortcuts(QKeySequence::Quit);
-    exitAct->setStatusTip(tr("Exit the application"));
-
-    QMenu *editMenu = menuBar()->addMenu(tr("&Edit"));
-    QToolBar *editToolBar = addToolBar(tr("Edit"));
-
-#ifndef QT_NO_CLIPBOARD
-    const QIcon cutIcon = QIcon::fromTheme("edit-cut", QIcon("../../../../QtLing/images/cut.png"));
-    QAction *cutAct = new QAction(cutIcon, tr("Cu&t"), this);
-
-    cutAct->setShortcuts(QKeySequence::Cut);
-    cutAct->setStatusTip(tr("Cut the current selection's contents to the "
-                            "clipboard"));
-//    connect(cutAct, &QAction::triggered, textEdit, &QPlainTextEdit::cut);
-    editMenu->addAction(cutAct);
-    editToolBar->addAction(cutAct);
-
-    const QIcon copyIcon = QIcon::fromTheme("edit-copy", QIcon("../../../../QtLing/images/copy.png"));
-    QAction *copyAct = new QAction(copyIcon, tr("&Copy"), this);
-    copyAct->setShortcuts(QKeySequence::Copy);
-    copyAct->setStatusTip(tr("Copy the current selection's contents to the "
-                             "clipboard"));
-//    connect(copyAct, &QAction::triggered, textEdit, &QPlainTextEdit::copy);
-    editMenu->addAction(copyAct);
-    editToolBar->addAction(copyAct);
-
-    const QIcon pasteIcon = QIcon::fromTheme("edit-paste", QIcon("../../../../QtLing/images/paste.png"));
-    QAction *pasteAct = new QAction(pasteIcon, tr("&Paste"), this);
-    pasteAct->setShortcuts(QKeySequence::Paste);
-    pasteAct->setStatusTip(tr("Paste the clipboard's contents into the current "
-                              "selection"));
-//    connect(pasteAct, &QAction::triggered, textEdit, &QPlainTextEdit::paste);
-    editMenu->addAction(pasteAct);
-    editToolBar->addAction(pasteAct);
-
-    menuBar()->addSeparator();
-
-#endif // !QT_NO_CLIPBOARD
-
-    QMenu *helpMenu = menuBar()->addMenu(tr("&Help"));
-    QAction *aboutAct = helpMenu->addAction(tr("&About"), this, &MainWindow::about);
-    aboutAct->setStatusTip(tr("Show the application's About box"));
-
-    QAction *aboutQtAct = helpMenu->addAction(tr("About &Qt"), qApp, &QApplication::aboutQt);
-    aboutQtAct->setStatusTip(tr("Show the Qt library's About box"));
-
-
-    //fileToolBar->addButton("Sort");
-}
 void MainWindow::createStatusBar()
 {
     statusBar()->showMessage(tr("Ready"));

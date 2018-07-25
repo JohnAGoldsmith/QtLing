@@ -30,14 +30,15 @@ void CLexicon::Crab_2()
     step6_ReSignaturizeWithKnownAffixes();
     step7_FindGoodSignaturesInsideParaSignatures();
 
+    if(true){
      m_SuffixesFlag ?
         m_Signatures->calculate_stem_entropy():
         m_PrefixSignatures->calculate_stem_entropy();
 
-   compute_sig_graph_edges();
-   compute_sig_graph_edge_map();
-   generate_hypotheses();
-
+    compute_sig_graph_edges();
+   // compute_sig_graph_edge_map();
+   // generate_hypotheses();
+    }
 
     qDebug() << "finished crab 2.";
 
@@ -54,15 +55,16 @@ void CLexicon::Crab_2()
 */
 void CLexicon::step6_ReSignaturizeWithKnownAffixes()
 
-{   const int MINIMUM_NUMBER_OF_STEMS = 2;
-   CWord *                     pWord;
-   CSignature*                 pSig;
-   QString                     this_stem_t, this_suffix_t, this_prefix, this_affix, this_signature_string, this_word;
-   stem_list *                 p_this_stem_list;
-   affix_set *                 this_ptr_to_affix_set;
-   CStem*                      pStem;
-   CStemCollection*            stems;
-   m_SuffixesFlag ?
+{
+    const int MINIMUM_NUMBER_OF_STEMS = 2;
+    CSignature*                 pSig;
+    QString                     this_stem_t, this_suffix_t, this_prefix, this_affix, this_signature_string, this_word;
+    stem_list *                 p_this_stem_list;
+    affix_set *                 this_ptr_to_affix_set;
+    CStem*                      pStem;
+    CWord *                     pWord;
+    CStemCollection*            stems;
+    m_SuffixesFlag ?
                stems = m_suffixal_stems:
                stems = m_prefixal_stems;
    Stem_to_sig_map                    these_stem_to_sig_maps;
@@ -74,8 +76,9 @@ void CLexicon::step6_ReSignaturizeWithKnownAffixes()
    m_ProgressBar->setMaximum(m_Parses->size());
    time_stamp("Resignaturize with known affixes");
 
-   map_string_to_word_ptr_iter word_iter (*m_Words->get_map());
-   while(word_iter.hasNext()){
+    // clear signatures and parse_triple_map stored in each word
+    map_string_to_word_ptr_iter word_iter (*m_Words->get_map());
+    while(word_iter.hasNext()){
        pWord = word_iter.next().value();
        pWord->clear_signatures();
        pWord->clear_parse_triple_map();
@@ -112,6 +115,7 @@ void CLexicon::step6a_create_temporary_map_from_stems_to_affix_sets(Stem_to_sig_
 
     // iterate through parselist, and assign to stem and affix collections;
     for (int parseno = 0; parseno < m_Parses->size(); parseno++){
+        // iterate through each parse stored in CLexicon::m_Parses
         this_parse = m_Parses->at(parseno);
         count++;
         if (count = 10000){
@@ -143,7 +147,7 @@ void CLexicon::step6a_create_temporary_map_from_stems_to_affix_sets(Stem_to_sig_
             these_stem_to_sig_maps.insert(this_stem_t,pSet);
         }
         these_stem_to_sig_maps.value(this_stem_t)->insert(this_affix_t);
-        }
+    }
 }
 
 /*!
@@ -189,7 +193,9 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
     }
     signatures->sort(SIG_BY_AFFIX_COUNT);
 
-    signatures->find_minimal_cover(); // the signature collection finds a "cover", which is a set of signatures which are a superset of all the other signatures.
+    signatures->find_minimal_cover();
+    // the signature collection finds a "cover", which is a set of signatures
+    // which are a superset of all the other signatures.
 
     QMap<QString, protostem*> * these_protostems;
     m_SuffixesFlag?
@@ -203,7 +209,8 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
     int protostem_count = 0;
     int temp_i = 0;
     foreach (auto this_protostem, * these_protostems)
-    {   m_ProgressBar->setValue(protostem_count++);
+    {
+        m_ProgressBar->setValue(protostem_count++);
         qApp->processEvents();
 
         affixes_of_residual_sig.clear();
@@ -226,7 +233,8 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
                 this_word = m_Words->get_reverse_sort_list()->at(wordno);
                 affix = this_word.left(this_word.length()- stem_length);
             }
-            affixes_of_residual_sig.append( affix );
+            if (!affix.isEmpty())
+                affixes_of_residual_sig.append( affix ); // what if affix is NULL?
         }
         if (m_Words->contains(this_stem)) {
                 affixes_of_residual_sig.append("NULL");
@@ -259,7 +267,7 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
             this_affix = affix_iter_2.next();
             step4a_link_signature_and_affix(pSig,this_affix);
         }
-        step4b_link_signature_and_stem_and_word(this_stem, pSig, best_affix_list_string);
+        step4b_link_signature_and_stem_and_word(this_stem, pSig, best_affix_list_string, "Crab2");
 
         // . This shouldn't happen: there are no affixes.
         if (best_affix_list.length() == 0){
@@ -282,4 +290,3 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
    } // end of protostem loop
    signatures->sort_each_signatures_stems_alphabetically();
 }
-

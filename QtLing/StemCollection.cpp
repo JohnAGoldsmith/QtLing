@@ -33,18 +33,18 @@ void CStemCollection::clear(){
     m_StringToStemMap->clear();
     m_CorpusCount = 0;
 }
-CStem* CStemCollection::add(QString stem)
+CStem* CStemCollection::add(const QString& stem)
 {
     CStem* pStem = new CStem(stem);
     m_StringToStemMap->insert(stem, pStem);
     return pStem;
 }
-CStem* CStemCollection::operator <<(QString stem)
+CStem* CStemCollection::operator <<(const QString& stem)
 {
     return this->add(stem);
 }
 
-CStem* CStemCollection::operator ^=(QString stem)
+CStem* CStemCollection::operator ^=(const QString& stem)
 { return this->find_or_add(stem);
 }
 
@@ -60,7 +60,7 @@ QListIterator<CStem*> * CStemCollection::get_sorted_list_iterator()
     QListIterator<CStem*> * iter = new QListIterator<CStem*>(m_SortList);
     return iter;
 }
-CStem* CStemCollection::find_or_add(QString stem)
+CStem* CStemCollection::find_or_add(const QString& stem)
 {
     if (m_StringToStemMap->contains(stem)){
         return m_StringToStemMap->value(stem);
@@ -70,7 +70,7 @@ CStem* CStemCollection::find_or_add(QString stem)
         return pStem;
     }
 }
-CStem* CStemCollection::find_or_fail(QString stem)
+CStem* CStemCollection::find_or_fail(const QString& stem)
 {
     if (m_StringToStemMap->contains(stem)){
         return m_StringToStemMap->value(stem);
