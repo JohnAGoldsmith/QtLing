@@ -15,9 +15,10 @@ class CLexicon;
 class CSignatureCollection
 {
 protected:
+    //QMap<QString, CSignature*>
     map_string_to_sig                       m_SignatureMap;
-    int                                     m_CorpusCount;
-    QString                                 m_MemberName;
+    int                                     m_CorpusCount; // What is this used for?
+    QString                                 m_MemberName; // what is this used for?
     QList<CSignature*>                      m_SortList;
     QList<CSignature*>                      m_signature_list;
     bool                                    m_SortValidFlag;
@@ -70,6 +71,7 @@ public:
     void                                    sort_signatures_by_affix_count();
     void                                    sort_each_signatures_stems_alphabetically();
 
-
+    void                                    assign_json_id();
+    void                                    check_singleton_signatures(const QString& message);
 };
 #endif // CSIGNATURECOLLECTION_H

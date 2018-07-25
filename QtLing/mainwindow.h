@@ -38,6 +38,8 @@ class LxaStandardItemModel;
 class UpperTableView;
 class LowerTableView;
 class LeftSideTreeView;
+class MainMenuBar;
+class FindDockWidget;
 
 QT_END_NAMESPACE
 
@@ -74,6 +76,8 @@ class MainWindow : public QMainWindow
     friend class                            LowerTableView;
     friend class                            lxaWindow;
     friend class                            CLexicon;
+    friend class                            MainMenu;
+    friend class                            MainMenuBar;
 
     QList<CLexicon*>                        m_lexicon_list;
     CLexicon*                               m_my_lexicon;
@@ -103,7 +107,28 @@ class MainWindow : public QMainWindow
     QGroupBox *                             horizontalGroupBox;
     QGroupBox *                             verticalGroupBox;
     QString                                 curFile;
+    FindDockWidget *                        m_find_dock_widget;
 
+    // ACTIONS, see mainwindow_actions.cpp
+    MainMenuBar *                           m_main_menu_bar;
+    QAction *                               openAct;
+    QAction *                               saveAsAct;
+    QAction *                               exitAct;
+
+    QAction *                               cutAct;
+    QAction *                               copyAct;
+    QAction *                               pasteAct;
+    QAction *                               findAct;
+    QAction *                               findLeftAct;
+    QAction *                               findRightAct;
+
+    QAction *                               aboutAct;
+    QAction *                               aboutQtAct;
+
+    QAction *                               importAct;
+    QAction *                               evalAct;
+    QAction *                               importMorfessorAct;
+    QAction *                               evalMorfessorAct;
 
 
 public:
@@ -125,10 +150,13 @@ public:
     void                                    read_corpus();
    // void                                    set_up_graphics_scene_and_view();
 
-
-
 protected:
     void closeEvent(QCloseEvent *event) override;
+
+signals:
+    void                                    xml_parsed();
+    void                                    lexicon_ready();
+    void                                    morfessor_parsed();
 
 private slots:
     void                                    about();
@@ -146,6 +174,15 @@ private slots:
     void                                    read_stems_and_words();
     void                                    write_stems_and_words();
 
+    // for find functionality
+    void                                    launch_find_dock();
+
+    // test for gold standard
+    void                                    gs_read_and_parse_xml();
+    void                                    gs_evaluate();
+    void                                    read_morfessor_txt_file();
+    void                                    gs_evaluate_morfessor();
+
 #ifndef QT_NO_SESSIONMANAGER
     void                    commitData(QSessionManager &);
 #endif
@@ -158,6 +195,8 @@ public:
     void ask_for_project_file();
     void read_dx1_file();
     void read_text_file();
+
+    void                    createFindDockWidget(UpperTableView* p_tableview);
 
 //          Qt-style modesl
     void                    load_stem_model();
@@ -174,6 +213,10 @@ public:
     void                    load_subsignature_model();
     void                    load_word_model();
     void                    create_or_update_TreeModel(CLexicon* lexicon);
+    //                      update tree model after gs evaluation is completed
+    void                    append_eval_results(EvaluationResults& results, QStandardItem* parent_item);
+    void                    update_TreeModel_for_gs(CLexicon* lexicon);
+    void                    update_TreeModel_for_eval(CLexicon* lexicon);
 
     void                    sort_upper_table();
 

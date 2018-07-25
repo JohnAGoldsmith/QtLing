@@ -224,14 +224,21 @@ void CSignatureCollection::get_epositive_signatures(QMap<CSignature*, int> sig_m
     }
 }
 
-//This function find a small subset of the signatures with the property that each signature in the collection
-// (whose stem count is greater or equal to threshold) is a subsignature of one of the minimal covering signatures.
-
+/*!
+ * \brief CSignatureCollection::find_minimal_cover
+ *
+ * 1. Find all signatures that have more than 5 stems corresponding to each of
+ *    them.
+ * 2. Among these signatures, make a comparison between each two signatures.
+ *    If a signature A "contains" signature B, signature B is removed from the
+ *    list.
+ */
 void CSignatureCollection::find_minimal_cover()
 {
     int STEM_THRESHOLD = 5;
 
     sort(SIG_BY_AFFIX_COUNT);
+    // important!! Sort signatures by descending affix count
 
     QList<CSignature*> temporary_sig_list;
     QList<CSignature*> minimal_sig_cover;
@@ -260,5 +267,23 @@ void CSignatureCollection::find_minimal_cover()
                     //qDebug() << 256 << pSig->display() << qSig->display();
             }
         }
+    }
+}
+
+void CSignatureCollection::check_singleton_signatures(const QString &message)
+{
+    QMap<QString, CSignature*>::ConstIterator sig_map_iter;
+    qDebug() << message << "Checking for singleton signatures";
+    for (sig_map_iter = m_SignatureMap.constBegin();
+         sig_map_iter != m_SignatureMap.constEnd();
+         sig_map_iter++) {
+        const QString& str_sig = sig_map_iter.key();
+        if (!str_sig.contains('='))
+            qDebug() << message << "found singleton signature in key:" << str_sig;
+        CSignature* p_sig = sig_map_iter.value();
+        if (!p_sig->get_key().contains('='))
+            qDebug() << message << "found singleton signature in CSignature object:" << str_sig;
+        if (p_sig->get_number_of_affixes() == 1)
+            qDebug() << message << "found singleton signature in CSignature object:" << str_sig;
     }
 }
