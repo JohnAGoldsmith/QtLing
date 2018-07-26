@@ -1,4 +1,4 @@
-    #include <QPair>
+#include <QPair>
 #include <QList>
 #include <QMap>
 #include <QMapIterator>
@@ -31,8 +31,6 @@ void CLexicon::Crab_2()
     step6_ReSignaturizeWithKnownAffixes();
     step7_FindGoodSignaturesInsideParaSignatures();
 
-    step10_find_compounds();
-
      m_SuffixesFlag ?
         m_Signatures->calculate_stem_entropy():
         m_PrefixSignatures->calculate_stem_entropy();
@@ -40,6 +38,8 @@ void CLexicon::Crab_2()
     step8a_compute_sig_graph_edges();
     step8b_compute_sig_graph_edge_map();
     step9_from_sig_graph_edges_map_to_hypotheses();
+
+    step10_find_compounds();
 
     check_autobiography_consistency();
     qDebug() << "finished crab 2.";
@@ -299,7 +299,7 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
 
 void CLexicon::step10_find_compounds()
 {
-    // PART 1a: go through list of words to find hyphenated compounds
+
     CStemCollection* p_stems = m_SuffixesFlag ? m_suffixal_stems : m_prefixal_stems;
     const QMap<QString, protostem*>& ref_protostem_map
             = m_SuffixesFlag ? m_suffix_protostems : m_prefix_protostems;
@@ -310,6 +310,7 @@ void CLexicon::step10_find_compounds()
     m_StatusBar->showMessage("8: Finding Compounds - part 1.");
     int progress_count = 0;
 
+    // PART 1a: go through list of words to find hyphenated compounds
     QMap<QString, CWord*>::ConstIterator word_iter;
     for (word_iter = m_Words->get_map()->constBegin();
          word_iter != m_Words->get_map()->constEnd();
@@ -332,6 +333,7 @@ void CLexicon::step10_find_compounds()
         }
     }
     // END OF PART 1a
+
     // PART 1b: go through list of stems and protostems to find potential
     // non-hyphenated compound words
     QMap<QString, CStem*>* p_stem_map = p_stems->get_map();
@@ -372,18 +374,56 @@ void CLexicon::step10_find_compounds()
                     QList<CSuffix*>* p_suffixes = p_signature->get_suffix_list();
                     CSuffix* p_suffix;
                     foreach (p_suffix, *p_suffixes) {
-                        if (p_suffix->get_key() == str_continuation) {
-                            continuation_valid = false;
-                            break;
+                        QString str_suffix = p_suffix->get_key();
+                        if (!str_suffix.contains('[')) {
+                            if (p_suffix->get_key() == str_continuation) {
+                                continuation_valid = false;
+                                break;
+                            }
+                        } else {
+                            int bracket_start_i = str_suffix.indexOf('[');
+                            const QString reduced_affix = str_suffix.left(bracket_start_i);
+                            const QString str_secondary_affixes =
+                                    str_suffix.mid(bracket_start_i+1,
+                                                   str_suffix.length()-bracket_start_i-2);
+                            const QStringList secondary_affixes = str_secondary_affixes.split('~');
+                            foreach (QString secondary_affix, secondary_affixes) {
+                                if (secondary_affix == "NULL")
+                                    secondary_affix = "";
+                                str_suffix = reduced_affix + secondary_affix;
+                                if (str_suffix == str_continuation) {
+                                    continuation_valid = false;
+                                    break;
+                                }
+                            }
                         }
                     }
                 } else {
                     QList<CPrefix*>* p_prefixes = p_signature->get_prefix_list();
                     CPrefix* p_prefix;
                     foreach (p_prefix, *p_prefixes) {
-                        if (p_prefix->get_key() == str_continuation) {
-                            continuation_valid = false;
-                            break;
+                        QString str_prefix = p_prefix->get_key();
+                        if (!str_prefix.contains('[')) {
+                            if (p_prefix->get_key() == str_continuation) {
+                                continuation_valid = false;
+                                break;
+                            }
+                        } else {
+                            int bracket_start_i = str_prefix.indexOf('[');
+                            const QString reduced_affix = str_prefix.left(bracket_start_i);
+                            const QString str_secondary_affixes =
+                                    str_prefix.mid(bracket_start_i+1,
+                                                   str_prefix.length()-bracket_start_i-2);
+                            const QStringList secondary_affixes = str_secondary_affixes.split('~');
+                            foreach (QString secondary_affix, secondary_affixes) {
+                                if (secondary_affix == "NULL")
+                                    secondary_affix = "";
+                                str_prefix = secondary_affix + reduced_affix;
+                                if (str_prefix == str_continuation) {
+                                    continuation_valid = false;
+                                    break;
+                                }
+                            }
                         }
                     }
                 }

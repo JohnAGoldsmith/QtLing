@@ -9,6 +9,7 @@ CHypothesis* CLexicon::get_hypothesis(QString hypothesis)
 {
     return m_Hypothesis_map->value( hypothesis );
 }
+
 /* e.g.
  * transform transforms transformed transformation transformations
  * consult   consults   consulted   consultation   consultations
@@ -22,8 +23,23 @@ CHypothesis* CLexicon::get_hypothesis(QString hypothesis)
  * consultation=consultation=consult
  * consultations=consultation=consult
  */
+
+/*!
+ * \brief 1) Given a map of sig_graph_edges, find which of those are valid;
+ * 2) for valid (or "doomed") sig_graph_edges, remove `sig_2_shorter_stem` from
+ * the signature collection in the lexicon, replace it with a new one reflecting
+ * the hypothesis; 3) create `CHypotheses` objects for valid sig_graph_edges.
+ *
+ * Modifications to other parts of the program to support hypotheses generation:
+ * 1.   Revised `step4b_link_signature_and_stem_and_word` do deal with cases like
+ *      "ation[NULL~s]" when linking words and signatures - treat this as two
+ *      separate affixes: "ation" and "ations"
+ * 2.   Made similar revision in compound discovery.
+ */
 void CLexicon::step9_from_sig_graph_edges_map_to_hypotheses()
 {
+    m_StatusBar->showMessage("9: Generating Hypotheses");
+
     sig_graph_edge * p_edge;
     lxa_sig_graph_edge_map_iter edge_iter (m_SigGraphEdgeMap);
     QString affix_1, doomed_affix;
@@ -110,12 +126,17 @@ void CLexicon::step9_from_sig_graph_edges_map_to_hypotheses()
         doomed_signature_info_map[original_sig2_affixes_shorter_stem]
                 = DoomedSignatureInfo(p_edge, doomed_affixes);
     }
-    // Go through list of doomed signatures, call remove_signature, and replace them with new ones.
+
+
+    /* --- 2) Go through list of doomed signatures,
+     * call remove_signature, and replace them with new ones. --- */
 
     DoomedSignatureInfoMap::iterator infomap_iter;
     for (infomap_iter = doomed_signature_info_map.begin();
          infomap_iter != doomed_signature_info_map.end();
          infomap_iter++) {
+
+
         DoomedSignatureInfo& info = infomap_iter.value();
 
         // Get string representation of new signature
@@ -159,6 +180,7 @@ void CLexicon::step9_from_sig_graph_edges_map_to_hypotheses()
 
         info.m_str_revised_sig = str_new_sig;
 
+        /* --- 3) Create CHypothesis object --- */
         eHypothesisType this_hypothesis_type = HT_affix_goes_to_signature;
         // CHypothesis (this_hypothesis_type, info.m_edge_ptr);
         CHypothesis * this_hypothesis = new CHypothesis( this_hypothesis_type, info.m_edge_ptr->get_morph(),
@@ -173,6 +195,13 @@ void CLexicon::step9_from_sig_graph_edges_map_to_hypotheses()
     p_signatures->sort_each_signatures_stems_alphabetically();
 }
 
+/*!
+ * \brief Goes through the map of sig_graph_edges and updates the pointer
+ * `m_sig_1` or `m_sig_2` to p_new_sig if it is found that `m_sig_string_1`
+ * or `m_sig_string_2` is identical to str_old_sig.
+ * \param String representation of signature whose pointer needs to be updated
+ * \param New pointer of that signature.
+ */
 void CLexicon::update_pointer_in_edge_map(const QString& str_old_sig, CSignature* p_new_sig)
 {
     QMap<QString,sig_graph_edge*>::iterator edge_map_iter;
@@ -187,6 +216,21 @@ void CLexicon::update_pointer_in_edge_map(const QString& str_old_sig, CSignature
     }
 }
 
+/*!
+ * \brief Removes a CSignature object from CSignatureCollection, at the same
+ * time removing all pointers to that object; delete any stem or affix if the
+ * deleted signature is the only signature associated with it.
+ * \param Pointer to signature
+ * \param Used for logging into autobiography of stems and words
+ *
+ * This function is basically a reverse implementation of how a signature
+ * is added in step4. Some methods such as `CStem::remove_signature()`,
+ * `CStemCollection::remove_stem()`, `CSuffixCollection::remove_suffix()`,
+ * `CPrefixCollection::remove_prefix()`, and
+ * `CSignatureCollection::remove_signature()` are added to support this
+ * function.
+ *
+ */
 void CLexicon::remove_signature(CSignature* p_sig, const QString& name_of_calling_function)
 {
     CSignatureCollection* p_sigs = m_SuffixesFlag?
@@ -275,7 +319,12 @@ void CLexicon::remove_signature(CSignature* p_sig, const QString& name_of_callin
 }
 
 
-
+/*!
+ * \brief Test function not actually used in code; was intended for checking
+ * whether in the previous method (where parses are regenerated and the whole
+ * lexicon is reconstructed) signatures discovered in step7 were rejected after
+ * calling step3 and step4 as a part of step9.
+ */
 void CLexicon::check_autobiography_consistency()
 {
     QMap<QString, QStringList*>::ConstIterator iter;

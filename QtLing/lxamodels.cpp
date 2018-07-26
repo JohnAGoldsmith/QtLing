@@ -255,6 +255,7 @@ void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures, e
         items.append(item4);
         appendRow(items);
     }
+
 }
 void LxaStandardItemModel::load_positive_signatures(CSignatureCollection* p_signatures, eSortStyle this_sort_style)
 {
