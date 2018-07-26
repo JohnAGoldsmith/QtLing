@@ -225,7 +225,7 @@ protected:
     QMap<QString, CHypothesis*> *            m_Hypothesis_map;
 // add component 1
 
-    Sig_to_stems                    m_intermediate_signature_to_stems_map; // used during computation, not permanent.
+    Sig_to_stem_map                    m_intermediate_sig_to_stem_map; // used during computation, not permanent.
 
     QProgressBar*                   m_ProgressBar;
     QStatusBar *                      m_StatusBar;
@@ -320,8 +320,10 @@ public:
     // insert functions here
     void step1_from_words_to_protostems();
     void step2_from_protostems_to_parses();
+
     void step3_from_parses_to_stem_to_sig_maps(QString name_of_calling_function);
-    void step3a_from_parses_to_stem_to_sig_maps(QList<CParse*> * parses, bool suffix_flag, Stem_to_sig_map* these_stem_to_sig_maps);
+    void step3a_from_parses_to_stem_to_sig_map(QList<CParse*> * parses, bool suffix_flag, Stem_to_sig_map& these_stem_to_sig_maps);
+    void step3b_from_stemsig_map_to_sigstem_map(Stem_to_sig_map& these_stem_to_sig_maps);
     //void step4_assign_affixes_to_stems(QString name_of_calling_function);
     void step4_create_signatures(QString name_of_calling_function);
     void step4a_link_signature_and_affix(CSignature*, affix_t);
@@ -333,8 +335,9 @@ public:
 
     void step6_ReSignaturizeWithKnownAffixes();
     void step6a_create_temporary_map_from_stems_to_affix_sets(Stem_to_sig_map&); //map_sigstring_to_stem_list &);
+
     void step7_FindGoodSignaturesInsideParaSignatures();
-    void step7_from_stem_to_sig_maps_to_xxx(QString, Stem_to_sig_map ) {return;}
+    void step6c_from_stem_to_sig_maps_to_xxx(QString, Stem_to_sig_map ) {return;}
 
     void step8a_compute_sig_graph_edges();
     void step8b_compute_sig_graph_edge_map();

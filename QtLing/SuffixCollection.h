@@ -35,12 +35,12 @@ public:
     CSuffix*                GetAt( uint );
     int                     get_count() const               { return m_SuffixMap.size(); }
     void                    get_set_of_suffixes (QSet<QString> * p_string_set);
-    QMap<QString,CSuffix*>* GetMap()                        { return & m_SuffixMap;         }
-    QMap<QString,CSuffix*>* get_map()                       { return & m_SuffixMap;         }
+    QMap<QString,CSuffix*>* GetMap()                        { return & m_SuffixMap; }
+    QMap<QString,CSuffix*>* get_map()                       { return & m_SuffixMap; }
     void                    get_suffixes(QList<QString>*);
-    bool                    contains(suffix_t this_suffix)  {return m_SuffixMap.contains(this_suffix);}
+    bool                    contains(const suffix_t& this_suffix)  { return m_SuffixMap.contains(this_suffix); }
     void                    sort_by_count();
-    CSuffix_ptr_list*       get_sorted_list()               {return & m_SortedList;}
+    CSuffix_ptr_list*       get_sorted_list()               { return & m_SortedList; }
     void                    clear();
     void                    remove_suffix(CSuffix* p_suffix);
 };
@@ -72,7 +72,7 @@ public:
     QMap<QString,CPrefix*>* GetMap()               { return & m_PrefixMap;         }
     QMap<QString,CPrefix*>* get_map()              { return & m_PrefixMap;         }
     void                    get_prefixes(QList<QString>*);
-    bool                    contains(prefix_t this_prefix) {return m_PrefixMap.contains(this_prefix);}
+    bool                    contains(const prefix_t& this_prefix) {return m_PrefixMap.contains(this_prefix);}
     void                    sort_by_count();
     CPrefix_ptr_list*       get_sorted_list()               {return & m_SortedList;}
     void                    clear();

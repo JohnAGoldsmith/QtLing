@@ -52,7 +52,7 @@ public:
     void                                add_parse_triple(QString stem, QString affix, sig_string this_sig_string);
     void                                add_to_autobiography(QString line);
     void                                clear_signatures() { m_Signatures.clear();}
-    void                                clear_parse_triple_map() {m_Parse_triple_map.clear();}
+    void                                clear_parse_triple_map();
     QList<QString>*                     get_autobiography() {return & m_Autobiography;}
     QString                             get_key() {return m_Word;}
     int                                 get_word_count() const  { return m_WordCount; }

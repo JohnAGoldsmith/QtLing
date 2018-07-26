@@ -13,8 +13,9 @@ CWord::CWord(CWord& word)
  }
 
 
-CWord::~CWord(){
-
+CWord::~CWord()
+{
+    clear_parse_triple_map();
 }
 
 void CWord::IncrementWordCount (int n )
@@ -34,4 +35,14 @@ void CWord::add_parse_triple(QString stem, QString affix, QString sig_string)
    // m_Parse_triples.append(this_triple);
     m_Parse_triple_map[stem]= this_triple;
 
+}
+
+void CWord::clear_parse_triple_map()
+{
+    QMap<stem_t, Parse_triple*>::iterator ptm_iter;
+    for (ptm_iter = m_Parse_triple_map.begin();
+         ptm_iter != m_Parse_triple_map.end();
+         ptm_iter++) {
+        delete ptm_iter.value();
+    }
 }
