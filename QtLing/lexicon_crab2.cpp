@@ -28,7 +28,7 @@ extern bool contains(QList<QString> * list2, QList<QString> * list1);
  */
 void CLexicon::Crab_2()
 {
-    step6_ReSignaturizeWithKnownAffixes();
+    //step6_ReSignaturizeWithKnownAffixes();
     step7_FindGoodSignaturesInsideParaSignatures();
 
      m_SuffixesFlag ?
