@@ -51,7 +51,6 @@ public:
 
     // for displaying protostems
     void        load_protostems(QMap<QString, protostem*>* p_protostems);
-    void        load_compounds(CompoundWordCollection* p_compounds);
 
     void        load_parsemap_from_gs(GoldStandard* p_gs, ParseMapHandler parsemap, const QString &type);
 };

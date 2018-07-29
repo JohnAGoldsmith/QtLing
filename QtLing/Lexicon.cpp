@@ -20,7 +20,6 @@
 #include "Word.h"
 #include "evaluation.h"
 #include "cparse.h"
-#include "compound.h"
 
 void SortQStringListFromRight(QStringList& ThisStringList);
 bool reverse_string_compare(QString,QString);
@@ -58,7 +57,6 @@ CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag):
     m_suffixal_stems        = new CStemCollection(this);
     m_Suffixes              = new CSuffixCollection(this);
     m_Prefixes              = new CPrefixCollection(this);
-    m_Compounds             = new CompoundWordCollection(this);
     //    m_Parses                = new QList<QPair<QString,QString>>();
     m_Parses                = new QList<CParse*>();
     m_ParaSignatures        =  new CSignatureCollection(this, true);
@@ -110,7 +108,6 @@ CLexicon::~CLexicon()
     delete m_ParaSignatures;
     delete m_PassiveSignatures;
     delete m_goldstandard;
-    delete m_Compounds;
     delete m_Parses;
 }
 
