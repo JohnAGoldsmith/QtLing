@@ -12,7 +12,7 @@
     protected:
         QString m_key;
         int m_frequency;
-        int m_count;
+        int m_sig_count;
     public:
         CSuffix(QString ssWord);
         CSuffix(CSuffix&);
@@ -22,8 +22,9 @@
         QString GetSuffix() const               { return m_key;    }
         int     GetFrequency()                  { return m_frequency; }
         void    SetFrequency(int frequency)     { m_frequency = frequency; }
-        int     get_count() const               { return m_count;}
-        int     increment_count()               { m_count+= 1; return m_count;}
+        int     get_sig_count() const               { return m_sig_count;}
+        int     increment_sig_count()               { return ++m_sig_count;}
+        int     decrement_count()               { return --m_sig_count;}
     };
 
     class CPrefix
@@ -31,7 +32,7 @@
     protected:
         QString m_key;
         int m_frequency;
-        int m_count;
+        int m_sig_count;
     public:
         CPrefix(QString ssWord);
         CPrefix(CPrefix&);
@@ -41,8 +42,9 @@
         QString GetPrefix() const               { return m_key;    }
         int     GetFrequency()                  { return m_frequency; }
         void    SetFrequency(int frequency)     { m_frequency = frequency; }
-        int     get_count() const               { return m_count;}
-        int     increment_count()               { m_count+= 1; return m_count;}
+        int     get_sig_count() const               { return m_sig_count;}
+        int     increment_sig_count()               { return ++m_sig_count;}
+        int     decrement_count()               { return --m_sig_count;}
     };
 
 

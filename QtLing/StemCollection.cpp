@@ -78,3 +78,15 @@ CStem* CStemCollection::find_or_fail(const QString& stem)
         return NULL;
     }
 }
+
+/*!
+ * \brief Removes a stem from this collection, and deletes the stem.
+ * \param Pointer to stem object
+ */
+void CStemCollection::remove_stem(CStem *p_stem)
+{
+    const QString str_stem = p_stem->get_key();
+    m_StringToStemMap->remove(str_stem);
+    m_SortList.removeOne(p_stem);
+    delete p_stem;
+}
