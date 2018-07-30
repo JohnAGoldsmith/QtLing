@@ -15,7 +15,7 @@ class CSuffixCollection
 protected:
     QMap<QString, CSuffix*>  m_SuffixMap;
     CSuffix_ptr_list         m_SortedList;
-    CLexicon*              m_Lexicon;
+    CLexicon*                m_Lexicon;
 
 public:
     //construction/destruction

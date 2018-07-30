@@ -27,19 +27,23 @@ extern bool contains(QList<QString> * list2, QList<QString> * list1);
  */
 void CLexicon::Crab_2()
 {
-    //step6_ReSignaturizeWithKnownAffixes();
+    step6_ReSignaturizeWithKnownAffixes();
+
+
     step7_FindGoodSignaturesInsideParaSignatures();
-     m_SuffixesFlag ?
+    if (false){
+    m_SuffixesFlag ?
         m_Signatures->calculate_stem_entropy():
         m_PrefixSignatures->calculate_stem_entropy();
 
     step8a_compute_sig_graph_edges();
     step8b_compute_sig_graph_edge_map();
-    step9_from_sig_graph_edges_map_to_hypotheses();
+    //step9_from_sig_graph_edges_map_to_hypotheses();
 
-    step10_find_compounds();
+    //ßstep10_find_compounds();
 
     check_autobiography_consistency();
+    }
     qDebug() << "finished crab 2.";
 
 }
@@ -55,21 +59,14 @@ void CLexicon::Crab_2()
 */
 void CLexicon::step6_ReSignaturizeWithKnownAffixes()
 {
-    /*
-    CWord *                     pWord;
-    CStemCollection* p_stems = m_SuffixesFlag? m_suffixal_stems: m_prefixal_stems;
-    map_sigstring_to_stem_list    temp_signatures_to_stems;
-    */
-
     m_StatusBar->showMessage("6: resignaturize with known affixes");
     m_ProgressBar->reset();
     m_ProgressBar->setMinimum(0);
     m_ProgressBar->setMaximum(m_Parses->size());
     time_stamp("Resignaturize with known affixes");
 
-    // Not necessary because the same is done so in step4
+    // Not necessary because the same is done so in step4 JG: What is  not necessary?
 
-    // clear signatures and parse_triple_map stored in each word
     map_string_to_word_ptr_iter word_iter (*m_Words->get_map());
     while(word_iter.hasNext()){
         CWord* pWord = word_iter.next().value();
@@ -80,29 +77,28 @@ void CLexicon::step6_ReSignaturizeWithKnownAffixes()
 
     //--> We establish a temporary map from stems to sets of affixes as we iterate through parses. <--//
     //--> THIS is where the continuations that are not affixes are eliminated -- well, they are not
-    //    eliminated, but they are not copied into ref_stems_to_affix_set. Changing that to a Protosigs.
-    Stem_to_sig_map these_stem_to_sig_maps;
-    step6a_create_temporary_map_from_stems_to_affix_sets(these_stem_to_sig_maps);// ref_stems_to_affix_set);
-    step3b_from_stemsig_map_to_sigstem_map(these_stem_to_sig_maps);
+    //    eliminated.
 
+    m_intermediate_sig_to_stem_map.clear();
+    m_intermediate_stem_to_sig_map.clear();
+
+    step6a_create_temporary_stem_to_sig_map();
+    step3b_from_stem_to_sig_map_to_sig_to_stem_map();
     step4_create_signatures("Resignaturize");
 
-    // step6c_from_stem_to_sig_maps_to_xxx("re-signaturize to good affixes only", these_stem_to_sig_maps);      //ref_stems_to_affix_set);
-}
+ }
 /**
  * helper function for preceeding function.
  *
  */
-void CLexicon::step6a_create_temporary_map_from_stems_to_affix_sets(Stem_to_sig_map& these_stem_to_sig_maps
-                                                             /*, map_sigstring_to_stem_list & ref_temp_signatures_to_stems*/)
+//void CLexicon::step6a_create_temporary_map_from_stem_to_affix_set( )
+void CLexicon::step6a_create_temporary_stem_to_sig_map()
 {
-    m_StatusBar->showMessage("6 Resignaturize: temporary map from stems to affix sets.");
+    m_StatusBar->showMessage("6 Resignaturize: temporary map from stem to affix set.");
     qApp->processEvents();
     CParse*                     this_parse;
-    // QPair<QString,QString>      this_pair;
     int                         count = 0;
     QString                     this_stem_t, this_affix_t;
-    // morph_set *                 pSet;
     CStemCollection *           stems;
     m_SuffixesFlag ?
                 stems = m_suffixal_stems:
@@ -110,7 +106,6 @@ void CLexicon::step6a_create_temporary_map_from_stems_to_affix_sets(Stem_to_sig_
 
     // iterate through parselist, and assign to stem and affix collections;
     for (int parseno = 0; parseno < m_Parses->size(); parseno++){
-        // iterate through each parse stored in CLexicon::m_Parses
         this_parse = m_Parses->at(parseno);
         count++;
         if (count == 10000){
@@ -132,11 +127,10 @@ void CLexicon::step6a_create_temporary_map_from_stems_to_affix_sets(Stem_to_sig_
                 continue;
             }
         }
-
-        if (! these_stem_to_sig_maps.contains(this_stem_t)){
-            these_stem_to_sig_maps[this_stem_t] = QSet<affix_t>();
+        if (! m_intermediate_stem_to_sig_map.contains(this_stem_t)){
+            m_intermediate_stem_to_sig_map[this_stem_t] = QSet<affix_t>();
         }
-        these_stem_to_sig_maps[this_stem_t].insert(this_affix_t);
+        m_intermediate_stem_to_sig_map[this_stem_t].insert(this_affix_t);
     }
 }
 
