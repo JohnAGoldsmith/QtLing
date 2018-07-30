@@ -372,7 +372,7 @@ bool UpperTableView::find_prev_and_highlight(QString &s)
         }
         m_row_recently_selected = highest_row;
     } else {
-        // The user did not select anything; start from the beginning
+        // The user did not select anything; start from the end
         if (m_row_recently_selected == -2)
             m_row_recently_selected = p_model->rowCount();
     }
@@ -380,13 +380,13 @@ bool UpperTableView::find_prev_and_highlight(QString &s)
     // Highlight an item among the list of items found, this item may follow
     // after the user's selection or may be the first item in that list
     bool next_item_found = false;
-    QModelIndexList::ConstIterator iter_index_found;
+    QModelIndexList::reverse_iterator iter_index_found;
     int curr_row;
-    for (iter_index_found = m_indeces_found.constBegin();
-         iter_index_found != m_indeces_found.constEnd(); ) {
+    for (iter_index_found = m_indeces_found.rbegin();
+         iter_index_found != m_indeces_found.rend(); ) {
         const QModelIndex& curr_index = *iter_index_found;
         curr_row = curr_index.row();
-        if (curr_row > m_row_recently_selected) {
+        if (curr_row < m_row_recently_selected) {
             m_row_recently_selected = curr_row;
             next_item_found = true;
             break;

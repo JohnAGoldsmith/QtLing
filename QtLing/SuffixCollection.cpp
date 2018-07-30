@@ -17,11 +17,11 @@ void CSuffixCollection::clear(){
     m_SortedList.clear();
 }
 
-CSuffix* CSuffixCollection::operator ^=(QString suffix)
+CSuffix* CSuffixCollection::operator ^=(const QString& suffix)
 {
       return this->find_or_fail ( suffix );
 }
-CSuffix* CSuffixCollection::find_or_fail(QString suffix)
+CSuffix* CSuffixCollection::find_or_fail(const QString& suffix)
 {
     QMap<QString,CSuffix*>::iterator suffix_iter = m_SuffixMap.find(suffix);
     //map_string_to_suffix_iter suffix_iter = m_SuffixMap.find(suffix);
@@ -32,7 +32,7 @@ CSuffix* CSuffixCollection::find_or_fail(QString suffix)
     }
 
 }
-CSuffix* CSuffixCollection::find_or_add(QString suffix)
+CSuffix* CSuffixCollection::find_or_add(const QString& suffix)
 {
 
     QMap<QString,CSuffix*>::iterator suffix_iter = m_SuffixMap.find(suffix);
@@ -46,7 +46,7 @@ CSuffix* CSuffixCollection::find_or_add(QString suffix)
 }
 
 
-CSuffix* CSuffixCollection::operator << (QString suffix)
+CSuffix* CSuffixCollection::operator << (const QString& suffix)
 {
     return this->find_or_add(suffix);
 }
@@ -64,7 +64,7 @@ void  CSuffixCollection::get_suffixes(QList<QString>* pList)
 }
 
 bool count_compare_suffixes(CSuffix* pSuff1, CSuffix* pSuff2){
-    if (pSuff1->get_count() > pSuff2->get_count()) return true;
+    if (pSuff1->get_sig_count() > pSuff2->get_sig_count()) return true;
     return false;
 }
 
@@ -79,8 +79,13 @@ void CSuffixCollection::sort_by_count()
 
 }
 
-
-
+void CSuffixCollection::remove_suffix(CSuffix* p_suffix)
+{
+    const QString str_suffix = p_suffix->get_key();
+    m_SuffixMap.remove(str_suffix);
+    m_SortedList.removeOne(p_suffix);
+    delete p_suffix;
+}
 
 
 
@@ -102,11 +107,11 @@ void CPrefixCollection::clear(){
     m_SortedList.clear();
 }
 
-CPrefix* CPrefixCollection::operator ^=(QString prefix)
+CPrefix* CPrefixCollection::operator ^=(const QString& prefix)
 {
       return this->find_or_fail ( prefix );
 }
-CPrefix* CPrefixCollection::find_or_fail(QString prefix)
+CPrefix* CPrefixCollection::find_or_fail(const QString& prefix)
 {
     QMap<QString,CPrefix*>::iterator prefix_iter = m_PrefixMap.find(prefix);
     //map_string_to_suffix_iter suffix_iter = m_SuffixMap.find(suffix);
@@ -117,7 +122,7 @@ CPrefix* CPrefixCollection::find_or_fail(QString prefix)
     }
 
 }
-CPrefix* CPrefixCollection::find_or_add(QString prefix)
+CPrefix* CPrefixCollection::find_or_add(const QString& prefix)
 {
 
     QMap<QString,CPrefix*>::iterator prefix_iter = m_PrefixMap.find(prefix);
@@ -132,7 +137,7 @@ CPrefix* CPrefixCollection::find_or_add(QString prefix)
 
 
 
-CPrefix* CPrefixCollection::operator << (QString prefix)
+CPrefix* CPrefixCollection::operator << (const QString& prefix)
 {
     return this->find_or_add(prefix);
 }
@@ -149,7 +154,7 @@ void  CPrefixCollection::get_prefixes(QList<QString>* pList)
     }
 }
 bool count_compare_prefixes(CPrefix* pPrefix1, CPrefix* pPrefix2){
-    if (pPrefix1->get_count() > pPrefix2->get_count()) return true;
+    if (pPrefix1->get_sig_count() > pPrefix2->get_sig_count()) return true;
     return false;
 }
 
@@ -164,3 +169,10 @@ void CPrefixCollection::sort_by_count()
 
 }
 
+void CPrefixCollection::remove_prefix(CPrefix* p_prefix)
+{
+    const QString str_prefix = p_prefix->get_key();
+    m_PrefixMap.remove(str_prefix);
+    m_SortedList.removeOne(p_prefix);
+    delete p_prefix;
+}

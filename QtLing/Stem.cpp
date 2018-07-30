@@ -13,8 +13,17 @@ CStem::CStem(CStem& stem) {
 
 }
 
-
-
 QString CStem::display(){
     return m_key;
+}
+
+/*!
+ * \brief Removes a given signature from the list of signature pointers.
+ * \param Given signature pointer
+ * \return The number of signatures left after a signature is removed
+ */
+int CStem::remove_signature(CSignature *pSig)
+{
+    m_Signatures.removeOne(pSig);
+    return m_Signatures.length();
 }

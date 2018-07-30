@@ -161,10 +161,12 @@ void LowerTableView::display_this_item( const  QModelIndex & index )
 
         if (m_parent_window->m_graphic_display_flag){
             //-->  Graphic display in lower right window <--//
+
             if (column == 1){
                 pSig = pSig1;
             } else { pSig = pSig2;}
             graphics_sig_graph_edges(pSig, this_lexicon );
+
         } else
             // -->   Tabular display in lower right window <--//
         {   foreach (this_word_stem_item, this_edge->shared_word_stems){
@@ -177,9 +179,9 @@ void LowerTableView::display_this_item( const  QModelIndex & index )
             }
             m_my_current_model = new QStandardItemModel();
             // --> first signature <-- //
-            table_one_signature(pSig1, sig1_stems );
+            table_one_signature(pSig1, sig1_stems, pSig1->get_key());
             // --> second signature <-- //
-            table_one_signature(pSig2, sig2_stems );
+            table_one_signature(pSig2, sig2_stems, pSig2->get_key());
             // --> words <-- //
             m_my_current_model->appendRow(item_list);    // blank row in table.
             item_list.clear();
@@ -501,29 +503,38 @@ void LowerTableView::table_signature(CSignature* pSig ){
  *
  * This displays information about a single signature.
  */
-void LowerTableView::table_one_signature(CSignature* pSig, QStringList stems)
+void LowerTableView::table_one_signature(CSignature* pSig, QStringList stems, const QString& str_sig)
 {
     QStandardItem*             p_item;
     QList<QStandardItem*>      item_list;
     CStem*                     p_Stem;
 
-    p_item = new QStandardItem(pSig->get_key());
+    p_item = new QStandardItem(str_sig);
     item_list.append(p_item);
     m_my_current_model->appendRow(item_list);
     item_list.clear();
-    foreach(p_Stem, *pSig->get_stems()){
-        stem_t this_stem_t = p_Stem->get_key();
-        p_item = new QStandardItem(this_stem_t);
-        if (stems.contains(this_stem_t)){
-            p_item->setBackground(Qt::red);
+    if (pSig != NULL) {
+        foreach(p_Stem, *pSig->get_stems()){
+            stem_t this_stem_t = p_Stem->get_key();
+            p_item = new QStandardItem(this_stem_t);
+            if (stems.contains(this_stem_t)){
+                p_item->setBackground(Qt::red);
+            }
+            item_list.append(p_item);
+            if (item_list.length() >= m_number_of_columns){
+                m_my_current_model->appendRow(item_list);
+                item_list.clear();
+            }
         }
-        item_list.append(p_item);
-        if (item_list.length() >= m_number_of_columns){
+        if (item_list.size() > 0 ){
             m_my_current_model->appendRow(item_list);
             item_list.clear();
         }
-    }
-    if (item_list.size() > 0 ){
+    } else {
+        p_item = new QStandardItem("This signature is removed");
+        item_list.append(p_item);
+        p_item = new QStandardItem("(Deleted or re-created using hypotheses)");
+        item_list.append(p_item);
         m_my_current_model->appendRow(item_list);
         item_list.clear();
     }

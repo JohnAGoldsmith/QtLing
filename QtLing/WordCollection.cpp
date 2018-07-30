@@ -30,7 +30,7 @@ CWord* CWordCollection::get_word(const QString& word){
     return word_iter.value();
 }
 
-CWord* CWordCollection::find_or_add(QString word_string){
+CWord* CWordCollection::find_or_add(const QString& word_string){
     QMap<QString,CWord*>::const_iterator word_iter = m_WordMap.find(word_string);
     if (word_iter == m_WordMap.end()){
         CWord* pWord = new CWord(word_string);
@@ -40,7 +40,7 @@ CWord* CWordCollection::find_or_add(QString word_string){
         return word_iter.value();
     }
 }
-CWord* CWordCollection::find_or_fail(QString word_string){
+CWord* CWordCollection::find_or_fail(const QString& word_string){
     QMap<QString,CWord*>::const_iterator word_iter = m_WordMap.find(word_string);
     //qDebug() << word_string;
     if (word_iter == m_WordMap.end()){
@@ -51,20 +51,20 @@ CWord* CWordCollection::find_or_fail(QString word_string){
         return word_iter.value();
     }
 }
-CWord* CWordCollection::add(QString word)
+CWord* CWordCollection::add(const QString& word)
 {
     CWord* pWord = new CWord(word);
     m_WordMap[word] = pWord;
     return pWord;
 }
 
-CWord* CWordCollection::operator <<(QString word)
+CWord* CWordCollection::operator <<(const QString& word)
 {
      return this->add(word);
 }
 
 
-CWord* CWordCollection::operator ^=(QString word)
+CWord* CWordCollection::operator ^=(const QString& word)
 {
     return this->find_or_add(word);
 

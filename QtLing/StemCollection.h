@@ -42,6 +42,8 @@ public:
     QListIterator<CStem*> *         get_sorted_list_iterator();
     map_string_to_stem *            get_stem_map() { return m_StringToStemMap;}
 
+    void                            remove_stem(CStem* p_stem);
+
     CStem*                          operator<< (const QString& );
     CStem*                          operator^= (const QString& );
 };

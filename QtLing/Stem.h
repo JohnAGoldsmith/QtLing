@@ -34,6 +34,7 @@ public:
     CSignature*         get_last_signature()            { return m_Signatures.last(); }
     int                 get_count()             const   {return m_count;}
     void                set_count (int n)               {m_count = n;}
+    int                 remove_signature(CSignature* pSig);
 };
 
 #endif // CSTEM_H
