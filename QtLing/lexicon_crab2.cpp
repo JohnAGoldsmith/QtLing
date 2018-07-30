@@ -36,8 +36,8 @@ void CLexicon::Crab_2()
         m_PrefixSignatures->calculate_stem_entropy();
 
     compute_sig_graph_edges();
-   // compute_sig_graph_edge_map();
-   // generate_hypotheses();
+    //compute_sig_graph_edge_map();
+    //generate_hypotheses();
     }
 
     qDebug() << "finished crab 2.";
