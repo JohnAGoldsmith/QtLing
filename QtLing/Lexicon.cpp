@@ -810,7 +810,17 @@ void CLexicon::step4b_link_signature_and_stem_and_word
     m_SuffixesFlag ?
             pStem = m_suffixal_stems->find_or_add(this_stem_t):
             pStem = m_prefixal_stems->find_or_add(this_stem_t);
-    pStem->add_signature (pSig);
+
+    // Check if new signature already exists in the stem's list of signatures
+    bool duplicate_flag = false;
+    foreach (CSignature* p_sig, *(pStem->GetSignatures())) {
+        if (p_sig->get_key() == this_signature_string) {
+            duplicate_flag = true;
+            break;
+        }
+    }
+    if (!duplicate_flag) // Added by Hanson 7.30
+        pStem->add_signature (pSig);
     pSig->add_stem_pointer(pStem);
 
     add_to_stem_autobiographies(this_stem_t,
@@ -821,8 +831,10 @@ void CLexicon::step4b_link_signature_and_stem_and_word
     int stem_count = 0;
     affix_list this_affix_list = this_signature_string.split("=");
     foreach (this_affix, this_affix_list){
+        // added this condition to detect if affix is associated with a signature
+        // -- added by Hanson 7.30
         if (!this_affix.contains('[')) {
-            // word does not contain secondary affixes
+            // word does not contain secondary affixes, same as before
             if (this_affix == "NULL"){
                 this_word = this_stem_t;
             } else {
@@ -847,12 +859,14 @@ void CLexicon::step4b_link_signature_and_stem_and_word
                                             .arg(name_of_calling_function)
                                             .arg(this_stem_t)
                                             .arg(message));
-                /*
+                /* // removed old autobiography record system
                 pWord->add_to_autobiography(QString("Found signature")
                                             + "=" + this_stem_t + "=" + message); */
             }
         } else {
-            // word contains secondary suffixes
+            // Iterating through the list of affixes in the associated signatrue,
+            // e.g. iterating through the list {NULL, s} in ment[NULL~s]
+            // I call these "secondary signatures"
             int bracket_start_i = this_affix.indexOf('[');
             const QString reduced_affix = this_affix.left(bracket_start_i);
             const QString str_secondary_affixes =
@@ -887,11 +901,12 @@ void CLexicon::step4b_link_signature_and_stem_and_word
                                                 .arg(this_stem_t)
                                                 .arg(message));
 
-                    //pWord->add_to_autobiography(QString("Found signature")
-                     //                          + "=" + this_stem_t + "=" + message);
+                    /* // removing old autobiography record system
+                    pWord->add_to_autobiography(QString("Found signature")
+                                              + "=" + this_stem_t + "=" + message); */
                 }
-            }
-        }
+            } // end of iterating through each secondary affix in sig associated with an affix
+        } // end of dealing with affixes with associated signature -- added by Hanson 7.30
     }
     pStem->set_count(stem_count);
 }
