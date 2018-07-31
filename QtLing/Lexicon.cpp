@@ -666,10 +666,10 @@ void CLexicon::step4_create_signatures(QString name_of_calling_function)
             qApp->processEvents();
         }
 
-        QSet<stem_t>& this_stem_set = m_intermediate_sig_to_stem_map.get_stem_set(this_signature_string);
+        QSet<stem_t>* this_stem_set = m_intermediate_sig_to_stem_map.get_stem_set(this_signature_string);
         affix_list this_affix_list = this_signature_string.split("=");
 
-        if (this_stem_set.size() >= M_MINIMUM_STEM_COUNT)
+        if (this_stem_set->size() >= M_MINIMUM_STEM_COUNT)
         {
             if( m_SuffixesFlag) {
                 // CSignature* pSig;
@@ -681,7 +681,7 @@ void CLexicon::step4_create_signatures(QString name_of_calling_function)
             foreach (QString this_affix_t, this_affix_list){
                 step4a_link_signature_and_affix(pSig,this_affix_t);
             }
-            foreach (this_stem_t, this_stem_set){
+            foreach (this_stem_t, *this_stem_set){
                 step4b_link_signature_and_stem_and_word(this_stem_t,pSig, this_signature_string, name_of_calling_function);
             }
 
@@ -689,7 +689,7 @@ void CLexicon::step4_create_signatures(QString name_of_calling_function)
         else
         {   // if there are not enough stems for this signature: this is here just for words ability to remember where they were and how they were analyzed.
 
-            foreach(this_stem_t, this_stem_set){
+            foreach(this_stem_t, *this_stem_set){
                 QString message = this_affix_list.size() <= 50 ?
                             this_signature_string:
                             QString("Super long list of affixes");

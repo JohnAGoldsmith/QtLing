@@ -104,24 +104,13 @@ struct Sig_to_stem_map
         }
         else{return false;}
     }
-
-    bool contains_sig_and_stem(const sigstring_t& sig, const stem_t& this_stem) const
-    {
-        return m_core[sig].contains(this_stem);
-    }
-
-    void attach_stem_to_signature(const stem_t& this_stem, const sigstring_t& this_sig)
-    {
+    void attach_stem_to_signature(stem_t this_stem, sigstring_t this_sig){
         if (! m_core.contains(this_sig)){
-            m_core[this_sig] = QSet<QString>();
+            m_core[this_sig] = new QSet<QString>;
         }
-        m_core[this_sig].insert(this_stem);
+        m_core[this_sig]->insert(this_stem);
     }
-
-    void clear()
-    {
-        m_core.clear();
-    }
+    void clear() {m_core.clear();}
 };
 
 
