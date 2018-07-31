@@ -621,6 +621,20 @@ void CLexicon::step3b_from_stem_to_sig_map_to_sig_to_stem_map()
         }
         m_ProgressBar->setValue(count++);
         QSet<affix_t>& ref_affix_set = m_intermediate_stem_to_sig_map[this_stem_t];
+
+        // check for repetition, prevent cases like "NULL=ed=er=er[NULL~s];
+        foreach (QString affix, ref_affix_set) {
+            if (affix.contains('[')) {
+                int left_bracket_i = affix.indexOf('[');
+                if (affix.mid(left_bracket_i).contains("NULL")) {
+                    const QString reduced_affix = affix.left(left_bracket_i);
+                    QSet<affix_t>::iterator iter = ref_affix_set.find(reduced_affix);
+                    if (iter != ref_affix_set.end())
+                        ref_affix_set.erase(iter);
+                }
+            }
+        } // -- added by Hanson 7.31
+
         const QString this_signature_string = convert_set_to_qstring(ref_affix_set);
         m_intermediate_sig_to_stem_map.attach_stem_to_signature(this_stem_t, this_signature_string);
     }
