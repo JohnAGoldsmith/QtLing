@@ -33,14 +33,13 @@ private:
 
 public:
     friend class CLexicon;
-    CWord*                  operator<< ( QString );
-    CWord*                  operator^= ( QString );
+    CWord*                  operator<< (const QString&);
+    CWord*                  operator^= (const QString&);
 
-    CWord*                  add (QString);
-    bool                    contains(QString string)  {return m_WordMap.contains(string);}
-    CWord*                  find_or_add (QString);
-    CWord*                  find_or_null (QString);
-    CWord*                  find_or_fail(QString word_t);
+    CWord*                  add (const QString&);
+    bool                    contains(const QString& string)  {return m_WordMap.contains(string);}
+    CWord*                  find_or_add (const QString&);
+    CWord*                  find_or_fail(const QString& word_t);
     int                     get_count() const       { return m_WordMap.size(); }
     CWord*                  get_word (const QString&);     // returns false if the string is not in the word collection
     QString                 get_word_string (int n) {return m_SortedStringArray[n];}

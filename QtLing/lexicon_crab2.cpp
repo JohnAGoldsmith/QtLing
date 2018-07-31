@@ -1,4 +1,4 @@
-    #include <QPair>
+#include <QPair>
 #include <QList>
 #include <QMap>
 #include <QMapIterator>
@@ -29,19 +29,22 @@ extern bool contains(QList<QString> * list2, QList<QString> * list1);
 void CLexicon::Crab_2()
 {
     step6_ReSignaturizeWithKnownAffixes();
+
+
     step7_FindGoodSignaturesInsideParaSignatures();
-
-    step10_find_compounds();
-
-     m_SuffixesFlag ?
+    if (false){
+    m_SuffixesFlag ?
         m_Signatures->calculate_stem_entropy():
         m_PrefixSignatures->calculate_stem_entropy();
 
     step8a_compute_sig_graph_edges();
     step8b_compute_sig_graph_edge_map();
-    step9_from_sig_graph_edges_map_to_hypotheses();
+    //step9_from_sig_graph_edges_map_to_hypotheses();
+
+    //ßstep10_find_compounds();
 
     check_autobiography_consistency();
+    }
     qDebug() << "finished crab 2.";
 
 }
@@ -79,6 +82,8 @@ void CLexicon::step6_ReSignaturizeWithKnownAffixes()
    time_stamp("Resignaturize with known affixes");
 
     // clear signatures and parse_triple_map stored in each word
+    // Not necessary because the same is done so in step4 JG: What is  not necessary?
+
     map_string_to_word_ptr_iter word_iter (*m_Words->get_map());
     while(word_iter.hasNext()){
        pWord = word_iter.next().value();
@@ -89,27 +94,28 @@ void CLexicon::step6_ReSignaturizeWithKnownAffixes()
    //--> THIS is where the continuations that are not affixes are eliminated -- well, they are not
    //    eliminated, but they are not copied into ref_stems_to_affix_set. Changing that to a Protosigs.
 
-    step6a_create_temporary_map_from_stems_to_affix_sets( these_stem_to_sig_maps );                   // ref_stems_to_affix_set);
 
 
-   step7_from_stem_to_sig_maps_to_xxx("re-signaturize to good affixes only", these_stem_to_sig_maps );      //ref_stems_to_affix_set);
+    m_intermediate_sig_to_stem_map.clear();
+    m_intermediate_stem_to_sig_map.clear();
 
-}
+    step6a_create_temporary_stem_to_sig_map();
+    step3b_from_stem_to_sig_map_to_sig_to_stem_map();
+    step4_create_signatures("Resignaturize");
+
+ }
 /**
  * helper function for preceeding function.
  *
  */
-void CLexicon::step6a_create_temporary_map_from_stems_to_affix_sets(Stem_to_sig_map  & these_stem_to_sig_maps//,
-                                                             //map_sigstring_to_stem_list & ref_temp_signatures_to_stems
-                                                             )
+//void CLexicon::step6a_create_temporary_map_from_stem_to_affix_set( )
+void CLexicon::step6a_create_temporary_stem_to_sig_map()
 {
-    m_StatusBar->showMessage("6 Resignaturize: temporary map from stems to affix sets.");
+    m_StatusBar->showMessage("6 Resignaturize: temporary map from stem to affix set.");
     qApp->processEvents();
     CParse*                     this_parse;
-   // QPair<QString,QString>      this_pair;
     int                         count = 0;
     QString                     this_stem_t, this_affix_t;
-    morph_set *                 pSet;
     CStemCollection *           stems;
     m_SuffixesFlag ?
                 stems = m_suffixal_stems:
@@ -117,10 +123,9 @@ void CLexicon::step6a_create_temporary_map_from_stems_to_affix_sets(Stem_to_sig_
 
     // iterate through parselist, and assign to stem and affix collections;
     for (int parseno = 0; parseno < m_Parses->size(); parseno++){
-        // iterate through each parse stored in CLexicon::m_Parses
         this_parse = m_Parses->at(parseno);
         count++;
-        if (count = 10000){
+        if (count == 10000){
             count = 0;
             m_ProgressBar->setValue(parseno);
             qApp->processEvents();
@@ -139,16 +144,10 @@ void CLexicon::step6a_create_temporary_map_from_stems_to_affix_sets(Stem_to_sig_
                 continue;
             }
         }
-
-        if (! these_stem_to_sig_maps.contains(this_stem_t)){
-            if (m_SuffixesFlag){
-                pSet = new suffix_set();
-            } else{
-                pSet = new prefix_set();
-            }
-            these_stem_to_sig_maps.insert(this_stem_t,pSet);
+        if (! m_intermediate_stem_to_sig_map.contains(this_stem_t)){
+            m_intermediate_stem_to_sig_map[this_stem_t] = QSet<affix_t>();
         }
-        these_stem_to_sig_maps.value(this_stem_t)->insert(this_affix_t);
+        m_intermediate_stem_to_sig_map[this_stem_t].insert(this_affix_t);
     }
 }
 
@@ -261,6 +260,12 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
         CSignature * pSig;
         QString best_affix_list_string = best_affix_list.join("=");
 
+        // . This shouldn't happen: there are no affixes.
+        if (best_affix_list.length() == 0){
+            qDebug() << 359 << "affix list with no entries; this should not happen."<<this_stem << best_affix_list;
+            continue;
+        }
+
         pSig = *signatures << best_affix_list_string;
         if (!m_SuffixesFlag){ pSig->set_suffix_flag(false);}
 
@@ -271,24 +276,21 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
         }
         step4b_link_signature_and_stem_and_word(this_stem, pSig, best_affix_list_string, "Crab2");
 
-        // . This shouldn't happen: there are no affixes.
-        if (best_affix_list.length() == 0){
-            qDebug() << 359 << "affix list with no entries; this should not happen."<<this_stem << best_affix_list;
-            continue;
-        }
-        // 6. Make sure each affix has a c_affix.
 
+        // 6. Make sure each affix has a c_affix.
+        /*
         foreach (this_affix,best_affix_list){
               if (m_SuffixesFlag){
                   CSuffix* pSuffix = m_Suffixes->find_or_add(this_affix);
-                  pSuffix->increment_count();
+                  pSuffix->increment_sig_count();
                   pSig->add_affix_ptr(pSuffix);
               } else {
                   CPrefix* pPrefix = m_Prefixes->find_or_add(this_affix);
-                  pPrefix->increment_count();
+                  pPrefix->increment_sig_count();
                   pSig  ->add_affix_ptr(pPrefix);
               }
         } // end of best-affix loop
+        */
    } // end of protostem loop
    signatures->sort_each_signatures_stems_alphabetically();
 }

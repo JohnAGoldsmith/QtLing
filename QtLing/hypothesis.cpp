@@ -1,11 +1,15 @@
 #include <QDebug>
 #include "hypothesis.h"
 #include "Lexicon.h"
+#include "StemCollection.h"
+#include "WordCollection.h"
+#include "SuffixCollection.h"
 
 CHypothesis* CLexicon::get_hypothesis(QString hypothesis)
 {
     return m_Hypothesis_map->value( hypothesis );
 }
+
 /* e.g.
  * transform transforms transformed transformation transformations
  * consult   consults   consulted   consultation   consultations
@@ -19,8 +23,23 @@ CHypothesis* CLexicon::get_hypothesis(QString hypothesis)
  * consultation=consultation=consult
  * consultations=consultation=consult
  */
+
+/*!
+ * \brief 1) Given a map of sig_graph_edges, find which of those are valid;
+ * 2) for valid (or "doomed") sig_graph_edges, remove `sig_2_shorter_stem` from
+ * the signature collection in the lexicon, replace it with a new one reflecting
+ * the hypothesis; 3) create `CHypotheses` objects for valid sig_graph_edges.
+ *
+ * Modifications to other parts of the program to support hypotheses generation:
+ * 1.   Revised `step4b_link_signature_and_stem_and_word` do deal with cases like
+ *      "ation[NULL~s]" when linking words and signatures - treat this as two
+ *      separate affixes: "ation" and "ations"
+ * 2.   Made similar revision in compound discovery.
+ */
 void CLexicon::step9_from_sig_graph_edges_map_to_hypotheses()
 {
+    m_StatusBar->showMessage("9: Generating Hypotheses");
+
     sig_graph_edge * p_edge;
     lxa_sig_graph_edge_map_iter edge_iter (m_SigGraphEdgeMap);
     QString affix_1, doomed_affix;
@@ -31,10 +50,10 @@ void CLexicon::step9_from_sig_graph_edges_map_to_hypotheses()
     DoomedSignatureInfoMap doomed_signature_info_map;
     int MINIMUM_AFFIX_OVERLAP = 10;
     int MINIMUM_NUMBER_OF_WORDS = M_MINIMUM_HYPOTHESIS_WORD_COUNT;
-    CSignatureCollection * signatures;
+    CSignatureCollection * p_signatures;
     m_SuffixesFlag ?
-        signatures = m_Signatures:
-        signatures = m_PrefixSignatures;
+        p_signatures = m_Signatures:
+        p_signatures = m_PrefixSignatures;
 
     QStringList affected_signatures;
 
@@ -44,8 +63,8 @@ void CLexicon::step9_from_sig_graph_edges_map_to_hypotheses()
         sigstring_t original_sig1_affixes_longer_stem = p_edge->m_sig_string_1;
         sigstring_t original_sig2_affixes_shorter_stem = p_edge->m_sig_string_2;
 
-        CSignature* pSig1_longer_stem  = signatures->find_or_fail(original_sig1_affixes_longer_stem);
-        CSignature* pSig2_shorter_stem = signatures->find_or_fail(original_sig2_affixes_shorter_stem);
+        CSignature* pSig1_longer_stem  = p_signatures->find_or_fail(original_sig1_affixes_longer_stem);
+        CSignature* pSig2_shorter_stem = p_signatures->find_or_fail(original_sig2_affixes_shorter_stem);
         if (this_morph.length() < 2){
             continue;
         }
@@ -108,7 +127,7 @@ void CLexicon::step9_from_sig_graph_edges_map_to_hypotheses()
         // -- created new data structure to store relevant info of valid hypotheses
         doomed_signature_info_map[original_sig2_affixes_shorter_stem]
                 = DoomedSignatureInfo(p_edge, doomed_affixes);
-        // -- added by Hanosn 7.30
+        // -- added by Hanson 7.30
 
         // --- Beginning of code that needs to be fixed ---
         /*
@@ -140,13 +159,6 @@ void CLexicon::step9_from_sig_graph_edges_map_to_hypotheses()
             */
         // --- End of code that needs to be fixed -- commented out by Hanson, 7.30
     }
-    step9a_from_doomed_info_map_to_parses(doomed_signature_info_map);
-    step3_from_parses_to_stem_to_sig_maps(QString("Hypotheses"));
-    step4_create_signatures(QString("Hypotheses"));
-    step9b_redirect_ptrs_in_sig_graph_edges_map(doomed_signature_info_map);
-    step9c_from_doomed_info_map_to_hypotheses(doomed_signature_info_map);
-
-
 }
 
 /*!
@@ -235,8 +247,6 @@ void CLexicon::step9a_from_doomed_info_map_to_parses(DoomedSignatureInfoMap& ref
  */
 void CLexicon::step9b_redirect_ptrs_in_sig_graph_edges_map(const DoomedSignatureInfoMap &ref_doomed_info_map)
 {
-    CSignatureCollection* p_signatures = m_SuffixesFlag ?
-                m_Signatures : m_PrefixSignatures;
     QMap<QString,sig_graph_edge*>::iterator edge_map_iter;
     for (edge_map_iter = m_SigGraphEdgeMap.begin();
          edge_map_iter != m_SigGraphEdgeMap.end();
@@ -272,12 +282,14 @@ void CLexicon::step9b_redirect_ptrs_in_sig_graph_edges_map(const DoomedSignature
         /*if (not_found_flag)
             qDebug() << message;*/
     }
-
 }
 
+
 /*!
- * \brief Function to check if any signatures found in step 7 are rejected in
- * step 9.
+ * \brief Test function not actually used in code; was intended for checking
+ * whether in the previous method (where parses are regenerated and the whole
+ * lexicon is reconstructed) signatures discovered in step7 were rejected after
+ * calling step3 and step4 as a part of step9.
  */
 void CLexicon::check_autobiography_consistency()
 {
@@ -311,10 +323,6 @@ void CLexicon::check_autobiography_consistency()
     }
 }
 
-void CLexicon::step9c_from_doomed_info_map_to_hypotheses(const DoomedSignatureInfoMap& ref_doomed_info_map)
-{
-
-}
 
 
 CHypothesis::CHypothesis(eHypothesisType HypothesisT,   sig_graph_edge*  p_edge)

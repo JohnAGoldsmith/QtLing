@@ -159,6 +159,7 @@ void LxaStandardItemModel::load_stems(CStemCollection * p_stems)
         item_list.append(item2);
 
         QListIterator<CSignature*> sig_iter(*stem->GetSignatures());
+
         while (sig_iter.hasNext()){
            sigstring_t sig = sig_iter.next()->get_key();
            QStandardItem *item = new QStandardItem(sig);
@@ -172,6 +173,9 @@ void LxaStandardItemModel::load_stems(CStemCollection * p_stems)
 void LxaStandardItemModel::load_suffixes(CSuffixCollection * p_suffixes)
 {
     clear();
+    QStringList labels;
+    labels << "Suffix" << "# of signatures";
+    setHorizontalHeaderLabels(labels);
     //map_string_to_suffix_ptr_iter suffix_iter(*p_suffixes->get_map());
     CSuffix_ptr_list_iterator suffix_iter(*p_suffixes->get_sorted_list());
     while (suffix_iter.hasNext())
@@ -179,7 +183,7 @@ void LxaStandardItemModel::load_suffixes(CSuffixCollection * p_suffixes)
         CSuffix* pSuffix = suffix_iter.next();
         QStandardItem *item = new QStandardItem(pSuffix->GetSuffix());
         QStandardItem *item2 = new QStandardItem();
-        item2->setData(pSuffix->get_count(), Qt::DisplayRole);
+        item2->setData(pSuffix->get_sig_count(), Qt::DisplayRole);
         QList<QStandardItem*> item_list;
         item_list.append(item);
         item_list.append(item2);
@@ -190,13 +194,16 @@ void LxaStandardItemModel::load_prefixes(CPrefixCollection * p_prefixes)
 {
     clear();
     //map_string_to_suffix_ptr_iter suffix_iter(*p_suffixes->get_map());
+    QStringList labels;
+    labels << "Prefix" << "# of signatures";
+    setHorizontalHeaderLabels(labels);
 
     double totalcount = 0;
     CPrefix_ptr_list_iterator prefix_iter1(*p_prefixes->get_sorted_list());
     while (prefix_iter1.hasNext())
     {
         CPrefix* pPrefix = prefix_iter1.next();
-        totalcount += pPrefix->get_count();
+        totalcount += pPrefix->get_sig_count();
     }
 
     CPrefix_ptr_list_iterator prefix_iter(*p_prefixes->get_sorted_list());
@@ -205,9 +212,9 @@ void LxaStandardItemModel::load_prefixes(CPrefixCollection * p_prefixes)
         CPrefix* pPrefix = prefix_iter.next();
         QStandardItem *item = new QStandardItem(pPrefix->GetPrefix());
         QStandardItem *item2 = new QStandardItem();
-        item2->setData(pPrefix->get_count(), Qt::DisplayRole);
+        item2->setData(pPrefix->get_sig_count(), Qt::DisplayRole);
         QStandardItem *item3 = new QStandardItem();
-        item3->setData(pPrefix->get_count()/totalcount, Qt::DisplayRole);
+        item3->setData(pPrefix->get_sig_count()/totalcount, Qt::DisplayRole);
         QList<QStandardItem*> item_list;
         item_list.append(item);
         item_list.append(item2);
@@ -248,6 +255,7 @@ void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures, e
         items.append(item4);
         appendRow(items);
     }
+
 }
 void LxaStandardItemModel::load_positive_signatures(CSignatureCollection* p_signatures, eSortStyle this_sort_style)
 {
