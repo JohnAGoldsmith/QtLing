@@ -654,12 +654,12 @@ void CLexicon::step4_create_signatures(QString name_of_calling_function)
    } // moved this from step 7b to here, Hanson, 7.31
 
     if (m_SuffixesFlag){
-        m_suffixal_stems->clear(); // added by Hanson 7.31
+        //m_suffixal_stems->clear(); // added by Hanson 7.31
         m_Suffixes->clear();
         m_Signatures->clear();
     }
     else {
-        m_prefixal_stems->clear(); // added by Hanson 7.31
+        //m_prefixal_stems->clear(); // added by Hanson 7.31
         m_Prefixes->clear();
         m_PrefixSignatures->clear();
     }
@@ -773,8 +773,9 @@ void CLexicon::step4b_link_signature_and_stem_and_word
             break;
         }
     }
-    if (!duplicate_flag) // Added by Hanson 7.30
+    if (!duplicate_flag) { // Added by Hanson 7.30
         pStem->add_signature (pSig);
+    }
     pSig->add_stem_pointer(pStem);
 
     add_to_stem_autobiographies(this_stem_t,

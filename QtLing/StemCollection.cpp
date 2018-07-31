@@ -16,6 +16,7 @@ CStemCollection::CStemCollection(CLexicon* lexicon)
 CStemCollection::~CStemCollection()
 {
     // delete each stem individually, and then...
+    // Moved some code here into clear(): -- Hanson 7.31
     clear();
     delete m_StringToStemMap;
 }
@@ -26,9 +27,11 @@ void CStemCollection::clear(){
         iter.next();
         delete iter.value();
     }
+    /*
     for (int i = 0; i < m_SortList.size(); i++){
      delete m_SortList.at(i);
     }
+    */
     m_StringToStemMap->clear();
     m_SortList.clear();
     m_CorpusCount = 0;
