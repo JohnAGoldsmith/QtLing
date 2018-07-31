@@ -154,7 +154,7 @@ void CLexicon::step9_from_sig_graph_edges_map_to_hypotheses()
                                                              p_edge->get_number_of_words());
             m_Hypotheses->append(this_hypothesis);
             m_Hypothesis_map->insert (this_hypothesis->express_as_string(),  this_hypothesis);
-            */
+            */ // this part is moved to step9c
         // --- End of code that needs to be fixed -- commented out by Hanson, 7.30
     }
     step9a_from_doomed_info_map_to_parses(doomed_signature_info_map);
@@ -291,7 +291,22 @@ void CLexicon::step9b_redirect_ptrs_in_sig_graph_edges_map(const DoomedSignature
 
 void CLexicon::step9c_from_doomed_info_map_to_hypotheses(const DoomedSignatureInfoMap& ref_doomed_info_map)
 {
-
+    eHypothesisType this_hypothesis_type = HT_affix_goes_to_signature;
+    DoomedSignatureInfoMap::ConstIterator info_map_iter;
+    for (info_map_iter = ref_doomed_info_map.constBegin();
+         info_map_iter != ref_doomed_info_map.constEnd();
+         info_map_iter++) {
+        const DoomedSignatureInfo& ref_info = info_map_iter.value();
+        sig_graph_edge* p_edge = info_map_iter.value().m_edge_ptr;
+        CHypothesis * this_hypothesis = new CHypothesis( this_hypothesis_type, p_edge->get_morph(),
+                                                         p_edge->get_sig1_string(),
+                                                         p_edge->get_sig2_string(),
+                                                         ref_info.m_str_revised_sig,
+                                                         ref_info.m_str_revised_sig.split('='),
+                                                         p_edge->get_number_of_words());
+        m_Hypotheses->append(this_hypothesis);
+        m_Hypothesis_map->insert (this_hypothesis->express_as_string(),  this_hypothesis);
+    }
 }
 
 
@@ -374,11 +389,13 @@ CHypothesis::CHypothesis(eHypothesisType HypothesisT,   sig_graph_edge*  p_edge)
 }
 
 
-CHypothesis::CHypothesis (eHypothesisType HypothesisT, morph_t this_morph,
-                          sigstring_t sig1,
-                          sigstring_t sig2,
-                          sigstring_t new_sig,
-                          QStringList new_affixes, int number_of_words_saved)
+CHypothesis::CHypothesis (eHypothesisType HypothesisT,
+                          const morph_t& this_morph,
+                          const sigstring_t& sig1,
+                          const sigstring_t& sig2,
+                          const sigstring_t& new_sig,
+                          const QStringList& new_affixes,
+                          const int number_of_words_saved)
 {
     if (HypothesisT == HT_affix_goes_to_signature){
         m_hypothesis_type   = HypothesisT;

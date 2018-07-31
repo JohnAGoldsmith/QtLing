@@ -358,7 +358,7 @@ public:
 
     void Crab_1();
     void Crab_2();
-    void create_sublexicon ();
+    void create_sublexicon();
 
     void check_autobiography_consistency();
 

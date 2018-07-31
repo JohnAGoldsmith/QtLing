@@ -25,7 +25,7 @@ public:
 public:
     //Accessors
     void                add_memo (QString memo) {m_Autobiography.append(memo);}
-    void                add_signature(CSignature* pSig ) {m_Signatures.append(pSig); }
+    void                add_signature(CSignature* pSig);
     void                add_suffix_to_parasignature(CSuffix* pSuffix) { m_parasignature.append(pSuffix);}
     QString             display();
     QString             get_key()               const{return m_key;}

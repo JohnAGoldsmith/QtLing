@@ -622,13 +622,24 @@ void CLexicon::step3b_from_stem_to_sig_map_to_sig_to_stem_map()
         m_ProgressBar->setValue(count++);
         QSet<affix_t>& ref_affix_set = m_intermediate_stem_to_sig_map[this_stem_t];
 
-        // check for repetition, prevent cases like "NULL=ed=er=er[NULL~s];
-        foreach (QString affix, ref_affix_set) {
+        /* check for repetition, prevent cases like "NULL=ed=er=er[NULL~s]"
+         * or "...=li[a~wa]=ali=wali=..." by removing "er" in the former or
+         * removing "ali" and "wali" in the latter
+         */
+        foreach (affix_t affix, ref_affix_set) {
             if (affix.contains('[')) {
-                int left_bracket_i = affix.indexOf('[');
-                if (affix.mid(left_bracket_i).contains("NULL")) {
-                    const QString reduced_affix = affix.left(left_bracket_i);
-                    QSet<affix_t>::iterator iter = ref_affix_set.find(reduced_affix);
+                int bracket_start_i = affix.indexOf('[');
+                const affix_t reduced_affix = affix.left(bracket_start_i);
+                const sigstring_t str_secondary_affixes =
+                        affix.mid(bracket_start_i+1, affix.length()-bracket_start_i-2);
+                const QList<affix_t> secondary_affixes = str_secondary_affixes.split('~');
+                foreach (affix_t secondary_affix, secondary_affixes) {
+                    if (secondary_affix == "NULL")
+                        secondary_affix = "";
+                    const affix_t complete_affix = m_SuffixesFlag?
+                                reduced_affix + secondary_affix:
+                                secondary_affix + reduced_affix;
+                    QSet<affix_t>::iterator iter = ref_affix_set.find(complete_affix);
                     if (iter != ref_affix_set.end())
                         ref_affix_set.erase(iter);
                 }
@@ -668,12 +679,10 @@ void CLexicon::step4_create_signatures(const QString& name_of_calling_function, 
    } // moved this from step 7b to here, Hanson, 7.31
 
     if (m_SuffixesFlag){
-        //m_suffixal_stems->clear(); // added by Hanson 7.31
         m_Suffixes->clear();
         m_Signatures->clear();
     }
     else {
-        //m_prefixal_stems->clear(); // added by Hanson 7.31
         m_Prefixes->clear();
         m_PrefixSignatures->clear();
     }
@@ -780,6 +789,7 @@ void CLexicon::step4b_link_signature_and_stem_and_word
             pStem = m_prefixal_stems->find_or_add(this_stem_t);
 
     // check if new signature already exists in the stem's list of signatures
+    /*
     bool duplicate_flag = false;
     foreach (CSignature* p_sig, *(pStem->GetSignatures())) {
         if (p_sig->get_key() == this_signature_string) {
@@ -787,9 +797,11 @@ void CLexicon::step4b_link_signature_and_stem_and_word
             break;
         }
     }
-    if (!duplicate_flag) { // Added by Hanson 7.30
-        pStem->add_signature (pSig);
-    }
+    if (!duplicate_flag)
+    // Added by Hanson 7.30,
+    // moved to definition of CStem::add_signature, 7.31
+    */
+    pStem->add_signature(pSig);
     pSig->add_stem_pointer(pStem);
 
     add_to_stem_autobiographies(this_stem_t,
