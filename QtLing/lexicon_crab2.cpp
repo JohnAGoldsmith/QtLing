@@ -43,7 +43,7 @@ void CLexicon::Crab_2()
 
     step10_find_compounds();
 
-    check_autobiography_consistency();
+    //check_autobiography_consistency();
 
     qDebug() << "finished crab 2.";
 
