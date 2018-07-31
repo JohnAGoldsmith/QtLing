@@ -628,7 +628,7 @@ void CLexicon::step3b_from_stem_to_sig_map_to_sig_to_stem_map()
 // ==========================================================================  //
 
 
-void CLexicon::step4_create_signatures(QString name_of_calling_function)
+void CLexicon::step4_create_signatures(const QString& name_of_calling_function, bool minimum_stem_count_flag)
 {
     sigstring_t             this_signature_string;
     stem_t                  this_stem_t;
@@ -681,7 +681,7 @@ void CLexicon::step4_create_signatures(QString name_of_calling_function)
         QSet<stem_t>* this_stem_set = m_intermediate_sig_to_stem_map.get_stem_set(this_signature_string);
         affix_list this_affix_list = this_signature_string.split("=");
 
-        if (this_stem_set->size() >= M_MINIMUM_STEM_COUNT)
+        if (!minimum_stem_count_flag || this_stem_set->size() >= M_MINIMUM_STEM_COUNT)
         {
             if( m_SuffixesFlag) {
                 // CSignature* pSig;

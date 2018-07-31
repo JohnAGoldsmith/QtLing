@@ -327,7 +327,8 @@ public:
     void step3b_from_stem_to_sig_map_to_sig_to_stem_map();
 
     //void step4_assign_affixes_to_stems(QString name_of_calling_function);
-    void step4_create_signatures(QString name_of_calling_function);
+    //void step4_create_signatures(QString name_of_calling_function);
+    void step4_create_signatures(const QString& name_of_calling_function, bool minimum_stem_count_flag = true);
     void step4a_link_signature_and_affix(CSignature*, affix_t);
     void step4b_link_signature_and_stem_and_word(stem_t , CSignature*, QString this_signature_string, const QString& name_of_calling_function);
 
