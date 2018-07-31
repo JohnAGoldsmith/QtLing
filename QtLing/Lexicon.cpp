@@ -705,7 +705,7 @@ void CLexicon::step4_create_signatures(const QString& name_of_calling_function,
         QSet<stem_t>* this_stem_set = m_intermediate_sig_to_stem_map.get_stem_set(this_signature_string);
         affix_list this_affix_list = this_signature_string.split("=");
 
-        if (minimum_stem_count_flag == MS_ignore_minimum_stem_count
+        if (min_stem_count_flag == MS_ignore_minimum_stem_count
                 || this_stem_set->size() >= M_MINIMUM_STEM_COUNT)
         {
             if( m_SuffixesFlag) {

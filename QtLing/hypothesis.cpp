@@ -159,15 +159,15 @@ void CLexicon::step9_from_sig_graph_edges_map_to_hypotheses()
     }
     step9a_from_doomed_info_map_to_parses(doomed_signature_info_map);
     step3_from_parses_to_stem_to_sig_maps(QString("Hypotheses"));
-    step4_create_signatures(QString("Hypotheses"), false);
+    step4_create_signatures(QString("Hypotheses"), MS_ignore_minimum_stem_count);
     step9b_redirect_ptrs_in_sig_graph_edges_map(doomed_signature_info_map);
     step9c_from_doomed_info_map_to_hypotheses(doomed_signature_info_map);
 }
 
 /*!
- * \brief Create new parses using the current collection of signatures; also
+ * \brief Create new parses using the current collection of signatures;
  * takes the map containing info of signatures to be modified after hypothesis
- * generation.
+ * generation (`ref_doomed_info_map`) and modifies these parses.
  * \param ref_doomed_info_map
  *
  * -- added by Hanson 7.30
