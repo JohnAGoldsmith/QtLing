@@ -32,19 +32,19 @@ void CLexicon::Crab_2()
 
 
     step7_FindGoodSignaturesInsideParaSignatures();
-    if (false){
+
     m_SuffixesFlag ?
         m_Signatures->calculate_stem_entropy():
         m_PrefixSignatures->calculate_stem_entropy();
 
     step8a_compute_sig_graph_edges();
     step8b_compute_sig_graph_edge_map();
-    //step9_from_sig_graph_edges_map_to_hypotheses();
+    step9_from_sig_graph_edges_map_to_hypotheses();
 
-    //ßstep10_find_compounds();
+    step10_find_compounds();
 
     check_autobiography_consistency();
-    }
+
     qDebug() << "finished crab 2.";
 
 }
@@ -59,21 +59,23 @@ void CLexicon::Crab_2()
 * I need to refactorize this function.
 */
 void CLexicon::step6_ReSignaturizeWithKnownAffixes()
-
 {
+    /*
     const int MINIMUM_NUMBER_OF_STEMS = 2;
     CSignature*                 pSig;
     QString                     this_stem_t, this_suffix_t, this_prefix, this_affix, this_signature_string, this_word;
     stem_list *                 p_this_stem_list;
     affix_set *                 this_ptr_to_affix_set;
     CStem*                      pStem;
+    Stem_to_sig_map                    these_stem_to_sig_maps;
+    map_sigstring_to_stem_list    temp_signatures_to_stems;
+    */
+
     CWord *                     pWord;
     CStemCollection*            stems;
     m_SuffixesFlag ?
                stems = m_suffixal_stems:
                stems = m_prefixal_stems;
-   Stem_to_sig_map                    these_stem_to_sig_maps;
-   map_sigstring_to_stem_list    temp_signatures_to_stems;
 
    m_StatusBar->showMessage("6: resignaturize with known affixes");
    m_ProgressBar->reset();
@@ -82,20 +84,22 @@ void CLexicon::step6_ReSignaturizeWithKnownAffixes()
    time_stamp("Resignaturize with known affixes");
 
     // clear signatures and parse_triple_map stored in each word
-    // Not necessary because the same is done so in step4 JG: What is  not necessary?
 
-    map_string_to_word_ptr_iter word_iter (*m_Words->get_map());
-    while(word_iter.hasNext()){
-       pWord = word_iter.next().value();
-       pWord->clear_signatures();
-       pWord->clear_parse_triple_map();
-   }
+    // Not necessary because the same is done so in step4 JG: What is  not necessary?
+   /*
+   map_string_to_word_ptr_iter word_iter (*m_Words->get_map());
+   while(word_iter.hasNext()){
+      pWord = word_iter.next().value();
+      pWord->clear_signatures();
+      pWord->clear_parse_triple_map();
+  } */
+   // Moved this to the beginning of step4; I think this step is necessary
+   // any time we call step4, as step4 must start with a "blank state" of
+   // everything. -- Hanson 7.31
+
    //--> We establish a temporary map from stems to sets of affixes as we iterate through parses. <--//
    //--> THIS is where the continuations that are not affixes are eliminated -- well, they are not
    //    eliminated, but they are not copied into ref_stems_to_affix_set. Changing that to a Protosigs.
-
-
-
     m_intermediate_sig_to_stem_map.clear();
     m_intermediate_stem_to_sig_map.clear();
 

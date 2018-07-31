@@ -20,6 +20,7 @@
 #include "Word.h"
 #include "evaluation.h"
 #include "cparse.h"
+#include "compound.h"
 
 void SortQStringListFromRight(QStringList& ThisStringList);
 bool reverse_string_compare(QString,QString);
@@ -70,6 +71,8 @@ CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag):
     m_parent_lexicon        = lexicon;
     m_goldstandard          = NULL;
     m_eval_parses      = NULL;
+
+    m_Compounds             = new CompoundWordCollection(this);
 
     m_category_types["Words"]               = CT_word;
     m_category_types["Suffixal stems"]      = CT_stem;
@@ -642,12 +645,21 @@ void CLexicon::step4_create_signatures(QString name_of_calling_function)
     m_ProgressBar->setMaximum(m_intermediate_sig_to_stem_map.m_core.count());
     m_StatusBar->showMessage("4: create signatures.");
 
+    // this is an experiment
+    map_string_to_word_ptr_iter word_iter (*m_Words->get_map());
+    while(word_iter.hasNext()){
+       CWord* pWord = word_iter.next().value();
+       pWord->clear_signatures();
+       pWord->clear_parse_triple_map();
+   } // moved this from step 7b to here, Hanson, 7.31
 
     if (m_SuffixesFlag){
+        m_suffixal_stems->clear(); // added by Hanson 7.31
         m_Suffixes->clear();
         m_Signatures->clear();
     }
     else {
+        m_prefixal_stems->clear(); // added by Hanson 7.31
         m_Prefixes->clear();
         m_PrefixSignatures->clear();
     }

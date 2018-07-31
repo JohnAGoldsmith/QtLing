@@ -247,6 +247,8 @@ void CLexicon::step9a_from_doomed_info_map_to_parses(DoomedSignatureInfoMap& ref
  */
 void CLexicon::step9b_redirect_ptrs_in_sig_graph_edges_map(const DoomedSignatureInfoMap &ref_doomed_info_map)
 {
+    CSignatureCollection* p_signatures = m_SuffixesFlag?
+                m_Signatures : m_PrefixSignatures;
     QMap<QString,sig_graph_edge*>::iterator edge_map_iter;
     for (edge_map_iter = m_SigGraphEdgeMap.begin();
          edge_map_iter != m_SigGraphEdgeMap.end();

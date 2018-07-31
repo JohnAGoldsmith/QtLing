@@ -110,7 +110,12 @@ struct Sig_to_stem_map
         }
         m_core[this_sig]->insert(this_stem);
     }
-    void clear() {m_core.clear();}
+    void clear() {
+        foreach (QSet<stem_t>* p_set, m_core) {
+            delete p_set;
+        } // added by Hanson 7.31, to prevent memory leak
+        m_core.clear();
+    }
 };
 
 
