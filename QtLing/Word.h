@@ -49,7 +49,7 @@ public:
     //Accessors
     void                                add_parse(CStem* stem, CSuffix* suffix, CSignature* signature);
 //    void                                add_parse_triple(QString stem, QString affix, CSignature*);
-    void                                add_parse_triple(QString stem, QString affix, sig_string this_sig_string);
+    void                                add_parse_triple(QString stem, QString affix, sigstring_t this_sig_string);
     void                                add_to_autobiography(QString line);
     void                                clear_signatures() { m_Signatures.clear();}
     void                                clear_parse_triple_map() {m_Parse_triple_map.clear();}

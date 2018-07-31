@@ -62,8 +62,8 @@ public:
     CSignature*         m_sig_1;
     CSignature*         m_sig_2;
     CLexicon *          m_Lexicon;
-    sig_string          m_sig_string_1;
-    sig_string          m_sig_string_2;
+    sigstring_t          m_sig_string_1;
+    sigstring_t          m_sig_string_2;
     double              m_sig_1_entropy = -1;
     double              m_sig_2_entropy = -1;
     morph_t             morph;
@@ -96,8 +96,8 @@ public:
     CSignature* m_sig_1;
     CSignature* m_sig_2;
     CLexicon*   m_lexicon;
-    sig_string  m_sig_string_1;
-    sig_string  m_sig_string_2;
+    sigstring_t  m_sig_string_1;
+    sigstring_t  m_sig_string_2;
     double m_sig_1_entropy = -1;
     double m_sig_2_entropy = -1;
     morph_t     morph;
@@ -123,15 +123,15 @@ public:
     int     get_number_of_words() {return shared_word_stems.size();}
     CSignature*     get_sig_1() {return m_sig_1;}
     CSignature*     get_sig_2() {return m_sig_2;}
-    sig_string      get_sig1_string() { return m_sig_string_1;}
-    sig_string      get_sig2_string() { return m_sig_string_2;}
+    sigstring_t      get_sig1_string() { return m_sig_string_1;}
+    sigstring_t      get_sig2_string() { return m_sig_string_2;}
     morph_t         get_morph() {return morph;}
 };
 
 struct DoomedSignatureInfo {
     sig_graph_edge* m_edge_ptr;
-    QStringList m_doomed_affixes;
-    QString m_str_revised_sig;
+    QList<affix_t> m_doomed_affixes;
+    sigstring_t m_str_revised_sig;
 
     DoomedSignatureInfo() {
         m_edge_ptr = NULL;
@@ -339,7 +339,7 @@ public:
     void step8a_compute_sig_graph_edges();
     void step8b_compute_sig_graph_edge_map();
 
-    typedef QMap<QString, DoomedSignatureInfo> DoomedSignatureInfoMap;
+    typedef QMap<sigstring_t, DoomedSignatureInfo> DoomedSignatureInfoMap;
     void step9_from_sig_graph_edges_map_to_hypotheses();
     void step9a_from_doomed_info_map_to_parses(DoomedSignatureInfoMap& ref_doomed_info_map);
     void step9b_redirect_ptrs_in_sig_graph_edges_map(const DoomedSignatureInfoMap& ref_doomed_info_map);

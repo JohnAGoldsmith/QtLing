@@ -126,7 +126,7 @@ void LowerTableView::display_this_item( const  QModelIndex & index )
             delete m_my_current_model;
         }
         m_my_current_model = new QStandardItemModel();
-        sig_string sig = index.sibling(row,0).data().toString();
+        sigstring_t sig = index.sibling(row,0).data().toString();
         CSignature* pSig;
         this_lexicon->get_suffix_flag()?
                     pSig = this_lexicon->get_signatures()->get_signature(sig):
@@ -606,7 +606,7 @@ void LowerTableView::table_passive_signature(CSignature *p_this_sig)
 
     for (int signo = sorted_signatures.count()-1; signo >= 0 ;signo-- ){
         CSignature* pSig2 = sorted_signatures[signo];
-        sig_string sig2 = pSig2->get_key();
+        sigstring_t sig2 = pSig2->get_key();
         item_list.clear();
         p_item = new QStandardItem(Morphs[pSig2]);
         item_list.append(p_item);
