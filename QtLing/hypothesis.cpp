@@ -25,10 +25,8 @@ CHypothesis* CLexicon::get_hypothesis(QString hypothesis)
  */
 
 /*!
- * \brief 1) Given a map of sig_graph_edges, find which of those are valid;
- * 2) for valid (or "doomed") sig_graph_edges, remove `sig_2_shorter_stem` from
- * the signature collection in the lexicon, replace it with a new one reflecting
- * the hypothesis; 3) create `CHypotheses` objects for valid sig_graph_edges.
+ * \brief Given the sig_graph_edges_map from step8b, generates hypotheses;
+ * modified by Hanson 7.31.
  *
  * Modifications to other parts of the program to support hypotheses generation:
  * 1.   Revised `step4b_link_signature_and_stem_and_word` do deal with cases like
@@ -159,6 +157,11 @@ void CLexicon::step9_from_sig_graph_edges_map_to_hypotheses()
             */
         // --- End of code that needs to be fixed -- commented out by Hanson, 7.30
     }
+    step9a_from_doomed_info_map_to_parses(doomed_signature_info_map);
+    step3_from_parses_to_stem_to_sig_maps(QString("Hypotheses"));
+    step4_create_signatures(QString("Hypotheses"));
+    step9b_redirect_ptrs_in_sig_graph_edges_map(doomed_signature_info_map);
+    step9c_from_doomed_info_map_to_hypotheses(doomed_signature_info_map);
 }
 
 /*!
@@ -284,6 +287,11 @@ void CLexicon::step9b_redirect_ptrs_in_sig_graph_edges_map(const DoomedSignature
         /*if (not_found_flag)
             qDebug() << message;*/
     }
+}
+
+void CLexicon::step9c_from_doomed_info_map_to_hypotheses(const DoomedSignatureInfoMap& ref_doomed_info_map)
+{
+
 }
 
 
