@@ -169,10 +169,8 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
 {   stem_t                      this_stem;
     word_t                      this_word;
     affix_t                     this_affix;
-    //sig_string                  this_signature_string;
     CStem*                      pStem;
     CWord*                      pWord;
-    //CSignature*                 p_proven_sig;
     affix_list                  affixes_of_residual_sig;
     CSuffix_ptr_list            this_residual_sig_suffix_pointer_list;
     CSignatureCollection*       signatures;

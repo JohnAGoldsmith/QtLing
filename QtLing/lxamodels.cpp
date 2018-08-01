@@ -55,30 +55,37 @@ void  LxaStandardItemModel::load_category(QString , eComponentType)
 
 void LxaStandardItemModel::load_words(CWordCollection* p_words)
 {
-    QStringList labels;
+    QStringList labels, this_sigstring;
+    CWord* pWord, *qWord;
     clear();
     labels  << tr("word") << "word count" << "signatures";
     setHorizontalHeaderLabels(labels);
     m_Description = QString (" ");
-    QMapIterator<word_t, CWord*> word_iter ( * p_words->get_map() );
-    while (word_iter.hasNext())
-    {   word_iter.next();
-        CWord* pWord = word_iter.value();
-        word_t this_word = word_iter.key();
+    //QMapIterator<word_t, CWord*> word_iter ( * p_words->get_map() );
+
+    foreach (pWord, *p_words->get_map())
+    //for (int wordno = 0; wordno < p_words->get_count(); wordno++){
+    {
+        word_t this_word = pWord->get_key();
         QList<QStandardItem*> item_list;
         QStandardItem* pItem = new QStandardItem(this_word);
         item_list.append(pItem);
-        // changed here: let data have type int //
+
         QStandardItem* pItem2 = new QStandardItem();
         pItem2->setData(pWord->get_word_count(), Qt::DisplayRole);
         item_list.append(pItem2);
-        // changed here //
-        QMapIterator<stem_t, Parse_triple*> parse_3_iter(*pWord->get_parse_triple_map());
+
+        //QMapIterator<stem_t, Parse_triple*> parse_3_iter(*pWord->get_parse_triple_map());
         int tempcount = 0;
-        while (parse_3_iter.hasNext()){
-            QStandardItem* pItem3 = new QStandardItem(parse_3_iter.next().value()->p_sig_string) ;
-            item_list.append(pItem3);
-            tempcount++;
+        //while (parse_3_iter.hasNext()){
+        for(int i = 0; i < pWord->get_parse_triple_map()->size(); i++){
+            //QString p_sig_string = *pWord->at(i)->get_parse_triple_map();
+            //this_sigstring = pWord->get_parse_triple_map()...
+            foreach (const Parse_triple* this_parse_triple, *pWord->get_parse_triple_map())  {
+                QStandardItem* pItem3 = new QStandardItem(this_parse_triple->m_sig_string) ;
+                item_list.append(pItem3);
+                tempcount++;
+            }
         }
         appendRow(item_list);
     }
@@ -547,7 +554,7 @@ void LxaStandardItemModel::load_parsemap_from_gs(GoldStandard* p_gs, ParseMapHan
             GoldStandard::Parse_triple_map* ptm = pm_iter.value();
             for (ptm_iter = ptm->constBegin(); ptm_iter != ptm->constEnd(); ptm_iter++) {
                 Parse_triple* this_pt = ptm_iter.value();
-                QString this_parse = this_pt->p_stem + "=" + this_pt->p_suffix;
+                QString this_parse = this_pt->m_stem + "=" + this_pt->m_suffix;
                 items.append(new QStandardItem(this_parse));
             }
         }
