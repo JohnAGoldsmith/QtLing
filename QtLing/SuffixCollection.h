@@ -27,6 +27,9 @@ private:
     CSuffixCollection(const CSuffixCollection& x);
     CSuffixCollection& operator=(const CSuffixCollection& x);
 public:
+    // Many functions below used to take the type `QString` as arguments.
+    // Changed them to `const QString&` for possibly greater efficiency.
+    // Changed made by Hanson 7.30
 
     CSuffix*                operator<< (const QString&);
     CSuffix*                operator^= (const QString&);

@@ -228,6 +228,7 @@ void LowerTableView::display_this_item( const  QModelIndex & index )
         break;
 
         // add component 9
+        /* Lower display function for protostems added by Hanson. */
     case e_data_suffixal_protostems:
     case e_data_prefixal_protostems: {
         if (index.isValid()) {row = index.row();}
@@ -239,8 +240,9 @@ void LowerTableView::display_this_item( const  QModelIndex & index )
         table_protostem(p_protostem);
         setModel(m_my_current_model);
         break;
-    }
+    }   /* Lower display function for protostems added by Hanson. */
 
+        /* Lower display function for compounds added by Hanson. */
     case e_data_compound_words: {
         if (index.isValid()) {
             row = index.row();
@@ -260,7 +262,7 @@ void LowerTableView::display_this_item( const  QModelIndex & index )
         setModel(m_my_current_model);
         break;
 
-    }
+    }   /* Lower display function for compounds added by Hanson. */
 
     default:
         break;
@@ -648,6 +650,11 @@ void LowerTableView::table_protostem(protostem *p_protostem)
 
 }
 
+/*!
+ * \brief Lower display function for compounds added by Hanson.
+ * \param p_compound
+ * \param composition_i
+ */
 void LowerTableView::table_compound_composition(CompoundWord* p_compound, int composition_i)
 {
     typedef  QStandardItem QSI;

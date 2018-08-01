@@ -49,7 +49,7 @@ CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag):
     M_MINIMUM_STEM_LENGTH(4),
     M_MINIMUM_STEM_COUNT(8),
     M_MAXIMUM_AFFIX_LENGTH(10),
-    M_MINIMUM_HYPOTHESIS_WORD_COUNT(6)
+    M_MINIMUM_HYPOTHESIS_WORD_COUNT(6) // Moved to here, originally a fxn variable defined in step 9
 {
     m_Signatures            = new CSignatureCollection(this, true);
     m_PrefixSignatures      = new CSignatureCollection(this,false);
@@ -72,6 +72,7 @@ CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag):
     m_goldstandard          = NULL;
     m_eval_parses      = NULL;
 
+    // Put this back in, Hanson 8.1
     m_Compounds             = new CompoundWordCollection(this);
 
     m_category_types["Words"]               = CT_word;

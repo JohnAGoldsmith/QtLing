@@ -5,6 +5,7 @@
 #include <QList>
 #include <QMap>
 #include <QPair>
+#include "Typedefs.h"
 
 class CWord;
 class CLexicon;
@@ -40,10 +41,10 @@ protected:
 
 public:
     CompoundComponent();
-    CompoundComponent(const QString& word);
+    CompoundComponent(const word_t& word);
     void                                        add_connection(CompoundWord* compword, int position);
     const CompoundConnectionMap&                get_connections() const { return m_connections; }
-    const QString&                              get_word() const {return m_word;}
+    const word_t&                               get_word() const {return m_word;}
     bool                                        check_valid();
 };
 
@@ -72,7 +73,7 @@ protected:
 public:
     CompoundWord();
     ~CompoundWord();
-    CompoundWord(const QString& word);
+    CompoundWord(const word_t& word);
     const QString &                             get_word() const { return m_word; }
     const QList<CompoundComposition*>&          get_compositions() const { return m_compositions; }
     //void                                        add_component(CompoundComponent* p_part);
@@ -86,10 +87,12 @@ public:
  * \brief The CompoundComponentCollection class is a wrapper class for a QMap
  * data structure containing pointers to all CompoundComponent objects created
  * during compound discovery.
+ *
+ * A component is also a word, hence the use of word_t
  */
 class CompoundComponentCollection
 {
-    QMap<QString, CompoundComponent*>   m_map;
+    QMap<word_t, CompoundComponent*>   m_map;
     CompoundWordCollection*             m_word_collection;
     CLexicon*                           m_lexicon;
 public:
@@ -97,8 +100,8 @@ public:
     CompoundComponentCollection(CompoundWordCollection* p_word_collection, CLexicon* p_lexicon);
     ~CompoundComponentCollection();
 
-    QMap<QString, CompoundComponent*>&  get_map() { return m_map; }
-    CompoundComponent*                  add_or_find_compound_component(const QString& str_word);
+    QMap<word_t, CompoundComponent*>&  get_map() { return m_map; }
+    CompoundComponent*                  add_or_find_compound_component(const word_t& str_word);
     void                                remove_component(CompoundComponent* p_component);
 };
 
@@ -110,7 +113,7 @@ public:
  */
 class CompoundWordCollection
 {
-    QMap<QString, CompoundWord*>        m_map;
+    QMap<word_t, CompoundWord*>        m_map;
     CompoundComponentCollection*        m_component_collection;
     CLexicon*                           m_lexicon;
 
@@ -120,12 +123,12 @@ public:
     ~CompoundWordCollection();
     CompoundWordCollection(const CompoundWordCollection& other);
 
-    const QMap<QString, CompoundWord*>& get_map() const { return m_map; }
+    const QMap<word_t, CompoundWord*>& get_map() const { return m_map; }
     int                                 get_count() const { return m_map.size(); }
     CompoundComponentCollection*        get_components() const { return m_component_collection; }
-    CompoundWord*                       add_compound_word(const QString& word, const QStringList& composition);
-    CompoundWord*                       add_compound_word(const QString& whole, const QString& part0, const QString& part1);
-    CompoundWord*                       get_compound_word(const QString& word) const;
+    CompoundWord*                       add_compound_word(const word_t& word, const QStringList& composition);
+    CompoundWord*                       add_compound_word(const word_t& whole, const QString& part0, const QString& part1);
+    CompoundWord*                       get_compound_word(const word_t& word) const;
     void                                remove_compound_word(CompoundWord* p_word);
     void                                remove_invalid_components(QProgressBar* p_progressbar = NULL);
 

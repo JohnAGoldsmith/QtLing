@@ -24,8 +24,10 @@ UpperTableView::UpperTableView (MainWindow* window, eSortStyle this_sort_style)
        m_row_recently_selected = -2;
        m_gold_standard_display_order = 0;
 
+       // -- use proxy model to allow sorting of data -- //
        m_proxy_model = new LxaSortFilterProxyModel(this);
        setModel(m_proxy_model);
+       // -- added by Hanson -- //
 }
 
 
@@ -47,6 +49,18 @@ UpperTableView::UpperTableView (MainWindow* window, eSortStyle this_sort_style)
  * Right now I have created two different models for different sorts
  * of the Signatures, which isn't the right way to do things in principle. Dec 2017.
  * And I have had to do this several times.
+ *
+ * Hanson's implementation of `LxaSortFilterProxyModel`:
+ * [different models in main window] ---(source model of)---> [`m_proxy_model`]
+ *                 [`m_proxy_model`]  ---(base model of)--->  [table view]
+ * 1.   Call `setModel(m_proxy_model)` only once in the constructor function of
+ *      the `UpperTableView` object. For each tableview there is only ONE
+ *      `LxaSortFilterProxyModel` associated with it.
+ * 2.   For showing a specific type of data (words, suffixes, signatures, etc),
+ *      instead of using `setModel()` to change the table view, we use
+ *      `setSourceModel()` to modify the `LxaSortFilterProxyModel` associated
+ *      with it, so that different contents is rendered in the tableview.
+ * comment added 8.1
  */
 void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
 {
@@ -71,6 +85,18 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
     } else return;
 
     // Show gold standard information in tables
+    /* The series of conditional jumps below have the following functionality.
+     * Clicking on one of the items in goldstandard group in the left treeview
+     * will have the following effect:
+     * -    The first click will update both tableviews and display what is
+     *      selected in both table views.
+     * -    The second click will only update the right tableview and display
+     *      the selected data in that tableview.
+     * -    Subsequent clicks will only update and display content in the
+     *      table view that is NOT most recently updated, e.g. will display
+     *      "retrived parses" in the left tableview if the last update occured
+     *      in the right tableview.
+     */
     if (is_child_of_gs && (component == "True Positive Parses"
      || component == "Gold Standard Parses"
      || component == "Retrieved Parses"
@@ -113,7 +139,8 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
             left_order = 0;
             right_order = 0;
         }
-    }
+    } /* --- end of displaying information related to Gold Standard ---
+       * added by Hanson */
     // showing information in other tables
     else {
         left_table->m_gold_standard_display_order = 0;
@@ -193,16 +220,39 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
     resizeColumnsToContents();
 }
 
+/*!
+ * \brief Static compare function to compare two QStandardItems by their row numbers
+ * \param item1
+ * \param item2
+ * \return
+ *
+ * Added by Hanson
+ */
 bool UpperTableView::qsi_row_less_than (const QStandardItem* item1, const QStandardItem* item2)
 {
     return item1->row() < item2->row();
 }
 
+/*!
+ * \brief Static compare function to compare two QModelIndex objects by their row numbers
+ * \param item1
+ * \param item2
+ * \return
+ *
+ * Added by Hanson
+ */
 bool UpperTableView::index_row_less_than(const QModelIndex& i1, const QModelIndex& i2)
 {
     return i1.row() < i2.row();
 }
 
+/*!
+ * \brief Highlight items that are in the list of found items (m_items_found)
+ * with a green color, and generate a list of QModelIndexes that contain all
+ * the indeces of selected items, sorted in increasing row order.
+ *
+ * Called by `find_all_strings()`. Added by Hanson.
+ */
 void UpperTableView::remap_indeces_and_highlight()
 {
     m_indeces_found.clear();
@@ -217,6 +267,18 @@ void UpperTableView::remap_indeces_and_highlight()
     //Debug() << "Found" << num_items_found << "occurrences of" << str;
 }
 
+
+/*!
+ * \brief Given a string and match method, modifies the m_items_found list (a
+ * member variable of UpperTableView) to store pointers to QStandardItem objects.
+ * \param String to find
+ * \param Whether search is exact match
+ * \return Number of items found in the table.
+ *
+ * Currently only finds strings in the leftmost column. This function is called
+ * by `find_next_and_highlight()` and `find_prev_and_highlight()`.
+ * Added by Hanson.
+ */
 int UpperTableView::find_all_strings(const QString& str, bool exact_match)
 {
     // qDebug() << "Finding strings";
@@ -226,6 +288,7 @@ int UpperTableView::find_all_strings(const QString& str, bool exact_match)
         return 0;
     }
     m_items_found = QList<QStandardItem*>();
+    // the "0" indicates that the search is only done in the leftmost column.
     m_items_found = p_model->findItems(str, exact_match? Qt::MatchExactly : Qt::MatchContains, 0);
 
     int num_items_found = m_items_found.length();
@@ -239,6 +302,12 @@ int UpperTableView::find_all_strings(const QString& str, bool exact_match)
     }
 }
 
+
+/*!
+ * \brief Clears highlighted colors, and any member variables that store search
+ * results, and restores the search system to a blank, initial state.
+ * Added by Hanson.
+ */
 void UpperTableView::clear_search()
 {
     QBrush brush(QColor(255, 255, 255));
@@ -256,6 +325,18 @@ void UpperTableView::clear_search()
     m_row_recently_selected = -2;
 }
 
+/*!
+ * \brief Every time this slot is activated by a signal, calls `find_all
+ * _strings()` to generate a list of found items in the tableview; selects and
+ * scrolls down to the next item in the list of found items, relative to the
+ * currently selected item.
+ * \param s
+ * \return false only if an error occurs.
+ *
+ * Selects the first found item in the list, with the lowest row number, if no
+ * item is currently selected.
+ * Added by Hanson.
+ */
 bool UpperTableView::find_next_and_highlight(QString &s)
 {
     // qDebug() << "Signal to find next received; string to find:" + s;
@@ -344,6 +425,18 @@ bool UpperTableView::find_next_and_highlight(QString &s)
     }
 }
 
+/*!
+ * \brief Every time this slot is activated by a signal, calls `find_all
+ * _strings()` to generate a list of found items in the tableview; selects and
+ * scrolls up to the previous item in the list of found items, relative to the
+ * currently selected item.
+ * \param s
+ * \return false only if an error occurs.
+ *
+ * Selects the last found item in the list, with the highest row number, if no
+ * item is currently selected.
+ * Added by Hanson.
+ */
 bool UpperTableView::find_prev_and_highlight(QString &s)
 {
     QStandardItemModel* p_model = (QStandardItemModel*) m_proxy_model->sourceModel();

@@ -154,11 +154,13 @@ void CLexicon::step9_from_sig_graph_edges_map_to_hypotheses()
             */ // this part is moved to step9c
         // --- End of code that needs to be fixed -- commented out by Hanson, 7.30
     }
+    // -- Remaining steps for hypothesis generation
     step9a_from_doomed_info_map_to_parses(doomed_signature_info_map);
     step3_from_parses_to_stem_to_sig_maps(QString("Hypotheses"));
     step4_create_signatures(QString("Hypotheses"), MS_ignore_minimum_stem_count);
     step9b_redirect_ptrs_in_sig_graph_edges_map(doomed_signature_info_map);
     step9c_from_doomed_info_map_to_hypotheses(doomed_signature_info_map);
+    // -- Added by Hanson, 8.1
 }
 
 /*!
