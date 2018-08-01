@@ -98,13 +98,10 @@ void CLexicon::step9_from_sig_graph_edges_map_to_hypotheses()
             }
             doomed_affixes.append(doomed_affix);
             if (affixes2.contains(doomed_affix)){
-                //qDebug() << 58 << doomed_affix << affixes2;
                 matching_affixes_count++;
-                //qDebug() << "success" << this_morph << doomed_affix << this_morph <<  pSig1_longer_stem->display() << pSig2_shorter_stem->display();
             }else{
                 // not all of the first sig is continued in the second sig.
                 success_flag = false;
-               // qDebug() << 59 << " failure " << this_morph << doomed_affix << pSig1_longer_stem->display() << pSig2_shorter_stem->display() << "matches so far " << matching_affixes_count;
                 break;
             }
         }
@@ -268,7 +265,7 @@ void CLexicon::remove_signature(CSignature* p_sig, const QString& name_of_callin
                 const QString& str_curr_stem = ptm_iter.key();
                 Parse_triple* p_curr_parse_triple = ptm_iter.value();
                 if (str_curr_stem == str_stem
-                        && ptm_iter.value()->p_sig_string == str_sig) {
+                        && ptm_iter.value()->m_sig_string == str_sig) {
                     delete p_curr_parse_triple;
                     p_ptm->erase(ptm_iter);
                     add_to_word_autobiographies(str_word,

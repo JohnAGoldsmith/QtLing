@@ -71,6 +71,7 @@ public:
  */
 class ParseMapHandler
 {
+    // JG: Hanson, if the key of the Parse_triple_map is a stem, then put "stem_t" instead of QString  -- QMap<stem_t, Parse_triple*> Parse_triple_map
 public:
     typedef QMap<QString, Parse_triple*> Parse_triple_map;
     typedef QMap<QString, Parse_triple_map*> ParseMap;

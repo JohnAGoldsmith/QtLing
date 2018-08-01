@@ -289,6 +289,8 @@ void CLexicon::dump_signatures_to_debug()
  */
 void CLexicon::Crab_1()
 {
+
+
     step1_from_words_to_protostems();
 
     step2_from_protostems_to_parses();
