@@ -40,7 +40,7 @@ ParseMapHandler::ParseMap *ParseMapHandler::clone_map() const
         Parse_triple_map currptm = *(gsIter.value());
         for (Parse_triple_map::const_iterator ptmIter = currptm.constBegin();
              ptmIter != currptm.constEnd(); ptmIter++) {
-            Parse_triple *newpt = new Parse_triple(ptmIter.key(), ptmIter.value()->p_suffix, QString());
+            Parse_triple *newpt = new Parse_triple(ptmIter.key(), ptmIter.value()->m_suffix, QString());
             newptm->insert(ptmIter.key(), newpt);
         }
         newmap->insert(gsIter.key(),newptm);

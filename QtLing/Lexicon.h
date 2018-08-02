@@ -125,8 +125,24 @@ public:
     sig_string      get_sig1_string() { return m_sig_string_1;}
     sig_string      get_sig2_string() { return m_sig_string_2;}
     morph_t         get_morph() {return morph;}
+};
 
+struct DoomedSignatureInfo {
+    sig_graph_edge* m_edge_ptr;
+    QStringList m_doomed_affixes;
+    QString m_str_revised_sig;
 
+    DoomedSignatureInfo() {
+        m_edge_ptr = NULL;
+        m_doomed_affixes = QStringList();
+        m_str_revised_sig = QString();
+    }
+
+    DoomedSignatureInfo(sig_graph_edge* p_edge, QStringList& affixes) {
+        m_edge_ptr = p_edge;
+        m_doomed_affixes = affixes;
+        m_str_revised_sig = QString();
+    }
 };
 
 //-----------------------------------------------------------------------//
@@ -156,6 +172,7 @@ protected:
     const int                       M_MINIMUM_STEM_LENGTH;
     const int                       M_MINIMUM_STEM_COUNT;
     const int                       M_MAXIMUM_AFFIX_LENGTH;
+    const int                       M_MINIMUM_HYPOTHESIS_WORD_COUNT;
                                                          // this is part of an experiment.
     QMap<QString,eComponentType>    m_category_types;    // part of the experiment. It serves
                                                         // as the principal way in which the Lexicon communicates
@@ -206,7 +223,8 @@ protected:
     QMap<QString, CHypothesis*> *            m_Hypothesis_map;
 // add component 1
 
-    Sig_to_stems                    m_intermediate_signature_to_stems_map; // used during computation, not permanent.
+    Sig_to_stem_map                    m_intermediate_sig_to_stem_map; // used during computation, not permanent.
+    Stem_to_sig_map                    m_intermediate_stem_to_sig_map; // used during computation, not permanent.
 
     QProgressBar*                   m_ProgressBar;
     QStatusBar *                      m_StatusBar;
@@ -302,29 +320,51 @@ public:
     // insert functions here
     void step1_from_words_to_protostems();
     void step2_from_protostems_to_parses();
+
     void step3_from_parses_to_stem_to_sig_maps(QString name_of_calling_function);
-    void step3a_from_parses_to_stem_to_sig_maps(QList<CParse*> * parses, bool suffix_flag,Stem_to_sig_map* these_stem_to_sig_maps);
+    void step3a_from_parses_to_stem_to_sig_map(QList<CParse*> * parses, bool suffix_flag);
+    void step3b_from_stem_to_sig_map_to_sig_to_stem_map();
+
     //void step4_assign_affixes_to_stems(QString name_of_calling_function);
     void step4_create_signatures(QString name_of_calling_function);
     void step4a_link_signature_and_affix(CSignature*, affix_t);
     void step4b_link_signature_and_stem_and_word(stem_t , CSignature*, QString this_signature_string, const QString& name_of_calling_function);
-    void step6_ReSignaturizeWithKnownAffixes();
-    void step6a_create_temporary_map_from_stems_to_affix_sets(Stem_to_sig_map&); //map_sigstring_to_stem_list &);
-    void step7_FindGoodSignaturesInsideParaSignatures();
 
-    void find_compounds();
-    void step7_from_stem_to_sig_maps_to_xxx(QString, Stem_to_sig_map ) {return;}
+    void step5a_replace_parse_pairs_from_current_signature_structure();
+    void step5b_find_full_signatures();
+    //void collect_parasuffixes();
+
+    void step6_ReSignaturizeWithKnownAffixes();
+    //void step6a_create_temporary_map_from_stems_to_affix_sets(); //map_sigstring_to_stem_list &); will delete this
+    void step6a_create_temporary_stem_to_sig_map(); // will replace preceding version;ß∫
+    void step7_FindGoodSignaturesInsideParaSignatures();
+    void step6c_from_stem_to_sig_maps_to_xxx(QString, Stem_to_sig_map ) {return;}
+
+    void step8a_compute_sig_graph_edges();
+    void step8b_compute_sig_graph_edge_map();
+
+    typedef QMap<QString, DoomedSignatureInfo> DoomedSignatureInfoMap;
+    void step9_from_sig_graph_edges_map_to_hypotheses();
+    void remove_signature(CSignature* p_sig, const QString& name_of_calling_function);
+    void update_pointer_in_edge_map(const QString& str_old_sig, CSignature* p_new_sig);
+
+    void step10_find_compounds();
 
     void clear_lexicon();
     void compare_opposite_sets_of_signatures(QSet<CSignature*>* sig_set_1, QSet<CSignature*>* sig_set_2,QString letter);
-    void compute_sig_graph_edge_map();
+
     void Crab_1();
     void Crab_2();
     void create_sublexicon ();
     void find_full_signatures();
 
-    void replace_parse_pairs_from_current_signature_structure();
+    void check_autobiography_consistency();
+
+
+
     void test_for_phonological_relations_between_signatures();
+
+    void clear_parses();
 };
 
 #endif // CLEXICON_H

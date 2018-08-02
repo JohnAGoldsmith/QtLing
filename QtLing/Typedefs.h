@@ -91,26 +91,40 @@ typedef QMapIterator<QString, CStem*>       map_string_to_stem_ptr_iter;
 typedef QMap<QString,sig_graph_edge*>        lxa_sig_graph_edge_map;
 typedef QMapIterator<QString,sig_graph_edge*>        lxa_sig_graph_edge_map_iter;
 
-typedef  QMap<stem_t , QSet<affix_t>* >      Stem_to_sig_map;// was Protosigs;
+typedef  QMap<stem_t , QSet<affix_t>>      Stem_to_sig_map;// was Protosigs;
 
-struct Sig_to_stems
+
+struct Sig_to_stem_map
 {
-    QMap<sigstring_t,QSet<stem_t>*>    m_core;
-    QSet<stem_t>*  get_stem_set (sigstring_t this_sigstring) { return m_core[this_sigstring]; }
-    bool contains_signature (sig_string sig) { return m_core.contains(sig); }
-    bool contains_sig_and_stem (sig_string sig, stem_t this_stem) {
-        if (m_core[sig]->contains(this_stem)){
-            return true;
-        }
-        else{return false;}
+    QMap<sigstring_t,QSet<stem_t>>    m_core;
+
+    QSet<stem_t>& get_stem_set(const sigstring_t& this_sigstring)
+    {
+        return m_core[this_sigstring];
     }
-    void attach_stem_to_signature(stem_t this_stem, sigstring_t this_sig){
+
+    bool contains_signature(const sigstring_t& sig) const
+    {
+        return m_core.contains(sig);
+    }
+
+    bool contains_sig_and_stem(const sigstring_t& sig, const stem_t& this_stem) const
+    {
+        return m_core[sig].contains(this_stem);
+    }
+
+    void attach_stem_to_signature(const stem_t& this_stem, const sigstring_t& this_sig)
+    {
         if (! m_core.contains(this_sig)){
-            m_core[this_sig] = new QSet<QString>;
+            m_core[this_sig] = QSet<QString>();
         }
-        m_core[this_sig]->insert(this_stem);
+        m_core[this_sig].insert(this_stem);
     }
-    void clear() {m_core.clear();}
+
+    void clear()
+    {
+        m_core.clear();
+    }
 };
 
 
