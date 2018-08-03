@@ -31,20 +31,16 @@ void CLexicon::Crab_2()
 
     step7_FindGoodSignaturesInsideParaSignatures();
 
-    if (false){
-
-        m_SuffixesFlag ?
-            m_Signatures->calculate_stem_entropy():
-            m_PrefixSignatures->calculate_stem_entropy();
+    m_SuffixesFlag ?
+        m_Signatures->calculate_stem_entropy():
+        m_PrefixSignatures->calculate_stem_entropy();
 
     step8a_compute_sig_graph_edges();
     step8b_compute_sig_graph_edge_map();
     //step9_from_sig_graph_edges_map_to_hypotheses();
+    step10_find_compounds();
 
-    //ßstep10_find_compounds();
-
-    check_autobiography_consistency();
-    }
+    //check_autobiography_consistency();
     qDebug() << "finished crab 2.";
 
 }

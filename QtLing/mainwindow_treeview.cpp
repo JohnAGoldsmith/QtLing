@@ -1,8 +1,18 @@
+/* I moved any functions related to the treeview in the main window to here
+ * because more and more things got added to the treeview and lxamodels.cpp
+ * was getting too long.
+ *
+ * Comment added by Hanson in branch compound_discovery_merge 8.3
+ */
+
 #include "mainwindow.h"
 #include "WordCollection.h"
 #include "StemCollection.h"
 #include "SuffixCollection.h"
 #include <QDebug>
+
+#include "compound.h"
+// compound_discovery_merge, HL 8.3
 
 void remove_item_from_tree(const QString name, QStandardItem* item)
 {
@@ -322,6 +332,15 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
     hypothesis_items.append(hypothesis_item);
     hypothesis_items.append(hypothesis_count_item);
 
+    // for compound discovery, all functions related are placed here.
+    QStandardItem * compound_item = new QStandardItem(QString("Compound words"));
+    QStandardItem * compound_count_item = new QStandardItem(QString::number(lexicon->get_compounds()->get_count()));
+
+    QList<QStandardItem*> compound_items;
+    compound_items.append(compound_item);
+    compound_items.append(compound_count_item);
+    // compound_discovery_merge HL 8.3
+
 // add component 7
 
     parent->appendRow(lexicon_items);
@@ -346,5 +365,8 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
     lexicon_item->appendRow(parasuffix_items);
     lexicon_item->appendRow(passive_signature_items);
     lexicon_item->appendRow(hypothesis_items);
+
+    lexicon_item->appendRow(compound_items);
+    // compound_discovery_merge HL 8.3
 // add component 8
 }

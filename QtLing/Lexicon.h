@@ -13,6 +13,8 @@
 #include "Typedefs.h"
 #include "evaluation.h"
 
+#include "compound.h" // added for compound discovery Hanson 8.2
+
 class MainWindow;
 class CWordCollection;
 class CStemCollection;
@@ -239,6 +241,10 @@ protected:
     EvalParses*                     m_eval_parses;
     // end of experiment
 
+    CompoundWordCollection *            m_Compounds; //!< Main data structure for storing information for compound words
+    // added by Hanson 8.2
+
+
 public:
     CLexicon(CLexicon* parent_lexicon = NULL, bool suffix_flag = true);
 public:
@@ -314,7 +320,9 @@ public:
 
 
     void                                        time_stamp(const QString& message);
-
+    // functions for compound discovery
+    CompoundWordCollection*                     get_compounds()             { return m_Compounds; }
+    void step10_find_compounds();
 
 public:
     // insert functions here
@@ -347,8 +355,6 @@ public:
     void step9_from_sig_graph_edges_map_to_hypotheses();
     void remove_signature(CSignature* p_sig, const QString& name_of_calling_function);
     void update_pointer_in_edge_map(const QString& str_old_sig, CSignature* p_new_sig);
-
-    void step10_find_compounds();
 
     void clear_lexicon();
     void compare_opposite_sets_of_signatures(QSet<CSignature*>* sig_set_1, QSet<CSignature*>* sig_set_2,QString letter);
