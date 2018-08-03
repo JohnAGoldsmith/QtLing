@@ -47,6 +47,8 @@ enum eDataType{
     // for protostem display
     e_data_suffixal_protostems,
     e_data_prefixal_protostems,
+    // for compound words, added compound_discovery_merge 8.3
+    e_data_compound_words
 };
 
 enum eDocumentType  // for the Collection View

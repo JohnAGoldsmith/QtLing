@@ -182,21 +182,50 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
             set_data_type(e_data_prefixal_protostems);
             sortByColumn(1);
         }
+        else     if (component == "Compound words"){
+            m_proxy_model->setSourceModel(m_parent_window->m_Models["Compound words"]);
+            set_data_type(e_data_compound_words);
+            sortByColumn(1);
+        } // compound_discovery_merge HL 8.3
     }
 
     resizeColumnsToContents();
 }
 
+/*!
+ * \brief Static compare function to compare two QStandardItems by their row numbers
+ * \param item1
+ * \param item2
+ * \return
+ *
+ * Comment added by Hanson in branch compound_discovery_merge 8.3
+ */
 bool UpperTableView::qsi_row_less_than (const QStandardItem* item1, const QStandardItem* item2)
 {
     return item1->row() < item2->row();
 }
 
+/*!
+ * \brief Static compare function to compare two QModelIndex objects by their row numbers
+ * \param item1
+ * \param item2
+ * \return
+ *
+ * Comment added by Hanson in branch compound_discovery_merge 8.3
+ */
 bool UpperTableView::index_row_less_than(const QModelIndex& i1, const QModelIndex& i2)
 {
     return i1.row() < i2.row();
 }
 
+/*!
+ * \brief Highlight items that are in the list of found items (m_items_found)
+ * with a green color, and generate a list of QModelIndexes that contain all
+ * the indeces of selected items, sorted in increasing row order.
+ *
+ * Called by `find_all_strings()`. Added by Hanson.
+ * Comment added by Hanson in branch compound_discovery_merge 8.3
+ */
 void UpperTableView::remap_indeces_and_highlight()
 {
     m_indeces_found.clear();
@@ -211,6 +240,17 @@ void UpperTableView::remap_indeces_and_highlight()
     //Debug() << "Found" << num_items_found << "occurrences of" << str;
 }
 
+/*!
+ * \brief Given a string and match method, modifies the m_items_found list (a
+ * member variable of UpperTableView) to store pointers to QStandardItem objects.
+ * \param String to find
+ * \param Whether search is exact match
+ * \return Number of items found in the table.
+ *
+ * Currently only finds strings in the leftmost column. This function is called
+ * by `find_next_and_highlight()` and `find_prev_and_highlight()`.
+ * Comment added by Hanson in branch compound_discovery_merge 8.3
+ */
 int UpperTableView::find_all_strings(const QString& str, bool exact_match)
 {
     // qDebug() << "Finding strings";
@@ -233,6 +273,12 @@ int UpperTableView::find_all_strings(const QString& str, bool exact_match)
     }
 }
 
+/*!
+ * \brief Clears highlighted colors, and any member variables that store search
+ * results, and restores the search system to a blank, initial state.
+ *
+ * Comment added by Hanson in branch compound_discovery_merge 8.3
+ */
 void UpperTableView::clear_search()
 {
     QBrush brush(QColor(255, 255, 255));
@@ -250,6 +296,18 @@ void UpperTableView::clear_search()
     m_row_recently_selected = -2;
 }
 
+/*!
+ * \brief Every time this slot is activated by a signal, calls `find_all
+ * _strings()` to generate a list of found items in the tableview; selects and
+ * scrolls down to the next item in the list of found items, relative to the
+ * currently selected item.
+ * \param s
+ * \return false only if an error occurs.
+ *
+ * Selects the first found item in the list, with the lowest row number, if no
+ * item is currently selected.
+ * Comment added by Hanson in branch compound_discovery_merge 8.3
+ */
 bool UpperTableView::find_next_and_highlight(QString &s)
 {
     // qDebug() << "Signal to find next received; string to find:" + s;
@@ -338,6 +396,18 @@ bool UpperTableView::find_next_and_highlight(QString &s)
     }
 }
 
+/*!
+ * \brief Every time this slot is activated by a signal, calls `find_all
+ * _strings()` to generate a list of found items in the tableview; selects and
+ * scrolls up to the previous item in the list of found items, relative to the
+ * currently selected item.
+ * \param s
+ * \return false only if an error occurs.
+ *
+ * Selects the last found item in the list, with the highest row number, if no
+ * item is currently selected.
+ * Comment added by Hanson in branch compound_discovery_merge 8.3
+ */
 bool UpperTableView::find_prev_and_highlight(QString &s)
 {
     QStandardItemModel* p_model = (QStandardItemModel*) m_proxy_model->sourceModel();

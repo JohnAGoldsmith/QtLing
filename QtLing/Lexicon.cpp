@@ -71,6 +71,9 @@ CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag):
     m_goldstandard          = NULL;
     m_eval_parses      = NULL;
 
+    m_Compounds             = new CompoundWordCollection(this);
+    // compound_discovery_merge HL 8.3
+
     m_category_types["Words"]               = CT_word;
     m_category_types["Suffixal stems"]      = CT_stem;
     m_category_types["Prefixal stems"]      = CT_stem;
@@ -158,7 +161,6 @@ void CLexicon::clear_lexicon(){
     m_PassiveSignatures = new CSignatureCollection(this);
     delete m_Hypotheses;
     m_Hypotheses = new QList<CHypothesis*>;
-
 
 }
 
@@ -1154,7 +1156,7 @@ void CLexicon::replace_parse_pairs_from_current_signature_structure()
   // 
 }
 
-
+*/
 
 
 

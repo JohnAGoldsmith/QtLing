@@ -81,7 +81,9 @@ MainWindow::MainWindow()
     // for displaying protostems
     m_Models["Suffixal protostems"]         = new LxaStandardItemModel("Suffixal protostems");
     m_Models["Prefixal protostems"]         = new LxaStandardItemModel("Prefixal protostems");
+
     m_Models["Compound words"]              = new LxaStandardItemModel("Compound words");
+    // compound_discovery_merge HL 8.3
 
 
 
@@ -482,6 +484,9 @@ void MainWindow::load_models(CLexicon* lexicon)
 
     m_Models["Suffixal protostems"]->load_protostems(lexicon->get_suffixal_protostems());
     m_Models["Prefixal protostems"]->load_protostems(lexicon->get_prefixal_protostems());
+
+    m_Models["Compound words"]->load_compounds(lexicon->get_compounds());
+    // compound_discovery_merge HL 8.3
 
 }
 void MainWindow::read_file_do_crab()
