@@ -39,10 +39,8 @@ void CWord::add_parse_triple(QString stem, QString affix, QString sig_string)
 
 void CWord::clear_parse_triple_map()
 {
-    QMap<stem_t, Parse_triple*>::iterator ptm_iter;
-    for (ptm_iter = m_Parse_triple_map.begin();
-         ptm_iter != m_Parse_triple_map.end();
-         ptm_iter++) {
-        delete ptm_iter.value();
+    foreach (Parse_triple* p_parse_triple, m_Parse_triple_map) {
+        delete p_parse_triple;
     }
-}
+    m_Parse_triple_map.clear();
+} // simplified and modified by Hanson, 7.31

@@ -8,6 +8,7 @@
 #include "hypothesis.h"
 #include "lxamodels.h"
 #include "evaluation.h"
+#include "compound.h"
 #include <QCoreApplication>
 
 LxaStandardItemModel::LxaStandardItemModel(MainWindow* main_window): QStandardItemModel(main_window)
@@ -71,7 +72,7 @@ void LxaStandardItemModel::load_words(CWordCollection* p_words)
         item_list.append(pItem);
 
         QStandardItem* pItem2 = new QStandardItem();
-        pItem2->setData(pWord->get_word_count(), Qt::DisplayRole);
+        pItem2->setData(pWord->get_word_count(), Qt::DisplayRole); // --- Numerical data
         item_list.append(pItem2);
 
         //QMapIterator<stem_t, Parse_triple*> parse_3_iter(*pWord->get_parse_triple_map());
@@ -81,10 +82,41 @@ void LxaStandardItemModel::load_words(CWordCollection* p_words)
             //QString p_sig_string = *pWord->at(i)->get_parse_triple_map();
             //this_sigstring = pWord->get_parse_triple_map()...
             foreach (const Parse_triple* this_parse_triple, *pWord->get_parse_triple_map())  {
-                QStandardItem* pItem3 = new QStandardItem(this_parse_triple->m_sig_string) ;
+                QStandardItem* pItem3 = new QStandardItem(this_parse_triple->p_sig_string) ;
                 item_list.append(pItem3);
                 tempcount++;
             }
+        }
+        appendRow(item_list);
+    }
+}
+
+void LxaStandardItemModel::load_compounds(CompoundWordCollection *p_compounds)
+{
+    typedef QStandardItem QSI;
+    typedef CompoundWord::CompoundComposition CompoundComposition;
+
+    QStringList labels;
+    labels << "Compound word" << "Possible Compositions";
+    setHorizontalHeaderLabels(labels);
+
+    QMap<QString, CompoundWord*>::ConstIterator compound_iter;
+    const QMap<QString, CompoundWord*>& ref_map = p_compounds->get_map();
+    for (compound_iter = ref_map.constBegin();
+         compound_iter != ref_map.constEnd();
+         compound_iter++) {
+        QList<QSI*> item_list;
+        QSI* item0 = new QSI(compound_iter.key());
+        item_list.append(item0);
+
+        CompoundWord* p_compoundword = compound_iter.value();
+        const QList<CompoundComposition*>& composition_list = p_compoundword->get_compositions();
+        QList<CompoundComposition*>::ConstIterator composition_iter;
+        for (composition_iter = composition_list.constBegin();
+             composition_iter != composition_list.constEnd();
+             composition_iter++) {
+            QSI* composition_item = new QSI(p_compoundword->composition_to_str(*composition_iter));
+            item_list.append(composition_item);
         }
         appendRow(item_list);
     }
@@ -108,7 +140,7 @@ void LxaStandardItemModel::load_protostems(QMap<QString, protostem *>* p_protost
         QSI* item2 = new QSI();
         int word_count = curr_protostem->get_end_word()
                 - curr_protostem->get_start_word() + 1;
-        item2->setData(word_count, Qt::DisplayRole);
+        item2->setData(word_count, Qt::DisplayRole); // --- Numerical data --- //
         item_list.append(item2);
         appendRow(item_list);
     }
@@ -129,7 +161,7 @@ void LxaStandardItemModel::load_stems(CStemCollection * p_stems)
         item_list.append(item);
 
         QStandardItem *item2 = new QStandardItem();
-        item2->setData(stem->get_count(), Qt::DisplayRole);
+        item2->setData(stem->get_count(), Qt::DisplayRole); // --- Numerical data --- //
         // changed: let data have type int //
         item_list.append(item2);
 
@@ -158,7 +190,7 @@ void LxaStandardItemModel::load_suffixes(CSuffixCollection * p_suffixes)
         CSuffix* pSuffix = suffix_iter.next();
         QStandardItem *item = new QStandardItem(pSuffix->GetSuffix());
         QStandardItem *item2 = new QStandardItem();
-        item2->setData(pSuffix->get_sig_count(), Qt::DisplayRole);
+        item2->setData(pSuffix->get_sig_count(), Qt::DisplayRole); // --- Numerical data --- //
         QList<QStandardItem*> item_list;
         item_list.append(item);
         item_list.append(item2);
@@ -187,9 +219,9 @@ void LxaStandardItemModel::load_prefixes(CPrefixCollection * p_prefixes)
         CPrefix* pPrefix = prefix_iter.next();
         QStandardItem *item = new QStandardItem(pPrefix->GetPrefix());
         QStandardItem *item2 = new QStandardItem();
-        item2->setData(pPrefix->get_sig_count(), Qt::DisplayRole);
+        item2->setData(pPrefix->get_sig_count(), Qt::DisplayRole); // --- Numerical data --- //
         QStandardItem *item3 = new QStandardItem();
-        item3->setData(pPrefix->get_sig_count()/totalcount, Qt::DisplayRole);
+        item3->setData(pPrefix->get_sig_count()/totalcount, Qt::DisplayRole); // --- Numerical data --- //
         QList<QStandardItem*> item_list;
         item_list.append(item);
         item_list.append(item2);
@@ -220,9 +252,9 @@ void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures, e
         QStandardItem * item2 = new QStandardItem();
         QStandardItem * item3 = new QStandardItem();
         QStandardItem * item4 = new QStandardItem();
-        item2->setData(sig->get_number_of_stems(), Qt::DisplayRole);
-        item3->setData(sig->get_robustness(), Qt::DisplayRole);
-        item4->setData(sig->get_stem_entropy(), Qt::DisplayRole);
+        item2->setData(sig->get_number_of_stems(), Qt::DisplayRole); // --- Numerical data --- //
+        item3->setData(sig->get_robustness(), Qt::DisplayRole);      // --- Numerical data --- //
+        item4->setData(sig->get_stem_entropy(), Qt::DisplayRole);    // --- Numerical data --- //
 
         items.append(item1);
         items.append(item2);
@@ -252,9 +284,9 @@ void LxaStandardItemModel::load_positive_signatures(CSignatureCollection* p_sign
         QStandardItem * item2 = new QStandardItem();
         QStandardItem * item3 = new QStandardItem();
         QStandardItem * item4 = new QStandardItem();
-        item2->setData(sig->get_number_of_stems(), Qt::DisplayRole);
-        item3->setData(sig->get_robustness(), Qt::DisplayRole);
-        item4->setData(sig->get_stem_entropy(), Qt::DisplayRole);
+        item2->setData(sig->get_number_of_stems(), Qt::DisplayRole);// --- Numerical data --- //
+        item3->setData(sig->get_robustness(), Qt::DisplayRole);     // --- Numerical data --- //
+        item4->setData(sig->get_stem_entropy(), Qt::DisplayRole);   // --- Numerical data --- //
 
         items.append(new QStandardItem(sig->GetSignature()));
         items.append(item2);
@@ -289,7 +321,7 @@ void LxaStandardItemModel::load_parasignatures(CSignatureCollection* p_signature
         QList<QStandardItem*> items;
         QStandardItem * item1 = new QStandardItem(sig->get_stems()->first()->get_key());
         QStandardItem * item3 = new QStandardItem();
-        item3->setData(sig->get_robustness(), Qt::DisplayRole);
+        item3->setData(sig->get_robustness(), Qt::DisplayRole); // --- Numerical data --- //
         items.append(item1);
         items.append(item3);
         items.append(new QStandardItem(sig->GetSignature()));
@@ -334,7 +366,7 @@ void LxaStandardItemModel::load_hypotheses(QList<CHypothesis*>* p_hypotheses)
         QList<QStandardItem*> items;
         QPair<QString,int>* pPair = iter.next();
         QStandardItem* item1 = new QStandardItem();
-        item1->setData(pPair->second, Qt::DisplayRole);
+        item1->setData(pPair->second, Qt::DisplayRole);     // --- Numerical data --- //
         items.append(item1);
 
         QString this_key = pPair->first;
@@ -472,17 +504,17 @@ void LxaStandardItemModel::load_sig_graph_edges( QMap<QString, sig_graph_edge*> 
         QStandardItem * item1 = new QStandardItem(p_sig_graph_edge->morph);
         QStandardItem * item2 = new QStandardItem(p_sig_graph_edge->m_sig_string_1); // changed here
         QStandardItem * item3 = new QStandardItem();
-        if (p_sig_graph_edge->m_sig_1)
+        if (p_sig_graph_edge->m_sig_1)              // --- Numerical data --- //
             item3->setData(p_sig_graph_edge->m_sig_1->get_stem_entropy(), Qt::DisplayRole);
         else
-            item3->setData("N/A", Qt::DisplayRole);
+            item3->setData("N/A", Qt::DisplayRole); // --- Numerical data --- //
         QStandardItem * item4 = new QStandardItem(p_sig_graph_edge->m_sig_string_2);
         QStandardItem * item5 = new QStandardItem();
         if (p_sig_graph_edge->m_sig_2)
             item5->setData(p_sig_graph_edge->m_sig_2->get_stem_entropy(), Qt::DisplayRole);
         else
-            item5->setData("N/A", Qt::DisplayRole);
-        QStandardItem * item6 = new QStandardItem();
+            item5->setData("N/A", Qt::DisplayRole); // --- Numerical data --- //
+        QStandardItem * item6 = new QStandardItem();// --- Numerical data --- //
         item6->setData(p_sig_graph_edge->shared_word_stems.size(), Qt::DisplayRole);
         QStandardItem * item7 = new QStandardItem(p_sig_graph_edge->label());
         QList<QStandardItem*> items;
@@ -508,8 +540,8 @@ void LxaStandardItemModel::load_parsemap_from_gs(GoldStandard* p_gs, ParseMapHan
     setHorizontalHeaderLabels(labels);
 
     typedef QStandardItem QSI;
-    GoldStandard::ParseMap::ConstIterator gs_iter, pm_iter;
-    GoldStandard::Parse_triple_map::ConstIterator ptm_iter;
+    GoldStandard::Word_to_parse_triple_collection_map::ConstIterator gs_iter, pm_iter;
+    GoldStandard::Parse_triple_collection::ConstIterator ptm_iter;
     ParseMapHandler p_all_word_gsm = p_gs->get_gs_parses();
 
     for (gs_iter = p_all_word_gsm->constBegin(); gs_iter != p_all_word_gsm->constEnd(); gs_iter++) {
@@ -519,10 +551,10 @@ void LxaStandardItemModel::load_parsemap_from_gs(GoldStandard* p_gs, ParseMapHan
         items.append(word_item);
         pm_iter = parsemap->find(this_word);
         if (pm_iter != parsemap->constEnd()) {
-            GoldStandard::Parse_triple_map* ptm = pm_iter.value();
+            GoldStandard::Parse_triple_collection* ptm = pm_iter.value();
             for (ptm_iter = ptm->constBegin(); ptm_iter != ptm->constEnd(); ptm_iter++) {
                 Parse_triple* this_pt = ptm_iter.value();
-                QString this_parse = this_pt->m_stem + "=" + this_pt->m_suffix;
+                QString this_parse = this_pt->p_stem + "=" + this_pt->p_suffix;
                 items.append(new QStandardItem(this_parse));
             }
         }

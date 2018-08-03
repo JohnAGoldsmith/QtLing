@@ -27,6 +27,9 @@ private:
     CSuffixCollection(const CSuffixCollection& x);
     CSuffixCollection& operator=(const CSuffixCollection& x);
 public:
+    // Many functions below used to take the type `QString` as arguments.
+    // Changed them to `const QString&` for possibly greater efficiency.
+    // Changed made by Hanson 7.30
 
     CSuffix*                operator<< (const QString&);
     CSuffix*                operator^= (const QString&);
@@ -42,7 +45,6 @@ public:
     void                    sort_by_count();
     CSuffix_ptr_list*       get_sorted_list()               { return & m_SortedList; }
     void                    clear();
-    void                    remove_suffix(CSuffix* p_suffix);
 };
 
 class CPrefixCollection
@@ -76,7 +78,6 @@ public:
     void                    sort_by_count();
     CPrefix_ptr_list*       get_sorted_list()               {return & m_SortedList;}
     void                    clear();
-    void                    remove_prefix(CPrefix* p_prefix);
 
 };
 

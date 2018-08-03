@@ -61,7 +61,7 @@ public:
 };
 
 /*!
- * \brief A handler class for `QMap<QString, QMap<QString, Parse_triple*>*>`.
+ * \brief A handler class for `QMap<word_t, QMap<stem_t, Parse_triple*>*>`.
  *
  * The handler class is a "smart pointer" to the QMap structure. When a
  * ParseMapHandler object is instantiated, space is automatically allocated
@@ -72,14 +72,15 @@ public:
 class ParseMapHandler
 {
     // JG: Hanson, if the key of the Parse_triple_map is a stem, then put "stem_t" instead of QString  -- QMap<stem_t, Parse_triple*> Parse_triple_map
+    // Corrected by Hanson 8.1, renamed the following
 public:
-    typedef QMap<QString, Parse_triple*> Parse_triple_map;
-    typedef QMap<QString, Parse_triple_map*> ParseMap;
+    typedef QMap<stem_t, Parse_triple*> Parse_triple_collection; // originally Parse_triple_map
+    typedef QMap<word_t, Parse_triple_collection*> Word_to_parse_triple_collection_map; // originally ParseMap
 
 protected:
-    ParseMap*       m_map;
+    Word_to_parse_triple_collection_map*       m_map;
 
-    ParseMap*       clone_map() const;
+    Word_to_parse_triple_collection_map*       clone_map() const;
     void            destroy_map();
 public:
     ParseMapHandler();
@@ -87,13 +88,13 @@ public:
     ParseMapHandler& operator=(const ParseMapHandler& parsemap);
     ~ParseMapHandler();
 
-    ParseMap&       operator*()             { return *m_map; }
-    ParseMap*       operator->()            { return m_map; }
+    Word_to_parse_triple_collection_map&       operator*()             { return *m_map; }
+    Word_to_parse_triple_collection_map*       operator->()            { return m_map; }
 
-    ParseMap*       get_map()               { return m_map; }
+    Word_to_parse_triple_collection_map*       get_map()               { return m_map; }
     // void            get_parse_triple_map(const QString& word);
 
-    void            add_parse_triple(const QString& word, const QString& stem, const QString& affix);
+    void            add_parse_triple(const word_t& word, const stem_t& stem, const affix_t& affix);
 };
 
 /*!
@@ -107,8 +108,9 @@ class GoldStandard
 {
 friend class EvalParses;
 public:
-    typedef QMap<QString, Parse_triple*> Parse_triple_map;
-    typedef QMap<QString, Parse_triple_map*> ParseMap;
+    typedef QMap<stem_t, Parse_triple*> Parse_triple_collection; // originally Parse_triple_map
+    typedef QMap<word_t, Parse_triple_collection*> Word_to_parse_triple_collection_map; // originally ParseMap
+
 
 protected:
     EvaluationResults   m_results;              //!< Data structure to store results.
@@ -162,8 +164,9 @@ class EvalParses
 {
     friend class GoldStandard;
 public:
-    typedef QMap<QString, Parse_triple*> Parse_triple_map;
-    typedef QMap<QString, Parse_triple_map*> ParseMap;
+    typedef QMap<stem_t, Parse_triple*> Parse_triple_collection; // originally Parse_triple_map
+    typedef QMap<word_t, Parse_triple_collection*> Word_to_parse_triple_collection_map;
+    // originally ParseMap
 protected:
     ParseMapHandler         m_parses;
     EvaluationResults       m_results;

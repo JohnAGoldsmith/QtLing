@@ -35,13 +35,7 @@ QListIterator<CSignature*> * CSignatureCollection::get_sorted_list_iterator()
     return m_SortedListIterator;
 }
 
-void CSignatureCollection::remove_signature(CSignature *p_sig)
-{
-    const QString str_sig = p_sig->get_key();
-    m_signature_list.removeOne(p_sig);
-    m_SignatureMap.remove(str_sig);
-    delete p_sig;
-}
+
 // -->   Accessing  <--     //
 
 

@@ -51,6 +51,7 @@ public:
 
     // for displaying protostems
     void        load_protostems(QMap<QString, protostem*>* p_protostems);
+    void        load_compounds(CompoundWordCollection* p_compounds);
 
     void        load_parsemap_from_gs(GoldStandard* p_gs, ParseMapHandler parsemap, const QString &type);
 };
@@ -65,6 +66,7 @@ public:
 
 private:
     bool lessThan(const QModelIndex & left, const QModelIndex & right) const override;
+    // function to support sorting by signature affix count
 
 };
 

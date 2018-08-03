@@ -39,6 +39,9 @@ private:
     CSignatureCollection& operator=(const CSignatureCollection& x);
 
 public:
+    // Many functions below used to take the type `QString` as arguments.
+    // Changed them to `const QString&` for possibly greater efficiency.
+    // Changed made by Hanson 7.30
     friend class CLexicon;
 
     CSignature*                             operator<< (const QString&);
@@ -70,8 +73,6 @@ public:
     void                                    sort(eSortStyle);
     void                                    sort_signatures_by_affix_count();
     void                                    sort_each_signatures_stems_alphabetically();
-
-    void                                    remove_signature(CSignature* p_sig);
 
     void                                    assign_json_id();
     void                                    check_singleton_signatures(const QString& message);

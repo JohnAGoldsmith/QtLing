@@ -19,13 +19,13 @@ class LowerTableView;
 typedef  QPair<CStem*,CSignature*>* ptr_to_stem_sig_pair;
 
 struct Parse_triple {
-    QString         m_stem;
-    QString         m_suffix;
+    QString         p_stem;
+    QString         p_suffix;
 //    CSignature*     p_signature; // we will get rid of this, since it can be a hanging pointer when the lexicon changes.
-    QString         m_sig_string;
+    QString         p_sig_string;
 
     Parse_triple(QString stem, QString suffix, QString sig_string)
-        {m_stem = stem; m_suffix = suffix;  m_sig_string =sig_string;}
+        {p_stem = stem; p_suffix = suffix;  p_sig_string =sig_string;}
 };
 
 
@@ -49,7 +49,7 @@ public:
     //Accessors
     void                                add_parse(CStem* stem, CSuffix* suffix, CSignature* signature);
 //    void                                add_parse_triple(QString stem, QString affix, CSignature*);
-    void                                add_parse_triple(QString stem, QString affix, sig_string this_sig_string);
+    void                                add_parse_triple(QString stem, QString affix, sigstring_t this_sig_string);
     void                                add_to_autobiography(QString line);
     void                                clear_signatures() { m_Signatures.clear();}
     void                                clear_parse_triple_map();

@@ -25,10 +25,8 @@ CHypothesis* CLexicon::get_hypothesis(QString hypothesis)
  */
 
 /*!
- * \brief 1) Given a map of sig_graph_edges, find which of those are valid;
- * 2) for valid (or "doomed") sig_graph_edges, remove `sig_2_shorter_stem` from
- * the signature collection in the lexicon, replace it with a new one reflecting
- * the hypothesis; 3) create `CHypotheses` objects for valid sig_graph_edges.
+ * \brief Given the sig_graph_edges_map from step8b, generates hypotheses;
+ * modified by Hanson 7.31.
  *
  * Modifications to other parts of the program to support hypotheses generation:
  * 1.   Revised `step4b_link_signature_and_stem_and_word` do deal with cases like
@@ -109,9 +107,9 @@ void CLexicon::step9_from_sig_graph_edges_map_to_hypotheses()
         if (success_flag == false) continue;
         // from now on the doomed affixes in the list are all valid ones.
 
-         // Test code for checking valid doomed signatures that are found
-        const QString& str_affected_signature = pSig2_shorter_stem->display();
-        const QString& str_affected_signature1 = pSig1_longer_stem->display();
+         // -- Test code for checking valid doomed signatures that are found
+        const sigstring_t& str_affected_signature = pSig2_shorter_stem->display();
+        const sigstring_t& str_affected_signature1 = pSig1_longer_stem->display();
         qDebug() << "Affected signatures:" << str_affected_signature << str_affected_signature1
                  << "| Doomed affixes:" << doomed_affixes.join(",")
                  << "| Num of affected stems:" << pSig2_shorter_stem->get_number_of_stems();
@@ -119,200 +117,195 @@ void CLexicon::step9_from_sig_graph_edges_map_to_hypotheses()
             qDebug() << "  This signature is not unique!";
         else
             affected_signatures.append(str_affected_signature);
+        // -- End of test code, added by Hanson, 7.30
 
+        // -- created new data structure to store relevant info of valid hypotheses
         doomed_signature_info_map[original_sig2_affixes_shorter_stem]
                 = DoomedSignatureInfo(p_edge, doomed_affixes);
+        // -- added by Hanson 7.30
+
+        // --- Beginning of code that needs to be fixed ---
+        /*
+            // we remove all of the newaffixes from pSig2, and replace them with this_morph, and
+            // this_morph poiznts directly to pSig1.
+            foreach (QString this_affix, affixes2){
+                if (doomed_affixes.contains(this_affix)){
+                    m_SuffixesFlag?
+                        pSig2_shorter_stem->remove_suffix(this_affix):
+                        pSig2_shorter_stem->remove_prefix(this_affix);
+                }
+            }
+            pSig2_shorter_stem->add_affix_string(this_morph); */
+            // !! this signature needs to send itself to the Dict in Signatures to be updated.
+
+            // Then pSig2 loses all of the stems that created the shared words here.
+            // But that has not yet been implemented.
+            /*
+            eHypothesisType this_hypothesis_type = HT_affix_goes_to_signature;
+            CHypothesis (this_hypothesis_type, p_edge);
+            CHypothesis * this_hypothesis = new CHypothesis( this_hypothesis_type, this_morph,
+                                                             original_sig1_affixes_longer_stem,
+                                                             original_sig2_affixes_shorter_stem,
+                                                             pSig2_shorter_stem->display(),
+                                                             doomed_affixes,
+                                                             p_edge->get_number_of_words());
+            m_Hypotheses->append(this_hypothesis);
+            m_Hypothesis_map->insert (this_hypothesis->express_as_string(),  this_hypothesis);
+            */ // this part is moved to step9c
+        // --- End of code that needs to be fixed -- commented out by Hanson, 7.30
     }
-
-
-    /* --- 2) Go through list of doomed signatures,
-     * call remove_signature, and replace them with new ones. --- */
-
-    DoomedSignatureInfoMap::iterator infomap_iter;
-    for (infomap_iter = doomed_signature_info_map.begin();
-         infomap_iter != doomed_signature_info_map.end();
-         infomap_iter++) {
-
-
-        DoomedSignatureInfo& info = infomap_iter.value();
-
-        // Get string representation of new signature
-        // removed doomed affixes from old signature
-        const QString str_old_sig = info.m_edge_ptr->get_sig2_string();
-        QStringList affixes = str_old_sig.split('=');
-        QStringList::iterator affixes_iter;
-        for (affixes_iter = affixes.begin(); affixes_iter != affixes.end(); ) {
-            if (info.m_doomed_affixes.contains(*affixes_iter))
-                affixes.erase(affixes_iter);
-            else
-                affixes_iter++;
-        }
-        const QString new_affix =
-                QString("%1[%2]")
-                .arg(info.m_edge_ptr->get_morph())
-                .arg(info.m_edge_ptr->get_sig1_string().replace('=','~'));
-        affixes.append(new_affix);
-        std::sort(affixes.begin(), affixes.end());
-
-        // create new signature and add it to the signature collection
-        const QString str_new_sig = affixes.join('=');
-        CSignature* p_new_sig;
-        p_new_sig = *p_signatures << str_new_sig;
-        if (!m_SuffixesFlag)
-            p_new_sig->set_suffix_flag(false);
-
-        foreach(QString affix, affixes) {
-            step4a_link_signature_and_affix(p_new_sig, affix);
-        }
-
-        CSignature* p_old_sig = info.m_edge_ptr->get_sig_2();
-        foreach(CStem* p_stem, *(p_old_sig->get_stems())) {
-            const QString str_stem = p_stem->get_key();
-            step4b_link_signature_and_stem_and_word(str_stem, p_new_sig, str_new_sig, "Hypothesis");
-        }
-
-        remove_signature(p_old_sig, "Hypothesis");
-        info.m_edge_ptr->m_sig_2 = p_new_sig;
-        update_pointer_in_edge_map(str_old_sig, p_new_sig);
-
-        info.m_str_revised_sig = str_new_sig;
-
-        /* --- 3) Create CHypothesis object --- */
-        eHypothesisType this_hypothesis_type = HT_affix_goes_to_signature;
-        // CHypothesis (this_hypothesis_type, info.m_edge_ptr);
-        CHypothesis * this_hypothesis = new CHypothesis( this_hypothesis_type, info.m_edge_ptr->get_morph(),
-                                                         info.m_edge_ptr->get_sig1_string(),
-                                                         str_old_sig,
-                                                         p_new_sig->display(),
-                                                         info.m_doomed_affixes,
-                                                         info.m_edge_ptr->get_number_of_words());
-        m_Hypotheses->append(this_hypothesis);
-        m_Hypothesis_map->insert (this_hypothesis->express_as_string(),  this_hypothesis);
-    }
-    p_signatures->sort_each_signatures_stems_alphabetically();
+    // -- Remaining steps for hypothesis generation
+    step9a_from_doomed_info_map_to_parses(doomed_signature_info_map);
+    step3_from_parses_to_stem_to_sig_maps(QString("Hypotheses"));
+    step4_create_signatures(QString("Hypotheses"), MS_ignore_minimum_stem_count);
+    step9b_redirect_ptrs_in_sig_graph_edges_map(doomed_signature_info_map);
+    step9c_from_doomed_info_map_to_hypotheses(doomed_signature_info_map);
+    // -- Added by Hanson, 8.1
 }
 
 /*!
- * \brief Goes through the map of sig_graph_edges and updates the pointer
- * `m_sig_1` or `m_sig_2` to p_new_sig if it is found that `m_sig_string_1`
- * or `m_sig_string_2` is identical to str_old_sig.
- * \param String representation of signature whose pointer needs to be updated
- * \param New pointer of that signature.
+ * \brief Create new parses using the current collection of signatures;
+ * takes the map containing info of signatures to be modified after hypothesis
+ * generation (`ref_doomed_info_map`) and modifies these parses.
+ * \param ref_doomed_info_map
+ *
+ * -- added by Hanson 7.30
  */
-void CLexicon::update_pointer_in_edge_map(const QString& str_old_sig, CSignature* p_new_sig)
+void CLexicon::step9a_from_doomed_info_map_to_parses(DoomedSignatureInfoMap& ref_doomed_info_map)
 {
+    // QMap<QString, QPair<sig_graph_edge*, QStringList>> = DoomedInfoMap
+    clear_parses();
+
+    QList<CSignature*>* p_old_signature_list;
+    m_SuffixesFlag?
+            p_old_signature_list = m_Signatures->get_signature_list():
+            p_old_signature_list = m_PrefixSignatures->get_signature_list();
+    CSignature* pSig;
+    QList<affix_t> affixes;
+
+    // Iterate through each signature in the current collection of signatures
+    foreach (pSig, *p_old_signature_list){
+        const sigstring_t& str_old_signature = pSig->display();
+        DoomedSignatureInfoMap::iterator iter
+                = ref_doomed_info_map.find(str_old_signature);
+        affixes = str_old_signature.split('=');
+
+        // see if the current signature is affected by hypothesis generation
+        if (iter != ref_doomed_info_map.end()) {
+            DoomedSignatureInfo& ref_info = iter.value();
+            sig_graph_edge* p_edge = ref_info.m_edge_ptr;
+            const QList<affix_t>& ref_doomed_affixes = ref_info.m_doomed_affixes;
+            // remove doomed affixes from this signature
+            // e.g. NULL=s=ed=ation=ations --> NULL=s=ed
+            QList<affix_t>::iterator aff_iter;
+            for (aff_iter = affixes.begin(); aff_iter != affixes.end(); ) {
+                const affix_t& curr_affix = *aff_iter;
+                if (ref_doomed_affixes.contains(curr_affix))
+                    affixes.erase(aff_iter);
+                else
+                    aff_iter++;
+            }
+            // add into new affix representation
+            // e.g. NULL=s=ed --> NULL=s=ed=ation[NULL~s]
+            sigstring_t secondary_sig = p_edge->get_sig1_string();
+            secondary_sig.replace('=','~');
+            const affix_t new_affix = p_edge->get_morph() + "[" + secondary_sig + "]";
+            affixes.append(new_affix);
+            std::sort(affixes.begin(), affixes.end());
+            ref_info.m_str_revised_sig = affixes.join('=');
+        }
+
+        // Creating parse objects given list of stems and affixes.
+        QList<CStem*>* stem_list = pSig->get_stems();
+        CStem* pStem;
+        foreach (pStem, *stem_list){
+            const stem_t& this_stem = pStem->display();
+            /*
+            if (this_stem == "call") {
+                qDebug() << "Found affixes for [call]:" << affixes.join(",");
+                if (sig_is_doomed)
+                    qDebug() << "Generated from a doomed signature";
+                else
+                    qDebug() << "Not generated from a doomed signature";
+            }*/
+            foreach (affix_t this_affix, affixes){
+                CParse* this_parse;
+                m_SuffixesFlag?
+                        this_parse = new CParse(this_stem, this_affix, true):
+                        this_parse = new CParse(this_affix, this_stem, false);
+                m_Parses->append(this_parse);
+            }
+        }
+    }
+}
+
+/*!
+ * \brief This function looks at the string representation of signatures in the
+ * sig_graph_edge_map, and updates the pointers associated with them by
+ * searching through the newly generated signature collection.
+ * \param ref_doomed_info_map
+ *
+ * -- added by Hanson 7.30
+ */
+void CLexicon::step9b_redirect_ptrs_in_sig_graph_edges_map(const DoomedSignatureInfoMap &ref_doomed_info_map)
+{
+    CSignatureCollection* p_signatures = m_SuffixesFlag?
+                m_Signatures : m_PrefixSignatures;
     QMap<QString,sig_graph_edge*>::iterator edge_map_iter;
     for (edge_map_iter = m_SigGraphEdgeMap.begin();
          edge_map_iter != m_SigGraphEdgeMap.end();
          edge_map_iter++) {
         sig_graph_edge* p_edge = edge_map_iter.value();
-        if (p_edge->m_sig_string_1 == str_old_sig)
-            p_edge->m_sig_1 = p_new_sig;
-        if (p_edge->m_sig_string_2 == str_old_sig)
-            p_edge->m_sig_2 = p_new_sig;
+        const sigstring_t& str_sig_1 = p_edge->get_sig1_string();
+        const sigstring_t& str_sig_2 = p_edge->get_sig2_string();
+        // QString message("Checking edge: " + p_edge->label());
+        CSignature *p_new_sig_1, *p_new_sig_2;
+        //bool not_found_flag = false;
+        p_new_sig_1 = p_signatures->find_or_fail(str_sig_1);
+        if (p_new_sig_1 == NULL) {
+            QMap<sigstring_t, DoomedSignatureInfo>::ConstIterator info_map_iter
+                    = ref_doomed_info_map.find(str_sig_1);
+            if (info_map_iter != ref_doomed_info_map.constEnd())
+                p_new_sig_1 = p_signatures->find_or_fail(info_map_iter.value().m_str_revised_sig);
+        }
+        p_edge->m_sig_1 = p_new_sig_1;
+
+        p_new_sig_2 = p_signatures->find_or_fail(str_sig_2);
+        if (p_new_sig_2 == NULL) {
+            QMap<sigstring_t, DoomedSignatureInfo>::ConstIterator info_map_iter
+                    = ref_doomed_info_map.find(str_sig_2);
+            if (info_map_iter != ref_doomed_info_map.constEnd())
+                p_new_sig_2 = p_signatures->find_or_fail(info_map_iter.value().m_str_revised_sig);
+        }
+        p_edge->m_sig_2 = p_new_sig_2;
+
+        if (p_new_sig_1 == NULL)
+            qDebug() << "Did not find signature1" << str_sig_1;
+        if (p_new_sig_2 == NULL)
+            qDebug() << "Did not find signature2" << str_sig_2;
+        /*if (not_found_flag)
+            qDebug() << message;*/
     }
 }
 
-/*!
- * \brief Removes a CSignature object from CSignatureCollection, at the same
- * time removing all pointers to that object; delete any stem or affix if the
- * deleted signature is the only signature associated with it.
- * \param Pointer to signature
- * \param Used for logging into autobiography of stems and words
- *
- * This function is basically a reverse implementation of how a signature
- * is added in step4. Some methods such as `CStem::remove_signature()`,
- * `CStemCollection::remove_stem()`, `CSuffixCollection::remove_suffix()`,
- * `CPrefixCollection::remove_prefix()`, and
- * `CSignatureCollection::remove_signature()` are added to support this
- * function.
- *
- */
-void CLexicon::remove_signature(CSignature* p_sig, const QString& name_of_calling_function)
+void CLexicon::step9c_from_doomed_info_map_to_hypotheses(const DoomedSignatureInfoMap& ref_doomed_info_map)
 {
-    CSignatureCollection* p_sigs = m_SuffixesFlag?
-                m_Signatures : m_PrefixSignatures;
-    CStemCollection* p_stems = m_SuffixesFlag?
-                m_suffixal_stems : m_prefixal_stems;
-    const QString str_sig = p_sig->get_key();
-
-    // PART1 -- reverse implementation of 4b
-    // iterate through the stem list - remove stem connections to signature,
-    // generate words that are connected to this signature
-    // - remove parse-triples in these words
-    const QStringList str_affixes = str_sig.split('=');
-
-    foreach (CStem* p_stem, *(p_sig->get_stems())) {
-        const QString str_stem = p_stem->get_key();
-
-        // iterate through all affixes in the list
-        foreach (QString str_affix, str_affixes) {
-            if (str_affix == "NULL")
-                str_affix = "";
-            const QString str_word = m_SuffixesFlag?
-                        str_stem + str_affix:
-                        str_affix + str_stem;
-            CWord* p_word = m_Words->find_or_fail(str_word);
-            if (p_word == NULL) {
-                qDebug() << "CLexicon::remove_signature() - did not find word" << str_word;
-                continue;
-            }
-
-            // delete parse_triple object from word if that word has this signature
-            QMap<stem_t, Parse_triple*>::iterator ptm_iter;
-            QMap<stem_t, Parse_triple*>* p_ptm = p_word->get_parse_triple_map();
-            for (ptm_iter = p_ptm->begin(); ptm_iter != p_ptm->end(); ) {
-                const QString& str_curr_stem = ptm_iter.key();
-                Parse_triple* p_curr_parse_triple = ptm_iter.value();
-                if (str_curr_stem == str_stem
-                        && ptm_iter.value()->m_sig_string == str_sig) {
-                    delete p_curr_parse_triple;
-                    p_ptm->erase(ptm_iter);
-                    add_to_word_autobiographies(str_word,
-                                                QString("[%1]=Removed signature=Stem: %2=%3")
-                                                .arg(name_of_calling_function)
-                                                .arg(str_stem)
-                                                .arg(str_sig));
-                } else {
-                    ptm_iter++;
-                }
-            }
-        }
-
-        // remove stem's association with signature, delete stem if current
-        // signature is the only associated signature with the stem
-        int sig_ptrs_left_in_stem =
-                p_stem->remove_signature(p_sig);
-        add_to_stem_autobiographies(str_stem,
-                                    QString("[%1]=Removed signature=%2")
-                                    .arg(name_of_calling_function)
-                                    .arg(str_sig));
-        if (sig_ptrs_left_in_stem == 0) { // reverse of find_or_add
-            p_stems->remove_stem(p_stem);
-            add_to_stem_autobiographies(str_stem,
-                                        QString("[%1]=Removed stem")
-                                        .arg(name_of_calling_function));
-        }
+    eHypothesisType this_hypothesis_type = HT_affix_goes_to_signature;
+    DoomedSignatureInfoMap::ConstIterator info_map_iter;
+    for (info_map_iter = ref_doomed_info_map.constBegin();
+         info_map_iter != ref_doomed_info_map.constEnd();
+         info_map_iter++) {
+        const DoomedSignatureInfo& ref_info = info_map_iter.value();
+        sig_graph_edge* p_edge = info_map_iter.value().m_edge_ptr;
+        CHypothesis * this_hypothesis = new CHypothesis( this_hypothesis_type, p_edge->get_morph(),
+                                                         p_edge->get_sig1_string(),
+                                                         p_edge->get_sig2_string(),
+                                                         ref_info.m_str_revised_sig,
+                                                         ref_info.m_str_revised_sig.split('='),
+                                                         p_edge->get_number_of_words());
+        m_Hypotheses->append(this_hypothesis);
+        m_Hypothesis_map->insert (this_hypothesis->express_as_string(),  this_hypothesis);
     }
-
-    // PART2 -- reverse implementation of 4a
-    if (m_SuffixesFlag) {
-        foreach (CSuffix* p_suffix, *(p_sig->get_suffix_list())) {
-            int updated_sig_count = p_suffix->decrement_count();
-            if (updated_sig_count == 0)
-                m_Suffixes->remove_suffix(p_suffix);
-        }
-    } else {
-        foreach (CPrefix* p_prefix, *(p_sig->get_prefix_list())) {
-            int updated_sig_count = p_prefix->decrement_count();
-            if (updated_sig_count == 0)
-                m_Prefixes->remove_prefix(p_prefix);
-        }
-    }
-
-    // PART3 -- reverse implementation of "*m_Signature << this_signature_string;
-    p_sigs->remove_signature(p_sig);
-
 }
 
 
@@ -395,11 +388,13 @@ CHypothesis::CHypothesis(eHypothesisType HypothesisT,   sig_graph_edge*  p_edge)
 }
 
 
-CHypothesis::CHypothesis (eHypothesisType HypothesisT, morph_t this_morph,
-                          sigstring_t sig1,
-                          sigstring_t sig2,
-                          sigstring_t new_sig,
-                          QStringList new_affixes, int number_of_words_saved)
+CHypothesis::CHypothesis (eHypothesisType HypothesisT,
+                          const morph_t& this_morph,
+                          const sigstring_t& sig1,
+                          const sigstring_t& sig2,
+                          const sigstring_t& new_sig,
+                          const QStringList& new_affixes,
+                          const int number_of_words_saved)
 {
     if (HypothesisT == HT_affix_goes_to_signature){
         m_hypothesis_type   = HypothesisT;

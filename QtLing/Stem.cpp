@@ -13,17 +13,15 @@ CStem::CStem(CStem& stem) {
 
 }
 
-QString CStem::display(){
-    return m_key;
+void CStem::add_signature(CSignature *p_new_sig)
+{
+    foreach (CSignature* p_sig, m_Signatures) {
+        if (p_sig->get_key() == p_new_sig->get_key())
+            return;
+    }
+    m_Signatures.append(p_new_sig);
 }
 
-/*!
- * \brief Removes a given signature from the list of signature pointers.
- * \param Given signature pointer
- * \return The number of signatures left after a signature is removed
- */
-int CStem::remove_signature(CSignature *pSig)
-{
-    m_Signatures.removeOne(pSig);
-    return m_Signatures.length();
+QString CStem::display(){
+    return m_key;
 }

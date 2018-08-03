@@ -8,6 +8,7 @@
 #include "WordCollection.h"
 #include "graphics.h"
 #include "lxamodels.h"
+#include "compound.h"
 class sig_graph_edge;
 
 /**
@@ -125,7 +126,7 @@ void LowerTableView::display_this_item( const  QModelIndex & index )
             delete m_my_current_model;
         }
         m_my_current_model = new QStandardItemModel();
-        sig_string sig = index.sibling(row,0).data().toString();
+        sigstring_t sig = index.sibling(row,0).data().toString();
         CSignature* pSig;
         this_lexicon->get_suffix_flag()?
                     pSig = this_lexicon->get_signatures()->get_signature(sig):
@@ -161,12 +162,12 @@ void LowerTableView::display_this_item( const  QModelIndex & index )
 
         if (m_parent_window->m_graphic_display_flag){
             //-->  Graphic display in lower right window <--//
-
+            /*
             if (column == 1){
                 pSig = pSig1;
             } else { pSig = pSig2;}
             graphics_sig_graph_edges(pSig, this_lexicon );
-
+            */
         } else
             // -->   Tabular display in lower right window <--//
         {   foreach (this_word_stem_item, this_edge->shared_word_stems){
@@ -179,9 +180,9 @@ void LowerTableView::display_this_item( const  QModelIndex & index )
             }
             m_my_current_model = new QStandardItemModel();
             // --> first signature <-- //
-            table_one_signature(pSig1, sig1_stems, pSig1->get_key());
+            table_one_signature(pSig1, sig1_stems, this_edge->get_sig1_string());
             // --> second signature <-- //
-            table_one_signature(pSig2, sig2_stems, pSig2->get_key());
+            table_one_signature(pSig2, sig2_stems, this_edge->get_sig2_string());
             // --> words <-- //
             m_my_current_model->appendRow(item_list);    // blank row in table.
             item_list.clear();
@@ -227,6 +228,7 @@ void LowerTableView::display_this_item( const  QModelIndex & index )
         break;
 
         // add component 9
+        /* Lower display function for protostems added by Hanson. */
     case e_data_suffixal_protostems:
     case e_data_prefixal_protostems: {
         if (index.isValid()) {row = index.row();}
@@ -238,7 +240,29 @@ void LowerTableView::display_this_item( const  QModelIndex & index )
         table_protostem(p_protostem);
         setModel(m_my_current_model);
         break;
-    }
+    }   /* Lower display function for protostems added by Hanson. */
+
+        /* Lower display function for compounds added by Hanson. */
+    case e_data_compound_words: {
+        if (index.isValid()) {
+            row = index.row();
+            column = index.column();
+            if (column == 0)
+                column = 1;
+        }
+        QString str_compound = index.sibling(row, 0).data().toString();
+        CompoundWord* p_compound = this_lexicon->get_compounds()
+                ->get_compound_word(str_compound);
+        if (p_compound == NULL) {
+            qDebug() << "LowerTableView::display_this_item: "
+                        "Cannot find compound word!";
+            break;
+        }
+        table_compound_composition(p_compound, column-1);
+        setModel(m_my_current_model);
+        break;
+
+    }   /* Lower display function for compounds added by Hanson. */
 
     default:
         break;
@@ -584,7 +608,7 @@ void LowerTableView::table_passive_signature(CSignature *p_this_sig)
 
     for (int signo = sorted_signatures.count()-1; signo >= 0 ;signo-- ){
         CSignature* pSig2 = sorted_signatures[signo];
-        sig_string sig2 = pSig2->get_key();
+        sigstring_t sig2 = pSig2->get_key();
         item_list.clear();
         p_item = new QStandardItem(Morphs[pSig2]);
         item_list.append(p_item);
@@ -626,3 +650,43 @@ void LowerTableView::table_protostem(protostem *p_protostem)
 
 }
 
+/*!
+ * \brief Lower display function for compounds added by Hanson.
+ * \param p_compound
+ * \param composition_i
+ */
+void LowerTableView::table_compound_composition(CompoundWord* p_compound, int composition_i)
+{
+    typedef  QStandardItem QSI;
+    typedef  CompoundWord::CompoundComposition CompoundComposition;
+    typedef  CompoundComponent::CompoundConnectionMap ConnectionMap;
+
+    const QList<CompoundComposition*>& ref_composition_list
+            = p_compound->get_compositions();
+    if (composition_i >= ref_composition_list.length())
+        return;
+
+    m_my_current_model = new QStandardItemModel();
+
+    QStringList labels;
+    labels << "Component of compound";
+
+    CompoundComposition* p_composition
+            = p_compound->get_compositions()[composition_i];
+    CompoundComponent* p_component;
+    foreach (p_component, *p_composition) {
+        QList<QSI*> item_list;
+        QSI* item0 = new QSI(p_component->get_word());
+        item0->setBackground(QBrush(QColor(200, 200, 200)));
+        item_list.append(item0);
+        ConnectionMap::ConstIterator connection_iter;
+        const ConnectionMap& connection_map = p_component->get_connections();
+        for (connection_iter = connection_map.constBegin();
+             connection_iter != connection_map.constEnd();
+             connection_iter++) {
+            QSI* connection_item = new QSI(connection_iter.key());
+            item_list.append(connection_item);
+        }
+        m_my_current_model->appendColumn(item_list);
+    }
+}

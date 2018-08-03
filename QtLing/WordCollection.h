@@ -32,6 +32,9 @@ private:
     CWordCollection&        operator=(const CWordCollection& x);
 
 public:
+    // Many functions below used to take the type `QString` as arguments.
+    // Changed them to `const QString&` for possibly greater efficiency.
+    // Changed made by Hanson 7.30
     friend class CLexicon;
     CWord*                  operator<< (const QString&);
     CWord*                  operator^= (const QString&);

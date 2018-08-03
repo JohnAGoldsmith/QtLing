@@ -79,13 +79,8 @@ void CSuffixCollection::sort_by_count()
 
 }
 
-void CSuffixCollection::remove_suffix(CSuffix* p_suffix)
-{
-    const QString str_suffix = p_suffix->get_key();
-    m_SuffixMap.remove(str_suffix);
-    m_SortedList.removeOne(p_suffix);
-    delete p_suffix;
-}
+
+
 
 
 
@@ -169,10 +164,3 @@ void CPrefixCollection::sort_by_count()
 
 }
 
-void CPrefixCollection::remove_prefix(CPrefix* p_prefix)
-{
-    const QString str_prefix = p_prefix->get_key();
-    m_PrefixMap.remove(str_prefix);
-    m_SortedList.removeOne(p_prefix);
-    delete p_prefix;
-}
