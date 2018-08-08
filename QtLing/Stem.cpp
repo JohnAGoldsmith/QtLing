@@ -16,6 +16,15 @@ CStem::CStem(CStem& stem) {
 
 }
 
+void CStem::add_signature(CSignature *p_new_sig)
+{
+    foreach (CSignature* p_sig, m_Signatures) {
+        if (p_sig->get_key() == p_new_sig->get_key())
+            return;
+    }
+    m_Signatures.append(p_new_sig);
+}
+
 QString CStem::display(){
     return m_key;
 }

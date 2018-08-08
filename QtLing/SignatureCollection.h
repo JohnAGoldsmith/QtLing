@@ -39,19 +39,22 @@ private:
     CSignatureCollection& operator=(const CSignatureCollection& x);
 
 public:
+    // Many functions below used to take the type `QString` as arguments.
+    // Changed them to `const QString&` for possibly greater efficiency.
+    // Changed made by Hanson 7.30
     friend class CLexicon;
 
-    CSignature*                             operator<< ( QString );
+    CSignature*                             operator<< (const QString&);
     void                                    operator<< ( CSignature* );
-    CSignature*                             operator^= ( QString );
+    CSignature*                             operator^= (const QString&);
     CSignature*                             operator[] (int n)              { return m_SortList[n];}
 
     void                                    calculate_stem_entropy();
     void                                    clear();
     void                                    compute_containment_list(); //this gives   for each signature the largest signatures it contains.
     bool                                    contains (sigstring_t);
-    CSignature*                             find_or_add ( QString);         // same as operatorˆ=
-    CSignature *                            find_or_fail(QString);
+    CSignature*                             find_or_add (const QString&);         // same as operatorˆ=
+    CSignature *                            find_or_fail(const QString&);
     void                                    find_minimal_cover();
     CSignature*                             get_at_sorted( uint n )         { return m_SortList[n];}
     QMap<CSignature*,QList<CSignature*>*> * get_containment_map()           {return & m_ContainmentMap;}
@@ -72,5 +75,6 @@ public:
     void                                    sort_each_signatures_stems_alphabetically();
 
     void                                    assign_json_id();
+    void                                    check_singleton_signatures(const QString& message);
 };
 #endif // CSIGNATURECOLLECTION_H

@@ -13,8 +13,9 @@ CWord::CWord(CWord& word)
  }
 
 
-CWord::~CWord(){
-
+CWord::~CWord()
+{
+    clear_parse_triple_map();
 }
 
 void CWord::IncrementWordCount (int n )
@@ -35,3 +36,11 @@ void CWord::add_parse_triple(QString stem, QString affix, QString sig_string)
     m_Parse_triple_map[stem]= this_triple;
 
 }
+
+void CWord::clear_parse_triple_map()
+{
+    foreach (Parse_triple* p_parse_triple, m_Parse_triple_map) {
+        delete p_parse_triple;
+    }
+    m_Parse_triple_map.clear();
+} // simplified and modified by Hanson, 7.31

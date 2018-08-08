@@ -126,7 +126,7 @@ void LowerTableView::display_this_item( const  QModelIndex & index )
             delete m_my_current_model;
         }
         m_my_current_model = new QStandardItemModel();
-        sig_string sig = index.sibling(row,0).data().toString();
+        sigstring_t sig = index.sibling(row,0).data().toString();
         CSignature* pSig;
         this_lexicon->get_suffix_flag()?
                     pSig = this_lexicon->get_signatures()->get_signature(sig):
@@ -162,10 +162,12 @@ void LowerTableView::display_this_item( const  QModelIndex & index )
 
         if (m_parent_window->m_graphic_display_flag){
             //-->  Graphic display in lower right window <--//
+            /*
             if (column == 1){
                 pSig = pSig1;
             } else { pSig = pSig2;}
             graphics_sig_graph_edges(pSig, this_lexicon );
+            */
         } else
             // -->   Tabular display in lower right window <--//
         {   foreach (this_word_stem_item, this_edge->shared_word_stems){
@@ -178,9 +180,9 @@ void LowerTableView::display_this_item( const  QModelIndex & index )
             }
             m_my_current_model = new QStandardItemModel();
             // --> first signature <-- //
-            table_one_signature(pSig1, sig1_stems );
+            table_one_signature(pSig1, sig1_stems, this_edge->get_sig1_string());
             // --> second signature <-- //
-            table_one_signature(pSig2, sig2_stems );
+            table_one_signature(pSig2, sig2_stems, this_edge->get_sig2_string());
             // --> words <-- //
             m_my_current_model->appendRow(item_list);    // blank row in table.
             item_list.clear();
@@ -214,18 +216,21 @@ void LowerTableView::display_this_item( const  QModelIndex & index )
           break;
 
         // add component 9
+        /* Lower display function for protostems added by Hanson. */
     case e_data_suffixal_protostems:
     case e_data_prefixal_protostems: {
         if (index.isValid()) {row = index.row();}
         QString str_protostem = index.sibling(row,0).data().toString();
         protostem* p_protostem = UpperView_data_type == e_data_suffixal_protostems ?
-                    this_lexicon->get_suffixal_protostems()->value(str_protostem):
-                    this_lexicon->get_prefixal_protostems()->value(str_protostem);
+                    this_lexicon->get_suffixal_protostems()->value(str_protostem, NULL):
+                    this_lexicon->get_prefixal_protostems()->value(str_protostem, NULL);
+        if (p_protostem == NULL) break;
         table_protostem(p_protostem);
         setModel(m_my_current_model);
         break;
-    }
+    }   /* Lower display function for protostems added by Hanson. */
 
+        /* Lower display function for compounds added by Hanson. */
     case e_data_compound_words: {
         if (index.isValid()) {
             row = index.row();
@@ -245,7 +250,7 @@ void LowerTableView::display_this_item( const  QModelIndex & index )
         setModel(m_my_current_model);
         break;
 
-    }
+    }   /* Lower display function for compounds added by Hanson. */
 
     default:
         break;
@@ -315,7 +320,7 @@ void LowerTableView::table_word(CWord* pWord){
         delete m_my_current_model;
     }
     m_my_current_model = new QStandardItemModel();
-
+    /*
     // Find the word's autobiography and set it, line by line, in the lower TableView.
     QListIterator<QString> line_iter(*pWord->get_autobiography());
     while (line_iter.hasNext()){
@@ -343,6 +348,28 @@ void LowerTableView::table_word(CWord* pWord){
         q_item = new QStandardItem(sig);
         item_list.append(q_item);
         m_my_current_model->appendRow(item_list);
+    }
+    */
+    CLexicon* lexicon = m_lexicon;
+    if (lexicon->word_autobiographies_contains(word_t)) {
+        //qDebug() << 339 << "true";
+        QListIterator<QString> line_iter(*(lexicon->get_word_autobiography(word_t)));
+        while (line_iter.hasNext()){
+            QString report_line = line_iter.next();
+            item_list.clear();
+            QStringList report_line_items = report_line.split("=");
+            for (int i = 0; i < report_line_items.size(); i++){
+                p_item = new QStandardItem(report_line_items[i]);
+                if (i == 0 && report_line_items[i][0] == "*"){
+                    p_item->setBackground(Qt::red);
+                } else{
+                    p_item->setBackground(Qt::white);
+                }
+                item_list.append(p_item);
+
+            }
+            m_my_current_model->appendRow(item_list);
+        }
     }
 
 }
@@ -402,7 +429,7 @@ void LowerTableView::table_stem(stem_t stem, CLexicon* Lexicon){
 
     // Find the stem's autobiography and set it, line by line, in the lower TableView.
     if (Lexicon->stem_autobiographies_contains(stem)) {
-        qDebug() << 339 << "true";
+        //qDebug() << 339 << "true";
         QListIterator<QString> line_iter(*Lexicon->get_stem_autobiography(stem));
         while (line_iter.hasNext()){
             QString report_line = line_iter.next();
@@ -488,29 +515,38 @@ void LowerTableView::table_signature(CSignature* pSig ){
  *
  * This displays information about a single signature.
  */
-void LowerTableView::table_one_signature(CSignature* pSig, QStringList stems)
+void LowerTableView::table_one_signature(CSignature* pSig, QStringList stems, const QString& str_sig)
 {
     QStandardItem*             p_item;
     QList<QStandardItem*>      item_list;
     CStem*                     p_Stem;
 
-    p_item = new QStandardItem(pSig->get_key());
+    p_item = new QStandardItem(str_sig);
     item_list.append(p_item);
     m_my_current_model->appendRow(item_list);
     item_list.clear();
-    foreach(p_Stem, *pSig->get_stems()){
-        stem_t this_stem_t = p_Stem->get_key();
-        p_item = new QStandardItem(this_stem_t);
-        if (stems.contains(this_stem_t)){
-            p_item->setBackground(Qt::red);
+    if (pSig != NULL) {
+        foreach(p_Stem, *pSig->get_stems()){
+            stem_t this_stem_t = p_Stem->get_key();
+            p_item = new QStandardItem(this_stem_t);
+            if (stems.contains(this_stem_t)){
+                p_item->setBackground(Qt::red);
+            }
+            item_list.append(p_item);
+            if (item_list.length() >= m_number_of_columns){
+                m_my_current_model->appendRow(item_list);
+                item_list.clear();
+            }
         }
-        item_list.append(p_item);
-        if (item_list.length() >= m_number_of_columns){
+        if (item_list.size() > 0 ){
             m_my_current_model->appendRow(item_list);
             item_list.clear();
         }
-    }
-    if (item_list.size() > 0 ){
+    } else {
+        p_item = new QStandardItem("This signature is removed");
+        item_list.append(p_item);
+        p_item = new QStandardItem("(Deleted or re-created using hypotheses)");
+        item_list.append(p_item);
         m_my_current_model->appendRow(item_list);
         item_list.clear();
     }
@@ -560,7 +596,7 @@ void LowerTableView::table_passive_signature(CSignature *p_this_sig)
 
     for (int signo = sorted_signatures.count()-1; signo >= 0 ;signo-- ){
         CSignature* pSig2 = sorted_signatures[signo];
-        sig_string sig2 = pSig2->get_key();
+        sigstring_t sig2 = pSig2->get_key();
         item_list.clear();
         p_item = new QStandardItem(Morphs[pSig2]);
         item_list.append(p_item);
@@ -578,10 +614,11 @@ void LowerTableView::table_protostem(protostem *p_protostem)
     typedef QStandardItem QSI;
     CLexicon* this_lexicon = get_parent_window()->get_lexicon();
     m_my_current_model = new QStandardItemModel();
+    const bool suffixes_flag = this_lexicon->get_suffix_flag();
 
-    QString str_protostem = p_protostem->get_stem();
-    int start_word_index = p_protostem->get_start_word();
-    int end_word_index = p_protostem->get_end_word();
+    const QString& str_protostem = p_protostem->get_stem();
+    const int start_word_index = p_protostem->get_start_word();
+    const int end_word_index = p_protostem->get_end_word();
     QStringList labels;
     labels << "" << str_protostem;
     m_my_current_model->setHorizontalHeaderLabels(labels);
@@ -590,7 +627,9 @@ void LowerTableView::table_protostem(protostem *p_protostem)
         QList<QSI*> item_list;
         QSI* item1 = new QSI();
         item1->setData(wordno, Qt::DisplayRole);
-        QString str_word = this_lexicon->get_words()->get_word_string(wordno);
+        const QString& str_word = suffixes_flag?
+                    this_lexicon->get_words()->get_word_string(wordno):
+                    this_lexicon->get_words()->get_reverse_sort_list()->at(wordno);
         QSI* item2 = new QSI(str_word);
         item_list.append(item1);
         item_list.append(item2);
@@ -599,11 +638,22 @@ void LowerTableView::table_protostem(protostem *p_protostem)
 
 }
 
+/*!
+ * \brief Lower display function for compounds added by Hanson.
+ * \param p_compound
+ * \param composition_i
+ */
 void LowerTableView::table_compound_composition(CompoundWord* p_compound, int composition_i)
 {
     typedef  QStandardItem QSI;
     typedef  CompoundWord::CompoundComposition CompoundComposition;
     typedef  CompoundComponent::CompoundConnectionMap ConnectionMap;
+
+    const QList<CompoundComposition*>& ref_composition_list
+            = p_compound->get_compositions();
+    if (composition_i >= ref_composition_list.length())
+        return;
+
     m_my_current_model = new QStandardItemModel();
 
     QStringList labels;

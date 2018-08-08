@@ -42,7 +42,7 @@ QListIterator<CSignature*> * CSignatureCollection::get_sorted_list_iterator()
 bool CSignatureCollection::contains(sigstring_t this_sigstring){
     return m_SignatureMap.contains(this_sigstring);
 }
-CSignature* CSignatureCollection::operator <<(QString this_sigstring)
+CSignature* CSignatureCollection::operator <<(const QString& this_sigstring)
 {
     CSignature* pSig;
 
@@ -73,11 +73,11 @@ void CSignatureCollection::operator<< (CSignature * pSig)
     }
 }
 
-CSignature* CSignatureCollection::operator ^=(QString szSignature)
+CSignature* CSignatureCollection::operator ^=(const QString& szSignature)
 {
     return this->find_or_add(szSignature);
 }
-CSignature* CSignatureCollection::find_or_add (QString sigstring )
+CSignature* CSignatureCollection::find_or_add (const QString& sigstring )
 {   if (m_SignatureMap.contains(sigstring))
     {
         return m_SignatureMap[sigstring];
@@ -89,7 +89,7 @@ CSignature* CSignatureCollection::find_or_add (QString sigstring )
         return pSig;
     }
 }
-CSignature* CSignatureCollection::find_or_fail(QString this_sig_string){
+CSignature* CSignatureCollection::find_or_fail(const QString& this_sig_string){
 
     if (m_SignatureMap.contains(this_sig_string)){
         return m_SignatureMap[this_sig_string];
@@ -269,3 +269,22 @@ void CSignatureCollection::find_minimal_cover()
         }
     }
 }
+
+void CSignatureCollection::check_singleton_signatures(const QString &message)
+{
+    QMap<QString, CSignature*>::ConstIterator sig_map_iter;
+    qDebug() << message << "Checking for singleton signatures";
+    for (sig_map_iter = m_SignatureMap.constBegin();
+         sig_map_iter != m_SignatureMap.constEnd();
+         sig_map_iter++) {
+        const QString& str_sig = sig_map_iter.key();
+        if (!str_sig.contains('='))
+            qDebug() << message << "found singleton signature in key:" << str_sig;
+        CSignature* p_sig = sig_map_iter.value();
+        if (!p_sig->get_key().contains('='))
+            qDebug() << message << "found singleton signature in CSignature object:" << str_sig;
+        if (p_sig->get_number_of_affixes() == 1)
+            qDebug() << message << "found singleton signature in CSignature object:" << str_sig;
+    }
+}
+

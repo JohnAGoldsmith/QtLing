@@ -91,16 +91,16 @@ bool GoldStandard::evaluate(CWordCollection* p_word_collection,
     int temp_overlap_word_count = 0; // number of words found in both gold standard and lxa
     int temp_gs_word_count = 0; // number of words foudn in gold standard
 
-    ParseMap::const_iterator gs_pm_iter;
-    Parse_triple_map::const_iterator gs_ptm_iter, lxa_ptm_iter;
-    const Parse_triple_map *p_lxa_ptm, *p_gs_ptm;
+    Word_to_parse_triple_collection_map::const_iterator gs_pm_iter;
+    Parse_triple_collection::const_iterator gs_ptm_iter, lxa_ptm_iter;
+    const Parse_triple_collection *p_lxa_ptm, *p_gs_ptm;
     CWord *p_word;
 
     for (gs_pm_iter = m_gs_parses->constBegin();
          gs_pm_iter != m_gs_parses->constEnd();
          gs_pm_iter++) {
         temp_gs_word_count++;
-        const QString& str_word = gs_pm_iter.key();
+        const word_t& str_word = gs_pm_iter.key();
         p_word = p_word_collection->get_word(str_word);
 
         if (p_word == NULL) {
@@ -117,11 +117,11 @@ bool GoldStandard::evaluate(CWordCollection* p_word_collection,
              gs_ptm_iter != p_gs_ptm->constEnd();
              gs_ptm_iter++) {
             total_correct++;
-            const QString& stem = gs_ptm_iter.key();
+            const stem_t& stem = gs_ptm_iter.key();
             if (p_lxa_ptm->contains(stem)) {
                 true_positives++;
                 if (p_true_positive_parses != NULL) {
-                    const QString& suffix = gs_ptm_iter.value()->p_suffix;
+                    const affix_t& suffix = gs_ptm_iter.value()->p_suffix;
                     // store parse into collection of true positive parses
                     p_true_positive_parses->add_parse_triple(str_word, stem, suffix); // **** NEED TO CHANGE **** //
                     // qDebug() << "[TRUE POSITIVE] " << str_word << ": " << stem << "-" << suffix;
@@ -133,11 +133,11 @@ bool GoldStandard::evaluate(CWordCollection* p_word_collection,
         for (lxa_ptm_iter = p_lxa_ptm->constBegin();
              lxa_ptm_iter != p_lxa_ptm->constEnd();
              lxa_ptm_iter++) {
-            const QString& stem = lxa_ptm_iter.key();
+            const stem_t& stem = lxa_ptm_iter.key();
             if (stem != str_word) {// only count parses with non-null suffixes
                 total_retrieved++;
                 if (p_retrieved_parses != NULL) {
-                    const QString& suffix = lxa_ptm_iter.value()->p_suffix;
+                    const affix_t& suffix = lxa_ptm_iter.value()->p_suffix;
                     // store parse into collection of retrieved parses
                     p_retrieved_parses->add_parse_triple(str_word, stem, suffix); // **** NEED TO CHANGE **** //
                     // qDebug() << "[RETRIEVED] " << str_word << ": " << stem << "-" << suffix;
@@ -214,16 +214,16 @@ bool GoldStandard::evaluate(ParseMapHandler& eval_parses,
     int temp_overlap_word_count = 0;
     int temp_gs_word_count = 0;
 
-    ParseMap::const_iterator gs_pm_iter;
-    ParseMap::const_iterator eval_pm_iter;
-    Parse_triple_map::const_iterator gs_ptm_iter, eval_ptm_iter;
-    const Parse_triple_map *p_eval_ptm, *p_gs_ptm;
+    Word_to_parse_triple_collection_map::const_iterator gs_pm_iter;
+    Word_to_parse_triple_collection_map::const_iterator eval_pm_iter;
+    Parse_triple_collection::const_iterator gs_ptm_iter, eval_ptm_iter;
+    const Parse_triple_collection *p_eval_ptm, *p_gs_ptm;
 
     for (gs_pm_iter = m_gs_parses->constBegin();
          gs_pm_iter != m_gs_parses->constEnd();
          gs_pm_iter++) {
         temp_gs_word_count++;
-        const QString& str_word = gs_pm_iter.key();
+        const word_t& str_word = gs_pm_iter.key();
         eval_pm_iter = eval_parses->find(str_word);
 
         if (eval_pm_iter == eval_parses->constEnd()) {
@@ -241,11 +241,11 @@ bool GoldStandard::evaluate(ParseMapHandler& eval_parses,
              gs_ptm_iter != p_gs_ptm->constEnd();
              gs_ptm_iter++) {
             total_correct++;
-            const QString& stem = gs_ptm_iter.key();
+            const stem_t& stem = gs_ptm_iter.key();
             if (p_eval_ptm->contains(stem)) {
                 true_positives++;
                 if (p_true_positive_parses != NULL) {
-                    const QString& suffix = gs_ptm_iter.value()->p_suffix;
+                    const affix_t& suffix = gs_ptm_iter.value()->p_suffix;
                     // store parse into collection of true positive parses
                     p_true_positive_parses->add_parse_triple(str_word, stem, suffix);
                     // qDebug() << "[TRUE POSITIVE] " << str_word << ": " << stem << "-" << suffix;
@@ -257,11 +257,11 @@ bool GoldStandard::evaluate(ParseMapHandler& eval_parses,
         for (eval_ptm_iter = p_eval_ptm->constBegin();
              eval_ptm_iter != p_eval_ptm->constEnd();
              eval_ptm_iter++) {
-            const QString& stem = eval_ptm_iter.key();
+            const stem_t& stem = eval_ptm_iter.key();
             if (stem != str_word) {// only count parses with non-null suffixes
                 total_retrieved++;
                 if (p_retrieved_parses != NULL) {
-                    const QString& suffix = eval_ptm_iter.value()->p_suffix;
+                    const affix_t& suffix = eval_ptm_iter.value()->p_suffix;
                     // store parse into collection of retrieved parses
                     p_retrieved_parses->add_parse_triple(str_word, stem, suffix);
                     // qDebug() << "[RETRIEVED] " << str_word << ": " << stem << "-" << suffix;
@@ -297,14 +297,12 @@ bool GoldStandard::evaluate(ParseMapHandler& eval_parses,
     return true;
 }
 
-void delete_ptm(QMap<QString, Parse_triple*>* ptm)
+void delete_parse_triple_collection(QMap<stem_t, Parse_triple*>* ptc)
 {
-    typedef QMap<QString, Parse_triple*> Parse_triple_map;
-    Parse_triple_map::iterator ptm_iter;
-    for (ptm_iter = ptm->begin(); ptm_iter != ptm->end(); ptm_iter++) {
-        delete ptm_iter.value();
+    foreach (Parse_triple* p_pt, *ptc) {
+        delete p_pt;
     }
-    delete ptm;
+    delete ptc;
 }
 
 /*!
@@ -346,10 +344,13 @@ bool GoldStandard::read_XML()
     //
     QDomNode node1, node2, node3, node4;
 
-    QString word, stem, affix;
-    ParseMap::iterator word_iter;
+    word_t word;
+    stem_t stem;
+    affix_t affix;
+
+    Word_to_parse_triple_collection_map::iterator word_iter;
     Parse_triple* new_pt;
-    Parse_triple_map* new_ptm;
+    Parse_triple_collection* new_ptm;
 
     bool skipWord = false;
     int lastEnd, start, length, pieceLength;
@@ -427,7 +428,7 @@ bool GoldStandard::read_XML()
             word = string.text();
             length = word.length();
 
-            new_ptm = new Parse_triple_map();
+            new_ptm = new Parse_triple_collection();
 
             // gloss element
             node3 = string.nextSibling();
@@ -462,7 +463,7 @@ bool GoldStandard::read_XML()
                             !piece.hasAttribute( "length" ) ) {
                             // TODO: add to error string
                             skipWord = true;
-                            delete_ptm(new_ptm);
+                            delete_parse_triple_collection(new_ptm);
                             break;
                         }
                         if ( morph.tagName() == "affix" || morph.tagName() == "root" ) {
@@ -472,7 +473,7 @@ bool GoldStandard::read_XML()
                             // discard word if it has empty spaces in it
                             if (start > lastEnd) {
                                 skipWord = true;
-                                delete_ptm(new_ptm);
+                                delete_parse_triple_collection(new_ptm);
                                 break;
                             } else {
                                 if (start != 0) {
@@ -496,7 +497,7 @@ bool GoldStandard::read_XML()
                 } else {
                     // Word has unassigned pieces, skip...
                     skipWord = true;
-                    delete_ptm(new_ptm);
+                    delete_parse_triple_collection(new_ptm);
                 }
                 node3 = node3.nextSibling();
             }
@@ -506,12 +507,12 @@ bool GoldStandard::read_XML()
             if (word_iter == m_gs_parses->end()) {
                 word_iter = m_gs_parses->insert(word, new_ptm);
             } else {
-                Parse_triple_map* existing_ptm = word_iter.value();
-                for (Parse_triple_map::const_iterator ptm_iter = new_ptm->constBegin();
+                Parse_triple_collection* existing_ptm = word_iter.value();
+                for (Parse_triple_collection::const_iterator ptm_iter = new_ptm->constBegin();
                      ptm_iter != new_ptm->constEnd(); ptm_iter++) {
                     existing_ptm->insert(ptm_iter.key(), ptm_iter.value());
                 }
-                delete_ptm(new_ptm);
+                delete_parse_triple_collection(new_ptm);
             }
 
             // notes element

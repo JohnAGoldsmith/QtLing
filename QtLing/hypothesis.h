@@ -8,7 +8,8 @@
 
 
 class CHypothesis
-{   friend lxa_graphics_scene;
+{
+    friend class lxa_graphics_scene;
 
     QString                         m_key;
     eHypothesisType                 m_hypothesis_type;
@@ -24,8 +25,13 @@ class CHypothesis
 public:
     CHypothesis (eHypothesisType  );
     CHypothesis (eHypothesisType, sig_graph_edge * );
-    CHypothesis (eHypothesisType, morph_t this_morph, sigstring_t sigstring_1, sigstring_t sigstring_2,
-                 sigstring_t new_sig, QStringList new_affixes, int number_of_words_saved);
+    CHypothesis (eHypothesisType,
+                 const morph_t& this_morph,
+                 const sigstring_t& sigstring_1,
+                 const sigstring_t& sigstring_2,
+                 const sigstring_t& new_sig,
+                 const QStringList& new_affixes,
+                 const int number_of_words_saved);
     QString                         get_key();
     QStringList                     express();
     QString                         express_as_string();

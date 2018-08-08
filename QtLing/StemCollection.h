@@ -13,7 +13,7 @@ class CLexicon;
 class CStemCollection
 {
 protected:
-
+    //QMap<stem_t, CStem*>
     map_string_to_stem *        m_StringToStemMap;
     int                         m_CorpusCount;
     QString                     m_MemberName;
@@ -31,6 +31,10 @@ private:
     CStemCollection& operator=(const CStemCollection& x);
 
 public:
+    // Many functions below used to take the type `QString` as arguments.
+    // Changed them to `const QString&` for possibly greater efficiency.
+    // Changed made by Hanson 7.30
+
     CStem*                          add (const QString&);  // deprecated
     void                            add_stem_pointer (CStem* pStem);
     void                            clear();

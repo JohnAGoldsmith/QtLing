@@ -1,3 +1,10 @@
+/* I moved any functions related to the treeview in the main window to here
+ * because more and more things got added to the treeview and lxamodels.cpp
+ * was getting too long.
+ *
+ * Comment added by Hanson 8.1
+ */
+
 #include "mainwindow.h"
 #include "WordCollection.h"
 #include "StemCollection.h"

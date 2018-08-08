@@ -4,14 +4,14 @@
 #include <QDebug>
 
 CSuffix::CSuffix(QString  suffix): m_key(suffix)
-{m_count = 0;
+{m_sig_count = 0;
 }
 
 CSuffix::CSuffix(CSuffix& suffix)
 {
     m_key = suffix.get_key();
     m_frequency = suffix.GetFrequency();
-    m_count = 0;
+    m_sig_count = 0;
 }
 
 void CSuffix::write_json(QJsonObject &ref_json) const
@@ -43,14 +43,14 @@ void CSuffix::read_json(const QJsonObject &ref_json)
 }
 
 CPrefix::CPrefix(QString  suffix): m_key(suffix)
-{m_count = 0;
+{m_sig_count = 0;
 }
 
 CPrefix::CPrefix(CPrefix& suffix)
 {
     m_key = suffix.get_key();
     m_frequency = suffix.GetFrequency();
-    m_count = 0;
+    m_sig_count = 0;
 }
 
 void CPrefix::write_json(QJsonObject &ref_json) const
