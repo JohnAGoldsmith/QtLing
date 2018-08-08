@@ -51,8 +51,11 @@ struct CJsonInfo {
     QList<CSignature*> prefix_signatures;
     QList<CSuffix*> suffixes;
     QList<CPrefix*> prefixes;
-    typedef QList<QPair<QJsonValue::Type, QString>> TagList;
+    typedef QPair<QJsonValue::Type, QString> JsonTag;
+    typedef QList<JsonTag> JsonTagList;
     static bool check_tags(const QJsonObject& ref_json, const QList<QPair<QJsonValue::Type, QString>>& tags);
+    static QString eSortStyle_to_string(const eSortStyle sortstyle);
+    static eSortStyle string_to_eSortStyle(const QString& str);
 };
 
 
@@ -375,6 +378,7 @@ public:
     void create_sublexicon();
 
     void check_autobiography_consistency();
+    void test_json_functionality();
 
 
 

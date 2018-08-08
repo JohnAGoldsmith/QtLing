@@ -6,6 +6,7 @@
 #include <QList>
 #include <QMap>
 #include <QJsonObject>
+#include <QJsonArray>
 
 class CSuffix;
 class CSignature;

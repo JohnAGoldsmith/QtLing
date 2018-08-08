@@ -50,7 +50,7 @@ public:
 
     void                    assign_json_id();
     void                    write_json(QJsonObject& ref_json);
-    void                    read_json(const QJsonObject& ref_json, CJsonInfo& ref_pointers);
+    void                    read_json_1(const QJsonObject& ref_json, CJsonInfo& ref_pointers);
 };
 
 class CPrefixCollection
@@ -87,7 +87,7 @@ public:
 
     void                    assign_json_id();
     void                    write_json(QJsonObject& ref_json);
-    void                    read_json(const QJsonObject &ref_json, CJsonInfo& ref_pointers);
+    void                    read_json_1(const QJsonObject &ref_json, CJsonInfo& ref_pointers);
 
 };
 
