@@ -3,18 +3,44 @@
 #include "SuffixCollection.h"
 #include "Stem.h"
 #include "StemCollection.h"
+#include "Signature.h"
+#include "SignatureCollection.h"
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QJsonDocument>
+#include <QFile>
 #include <QDebug>
 
 void CLexicon::test_json_functionality()
 {
     qDebug() << "testing json functionality";
+    assign_json_id();
     QJsonObject test_object;
+    /*
     if (m_SuffixesFlag)
         m_Suffixes->write_json(test_object);
     else
         m_Prefixes->write_json(test_object);
+    */
+    /*
+    if (m_SuffixesFlag)
+        m_suffixal_stems->write_json(test_object);
+    else
+        m_prefixal_stems->write_json(test_object);
+    */
+    if (m_SuffixesFlag)
+        m_Signatures->write_json(test_object);
+    else
+        m_PrefixSignatures->write_json(test_object);
+
+    QString filename("../test_json_stems.json");
+    QFile test_json_file(filename);
+    if (!test_json_file.open(QIODevice::WriteOnly)) {
+        qDebug() << "Cannot open file: " << filename;
+    } else {
+        QJsonDocument test_json_doc(test_object);
+        test_json_file.write(test_json_doc.toJson());
+    }
     qDebug() << "finished testing json functionality";
 }
 
@@ -93,6 +119,23 @@ eSortStyle CJsonInfo::string_to_eSortStyle(const QString &str)
 }
 
 /******************************************/
+/*                 LEXICON                */
+/******************************************/
+void CLexicon::assign_json_id()
+{
+    if (m_SuffixesFlag) {
+        m_Suffixes->assign_json_id();
+        m_suffixal_stems->assign_json_id();
+        m_Signatures->assign_json_id();
+    } else {
+        m_Prefixes->assign_json_id();
+        m_prefixal_stems->assign_json_id();
+        m_PrefixSignatures->assign_json_id();
+    }
+}
+
+
+/******************************************/
 /*          SUFFIXES and PREFIXES         */
 /******************************************/
 
@@ -155,9 +198,6 @@ void CSuffixCollection::assign_json_id()
 
 void CSuffixCollection::write_json(QJsonObject &ref_json)
 {
-    // need to use assign_json before using this function.
-    ref_json["count"] = m_SuffixMap.size();
-
     QJsonArray arr_suffixes;
     foreach (CSuffix* p_suffix, m_SuffixMap) {
         QJsonObject json_suffix;
@@ -169,7 +209,7 @@ void CSuffixCollection::write_json(QJsonObject &ref_json)
     foreach (CSuffix* p_suffix, m_SortedList) {
         arr_sorted_suffixes.append(p_suffix->get_json_id());
     }
-
+    ref_json["count"] = m_SuffixMap.size();
     ref_json["suffixes"] = arr_suffixes;
     ref_json["sortedSuffixes"] = arr_sorted_suffixes;
 }
@@ -207,7 +247,6 @@ void CPrefixCollection::write_json(QJsonObject &ref_json)
 {
     ref_json["count"] = m_PrefixMap.size();
 
-    assign_json_id();
     QJsonArray arr_prefixes;
     foreach (CPrefix* p_prefix, m_PrefixMap) {
         QJsonObject json_prefix;
@@ -250,20 +289,19 @@ void CPrefixCollection::read_json_1(const QJsonObject &ref_json, CJsonInfo& ref_
 
 void CStem::write_json(QJsonObject &ref_json) const
 {
-    ref_json["stem"] = m_key;
-    ref_json["count"] = m_count;
+
+    /*
     ref_json["wordListStartPoint"] = m_word_list_start_point;
     ref_json["wordListEndPoint"] = m_word_list_end_point;
+    */
     QJsonArray arr_signatures;
     CSignature* p_sig;
-
     foreach (p_sig, m_Signatures) {
         QJsonObject obj_sig;
-        obj_sig["signature"] = p_sig->get_key();
+        obj_sig["sig"] = p_sig->get_key();
         obj_sig["id"] = p_sig->get_json_id();
         arr_signatures.append(obj_sig);
     }
-    ref_json["signatures"] = arr_signatures;
 
     QJsonArray arr_parasignature;
     CSuffix* p_suffix;
@@ -273,13 +311,19 @@ void CStem::write_json(QJsonObject &ref_json) const
         obj_affix["id"] = p_suffix->get_json_id();
         arr_parasignature.append(obj_affix);
     }
-    ref_json["parasignature"] = arr_parasignature;
+    ref_json["id"] = m_json_id;
+    ref_json["stem"] = m_key;
+    ref_json["count"] = m_count;
+    ref_json["sigs"] = arr_signatures;
+    ref_json["parasig"] = arr_parasignature;
     /* need to change this part */
+    /*
     QJsonArray arr_autobiography;
     foreach (auto string, m_Autobiography) {
         arr_autobiography.append(string);
     }
     ref_json["autobiography"] = arr_autobiography;
+    */
 }
 
 void CStem::read_json_1(const QJsonObject &ref_json)
@@ -288,29 +332,31 @@ void CStem::read_json_1(const QJsonObject &ref_json)
     m_count = ref_json["count"].toInt();
     m_word_list_start_point = ref_json["wordListStartPoint"].toInt();
     m_word_list_end_point = ref_json["wordListEndPoint"].toInt();
+    /*
     const QJsonArray& arr_autobiography = ref_json["autobiography"].toArray();
     foreach (QJsonValue val_autobiography, arr_autobiography) {
         m_Autobiography.append(val_autobiography.toString());
     }
+    */
 }
 
 void CStem::read_json_2(const QJsonObject &ref_json, const CJsonInfo &ref_pointers)
 {
     if (ref_pointers.suffix_flag) {
-        const QJsonArray& arr_sigs = ref_json["signatures"].toArray();
+        const QJsonArray& arr_sigs = ref_json["sigs"].toArray();
         foreach (QJsonValue val_sig, arr_sigs) {
             const QJsonObject& obj_sig = val_sig.toObject();
             CSignature* p_sig = ref_pointers.suffix_signatures[obj_sig["id"].toInt()];
             add_signature(p_sig);
         }
-        const QJsonArray& arr_parasig = ref_json["parasignature"].toArray();
+        const QJsonArray& arr_parasig = ref_json["parasig"].toArray();
         foreach (QJsonValue val_parasig, arr_parasig) {
             const QJsonObject& obj_suf = val_parasig.toObject();
             CSuffix* p_suf = ref_pointers.suffixes[obj_suf["id"].toInt()];
             m_parasignature.append(p_suf);
         }
     } else {
-        const QJsonArray& arr_sigs = ref_json["signatures"].toArray();
+        const QJsonArray& arr_sigs = ref_json["sigs"].toArray();
         foreach (QJsonValue val_sig, arr_sigs) {
             const QJsonObject& obj_sig = val_sig.toObject();
             CSignature* p_sig = ref_pointers.prefix_signatures[obj_sig["id"].toInt()];
@@ -335,9 +381,6 @@ void CStemCollection::assign_json_id()
 
 void CStemCollection::write_json(QJsonObject &ref_json)
 {
-    ref_json["count"] = m_StringToStemMap->size();
-
-    assign_json_id();
     QJsonArray arr_stems;
     foreach (CStem* p_stem, *m_StringToStemMap) {
         QJsonObject json_stem;
@@ -348,6 +391,7 @@ void CStemCollection::write_json(QJsonObject &ref_json)
     foreach (CStem* p_stem, m_SortList) {
         arr_sorted_stems.append(p_stem->get_json_id());
     }
+    ref_json["count"] = m_StringToStemMap->size();
     ref_json["stems"] = arr_stems;
     ref_json["sortedStems"] = arr_sorted_stems;
     ref_json["sortValidFlag"] = m_SortValidFlag;
@@ -397,6 +441,92 @@ void CStemCollection::read_json_2(const QJsonObject& ref_json, const CJsonInfo &
     }
 }
 
+/******************************************/
+/*                SIGNATURE               */
+/******************************************/
+
+void CSignature::write_json(QJsonObject &ref_json) const
+{
+    QJsonArray arr_suffixes;
+    foreach (CSuffix* p_suffix, *m_Suffixes) {
+        QJsonObject obj_suffix;
+        obj_suffix["suffix"] = p_suffix->get_key();
+        obj_suffix["id"] = p_suffix->get_json_id();
+        arr_suffixes.append(obj_suffix);
+    }
 
 
+    QJsonArray arr_prefixes;
+    foreach (CPrefix* p_prefix, *m_Prefixes) {
+        QJsonObject obj_prefix;
+        obj_prefix["prefix"] = p_prefix->get_key();
+        obj_prefix["id"] = p_prefix->get_json_id();
+        arr_prefixes.append(obj_prefix);
+    }
 
+
+    QJsonArray arr_stems;
+    foreach (CStem* p_stem, *m_Stems) {
+        QJsonObject obj_stem;
+        obj_stem["stem"] = p_stem->get_key();
+        obj_stem["id"] = p_stem->get_json_id();
+        arr_stems.append(obj_stem);
+    }
+    ref_json["id"] = m_json_id;
+    ref_json["sig"] = m_Signature;
+    ref_json["stemEntropy"] = m_stem_entropy;
+    ref_json["suffixes"] = arr_suffixes;
+    ref_json["prefixes"] = arr_prefixes;
+    ref_json["stems"] = arr_stems;
+}
+
+
+/******************************************/
+/*          SIGNATURE COLLECTION          */
+/******************************************/
+
+void CSignatureCollection::assign_json_id()
+{
+    int curr_json_id = 0;
+    foreach (CSignature* p_sig, m_SignatureMap) {
+        p_sig->set_json_id(curr_json_id++);
+    }
+}
+
+void CSignatureCollection::write_json(QJsonObject& ref_json) const
+{
+    QJsonArray arr_sigs;
+    QJsonArray arr_containment_map;
+    foreach (CSignature* p_sig, m_SignatureMap) {
+        QJsonObject obj_sig;
+        p_sig->write_json(obj_sig);
+        arr_sigs.append(obj_sig);
+
+        QJsonArray arr_containment_list;
+        if (m_ContainmentMap.contains(p_sig)) {
+            foreach (CSignature* p_sig2, *(m_ContainmentMap[p_sig])) {
+                arr_containment_list.append(p_sig2->get_json_id());
+            }
+        }
+        arr_containment_map.append(arr_containment_list);
+    }
+
+    QJsonArray arr_sorted_sigs;
+    foreach (CSignature* p_sig, m_SortList) {
+        arr_sorted_sigs.append(p_sig->get_json_id());
+    }
+
+    QJsonArray arr_minimal_cover;
+    foreach (CSignature* p_sig, m_minimal_cover) {
+        arr_minimal_cover.append(p_sig->get_json_id());
+    }
+
+    ref_json["count"] = m_SignatureMap.size();
+    ref_json["containmentMap"] = arr_containment_map;
+    ref_json["minimalCover"] = arr_minimal_cover;
+    ref_json["mimimalCoverMinNumOfStems"] = m_minimum_number_of_stems_for_minimal_cover;
+    ref_json["sigs"] = arr_sigs;
+    ref_json["sortedSigs"] = arr_sorted_sigs;
+    ref_json["sortValidFlag"] = m_SortValidFlag;
+    ref_json["sortStyle"] = CJsonInfo::eSortStyle_to_string(m_SortStyle);
+}

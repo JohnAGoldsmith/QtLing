@@ -378,7 +378,9 @@ public:
     void create_sublexicon();
 
     void check_autobiography_consistency();
+
     void test_json_functionality();
+    void assign_json_id();
 
 
 
