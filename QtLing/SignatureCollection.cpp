@@ -42,7 +42,7 @@ QListIterator<CSignature*> * CSignatureCollection::get_sorted_list_iterator()
 bool CSignatureCollection::contains(sigstring_t this_sigstring){
     return m_SignatureMap.contains(this_sigstring);
 }
-CSignature* CSignatureCollection::operator <<(QString this_sigstring)
+CSignature* CSignatureCollection::operator <<(const QString& this_sigstring)
 {
     CSignature* pSig;
 
@@ -73,11 +73,11 @@ void CSignatureCollection::operator<< (CSignature * pSig)
     }
 }
 
-CSignature* CSignatureCollection::operator ^=(QString szSignature)
+CSignature* CSignatureCollection::operator ^=(const QString& szSignature)
 {
     return this->find_or_add(szSignature);
 }
-CSignature* CSignatureCollection::find_or_add (QString sigstring )
+CSignature* CSignatureCollection::find_or_add (const QString& sigstring )
 {   if (m_SignatureMap.contains(sigstring))
     {
         return m_SignatureMap[sigstring];
@@ -89,7 +89,7 @@ CSignature* CSignatureCollection::find_or_add (QString sigstring )
         return pSig;
     }
 }
-CSignature* CSignatureCollection::find_or_fail(QString this_sig_string){
+CSignature* CSignatureCollection::find_or_fail(const QString& this_sig_string){
 
     if (m_SignatureMap.contains(this_sig_string)){
         return m_SignatureMap[this_sig_string];
@@ -287,3 +287,4 @@ void CSignatureCollection::check_singleton_signatures(const QString &message)
             qDebug() << message << "found singleton signature in CSignature object:" << str_sig;
     }
 }
+

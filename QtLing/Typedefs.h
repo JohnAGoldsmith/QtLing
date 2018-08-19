@@ -35,13 +35,12 @@ typedef QString                             suffix_t;
 typedef QString                             prefix_t;
 typedef QString                             affix_t;
 
-typedef  QString                                    sig_string;
 typedef  QPair<CStem*,CSignature*>                  stem_sig_pair;
-typedef  QPair<stem_sig_pair*,                      stem_sig_pair*> pair_of_stem_sig_pairs;
+typedef  QPair<stem_sig_pair*, stem_sig_pair*>      pair_of_stem_sig_pairs;
 typedef  QPair<stem_t,stem_t>                       stem_string_pair;
 typedef  QPair<word_t, stem_string_pair*>           word_stem_pair_pair;
 
-typedef QList<CParse>                      parse_list;
+typedef QList<CParse>                       parse_list;
 typedef QList<stem_t>                       stem_list;
 typedef QList<suffix_t>                     suffix_list;
 typedef QList<affix_t>                      affix_list;
@@ -70,7 +69,7 @@ typedef QSetIterator<affix_t>               affix_set_iter;
 
 typedef QMap<suffix_t, int>                 map_suffix_to_int;
 typedef QMap<stem_t,suffix_set>             map_stem_t_to_suffix_set;
-typedef QMap<stem_t,affix_set*>              map_stem_t_to_affix_set;
+typedef QMap<stem_t,affix_set*>             map_stem_t_to_affix_set;
 typedef QMap<stem_t, int>                   map_stem_to_int;
 typedef QMap<sigstring_t, suffix_set*>      map_sigstring_to_suffix_set;
 typedef QMap<sigstring_t, morph_set*>       map_sigstring_to_morph_set;
@@ -96,9 +95,9 @@ typedef  QMap<stem_t , QSet<affix_t>>      Stem_to_sig_map;// was Protosigs;
 
 struct Sig_to_stem_map
 {
-    QMap<sigstring_t,QSet<stem_t>>    m_core;
+    QMap<sigstring_t,QSet<stem_t>*>    m_core;
 
-    QSet<stem_t>& get_stem_set(const sigstring_t& this_sigstring)
+    QSet<stem_t>* get_stem_set(const sigstring_t this_sigstring)
     {
         return m_core[this_sigstring];
     }
@@ -106,23 +105,26 @@ struct Sig_to_stem_map
     bool contains_signature(const sigstring_t& sig) const
     {
         return m_core.contains(sig);
-    }
+     }
 
-    bool contains_sig_and_stem(const sigstring_t& sig, const stem_t& this_stem) const
-    {
-        return m_core[sig].contains(this_stem);
-    }
-
-    void attach_stem_to_signature(const stem_t& this_stem, const sigstring_t& this_sig)
-    {
-        if (! m_core.contains(this_sig)){
-            m_core[this_sig] = QSet<QString>();
+    //bool contains_sig_and_stem(const sigstring_t& sig, const stem_t& this_stem) const
+    bool contains_sig_and_stem (sigstring_t sig, stem_t this_stem) {
+        if (m_core[sig]->contains(this_stem)){
+            return true;
         }
-        m_core[this_sig].insert(this_stem);
-    }
+        else{return false;}
+}
 
-    void clear()
-    {
+    void attach_stem_to_signature(stem_t this_stem, sigstring_t this_sig){
+        if (! m_core.contains(this_sig)){
+            m_core[this_sig] = new QSet<QString>;
+        }
+        m_core[this_sig]->insert(this_stem);
+}
+     void clear() {
+        foreach (QSet<stem_t>* p_set, m_core) {
+            delete p_set;
+        } // added by Hanson 7.31, to prevent memory leak
         m_core.clear();
     }
 };

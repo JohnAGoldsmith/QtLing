@@ -1,7 +1,16 @@
+/* I moved any functions related to the treeview in the main window to here
+ * because more and more things got added to the treeview and lxamodels.cpp
+ * was getting too long.
+ *
+ * Comment added by Hanson 8.1
+ */
+
 #include "mainwindow.h"
 #include "WordCollection.h"
 #include "StemCollection.h"
 #include "SuffixCollection.h"
+#include "compound.h"
+
 #include <QDebug>
 
 void remove_item_from_tree(const QString name, QStandardItem* item)
@@ -152,6 +161,9 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
     QStandardItem * word_item = new QStandardItem(QString("Words"));
     QStandardItem * word_count_item = new QStandardItem(QString::number(lexicon->get_word_collection()->get_count()));
 
+    QStandardItem * compound_item = new QStandardItem(QString("Compound words"));
+    QStandardItem * compound_count_item = new QStandardItem(QString::number(lexicon->get_compounds()->get_count()));
+
     QStandardItem * suffixal_protostem_item = new QStandardItem(QString("Suffixal protostems"));
     QStandardItem * suffixal_protostem_count_item = new QStandardItem(QString::number(lexicon->get_suffixal_protostems()->size()));
 
@@ -259,6 +271,11 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
     word_items.append(word_item);
     word_items.append(word_count_item);
 
+    // Displaying compound words
+    QList<QStandardItem*> compound_items;
+    compound_items.append(compound_item);
+    compound_items.append(compound_count_item);
+
     // Displaying Protostems
     QList<QStandardItem*> suffixal_protostem_items;
     suffixal_protostem_items.append(suffixal_protostem_item);
@@ -332,6 +349,7 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
     lexicon_item->appendRow(keyboard_5);
     lexicon_item->appendRow(prefix_items);
     lexicon_item->appendRow(word_items);
+    lexicon_item->appendRow(compound_items);
     lexicon_item->appendRow(suffixal_protostem_items);
     lexicon_item->appendRow(prefixal_protostem_items);
     lexicon_item->appendRow(suffixal_stem_items);

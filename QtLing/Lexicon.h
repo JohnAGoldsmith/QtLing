@@ -12,6 +12,7 @@
 #include "SignatureCollection.h"
 #include "Typedefs.h"
 #include "evaluation.h"
+#include "generaldefinitions.h"
 
 class MainWindow;
 class CWordCollection;
@@ -21,6 +22,7 @@ class CPrefixCollection;
 class QProgressBar;
 class CHypothesis;
 class CParse;
+class CompoundWordCollection;
 
 
 /* The principal objects we use on the way to morphological analysis are:
@@ -32,7 +34,7 @@ class CParse;
  * eliminate: Sig_to_stems:  a map from sigstrings to a set of stems.
  *
  * Stem_to_sig_map: a map from a stem to a set of affixes (or to a string representation of affixes?). Was "Protosigs".
- * Sig_to_stem-map: a map from a sig-string to a set of stems. Was "Sig_to_stems".
+ * Sig_to_stem_map: a map from a sig-string to a set of stems. Was "Sig_to_stems".
  *
  * Also:
  * Parse_list
@@ -61,13 +63,13 @@ public:
     CSignature*         m_sig_1;
     CSignature*         m_sig_2;
     CLexicon *          m_Lexicon;
-    sig_string          m_sig_string_1;
-    sig_string          m_sig_string_2;
+    sigstring_t          m_sig_string_1;
+    sigstring_t          m_sig_string_2;
     double              m_sig_1_entropy = -1;
     double              m_sig_2_entropy = -1;
     morph_t             morph;
     word_t              word;
-    stem_t              stem_1;
+    stem_t              stem_1; // the longer stem
     stem_t              stem_2;
     simple_sig_graph_edge();
     simple_sig_graph_edge(CLexicon* lexicon, CSignature* pSig1, CSignature* pSig2, sigstring_t sig_string_1, sigstring_t sig_string_2,morph_t m,word_t w, stem_t stem1, stem_t stem2)
@@ -95,8 +97,8 @@ public:
     CSignature* m_sig_1;
     CSignature* m_sig_2;
     CLexicon*   m_lexicon;
-    sig_string  m_sig_string_1;
-    sig_string  m_sig_string_2;
+    sigstring_t  m_sig_string_1;
+    sigstring_t  m_sig_string_2;
     double m_sig_1_entropy = -1;
     double m_sig_2_entropy = -1;
     morph_t     morph;
@@ -122,15 +124,17 @@ public:
     int     get_number_of_words() {return shared_word_stems.size();}
     CSignature*     get_sig_1() {return m_sig_1;}
     CSignature*     get_sig_2() {return m_sig_2;}
-    sig_string      get_sig1_string() { return m_sig_string_1;}
-    sig_string      get_sig2_string() { return m_sig_string_2;}
+    sigstring_t      get_sig1_string() { return m_sig_string_1;}
+    sigstring_t      get_sig2_string() { return m_sig_string_2;}
     morph_t         get_morph() {return morph;}
 };
 
 struct DoomedSignatureInfo {
     sig_graph_edge* m_edge_ptr;
-    QStringList m_doomed_affixes;
-    QString m_str_revised_sig;
+
+    QList<affix_t> m_doomed_affixes;
+    sigstring_t m_str_revised_sig;
+
 
     DoomedSignatureInfo() {
         m_edge_ptr = NULL;
@@ -186,7 +190,8 @@ protected:
     CPrefixCollection *             m_Prefixes;
     CSignatureCollection *          m_Signatures;
     CSignatureCollection *          m_PrefixSignatures;
-
+    //CWordCollection *               m_Compounds; // nothing done yet
+    CompoundWordCollection *            m_Compounds;
     //QList<QPair<QString,QString>> * m_Parses;
     QList<CParse*> *                 m_Parses; //
 
@@ -260,11 +265,10 @@ public:
     void                                        dump_signatures_to_debug();
     // accessors and protostems
     void                                        dump_suffixes(QList<QString>*);
-    void                                        collect_parasuffixes();
-    void                                        compute_sig_graph_edges();
-    void                                        generate_hypotheses();
+
     CSignatureCollection*                       get_active_signature_collection();
     QMap<QString, eComponentType> &             get_category_types()        { return m_category_types;}
+    CompoundWordCollection*                     get_compounds()             { return m_Compounds; }
     double                                      get_entropy_threshold_for_positive_signatures() {return m_entropy_threshold_for_stems;}
     //void                                        get_epositive_signatures(QList<CSignature*> *);
     QList<CHypothesis*>*                        get_hypotheses ()           {return m_Hypotheses;}
@@ -326,16 +330,18 @@ public:
     void step3b_from_stem_to_sig_map_to_sig_to_stem_map();
 
     //void step4_assign_affixes_to_stems(QString name_of_calling_function);
-    void step4_create_signatures(QString name_of_calling_function);
+    //void step4_create_signatures(QString name_of_calling_function);
+    void step4_create_signatures(const QString& name_of_calling_function,
+                                 eMinimumStemCountFlag min_stem_count_flag = MS_respect_mininmum_stem_count);
     void step4a_link_signature_and_affix(CSignature*, affix_t);
     void step4b_link_signature_and_stem_and_word(stem_t , CSignature*, QString this_signature_string, const QString& name_of_calling_function);
 
     void step5a_replace_parse_pairs_from_current_signature_structure();
     void step5b_find_full_signatures();
-    //void collect_parasuffixes();
+     void collect_parasuffixes();
 
     void step6_ReSignaturizeWithKnownAffixes();
-    //void step6a_create_temporary_map_from_stems_to_affix_sets(); //map_sigstring_to_stem_list &); will delete this
+    void step6a_create_temporary_map_from_stems_to_affix_sets(Stem_to_sig_map&); //map_sigstring_to_stem_list &); will delete this
     void step6a_create_temporary_stem_to_sig_map(); // will replace preceding version;ß∫
     void step7_FindGoodSignaturesInsideParaSignatures();
     void step6c_from_stem_to_sig_maps_to_xxx(QString, Stem_to_sig_map ) {return;}
@@ -343,10 +349,11 @@ public:
     void step8a_compute_sig_graph_edges();
     void step8b_compute_sig_graph_edge_map();
 
-    typedef QMap<QString, DoomedSignatureInfo> DoomedSignatureInfoMap;
+    typedef QMap<sigstring_t, DoomedSignatureInfo> DoomedSignatureInfoMap;
     void step9_from_sig_graph_edges_map_to_hypotheses();
-    void remove_signature(CSignature* p_sig, const QString& name_of_calling_function);
-    void update_pointer_in_edge_map(const QString& str_old_sig, CSignature* p_new_sig);
+    void step9a_from_doomed_info_map_to_parses(DoomedSignatureInfoMap& ref_doomed_info_map);
+    void step9b_redirect_ptrs_in_sig_graph_edges_map(const DoomedSignatureInfoMap& ref_doomed_info_map);
+    void step9c_from_doomed_info_map_to_hypotheses(const DoomedSignatureInfoMap& ref_doomed_info_map);
 
     void step10_find_compounds();
 
@@ -355,14 +362,14 @@ public:
 
     void Crab_1();
     void Crab_2();
-    void create_sublexicon ();
-    void find_full_signatures();
+    void create_sublexicon();
 
     void check_autobiography_consistency();
 
 
 
-    void test_for_phonological_relations_between_signatures();
+
+     void test_for_phonological_relations_between_signatures();
 
     void clear_parses();
 };

@@ -56,13 +56,13 @@ bool EvalParses::read_morfessor_txt_file()
         word_count++;
         line.remove(QRegularExpression("\\/[A-Z]+"));
         QStringList tokens = line.split(QRegularExpression("\\s\\+\\s|1\\s"));
-        QString str_word = tokens.join("");
+        word_t str_word = tokens.join("");
         int word_len = str_word.length();
         int cut_position = tokens[0].length();
         int list_len = tokens.length();
         for (int i = 1; i < list_len; i++) {
-            QString stem = str_word.left(cut_position);
-            QString suffix = str_word.right(word_len - cut_position);
+            stem_t stem = str_word.left(cut_position);
+            affix_t suffix = str_word.right(word_len - cut_position);
             cut_position += tokens[i].length();
             m_parses.add_parse_triple(str_word, stem, suffix);
         }

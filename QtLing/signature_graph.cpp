@@ -1,5 +1,4 @@
 #include "Lexicon.h"
-
 #include "WordCollection.h"
 #include "Word.h"
 #include <QProgressBar>
@@ -44,7 +43,7 @@ void CLexicon::step8a_compute_sig_graph_edges()
             this_stem = iter_triple_1.next().key();
             int this_stem_length = this_stem.length();
             Parse_triple * this_triple = iter_triple_1.value();
-            sig_string this_sig = this_triple->m_sig_string;
+            sigstring_t this_sig = this_triple->m_sig_string;
             CSignature* this_sig_ptr;
             m_SuffixesFlag?
                 this_sig_ptr = m_Signatures->find_or_fail(this_sig):
@@ -55,7 +54,7 @@ void CLexicon::step8a_compute_sig_graph_edges()
                 the_other_stem = iter_triple_2.next().key();
                 int the_other_stem_length = the_other_stem.length();
                 Parse_triple* the_other_triple = iter_triple_2.value();
-                sig_string the_other_sig = the_other_triple->m_sig_string;
+                sigstring_t the_other_sig = the_other_triple->m_sig_string;
                 m_SuffixesFlag?
                     the_other_sig_ptr = m_Signatures->find_or_fail(the_other_sig):
                     the_other_sig_ptr = m_PrefixSignatures->find_or_fail(the_other_sig);
@@ -67,7 +66,7 @@ void CLexicon::step8a_compute_sig_graph_edges()
                                 difference = this_stem.left(length_of_difference);
                             p_SigGraphEdge = new simple_sig_graph_edge (this, this_sig_ptr, the_other_sig_ptr, this_sig,the_other_sig,
                                                                         difference, pWord->get_key(), this_stem, the_other_stem);
-                 } else{
+                 } else{ // this_stem_length <= the_other_stem_length
                      int length_of_difference = the_other_stem_length - this_stem_length;
                      m_SuffixesFlag?
                            difference = the_other_stem.mid(this_stem_length):
@@ -131,5 +130,5 @@ void CLexicon::step8b_compute_sig_graph_edge_map() {
             sig_graph_edge * p_sig_graph_edge_2 = new sig_graph_edge(*p_sig_graph_edge);
             m_SigGraphEdgeMap.insert(p_sig_graph_edge_2->label(),p_sig_graph_edge_2);
         }
-     }
+    }
 }
