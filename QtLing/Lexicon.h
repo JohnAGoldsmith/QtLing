@@ -42,7 +42,8 @@ class CompoundWordCollection;
  */
 
 
-struct CJsonInfo {
+class CJsonInfo {
+public:
     bool suffix_flag;
     QList<CWord*> words;
     QList<CStem*> suffix_stems;

@@ -62,8 +62,9 @@ public:
     void                                IncrementWordCount(int n = 1);
     void                                SetWordCount(int count) { m_WordCount = count;}
 
-    void                                set_json_id(int id) { m_json_id = id; }
-    int                                 get_json_id() { return m_json_id; }
+    void                        set_json_id(const int id) {m_json_id = id;}
+    int                         get_json_id() const {return m_json_id;}
+    void                        write_json(QJsonObject& ref_json) const;
 
 };
 

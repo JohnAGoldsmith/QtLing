@@ -53,6 +53,7 @@ public:
     void                    sort_word_list();
 
     void                    assign_json_id();
+    void                    write_json(QJsonObject& ref_json);
 
     QMapIterator<QString,CWord*> *  get_iterator();
     QMap<word_t, CWord*>::iterator  begin()                    { return m_WordMap.begin();}

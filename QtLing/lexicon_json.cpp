@@ -5,6 +5,8 @@
 #include "StemCollection.h"
 #include "Signature.h"
 #include "SignatureCollection.h"
+#include "Word.h"
+#include "WordCollection.h"
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonDocument>
@@ -85,7 +87,7 @@ QString CJsonInfo::eSortStyle_to_string(const eSortStyle sortstyle)
     case SIG_MENTORS: return "sigMentors";
     case TEMPLATE_SORT: return "templateSort";
     case TEMPLATE_SORT_COLUMN: return "templateSortColumn";
-    default: return "default";
+    //default: return "default";
     }
 }
 
@@ -177,6 +179,17 @@ void CPrefix::write_json(QJsonObject &ref_json) const
 
 void CPrefix::read_json(const QJsonObject &ref_json)
 {
+    CJsonInfo::JsonTagList tag_list =
+    {
+        QPair<QJsonValue::Type, QString>(QJsonValue::String, "prefix"),
+        QPair<QJsonValue::Type, QString>(QJsonValue::Double, "frequency"),
+        QPair<QJsonValue::Type, QString>(QJsonValue::Double, "count"),
+        QPair<QJsonValue::Type, QString>(QJsonValue::Double, "id")
+    };
+    if (!CJsonInfo::check_tags(ref_json, tag_list)) {
+        qDebug() << "Invalid json object read!";
+        return;
+    }
     m_key = ref_json["prefix"].toString();
     m_frequency = ref_json["frequency"].toInt();
     m_sig_count = ref_json["count"].toInt();
@@ -529,4 +542,131 @@ void CSignatureCollection::write_json(QJsonObject& ref_json) const
     ref_json["sortedSigs"] = arr_sorted_sigs;
     ref_json["sortValidFlag"] = m_SortValidFlag;
     ref_json["sortStyle"] = CJsonInfo::eSortStyle_to_string(m_SortStyle);
+}
+
+/******************************************/
+/*                WORDS                   */
+/******************************************/
+
+void CWord::write_json(QJsonObject &ref_json) const
+{
+    // This part will be moved to CWordCollection::write_json
+    // as CWord objects have no access to CLexicon and pointers to stems,
+    // affixes and signatures
+    /*
+    QJsonArray arr_parses;
+    foreach (Parse_triple* p_parse, m_Parse_triple_map) {
+        QJsonObject obj_parse;
+        obj_parse["affix"] = p_parse->p_suffix;
+        obj_parse["affixId"] = 0;
+        obj_parse["sig"] = p_parse->p_sig_string;
+        obj_parse["sigId"] = 0;
+        obj_parse["stem"] = p_parse->p_stem;
+        obj_parse["stemId"] = 0;
+    }
+    */
+
+    ref_json["count"] = m_WordCount;
+    ref_json["id"] = m_json_id;
+    //ref_json["parses"] = arr_parses;
+    ref_json["word"] = m_Word;
+}
+
+/******************************************/
+/*             WORD COLLECTION            */
+/******************************************/
+
+void CWordCollection::assign_json_id()
+{
+    int id = 0;
+    foreach (CWord* p_word, m_WordMap) {
+        p_word->set_json_id(id++);
+    }
+}
+
+void CWordCollection::write_json(QJsonObject& ref_json)
+{
+    /* Need to get id's for stems, affixes and sigs
+     * in each parse for each word first*/
+    bool suffix_flag = m_Lexicon->get_suffix_flag();
+    CSuffixCollection* p_suffixes = m_Lexicon->get_suffixes();
+    CPrefixCollection* p_prefixes = m_Lexicon->get_prefixes();
+    CSignatureCollection* p_sigs = suffix_flag?
+                m_Lexicon->get_suffix_signatures():
+                m_Lexicon->get_prefix_signatures();
+    CStemCollection* p_stems = suffix_flag?
+                m_Lexicon->get_suffixal_stems():
+                m_Lexicon->get_prefixal_stems();
+
+    QJsonArray arr_words;
+    foreach (CWord* p_word, m_WordMap) {
+        QJsonObject obj_word;
+        p_word->write_json(obj_word);
+        QJsonArray arr_parses;
+        foreach (Parse_triple* p_parse, *(p_word->get_parse_triple_map())) {
+            QJsonObject obj_parse;
+            const QString& str_affix = p_parse->p_suffix;
+            obj_parse["affix"] = str_affix;
+            if (suffix_flag) {
+                CSuffix* p_suffix = p_suffixes->find_or_fail(str_affix);
+                if (p_suffix)
+                    obj_parse["affixId"] = p_suffix->get_json_id();
+                else {
+                    qDebug() << "CWordCollection::write_json - cannot find CSuffix object: " << str_affix;
+                    obj_parse["affixId"] = "n/a";
+                    //continue;
+                }
+            } else {
+                CPrefix* p_prefix = p_prefixes->find_or_fail(str_affix);
+                if (p_prefix)
+                    obj_parse["affixId"] = p_prefix->get_json_id();
+                else {
+                    qDebug() << "CWordCollection::write_json - cannot find CPrefix object: " << str_affix;
+                    obj_parse["affixId"] = "n/a";
+                    //continue;
+                }
+            }
+
+            const QString& str_sig = p_parse->p_sig_string;
+            obj_parse["sig"] = str_sig;
+            CSignature* p_sig = p_sigs->find_or_fail(str_sig);
+            if (p_sig)
+                obj_parse["sigId"] = p_sig->get_json_id();
+            else {
+                qDebug() << "CWordCollection::write_json - cannot find CSignature object: " << str_sig;
+                obj_parse["sigId"] = "n/a";
+                //continue;
+            }
+
+            const QString& str_stem = p_parse->p_stem;
+            obj_parse["stem"] = str_stem;
+            CStem* p_stem = p_stems->find_or_fail(str_stem);
+            if (p_stem)
+                obj_parse["stemId"] = p_stem->get_json_id();
+            else {
+                qDebug() << "CWordCollection::write_json - cannot find CStem object: " << str_stem;
+                obj_parse["stemId"] = "n/a";
+                //continue;
+            }
+
+            // the parse object is now completed. Add to list of parses.
+            arr_parses.append(obj_parse);
+        }
+        // add array of parses to CWord json object
+        obj_word["parses"] = arr_parses;
+        // append word to array of words
+        arr_words.append(obj_word);
+    }
+
+    QJsonArray arr_sorted_words;
+    foreach (QString str_word, m_SortedStringArray) {
+        arr_sorted_words.append(m_WordMap[str_word]->get_json_id());
+    }
+
+
+    ref_json["count"] = m_WordMap.size();
+    ref_json["sortValidFlag"] = m_SortValidFlag;
+    ref_json["sortStyle"] = CJsonInfo::eSortStyle_to_string(m_SortStyle);
+    ref_json["sortedWords"] = arr_sorted_words;
+    ref_json["words"] = arr_words;
 }
