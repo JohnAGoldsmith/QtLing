@@ -382,6 +382,7 @@ public:
 
     void test_json_functionality();
     void assign_json_id();
+    void write_json(QJsonObject& ref_json);
 
 
 

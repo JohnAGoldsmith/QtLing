@@ -316,8 +316,6 @@ void CLexicon::Crab_1()
                 m_Signatures->compute_containment_list():
                 m_PrefixSignatures->compute_containment_list();
 
-    test_json_functionality();
-
 }
 
 //  <-------------->
