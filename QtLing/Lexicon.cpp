@@ -263,15 +263,6 @@ void CLexicon::time_stamp(const QString& message)
 }
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-//linguistic methods
-/**
- * @brief CLexicon::Crab_1
- * The division of the Crab algorithm into two parts (as I have done here) is only temporary.
- * I have done it so that I can do code development more quickly; sometimes I only need to
- * get part of the algorithm going to test what I am doing.
- */
-
 
 void CLexicon::dump_signatures_to_debug()
 {

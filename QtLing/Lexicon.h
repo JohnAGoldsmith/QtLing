@@ -30,8 +30,6 @@ class CompoundWordCollection;
  * Parse: a pair of strings, typically stem and affix;
  * Protostem: a triple, one string and two integers, showing the stem and the beginning and end point on the list of words where it appears.
  * Protosig: A pair consisting of a stem and a set of affixes
- * eliminate: Protosigs: a map from a stem to the set of affixes in a protosig
- * eliminate: Sig_to_stems:  a map from sigstrings to a set of stems.
  *
  * Stem_to_sig_map: a map from a stem to a set of affixes (or to a string representation of affixes?). Was "Protosigs".
  * Sig_to_stem_map: a map from a sig-string to a set of stems. Was "Sig_to_stems".
@@ -120,13 +118,13 @@ public:
              this_word_stems->stem_2 = this_edge.stem_2;
              shared_word_stems[this_word_stems->get_label()] = this_word_stems;
          }
-    QString label() {return morph + "/" + m_sig_string_1 + "/" + m_sig_string_2; }
-    int     get_number_of_words() {return shared_word_stems.size();}
-    CSignature*     get_sig_1() {return m_sig_1;}
-    CSignature*     get_sig_2() {return m_sig_2;}
-    sigstring_t      get_sig1_string() { return m_sig_string_1;}
-    sigstring_t      get_sig2_string() { return m_sig_string_2;}
-    morph_t         get_morph() {return morph;}
+    QString     label() {return morph + "/" + m_sig_string_1 + "/" + m_sig_string_2; }
+    int         get_number_of_words() {return shared_word_stems.size();}
+    CSignature* get_sig_1() {return m_sig_1;}
+    CSignature* get_sig_2() {return m_sig_2;}
+    sigstring_t get_sig1_string() { return m_sig_string_1;}
+    sigstring_t get_sig2_string() { return m_sig_string_2;}
+    morph_t     get_morph() {return morph;}
 };
 
 struct DoomedSignatureInfo {
@@ -152,6 +150,9 @@ struct DoomedSignatureInfo {
 //-----------------------------------------------------------------------//
 class protostem{
 //-----------------------------------------------------------------------//
+    /*!
+         * \brief m_protostem
+         */
         QString     m_protostem;
         int         m_start_word;
         int         m_end_word;
@@ -190,21 +191,11 @@ protected:
     CPrefixCollection *             m_Prefixes;
     CSignatureCollection *          m_Signatures;
     CSignatureCollection *          m_PrefixSignatures;
-    //CWordCollection *               m_Compounds; // nothing done yet
-    CompoundWordCollection *            m_Compounds;
-    //QList<QPair<QString,QString>> * m_Parses;
-    QList<CParse*> *                 m_Parses; //
+    CompoundWordCollection *        m_Compounds;
+    QList<CParse*> *                m_Parses; //
 
-   // QMap<QString,int>               m_Parse_map;
-    QMap<QString, protostem*>              m_suffix_protostems;
-    QMap<QString, protostem*>              m_prefix_protostems;
-
-    // m_protostems_2 is used in order to keep track of exactly which interval of words in the word list begins
-    // with a particular proto-stem (i.e., a word-beginning). This replaces using a huge signature to store
-    // that same information.
-    //QMap<QString, protostem*>        m_suffix_protostems_2;
-    //QMap<QString, protostem*>        m_prefix_protostems_2;
-
+    QMap<QString, protostem*>       m_suffix_protostems;
+    QMap<QString, protostem*>       m_prefix_protostems;
 
     bool                            m_SuffixesFlag;
     CLexicon*                       m_parent_lexicon;
@@ -224,18 +215,18 @@ protected:
     CSignatureCollection *          m_PassiveSignatures;  /*!< these signatures have stems one letter off from another signature. */
     CSignatureCollection *          m_SequentialSignatures; /*! signatures where one affix leads to another signature. */
     // Generalizes repeating
-    QList<CHypothesis*> *            m_Hypotheses;
-    QMap<QString, CHypothesis*> *            m_Hypothesis_map;
+    QList<CHypothesis*> *           m_Hypotheses;
+    QMap<QString, CHypothesis*> *   m_Hypothesis_map;
 // add component 1
 
-    Sig_to_stem_map                    m_intermediate_sig_to_stem_map; // used during computation, not permanent.
-    Stem_to_sig_map                    m_intermediate_stem_to_sig_map; // used during computation, not permanent.
+    Sig_to_stem_map                 m_intermediate_sig_to_stem_map; // used during computation, not permanent.
+    Stem_to_sig_map                 m_intermediate_stem_to_sig_map; // used during computation, not permanent.
 
     QProgressBar*                   m_ProgressBar;
-    QStatusBar *                      m_StatusBar;
+    QStatusBar *                    m_StatusBar;
 
-    QMap<QString, QStringList*>        m_stem_autobiographies;
-    QMap<QString, QStringList*>         m_word_autobiographies;
+    QMap<QString, QStringList*>     m_stem_autobiographies;
+    QMap<QString, QStringList*>     m_word_autobiographies;
 
     double                          m_entropy_threshold_for_stems;
 

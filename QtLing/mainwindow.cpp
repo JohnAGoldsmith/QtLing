@@ -56,6 +56,8 @@ MainWindow::MainWindow()
     m_lexicon_list.append (m_my_lexicon);
     CLexicon * lexicon =  m_my_lexicon;
 
+        setFocusPolicy(Qt::StrongFocus); // allows it to capture keystrokes
+
     // models
     m_Models["Words"]                       = new LxaStandardItemModel("Words");
     m_Models["Suffixal stems"]              = new LxaStandardItemModel("Suffixal stems");
@@ -224,7 +226,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         MainWindow* new_window = new MainWindow();
         CLexicon* sublexicon = get_lexicon()->build_sublexicon(new_window);
         m_lexicon_list.append(sublexicon);
-        new_window->do_crab();
+        new_window->do_crab1();
         if (sublexicon->get_suffix_flag()){
             new_window->display_epositive_suffix_signatures(sublexicon);
         } else{
@@ -288,7 +290,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     case Qt::Key_P:
     {
         get_lexicon()->set_prefixes_flag();
-        do_crab();
+        do_crab1();
         display_prefix_signatures(get_lexicon());
         break;
     }
@@ -300,7 +302,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     case Qt::Key_S:
     {
         get_lexicon()->set_suffixes_flag();
-        do_crab();
+        do_crab1();
         display_epositive_suffix_signatures(get_lexicon());
         break;
     }
@@ -360,7 +362,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
 
 
 
-void MainWindow::do_crab()
+void MainWindow::do_crab1()
 {   statusBar()->showMessage("Entering the Crab Nebula.");
     CLexicon* lexicon = get_lexicon();
     lexicon->Crab_1();
@@ -486,7 +488,7 @@ void MainWindow::load_models(CLexicon* lexicon)
 void MainWindow::read_file_do_crab()
 {       read_dx1_file();
         statusBar()->showMessage(tr("Ready"));
-        do_crab();
+        do_crab1();
 }
 
 

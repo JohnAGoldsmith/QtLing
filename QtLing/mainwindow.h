@@ -161,7 +161,7 @@ signals:
 private slots:
     void                                    about();
 
-    void                                    do_crab();
+    void                                    do_crab1();
     void                                    do_crab2();
     void                                    documentWasModified();
     void                                    newFile();
