@@ -53,7 +53,7 @@ MainWindow::MainWindow()
 
 
     m_my_lexicon = new CLexicon();
-    m_lexicon_list.append ( m_my_lexicon );
+    m_lexicon_list.append (m_my_lexicon);
     CLexicon * lexicon =  m_my_lexicon;
 
     // models
@@ -72,8 +72,8 @@ MainWindow::MainWindow()
     m_Models["EPositive prefix signatures"] = new LxaStandardItemModel("EPositive prefix signatures");
     m_Models["EPositive prefix signatures 2"]= new LxaStandardItemModel("EPositive prefix signatures");
     m_Models["Residual parasignatures"]     = new LxaStandardItemModel("Residual parasignatures");
-    m_Models["SigGraphEdges_1"]               = new LxaStandardItemModel("SigTreeEdges_1");
-    m_Models["SigGraphEdges_2"]               = new LxaStandardItemModel("SigTreeEdges_2");
+    m_Models["SigGraphEdges_1"]             = new LxaStandardItemModel("SigTreeEdges_1");
+    m_Models["SigGraphEdges_2"]             = new LxaStandardItemModel("SigTreeEdges_2");
     m_Models["Parasuffixes"]                = new LxaStandardItemModel("Parasuffixes");
     m_Models["Passive signatures"]          = new LxaStandardItemModel("Passive signatures");
     m_Models["Hypotheses"]                  = new LxaStandardItemModel("Hypotheses");
@@ -90,15 +90,15 @@ MainWindow::MainWindow()
     get_lexicon()->set_status_bar(statusBar());
 
     // views
-    m_leftTreeView              = new LeftSideTreeView(this);
-    m_tableView_upper_left      = new UpperTableView (this);
-    m_tableView_upper_right     = new UpperTableView (this, SIG_BY_AFFIX_COUNT);
-    m_tableView_lower           = new LowerTableView (this);
+    m_leftTreeView                          = new LeftSideTreeView(this);
+    m_tableView_upper_left                  = new UpperTableView (this);
+    m_tableView_upper_right                 = new UpperTableView (this, SIG_BY_AFFIX_COUNT);
+    m_tableView_lower                       = new LowerTableView (this);
     m_tableView_upper_left->setSortingEnabled(true);
     m_tableView_upper_right->setSortingEnabled(true);
-    m_graphics_scene            = new lxa_graphics_scene( this, lexicon);
-    m_graphics_view             = new lxa_graphics_view(m_graphics_scene, this);
-    m_graphic_display_flag      = false;             // toggle with Ctrl-G
+    m_graphics_scene                        = new lxa_graphics_scene( this, lexicon);
+    m_graphics_view                         = new lxa_graphics_view(m_graphics_scene, this);
+    m_graphic_display_flag                  = false;             // toggle with Ctrl-G
     m_graphics_scene->set_signature_collection(get_lexicon()->get_signatures());
 
     // Status bars on top of each table view
@@ -129,7 +129,7 @@ MainWindow::MainWindow()
 
     m_ProgressBar  = new QProgressBar(this);
     m_ProgressBar->setVisible(true);
-    statusBar()->addPermanentWidget(m_ProgressBar);
+    statusBar()  ->addPermanentWidget(m_ProgressBar);
     get_lexicon()->set_progress_bar (m_ProgressBar);
 
     // Set dock-widget for find functionality, but not showing it yet
@@ -149,6 +149,8 @@ MainWindow::MainWindow()
     setCurrentFile(QString());
     setUnifiedTitleAndToolBarOnMac(true);
 
+    // Qt SIGNAL-SLOT model that connects clicks in the left window to displays on the right side of the screen
+
     // clicking on certain items in the tree view displays tables on the upper left and upper right
     connect(m_leftTreeView, SIGNAL(clicked(const QModelIndex&)),
             m_tableView_upper_left, SLOT(ShowModelsUpperTableView(const QModelIndex&)));
@@ -159,8 +161,6 @@ MainWindow::MainWindow()
     // clicking on the upperleft corner can signal a graphic view below it, or a table below it.
     connect(m_tableView_upper_left,SIGNAL(clicked(const QModelIndex & )),
             m_tableView_lower,SLOT(display_this_item(const QModelIndex &  )));
-//    connect(m_tableView_upper_left,SIGNAL(clicked(const QModelIndex & )),
-//            m_current_graphics_scene,SLOT(display_this_item(const QModelIndex &  )));
 
     connect(m_tableView_upper_right,SIGNAL(clicked(const QModelIndex & )),
             m_tableView_lower,SLOT(display_this_item(const QModelIndex &  )));
@@ -369,8 +369,6 @@ void MainWindow::do_crab()
     statusBar()->showMessage("We have returned from the Crab Nebula.");
 
     create_or_update_TreeModel(get_lexicon());
-    //delete m_graphics_scene;
-    //m_graphics_scene = new lxa_graphics_scene(this, lexicon);
     m_graphics_scene->set_signature_collection(get_lexicon()->get_active_signature_collection());
     m_leftTreeView->expandAll();
     m_leftTreeView->resizeColumnToContents(0);

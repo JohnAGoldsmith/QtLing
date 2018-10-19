@@ -40,7 +40,7 @@ void CLexicon::Crab_2()
     step8b_compute_sig_graph_edge_map();
     step9_from_sig_graph_edges_map_to_hypotheses();
 
-    step10_find_compounds();
+//  step10_find_compounds();
     check_autobiography_consistency();
 
     qDebug() << "finished crab 2.";
