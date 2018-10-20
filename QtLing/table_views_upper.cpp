@@ -1,9 +1,17 @@
 #include <QDebug>
 #include <QMessageBox>
+#include <QAbstractItemView>
 #include "table_views.h"
 #include "lxamodels.h"
 #include "mainwindow_find.h"
+#include "mainwindow.h"
 
+// This passes the user keyEvent up to the MainWindow, which responds to users
+// general instructions.
+void UpperTableView::keyPressEvent(QKeyEvent *e)
+{
+    m_parent_window->MainWindow::keyPressEvent(e);
+}
 
 
 /**
@@ -28,6 +36,7 @@ UpperTableView::UpperTableView (MainWindow* window, eSortStyle this_sort_style)
        m_proxy_model = new LxaSortFilterProxyModel(this);
        setModel(m_proxy_model);
        // -- added by Hanson -- //
+
 }
 
 

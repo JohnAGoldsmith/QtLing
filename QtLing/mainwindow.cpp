@@ -56,7 +56,7 @@ MainWindow::MainWindow()
     m_lexicon_list.append (m_my_lexicon);
     CLexicon * lexicon =  m_my_lexicon;
 
-        setFocusPolicy(Qt::StrongFocus); // allows it to capture keystrokes
+    setFocusPolicy(Qt::StrongFocus); // allows it to capture keystrokes
 
     // models
     m_Models["Words"]                       = new LxaStandardItemModel("Words");
@@ -150,6 +150,10 @@ MainWindow::MainWindow()
 
     setCurrentFile(QString());
     setUnifiedTitleAndToolBarOnMac(true);
+
+
+    setFocus(Qt::OtherFocusReason);
+
 
     // Qt SIGNAL-SLOT model that connects clicks in the left window to displays on the right side of the screen
 

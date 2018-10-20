@@ -50,7 +50,7 @@ class lxaWindow : public QWidget
     double          m_xshift;
     double          m_yshift;
 
-            public:
+public:
     lxaWindow( MainWindow * );
     virtual void    paintEvent(QPaintEvent * );
     void            drawSignatures(QPainter& painter);
