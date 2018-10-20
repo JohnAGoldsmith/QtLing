@@ -1,6 +1,7 @@
 ﻿#include "mainwindow.h"
 //#include "generaldefinitions.h"
 #include "ui_mainwindow.h"
+#include <Qt>
 #include <QBrush>
 #include <QColor>
 #include <QtWidgets>
@@ -198,6 +199,10 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
 {
     int this_key = ke->key();
 
+    // the MainWindow only responds to keyboard instructions with Control Key depressed.
+    if (ke->modifiers() != Qt::ControlModifier){
+        return;
+    }
     switch(this_key){
     case Qt::Key_1:
     {
