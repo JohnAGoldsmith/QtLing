@@ -31,6 +31,10 @@ class UpperTableView : public QTableView
 
     // John Oct 2018
     void                    keyPressEvent(QKeyEvent *e);
+    void                    createActions();
+
+public:
+    void                    showWords();
 
  signals:
     void                    num_items_found(int);

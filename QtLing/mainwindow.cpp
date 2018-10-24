@@ -4,6 +4,7 @@
 #include <Qt>
 #include <QBrush>
 #include <QColor>
+#include <QWidget>
 #include <QtWidgets>
 #include <QTreeView>
 #include <QKeyEvent>
@@ -23,6 +24,7 @@
 #include "Suffix.h"
 #include "SignatureCollection.h"
 #include "Signature.h"
+#include "table_views.h"
 #include <QKeyEvent>
 #include <QtWidgets>
 #include <QString>
@@ -119,6 +121,7 @@ MainWindow::MainWindow()
     m_top_rightSplitter->addWidget(m_tableView_upper_left);
     m_top_rightSplitter->addWidget(m_tableView_upper_right );
 
+
     // entire right side:
     m_rightSplitter->addWidget(m_top_rightSplitter);
     m_rightSplitter->addWidget(m_tableView_lower);
@@ -127,6 +130,10 @@ MainWindow::MainWindow()
     // on left side:
     m_mainSplitter->addWidget(m_leftTreeView);
     m_mainSplitter->addWidget(m_rightSplitter);
+
+    QWidget::setTabOrder(m_leftTreeView, m_tableView_upper_left);
+    QWidget::setTabOrder(m_tableView_upper_left, m_tableView_upper_right);
+
 
     setCentralWidget(m_mainSplitter);
 
@@ -322,6 +329,12 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     {
         m_graphics_scene->widen_columns();
         break;
+    }
+    case Qt::Key_W:
+    {
+        // NB: this could be done with signals/slots.
+        m_tableView_upper_left ->showWords();
+        m_tableView_upper_right->showWords();
     }
     case Qt::Key_Y:
     {   // toggle flag for sliding signature icons to the left when they become in-use.

@@ -123,5 +123,4 @@ void MainWindow::createActions()
     editToolBar->addAction(copyAct);
     editToolBar->addAction(pasteAct);
 
-
-}
+ }
