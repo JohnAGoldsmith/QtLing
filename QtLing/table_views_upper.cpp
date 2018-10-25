@@ -1,6 +1,7 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QAbstractItemView>
+#include <QTableView>
 #include "table_views.h"
 #include "lxamodels.h"
 #include "mainwindow_find.h"
@@ -10,6 +11,7 @@
 // general instructions.
 void UpperTableView::keyPressEvent(QKeyEvent *e)
 {
+    QTableView::keyPressEvent();
     m_parent_window->MainWindow::keyPressEvent(e);
 }
 
@@ -173,8 +175,6 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
 
         if (component == "Words"){
             showWords();
-            //m_proxy_model->setSourceModel(m_parent_window->m_Models["Words"]);
-            //set_data_type( e_data_words );
         }
         else     if (component == "Prefixal stems"){
             m_proxy_model->setSourceModel(m_parent_window->m_Models["Prefixal stems"]);

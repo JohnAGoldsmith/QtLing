@@ -75,7 +75,6 @@ void LxaStandardItemModel::load_words(CWordCollection* p_words)
         pItem2->setData(pWord->get_word_count(), Qt::DisplayRole); // --- Numerical data
         item_list.append(pItem2);
 
-        //QMapIterator<stem_t, Parse_triple*> parse_3_iter(*pWord->get_parse_triple_map());
         int tempcount = 0;
         for(int i = 0; i < pWord->get_parse_triple_map()->size(); i++){
             //QString p_sig_string = *pWord->at(i)->get_parse_triple_map();
