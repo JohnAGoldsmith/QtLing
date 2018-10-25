@@ -12,6 +12,7 @@ class CSuffix;
 class CPrefix;
 class CStem;
 class CSignatureCollection;
+class QJsonObject;
 
 sigstring_t restructure_signature(sigstring_t, QString morph, QStringList new_affixes);
 
@@ -27,6 +28,8 @@ protected:
     CSignatureCollection*           m_SignatureCollection;
     double                          m_stem_entropy;
     int                             m_json_id;
+
+    int                             m_robustness;
 
 public:
 
@@ -57,7 +60,7 @@ public:
     QString                     GetSignature()              const       { return m_Signature; }
     QString                     get_key()                   const       { return m_Signature;}
     QList<CPrefix*>*            get_prefix_list()                       {return m_Prefixes;}
-    int                         get_robustness() const;
+    //int                         get_robustness() const;
     double                      get_stem_entropy();
     QList<CStem*>*              get_stems()                             { return   m_Stems;}
     QStringList&                get_stem_strings(QStringList&);
@@ -71,9 +74,12 @@ public:
     void                        sort_stems();
     void                        sort_stems_by_count();
 
-    void                        set_json_id(int id) {m_json_id = id;}
-    int                         get_json_id() {return m_json_id;}
+    void                        set_json_id(const int id) {m_json_id = id;}
+    int                         get_json_id() const {return m_json_id;}
+    void                        write_json(QJsonObject& ref_json, eJsonType json_type = INDEXED) const;
 
+    void                        calculate_robustness();
+    int                         get_robustness() const                  { return m_robustness; }
 
 };
 

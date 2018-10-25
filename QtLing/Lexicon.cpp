@@ -316,6 +316,9 @@ void CLexicon::Crab_1()
                 m_Signatures->compute_containment_list():
                 m_PrefixSignatures->compute_containment_list();
 
+    m_SuffixesFlag?
+                m_Signatures->calculate_sig_robustness():
+                m_PrefixSignatures->calculate_sig_robustness();
 }
 
 //  <-------------->
@@ -690,7 +693,7 @@ void CLexicon::step4_create_signatures(const QString& name_of_calling_function,
         m_Prefixes->clear();
         m_PrefixSignatures->clear();
     }
-    // -->  Iterate through tentative signatures.    <-- //
+     // -->  Iterate through tentative signatures.    <-- //
     int temp_i = 0;
     int count (0);
     foreach (this_signature_string, m_intermediate_sig_to_stem_map.m_core.keys() )

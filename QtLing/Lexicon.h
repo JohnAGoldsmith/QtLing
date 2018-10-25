@@ -12,6 +12,7 @@
 #include "SignatureCollection.h"
 #include "Typedefs.h"
 #include "evaluation.h"
+#include <QJsonValue>
 #include "generaldefinitions.h"
 
 class MainWindow;
@@ -41,7 +42,22 @@ class CompoundWordCollection;
  */
 
 
-
+class CJsonInfo {
+public:
+    bool suffix_flag;
+    QList<CWord*> words;
+    QList<CStem*> suffix_stems;
+    QList<CStem*> prefix_stems;
+    QList<CSignature*> suffix_signatures;
+    QList<CSignature*> prefix_signatures;
+    QList<CSuffix*> suffixes;
+    QList<CPrefix*> prefixes;
+    typedef QPair<QJsonValue::Type, QString> JsonTag;
+    typedef QList<JsonTag> JsonTagList;
+    static bool check_tags(const QJsonObject& ref_json, const QList<QPair<QJsonValue::Type, QString>>& tags);
+    static QString eSortStyle_to_string(const eSortStyle sortstyle);
+    static eSortStyle string_to_eSortStyle(const QString& str);
+};
 
 
 //  part of an experiment:
@@ -364,6 +380,9 @@ public:
 
     void check_autobiography_consistency();
 
+    void test_json_functionality();
+    void assign_json_id();
+    void write_json(QJsonObject& ref_json, eJsonType json_type = INDEXED);
 
 
     void test_for_phonological_relations_between_signatures();

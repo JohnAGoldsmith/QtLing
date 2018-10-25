@@ -207,25 +207,13 @@ void LowerTableView::display_this_item( const  QModelIndex & index )
         break;}
     case  e_data_hypotheses:
         if (m_parent_window->m_graphic_display_flag){
-            if (index.isValid()) {row = index.row();}
-            QString hypothesis_label = index.sibling(row,6).data().toString();
-        }
-        else{ //tabular info, not graphics.
+                if (index.isValid()) {row = index.row();}
+                QString hypothesis_label = index.sibling(row,6).data().toString();
+          }
+          else{ //tabular info, not graphics.
 
-        }
-        break;
-
-        // add component 9
-        if (m_parent_window->m_graphic_display_flag){
-            if (index.isValid()) {row = index.row();}
-            QString hypothesis_label = index.sibling(row,6).data().toString();
-            //CHypothesis*  pHypothesis = this_lexicon->get_hypothesis(hypothesis_label);
-            qDebug() << 207 << hypothesis_label;
-        }
-        else{ //tabular info, not graphics.
-
-        }
-        break;
+          }
+          break;
 
         // add component 9
         /* Lower display function for protostems added by Hanson. */

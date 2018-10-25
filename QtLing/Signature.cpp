@@ -186,26 +186,51 @@ QString CSignature::display_stems()
     }
     return outstring;
 }
-int CSignature::get_robustness() const
+
+
+void CSignature::calculate_robustness()
 {
-    int robustness = 0;
     int stem_letters = 0;
-    int suffix_letters = 0;
+    int affix_letters = 0;
     if (m_SuffixFlag){
+        foreach (CSuffix* p_suffix, *m_Suffixes) {
+            const QString& str_suffix = p_suffix->get_key();
+            if (str_suffix == "NULL") {
+                affix_letters += 1;
+            } else {
+                affix_letters += str_suffix.length();
+            }
+        }
+        /*
         for (int suffix_no=0; suffix_no < m_Suffixes->size(); suffix_no++){
             if (m_Suffixes->at(suffix_no)->get_key() == "NULL"){
                 suffix_letters += 1;
             } else{
                 suffix_letters += m_Suffixes->at(suffix_no)->get_key().length();
             }
+        } */
+    } else {
+        foreach (CPrefix* p_prefix, *m_Prefixes) {
+            const QString& str_prefix = p_prefix->get_key();
+            if (str_prefix == "NULL") {
+                affix_letters += 1;
+            } else {
+                affix_letters += str_prefix.length();
+            }
         }
     }
+
+    foreach (CStem* p_stem, *m_Stems) {
+        const QString& str_stem = p_stem->get_key();
+        stem_letters += str_stem.length();
+    }
+    /*
     for (int stem_no=0;stem_no<m_Stems->size();stem_no++){
         stem_letters += m_Stems->at(stem_no)->get_key().length();
-    }
-    robustness = stem_letters * (get_number_of_affixes()-1)  +  suffix_letters * (get_number_of_stems()-1);
-    return robustness;
+    }*/
+    m_robustness = stem_letters * (get_number_of_affixes()-1)  +  affix_letters * (get_number_of_stems()-1);
 }
+
  int CSignature::get_number_of_affixes() const
 {    if (m_SuffixFlag){
          if (m_Suffixes->count() > 0)

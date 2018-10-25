@@ -3,18 +3,20 @@
 
 #include <QList>
 #include <iterator>
+#include <QJsonObject>
 #include "generaldefinitions.h"
 #include "Suffix.h"
 #include "Typedefs.h"
 
 class CLexicon;
+class CJsonInfo;
 
 
 class CSuffixCollection
 {
 protected:
-    QMap<QString, CSuffix*>  m_SuffixMap;
-    CSuffix_ptr_list         m_SortedList;
+    QMap<QString, CSuffix*>  m_SuffixMap;   // json tag: "suffixes"
+    CSuffix_ptr_list         m_SortedList;  // json tag: "sortedSuffixes"
     CLexicon*                m_Lexicon;
 
 public:
@@ -45,6 +47,10 @@ public:
     void                    sort_by_count();
     CSuffix_ptr_list*       get_sorted_list()               { return & m_SortedList; }
     void                    clear();
+
+    void                    assign_json_id();
+    void                    write_json(QJsonObject& ref_json, eJsonType json_type = INDEXED);
+    void                    read_json_1(const QJsonObject& ref_json, CJsonInfo& ref_pointers);
 };
 
 class CPrefixCollection
@@ -78,6 +84,10 @@ public:
     void                    sort_by_count();
     CPrefix_ptr_list*       get_sorted_list()               {return & m_SortedList;}
     void                    clear();
+
+    void                    assign_json_id();
+    void                    write_json(QJsonObject& ref_json, eJsonType json_type = INDEXED);
+    void                    read_json_1(const QJsonObject &ref_json, CJsonInfo& ref_pointers);
 
 };
 

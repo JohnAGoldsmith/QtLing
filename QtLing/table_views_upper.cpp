@@ -28,6 +28,8 @@ UpperTableView::UpperTableView (MainWindow* window, eSortStyle this_sort_style)
        m_proxy_model = new LxaSortFilterProxyModel(this);
        setModel(m_proxy_model);
        // -- added by Hanson -- //
+
+       setFocusPolicy(Qt::ClickFocus);
 }
 
 
@@ -564,3 +566,8 @@ void  UpperTableView::display_this_affixes_signatures(const QModelIndex & index)
    get_parent_window()->get
 }
 */
+
+void UpperTableView::focusInEvent()
+{
+    qDebug() << "Upper table view focused";
+}
