@@ -56,6 +56,8 @@ MainWindow::MainWindow()
     m_lexicon_list.append ( m_my_lexicon );
     CLexicon * lexicon =  m_my_lexicon;
 
+    // setFocusPolicy()
+
     // models
     m_Models["Words"]                       = new LxaStandardItemModel("Words");
     m_Models["Suffixal stems"]              = new LxaStandardItemModel("Suffixal stems");
@@ -198,7 +200,8 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         if (get_lexicon()->get_prefixal_stems()->get_count() > 0){
             get_lexicon()->set_prefixes_flag();
             do_crab2();
-            display_epositive_prefix_signatures(get_lexicon());        }
+            display_epositive_prefix_signatures(get_lexicon());
+        }
         break;
      }
     case Qt::Key_2:

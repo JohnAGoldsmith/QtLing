@@ -64,7 +64,7 @@ public:
 
     void                        set_json_id(const int id) {m_json_id = id;}
     int                         get_json_id() const {return m_json_id;}
-    void                        write_json(QJsonObject& ref_json) const;
+    void                        write_json(QJsonObject& ref_json, eJsonType json_type = INDEXED) const;
 
 };
 

@@ -288,3 +288,11 @@ void CSignatureCollection::check_singleton_signatures(const QString &message)
     }
 }
 
+void CSignatureCollection::calculate_sig_robustness()
+{
+    foreach (CSignature* p_sig, m_SignatureMap) {
+        p_sig->calculate_robustness();
+    }
+    qDebug() << "Calculated signature robustness";
+}
+

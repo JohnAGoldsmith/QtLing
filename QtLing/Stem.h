@@ -7,6 +7,7 @@
 #include <QMap>
 #include <QJsonObject>
 #include <QJsonArray>
+#include "generaldefinitions.h"
 
 class CSuffix;
 class CSignature;
@@ -42,7 +43,7 @@ public:
     int                 get_count()             const   {return m_count;}
     void                set_count (int n)               {m_count = n;}
 
-    void                write_json(QJsonObject& ref_json) const;
+    void                write_json(QJsonObject& ref_json, eJsonType json_type = INDEXED) const;
     void                read_json_1(const QJsonObject& ref_json);
     void                read_json_2(const QJsonObject& ref_json, const CJsonInfo& ref_pointers);
     int                 get_json_id() const {return m_json_id;}

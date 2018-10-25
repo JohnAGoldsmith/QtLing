@@ -5,6 +5,7 @@
 #include "lxamodels.h"
 
 class MainWindow;
+class CLexicon;
 class CompoundWord;
 
 class UpperTableView : public QTableView
@@ -53,6 +54,9 @@ public slots:
     bool                    find_next_and_highlight(QString& s);
     void                    clear_search();
     // for search functionality //
+
+    void                    focusInEvent();
+    //void                    keyPressEvent(QKeyEvent* e);
 
     signals:
     void                    please_display_this_signature(QString sig);

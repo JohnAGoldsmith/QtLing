@@ -382,8 +382,7 @@ public:
 
     void test_json_functionality();
     void assign_json_id();
-    void write_json(QJsonObject& ref_json);
-
+    void write_json(QJsonObject& ref_json, eJsonType json_type = INDEXED);
 
 
     void test_for_phonological_relations_between_signatures();

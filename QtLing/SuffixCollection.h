@@ -49,7 +49,7 @@ public:
     void                    clear();
 
     void                    assign_json_id();
-    void                    write_json(QJsonObject& ref_json);
+    void                    write_json(QJsonObject& ref_json, eJsonType json_type = INDEXED);
     void                    read_json_1(const QJsonObject& ref_json, CJsonInfo& ref_pointers);
 };
 
@@ -86,7 +86,7 @@ public:
     void                    clear();
 
     void                    assign_json_id();
-    void                    write_json(QJsonObject& ref_json);
+    void                    write_json(QJsonObject& ref_json, eJsonType json_type = INDEXED);
     void                    read_json_1(const QJsonObject &ref_json, CJsonInfo& ref_pointers);
 
 };

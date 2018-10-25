@@ -29,6 +29,8 @@ protected:
     double                          m_stem_entropy;
     int                             m_json_id;
 
+    int                             m_robustness;
+
 public:
 
     CSignature(CSignature&);
@@ -58,7 +60,7 @@ public:
     QString                     GetSignature()              const       { return m_Signature; }
     QString                     get_key()                   const       { return m_Signature;}
     QList<CPrefix*>*            get_prefix_list()                       {return m_Prefixes;}
-    int                         get_robustness() const;
+    //int                         get_robustness() const;
     double                      get_stem_entropy();
     QList<CStem*>*              get_stems()                             { return   m_Stems;}
     QStringList&                get_stem_strings(QStringList&);
@@ -74,7 +76,10 @@ public:
 
     void                        set_json_id(const int id) {m_json_id = id;}
     int                         get_json_id() const {return m_json_id;}
-    void                        write_json(QJsonObject& ref_json) const;
+    void                        write_json(QJsonObject& ref_json, eJsonType json_type = INDEXED) const;
+
+    void                        calculate_robustness();
+    int                         get_robustness() const                  { return m_robustness; }
 
 };
 

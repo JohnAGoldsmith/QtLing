@@ -237,6 +237,12 @@ enum eMinimumStemCountFlag
     MS_ignore_minimum_stem_count
 };
 
+enum eJsonType
+{
+    INDEXED,
+    MAPPED
+};
+
 /*
 enum eCurrentDisplay
 {

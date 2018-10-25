@@ -6,6 +6,7 @@
 #include <QList>
 #include <QMap>
 #include <QJsonObject>
+#include "generaldefinitions.h"
 
 
 class CSuffix
@@ -27,7 +28,7 @@ public:
     int     get_sig_count() const               { return m_sig_count;}
     int     increment_sig_count()               { m_sig_count+= 1; return m_sig_count;}
 
-    void    write_json(QJsonObject& ref_json) const;
+    void    write_json(QJsonObject& ref_json, eJsonType json_type = INDEXED) const;
     void    read_json(const QJsonObject& ref_json);
     int     get_json_id() const { return m_json_id; }
     void    set_json_id(const int id) { m_json_id = id; }
@@ -52,7 +53,7 @@ public:
     int     get_sig_count() const               { return m_sig_count;}
     int     increment_sig_count()               { m_sig_count+= 1; return m_sig_count;}
 
-    void    write_json(QJsonObject& ref_json) const;
+    void    write_json(QJsonObject& ref_json, eJsonType json_type = INDEXED) const;
     void    read_json(const QJsonObject& ref_json);
     int     get_json_id() const { return m_json_id; }
     void    set_json_id(const int id) { m_json_id = id; }
