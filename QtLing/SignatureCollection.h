@@ -75,6 +75,9 @@ public:
     void                                    sort_each_signatures_stems_alphabetically();
 
     void                                    assign_json_id();
+    void                                    write_json(QJsonObject& ref_json, eJsonType json_type = INDEXED) const;
     void                                    check_singleton_signatures(const QString& message);
+
+    void                                    calculate_sig_robustness();
 };
 #endif // CSIGNATURECOLLECTION_H

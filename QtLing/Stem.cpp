@@ -1,5 +1,8 @@
+#include "Lexicon.h"
 #include "Stem.h"
+#include "Suffix.h"
 #include "Signature.h"
+
 
 CStem::CStem(QString stem) :  m_key(stem), m_Signatures(),m_count(0) {}
 

@@ -216,7 +216,8 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         if (get_lexicon()->get_prefixal_stems()->get_count() > 0){
             get_lexicon()->set_prefixes_flag();
             do_crab2();
-            display_epositive_prefix_signatures(get_lexicon());        }
+            display_epositive_prefix_signatures(get_lexicon());
+        }
         break;
      }
     case Qt::Key_2:
@@ -429,7 +430,7 @@ void MainWindow::newFile()
 
 void MainWindow::ask_for_filename()
 {
-    qDebug() << " ask for filename" ;
+    // qDebug() << " ask for filename" ;
     m_name_of_data_file = QFileDialog::getOpenFileName(this);
     qDebug() << m_name_of_data_file;
     read_dx1_file();

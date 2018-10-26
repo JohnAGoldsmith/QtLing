@@ -1,5 +1,7 @@
 #include "SuffixCollection.h"
+#include "Lexicon.h"
 #include <QDebug>
+#include <QJsonArray>
 
 class CLexicon;
 
@@ -78,10 +80,6 @@ void CSuffixCollection::sort_by_count()
     std::sort(m_SortedList.begin(), m_SortedList.end(), count_compare_suffixes);
 
 }
-
-
-
-
 
 
 

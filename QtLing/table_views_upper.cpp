@@ -11,7 +11,7 @@
 // general instructions.
 void UpperTableView::keyPressEvent(QKeyEvent *e)
 {
-    QTableView::keyPressEvent();
+   // QTableView::keyPressEvent();
     m_parent_window->MainWindow::keyPressEvent(e);
 }
 
@@ -50,9 +50,12 @@ UpperTableView::UpperTableView (MainWindow* window, eSortStyle this_sort_style)
        setModel(m_proxy_model);
        // -- added by Hanson -- //
 
+
        setFocusPolicy(Qt::StrongFocus); // allows it to capture keystrokes
 
        createActions();
+        setFocusPolicy(Qt::ClickFocus);
+
 }
 
 
@@ -590,3 +593,8 @@ void  UpperTableView::display_this_affixes_signatures(const QModelIndex & index)
    get_parent_window()->get
 }
 */
+
+void UpperTableView::focusInEvent()
+{
+    qDebug() << "Upper table view focused";
+}

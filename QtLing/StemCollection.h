@@ -7,6 +7,8 @@
 #include "Stem.h"
 #include "Typedefs.h"
 
+class QJsonObject;
+class CJsonInfo;
 class CLexicon;
 
 
@@ -48,6 +50,11 @@ public:
 
     CStem*                          operator<< (const QString& );
     CStem*                          operator^= (const QString& );
+
+    void                            assign_json_id();
+    void                            write_json(QJsonObject& ref_json, eJsonType json_type = INDEXED);
+    void                            read_json_1(const QJsonObject& ref_json, CJsonInfo &ref_pointers);
+    void                            read_json_2(const QJsonObject& ref_json, const CJsonInfo &ref_pointers);
 };
 
 #endif // CSTEMCOLLECTION_H

@@ -12,8 +12,9 @@
 #include <QSortFilterProxyModel>
 #include <QListView>
 #include <QGraphicsView>
-#include "Lexicon.h"
 #include "table_views.h"
+#include <QProgressBar>
+#include "Lexicon.h"
 
 
 QT_BEGIN_NAMESPACE
