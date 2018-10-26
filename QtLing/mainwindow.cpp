@@ -207,11 +207,12 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     int this_key = ke->key();
 
     // the MainWindow only responds to keyboard instructions with Control Key depressed.
-    if (ke->modifiers() != Qt::ControlModifier){
+    if (ke->modifiers() != Qt::ControlModifier && ke->modifiers() != Qt::AltModifier){
         return;
     }
     switch(this_key){
     case Qt::Key_1:
+    {if (ke->modifiers() == Qt::AltModifier)
     {
         if (get_lexicon()->get_prefixal_stems()->get_count() > 0){
             get_lexicon()->set_prefixes_flag();
@@ -220,7 +221,9 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         }
         break;
      }
+    }
     case Qt::Key_2:
+    {if (ke->modifiers() == Qt::AltModifier)
     {
         if (get_lexicon()->get_suffixal_stems()->get_count() > 0){
            get_lexicon()->set_suffixes_flag();
@@ -229,32 +232,42 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         }
         break;
     }
-    case  Qt::Key_3:    {
+    }
+    case  Qt::Key_3:
+    {if (ke->modifiers() == Qt::AltModifier)
+    {
         statusBar()->showMessage(tr("Read file."), 5000);
         ask_for_project_file();
         break;
     }
-    case Qt::Key_4:{
+    }
+    case Qt::Key_4:
+    {if (ke->modifiers() == Qt::AltModifier)
+    {
         read_corpus();
         analyze_corpus();
         break;
     }
-    case Qt::Key_5:{
-        MainWindow* new_window = new MainWindow();
-        CLexicon* sublexicon = get_lexicon()->build_sublexicon(new_window);
-        m_lexicon_list.append(sublexicon);
-        new_window->do_crab1();
-        if (sublexicon->get_suffix_flag()){
-            new_window->display_epositive_suffix_signatures(sublexicon);
-        } else{
-            new_window->display_epositive_prefix_signatures(sublexicon);
+    }
+    case Qt::Key_5:
+    {if (ke->modifiers() == Qt::AltModifier)
+        {
+            MainWindow* new_window = new MainWindow();
+            CLexicon* sublexicon = get_lexicon()->build_sublexicon(new_window);
+            m_lexicon_list.append(sublexicon);
+            new_window->do_crab1();
+            if (sublexicon->get_suffix_flag()){
+                new_window->display_epositive_suffix_signatures(sublexicon);
+            } else{
+                new_window->display_epositive_prefix_signatures(sublexicon);
+            }
+
+            new_window->resize(600, 400);
+            new_window->setWindowTitle("Sublexicon");
+            new_window->show();
+
+            break;
         }
-
-        new_window->resize(600, 400);
-        new_window->setWindowTitle("Sublexicon");
-        new_window->show();
-
-        break;
     }
     case Qt::Key_6:{
         get_lexicon()->set_prefixes_flag();
@@ -317,11 +330,22 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
          break;
     }
     case Qt::Key_S:
-    {
-        get_lexicon()->set_suffixes_flag();
-        do_crab1();
-        display_epositive_suffix_signatures(get_lexicon());
-        break;
+    {   if (ke->modifiers() == Qt::ControlModifier)
+        {
+            get_lexicon()->set_suffixes_flag();
+            do_crab1();
+            display_epositive_suffix_signatures(get_lexicon());
+            break;
+        }
+        else
+        {
+        if (ke->modifiers() == Qt::AltModifier)
+        {
+                // NB: this could be done with signals/slots.
+                m_tableView_upper_left ->showSuffixSignatures();
+                m_tableView_upper_right->showSuffixSignatures();
+        }
+        }
     }
     case Qt::Key_V:
     {
@@ -331,8 +355,8 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         m_graphics_scene->widen_columns();
         break;
     }
-    case Qt::Key_W:
-    {
+    case Qt::Key_W:        
+    {if (ke->modifiers() == Qt::AltModifier)
         // NB: this could be done with signals/slots.
         m_tableView_upper_left ->showWords();
         m_tableView_upper_right->showWords();

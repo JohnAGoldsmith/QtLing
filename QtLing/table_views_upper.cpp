@@ -26,7 +26,11 @@ void UpperTableView::showWords()
     m_proxy_model->setSourceModel(m_parent_window->m_Models["Words"]);
     set_data_type( e_data_words );
 }
-
+void UpperTableView::showSuffixSignatures()
+{
+    m_proxy_model->setSourceModel(m_parent_window->m_Models["EPositive signatures"]);
+    set_data_type( e_data_suffixal_signatures );
+}
 /**
 * @brief UpperTableView::UpperTableView
 * @param window

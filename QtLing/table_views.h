@@ -36,7 +36,7 @@ class UpperTableView : public QTableView
 
 public:
     void                    showWords();
-
+    void                    showSuffixSignatures();
  signals:
     void                    num_items_found(int);
     // for search functionality //
