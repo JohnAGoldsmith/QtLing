@@ -4,6 +4,7 @@
 #include <Qt>
 #include <QBrush>
 #include <QColor>
+#include <QDebug>
 #include <QWidget>
 #include <QtWidgets>
 #include <QTreeView>
@@ -212,29 +213,25 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     }
     switch(this_key){
     case Qt::Key_1:
-    {if (ke->modifiers() == Qt::AltModifier)
+    {if (ke->modifiers() == Qt::ControlModifier)
     {
         if (get_lexicon()->get_prefixal_stems()->get_count() > 0){
-            get_lexicon()->set_prefixes_flag();
-            do_crab2();
-            display_epositive_prefix_signatures(get_lexicon());
+            do_crab2_prefixes();
         }
         break;
      }
     }
     case Qt::Key_2:
-    {if (ke->modifiers() == Qt::AltModifier)
+    {if (ke->modifiers() == Qt::ControlModifier)
     {
         if (get_lexicon()->get_suffixal_stems()->get_count() > 0){
-           get_lexicon()->set_suffixes_flag();
-           do_crab2();
-           display_epositive_suffix_signatures(get_lexicon());
+            do_crab2_suffixes();
         }
         break;
     }
     }
     case  Qt::Key_3:
-    {if (ke->modifiers() == Qt::AltModifier)
+    {if (ke->modifiers() == Qt::ControlModifier)
     {
         statusBar()->showMessage(tr("Read file."), 5000);
         ask_for_project_file();
@@ -250,7 +247,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     }
     }
     case Qt::Key_5:
-    {if (ke->modifiers() == Qt::AltModifier)
+    {if (ke->modifiers() == Qt::ControlModifier)
         {
             MainWindow* new_window = new MainWindow();
             CLexicon* sublexicon = get_lexicon()->build_sublexicon(new_window);
@@ -271,6 +268,13 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     }
     case Qt::Key_6:{
         get_lexicon()->set_prefixes_flag();
+        break;
+    }
+    case Qt::Key_C:
+    {if (ke->modifiers() == Qt::AltModifier)
+        {   qDebug() << "key c";
+            get_lexicon()->step10_find_compounds();
+        }
         break;
     }
     case Qt::Key_D:     {
@@ -319,9 +323,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     }
     case Qt::Key_P:
     {
-        get_lexicon()->set_prefixes_flag();
-        do_crab1();
-        display_prefix_signatures(get_lexicon());
+        do_crab1_prefixes();
         break;
     }
     case Qt::Key_Q:
@@ -332,9 +334,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     case Qt::Key_S:
     {   if (ke->modifiers() == Qt::ControlModifier)
         {
-            get_lexicon()->set_suffixes_flag();
-            do_crab1();
-            display_epositive_suffix_signatures(get_lexicon());
+            do_crab1_suffixes();
             break;
         }
         else
@@ -407,8 +407,30 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     }
 }
 
-
-
+void MainWindow::do_crab1_suffixes()
+{
+    get_lexicon()->set_suffixes_flag();
+    do_crab1();
+    display_epositive_suffix_signatures(get_lexicon());
+}
+void MainWindow::do_crab1_prefixes()
+{
+    get_lexicon()->set_prefixes_flag();
+    do_crab1();
+    display_epositive_prefix_signatures(get_lexicon());
+}
+void MainWindow::do_crab2_suffixes()
+{
+    get_lexicon()->set_suffixes_flag();
+    do_crab2();
+    display_epositive_suffix_signatures(get_lexicon());
+}
+void MainWindow::do_crab2_prefixes()
+{
+    get_lexicon()->set_prefixes_flag();
+    do_crab2();
+    display_epositive_prefix_signatures(get_lexicon());
+}
 void MainWindow::do_crab1()
 {   statusBar()->showMessage("Entering the Crab Nebula.");
     CLexicon* lexicon = get_lexicon();
@@ -434,7 +456,6 @@ void MainWindow::do_crab2()
     statusBar()->showMessage("We have returned from the Crab Nebula.");
 
     create_or_update_TreeModel(lexicon);
-   // m_graphics_scene->clear_all();
     if (lexicon->get_suffix_flag())
         print_suffix_signatures();
     else

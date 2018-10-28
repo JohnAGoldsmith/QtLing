@@ -3,6 +3,7 @@
 #include <QAction>
 #include <QToolBar>
 #include <QDebug>
+#include <QShortcut>
 #include "mainwindow_menubar.h"
 
 /*!
@@ -115,6 +116,21 @@ void MainWindow::createActions()
     m_main_menu_bar = new MainMenuBar(this);
     setMenuBar(m_main_menu_bar);
 
+
+    // Crab Suffix Part 1
+    const QIcon crab_suffix_1_Icon = QIcon("./images/paste.png");
+    crab_suffix_1_Act = new QAction(crab_suffix_1_Icon, tr("&Crab suffix part 1"), this);
+    crab_suffix_1_Act->setShortcut(QKeySequence(tr("Ctrl+S")));
+    crab_suffix_1_Act->setStatusTip(tr("Find suffix signatures part 1"));
+    connect(crab_suffix_1_Act, &QAction::triggered, this, &MainWindow::do_crab1_suffixes);
+
+    // Crab Prefix Part 1
+    const QIcon crab_prefix_1_Icon = QIcon::fromTheme("edit-paste", QIcon("../../../../QtLing/images/paste.png"));
+    crab_prefix_1_Act = new QAction(crab_prefix_1_Icon, tr("&Crab suffix part 1"), this);
+    crab_prefix_1_Act->setShortcut(QKeySequence(tr("Ctrl+P")));
+    crab_prefix_1_Act->setStatusTip(tr("Find prefix signatures part 1"));
+    connect(crab_suffix_1_Act, &QAction::triggered, this, &MainWindow::do_crab1_prefixes);
+
     // Create Tool Bar
     QToolBar* fileToolBar = addToolBar(tr("File"));
     fileToolBar->addAction(openAct);
@@ -122,5 +138,7 @@ void MainWindow::createActions()
     editToolBar->addAction(cutAct);
     editToolBar->addAction(copyAct);
     editToolBar->addAction(pasteAct);
+
+    editToolBar->addAction(crab_suffix_1_Act);
 
  }

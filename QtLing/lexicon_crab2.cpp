@@ -30,19 +30,19 @@ void CLexicon::Crab_2()
 {
     step6_ReSignaturizeWithKnownAffixes();
 
-     step7_FindGoodSignaturesInsideParaSignatures();
+    step7_FindGoodSignaturesInsideParaSignatures();
 
     m_SuffixesFlag ?
         m_Signatures->calculate_stem_entropy():
         m_PrefixSignatures->calculate_stem_entropy();
 
     step8a_compute_sig_graph_edges();
+
     step8b_compute_sig_graph_edge_map();
+
     step9_from_sig_graph_edges_map_to_hypotheses();
 
-//  step10_find_compounds();
     check_autobiography_consistency();
-//    step10_find_compounds();
 
     m_SuffixesFlag?
                 m_Signatures->calculate_sig_robustness():
@@ -50,7 +50,7 @@ void CLexicon::Crab_2()
 
     test_json_functionality();
 
-    //check_autobiography_consistency();
+    check_autobiography_consistency();
 
     qDebug() << "finished crab 2.";
 
@@ -307,147 +307,3 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
 }
 
 
-void CLexicon::step10_find_compounds()
-{
-    // PART 1a: go through list of words to find hyphenated compounds
-    CStemCollection* p_stems = m_SuffixesFlag ? m_suffixal_stems : m_prefixal_stems;
-    const QMap<QString, protostem*>& ref_protostem_map
-            = m_SuffixesFlag ? m_suffix_protostems : m_prefix_protostems;
-
-    m_ProgressBar->reset();
-    m_ProgressBar->setMinimum(0);
-    m_ProgressBar->setMaximum(m_Words->get_count() + p_stems->get_count());
-    m_StatusBar->showMessage("8: Finding Compounds - part 1.");
-    int progress_count = 0;
-
-    QMap<QString, CWord*>::ConstIterator word_iter;
-    for (word_iter = m_Words->get_map()->constBegin();
-         word_iter != m_Words->get_map()->constEnd();
-         word_iter++) {
-        m_ProgressBar->setValue(progress_count++);
-        const QString& word = word_iter.key();
-
-        QStringList components = word.split('-');
-        bool compound_valid = true;
-        foreach (QString curr_component, components) {
-            if (curr_component.length() < M_MINIMUM_STEM_LENGTH
-                    || m_Words->get_word(curr_component) == NULL
-                    || p_stems->find_or_fail(curr_component) == NULL) {
-                compound_valid = false;
-                break;
-            }
-        }
-        if (components.length() == 2 && compound_valid) {
-            m_Compounds->add_compound_word(word, components);
-        }
-    }
-    // END OF PART 1a
-    // PART 1b: go through list of stems and protostems to find potential
-    // non-hyphenated compound words
-    QMap<QString, CStem*>* p_stem_map = p_stems->get_map();
-    QMap<QString, CStem*>::ConstIterator stem_map_iter;
-    for (stem_map_iter = p_stem_map->constBegin();
-         stem_map_iter != p_stem_map->constEnd();
-         stem_map_iter++) {
-        m_ProgressBar->setValue(progress_count++);
-        // for each stem, find its corresponding protostem
-        const QString& str_stem = stem_map_iter.key();
-
-        CStem* p_stem = stem_map_iter.value();
-        protostem* p_protostem = ref_protostem_map[str_stem];
-        int stem_length = str_stem.length();
-
-        if (stem_length < M_MINIMUM_STEM_LENGTH) continue;
-
-        // iterate through all words in the protostem
-        int wordno;
-        const int end_word = p_protostem->get_end_word();
-        for (wordno = p_protostem->get_start_word();
-             wordno <= end_word;
-             wordno++) {
-            // find the continuation of a word, i.e. the part of the word
-            // left over after stem part is removed
-            const QString& str_word = m_SuffixesFlag ?
-                        m_Words->get_word_string(wordno):
-                        m_Words->get_reverse_sort_list()->at(wordno);
-            const QString str_continuation = m_SuffixesFlag ?
-                        str_word.mid(stem_length) :
-                        str_word.left(str_word.length()-stem_length);
-            bool continuation_valid = true;
-            // determine if the continuation is already in stem's signature,
-            // skip if it is.
-            CSignature* p_signature;
-            foreach (p_signature, *(p_stem->GetSignatures())) {
-                if (m_SuffixesFlag) {
-                    QList<CSuffix*>* p_suffixes = p_signature->get_suffix_list();
-                    CSuffix* p_suffix;
-                    foreach (p_suffix, *p_suffixes) {
-                        if (p_suffix->get_key() == str_continuation) {
-                            continuation_valid = false;
-                            break;
-                        }
-                    }
-                } else {
-                    QList<CPrefix*>* p_prefixes = p_signature->get_prefix_list();
-                    CPrefix* p_prefix;
-                    foreach (p_prefix, *p_prefixes) {
-                        if (p_prefix->get_key() == str_continuation) {
-                            continuation_valid = false;
-                            break;
-                        }
-                    }
-                }
-            }
-            if (!continuation_valid) continue;
-
-            // determine if the continuation is a word or a stem,
-            // skip if it is not.
-            // bool continuation_is_word = false;
-            // bool continuation_is_stem = false;
-            if (m_Words->get_word(str_continuation) == NULL) {
-                continuation_valid = (p_stems->find_or_fail(str_continuation) != NULL);
-                // continuation_is_stem = continuation_valid;
-            } else {
-                continuation_valid = true;
-                // continuation_is_word = true;
-            }
-            if (!continuation_valid) continue;
-
-            if (m_SuffixesFlag) {
-                m_Compounds->add_compound_word(str_word, str_stem, str_continuation);
-                /*add_to_word_autobiographies(str_word,
-                                            QString("[Compound]=I am a compound!=Components:=%1=%2")
-                                            .arg(str_stem).arg(str_continuation));*/
-            }
-            else {
-                m_Compounds->add_compound_word(str_word, str_continuation, str_stem);
-                /*add_to_word_autobiographies(str_word,
-                                            QString("[Compound]=I am a compound!=Components:=%1=%2")
-                                            .arg(str_continuation).arg(str_stem));*/
-            }
-            /*
-            add_to_stem_autobiographies(str_stem,
-                                        QString("[Compound]=I am a compound component of=%1")
-                                        .arg(str_word));
-            if (continuation_is_stem) {
-                add_to_stem_autobiographies(str_continuation,
-                                            QString("[Compound]=I am a compound component of=%1")
-                                            .arg(str_word));
-            }
-            if (continuation_is_word) {
-                add_to_word_autobiographies(str_continuation,
-                                            QString("[Compound]=I am a compound component of=%1")
-                                            .arg(str_word));
-            }
-            */
-
-        }
-    }
-    // END OF PART 1b
-
-    // PART 2: remove invalid components
-    m_StatusBar->showMessage("8: Finding Compounds - part 2: "
-                             "removing invalid components.");
-    m_Compounds->remove_invalid_components(m_ProgressBar);
-
-}

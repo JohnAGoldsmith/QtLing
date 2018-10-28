@@ -21,15 +21,16 @@ void UpperTableView::createActions()
 
 }
 
-void UpperTableView::showWords()
-{
-    m_proxy_model->setSourceModel(m_parent_window->m_Models["Words"]);
-    set_data_type( e_data_words );
-}
+
 void UpperTableView::showSuffixSignatures()
 {
     m_proxy_model->setSourceModel(m_parent_window->m_Models["EPositive signatures"]);
     set_data_type( e_data_suffixal_signatures );
+}
+void UpperTableView::showWords()
+{
+    m_proxy_model->setSourceModel(m_parent_window->m_Models["Words"]);
+    set_data_type( e_data_words );
 }
 /**
 * @brief UpperTableView::UpperTableView
@@ -54,12 +55,9 @@ UpperTableView::UpperTableView (MainWindow* window, eSortStyle this_sort_style)
        setModel(m_proxy_model);
        // -- added by Hanson -- //
 
-
        setFocusPolicy(Qt::StrongFocus); // allows it to capture keystrokes
-
        createActions();
-        setFocusPolicy(Qt::ClickFocus);
-
+       setFocusPolicy(Qt::ClickFocus);
 }
 
 
@@ -602,3 +600,6 @@ void UpperTableView::focusInEvent()
 {
     qDebug() << "Upper table view focused";
 }
+
+
+
