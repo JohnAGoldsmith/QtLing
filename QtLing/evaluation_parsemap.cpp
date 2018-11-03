@@ -45,7 +45,7 @@ ParseMapHandler::Word_to_parse_triple_collection_map *ParseMapHandler::clone_map
         Parse_triple_collection *curr_ptm = m_map->value(this_word);
         foreach(stem_t this_stem, curr_ptm->keys()) {
             Parse_triple *newpt = new Parse_triple(this_stem,
-                                                   curr_ptm->value(this_stem)->p_suffix,
+                                                   curr_ptm->value(this_stem)->m_suffix,
                                                    QString());
             newptm->insert(this_stem, newpt);
         }
@@ -53,6 +53,28 @@ ParseMapHandler::Word_to_parse_triple_collection_map *ParseMapHandler::clone_map
     }
     return newmap;
 }
+
+/*ParseMapHandler::Word_to_parse_triple_collection_map *ParseMapHandler::clone_map() const
+{
+    if (m_map == NULL)
+        return NULL;
+    // *** JG August 2018 I am not sure which is Hanson's latest code for this function.
+    ParseMap *newmap = new ParseMap();
+    for (ParseMap::const_iterator gsIter = m_map->constBegin();
+         gsIter != m_map->constEnd(); gsIter++) {
+        Parse_triple_map *newptm = new Parse_triple_map();
+        Parse_triple_map currptm = *(gsIter.value());
+        for (Parse_triple_map::const_iterator ptmIter = currptm.constBegin();
+             ptmIter != currptm.constEnd(); ptmIter++) {
+            Parse_triple *newpt = new Parse_triple(ptmIter.key(), ptmIter.value()->m_suffix, QString());
+            newptm->insert(ptmIter.key(), newpt);
+         }
+        newmap->insert(this_word, newptm);
+    }
+    return newmap;
+}
+*/
+
 
 //copy constructor, 2 of them:
 

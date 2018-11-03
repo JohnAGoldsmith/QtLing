@@ -96,21 +96,32 @@ typedef  QMap<stem_t , QSet<affix_t>>      Stem_to_sig_map;// was Protosigs;
 struct Sig_to_stem_map
 {
     QMap<sigstring_t,QSet<stem_t>*>    m_core;
-    QSet<stem_t>*  get_stem_set (sigstring_t this_sigstring) { return m_core[this_sigstring]; }
-    bool contains_signature (sigstring_t sig) { return m_core.contains(sig); }
+
+    QSet<stem_t>* get_stem_set(const sigstring_t this_sigstring)
+    {
+        return m_core[this_sigstring];
+    }
+
+    bool contains_signature(const sigstring_t& sig) const
+    {
+        return m_core.contains(sig);
+     }
+
+    //bool contains_sig_and_stem(const sigstring_t& sig, const stem_t& this_stem) const
     bool contains_sig_and_stem (sigstring_t sig, stem_t this_stem) {
         if (m_core[sig]->contains(this_stem)){
             return true;
         }
         else{return false;}
-    }
+}
+
     void attach_stem_to_signature(stem_t this_stem, sigstring_t this_sig){
         if (! m_core.contains(this_sig)){
             m_core[this_sig] = new QSet<QString>;
         }
         m_core[this_sig]->insert(this_stem);
-    }
-    void clear() {
+}
+     void clear() {
         foreach (QSet<stem_t>* p_set, m_core) {
             delete p_set;
         } // added by Hanson 7.31, to prevent memory leak

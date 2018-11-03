@@ -36,6 +36,7 @@ SOURCES += main.cpp\
     output.cpp \
     corpus.cpp \
     lexicon_sublexicon.cpp \
+    lexicon_crab1.cpp \
     lexicon_crab2.cpp \
     signature_graph.cpp \
     string_group.cpp \

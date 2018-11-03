@@ -8,6 +8,86 @@
 #include <QDebug>
 #include <QProgressBar>
 
+void CLexicon::step10_find_compounds()
+{
+
+    // PART 1a: go through list of words to find hyphenated compounds
+    CStemCollection* p_stems = m_SuffixesFlag ? m_suffixal_stems : m_prefixal_stems;
+    const QMap<QString, protostem*>& ref_protostem_map
+            = m_SuffixesFlag ? m_suffix_protostems : m_prefix_protostems;
+
+    m_ProgressBar->reset();
+    m_ProgressBar->setMinimum(0);
+    m_ProgressBar->setMaximum(m_Words->get_count() + p_stems->get_count());
+    m_StatusBar->showMessage("8: Finding Compounds - part 1.");
+    int progress_count = 0;
+
+    QMap<QString, CWord*>::ConstIterator word_iter;
+    for (word_iter = m_Words->get_map()->constBegin();
+         word_iter != m_Words->get_map()->constEnd();
+         word_iter++) {
+        m_ProgressBar->setValue(progress_count++);
+        const QString& word = word_iter.key();
+
+        QStringList components = word.split('-');
+        bool compound_valid = true;
+        foreach (QString curr_component, components) {
+            if (curr_component.length() < M_MINIMUM_STEM_LENGTH
+                    || m_Words->get_word(curr_component) == NULL
+                    || p_stems->find_or_fail(curr_component) == NULL) {
+                compound_valid = false;
+                break;
+            }
+        }
+        if (components.length() == 2 && compound_valid) {
+            m_Compounds->add_compound_word(word, components);
+            qDebug() << word << components << 44;
+        }
+    }
+    // END OF PART 1a
+    // PART 1b: go through list of stems and protostems to find potential
+    // non-hyphenated compound words
+    // JG: No -- we need to go through the words, actually.
+
+    QString str_word;
+    int wordno;
+    QStringList * Words = m_Words->GetSortedStringArray();
+    for (wordno = 0;
+             wordno < m_Words->get_count();
+             wordno++)
+    {
+            str_word = Words->at(wordno);
+            const int minLengthFirstStemInCompound = 3;
+            const int minLengthSecondStemInCompound = 3;
+            for (int cutpoint = minLengthFirstStemInCompound;
+                 cutpoint < str_word.length() - minLengthSecondStemInCompound ;
+                 cutpoint++)
+            {
+                QString piece1 = str_word.left(cutpoint);
+                QString piece2 = str_word.mid(cutpoint);
+                if (m_Words->get_word(piece1) &&
+                    m_Words->get_word(piece2)
+                )
+                {
+
+
+
+                m_Compounds->add_compound_word(str_word, piece1, piece2);
+                    /*add_to_word_autobiographies(str_word,
+                                                QString("[Compound]=I am a compound!=Components:=%1=%2")
+                                                  .arg(str_stem).arg(str_continuation));*/
+                } // end of compound detected
+            }// end of moving cutpoint
+    }
+    // END OF PART 1b
+
+    // PART 2: remove invalid components
+    m_StatusBar->showMessage("8: Finding Compounds - part 2: "
+                             "removing invalid components.");
+    m_Compounds->remove_invalid_components(m_ProgressBar);
+
+}
+
 
 // -------------- CompoundComponent ---------------- //
 CompoundComponent::CompoundComponent(const word_t &word):
@@ -90,7 +170,7 @@ CompoundComponentCollection::CompoundComponentCollection
 CompoundComponentCollection::~CompoundComponentCollection()
 {
     QMap<QString, CompoundComponent*>::iterator iter;
-    for (iter = m_map.begin(); iter != m_map.end(); iter++) {
+    for (iter = m_map_words_to_compound_components.begin(); iter != m_map_words_to_compound_components.end(); iter++) {
         delete iter.value();
     }
 }
@@ -99,10 +179,11 @@ CompoundComponent* CompoundComponentCollection::add_or_find_compound_component
 (const word_t& str_word)
 {
     QMap<QString, CompoundComponent*>::ConstIterator comp_iter;
-    comp_iter = m_map.find(str_word);
-    if (comp_iter == m_map.constEnd()) {
+    comp_iter = m_map_words_to_compound_components.find(str_word);
+    if (comp_iter == m_map_words_to_compound_components.constEnd()) {
         CompoundComponent* new_component = new CompoundComponent(str_word);
-        m_map.insert(str_word, new_component);
+        m_map_words_to_compound_components.insert(str_word, new_component);
+        qDebug() << str_word<< 183;
         return new_component;
     } else {
         return comp_iter.value();
@@ -131,7 +212,7 @@ void CompoundComponentCollection::remove_component
     }
 
     const word_t& str_component = p_component->get_word();
-    m_map.remove(str_component);
+    m_map_words_to_compound_components.remove(str_component);
     delete p_component;
 }
 
@@ -187,26 +268,28 @@ CompoundWord* CompoundWordCollection::get_compound_word(const word_t &word) cons
 CompoundWord* CompoundWordCollection::add_compound_word
 (const word_t& str_word, const QStringList& composition)
 {
+    //qDebug() << str_word << 268;
     QMap<word_t, CompoundWord*>::iterator iter = m_map.find(str_word);
-    CompoundWord* p_curr_word;
+    CompoundWord* p_this_word;
     if (iter == m_map.end()) {
-        p_curr_word = new CompoundWord(str_word);
-        m_map.insert(str_word, p_curr_word);
+        p_this_word = new CompoundWord(str_word);
+        m_map.insert(str_word, p_this_word);
+        //qDebug() << str_word << 276;
     } else {
-        p_curr_word = iter.value();
+        p_this_word = iter.value();
     }
 
     int composition_len = composition.length();
-    QList<CompoundComponent*> curr_composition;
+    QList<CompoundComponent*> this_composition;
     for (int i = 0; i < composition_len; i++)
     {
-        CompoundComponent* curr_comp;
-        curr_comp = m_component_collection->add_or_find_compound_component(composition[i]);
-        curr_composition.append(curr_comp);
-        curr_comp->add_connection(p_curr_word, i);
+        CompoundComponent* this_comp;
+        this_comp = m_component_collection->add_or_find_compound_component(composition[i]);
+        this_composition.append(this_comp);
+        this_comp->add_connection(p_this_word, i);
     }
-    p_curr_word->add_composition(curr_composition);
-    return p_curr_word;
+    p_this_word->add_composition(this_composition);
+    return p_this_word;
 }
 
 CompoundWord* CompoundWordCollection::add_compound_word

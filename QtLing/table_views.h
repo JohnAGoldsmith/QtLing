@@ -29,7 +29,15 @@ class UpperTableView : public QTableView
     static bool             index_row_less_than(const QModelIndex& i1, const QModelIndex& i2);
 
     LxaSortFilterProxyModel* m_proxy_model;
-signals:
+
+    // John Oct 2018
+    void                    keyPressEvent(QKeyEvent *e);
+    void                    createActions();
+
+public:
+    void                    showWords();
+    void                    showSuffixSignatures();
+ signals:
     void                    num_items_found(int);
     // for search functionality //
 
@@ -79,6 +87,8 @@ public:
     MainWindow*             get_parent_window() {return m_parent_window;}
     void                    change_current_model(QStandardItemModel*);
 
+    void                    keyPressEvent(QKeyEvent *e);
+
 public slots:
         void                display_this_item(const QModelIndex&);
         CLexicon*           get_lexicon() {return m_lexicon;}
@@ -104,6 +114,7 @@ class LeftSideTreeView : public QTreeView
     MainWindow * m_parent_window;
 
 public:
+    void    keyPressEvent(QKeyEvent * e);
     LeftSideTreeView(MainWindow*  window);
     void rowClicked(const QModelIndex& index);
 };

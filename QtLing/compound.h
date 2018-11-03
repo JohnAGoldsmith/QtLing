@@ -92,15 +92,15 @@ public:
  */
 class CompoundComponentCollection
 {
-    QMap<word_t, CompoundComponent*>   m_map;
-    CompoundWordCollection*             m_word_collection;
-    CLexicon*                           m_lexicon;
+    QMap<word_t, CompoundComponent*>   m_map_words_to_compound_components;
+    CompoundWordCollection*            m_word_collection;
+    CLexicon*                          m_lexicon;
 public:
     CompoundComponentCollection();
     CompoundComponentCollection(CompoundWordCollection* p_word_collection, CLexicon* p_lexicon);
     ~CompoundComponentCollection();
 
-    QMap<word_t, CompoundComponent*>&  get_map() { return m_map; }
+    QMap<word_t, CompoundComponent*>&  get_map() { return m_map_words_to_compound_components; }
     CompoundComponent*                  add_or_find_compound_component(const word_t& str_word);
     void                                remove_component(CompoundComponent* p_component);
 };

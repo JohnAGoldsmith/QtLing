@@ -121,7 +121,7 @@ bool GoldStandard::evaluate(CWordCollection* p_word_collection,
             if (p_lxa_ptm->contains(stem)) {
                 true_positives++;
                 if (p_true_positive_parses != NULL) {
-                    const affix_t& suffix = gs_ptm_iter.value()->p_suffix;
+                     const affix_t& suffix = gs_ptm_iter.value()->m_suffix;
                     // store parse into collection of true positive parses
                     p_true_positive_parses->add_parse_triple(str_word, stem, suffix); // **** NEED TO CHANGE **** //
                     // qDebug() << "[TRUE POSITIVE] " << str_word << ": " << stem << "-" << suffix;
@@ -137,7 +137,7 @@ bool GoldStandard::evaluate(CWordCollection* p_word_collection,
             if (stem != str_word) {// only count parses with non-null suffixes
                 total_retrieved++;
                 if (p_retrieved_parses != NULL) {
-                    const affix_t& suffix = lxa_ptm_iter.value()->p_suffix;
+                     const affix_t& suffix = lxa_ptm_iter.value()->m_suffix;
                     // store parse into collection of retrieved parses
                     p_retrieved_parses->add_parse_triple(str_word, stem, suffix); // **** NEED TO CHANGE **** //
                     // qDebug() << "[RETRIEVED] " << str_word << ": " << stem << "-" << suffix;
@@ -245,7 +245,7 @@ bool GoldStandard::evaluate(ParseMapHandler& eval_parses,
             if (p_eval_ptm->contains(stem)) {
                 true_positives++;
                 if (p_true_positive_parses != NULL) {
-                    const affix_t& suffix = gs_ptm_iter.value()->p_suffix;
+                    const affix_t& suffix = gs_ptm_iter.value()->m_suffix;
                     // store parse into collection of true positive parses
                     p_true_positive_parses->add_parse_triple(str_word, stem, suffix);
                     // qDebug() << "[TRUE POSITIVE] " << str_word << ": " << stem << "-" << suffix;
@@ -261,7 +261,7 @@ bool GoldStandard::evaluate(ParseMapHandler& eval_parses,
             if (stem != str_word) {// only count parses with non-null suffixes
                 total_retrieved++;
                 if (p_retrieved_parses != NULL) {
-                    const affix_t& suffix = eval_ptm_iter.value()->p_suffix;
+                    const affix_t& suffix = eval_ptm_iter.value()->m_suffix;
                     // store parse into collection of retrieved parses
                     p_retrieved_parses->add_parse_triple(str_word, stem, suffix);
                     // qDebug() << "[RETRIEVED] " << str_word << ": " << stem << "-" << suffix;

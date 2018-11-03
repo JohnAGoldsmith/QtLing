@@ -1,8 +1,11 @@
 ﻿#include "mainwindow.h"
 //#include "generaldefinitions.h"
 #include "ui_mainwindow.h"
+#include <Qt>
 #include <QBrush>
 #include <QColor>
+#include <QDebug>
+#include <QWidget>
 #include <QtWidgets>
 #include <QTreeView>
 #include <QKeyEvent>
@@ -22,6 +25,7 @@
 #include "Suffix.h"
 #include "SignatureCollection.h"
 #include "Signature.h"
+#include "table_views.h"
 #include <QKeyEvent>
 #include <QtWidgets>
 #include <QString>
@@ -53,10 +57,10 @@ MainWindow::MainWindow()
 
 
     m_my_lexicon = new CLexicon();
-    m_lexicon_list.append ( m_my_lexicon );
+    m_lexicon_list.append (m_my_lexicon);
     CLexicon * lexicon =  m_my_lexicon;
 
-    // setFocusPolicy()
+    setFocusPolicy(Qt::StrongFocus); // allows it to capture keystrokes
 
     // models
     m_Models["Words"]                       = new LxaStandardItemModel("Words");
@@ -74,8 +78,8 @@ MainWindow::MainWindow()
     m_Models["EPositive prefix signatures"] = new LxaStandardItemModel("EPositive prefix signatures");
     m_Models["EPositive prefix signatures 2"]= new LxaStandardItemModel("EPositive prefix signatures");
     m_Models["Residual parasignatures"]     = new LxaStandardItemModel("Residual parasignatures");
-    m_Models["SigGraphEdges_1"]               = new LxaStandardItemModel("SigTreeEdges_1");
-    m_Models["SigGraphEdges_2"]               = new LxaStandardItemModel("SigTreeEdges_2");
+    m_Models["SigGraphEdges_1"]             = new LxaStandardItemModel("SigTreeEdges_1");
+    m_Models["SigGraphEdges_2"]             = new LxaStandardItemModel("SigTreeEdges_2");
     m_Models["Parasuffixes"]                = new LxaStandardItemModel("Parasuffixes");
     m_Models["Passive signatures"]          = new LxaStandardItemModel("Passive signatures");
     m_Models["Hypotheses"]                  = new LxaStandardItemModel("Hypotheses");
@@ -92,15 +96,15 @@ MainWindow::MainWindow()
     get_lexicon()->set_status_bar(statusBar());
 
     // views
-    m_leftTreeView              = new LeftSideTreeView(this);
-    m_tableView_upper_left      = new UpperTableView (this);
-    m_tableView_upper_right     = new UpperTableView (this, SIG_BY_AFFIX_COUNT);
-    m_tableView_lower           = new LowerTableView (this);
+    m_leftTreeView                          = new LeftSideTreeView(this);
+    m_tableView_upper_left                  = new UpperTableView (this);
+    m_tableView_upper_right                 = new UpperTableView (this, SIG_BY_AFFIX_COUNT);
+    m_tableView_lower                       = new LowerTableView (this);
     m_tableView_upper_left->setSortingEnabled(true);
     m_tableView_upper_right->setSortingEnabled(true);
-    m_graphics_scene            = new lxa_graphics_scene( this, lexicon);
-    m_graphics_view             = new lxa_graphics_view(m_graphics_scene, this);
-    m_graphic_display_flag      = false;             // toggle with Ctrl-G
+    m_graphics_scene                        = new lxa_graphics_scene( this, lexicon);
+    m_graphics_view                         = new lxa_graphics_view(m_graphics_scene, this);
+    m_graphic_display_flag                  = false;             // toggle with Ctrl-G
     m_graphics_scene->set_signature_collection(get_lexicon()->get_signatures());
 
     // Status bars on top of each table view
@@ -118,6 +122,7 @@ MainWindow::MainWindow()
     m_top_rightSplitter->addWidget(m_tableView_upper_left);
     m_top_rightSplitter->addWidget(m_tableView_upper_right );
 
+
     // entire right side:
     m_rightSplitter->addWidget(m_top_rightSplitter);
     m_rightSplitter->addWidget(m_tableView_lower);
@@ -127,11 +132,15 @@ MainWindow::MainWindow()
     m_mainSplitter->addWidget(m_leftTreeView);
     m_mainSplitter->addWidget(m_rightSplitter);
 
+    QWidget::setTabOrder(m_leftTreeView, m_tableView_upper_left);
+    QWidget::setTabOrder(m_tableView_upper_left, m_tableView_upper_right);
+
+
     setCentralWidget(m_mainSplitter);
 
     m_ProgressBar  = new QProgressBar(this);
     m_ProgressBar->setVisible(true);
-    statusBar()->addPermanentWidget(m_ProgressBar);
+    statusBar()  ->addPermanentWidget(m_ProgressBar);
     get_lexicon()->set_progress_bar (m_ProgressBar);
 
     // Set dock-widget for find functionality, but not showing it yet
@@ -151,6 +160,12 @@ MainWindow::MainWindow()
     setCurrentFile(QString());
     setUnifiedTitleAndToolBarOnMac(true);
 
+
+    setFocus(Qt::OtherFocusReason);
+
+
+    // Qt SIGNAL-SLOT model that connects clicks in the left window to displays on the right side of the screen
+
     // clicking on certain items in the tree view displays tables on the upper left and upper right
     connect(m_leftTreeView, SIGNAL(clicked(const QModelIndex&)),
             m_tableView_upper_left, SLOT(ShowModelsUpperTableView(const QModelIndex&)));
@@ -161,8 +176,6 @@ MainWindow::MainWindow()
     // clicking on the upperleft corner can signal a graphic view below it, or a table below it.
     connect(m_tableView_upper_left,SIGNAL(clicked(const QModelIndex & )),
             m_tableView_lower,SLOT(display_this_item(const QModelIndex &  )));
-//    connect(m_tableView_upper_left,SIGNAL(clicked(const QModelIndex & )),
-//            m_current_graphics_scene,SLOT(display_this_item(const QModelIndex &  )));
 
     connect(m_tableView_upper_right,SIGNAL(clicked(const QModelIndex & )),
             m_tableView_lower,SLOT(display_this_item(const QModelIndex &  )));
@@ -194,54 +207,74 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
 {
     int this_key = ke->key();
 
+    // the MainWindow only responds to keyboard instructions with Control Key depressed.
+    if (ke->modifiers() != Qt::ControlModifier && ke->modifiers() != Qt::AltModifier){
+        return;
+    }
     switch(this_key){
     case Qt::Key_1:
+    {if (ke->modifiers() == Qt::ControlModifier)
     {
         if (get_lexicon()->get_prefixal_stems()->get_count() > 0){
-            get_lexicon()->set_prefixes_flag();
-            do_crab2();
-            display_epositive_prefix_signatures(get_lexicon());
+            do_crab2_prefixes();
         }
         break;
      }
+    }
     case Qt::Key_2:
+    {if (ke->modifiers() == Qt::ControlModifier)
     {
         if (get_lexicon()->get_suffixal_stems()->get_count() > 0){
-           get_lexicon()->set_suffixes_flag();
-           do_crab2();
-           display_epositive_suffix_signatures(get_lexicon());
+            do_crab2_suffixes();
         }
         break;
     }
-    case  Qt::Key_3:    {
+    }
+    case  Qt::Key_3:
+    {if (ke->modifiers() == Qt::ControlModifier)
+    {
         statusBar()->showMessage(tr("Read file."), 5000);
         ask_for_project_file();
         break;
     }
-    case Qt::Key_4:{
+    }
+    case Qt::Key_4:
+    {if (ke->modifiers() == Qt::AltModifier)
+    {
         read_corpus();
         analyze_corpus();
         break;
     }
-    case Qt::Key_5:{
-        MainWindow* new_window = new MainWindow();
-        CLexicon* sublexicon = get_lexicon()->build_sublexicon(new_window);
-        m_lexicon_list.append(sublexicon);
-        new_window->do_crab();
-        if (sublexicon->get_suffix_flag()){
-            new_window->display_epositive_suffix_signatures(sublexicon);
-        } else{
-            new_window->display_epositive_prefix_signatures(sublexicon);
+    }
+    case Qt::Key_5:
+    {if (ke->modifiers() == Qt::ControlModifier)
+        {
+            MainWindow* new_window = new MainWindow();
+            CLexicon* sublexicon = get_lexicon()->build_sublexicon(new_window);
+            m_lexicon_list.append(sublexicon);
+            new_window->do_crab1();
+            if (sublexicon->get_suffix_flag()){
+                new_window->display_epositive_suffix_signatures(sublexicon);
+            } else{
+                new_window->display_epositive_prefix_signatures(sublexicon);
+            }
+
+            new_window->resize(600, 400);
+            new_window->setWindowTitle("Sublexicon");
+            new_window->show();
+
+            break;
         }
-
-        new_window->resize(600, 400);
-        new_window->setWindowTitle("Sublexicon");
-        new_window->show();
-
-        break;
     }
     case Qt::Key_6:{
         get_lexicon()->set_prefixes_flag();
+        break;
+    }
+    case Qt::Key_C:
+    {if (ke->modifiers() == Qt::AltModifier)
+        {   qDebug() << "key c";
+            get_lexicon()->step10_find_compounds();
+        }
         break;
     }
     case Qt::Key_D:     {
@@ -290,9 +323,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     }
     case Qt::Key_P:
     {
-        get_lexicon()->set_prefixes_flag();
-        do_crab();
-        display_prefix_signatures(get_lexicon());
+        do_crab1_prefixes();
         break;
     }
     case Qt::Key_Q:
@@ -301,11 +332,20 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
          break;
     }
     case Qt::Key_S:
-    {
-        get_lexicon()->set_suffixes_flag();
-        do_crab();
-        display_epositive_suffix_signatures(get_lexicon());
-        break;
+    {   if (ke->modifiers() == Qt::ControlModifier)
+        {
+            do_crab1_suffixes();
+            break;
+        }
+        else
+        {
+        if (ke->modifiers() == Qt::AltModifier)
+        {
+                // NB: this could be done with signals/slots.
+                m_tableView_upper_left ->showSuffixSignatures();
+                m_tableView_upper_right->showSuffixSignatures();
+        }
+        }
     }
     case Qt::Key_V:
     {
@@ -314,6 +354,12 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     {
         m_graphics_scene->widen_columns();
         break;
+    }
+    case Qt::Key_W:        
+    {if (ke->modifiers() == Qt::AltModifier)
+        // NB: this could be done with signals/slots.
+        m_tableView_upper_left ->showWords();
+        m_tableView_upper_right->showWords();
     }
     case Qt::Key_Y:
     {   // toggle flag for sliding signature icons to the left when they become in-use.
@@ -361,9 +407,31 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     }
 }
 
-
-
-void MainWindow::do_crab()
+void MainWindow::do_crab1_suffixes()
+{
+    get_lexicon()->set_suffixes_flag();
+    do_crab1();
+    display_epositive_suffix_signatures(get_lexicon());
+}
+void MainWindow::do_crab1_prefixes()
+{
+    get_lexicon()->set_prefixes_flag();
+    do_crab1();
+    display_epositive_prefix_signatures(get_lexicon());
+}
+void MainWindow::do_crab2_suffixes()
+{
+    get_lexicon()->set_suffixes_flag();
+    do_crab2();
+    display_epositive_suffix_signatures(get_lexicon());
+}
+void MainWindow::do_crab2_prefixes()
+{
+    get_lexicon()->set_prefixes_flag();
+    do_crab2();
+    display_epositive_prefix_signatures(get_lexicon());
+}
+void MainWindow::do_crab1()
 {   statusBar()->showMessage("Entering the Crab Nebula.");
     CLexicon* lexicon = get_lexicon();
     lexicon->Crab_1();
@@ -372,8 +440,6 @@ void MainWindow::do_crab()
     statusBar()->showMessage("We have returned from the Crab Nebula.");
 
     create_or_update_TreeModel(get_lexicon());
-    //delete m_graphics_scene;
-    //m_graphics_scene = new lxa_graphics_scene(this, lexicon);
     m_graphics_scene->set_signature_collection(get_lexicon()->get_active_signature_collection());
     m_leftTreeView->expandAll();
     m_leftTreeView->resizeColumnToContents(0);
@@ -390,7 +456,6 @@ void MainWindow::do_crab2()
     statusBar()->showMessage("We have returned from the Crab Nebula.");
 
     create_or_update_TreeModel(lexicon);
-   // m_graphics_scene->clear_all();
     if (lexicon->get_suffix_flag())
         print_suffix_signatures();
     else
@@ -491,7 +556,7 @@ void MainWindow::load_models(CLexicon* lexicon)
 void MainWindow::read_file_do_crab()
 {       read_dx1_file();
         statusBar()->showMessage(tr("Ready"));
-        do_crab();
+        do_crab1();
 }
 
 

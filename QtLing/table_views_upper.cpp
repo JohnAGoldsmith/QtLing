@@ -1,11 +1,37 @@
 #include <QDebug>
 #include <QMessageBox>
+#include <QAbstractItemView>
+#include <QTableView>
 #include "table_views.h"
 #include "lxamodels.h"
 #include "mainwindow_find.h"
+#include "mainwindow.h"
+
+// This passes the user keyEvent up to the MainWindow, which responds to users
+// general instructions.
+void UpperTableView::keyPressEvent(QKeyEvent *e)
+{
+   // QTableView::keyPressEvent();
+    m_parent_window->MainWindow::keyPressEvent(e);
+}
+
+void UpperTableView::createActions()
+{
+    /* --  Display Words -- */
+
+}
 
 
-
+void UpperTableView::showSuffixSignatures()
+{
+    m_proxy_model->setSourceModel(m_parent_window->m_Models["EPositive signatures"]);
+    set_data_type( e_data_suffixal_signatures );
+}
+void UpperTableView::showWords()
+{
+    m_proxy_model->setSourceModel(m_parent_window->m_Models["Words"]);
+    set_data_type( e_data_words );
+}
 /**
 * @brief UpperTableView::UpperTableView
 * @param window
@@ -29,8 +55,12 @@ UpperTableView::UpperTableView (MainWindow* window, eSortStyle this_sort_style)
        setModel(m_proxy_model);
        // -- added by Hanson -- //
 
+       setFocusPolicy(Qt::StrongFocus); // allows it to capture keystrokes
+       createActions();
        setFocusPolicy(Qt::ClickFocus);
 }
+
+
 
 
 
@@ -149,8 +179,7 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         right_table->m_gold_standard_display_order = 0;
 
         if (component == "Words"){
-            m_proxy_model->setSourceModel(m_parent_window->m_Models["Words"]);
-            set_data_type( e_data_words );
+            showWords();
         }
         else     if (component == "Prefixal stems"){
             m_proxy_model->setSourceModel(m_parent_window->m_Models["Prefixal stems"]);
@@ -571,3 +600,6 @@ void UpperTableView::focusInEvent()
 {
     qDebug() << "Upper table view focused";
 }
+
+
+

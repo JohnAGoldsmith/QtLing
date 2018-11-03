@@ -11,6 +11,14 @@
 #include "compound.h"
 class sig_graph_edge;
 
+// This passes the user keyEvent up to the MainWindow, which responds to users
+// general instructions.
+void LowerTableView::keyPressEvent(QKeyEvent *e)
+{
+    m_parent_window->MainWindow::keyPressEvent(e);
+}
+
+
 /**
  * @brief LowerTableView::LowerTableView
  * This is the view on the lower right part of the screen.
@@ -269,6 +277,12 @@ void LowerTableView::display_this_item( const  QModelIndex & index )
  {
      m_parent_window = window;
      setEditTriggers(QAbstractItemView::NoEditTriggers);
+ }
+ // This passes the user keyEvent up to the MainWindow, which responds to users
+ // general instructions.
+ void LeftSideTreeView::keyPressEvent(QKeyEvent *e)
+ {
+     m_parent_window->MainWindow::keyPressEvent(e);
  }
 
 

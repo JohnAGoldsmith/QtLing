@@ -51,7 +51,7 @@ class lxaWindow : public QWidget
     double          m_xshift;
     double          m_yshift;
 
-            public:
+public:
     lxaWindow( MainWindow * );
     virtual void    paintEvent(QPaintEvent * );
     void            drawSignatures(QPainter& painter);
@@ -131,6 +131,11 @@ class MainWindow : public QMainWindow
     QAction *                               importMorfessorAct;
     QAction *                               evalMorfessorAct;
 
+    QAction *                               crab_suffix_1_Act;
+    QAction *                               crab_prefix_1_Act;
+    QAction *                               crab_suffix_2_Act;
+    QAction *                               crab_prefix_2_Act;
+
 
 public:
     void                                    analyze_corpus();
@@ -162,7 +167,11 @@ signals:
 private slots:
     void                                    about();
 
-    void                                    do_crab();
+    void                                    do_crab1_suffixes();
+    void                                    do_crab1_prefixes();
+    void                                    do_crab2_suffixes();
+    void                                    do_crab2_prefixes();
+    void                                    do_crab1();
     void                                    do_crab2();
     void                                    documentWasModified();
     void                                    newFile();

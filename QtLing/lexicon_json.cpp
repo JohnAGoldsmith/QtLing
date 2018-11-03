@@ -785,7 +785,7 @@ void CWordCollection::write_json(QJsonObject& ref_json, eJsonType json_type)
                 QJsonArray arr_parses;
                 foreach (Parse_triple* p_parse, *(p_word->get_parse_triple_map())) {
                     QJsonObject obj_parse;
-                    const QString& str_affix = p_parse->p_suffix;
+                    const QString& str_affix = p_parse->m_suffix;
                     obj_parse["affix"] = str_affix;
                     if (suffix_flag) {
                         CSuffix* p_suffix = p_suffixes->find_or_fail(str_affix);
@@ -807,7 +807,7 @@ void CWordCollection::write_json(QJsonObject& ref_json, eJsonType json_type)
                         }
                     }
 
-                    const QString& str_sig = p_parse->p_sig_string;
+                    const QString& str_sig = p_parse->m_sig_string;
                     obj_parse["sig"] = str_sig;
                     CSignature* p_sig = p_sigs->find_or_fail(str_sig);
                     if (p_sig)
@@ -818,7 +818,7 @@ void CWordCollection::write_json(QJsonObject& ref_json, eJsonType json_type)
                         //continue;
                     }
 
-                    const QString& str_stem = p_parse->p_stem;
+                    const QString& str_stem = p_parse->m_stem;
                     obj_parse["stem"] = str_stem;
                     CStem* p_stem = p_stems->find_or_fail(str_stem);
                     if (p_stem)
@@ -862,10 +862,10 @@ void CWordCollection::write_json(QJsonObject& ref_json, eJsonType json_type)
                 QJsonArray arr_parses;
                 foreach (Parse_triple* p_parse, *(p_word->get_parse_triple_map())) {
                     QJsonObject obj_parse;
-                    obj_parse["affix"] = p_parse->p_suffix;
-                    obj_parse["stem"] = p_parse->p_stem;
+                    obj_parse["affix"] = p_parse->m_suffix;
+                    obj_parse["stem"] = p_parse->m_stem;
 
-                    const QString& str_sig = p_parse->p_sig_string;
+                    const QString& str_sig = p_parse->m_sig_string;
                     obj_parse["sig"] = str_sig;
                     CSignature* p_sig = p_sigs->find_or_fail(str_sig);
                     if (p_sig)
