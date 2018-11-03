@@ -118,6 +118,7 @@ void MainWindow::createActions()
 
 
     // Crab Suffix Part 1
+    /*
     const QIcon crab_suffix_1_Icon = QIcon("./images/paste.png");
     crab_suffix_1_Act = new QAction(crab_suffix_1_Icon, tr("&Crab suffix part 1"), this);
     crab_suffix_1_Act->setShortcut(QKeySequence(tr("Ctrl+S")));
@@ -130,6 +131,7 @@ void MainWindow::createActions()
     crab_prefix_1_Act->setShortcut(QKeySequence(tr("Ctrl+P")));
     crab_prefix_1_Act->setStatusTip(tr("Find prefix signatures part 1"));
     connect(crab_suffix_1_Act, &QAction::triggered, this, &MainWindow::do_crab1_prefixes);
+    */
 
     // Create Tool Bar
     QToolBar* fileToolBar = addToolBar(tr("File"));
@@ -139,6 +141,6 @@ void MainWindow::createActions()
     editToolBar->addAction(copyAct);
     editToolBar->addAction(pasteAct);
 
-    editToolBar->addAction(crab_suffix_1_Act);
+    //editToolBar->addAction(crab_suffix_1_Act);
 
  }

@@ -323,6 +323,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     }
     case Qt::Key_P:
     {
+
         do_crab1_prefixes();
         break;
     }
@@ -332,7 +333,8 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
          break;
     }
     case Qt::Key_S:
-    {   if (ke->modifiers() == Qt::ControlModifier)
+    {
+        if (ke->modifiers() == Qt::ControlModifier)
         {
             do_crab1_suffixes();
             break;
