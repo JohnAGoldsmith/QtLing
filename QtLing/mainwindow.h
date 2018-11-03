@@ -36,6 +36,7 @@ class MainWindow;
 class lxa_graphics_view;
 class lxa_graphics_scene;
 class LxaStandardItemModel;
+class LxaSortFilterProxyModel;
 class UpperTableView;
 class LowerTableView;
 class LeftSideTreeView;
@@ -80,6 +81,37 @@ class MainWindow : public QMainWindow
     friend class                            MainMenu;
     friend class                            MainMenuBar;
 
+    QStringList m_model_names {
+        "Words",
+        "Suffixal stems",
+        "Prefixal stems",
+        "Suffixes",
+        "Prefixes",
+        "Signatures",
+        "EPositive signatures",
+        "Prefix signatures",
+        "EPositive prefix signatures",
+        "Residual parasignatures",
+        "SigGraphEdges_1",
+        "SigGraphEdges_2",
+        "Parasuffixes",
+        "Passive signatures",
+        "Hypotheses",
+        "Hypotheses 2",
+        "Suffixal protostems",
+        "Prefixal protostems",
+        "Compound words"
+    };
+    QStringList m_duplicate_model_names {
+        "Words 2",
+        "Prefixes 2",
+        "Suffixes 2",
+        "Signatures 2",
+        "Prefix signatures 2",
+        "EPositive signatures 2",
+        "EPositive prefix signatures 2"
+    };
+
     QList<CLexicon*>                        m_lexicon_list;
     CLexicon*                               m_my_lexicon;
     QStringList                             m_corpus;
@@ -88,6 +120,7 @@ class MainWindow : public QMainWindow
     QProgressBar *                          m_ProgressBar;
     QStatusBar *                            m_status_bar;
     QMap<QString, LxaStandardItemModel*>    m_Models;
+    QMap<QString, LxaSortFilterProxyModel*> m_proxy_models;
     eDataType                               m_graphic_display_type;
     eDataType                               m_upper_table_left_data_type;
     eDataType                               m_upper_table_right_data_type;
@@ -140,6 +173,7 @@ class MainWindow : public QMainWindow
 public:
     void                                    analyze_corpus();
     MainWindow();
+    void                                    display_words();
     void                                    display_suffixes();
     void                                    display_prefixes();
     void                                    display_suffix_signatures(CLexicon*);

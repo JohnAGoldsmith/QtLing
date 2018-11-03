@@ -28,7 +28,7 @@ class UpperTableView : public QTableView
     static bool             qsi_row_less_than(const QStandardItem* item1, const QStandardItem* item2);
     static bool             index_row_less_than(const QModelIndex& i1, const QModelIndex& i2);
 
-    LxaSortFilterProxyModel* m_proxy_model;
+    //LxaSortFilterProxyModel* m_proxy_model;
 
     // John Oct 2018
     void                    keyPressEvent(QKeyEvent *e);
@@ -49,7 +49,7 @@ public:
     MainWindow*             get_parent_window()                         {return m_parent_window;}
     eDataType               get_data_type()                             {return m_data_type;}
     void                    set_data_type(eDataType type)               {m_data_type = type;}
-    void                    set_proxy_source_model(QStandardItemModel* m) {m_proxy_model->setSourceModel(m);}
+    //void                    set_proxy_source_model(QStandardItemModel* m) {m_proxy_model->setSourceModel(m);}
 
 public slots:
     eSortStyle              get_signature_sort_style ()                 { return m_signature_sort_style;}
