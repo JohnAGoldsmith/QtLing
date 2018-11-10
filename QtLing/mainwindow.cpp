@@ -346,7 +346,6 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     {
         // this has been moved to the "Actions" which can link themselves to the keyboard shortcuts.
         //do_crab1_prefixes();
-        break;
         if (ke->modifiers() == Qt::AltModifier)
         {
                 // NB: this could be done with signals/slots.
@@ -354,6 +353,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
                 m_tableView_upper_right->showPrefixSignatures();
                 break;
         }
+        break;
 
     }
     case Qt::Key_Q:
@@ -536,29 +536,27 @@ void MainWindow::load_models(CLexicon* lexicon)
         m_proxy_models[str_model_name]->setSourceModel(nullptr);
     }
 
-
+    statusBar()->showMessage("Loading models: Words");
     m_Models["Words"]               ->load_words(lexicon->get_words());
-    statusBar()->showMessage("Words.");
     QCoreApplication::processEvents();
 
+    statusBar()->showMessage("Loading models: Stems");
     m_Models["Suffixal stems"]      ->load_stems(lexicon->get_suffixal_stems());
-    statusBar()->showMessage("Suffixal stems.");
     QCoreApplication::processEvents();
 
     m_Models["Prefixal stems"]      ->load_stems(lexicon->get_prefixal_stems());
-    statusBar()->showMessage("Prefixal stems.");
     QCoreApplication::processEvents();
 
+    statusBar()->showMessage("Loading models: Affixes");
     m_Models["Suffixes"]            ->load_suffixes(lexicon->get_suffixes());
-    statusBar()->showMessage("Suffixes.");
     QCoreApplication::processEvents();
 
     m_Models["Prefixes"]            ->load_prefixes(lexicon->get_prefixes());
     statusBar()->showMessage("Prefixes.");
     QCoreApplication::processEvents();
 
+    statusBar()->showMessage("Loading models: Signatures");
     m_Models["Signatures"]          ->load_signatures(lexicon->get_signatures());
-    statusBar()->showMessage("Signatures.");
     QCoreApplication::processEvents();
 
     /* Using the sorting function of the proxy models, we do not need duplicate source models,
@@ -574,12 +572,12 @@ void MainWindow::load_models(CLexicon* lexicon)
     QCoreApplication::processEvents();
     */
     m_Models["EPositive signatures"]->load_positive_signatures(lexicon->get_signatures());
-    statusBar()->showMessage("EPositive signatures.");
+
     /*
     m_Models["EPositive signatures 2"]->load_positive_signatures(lexicon->get_signatures(),SIG_BY_AFFIX_COUNT);
     statusBar()->showMessage("EPositive signatures 2.");
     */
-    QCoreApplication::processEvents();
+    //QCoreApplication::processEvents();
 
     m_Models["Prefix signatures"]   ->load_signatures( lexicon->get_prefix_signatures());
     //m_Models["Prefix signatures 2"] ->load_signatures(lexicon->get_prefix_signatures(), SIG_BY_AFFIX_COUNT);
@@ -587,25 +585,30 @@ void MainWindow::load_models(CLexicon* lexicon)
     //m_Models["EPositive prefix signatures 2"]->load_positive_signatures(lexicon->get_prefix_signatures(), SIG_BY_AFFIX_COUNT);
     QCoreApplication::processEvents();
 
+    statusBar()->showMessage("Loading models: Parasignatures");
     m_Models["Residual parasignatures"]->load_parasignatures(lexicon->get_residual_signatures());
     m_Models["Parasuffixes"]        ->load_suffixes(lexicon->get_parasuffixes());
-    QCoreApplication::processEvents();
+    //QCoreApplication::processEvents();
     m_Models["Passive signatures"]  ->load_signatures(lexicon->get_passive_signatures());
+    statusBar()->showMessage("Loading models: Hypotheses");
     m_Models["Hypotheses"]          ->load_hypotheses(lexicon->get_hypotheses());
     m_Models["Hypotheses 2"]        ->load_hypotheses_2(lexicon->get_hypotheses());
-    QCoreApplication::processEvents();
+    //QCoreApplication::processEvents();
     m_Models["SigGraphEdges_1"]        ->load_sig_graph_edges(lexicon->get_sig_graph_edge_map(),1);
     m_Models["SigGraphEdges_2"]        ->load_sig_graph_edges(lexicon->get_sig_graph_edge_map(),2);
-    QCoreApplication::processEvents();
+    //QCoreApplication::processEvents();
+    statusBar()->showMessage("Loading models: Protostems");
     m_Models["Suffixal protostems"]->load_protostems(lexicon->get_suffixal_protostems());
     m_Models["Prefixal protostems"]->load_protostems(lexicon->get_prefixal_protostems());
-    QCoreApplication::processEvents();
+    //QCoreApplication::processEvents();
+    statusBar()->showMessage("Loading models: Compound words");
     m_Models["Compound words"]->load_compounds(lexicon->get_compounds());
-    QCoreApplication::processEvents();
+    //QCoreApplication::processEvents();
     qDebug() << "finished loading models";
     qDebug() << "loading proxy models";
 
     // Now all source models are loaded. Link them to proxy models.
+    statusBar()->showMessage("Loading models: Finishing up");
     foreach (str_model_name, m_Models.keys()) {
         m_proxy_models[str_model_name]->setSourceModel(m_Models[str_model_name]);
     }
@@ -619,6 +622,7 @@ void MainWindow::load_models(CLexicon* lexicon)
     m_proxy_models["EPositive prefix signatures 2"]->setSourceModel(m_Models["EPositive prefix signatures"]);
 
     qDebug() << "finished loading proxy models";
+    statusBar()->showMessage("Finished loading models.");
 
 }
 void MainWindow::read_file_do_crab()

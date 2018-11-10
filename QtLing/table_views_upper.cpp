@@ -33,9 +33,11 @@ void UpperTableView::showSuffixSignatures()
 
 void UpperTableView::showPrefixSignatures()
 {
-    m_proxy_model->setSourceModel(m_parent_window->m_Models["EPositive prefix signatures"]);
+    setModel(m_parent_window->m_proxy_models["EPositive prefix signatures"]);
+    //m_proxy_model->setSourceModel(m_parent_window->m_Models["EPositive prefix signatures"]);
     set_data_type( e_data_prefixal_signatures );
 }
+
 void UpperTableView::showWords()
 {
     setModel(m_parent_window->m_proxy_models["Words"]);
@@ -74,7 +76,17 @@ UpperTableView::UpperTableView (MainWindow* window, eSortStyle this_sort_style)
 }
 
 
-
+/* The following idea occurred to me:
+ * This is a possible way to change the ShowModelsUpperTableView function:
+ * Write a function that does a similar thing but take in a string and a pointer to a lexicon,
+ * and dispays the corresponding table. In that way the display of tables can be modified
+ * by other actions than the selecting a cell inside the left-side tree view.
+ *
+ * If we were to do this we need to change the current method of how evaluation info is displayed.
+ *
+ * Hanson 11.10
+ *
+ */
 
 
 /**
