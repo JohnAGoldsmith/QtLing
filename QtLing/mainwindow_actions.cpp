@@ -50,9 +50,10 @@ void MainWindow::createActions()
                             "clipboard"));
 
     // Copy
+    // normal key shortcut removed, because we use it for finding compounds.
     const QIcon copyIcon = QIcon::fromTheme("edit-copy", QIcon("../../../../QtLing/images/copy.png"));
     copyAct = new QAction(copyIcon, tr("&Copy"), this);
-    copyAct->setShortcuts(QKeySequence::Copy);
+    //copyAct->setShortcuts(QKeySequence::Copy);
     copyAct->setStatusTip(tr("Copy the current selection's contents to the "
                              "clipboard"));
 
@@ -117,21 +118,19 @@ void MainWindow::createActions()
     setMenuBar(m_main_menu_bar);
 
 
-    // Crab Suffix Part 1
-    /*
-    const QIcon crab_suffix_1_Icon = QIcon("./images/paste.png");
+    // Crab Suffix Part 1: Control S
+    const QIcon crab_suffix_1_Icon = QIcon::fromTheme("edit-paste", QIcon("./images/to-left.png"));
     crab_suffix_1_Act = new QAction(crab_suffix_1_Icon, tr("&Crab suffix part 1"), this);
     crab_suffix_1_Act->setShortcut(QKeySequence(tr("Ctrl+S")));
     crab_suffix_1_Act->setStatusTip(tr("Find suffix signatures part 1"));
     connect(crab_suffix_1_Act, &QAction::triggered, this, &MainWindow::do_crab1_suffixes);
 
-    // Crab Prefix Part 1
-    const QIcon crab_prefix_1_Icon = QIcon::fromTheme("edit-paste", QIcon("../../../../QtLing/images/paste.png"));
+    // Crab Prefix Part 1: Control P
+    const QIcon crab_prefix_1_Icon = QIcon::fromTheme("edit-paste", QIcon("./images/to-right.png"));
     crab_prefix_1_Act = new QAction(crab_prefix_1_Icon, tr("&Crab suffix part 1"), this);
     crab_prefix_1_Act->setShortcut(QKeySequence(tr("Ctrl+P")));
     crab_prefix_1_Act->setStatusTip(tr("Find prefix signatures part 1"));
-    connect(crab_suffix_1_Act, &QAction::triggered, this, &MainWindow::do_crab1_prefixes);
-    */
+    connect(crab_prefix_1_Act, &QAction::triggered, this, &MainWindow::do_crab1_prefixes);
 
     // Create Tool Bar
     QToolBar* fileToolBar = addToolBar(tr("File"));
@@ -141,6 +140,8 @@ void MainWindow::createActions()
     editToolBar->addAction(copyAct);
     editToolBar->addAction(pasteAct);
 
-    //editToolBar->addAction(crab_suffix_1_Act);
+    editToolBar->addAction(crab_suffix_1_Act);
+    editToolBar->addAction(crab_prefix_1_Act);
+
 
  }

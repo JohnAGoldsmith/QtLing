@@ -161,9 +161,9 @@ MainWindow::MainWindow()
     readSettings();
 
     // resize the main window
-    resize(QDesktopWidget().availableGeometry(this).size() * 0.7);
+    resize(QDesktopWidget().availableGeometry(this).size() * 0.9);
     // set sizes of children of main splitter, i.e. left tree view and tables on the right
-    m_mainSplitter->setSizes(QList<int>() << 1000 <<4000);
+    m_mainSplitter->setSizes(QList<int>() << 800 <<2000);
 
     setCurrentFile(QString());
     setUnifiedTitleAndToolBarOnMac(true);
@@ -212,11 +212,24 @@ MainWindow::MainWindow()
 }
 
 void MainWindow::keyPressEvent(QKeyEvent* ke)
-{
+{   /*
+     Keyboard shortcuts grapped by Actions:
+     QKeySequence::Open
+     QKeySequence::SaveAs
+     QKeySequence::Quit
+     QKeySequence::Cut
+     QKeySequence::Paste
+     QKeySequence::Find
+     QKeySequence::Control S suffixes
+     QKeySequence::Control P prefixes
+     QKeySequence::Control C compounds
+    */
+
     int this_key = ke->key();
 
     // the MainWindow only responds to keyboard instructions with Control Key depressed.
     if (ke->modifiers() != Qt::ControlModifier && ke->modifiers() != Qt::AltModifier){
+        ke->ignore();
         return;
     }
     switch(this_key){
@@ -279,7 +292,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         break;
     }
     case Qt::Key_C:
-    {if (ke->modifiers() == Qt::AltModifier)
+    {if (ke->modifiers() == Qt::ControlModifier)
         {   qDebug() << "key c";
             get_lexicon()->step10_find_compounds();
         }
@@ -331,9 +344,17 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     }
     case Qt::Key_P:
     {
-
-        do_crab1_prefixes();
+        // this has been moved to the "Actions" which can link themselves to the keyboard shortcuts.
+        //do_crab1_prefixes();
         break;
+        if (ke->modifiers() == Qt::AltModifier)
+        {
+                // NB: this could be done with signals/slots.
+                m_tableView_upper_left ->showPrefixSignatures();
+                m_tableView_upper_right->showPrefixSignatures();
+                break;
+        }
+
     }
     case Qt::Key_Q:
     {   // reset scene scale
@@ -341,10 +362,9 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
          break;
     }
     case Qt::Key_S:
-    {
-        if (ke->modifiers() == Qt::ControlModifier)
-        {
-            do_crab1_suffixes();
+    {   if (ke->modifiers() == Qt::ControlModifier)
+        {   // this has been moved to the "Actions" which can link themselves easy to keyboard shutcuts.
+            //do_crab1_suffixes();
             break;
         }
         else
@@ -354,6 +374,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
                 // NB: this could be done with signals/slots.
                 m_tableView_upper_left ->showSuffixSignatures();
                 m_tableView_upper_right->showSuffixSignatures();
+                break;
         }
         }
     }
@@ -365,9 +386,9 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         m_graphics_scene->widen_columns();
         break;
     }
-    case Qt::Key_W:        
+    case Qt::Key_W:
     {
-        if (ke->modifiers() == Qt::AltModifier) {
+      if (ke->modifiers() == Qt::AltModifier){
         // NB: this could be done with signals/slots.
         m_tableView_upper_left ->showWords();
         m_tableView_upper_right->showWords();
@@ -428,7 +449,7 @@ void MainWindow::do_crab1_suffixes()
 }
 void MainWindow::do_crab1_prefixes()
 {
-    get_lexicon()->set_prefixes_flag();
+        get_lexicon()->set_prefixes_flag();
     do_crab1();
     display_epositive_prefix_signatures(get_lexicon());
 }

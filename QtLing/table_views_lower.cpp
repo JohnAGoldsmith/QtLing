@@ -15,6 +15,7 @@ class sig_graph_edge;
 // general instructions.
 void LowerTableView::keyPressEvent(QKeyEvent *e)
 {
+    // Careful: we have to keep the up, down, left, right keypresses active here.
     m_parent_window->MainWindow::keyPressEvent(e);
 }
 
@@ -282,6 +283,8 @@ void LowerTableView::display_this_item( const  QModelIndex & index )
  // general instructions.
  void LeftSideTreeView::keyPressEvent(QKeyEvent *e)
  {
+     // Careful: we need to let this widget process the up-key and down-key.
+
      m_parent_window->MainWindow::keyPressEvent(e);
  }
 

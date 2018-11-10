@@ -60,6 +60,10 @@ void CLexicon::Crab_1()
     m_SuffixesFlag?
                 m_Signatures->compute_containment_list():
                 m_PrefixSignatures->compute_containment_list();
+    m_SuffixesFlag?
+                m_Signatures->calculate_sig_robustness():
+                m_PrefixSignatures->calculate_sig_robustness();
+
 
 }
 
