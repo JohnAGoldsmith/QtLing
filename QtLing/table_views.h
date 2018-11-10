@@ -31,12 +31,13 @@ class UpperTableView : public QTableView
     LxaSortFilterProxyModel* m_proxy_model;
 
     // John Oct 2018
-    void                    keyPressEvent(QKeyEvent *e);
+    //void                    keyPressEvent(QKeyEvent *e);
     void                    createActions();
 
 public:
     void                    showWords();
     void                    showSuffixSignatures();
+        void                showPrefixSignatures();
  signals:
     void                    num_items_found(int);
     // for search functionality //

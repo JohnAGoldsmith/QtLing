@@ -9,11 +9,12 @@
 
 // This passes the user keyEvent up to the MainWindow, which responds to users
 // general instructions.
-void UpperTableView::keyPressEvent(QKeyEvent *e)
-{
-   // QTableView::keyPressEvent();
-    m_parent_window->MainWindow::keyPressEvent(e);
-}
+// Careful: we need to pass on keyboard events that change the selected cell if we implement this.
+//void UpperTableView::keyPressEvent(QKeyEvent *e)
+//{
+//   QTableView::keyPressEvent();
+//    m_parent_window->MainWindow::keyPressEvent(e);
+//}
 
 void UpperTableView::createActions()
 {
@@ -26,6 +27,11 @@ void UpperTableView::showSuffixSignatures()
 {
     m_proxy_model->setSourceModel(m_parent_window->m_Models["EPositive signatures"]);
     set_data_type( e_data_suffixal_signatures );
+}
+void UpperTableView::showPrefixSignatures()
+{
+    m_proxy_model->setSourceModel(m_parent_window->m_Models["EPositive prefix signatures"]);
+    set_data_type( e_data_prefixal_signatures );
 }
 void UpperTableView::showWords()
 {
