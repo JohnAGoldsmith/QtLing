@@ -25,19 +25,26 @@ void UpperTableView::createActions()
 
 void UpperTableView::showSuffixSignatures()
 {
-    m_proxy_model->setSourceModel(m_parent_window->m_Models["EPositive signatures"]);
+    setModel(m_parent_window->m_proxy_models["EPositive signatures"]);
+
+    //m_proxy_model->setSourceModel(m_parent_window->m_Models["EPositive signatures"]);
     set_data_type( e_data_suffixal_signatures );
 }
+
 void UpperTableView::showPrefixSignatures()
 {
-    m_proxy_model->setSourceModel(m_parent_window->m_Models["EPositive prefix signatures"]);
+    setModel(m_parent_window->m_proxy_models["EPositive prefix signatures"]);
+    //m_proxy_model->setSourceModel(m_parent_window->m_Models["EPositive prefix signatures"]);
     set_data_type( e_data_prefixal_signatures );
 }
+
 void UpperTableView::showWords()
 {
-    m_proxy_model->setSourceModel(m_parent_window->m_Models["Words"]);
+    setModel(m_parent_window->m_proxy_models["Words"]);
+    //m_proxy_model->setSourceModel(m_parent_window->m_Models["Words"]);
     set_data_type( e_data_words );
 }
+
 /**
 * @brief UpperTableView::UpperTableView
 * @param window
@@ -57,8 +64,10 @@ UpperTableView::UpperTableView (MainWindow* window, eSortStyle this_sort_style)
        m_gold_standard_display_order = 0;
 
        // -- use proxy model to allow sorting of data -- //
+       /*
        m_proxy_model = new LxaSortFilterProxyModel(this);
        setModel(m_proxy_model);
+       */
        // -- added by Hanson -- //
 
        setFocusPolicy(Qt::StrongFocus); // allows it to capture keystrokes
@@ -67,7 +76,17 @@ UpperTableView::UpperTableView (MainWindow* window, eSortStyle this_sort_style)
 }
 
 
-
+/* The following idea occurred to me:
+ * This is a possible way to change the ShowModelsUpperTableView function:
+ * Write a function that does a similar thing but take in a string and a pointer to a lexicon,
+ * and dispays the corresponding table. In that way the display of tables can be modified
+ * by other actions than the selecting a cell inside the left-side tree view.
+ *
+ * If we were to do this we need to change the current method of how evaluation info is displayed.
+ *
+ * Hanson 11.10
+ *
+ */
 
 
 /**
@@ -152,19 +171,22 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         set_data_type(curr_data_type);
 
         if (left_order == 0 && right_order == 0) {
-            m_proxy_model->setSourceModel(m_parent_window->m_Models[component]);
+            setModel(m_parent_window->m_proxy_models[component]);
+            //m_proxy_model->setSourceModel(m_parent_window->m_Models[component]);
             if (this == right_table)
                 left_order = 1;
         } else if (left_order == 1 && right_order == 0) {
             if (this == right_table) {
                 //qDebug() << "Showing " << component << "on the right";
-                m_proxy_model->setSourceModel(m_parent_window->m_Models[component]);
+                setModel(m_parent_window->m_proxy_models[component]);
+                //m_proxy_model->setSourceModel(m_parent_window->m_Models[component]);
                 left_order = 0;
                 right_order = 1;
             }
         } else if (left_order == 0 && right_order == 1) {
             if (this == left_table) {
-                m_proxy_model->setSourceModel(m_parent_window->m_Models[component]);
+                setModel(m_parent_window->m_proxy_models[component]);
+                //m_proxy_model->setSourceModel(m_parent_window->m_Models[component]);
                 //qDebug() << "Showing " << component << "on the left";
             }
             if (this == right_table) {
@@ -185,14 +207,16 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         right_table->m_gold_standard_display_order = 0;
 
         if (component == "Words"){
-            showWords();
+            m_parent_window->display_words();
         }
         else     if (component == "Prefixal stems"){
-            m_proxy_model->setSourceModel(m_parent_window->m_Models["Prefixal stems"]);
+            setModel(m_parent_window->m_proxy_models["Prefixal stems"]);
+            //m_proxy_model->setSourceModel(m_parent_window->m_Models["Prefixal stems"]);
             set_data_type(e_prefixal_stems);
         }
         else     if (component == "Suffixal stems"){
-            m_proxy_model->setSourceModel(m_parent_window->m_Models["Suffixal stems"]);
+            setModel(m_parent_window->m_proxy_models["Suffixal stems"]);
+            //m_proxy_model->setSourceModel(m_parent_window->m_Models["Suffixal stems"]);
             set_data_type(e_suffixal_stems);
         }
         else     if (component == "Prefixes"){
@@ -222,7 +246,8 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
 
         }
         else     if (component == "Parasuffixes"){
-            m_proxy_model->setSourceModel(m_parent_window->m_Models["Parasuffixes"]);
+            setModel(m_parent_window->m_proxy_models["Parasuffixes"]);
+            //m_proxy_model->setSourceModel(m_parent_window->m_Models["Parasuffixes"]);
             set_data_type ( e_data_suffixes );
             sortByColumn(1);
         }
@@ -230,24 +255,29 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
 
         }
         else     if (component == "Passive signatures"){
-            m_proxy_model->setSourceModel(m_parent_window->m_Models["Passive signatures"]);
+            setModel(m_parent_window->m_proxy_models["Passive signatures"]);
+            //m_proxy_model->setSourceModel(m_parent_window->m_Models["Passive signatures"]);
             set_data_type ( e_data_hollow_suffixal_signatures );
-            sortByColumn(1);    }
+            sortByColumn(1);
+        }
         else     if (component == "Hypotheses"){
             m_parent_window->display_hypotheses();
         }
         else     if (component == "Suffixal protostems"){
-            m_proxy_model->setSourceModel(m_parent_window->m_Models["Suffixal protostems"]);
+            setModel(m_parent_window->m_proxy_models["Suffixal protostems"]);
+            //m_proxy_model->setSourceModel(m_parent_window->m_Models["Suffixal protostems"]);
             set_data_type(e_data_suffixal_protostems);
             sortByColumn(1);
         }
         else     if (component == "Prefixal protostems"){
-            m_proxy_model->setSourceModel(m_parent_window->m_Models["Prefixal protostems"]);
+            setModel(m_parent_window->m_proxy_models["Prefixal protostems"]);
+            //m_proxy_model->setSourceModel(m_parent_window->m_Models["Prefixal protostems"]);
             set_data_type(e_data_prefixal_protostems);
             sortByColumn(1);
         }
         else     if (component == "Compound words"){
-            m_proxy_model->setSourceModel(m_parent_window->m_Models["Compound words"]);
+            setModel(m_parent_window->m_proxy_models["Compound words"]);
+            //m_proxy_model->setSourceModel(m_parent_window->m_Models["Compound words"]);
             set_data_type(e_data_compound_words);
             sortByColumn(1);
         }
@@ -292,12 +322,13 @@ bool UpperTableView::index_row_less_than(const QModelIndex& i1, const QModelInde
  */
 void UpperTableView::remap_indeces_and_highlight()
 {
+    LxaSortFilterProxyModel* proxy_model = (LxaSortFilterProxyModel*) model();
     m_indeces_found.clear();
     QStandardItem* item_found;
     QBrush brush_item_found(QColor(57, 197, 187));
     foreach (item_found, m_items_found) {
         item_found->setBackground(brush_item_found);
-        m_indeces_found.append(m_proxy_model->mapFromSource(item_found->index()));
+        m_indeces_found.append(proxy_model->mapFromSource(item_found->index()));
     }
 
     qSort(m_indeces_found.begin(), m_indeces_found.end(), index_row_less_than);
@@ -319,8 +350,8 @@ void UpperTableView::remap_indeces_and_highlight()
 int UpperTableView::find_all_strings(const QString& str, bool exact_match)
 {
     // qDebug() << "Finding strings";
-    QStandardItemModel* p_model = (QStandardItemModel*) m_proxy_model->sourceModel();
-    if (p_model == NULL) {
+    QStandardItemModel* p_model = (QStandardItemModel*) ((LxaSortFilterProxyModel*) model())->sourceModel();
+    if (p_model == nullptr) {
         // qDebug() << "Model not loaded";
         return 0;
     }
@@ -348,8 +379,8 @@ int UpperTableView::find_all_strings(const QString& str, bool exact_match)
 void UpperTableView::clear_search()
 {
     QBrush brush(QColor(255, 255, 255));
-    QStandardItemModel* p_model = (QStandardItemModel*) m_proxy_model->sourceModel();
-    if (p_model == NULL) {
+    QStandardItemModel* p_model = (QStandardItemModel*) ((LxaSortFilterProxyModel*) model())->sourceModel();
+    if (p_model == nullptr) {
         qDebug() << "UpperTableView::clear_search(): model not loaded!";
         return;
     }
@@ -377,7 +408,8 @@ void UpperTableView::clear_search()
 bool UpperTableView::find_next_and_highlight(QString &s)
 {
     // qDebug() << "Signal to find next received; string to find:" + s;
-    QStandardItemModel* p_model = (QStandardItemModel*) m_proxy_model->sourceModel();
+    QStandardItemModel* p_model = (QStandardItemModel*) ((LxaSortFilterProxyModel*) model())->sourceModel();
+    //QStandardItemModel* p_model = (QStandardItemModel*) m_proxy_model->sourceModel();
     FindDialog* p_find_dialog = (FindDialog*) sender();
 
     if (p_model == NULL) {
@@ -476,10 +508,11 @@ bool UpperTableView::find_next_and_highlight(QString &s)
  */
 bool UpperTableView::find_prev_and_highlight(QString &s)
 {
-    QStandardItemModel* p_model = (QStandardItemModel*) m_proxy_model->sourceModel();
+    QStandardItemModel* p_model = (QStandardItemModel*) ((LxaSortFilterProxyModel*) model())->sourceModel();
+    //QStandardItemModel* p_model = (QStandardItemModel*) m_proxy_model->sourceModel();
     FindDialog* p_find_dialog = (FindDialog*) sender();
 
-    if (p_model == NULL) {
+    if (p_model == nullptr) {
         qDebug() << "Model not loaded";
         m_row_recently_selected = -2;
         return false;
@@ -606,6 +639,3 @@ void UpperTableView::focusInEvent()
 {
     qDebug() << "Upper table view focused";
 }
-
-
-
