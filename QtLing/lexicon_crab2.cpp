@@ -42,15 +42,13 @@ void CLexicon::Crab_2()
 
     step9_from_sig_graph_edges_map_to_hypotheses();
 
-    check_autobiography_consistency();
+    step10_find_compounds();
 
     m_SuffixesFlag?
                 m_Signatures->calculate_sig_robustness():
                 m_PrefixSignatures->calculate_sig_robustness();
 
     test_json_functionality();
-
-    check_autobiography_consistency();
 
     qDebug() << "finished crab 2.";
 

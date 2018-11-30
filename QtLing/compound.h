@@ -130,7 +130,7 @@ public:
     CompoundWord*                       add_compound_word(const word_t& whole, const QString& part0, const QString& part1);
     CompoundWord*                       get_compound_word(const word_t& word) const;
     void                                remove_compound_word(CompoundWord* p_word);
-    void                                remove_invalid_components(QProgressBar* p_progressbar = NULL);
+    void                                remove_invalid_components(QProgressBar* p_progressbar = nullptr);
 
 };
 

@@ -133,15 +133,18 @@ void CompoundWord::add_composition(const CompoundComposition& composition)
     m_compositions.append(new_composition);
 }
 
-bool CompoundWord::remove_composition_if_contains(CompoundComponent* p_comp)
+bool CompoundWord::remove_composition_if_contains(CompoundComponent* p_component)
 {
+    //qDebug() << "\tcheck if" << m_word << "contains" << p_component->get_word();
     QList<CompoundComposition*>::iterator comp_list_iter;
     for (comp_list_iter = m_compositions.begin();
          comp_list_iter != m_compositions.end();) {
         CompoundComposition* p_comp_list = *comp_list_iter;
-        if (p_comp_list->contains(p_comp)) {
+        //qDebug() << "\tPointer of comp_list:" << p_comp_list;
+        if (p_comp_list->contains(p_component)) {
             delete p_comp_list;
-            m_compositions.erase(comp_list_iter);
+            //qDebug() << "\t comp_list" << p_comp_list << "deleted";
+            comp_list_iter = m_compositions.erase(comp_list_iter);
         } else {
             comp_list_iter++;
         }
@@ -192,18 +195,15 @@ void CompoundComponentCollection::remove_component
 {
     typedef QMap<word_t, QPair<int, CompoundWord*>> CompoundConnectionMap;
     // iterate through compound words containing that component
-    CompoundConnectionMap::ConstIterator conn_map_iter;
     const CompoundConnectionMap& ref_connections_map = p_component->get_connections();
-    for (conn_map_iter = ref_connections_map.constBegin();
-         conn_map_iter != ref_connections_map.constEnd();
-         conn_map_iter++) {
+    word_t str_word;
+    foreach (str_word, ref_connections_map.keys()) {
         // skip if that word has already been removed
-        const word_t& str_word = conn_map_iter.key();
         if (!m_word_collection->get_map().contains(str_word))
             continue;
 
         // for each word, remove the composition containing that component
-        CompoundWord* p_word = conn_map_iter.value().second;
+        CompoundWord* p_word = ref_connections_map[str_word].second;//conn_map_iter.value().second;
         bool remove_word = p_word->remove_composition_if_contains(p_component);
         // if that is the last composition in the list, remove that word
         // from the list of compound wordsd
@@ -262,7 +262,7 @@ CompoundWordCollection::CompoundWordCollection(const CompoundWordCollection &oth
 CompoundWord* CompoundWordCollection::get_compound_word(const word_t &word) const
 {
     QMap<word_t, CompoundWord*>::ConstIterator iter = m_map.find(word);
-    return iter == m_map.constEnd() ? NULL : iter.value();
+    return iter == m_map.constEnd() ? nullptr : iter.value();
 }
 
 CompoundWord* CompoundWordCollection::add_compound_word
@@ -313,22 +313,20 @@ void CompoundWordCollection::remove_compound_word(CompoundWord* p_word)
 void CompoundWordCollection::remove_invalid_components(QProgressBar *p_progressbar)
 {
     QList<CompoundComponent*> list_to_remove;
+    //QList<QString> list_to_remove;
     QMap<word_t, CompoundComponent*>& ref_components_map
             = m_component_collection->get_map();
-    int itercount;
-    if (p_progressbar != NULL) {
+    int itercount = 0;
+    if (p_progressbar != nullptr) {
         p_progressbar->reset();
         p_progressbar->setMinimum(0);
         p_progressbar->setMaximum(ref_components_map.size());
-        itercount = 0;
     }
     QMap<word_t, CompoundComponent*>::iterator components_iter;
-    for (components_iter = ref_components_map.begin();
-         components_iter != ref_components_map.end();
-         components_iter++) {
-        if (p_progressbar != NULL)
+    CompoundComponent* p_component;
+    foreach (p_component, ref_components_map) {
+        if (p_progressbar != nullptr)
             p_progressbar->setValue(itercount++);
-        CompoundComponent* p_component = components_iter.value();
         if (!p_component->check_valid()) {
             list_to_remove.append(p_component);
         }
@@ -349,7 +347,6 @@ void CompoundWordCollection::remove_invalid_components(QProgressBar *p_progressb
             m_lexicon->add_to_stem_autobiographies(str_component,
                 QString("[Compound]=I am removed because I am invalid."));
         }*/
-
         m_component_collection->remove_component(p_component_to_remove);
 
     }
