@@ -237,7 +237,7 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
         for (int wordno= this_protostem->get_start_word(); wordno <= this_protostem->get_end_word(); wordno++){ //corrected error here july 2018, hanson.
             QString this_word, affix;
             if (m_SuffixesFlag){
-                this_word = m_Words->get_word_string(wordno);
+                this_word = m_Words->get_string_from_sorted_list(wordno);
                 affix = this_word.mid( stem_length );
             } else{
                 this_word = m_Words->get_reverse_sort_list()->at(wordno);

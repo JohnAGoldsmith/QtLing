@@ -33,13 +33,14 @@ void CStemCollection::clear(){
     }
     */
     m_StringToStemMap->clear();
-    m_SortList.clear();
+    m_SortedStringList.clear();
     m_CorpusCount = 0;
 }
 CStem* CStemCollection::add(const QString& stem)
 {
     CStem* pStem = new CStem(stem);
     m_StringToStemMap->insert(stem, pStem);
+    m_SortValidFlag = false;
     return pStem;
 }
 CStem* CStemCollection::operator <<(const QString& stem)
@@ -48,7 +49,8 @@ CStem* CStemCollection::operator <<(const QString& stem)
 }
 
 CStem* CStemCollection::operator ^=(const QString& stem)
-{ return this->find_or_add(stem);
+{
+    return this->find_or_add(stem);
 }
 
 
@@ -57,14 +59,25 @@ CStem* CStemCollection::GetAtKey( QString stem)
     return m_StringToStemMap->value(stem);
 }
 
-
+CStem* CStemCollection::get_at( int stemno)
+{
+    return GetAtKey( m_SortedStringList.at(stemno) );
+}
+/*
 QListIterator<CStem*> * CStemCollection::get_sorted_list_iterator()
 {
-    QListIterator<CStem*> * iter = new QListIterator<CStem*>(m_SortList);
+    if (!m_SortValidFlag    ){
+        sort_alphabetically();
+    }
+    QListIterator<CStem*> * iter = new QListIterator<CStem*>(m_SortedStringList);
     return iter;
 }
+*/
 CStem* CStemCollection::find_or_add(const QString& stem)
 {
+    if (!m_SortValidFlag){
+        sort_alphabetically();
+    }
     if (m_StringToStemMap->contains(stem)){
         return m_StringToStemMap->value(stem);
     } else{
@@ -81,3 +94,13 @@ CStem* CStemCollection::find_or_fail(const QString& stem)
         return NULL;
     }
 }
+void CStemCollection::sort_alphabetically()
+{
+    foreach(QString word, m_StringToStemMap->keys()){
+        m_SortedStringList.append(word);
+    }
+
+    m_SortedStringList.sort();
+    m_SortValidFlag = true;
+}
+

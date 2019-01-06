@@ -3,6 +3,7 @@
 #include "StemCollection.h"
 #include "WordCollection.h"
 #include "Word.h"
+#include <QApplication>
 #include <QMap>
 #include <QPair>
 #include <QDebug>
@@ -21,6 +22,10 @@ void CLexicon::step10_find_compounds()
     m_ProgressBar->setMaximum(m_Words->get_count() + p_stems->get_count());
     m_StatusBar->showMessage("8: Finding Compounds - part 1.");
     int progress_count = 0;
+    if (false) {
+
+
+
 
     QMap<QString, CWord*>::ConstIterator word_iter;
     for (word_iter = m_Words->get_map()->constBegin();
@@ -46,40 +51,120 @@ void CLexicon::step10_find_compounds()
     }
     // END OF PART 1a
     // PART 1b: go through list of stems and protostems to find potential
-    // non-hyphenated compound words
-    // JG: No -- we need to go through the words, actually.
+    // non-hyphenated compound words.
 
+
+    }
+
+
+
+
+
+
+    CStemCollection * stems;
     QString str_word;
-    int wordno;
+    int wordno, stemno;
     QStringList * Words = m_Words->GetSortedStringArray();
-    for (wordno = 0;
-             wordno < m_Words->get_count();
-             wordno++)
+    if (m_SuffixesFlag){
+        stems = get_suffixal_stems();
+    }else{
+        stems = get_prefixal_stems();
+    }
+    CStemCollection * Stems = m_suffixal_stems;
+    const int min_component_length = 3;
+
+
+    m_ProgressBar->reset();
+    m_ProgressBar->setMinimum(0);
+    m_ProgressBar->setMaximum(stems->get_count());
+    m_StatusBar->showMessage("Looking for compounds.");
+    int temp_k = 0;
+    for (int stemno = 0; stemno < stems->get_count(); stemno++)
     {
-            str_word = Words->at(wordno);
-            const int minLengthFirstStemInCompound = 3;
-            const int minLengthSecondStemInCompound = 3;
-            for (int cutpoint = minLengthFirstStemInCompound;
-                 cutpoint < str_word.length() - minLengthSecondStemInCompound ;
-                 cutpoint++)
+        temp_k++;
+        if (temp_k++ == 5000) {
+            temp_k = 0;
+            m_ProgressBar->setValue(wordno);
+            qApp->processEvents();
+         }
+
+
+        QString possibleFirstComponent = stems->get_string_from_sorted_list(stemno);
+        int lengthOfPossibleFirstComponent = possibleFirstComponent.length();
+        if (lengthOfPossibleFirstComponent < min_component_length){continue;}
+        int stemno2 = stemno + 1;
+        while (stemno2 < stems->get_count())
+        {   QString thisStem = stems->get_string_from_sorted_list( stemno2 );
+
+            if (thisStem.startsWith(possibleFirstComponent))
             {
-                QString piece1 = str_word.left(cutpoint);
-                QString piece2 = str_word.mid(cutpoint);
-                if (m_Words->get_word(piece1) &&
-                    m_Words->get_word(piece2)
-                )
+
+                int lengthOfSecondPart = thisStem.length() - lengthOfPossibleFirstComponent;
+                if (lengthOfSecondPart < min_component_length){ stemno2++; continue; }
+                QString secondPiece = thisStem.right(lengthOfSecondPart);
+                if (stems->find_or_fail(secondPiece))
                 {
+                        //qDebug() << possibleFirstComponent <<  thisStem << secondPiece << 94 << "Stems: Found one!";
+                        //m_Compounds->add_compound_word(str_word, piece1, piece2);
+
+                }
+            }
+            else
+            {
+                break;
+            }
+            stemno2++;
+        }
+    }
 
 
+    if (false)
+    {
+    CWordCollection * words = get_words();
+    m_ProgressBar->reset();
+    m_ProgressBar->setMinimum(0);
+    m_ProgressBar->setMaximum(words->get_count());
+    m_StatusBar->showMessage("Looking for compounds.");
+    int temp_j = 0;
+    for (int wordno = 0; wordno < words->get_count(); wordno++)
+    {
+       temp_j++;
+       if (temp_j++ == 5000) {
+           temp_j = 0;
+           m_ProgressBar->setValue(wordno);
+           qApp->processEvents();
+        }
 
-                m_Compounds->add_compound_word(str_word, piece1, piece2);
+        QString possibleFirstComponent = words->get_string_from_sorted_list(wordno);
+        int lengthOfPossibleFirstComponent = possibleFirstComponent.length();
+        if (lengthOfPossibleFirstComponent < min_component_length){continue;}
+        int wordno2 = wordno + 1;
+        while (wordno2 < words->get_count())
+        {   QString thisWord = words->get_string_from_sorted_list( wordno2 );
+            if (thisWord.startsWith(possibleFirstComponent))
+            {
+                int lengthOfSecondPart = thisWord.length() - lengthOfPossibleFirstComponent;
+                if (lengthOfSecondPart < min_component_length){ wordno2++; continue; }
+                QString possibleSecondComponent = thisWord.right(lengthOfSecondPart);
+                if (words->find_or_fail(possibleSecondComponent))
+                {
+                    m_Compounds->add_compound_word(thisWord, possibleFirstComponent, possibleSecondComponent);
+                    qDebug() << possibleFirstComponent <<  thisWord << possibleSecondComponent << 94 << "Words: Found one!" << wordno <<wordno2;
                     /*add_to_word_autobiographies(str_word,
                                                 QString("[Compound]=I am a compound!=Components:=%1=%2")
                                                   .arg(str_stem).arg(str_continuation));*/
                 } // end of compound detected
-            }// end of moving cutpoint
+            }
+            else
+            {
+                break;
+            }
+            wordno2++;
+        }
     }
-    // END OF PART 1b
+    }
+
+    return;  // get rid of this
 
     // PART 2: remove invalid components
     m_StatusBar->showMessage("8: Finding Compounds - part 2: "

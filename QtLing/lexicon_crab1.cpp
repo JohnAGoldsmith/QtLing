@@ -47,9 +47,12 @@ void CLexicon::Crab_1()
     time_stamp("crab 1");
     // time_stamp does not work here because the stem collection is empty before step 4.
 
+
     step3_from_parses_to_stem_to_sig_maps(QString("crab_1"));
 
     step4_create_signatures(QString("Crab1"));
+
+
 
     step5a_replace_parse_pairs_from_current_signature_structure(); // from_
 
@@ -64,6 +67,7 @@ void CLexicon::Crab_1()
                 m_Signatures->calculate_sig_robustness():
                 m_PrefixSignatures->calculate_sig_robustness();
 
+    //step10_find_compounds();
 
 }
 
@@ -513,7 +517,9 @@ void CLexicon::step4_create_signatures(const QString& name_of_calling_function,
             }
         }
     }
-
+    m_SuffixesFlag?
+                m_suffixal_stems->sort_alphabetically():
+                m_prefixal_stems->sort_alphabetically();
     m_Suffixes->sort_by_count();
     m_Prefixes->sort_by_count();
     m_SuffixesFlag ?

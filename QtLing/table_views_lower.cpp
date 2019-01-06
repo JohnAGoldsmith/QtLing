@@ -29,7 +29,7 @@ LowerTableView::LowerTableView()
 {
    m_my_current_model =new  QStandardItemModel();
    m_number_of_columns = 8;
-   QFont sansFont("Ariel", 20);
+   QFont sansFont("Ariel", 14);
    setFont(sansFont);
 
 
@@ -645,7 +645,7 @@ void LowerTableView::table_protostem(protostem *p_protostem)
         QSI* item1 = new QSI();
         item1->setData(wordno, Qt::DisplayRole);
         const QString& str_word = suffixes_flag?
-                    this_lexicon->get_words()->get_word_string(wordno):
+                    this_lexicon->get_words()->get_string_from_sorted_list(wordno):
                     this_lexicon->get_words()->get_reverse_sort_list()->at(wordno);
         QSI* item2 = new QSI(str_word);
         item_list.append(item1);
