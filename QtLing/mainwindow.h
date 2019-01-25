@@ -32,16 +32,16 @@ class QSplitter;
 class QStandardItemModel;
 class QTextEdit;
 class QTreeView;
-class MainWindow;
+class FindDockWidget;
+class LowerTableView;
+class LeftSideTreeView;
 class lxa_graphics_view;
 class lxa_graphics_scene;
 class LxaStandardItemModel;
 class LxaSortFilterProxyModel;
-class UpperTableView;
-class LowerTableView;
-class LeftSideTreeView;
 class MainMenuBar;
-class FindDockWidget;
+class MainWindow;
+class UpperTableView;
 
 QT_END_NAMESPACE
 
@@ -182,13 +182,11 @@ public:
     void                                    display_epositive_prefix_signatures(CLexicon*);
     void                                    display_signature_graph_edges(CLexicon* );
     void                                    display_hypotheses();
-//    void                                    DisplaySignatures();
     CLexicon*                               get_lexicon()                       { return m_my_lexicon;  }
     QList<CLexicon*>*                       get_lexica()                        { return& m_lexicon_list; }
     bool                                    get_graphic_display_flag()          { return m_graphic_display_flag; }
     void                                    load_models(CLexicon* lexicon);
     void                                    read_corpus();
-   // void                                    set_up_graphics_scene_and_view();
 
 protected:
     void closeEvent(QCloseEvent *event) override;
@@ -242,7 +240,7 @@ public:
 
     void                    createFindDockWidget(UpperTableView* p_tableview);
 
-//          Qt-style modesl
+//          Qt-style models
     void                    load_stem_model();
     void                    load_affix_model();
     void                    load_signature_model();
