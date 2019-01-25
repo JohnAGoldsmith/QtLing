@@ -3,36 +3,30 @@
 #include "ui_mainwindow.h"
 
 #include "iostream"
+
 #include <algorithm>
 #include <stdio.h>
 
-#include <QStandardItemModel>
-#include <QList>
-#include <QFile>
-#include <QTextStream>
-#include <QString>
-#include <QKeyEvent>
-#include <QtWidgets>
-#include <QString>
-#include <QDebug>
-#include <QPair>
-#include <QMapIterator>
-#include <QDir>
 #include <Qt>
 #include <QBrush>
 #include <QColor>
 #include <QDebug>
-#include <QWidget>
-#include <QtWidgets>
-#include <QTreeView>
+#include <QDir>
+#include <QFile>
 #include <QKeyEvent>
-#include <QSplitter>
-#include <QTableView>
-#include <QTreeView>
-#include <QStandardItemModel>
-#include <QStandardItem>
+#include <QList>
+#include <QMapIterator>
+#include <QPair>
 #include <QSortFilterProxyModel>
-#include <algorithm>
+#include <QSplitter>
+#include <QStandardItem>
+#include <QStandardItemModel>
+#include <QString>
+#include <QTableView>
+#include <QTextStream>
+#include <QTreeView>
+#include <QtWidgets>
+#include <QWidget>
 
 #include "evaluation.h"
 #include "generaldefinitions.h"
@@ -75,33 +69,6 @@ MainWindow::MainWindow()
     foreach (str_model_name, m_duplicate_model_names) {
         m_proxy_models[str_model_name] = new LxaSortFilterProxyModel(this);
     }
-    /*
-    m_Models["Words"]                       = new LxaStandardItemModel("Words");
-    m_Models["Suffixal stems"]              = new LxaStandardItemModel("Suffixal stems");
-    m_Models["Prefixal stems"]              = new LxaStandardItemModel("Prefixal stems");
-    m_Models["Suffixes"]                    = new LxaStandardItemModel("Suffixes");
-    m_Models["Prefixes"]                    = new LxaStandardItemModel("Prefixes");
-    m_Models["Signatures"]                  = new LxaStandardItemModel("Signatures");
-   // m_Models["Signatures 2"]                = new LxaStandardItemModel("Signatures");// sorted by affix count;
-    //m_Models["Signatures 3"]                = new LxaStandardItemModel("Signatures");// used temporarily;
-    m_Models["EPositive signatures"]        = new LxaStandardItemModel("EPositive signatures");
-    //m_Models["EPositive signatures 2"]      = new LxaStandardItemModel("EPositive signatures 2"); // sorted by affix count
-    m_Models["Prefix signatures"]           = new LxaStandardItemModel("Prefix signatures");
-    //m_Models["Prefix signatures 2"]         = new LxaStandardItemModel("Prefix signatures"); //sorted by affix count;
-    m_Models["EPositive prefix signatures"] = new LxaStandardItemModel("EPositive prefix signatures");
-    //m_Models["EPositive prefix signatures 2"]= new LxaStandardItemModel("EPositive prefix signatures");
-    m_Models["Residual parasignatures"]     = new LxaStandardItemModel("Residual parasignatures");
-    m_Models["SigGraphEdges_1"]             = new LxaStandardItemModel("SigTreeEdges_1");
-    m_Models["SigGraphEdges_2"]             = new LxaStandardItemModel("SigTreeEdges_2");
-    m_Models["Parasuffixes"]                = new LxaStandardItemModel("Parasuffixes");
-    m_Models["Passive signatures"]          = new LxaStandardItemModel("Passive signatures");
-    m_Models["Hypotheses"]                  = new LxaStandardItemModel("Hypotheses");
-    m_Models["Hypotheses 2"]                = new LxaStandardItemModel("Hypotheses 2");
-    // for displaying protostems
-    m_Models["Suffixal protostems"]         = new LxaStandardItemModel("Suffixal protostems");
-    m_Models["Prefixal protostems"]         = new LxaStandardItemModel("Prefixal protostems");
-    m_Models["Compound words"]              = new LxaStandardItemModel("Compound words");
-    */
 
     m_treeModel     = new QStandardItemModel();
 
@@ -129,11 +96,9 @@ MainWindow::MainWindow()
     // on right side:
     m_rightSplitter = new QSplitter(Qt::Vertical);
 
-    // new stuff:
     m_top_rightSplitter = new QSplitter(Qt::Horizontal);
     m_top_rightSplitter->addWidget(m_tableView_upper_left);
     m_top_rightSplitter->addWidget(m_tableView_upper_right );
-
 
     // entire right side:
     m_rightSplitter->addWidget(m_top_rightSplitter);
@@ -146,7 +111,6 @@ MainWindow::MainWindow()
 
     QWidget::setTabOrder(m_leftTreeView, m_tableView_upper_left);
     QWidget::setTabOrder(m_tableView_upper_left, m_tableView_upper_right);
-
 
     setCentralWidget(m_mainSplitter);
 
@@ -172,9 +136,7 @@ MainWindow::MainWindow()
     setCurrentFile(QString());
     setUnifiedTitleAndToolBarOnMac(true);
 
-
     setFocus(Qt::OtherFocusReason);
-
 
     // Qt SIGNAL-SLOT model that connects clicks in the left window to displays on the right side of the screen
 
@@ -367,7 +329,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     }
     case Qt::Key_S:
     {   if (ke->modifiers() == Qt::ControlModifier)
-        {   // this has been moved to the "Actions" which can link themselves easy to keyboard shutcuts.
+        {   // this has been moved to the "Actions" which can link themselves easily to keyboard shutcuts.
             //do_crab1_suffixes();
             break;
         }
@@ -404,7 +366,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         m_graphics_scene->toggle_signature_slide_flag();
         break;
     }
-    case Qt::Key_Z:
+    case Qt::Key_Z: // remove this for publication
     {   // toggle graphical circles versus real shapes
 
         if (m_graphics_scene->get_display_circles_for_signatures()){
@@ -524,7 +486,6 @@ void MainWindow::ask_for_project_file()
     m_name_of_project_file = QFileDialog::getOpenFileName (this);
     read_stems_and_words();
 
-    //display_suffix_signatures(get_lexicon());
 }
 
 
@@ -664,8 +625,6 @@ void MainWindow::read_dx1_file()
             //qDebug() << 486 << word<< 486;
             if (words.size()> 1) {
                 pWord->SetWordCount(words[1].toInt());
-                //if (words[1].toInt() > 1000)
-                   // qDebug() << 489 << words[0] << words[1];
             }
      }
     Words->sort_word_list();
@@ -673,18 +632,6 @@ void MainWindow::read_dx1_file()
     statusBar()->showMessage(tr("File loaded"), 5000);
     QStringList word_pair;
     QString common;
-
-    if (false){
-    for (int i = 500; i < 600; i++){
-        word_pair.clear();
-        word_pair.append(Words->get_reverse_sort_list()->at(i-1));
-        word_pair.append(Words->get_reverse_sort_list()->at(i));
-
-        left_string_diff(word_pair,common);
-        qDebug() << Words->get_reverse_sort_list()->at(i-1) << Words->get_reverse_sort_list()->at(i);
-        qDebug() << word_pair.first() << word_pair.last() << common << 494;
-    }
-    }
 }
 
 
@@ -762,7 +709,6 @@ void MainWindow::print_suffix_signatures()
 
 void MainWindow::print_prefix_signatures()
 {
-    //CSignature* pSig;
     int count = 0;
     CStem *  pStem;
     QString filename = "swahili-prefix-signatures.txt";
@@ -821,7 +767,6 @@ void MainWindow::gs_read_and_parse_xml()
                                                      "Choose a gold standard file to open",
                                                      QString(),
                                                      "XML Files (*.xml)");
-    //qDebug() << 114 << "Goldstandard.cpp: xml file opened";
     if (!file_name.isEmpty()) {
         GoldStandard* gs = lexicon->new_goldstandard_from_xml(file_name);
         if(gs->read_XML()) {
