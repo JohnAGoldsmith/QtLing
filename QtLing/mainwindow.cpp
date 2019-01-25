@@ -1,6 +1,23 @@
 ﻿#include "mainwindow.h"
 //#include "generaldefinitions.h"
 #include "ui_mainwindow.h"
+
+#include "iostream"
+#include <algorithm>
+#include <stdio.h>
+
+#include <QStandardItemModel>
+#include <QList>
+#include <QFile>
+#include <QTextStream>
+#include <QString>
+#include <QKeyEvent>
+#include <QtWidgets>
+#include <QString>
+#include <QDebug>
+#include <QPair>
+#include <QMapIterator>
+#include <QDir>
 #include <Qt>
 #include <QBrush>
 #include <QColor>
@@ -9,45 +26,32 @@
 #include <QtWidgets>
 #include <QTreeView>
 #include <QKeyEvent>
-#include "iostream"
-#include <QStandardItemModel>
-#include <QList>
-#include <QFile>
-#include <QTextStream>
-#include <QString>
-#include <algorithm>
-#include <stdio.h>
-#include "WordCollection.h"
-#include "Word.h"
-#include "StemCollection.h"
-#include "Stem.h"
-#include "SuffixCollection.h"
-#include "Suffix.h"
-#include "SignatureCollection.h"
-#include "Signature.h"
-#include "table_views.h"
-#include <QKeyEvent>
-#include <QtWidgets>
-#include <QString>
-#include <QDebug>
-#include <QPair>
-#include <QMapIterator>
-#include <QDir>
-
 #include <QSplitter>
 #include <QTableView>
 #include <QTreeView>
 #include <QStandardItemModel>
 #include <QStandardItem>
 #include <QSortFilterProxyModel>
-#include "mainwindow.h"
-#include "graphics.h"
+#include <algorithm>
+
+#include "evaluation.h"
 #include "generaldefinitions.h"
+#include "graphics.h"
 #include "lxamodels.h"
+#include "mainwindow.h"
 #include "mainwindow_find.h"
 #include "mainwindow_menubar.h"
-#include "evaluation.h"
 #include "string_group.h"
+#include "StemCollection.h"
+#include "Stem.h"
+#include "SuffixCollection.h"
+#include "Suffix.h"
+#include "SignatureCollection.h"
+#include "Signature.h"
+#include "WordCollection.h"
+#include "Word.h"
+
+#include "table_views.h"
 
 class LxaStandardItemModel;
 

@@ -58,7 +58,6 @@ CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag):
     m_suffixal_stems        = new CStemCollection(this);
     m_Suffixes              = new CSuffixCollection(this);
     m_Prefixes              = new CPrefixCollection(this);
-    //    m_Parses                = new QList<QPair<QString,QString>>();
     m_Parses                = new QList<CParse*>();
     m_ParaSignatures        =  new CSignatureCollection(this, true);
     m_ParaSuffixes          = new CSuffixCollection(this);
@@ -137,7 +136,6 @@ void CLexicon::clear_lexicon(){
     QMapIterator<QString, protostem*> stem_iter(m_prefix_protostems);
     while(stem_iter.hasNext()){
         stem_iter.next();
-        //delete stem_iter.value();
     }
 
     delete m_Signatures;
@@ -250,16 +248,6 @@ void CLexicon::time_stamp(const QString& message)
         { m_stem_autobiographies[stemstring] = new QStringList();}
         m_stem_autobiographies[stemstring]->append(message);
     }
-    /*
-    QMapIterator<QString, CWord*> word_iter (*m_Words->get_map());
-    while (word_iter.hasNext()){
-        word_iter.next();
-        QString wordstring = word_iter.key();
-        if (!m_word_autobiographies.contains(wordstring))
-        { m_word_autobiographies[wordstring] = new QStringList();qDebug() << 151 << wordstring << message;}
-        m_word_autobiographies[wordstring]->append(message);
-    }
-    */
 }
 
 
