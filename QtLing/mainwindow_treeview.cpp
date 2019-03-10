@@ -127,7 +127,7 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
     // possible take them out
      QStandardItem * parent = m_treeModel->invisibleRootItem();
 
-     QStandardItem * command_item = new QStandardItem(QString("Keyboard commands"));
+     //QStandardItem * command_item = new QStandardItem(QString("Keyboard commands"));
 
      QStandardItem * ctrl_1 = new QStandardItem(QString("Prefixes step 2"));
      QStandardItem * ctrl_1_key = new QStandardItem("Ctrl 1");
@@ -150,12 +150,12 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
     QStandardItem * lexicon_item = new QStandardItem(QString("Lexicon"));
     QStandardItem * lexicon_count_item = new QStandardItem(QString("1"));
 
-    QStandardItem * suffix_flag_item;
-    if (lexicon->get_suffix_flag()){
-        suffix_flag_item = new QStandardItem(QString("Suffixes"));
-    } else {
-        suffix_flag_item = new QStandardItem(QString("Prefixes"));
-    }
+    //QStandardItem * suffix_flag_item;
+    //if (lexicon->get_suffix_flag()){
+    //    suffix_flag_item = new QStandardItem(QString("Suffixes"));
+    //} else {
+    //    suffix_flag_item = new QStandardItem(QString("Prefixes"));
+    //}
 
     // will be eliminated by the experiment:
     QStandardItem * word_item = new QStandardItem(QString("Words"));

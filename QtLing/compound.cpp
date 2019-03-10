@@ -13,15 +13,18 @@ void CLexicon::step10_find_compounds()
 {
 
     // PART 1a: go through list of words to find hyphenated compounds
-    CStemCollection* p_stems = m_SuffixesFlag ? m_suffixal_stems : m_prefixal_stems;
     const QMap<QString, protostem*>& ref_protostem_map
             = m_SuffixesFlag ? m_suffix_protostems : m_prefix_protostems;
-
+    CStemCollection* p_stems = m_SuffixesFlag ? m_suffixal_stems : m_prefixal_stems;
     m_ProgressBar->reset();
     m_ProgressBar->setMinimum(0);
     m_ProgressBar->setMaximum(m_Words->get_count() + p_stems->get_count());
     m_StatusBar->showMessage("8: Finding Compounds - part 1.");
     int progress_count = 0;
+
+    // placeholder:
+    (void)  ref_protostem_map;
+
     if (false) {
 
 
@@ -63,14 +66,15 @@ void CLexicon::step10_find_compounds()
 
     CStemCollection * stems;
     QString str_word;
-    int wordno, stemno;
-    QStringList * Words = m_Words->GetSortedStringArray();
+    int wordno;
+    //QStringList * Words = m_Words->GetSortedStringArray();
     if (m_SuffixesFlag){
         stems = get_suffixal_stems();
     }else{
         stems = get_prefixal_stems();
     }
-    CStemCollection * Stems = m_suffixal_stems;
+    // CStemCollection * Stems = m_suffixal_stems maybe put this back in.
+
     const int min_component_length = 3;
 
 
@@ -79,6 +83,8 @@ void CLexicon::step10_find_compounds()
     m_ProgressBar->setMaximum(stems->get_count());
     m_StatusBar->showMessage("Looking for compounds.");
     int temp_k = 0;
+    // temp, just placeholder:
+    wordno= 0;
     for (int stemno = 0; stemno < stems->get_count(); stemno++)
     {
         temp_k++;

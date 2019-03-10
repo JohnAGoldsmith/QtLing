@@ -241,6 +241,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         }
         break;
      }
+     break;
     }
     case Qt::Key_2:
     {if (ke->modifiers() == Qt::ControlModifier)
@@ -250,6 +251,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         }
         break;
     }
+        break;
     }
     case  Qt::Key_3:
     {if (ke->modifiers() == Qt::ControlModifier)
@@ -258,6 +260,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         ask_for_project_file();
         break;
     }
+        break;
     }
     case Qt::Key_4:
     {if (ke->modifiers() == Qt::AltModifier)
@@ -266,6 +269,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         analyze_corpus();
         break;
     }
+        break;
     }
     case Qt::Key_5:
     {if (ke->modifiers() == Qt::ControlModifier)
@@ -286,6 +290,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
 
             break;
         }
+        break;
     }
     case Qt::Key_6:{
         get_lexicon()->set_prefixes_flag();
@@ -376,10 +381,12 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
                 m_tableView_upper_right->showSuffixSignatures();
                 break;
         }
+        break;
         }
     }
     case Qt::Key_V:
     {
+        break;
     }
     case Qt::Key_U:
     {

@@ -83,7 +83,7 @@ QString CJsonInfo::eSortStyle_to_string(const eSortStyle sortstyle)
     case SIG_MENTORS: return "sigMentors";
     case TEMPLATE_SORT: return "templateSort";
     case TEMPLATE_SORT_COLUMN: return "templateSortColumn";
-    //default: return "default";
+    default: return "default";
     }
 }
 

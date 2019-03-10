@@ -117,10 +117,10 @@ int lxa_graphics_scene::m_calculate_row_in_scene_pos_coord(int row_no)
    return  m_location_of_bottom_row - (row_no - 2) * m_row_delta;
 }
 
-void lxa_graphics_scene::add_arrow(CSignature* start_sig, CSignature* end_sig)
-{
+//void lxa_graphics_scene::add_arrow(CSignature* start_sig, CSignature* end_sig)
+//{
     //lxa_arrow* new_arrow = new lxa_arrow(start_sig,end_sig);
-}
+//}
 
 
 
@@ -618,18 +618,23 @@ eGraphicsStatus lxa_graphics_scene::change_graphics_status(){
     switch (m_graphics_status) {
         case GS_no_focus:{
            m_graphics_status =  GS_one_focus_signature;
-            }
+           break;
+        }
         case GS_one_focus_signature:{
             m_graphics_status =GS_one_focus_signature_all_others_grayed;
+            break;
         }
         case GS_one_focus_signature_all_others_grayed:{
             m_graphics_status =GS_one_focus_signature_some_satellites_others_grayed;
+            break;
         }
         case GS_one_focus_signature_some_satellites_others_grayed:{
             m_graphics_status =GS_no_focus;
+            break;
         }
         default:{
             m_graphics_status = GS_default;
+            break;
         }
     }
     return m_graphics_status;
@@ -638,24 +643,24 @@ eGraphicsStatus lxa_graphics_scene::change_graphics_status(){
 //--------------------------------------------------------------------------//
 // not currently used;
 void lxa_graphics_scene::place_containment_edges(){
-    QPair<CSignature*, CSignature*> * pPair;
-    QPair<int,int>* row_and_col_1, * row_and_col_2;
-    CSignature* sig1, *sig2;
+    //QPair<CSignature*, CSignature*> * pPair;
+    //QPair<int,int>* row_and_col_1, * row_and_col_2;
+    //CSignature* sig1, *sig2;
     for (int i= 0; i < m_signature_containment_edges.size(); i++){
-        pPair = m_signature_containment_edges[i];
-        sig1 = pPair->first;
-        sig2 = pPair->second;
-        int row1 = sig1->get_number_of_affixes();
-        int row2 = sig2->get_number_of_affixes();
+        //pPair = m_signature_containment_edges[i];
+        //sig1 = pPair->first;
+        //ig2 = pPair->second;
+        //int row1 = sig1->get_number_of_affixes();
+        //int row2 = sig2->get_number_of_affixes();
         //row_and_col_1 = m_map_from_sig_to_row_and_column[sig1];
-        int col1 = row_and_col_1->second;
+        //int col1 = row_and_col_1->second;
         //row_and_col_2 = m_map_from_sig_to_row_and_column[sig2];
-        int col2 = row_and_col_2->second;
-        int x1 = col1 * m_column_delta + m_signature_radius/2 ;
-        int x2 = col2 * m_column_delta + m_signature_radius/2;
-        int y1 = m_location_of_bottom_row - (row1-2) * m_row_delta + m_signature_radius/2;
-        int y2 = m_location_of_bottom_row - (row2-2) * m_row_delta + m_signature_radius/2;
-        addLine(x1,y1,x2,y2,QPen());
+        //int col2 = row_and_col_2->second;
+        //int x1 = col1 * m_column_delta + m_signature_radius/2 ;
+        //int x2 = col2 * m_column_delta + m_signature_radius/2;
+        //int y1 = m_location_of_bottom_row - (row1-2) * m_row_delta + m_signature_radius/2;
+        //int y2 = m_location_of_bottom_row - (row2-2) * m_row_delta + m_signature_radius/2;
+        //addLine(x1,y1,x2,y2,QPen());
     }
 }
 //--------------------------------------------------------------------------//
@@ -663,7 +668,8 @@ void lxa_graphics_scene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
    //QToolTip::showText(event->screenPos().toPoint(), "x");
    //QGraphicsScene::mouseMoveEvent();
-}
+    (void) event; // placeholder
+ }
 //--------------------------------------------------------------------------//
 void lxa_graphics_scene::widen_columns()
 {

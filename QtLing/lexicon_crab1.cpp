@@ -303,6 +303,8 @@ QString convert_set_to_qstring(affix_set& this_affix_set){
 void   CLexicon::step3_from_parses_to_stem_to_sig_maps(QString name_of_calling_function)
 {  // const int MINIMUM_NUMBER_OF_STEMS = 2;
 
+    // TEMP:
+    name_of_calling_function = " " ;
     Stem_to_sig_map                this_stem_to_sig_map;
     // morph_set *                 pSet;
     // CWord*                      pWord;
@@ -973,6 +975,9 @@ void CLexicon::test_for_phonological_relations_between_signatures()
 
 void CLexicon::compare_opposite_sets_of_signatures(QSet<CSignature*>* sig_set_1, QSet<CSignature*>* sig_set_2, QString morph)
 {   sig_graph_edge * p_edge;
+    //TEMP:
+    (void) sig_set_1;
+    (void) sig_set_2;
     CSignature* pSig_1, *pSig_2;
     QHash<QString,int> Counts;
     foreach(p_edge,  m_SigGraphEdgeMap){

@@ -14,6 +14,7 @@ class CSignature;
 sig_circle::sig_circle(QGraphicsScene* parent, CSignature* pSig): graphic_signature2(pSig)
 {
     m_score = pSig->get_robustness();
+    (void) parent;
     set_text();
 }
 
@@ -751,6 +752,7 @@ void twelvagon2::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
      QPen pen (Qt::darkBlue, 3);
      painter->setBrush(brush);
      painter->setPen(pen);
+    (void) widget;
 
      int delta_4 = 40;
      static const QPointF points[4] = {

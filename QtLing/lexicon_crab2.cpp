@@ -82,7 +82,7 @@ void CLexicon::step6_ReSignaturizeWithKnownAffixes()
     map_sigstring_to_stem_list    temp_signatures_to_stems;
     */
 
-    CWord *                     pWord;
+    //CWord *                     pWord;
     CStemCollection*            stems;
     m_SuffixesFlag ?
                stems = m_suffixal_stems:
@@ -176,8 +176,8 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
 {   stem_t                      this_stem;
     word_t                      this_word;
     affix_t                     this_affix;
-    CStem*                      pStem;
-    CWord*                      pWord;
+    //CStem*                      pStem;
+    //CWord*                      pWord;
     affix_list                  affixes_of_residual_sig;
     CSuffix_ptr_list            this_residual_sig_suffix_pointer_list;
     CSignatureCollection*       signatures;

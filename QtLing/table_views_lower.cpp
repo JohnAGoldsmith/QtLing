@@ -157,12 +157,9 @@ void LowerTableView::display_this_item( const  QModelIndex & index )
         }
         QString               edge_key = index.sibling(row,6).data().toString();
         sig_graph_edge*       this_edge = this_lexicon->get_sig_graph_edge_map()->value(edge_key);
-        //sig_graph_edge *      psig_graph_edge;
-        CSignature*           pSig;
         CSignature*           pSig1 = this_edge->m_sig_1;
         CSignature*           pSig2 = this_edge->m_sig_2;
         QStandardItem*        p_item;
-        //CStem*                p_Stem;
         QStringList           sig1_stems;
         QStringList           sig2_stems;
         QStringList           words;
@@ -329,7 +326,7 @@ void LowerTableView::graphics_sig_graph_edges(CSignature* pSig, CLexicon* p_lexi
 
 void LowerTableView::table_word(CWord* pWord){
     QList<QStandardItem*>      item_list;
-    QStandardItem *            p_item, *q_item;
+    QStandardItem *            p_item;//, *q_item;
     QString                     word_t = pWord->get_key();
 
     // Create a clean model.
@@ -436,7 +433,7 @@ void LowerTableView::table_word(QString word, CLexicon* Lexicon){
  */
 void LowerTableView::table_stem(stem_t stem, CLexicon* Lexicon){
     QList<QStandardItem*>      item_list;
-    QStandardItem *            p_item, *q_item;
+    QStandardItem *            p_item;//, *q_item;
 
     // Create a clean model.
     if (m_my_current_model){

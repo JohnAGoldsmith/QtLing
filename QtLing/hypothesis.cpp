@@ -46,7 +46,7 @@ void CLexicon::step9_from_sig_graph_edges_map_to_hypotheses()
     //     to pointer to a signature graph edge
     //     and to a list of doomed affixes
     DoomedSignatureInfoMap doomed_signature_info_map;
-    int MINIMUM_AFFIX_OVERLAP = 10;
+    //int MINIMUM_AFFIX_OVERLAP = 10;
     int MINIMUM_NUMBER_OF_WORDS = M_MINIMUM_HYPOTHESIS_WORD_COUNT;
     CSignatureCollection * p_signatures;
     m_SuffixesFlag ?
@@ -406,6 +406,7 @@ CHypothesis::CHypothesis (eHypothesisType HypothesisT,
         m_new_edge          = new QPair<QString, sigstring_t>(m_morpheme, m_signature_1_longer_stem);
         m_number_of_words_saved = number_of_words_saved;
         //m_number_of_stems   =
+        (void) new_affixes; // placeholder.
     }
 }
 
@@ -428,6 +429,7 @@ bool compare_number_of_words(CHypothesis* hyp1, CHypothesis* hyp2){
 void sort_hypotheses(QStringList hypotheses)
 {
  //   std::sort(hypotheses.begin(), hypotheses.end(),compare_number_of_words);
+    (void) hypotheses;
 }
 int CHypothesis::get_number_of_words_saved()
 {

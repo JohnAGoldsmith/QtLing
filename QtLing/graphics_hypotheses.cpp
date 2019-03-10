@@ -22,18 +22,19 @@ void lxa_graphics_scene::show_hypothesis_1(CHypothesis* hypothesis)
 
 
 void  lxa_graphics_scene::implement_hypothesis(const QModelIndex &  index )
-{   int row, column;
+{   int row;
+//    int column;
 
-    Qt::GlobalColor color_target_1,
-                    color_target_2,
-                    color_target_3,
-                    color_target_old_1,
-                    color_target_old_2,
-                    color_target_old_3;
-    color_target_1      = Qt::white;
-    color_target_old_1  = Qt::yellow;
-    color_target_2      = Qt::blue;
-    color_target_3      = Qt::green;
+//    Qt::GlobalColor color_target_1,
+//                    color_target_2,
+//                    color_target_3,
+//                    color_target_old_1,
+//                    color_target_old_2,
+//                    color_target_old_3;
+//    color_target_1      = Qt::white;
+//    color_target_old_1  = Qt::yellow;
+//    color_target_2      = Qt::blue;
+//    color_target_3      = Qt::green;
 
 
     graphic_signature2  * original_graphic_sig,
@@ -51,7 +52,7 @@ void  lxa_graphics_scene::implement_hypothesis(const QModelIndex &  index )
     {
         if (index.isValid()) {
             row = index.row();
-            column = index.column();
+            //column = index.column();
         }
         affix_t     morph                  = index.sibling(row,0).data().toString();
         sigstring_t lower_sigstring        = index.sibling(row,2).data().toString();

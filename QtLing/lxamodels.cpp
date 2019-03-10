@@ -56,7 +56,7 @@ void  LxaStandardItemModel::load_category(QString , eComponentType)
 void LxaStandardItemModel::load_words(CWordCollection* p_words)
 {
     QStringList labels, this_sigstring;
-    CWord* pWord, *qWord;
+    CWord* pWord;
     clear();
     labels  << tr("word") << "word count" << "signatures";
     setHorizontalHeaderLabels(labels);
@@ -453,28 +453,27 @@ void LxaStandardItemModel::sort_signatures(eSortStyle sort_style)
 }
 
 
-
+/*
 struct{
     bool operator ()(sig_graph_edge* a, sig_graph_edge* b) const {
      return a->shared_word_stems.size() > b->shared_word_stems.size();
     }
 }custom_compare;
+*/
+
 struct{
     bool operator ()(sig_graph_edge* a, sig_graph_edge* b) const
-    {
-        if (a->morph == b->morph){
-            if (a->m_sig_1 == b->m_sig_1){
-                return a->m_sig_2 < b->m_sig_2;
-            }else
-            {
+    {  if (a->morph == b->morph)
+        {
                 return a->m_sig_1 < b->m_sig_1;
-            }
-        }  else
+        }
+          else
         {
             return a->morph < b->morph;
         }
     }
 }custom_compare_2;
+
 
 void LxaStandardItemModel::load_sig_graph_edges( QMap<QString, sig_graph_edge*> * this_sig_graph_edge_map, int size )
 {
