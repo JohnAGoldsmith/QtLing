@@ -37,11 +37,11 @@ void  lxa_graphics_scene::implement_hypothesis(const QModelIndex &  index )
 //    color_target_3      = Qt::green;
 
 
-    graphic_signature2  * original_graphic_sig,
-                        * lower_graphic_sig,
-                        * shortened_graphic_sig,
-                        * this_graphic_signature;
-    bool    shortened_graphic_signature_already_existed (false);
+//    graphic_signature2  * original_graphic_sig,
+//                        * lower_graphic_sig,
+//                        * shortened_graphic_sig,
+//                        * this_graphic_signature;
+//    bool    shortened_graphic_signature_already_existed (false);
 
 
     // this function should fire only if the hypotheses are being shown in the right tables,

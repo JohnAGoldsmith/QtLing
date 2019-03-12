@@ -46,7 +46,7 @@ FindDialog::FindDialog(MainWindow *p_main_window):
     m_combobox_selection->addItem(tr("Upper-left table"));
     m_combobox_selection->addItem(tr("Upper-right table"));
 
-    int search_sel_init_index = 0;
+/*    int search_sel_init_index = 0;
     switch (m_search_range) {
         case FindDialog::e_tableview_upper_all:
             search_sel_init_index = 0; break;
@@ -57,6 +57,7 @@ FindDialog::FindDialog(MainWindow *p_main_window):
         default:
             qDebug() << "mainwindow_find.cpp: FindDialog() - invalid search range!";
     }
+*/
     m_checkbox_exact_match = new QCheckBox(tr("Exact Match?"),this);
     m_checkbox_exact_match->setChecked(false);
 
@@ -153,6 +154,7 @@ void FindDialog::do_next_search()
     switch (m_search_range) {
         case e_tableview_upper_all:
             emit search_for_right_next(search_text);
+            /* FALLTHRU */
         case e_tableview_upper_left:
             emit search_for_left_next(search_text);
             break;
@@ -172,6 +174,7 @@ void FindDialog::do_prev_search()
     switch (m_search_range) {
         case e_tableview_upper_all:
             emit search_for_right_prev(search_text);
+            /* fall-thru */
         case e_tableview_upper_left:
             emit search_for_left_prev(search_text);
             break;
@@ -195,6 +198,7 @@ void FindDialog::do_clear_search()
         switch (m_search_range) {
             case e_tableview_upper_all:
                 emit clear_right_search();
+                /* fall-thru */
             case e_tableview_upper_left:
                 emit clear_left_search();
                 return;
