@@ -55,7 +55,7 @@ UpperTableView::UpperTableView (MainWindow* window, eSortStyle this_sort_style)
        m_parent_window = window;
        m_signature_sort_style = this_sort_style;
 
-       QFont sansFont("Ariel", 18);
+       QFont sansFont("Ariel", 12); // was 18, july 2019 john goldsmith
        setFont(sansFont);
        setEditTriggers(QAbstractItemView::NoEditTriggers);
        setSortingEnabled(true);

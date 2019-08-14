@@ -41,7 +41,7 @@ LowerTableView::LowerTableView(MainWindow * window)
    m_number_of_columns = 8;
    m_lexicon = window->get_lexicon();
    m_current_sortstyle = 0;
-   QFont sansFont("Ariel", 20);
+   QFont sansFont("Ariel", 12); // was 20 John Goldsmith August 2019
    setFont(sansFont);
 
 }
