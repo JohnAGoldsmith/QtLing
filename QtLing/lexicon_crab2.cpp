@@ -259,6 +259,7 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
             if ( affix_intersection.length() > 1 &&
                  affix_intersection.size() > best_affix_list.size()){
                  best_affix_list = affix_intersection;
+                 //qDebug() << 262 << this_stem << best_affix_list;
             }
         }
         if (best_affix_list.size() == 0) {

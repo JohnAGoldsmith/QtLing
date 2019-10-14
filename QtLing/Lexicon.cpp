@@ -236,8 +236,11 @@ void CLexicon::add_to_word_autobiographies(const QString& word, const QString& m
     if (! m_word_autobiographies.contains(word)){
         m_word_autobiographies[word] = new QStringList;
     }
-    m_word_autobiographies[word]->append(message);
-
+    if (!m_word_autobiographies.contains(message))  //JohnG August 2019
+    {
+        m_word_autobiographies[word]->append(message);
+    }
+    //qDebug() << 244 << word << message;
 }
 
 void CLexicon::time_stamp(const QString& message)
