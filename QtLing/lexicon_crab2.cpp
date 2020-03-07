@@ -42,7 +42,7 @@ void CLexicon::Crab_2()
 
     step9_from_sig_graph_edges_map_to_hypotheses();
 
-    step10_find_compounds();
+ //   step10_find_compounds();
 
     m_SuffixesFlag?
                 m_Signatures->calculate_sig_robustness():

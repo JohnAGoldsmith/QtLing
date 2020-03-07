@@ -189,7 +189,7 @@ void CLexicon::step9a_from_doomed_info_map_to_parses(DoomedSignatureInfoMap& ref
         DoomedSignatureInfoMap::iterator iter
                 = ref_doomed_info_map.find(str_old_signature);
         affixes = str_old_signature.split('=');
-
+        qDebug() << affixes << 192;
         // see if the current signature is affected by hypothesis generation
         if (iter != ref_doomed_info_map.end()) {
             DoomedSignatureInfo& ref_info = iter.value();
@@ -200,6 +200,7 @@ void CLexicon::step9a_from_doomed_info_map_to_parses(DoomedSignatureInfoMap& ref
             QList<affix_t>::iterator aff_iter;
             for (aff_iter = affixes.begin(); aff_iter != affixes.end(); ) {
                 const affix_t& curr_affix = *aff_iter;
+                qDebug() << 203 << curr_affix;
                 if (ref_doomed_affixes.contains(curr_affix))
                     affixes.erase(aff_iter);
                 else
@@ -208,8 +209,10 @@ void CLexicon::step9a_from_doomed_info_map_to_parses(DoomedSignatureInfoMap& ref
             // add into new affix representation
             // e.g. NULL=s=ed --> NULL=s=ed=ation[NULL~s]
             sigstring_t secondary_sig = p_edge->get_sig1_string();
+            qDebug() << secondary_sig << 212;
             secondary_sig.replace('=','~');
             const affix_t new_affix = p_edge->get_morph() + "[" + secondary_sig + "]";
+            qDebug() << new_affix << 215;
             affixes.append(new_affix);
             std::sort(affixes.begin(), affixes.end());
             ref_info.m_str_revised_sig = affixes.join('=');
@@ -220,6 +223,7 @@ void CLexicon::step9a_from_doomed_info_map_to_parses(DoomedSignatureInfoMap& ref
         CStem* pStem;
         foreach (pStem, *stem_list){
             const stem_t& this_stem = pStem->display();
+            qDebug() << 226 << this_stem;
             /*
             if (this_stem == "call") {
                 qDebug() << "Found affixes for [call]:" << affixes.join(",");
