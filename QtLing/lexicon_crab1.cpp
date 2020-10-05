@@ -73,6 +73,20 @@ void CLexicon::Crab_1()
 
 //  <-------------->
 
+QString commonsuffix (QString string1, QString string2)
+{
+    int l1 = string1.length();
+    int l2 = string2.length();
+    int shorterlength = l1;
+    if (shorterlength > l2 ){
+         shorterlength = l2;}
+    for (int i =1; i  <= shorterlength; i++){
+        if (string1[l1 - i] != string2[l2 - i])
+            return string1.right(i);
+    }
+    return string1.right(shorterlength);
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /*!
  * This is the first of the three initial parts of finding signatures.
@@ -82,12 +96,8 @@ void CLexicon::Crab_1()
  * successfor frequency greater than 1; the second breaks a word after a protostem.
  */
 void CLexicon::step1_from_words_to_protostems()
-{   word_t          this_word, previous_word;
-    bool            StartFlag = true;
-    bool            DifferenceFoundFlag = false;
-    stem_t          potential_stem;
-    int             this_word_length(0), previous_word_length(0);
-    //int             MINIMUM_STEM_LENGTH = 4;
+{   word_t          this_word, previous_word, next_word;
+    stem_t          potential_stem, this_protostem;
 
     QStringList *  Words;
     if (m_SuffixesFlag){
@@ -105,7 +115,7 @@ void CLexicon::step1_from_words_to_protostems()
 
 
     int temp_j = 0;
-    for (int wordno=0; wordno<Words->size(); wordno ++) {
+    for (int wordno=0; wordno<Words->size()-1; wordno ++) {
         temp_j++;
         if (temp_j++ == 5000) {
             temp_j = 0;
@@ -114,82 +124,35 @@ void CLexicon::step1_from_words_to_protostems()
         }
 
         this_word = Words->at(wordno);
-        this_word_length = this_word.length();
-        if (StartFlag){
-            StartFlag = false;
-            previous_word = this_word;
-            previous_word_length = this_word_length;
-            continue;
+        next_word = Words->at(wordno+1);
+        if (m_SuffixesFlag) { // ==> Suffix case <== //
+            this_protostem = commonprefix (this_word, next_word);
+            if ( this_protostem.length() >= M_MINIMUM_STEM_LENGTH)
+                if ( ! m_suffix_protostems.contains(this_protostem) )
+                    m_suffix_protostems[this_protostem] = new protostem(this_protostem, true);
+        } else {  // ==> Prefix case <== //
+            this_protostem = commonsuffix(this_word,next_word);
+            if (this_protostem.length() >= M_MINIMUM_STEM_LENGTH)
+                 if ( ! m_prefix_protostems.contains(this_protostem))
+                     m_prefix_protostems[this_protostem] = new protostem(this_protostem,false);
         }
-        DifferenceFoundFlag = false;
-        int end = qMin(this_word_length, previous_word_length);
-        if (m_SuffixesFlag){   // -->   Suffix case   <-- //
-            for (int i=0; i <end; i++){
-                if (i < M_MINIMUM_STEM_LENGTH ) continue;
-                if (previous_word[i] != this_word[i]){
-                    potential_stem = previous_word.left(i);
-                    if (potential_stem.length()== 0){continue;}
-                    DifferenceFoundFlag = true;
-                    if (!m_suffix_protostems.contains(potential_stem)){
-                        m_suffix_protostems[potential_stem] = new protostem(potential_stem, true);
-                    }
-                    break;
-                } // end of having found a difference.
-            }// end of loop over this word;
-            if (DifferenceFoundFlag == false){
-                if (!m_suffix_protostems.contains(previous_word)
-                        && previous_word_length >= M_MINIMUM_STEM_LENGTH){
-                    m_suffix_protostems[previous_word] = new protostem(previous_word, true);
-                }
-            }
-        }  // end of suffix case.
-        else
-        {       // -->   Prefix case   <-- //
-            for (int i=1; i <=end; i++){
-                if (previous_word.right(i) != this_word.right(i)){
-                    if (i-1 < M_MINIMUM_STEM_LENGTH) continue;
-                    potential_stem = previous_word.right(i-1);
-                    if (potential_stem.length() == 0) {continue;}
-                    DifferenceFoundFlag = true;
-                    if (!m_prefix_protostems.contains(potential_stem)) {
-                        m_prefix_protostems[potential_stem] = new protostem(potential_stem, false);
-                    }
-                    break;
-                }// end of having found a difference.
-            } // end of loop over this word;
-            if (DifferenceFoundFlag == false){
-                if (!m_prefix_protostems.contains(previous_word)
-                        && previous_word_length >= M_MINIMUM_STEM_LENGTH){
-                    m_prefix_protostems[previous_word] = new protostem(previous_word, false);
-                }
-            }
-        } // end of prefix case.
-        previous_word = this_word;
-        previous_word_length = this_word_length;
-    } // word loop.
-    //Second half:  finding protostem objects, which mark their beginning and their end on the alphabetized word list.
+    }
+      //Second half:  finding protostem objects, which mark their beginning and their  on the alphabetized word list.
     if (m_SuffixesFlag){
         m_ProgressBar->reset();
         m_ProgressBar->setMinimum(0);
         m_ProgressBar->setMaximum(m_suffix_protostems.size());
         QStringList alphabetized_protostems = m_suffix_protostems.keys();
         alphabetized_protostems.sort();
-        int alpha = 0;
-        //int omega = 0;
-        //int start_index = 0;
 
         for (int p = 0; p<alphabetized_protostems.length(); p++){
             QString this_protostem_t = alphabetized_protostems[p];
-            int protostem_length = this_protostem_t.length();
-            int i = alpha;
-            while (Words->at(i).left(protostem_length) != this_protostem_t){
+            int i = 0;
+            while (Words->at(i).startsWith(this_protostem_t))
                 i++;
-            }
             int j = i;
-            alpha = i;
-            while (j < Words->length() && Words->at(j).left(protostem_length) == this_protostem_t){
+            while (j < Words->length() && Words->at(j).startsWith(this_protostem_t))
                 j++;
-            }
             m_suffix_protostems[this_protostem_t]->set_start_and_end_word(i,j-1);
         }
     } // end of suffix case
@@ -198,28 +161,24 @@ void CLexicon::step1_from_words_to_protostems()
         m_ProgressBar->setMinimum(0);
         m_ProgressBar->setMaximum(m_prefix_protostems.size());
         QStringList alphabetized_protostems = m_prefix_protostems.keys();
+
         SortQStringListFromRight(alphabetized_protostems);
-        int alpha = 0;
-        //int omega = 0;
-        //int start_index = 0;
+        //int alpha = 0;
         for (int p = 0; p<alphabetized_protostems.length(); p++){
             QString this_protostem_t = alphabetized_protostems[p];
-            int protostem_length = this_protostem_t.length();
-            int i = alpha;
-            while (Words->at(i).right(protostem_length) != this_protostem_t){
+            int i = 0;
+            while (! Words->at(i).endsWith(this_protostem_t) )
                 i++;
-            }
             int j = i;
-            alpha = i;
-            while (j < Words->length() && Words->at(j).right(protostem_length) == this_protostem_t){
+            while (j < Words->length() && Words->at(j).endsWith( this_protostem_t ) )
                 j++;
-            }
             m_prefix_protostems[this_protostem_t]->set_start_and_end_word(i,j-1);
         }
     } //end of prefix case.
     return;
 }
 
+ 
 
 /*!
  * This is the second of the three initial parts of finding signatures.
