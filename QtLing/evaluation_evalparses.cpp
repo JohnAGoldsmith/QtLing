@@ -1,5 +1,6 @@
 #include "evaluation.h"
 #include <QTextStream>
+#include<QFile>
 #include <QRegularExpression>
 
 EvalParses::EvalParses(): m_parses() { }
