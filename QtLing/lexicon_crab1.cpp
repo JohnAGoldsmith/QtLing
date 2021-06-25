@@ -47,12 +47,9 @@ void CLexicon::Crab_1()
     time_stamp("crab 1");
     // time_stamp does not work here because the stem collection is empty before step 4.
 
-
     step3_from_parses_to_stem_to_sig_maps(QString("crab_1"));
 
     step4_create_signatures(QString("Crab1"));
-
-
 
     step5a_replace_parse_pairs_from_current_signature_structure(); // from_
 
@@ -111,9 +108,7 @@ void CLexicon::step1_from_words_to_protostems()
     m_ProgressBar->setMaximum(Words->size());
     m_StatusBar->showMessage("1. Find proto-stems.");
     m_Parses->clear();
-    //m_Parse_map.clear();
-
-
+ 
     int temp_j = 0;
     for (int wordno=0; wordno<Words->size()-1; wordno ++) {
         temp_j++;
@@ -262,11 +257,8 @@ QString convert_set_to_qstring(affix_set& this_affix_set){
 void   CLexicon::step3_from_parses_to_stem_to_sig_maps(QString name_of_calling_function)
 {  // const int MINIMUM_NUMBER_OF_STEMS = 2;
 
-    // TEMP:
     name_of_calling_function = " " ;
     Stem_to_sig_map                this_stem_to_sig_map;
-    // morph_set *                 pSet;
-    // CWord*                      pWord;
     m_ProgressBar->reset();
     m_ProgressBar->setMinimum(0);
     m_ProgressBar->setMaximum(m_Parses->size());
@@ -278,13 +270,11 @@ void   CLexicon::step3_from_parses_to_stem_to_sig_maps(QString name_of_calling_f
 
     step3a_from_parses_to_stem_to_sig_map(m_Parses, m_SuffixesFlag);
 
-    //-----------------------------------------------------------------------------------------------//
-
     //--> We iterate through these stems and for each stem, create QStringLists of their affixes. <--//
     //--> then we create a "pre-signature" in a map that points to lists of stems. <--//
-     step3b_from_stem_to_sig_map_to_sig_to_stem_map();
 
-     //-----------------------------------------------------------------------------------------------//'
+    step3b_from_stem_to_sig_map_to_sig_to_stem_map();
+
     m_StatusBar->showMessage("3: completed.");
 }
 
@@ -378,9 +368,6 @@ void CLexicon::step4_create_signatures(const QString& name_of_calling_function,
     stem_t                  this_stem_t;
     affix_t                 this_affix_t;
     word_t                  this_word_t;
-    //CWord*                  pWord;
-
-    //const int               MINIMUM_NUMBER_OF_STEMS = 2;
     CSignature*             pSig;
 
     //-->  create signatures, stems, affixes:  <--//
