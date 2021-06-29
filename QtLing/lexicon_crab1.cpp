@@ -79,10 +79,24 @@ QString commonsuffix (QString string1, QString string2)
          shorterlength = l2;}
     for (int i =1; i  <= shorterlength; i++){
         if (string1[l1 - i] != string2[l2 - i])
-            return string1.right(i);
+            return string1.right(i-1);
     }
     return string1.right(shorterlength);
 }
+QString commonprefix (QString string1, QString string2)
+{   int l1 = string1.length();
+    int l2 = string2.length();
+    int shorterlength = l1;
+    if (shorterlength > l2 ){
+         shorterlength = l2;}
+    for (int i =0; i  < shorterlength; i++){
+        if (string1[i] != string2[i]){
+            return string1.left(i-1);
+        }
+    }
+    return string1.right(shorterlength);
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /*!
@@ -127,12 +141,16 @@ void CLexicon::step1_from_words_to_protostems()
                     m_suffix_protostems[this_protostem] = new protostem(this_protostem, true);
         } else {  // ==> Prefix case <== //
             this_protostem = commonsuffix(this_word,next_word);
+            if (this_protostem == "hould"){
+                qDebug() << 145 << this_protostem << this_word << next_word;
+            }
             if (this_protostem.length() >= M_MINIMUM_STEM_LENGTH)
                  if ( ! m_prefix_protostems.contains(this_protostem))
                      m_prefix_protostems[this_protostem] = new protostem(this_protostem,false);
         }
     }
-      //Second half:  finding protostem objects, which mark their beginning and their  on the alphabetized word list.
+
+      //Second half:  finding protostem objects, which mark their beginning and their end  on the alphabetized word list.
     if (m_SuffixesFlag){
         m_ProgressBar->reset();
         m_ProgressBar->setMinimum(0);
@@ -156,21 +174,28 @@ void CLexicon::step1_from_words_to_protostems()
         m_ProgressBar->setMinimum(0);
         m_ProgressBar->setMaximum(m_prefix_protostems.size());
         QStringList alphabetized_protostems = m_prefix_protostems.keys();
-
         SortQStringListFromRight(alphabetized_protostems);
-        //int alpha = 0;
         for (int p = 0; p<alphabetized_protostems.length(); p++){
             QString this_protostem_t = alphabetized_protostems[p];
+            //qDebug() << 175 << this_protostem_t;
             int i = 0;
-            while (! Words->at(i).endsWith(this_protostem_t) )
+            while (! Words->at(i).endsWith(this_protostem_t) ){
                 i++;
+            }
             int j = i;
-            while (j < Words->length() && Words->at(j).endsWith( this_protostem_t ) )
+            while (j < Words->length() && Words->at(j).endsWith( this_protostem_t ) ){
+                if (Words->at(j).endsWith("eized")){
+                    qDebug() << 185 << this_protostem_t<<  Words->at(j);
+                }
+                //qDebug() <<  "** " << Words->at(j);
                 j++;
+            }
             m_prefix_protostems[this_protostem_t]->set_start_and_end_word(i,j-1);
         }
     } //end of prefix case.
+    qDebug() << 189;
     return;
+
 }
 
  
@@ -211,6 +236,7 @@ void CLexicon::step2_from_protostems_to_parses()
                     }
                     suffix = word.right(suffix_length);
                     CParse* this_parse = new CParse(stem, suffix);
+                    //qDebug() << 233 << "find parses "<< stem << suffix;
                     m_Parses->append(this_parse);
                     if (m_Words->contains(stem)){
                         CParse* that_parse = new CParse(stem, QString("NULL"), true );
@@ -226,8 +252,10 @@ void CLexicon::step2_from_protostems_to_parses()
                     }
                     prefix = word.left(prefix_length);
                     CParse* this_parse = new CParse(prefix, stem);
+                    //qDebug() << 233 << "find parses "<< prefix << stem ;
                     m_Parses->append(this_parse);
                     if (m_Words->contains(stem)){
+                        //qDebug() << "Line 252" << stem;
                         CParse * that_parse = new CParse(QString("NULL"), stem, false);
                         m_Parses->append(that_parse);
                     }
@@ -356,6 +384,7 @@ void CLexicon::step3b_from_stem_to_sig_map_to_sig_to_stem_map()
 
         const QString this_signature_string = convert_set_to_qstring(ref_affix_set);
         m_intermediate_sig_to_stem_map.attach_stem_to_signature(this_stem_t, this_signature_string);
+        qDebug() << "Line 381 "<< this_signature_string << this_stem_t;
     }
 }
 // ==========================================================================  //
@@ -410,11 +439,17 @@ void CLexicon::step4_create_signatures(const QString& name_of_calling_function,
         QSet<stem_t>* this_stem_set = m_intermediate_sig_to_stem_map.get_stem_set(this_signature_string);
         affix_list this_affix_list = this_signature_string.split("=");
 
+        // There are one-affix signatures here from prefixes, but not from suffixes:  WHY??
+        if (this_affix_list.length() <= 1){
+            qDebug()<< "Sig with one affix: "<<  this_affix_list << 433 ;
+        }
+
+
+
         if (min_stem_count_flag == MS_ignore_minimum_stem_count
                 || this_stem_set->size() >= M_MINIMUM_STEM_COUNT)
         {
             if( m_SuffixesFlag) {
-                // CSignature* pSig;
                 pSig = *m_Signatures       << this_signature_string;
             } else {
                 pSig = *m_PrefixSignatures << this_signature_string;
@@ -424,6 +459,8 @@ void CLexicon::step4_create_signatures(const QString& name_of_calling_function,
                 step4a_link_signature_and_affix(pSig,this_affix_t);
             }
             foreach (this_stem_t, *this_stem_set){
+                if (this_affix_list.length()==1)
+                  qDebug() << "  451"<<this_stem_t;
                 step4b_link_signature_and_stem_and_word(this_stem_t,pSig, this_signature_string, name_of_calling_function);
             }
 
@@ -432,6 +469,7 @@ void CLexicon::step4_create_signatures(const QString& name_of_calling_function,
         {   // if there are not enough stems for this signature: this is here just for words ability to remember where they were and how they were analyzed.
 
             foreach(this_stem_t, *this_stem_set){
+                //qDebug() << " 462" << this_stem_t;
                 QString message = this_affix_list.size() <= 50 ?
                             this_signature_string:
                             QString("Super long list of affixes");
@@ -716,7 +754,7 @@ void CLexicon::step5b_find_full_signatures()
                 stems = m_suffixal_stems:
             stems = m_prefixal_stems;
     m_SuffixesFlag ?
-                signatures = m_Signatures:
+            signatures = m_Signatures:
             signatures = m_PrefixSignatures;
     m_ProgressBar->reset();
     m_ProgressBar->setMinimum(0);

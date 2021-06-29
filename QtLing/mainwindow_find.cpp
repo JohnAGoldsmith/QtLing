@@ -1,6 +1,6 @@
 #include "mainwindow_find.h"
 #include <QApplication>
-
+#include <QCloseEvent>
 #include <QDockWidget>
 #include <QLayout>
 #include <QComboBox>
