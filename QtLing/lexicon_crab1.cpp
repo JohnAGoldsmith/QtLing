@@ -91,7 +91,7 @@ QString commonprefix (QString string1, QString string2)
          shorterlength = l2;}
     for (int i =0; i  < shorterlength; i++){
         if (string1[i] != string2[i]){
-            return string1.left(i-1);
+            return string1.left(i);
         }
     }
     return string1.right(shorterlength);
@@ -136,6 +136,9 @@ void CLexicon::step1_from_words_to_protostems()
         next_word = Words->at(wordno+1);
         if (m_SuffixesFlag) { // ==> Suffix case <== //
             this_protostem = commonprefix (this_word, next_word);
+            if (this_protostem=="bosni"){
+                qDebug() << 140 << this_protostem << this_word << next_word;
+            }
             if ( this_protostem.length() >= M_MINIMUM_STEM_LENGTH)
                 if ( ! m_suffix_protostems.contains(this_protostem) )
                     m_suffix_protostems[this_protostem] = new protostem(this_protostem, true);
@@ -158,15 +161,18 @@ void CLexicon::step1_from_words_to_protostems()
         QStringList alphabetized_protostems = m_suffix_protostems.keys();
         alphabetized_protostems.sort();
 
+        int i = 0;
         for (int p = 0; p<alphabetized_protostems.length(); p++){
             QString this_protostem_t = alphabetized_protostems[p];
-            int i = 0;
-            while (Words->at(i).startsWith(this_protostem_t))
+
+            while ( ! Words->at(i).startsWith(this_protostem_t))
                 i++;
             int j = i;
-            while (j < Words->length() && Words->at(j).startsWith(this_protostem_t))
+            while (j < Words->length() && Words->at(j).startsWith(this_protostem_t)){
                 j++;
+            }
             m_suffix_protostems[this_protostem_t]->set_start_and_end_word(i,j-1);
+
         }
     } // end of suffix case
     else { // beginning of prefix case
@@ -175,19 +181,14 @@ void CLexicon::step1_from_words_to_protostems()
         m_ProgressBar->setMaximum(m_prefix_protostems.size());
         QStringList alphabetized_protostems = m_prefix_protostems.keys();
         SortQStringListFromRight(alphabetized_protostems);
+        int i = 0;
         for (int p = 0; p<alphabetized_protostems.length(); p++){
             QString this_protostem_t = alphabetized_protostems[p];
-            //qDebug() << 175 << this_protostem_t;
-            int i = 0;
             while (! Words->at(i).endsWith(this_protostem_t) ){
                 i++;
             }
             int j = i;
             while (j < Words->length() && Words->at(j).endsWith( this_protostem_t ) ){
-                if (Words->at(j).endsWith("eized")){
-                    qDebug() << 185 << this_protostem_t<<  Words->at(j);
-                }
-                //qDebug() <<  "** " << Words->at(j);
                 j++;
             }
             m_prefix_protostems[this_protostem_t]->set_start_and_end_word(i,j-1);
@@ -384,7 +385,6 @@ void CLexicon::step3b_from_stem_to_sig_map_to_sig_to_stem_map()
 
         const QString this_signature_string = convert_set_to_qstring(ref_affix_set);
         m_intermediate_sig_to_stem_map.attach_stem_to_signature(this_stem_t, this_signature_string);
-        qDebug() << "Line 381 "<< this_signature_string << this_stem_t;
     }
 }
 // ==========================================================================  //

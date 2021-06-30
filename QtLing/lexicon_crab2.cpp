@@ -9,6 +9,7 @@
 #include <QApplication>
 #include <algorithm>
 #include <QChar>
+#include <QMessageBox>
 #include "Lexicon.h"
 
 #include "SignatureCollection.h"
@@ -36,13 +37,12 @@ void CLexicon::Crab_2()
         m_Signatures->calculate_stem_entropy():
         m_PrefixSignatures->calculate_stem_entropy();
 
-    step8a_compute_sig_graph_edges();
+    // Temporarily stop these, June 2021
+    //step8a_compute_sig_graph_edges();
+    //step8b_compute_sig_graph_edge_map();
+    //step9_from_sig_graph_edges_map_to_hypotheses();
 
-    step8b_compute_sig_graph_edge_map();
-
-    step9_from_sig_graph_edges_map_to_hypotheses();
-
- //   step10_find_compounds();
+    // step10_find_compounds();
 
     m_SuffixesFlag?
                 m_Signatures->calculate_sig_robustness():
@@ -88,11 +88,8 @@ void CLexicon::step6_ReSignaturizeWithKnownAffixes()
                stems = m_suffixal_stems:
                stems = m_prefixal_stems;
 
-    // Not necessary because the same is done so in step4 JG: What is  not necessary?
-
     // clear signatures and parse_triple_map stored in each word
 
-    // Not necessary because the same is done so in step4 JG: What is  not necessary?
    /*
    map_string_to_word_ptr_iter word_iter (*m_Words->get_map());
    while(word_iter.hasNext()){
@@ -176,8 +173,6 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
 {   stem_t                      this_stem;
     word_t                      this_word;
     affix_t                     this_affix;
-    //CStem*                      pStem;
-    //CWord*                      pWord;
     affix_list                  affixes_of_residual_sig;
     CSuffix_ptr_list            this_residual_sig_suffix_pointer_list;
     CSignatureCollection*       signatures;
@@ -212,39 +207,46 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
                 these_protostems = & m_suffix_protostems:
                 these_protostems = & m_prefix_protostems;
 
+    //--------------------------------------------------------------------------------//
     m_ProgressBar->reset();
     m_ProgressBar->setMinimum(0);
     m_ProgressBar->setMaximum(these_protostems->count());
+    //--------------------------------------------------------------------------------//
 
     int protostem_count = 0;
     int temp_i = 0;
     foreach (auto this_protostem, * these_protostems)
-    {
-        m_ProgressBar->setValue(protostem_count++);
-        qApp->processEvents();
-
-        affixes_of_residual_sig.clear();
+    {   affixes_of_residual_sig.clear();
         stem_t this_stem = this_protostem->get_stem();
         int stem_length = this_stem.length();
 
+        //-----------------------------------------------------------------------------------------//
+        m_ProgressBar->setValue(protostem_count++);
+        qApp->processEvents();
         temp_i++;
         if (temp_i == 1000){
             temp_i = 0;
             m_StatusBar->showMessage("7: Find good signatures inside bad: " + this_stem);
             qApp->processEvents();
-        }
+        } //---------------------------------------------------------------------------------------//
 
-        for (int wordno= this_protostem->get_start_word(); wordno <= this_protostem->get_end_word(); wordno++){ //corrected error here july 2018, hanson.
+
+        qDebug() << this_stem << "start word" << this_protostem->get_start_word()
+             << "end word" << this_protostem->get_end_word()
+                 << 237;
+
+        for (int wordno= this_protostem->get_start_word(); wordno <= this_protostem->get_end_word(); wordno++){
             QString this_word, affix;
             if (m_SuffixesFlag){
                 this_word = m_Words->get_string_from_sorted_list(wordno);
                 affix = this_word.mid( stem_length );
+                qDebug() << "  " << 242 << this_word;
             } else{
                 this_word = m_Words->get_reverse_sort_list()->at(wordno);
                 affix = this_word.left(this_word.length()- stem_length);
             }
             if (!affix.isEmpty())
-                affixes_of_residual_sig.append( affix ); // what if affix is NULL?
+                affixes_of_residual_sig.append( affix );
         }
         if (m_Words->contains(this_stem)) {
                 affixes_of_residual_sig.append("NULL");
@@ -259,7 +261,6 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
             if ( affix_intersection.length() > 1 &&
                  affix_intersection.size() > best_affix_list.size()){
                  best_affix_list = affix_intersection;
-                 //qDebug() << 262 << this_stem << best_affix_list;
             }
         }
         if (best_affix_list.size() == 0) {
@@ -271,10 +272,15 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
         QString best_affix_list_string = best_affix_list.join("=");
 
         // . This shouldn't happen: there are no affixes.
+        QMessageBox msgBox;
         if (best_affix_list.length() == 0){
             qDebug() << 359 << "affix list with no entries; this should not happen."<<this_stem << best_affix_list;
+            msgBox.setText("Affix list with no entries. " + this_stem);
+            msgBox.exec();
             continue;
         }
+
+        qDebug() << this_stem << best_affix_list << "Find best signature for stem";
 
         pSig = *signatures << best_affix_list_string;
         if (!m_SuffixesFlag){ pSig->set_suffix_flag(false);}
@@ -285,22 +291,6 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
             step4a_link_signature_and_affix(pSig,this_affix);
         }
         step4b_link_signature_and_stem_and_word(this_stem, pSig, best_affix_list_string, "Crab2");
-
-
-        // 6. Make sure each affix has a c_affix.
-        /*
-        foreach (this_affix,best_affix_list){
-              if (m_SuffixesFlag){
-                  CSuffix* pSuffix = m_Suffixes->find_or_add(this_affix);
-                  pSuffix->increment_sig_count();
-                  pSig->add_affix_ptr(pSuffix);
-              } else {
-                  CPrefix* pPrefix = m_Prefixes->find_or_add(this_affix);
-                  pPrefix->increment_sig_count();
-                  pSig  ->add_affix_ptr(pPrefix);
-              }
-        } // end of best-affix loop
-        */
    } // end of protostem loop
    signatures->sort_each_signatures_stems_alphabetically();
 }
