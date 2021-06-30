@@ -270,6 +270,7 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
         // 2. add the signature string to the signature collection:
         CSignature * pSig;
         QString best_affix_list_string = best_affix_list.join("=");
+        qDebug() << best_affix_list_string;
 
         // . This shouldn't happen: there are no affixes.
         QMessageBox msgBox;

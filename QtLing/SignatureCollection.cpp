@@ -173,9 +173,6 @@ void CSignatureCollection::sort_each_signatures_stems_alphabetically()
     {
         sig_iter.next();
         sig_iter.value()->sort_stems();
-        if (sig_iter.value()->get_number_of_stems()==56){
-            qDebug() << sig_iter.value()->display() << sig_iter.value()->display_stems() << 177;
-        }
     }
 }
 
