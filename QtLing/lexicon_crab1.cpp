@@ -399,6 +399,8 @@ void CLexicon::step4_create_signatures(const QString& name_of_calling_function,
     word_t                  this_word_t;
     CSignature*             pSig;
 
+    qDebug() << "Core function step4 create signature, SuffixFlag"<< get_suffix_flag();
+
     //-->  create signatures, stems, affixes:  <--//
     m_ProgressBar->reset();
     m_ProgressBar->setMinimum(0);
@@ -601,8 +603,6 @@ void CLexicon::step4b_link_signature_and_stem_and_word
                     this_affix.mid(bracket_start_i+1, this_affix.length()-bracket_start_i-2);
             const QStringList secondary_affixes = str_secondary_affixes.split('~');
             foreach (QString secondary_affix, secondary_affixes) {
-                // iterate through list of secondary suffixes, and
-                // get string of whole word using concatenation
                 if (secondary_affix == "NULL")
                     secondary_affix = "";
                 m_SuffixesFlag ?

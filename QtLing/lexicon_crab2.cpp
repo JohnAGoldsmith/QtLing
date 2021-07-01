@@ -231,16 +231,11 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
         } //---------------------------------------------------------------------------------------//
 
 
-        qDebug() << this_stem << "start word" << this_protostem->get_start_word()
-             << "end word" << this_protostem->get_end_word()
-                 << 237;
-
         for (int wordno= this_protostem->get_start_word(); wordno <= this_protostem->get_end_word(); wordno++){
             QString this_word, affix;
             if (m_SuffixesFlag){
                 this_word = m_Words->get_string_from_sorted_list(wordno);
                 affix = this_word.mid( stem_length );
-                qDebug() << "  " << 242 << this_word;
             } else{
                 this_word = m_Words->get_reverse_sort_list()->at(wordno);
                 affix = this_word.left(this_word.length()- stem_length);
@@ -270,18 +265,15 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
         // 2. add the signature string to the signature collection:
         CSignature * pSig;
         QString best_affix_list_string = best_affix_list.join("=");
-        qDebug() << best_affix_list_string;
 
         // . This shouldn't happen: there are no affixes.
         QMessageBox msgBox;
         if (best_affix_list.length() == 0){
-            qDebug() << 359 << "affix list with no entries; this should not happen."<<this_stem << best_affix_list;
+            //qDebug() << 359 << "affix list with no entries; this should not happen."<<this_stem << best_affix_list;
             msgBox.setText("Affix list with no entries. " + this_stem);
             msgBox.exec();
             continue;
         }
-
-        qDebug() << this_stem << best_affix_list << "Find best signature for stem";
 
         pSig = *signatures << best_affix_list_string;
         if (!m_SuffixesFlag){ pSig->set_suffix_flag(false);}

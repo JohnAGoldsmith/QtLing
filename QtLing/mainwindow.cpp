@@ -71,33 +71,6 @@ MainWindow::MainWindow()
     foreach (str_model_name, m_duplicate_model_names) {
         m_proxy_models[str_model_name] = new LxaSortFilterProxyModel(this);
     }
-    /*
-    m_Models["Words"]                       = new LxaStandardItemModel("Words");
-    m_Models["Suffixal stems"]              = new LxaStandardItemModel("Suffixal stems");
-    m_Models["Prefixal stems"]              = new LxaStandardItemModel("Prefixal stems");
-    m_Models["Suffixes"]                    = new LxaStandardItemModel("Suffixes");
-    m_Models["Prefixes"]                    = new LxaStandardItemModel("Prefixes");
-    m_Models["Signatures"]                  = new LxaStandardItemModel("Signatures");
-   // m_Models["Signatures 2"]                = new LxaStandardItemModel("Signatures");// sorted by affix count;
-    //m_Models["Signatures 3"]                = new LxaStandardItemModel("Signatures");// used temporarily;
-    m_Models["EPositive signatures"]        = new LxaStandardItemModel("EPositive signatures");
-    //m_Models["EPositive signatures 2"]      = new LxaStandardItemModel("EPositive signatures 2"); // sorted by affix count
-    m_Models["Prefix signatures"]           = new LxaStandardItemModel("Prefix signatures");
-    //m_Models["Prefix signatures 2"]         = new LxaStandardItemModel("Prefix signatures"); //sorted by affix count;
-    m_Models["EPositive prefix signatures"] = new LxaStandardItemModel("EPositive prefix signatures");
-    //m_Models["EPositive prefix signatures 2"]= new LxaStandardItemModel("EPositive prefix signatures");
-    m_Models["Residual parasignatures"]     = new LxaStandardItemModel("Residual parasignatures");
-    m_Models["SigGraphEdges_1"]             = new LxaStandardItemModel("SigTreeEdges_1");
-    m_Models["SigGraphEdges_2"]             = new LxaStandardItemModel("SigTreeEdges_2");
-    m_Models["Parasuffixes"]                = new LxaStandardItemModel("Parasuffixes");
-    m_Models["Passive signatures"]          = new LxaStandardItemModel("Passive signatures");
-    m_Models["Hypotheses"]                  = new LxaStandardItemModel("Hypotheses");
-    m_Models["Hypotheses 2"]                = new LxaStandardItemModel("Hypotheses 2");
-    // for displaying protostems
-    m_Models["Suffixal protostems"]         = new LxaStandardItemModel("Suffixal protostems");
-    m_Models["Prefixal protostems"]         = new LxaStandardItemModel("Prefixal protostems");
-    m_Models["Compound words"]              = new LxaStandardItemModel("Compound words");
-    */
 
     m_treeModel     = new QStandardItemModel();
 
@@ -233,25 +206,29 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         return;
     }
     switch(this_key){
+
     case Qt::Key_1:
-    {if (ke->modifiers() == Qt::ControlModifier)
-    {
-        if (get_lexicon()->get_prefixal_stems()->get_count() > 0){
-            do_crab2_prefixes();
-        }
-        break;
-     }
-     break;
-    }
-    case Qt::Key_2:
-    {if (ke->modifiers() == Qt::ControlModifier)
-    {
-        if (get_lexicon()->get_suffixal_stems()->get_count() > 0){
-            do_crab2_suffixes();
-        }
-        break;
-    }
-        break;
+    {   qDebug() << "main window line 238";
+        if (ke->modifiers() == Qt::ControlModifier)
+        {
+            qDebug() << "main window line 241";
+            if (get_lexicon()->get_suffix_flag()){
+              qDebug() << "main window line 243";
+              if (get_lexicon()->get_suffixal_stems()->get_count() > 0){
+                  if (get_lexicon()->get_suffix_signatures()->get_count() > 0){
+                       do_crab2_suffixes();
+                  }
+              }
+            }
+            else{
+                if (get_lexicon()->get_prefixal_stems()->get_count() > 0){
+                    if (get_lexicon()->get_prefix_signatures()->get_count() > 0){
+                         do_crab2_prefixes();
+                    }
+                }
+            }
+         }
+         break;
     }
     case  Qt::Key_3:
     {if (ke->modifiers() == Qt::ControlModifier)
