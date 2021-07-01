@@ -341,7 +341,7 @@ public:
     void step4_create_signatures(const QString& name_of_calling_function,
                                  eMinimumStemCountFlag min_stem_count_flag = MS_respect_mininmum_stem_count);
     void step4a_link_signature_and_affix(CSignature*, affix_t);
-    void step4b_link_signature_and_stem_and_word(stem_t , CSignature*, QString this_signature_string, const QString& name_of_calling_function);
+    void step4b_link_signature_and_stem_and_word(stem_t , CSignature*, const QString& name_of_calling_function);
 
     void step5a_replace_parse_pairs_from_current_signature_structure();
     void step5b_find_full_signatures();

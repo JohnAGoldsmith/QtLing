@@ -283,7 +283,7 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
             this_affix = affix_iter_2.next();
             step4a_link_signature_and_affix(pSig,this_affix);
         }
-        step4b_link_signature_and_stem_and_word(this_stem, pSig, best_affix_list_string, "Crab2");
+        step4b_link_signature_and_stem_and_word(this_stem, pSig, "Crab2");
    } // end of protostem loop
    signatures->sort_each_signatures_stems_alphabetically();
 }

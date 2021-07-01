@@ -68,17 +68,9 @@ void LxaStandardItemModel::load_words(CWordCollection* p_words)
         pItem2->setData(pWord->get_word_count(), Qt::DisplayRole); // --- Numerical data
         item_list.append(pItem2);
 
-        int tempcount = 0;
-        //for(int i = 0; i < pWord->get_parse_triple_map()->size(); i++){
-        //    foreach (const Parse_triple* this_parse_triple, *pWord->get_parse_triple_map())  {
-        //        item_list.append(new QStandardItem(this_parse_triple->m_sig_string)) ;
-        //    }
-        //}
         foreach (const Parse_triple* this_parse_triple, *pWord->get_parse_triple_map())  {
             item_list.append(new QStandardItem(this_parse_triple->m_sig_string)) ;
         }
-
-
         appendRow(item_list);
     }
 }

@@ -389,6 +389,20 @@ void CLexicon::step3b_from_stem_to_sig_map_to_sig_to_stem_map()
 }
 // ==========================================================================  //
 
+void stem_autobiography_negative_notice(CLexicon* lexicon, QString stem, QString calling_function, QString message){
+    lexicon->add_to_stem_autobiographies(stem,
+                                QString("[%1]=Set of affixes"
+                                        " not qualified as a signature=%2")
+                                .arg(calling_function)
+                                .arg(message));
+}
+void word_autobiography_negative_notice(CLexicon* lexicon, QString word, QString calling_function, QString message){
+    lexicon->add_to_word_autobiographies(word,
+                                QString("[%1]=Set of affixes"
+                                        " not qualified as a signature=%2")
+                                .arg(calling_function)
+                                .arg(message));
+}
 
 void CLexicon::step4_create_signatures(const QString& name_of_calling_function,
                                        eMinimumStemCountFlag min_stem_count_flag)
@@ -398,12 +412,8 @@ void CLexicon::step4_create_signatures(const QString& name_of_calling_function,
     affix_t                 this_affix_t;
     word_t                  this_word_t;
     CSignature*             pSig;
-
+    int                     MINIMUM_NUMBER_OF_AFFIXES_IN_SIGNATURE (2);
     qDebug() << "Core function step4 create signature, SuffixFlag"<< get_suffix_flag();
-
-
-
-
 
     //-->  create signatures, stems, affixes:  <--//
     m_ProgressBar->reset();
@@ -411,16 +421,12 @@ void CLexicon::step4_create_signatures(const QString& name_of_calling_function,
     m_ProgressBar->setMaximum(m_intermediate_sig_to_stem_map.m_core.count());
     m_StatusBar->showMessage("4: create signatures.");
 
-    // this is an experiment
     map_string_to_word_ptr_iter word_iter (*m_Words->get_map());
     while(word_iter.hasNext()){
        CWord* pWord = word_iter.next().value();
        pWord->clear_signatures();
        pWord->clear_parse_triple_map();
-       // Clear list of signatures associated with the word:
-       pWord->clear_signatures();  // July 1 2021.
-
-   } // moved this from step 7b to here, Hanson, 7.31
+   }
 
     if (m_SuffixesFlag){
         m_Suffixes->clear();
@@ -431,29 +437,22 @@ void CLexicon::step4_create_signatures(const QString& name_of_calling_function,
         m_PrefixSignatures->clear();
     }
     // -->  Iterate through tentative signatures.    <-- //
-    int temp_i = 0;
     int count (0);
     foreach (this_signature_string, m_intermediate_sig_to_stem_map.m_core.keys() )
-    {
+    { //---------------------------------------------------------------------------------------------------------//
         qApp->processEvents();
-        count++;
         m_ProgressBar->setValue(count);
-        temp_i++;
-        if (temp_i == 1000){
-            temp_i = 0;
+        if (count++ % 1000 == 0){
             m_StatusBar->showMessage("4: create signatures: " + this_signature_string);
             qApp->processEvents();
         }
-
+      //---------------------------------------------------------------------------------------------------------//
         QSet<stem_t>* this_stem_set = m_intermediate_sig_to_stem_map.get_stem_set(this_signature_string);
         affix_list this_affix_list = this_signature_string.split("=");
 
-        // There are one-affix signatures here from prefixes, but not from suffixes:  WHY??
-        if (this_affix_list.length() <= 1){
-            qDebug()<< "Sig with one affix: "<<  this_affix_list << 433 ;
+        if (this_affix_list.count() < MINIMUM_NUMBER_OF_AFFIXES_IN_SIGNATURE){
+            continue;
         }
-
-
 
         if (min_stem_count_flag == MS_ignore_minimum_stem_count
                 || this_stem_set->size() >= M_MINIMUM_STEM_COUNT)
@@ -468,50 +467,25 @@ void CLexicon::step4_create_signatures(const QString& name_of_calling_function,
                 step4a_link_signature_and_affix(pSig,this_affix_t);
             }
             foreach (this_stem_t, *this_stem_set){
-                if (this_affix_list.length()==1){
-                  qDebug() << "  451"<<this_stem_t;
-                }
-                step4b_link_signature_and_stem_and_word(this_stem_t,pSig, this_signature_string, name_of_calling_function);
+                step4b_link_signature_and_stem_and_word(this_stem_t,pSig, name_of_calling_function);
             }
-
         } // end of condition of having enough stems in the signature.
         else
         {   // if there are not enough stems for this signature: this is here just for words ability to remember where they were and how they were analyzed.
-
             foreach(this_stem_t, *this_stem_set){
-                //qDebug() << " 462" << this_stem_t;
                 QString message = this_affix_list.size() <= 50 ?
                             this_signature_string:
                             QString("Super long list of affixes");
-                add_to_stem_autobiographies(this_stem_t,
-                                            QString("[%1]=Set of affixes"
-                                                    " not qualified as a signature=%2")
-                                            .arg(name_of_calling_function)
-                                            .arg(message));
-
+                stem_autobiography_negative_notice(this, this_stem_t, name_of_calling_function, message);
                 foreach (this_affix_t,this_affix_list){
-                    if (this_affix_t == "NULL"){
-                        this_affix_t = "";
-                    }
-
+                    if (this_affix_t == "NULL"){ this_affix_t = ""; }
                     m_SuffixesFlag?
                             this_word_t = this_stem_t + this_affix_t:
                             this_word_t = this_affix_t + this_stem_t;
-                    add_to_word_autobiographies(this_word_t,
-                                                QString("[%1]=Set of affixes"
-                                                        " not qualified as signature=Stem: %2=%3")
-                                                .arg(name_of_calling_function)
-                                                .arg(this_stem_t)
-                                                .arg(message));
-
-                    // old autobiography code
-                    /*
-                    pWord = m_Words->find_or_fail(this_word_t);
-                    pWord->add_to_autobiography("failure of " + name_of_calling_function + "=" + this_stem_t + "=" + this_signature_string );
-                    */
-                }
-            }
-        }
+                    word_autobiography_negative_notice(this, this_word_t, name_of_calling_function, message);
+                } //each affix
+            } // each stem
+        } // all stems in this set
     }
     m_SuffixesFlag?
                 m_suffixal_stems->sort_alphabetically():
@@ -535,52 +509,47 @@ void CLexicon::step4a_link_signature_and_affix(CSignature * pSig, affix_t this_a
         pSig->add_affix_ptr(pPrefix);
     }
 }
-
+void stem_autobiography_positive_notice (CLexicon* lexicon, QString stem, QString calling_function, QString sig_string){
+    lexicon->add_to_stem_autobiographies(stem,
+                                         QString("[%1]=Found signature=%2")
+                                         .arg(calling_function)
+                                         .arg(sig_string));
+}
+void word_autobiography_positive_notice(CLexicon* lexicon, QString word, QString stem, QString calling_function, QStringList this_affix_list, QString this_signature_string){
+    QString message = this_affix_list.size() <= 50 ?
+                this_signature_string:
+                QString("Super long signature");
+    lexicon->add_to_word_autobiographies(word,
+                                QString("[%1]=Found signature=stem: %2=%3")
+                                .arg(calling_function)
+                                .arg(stem)
+                                .arg(message));
+}
 void CLexicon::step4b_link_signature_and_stem_and_word
-(stem_t this_stem_t, CSignature* pSig, QString this_signature_string, const QString& name_of_calling_function)
+(stem_t this_stem_t, CSignature* pSig, const QString& name_of_calling_function)
 {
     CStem* pStem;
     QString this_affix, this_word;
+    QString this_signature_string = pSig->get_key();
     m_SuffixesFlag ?
             pStem = m_suffixal_stems->find_or_add(this_stem_t):
             pStem = m_prefixal_stems->find_or_add(this_stem_t);
 
-    // check if new signature already exists in the stem's list of signatures
-    /*
-    bool duplicate_flag = false;
-    foreach (CSignature* p_sig, *(pStem->GetSignatures())) {
-        if (p_sig->get_key() == this_signature_string) {
-            duplicate_flag = true;
-            break;
-        }
-    }
-    if (!duplicate_flag)
-        pStem->add_signature (pSig);
-    // Added by Hanson 7.30,
-    // moved to definition of CStem::add_signature, 7.31
-    */
     pStem->add_signature(pSig);
     pSig->add_stem_pointer(pStem);
-
-    add_to_stem_autobiographies(this_stem_t,
-                                QString("[%1]=Found signature=%2")
-                                .arg(name_of_calling_function)
-                                .arg(this_signature_string));
-
+    stem_autobiography_positive_notice(this, this_stem_t, name_of_calling_function, this_signature_string);
     int stem_count = 0;
     affix_list this_affix_list = this_signature_string.split("=");
     foreach (this_affix, this_affix_list){
         if (!this_affix.contains('[')) {
             // word does not contain secondary affixes, same as before
-            if (this_affix == "NULL"){
-                this_word = this_stem_t;
-            } else {
+            if (this_affix == "NULL"){ this_word = this_stem_t; }
+            else {
                 m_SuffixesFlag ?
                     this_word = this_stem_t + this_affix :
                     this_word = this_affix + this_stem_t ;
             }
-
-            // connecting word and signature
+            // connect word and signature
             CWord* pWord = m_Words->get_word(this_word);
             if (pWord == NULL){
                 qDebug() << this_word <<  "Step4: this_word not found among words."
@@ -588,21 +557,11 @@ void CLexicon::step4b_link_signature_and_stem_and_word
             } else {
                 stem_count += pWord->get_word_count();                
                 pWord->add_parse_triple(this_stem_t, this_affix, pSig->get_key());
-                QString message = this_affix_list.size() <= 50 ?
-                            this_signature_string:
-                            QString("Super long signature");
-                add_to_word_autobiographies(this_word,
-                                            QString("[%1]=Found signature=Stem: %2=%3")
-                                            .arg(name_of_calling_function)
-                                            .arg(this_stem_t)
-                                            .arg(message));
-                /*pWord->add_to_autobiography(QString("Found signature")
-                                            + "=" + this_stem_t + "=" + message); */
+                word_autobiography_positive_notice(this, this_word, this_stem_t, name_of_calling_function, this_affix_list, this_signature_string);
             }
         } else {
             // Iterating through the list of affixes in the associated signatrue,
             // e.g. iterating through the list {NULL, s} in ment[NULL~s]
-            // I call these "secondary signatures"
             int bracket_start_i = this_affix.indexOf('[');
             const QString reduced_affix = this_affix.left(bracket_start_i);
             const QString str_secondary_affixes =
@@ -634,10 +593,6 @@ void CLexicon::step4b_link_signature_and_stem_and_word
                                                 .arg(name_of_calling_function)
                                                 .arg(this_stem_t)
                                                 .arg(message));
-
-                    /* // removing old autobiography record system
-                    pWord->add_to_autobiography(QString("Found signature")
-                                              + "=" + this_stem_t + "=" + message); */
                 }
             } // end of iterating through each secondary affix in sig associated with an affix
         } // end of dealing with affixes with associated signature -- added by Hanson 7.30
