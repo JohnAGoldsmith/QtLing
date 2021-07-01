@@ -7,12 +7,10 @@
 void MainWindow::display_words()
 {
     m_tableView_upper_left->setModel(m_proxy_models["Words"]);
-    //m_tableView_upper_left->set_proxy_source_model(m_Models["Suffixes"]);
     m_tableView_upper_left->set_data_type ( e_data_words );
     m_tableView_upper_left->resizeColumnsToContents();
 
     m_tableView_upper_right->setModel(m_proxy_models["Words 2"]);
-    //m_tableView_upper_left->set_proxy_source_model(m_Models["Suffixes"]);
     m_tableView_upper_right->set_data_type ( e_data_words );
     m_tableView_upper_right->resizeColumnsToContents();
 }

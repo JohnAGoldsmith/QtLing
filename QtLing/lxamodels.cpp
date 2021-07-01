@@ -55,36 +55,30 @@ void  LxaStandardItemModel::load_category(QString , eComponentType)
 
 void LxaStandardItemModel::load_words(CWordCollection* p_words)
 {
-    QStringList labels, this_sigstring;
     CWord* pWord;
-    clear();
-    labels  << tr("word") << "word count" << "signatures";
+    QStringList labels = {tr("word"), tr("word count"), tr("signatures")};
     setHorizontalHeaderLabels(labels);
     m_Description = QString (" ");
-    //QMapIterator<word_t, CWord*> word_iter ( * p_words->get_map() );
-
+    clear();
     foreach (pWord, *p_words->get_map())
-    //for (int wordno = 0; wordno < p_words->get_count(); wordno++){
-    {
-        word_t this_word = pWord->get_key();
-        QList<QStandardItem*> item_list;
-        QStandardItem* pItem = new QStandardItem(this_word);
-        item_list.append(pItem);
+    {   QList<QStandardItem*> item_list;
+        item_list.append(new QStandardItem(pWord->get_key()));
 
         QStandardItem* pItem2 = new QStandardItem();
         pItem2->setData(pWord->get_word_count(), Qt::DisplayRole); // --- Numerical data
         item_list.append(pItem2);
 
         int tempcount = 0;
-        for(int i = 0; i < pWord->get_parse_triple_map()->size(); i++){
-            //QString p_sig_string = *pWord->at(i)->get_parse_triple_map();
-            //this_sigstring = pWord->get_parse_triple_map()...
-            foreach (const Parse_triple* this_parse_triple, *pWord->get_parse_triple_map())  {
-                QStandardItem* pItem3 = new QStandardItem(this_parse_triple->m_sig_string) ;
-                item_list.append(pItem3);
-                tempcount++;
-            }
+        //for(int i = 0; i < pWord->get_parse_triple_map()->size(); i++){
+        //    foreach (const Parse_triple* this_parse_triple, *pWord->get_parse_triple_map())  {
+        //        item_list.append(new QStandardItem(this_parse_triple->m_sig_string)) ;
+        //    }
+        //}
+        foreach (const Parse_triple* this_parse_triple, *pWord->get_parse_triple_map())  {
+            item_list.append(new QStandardItem(this_parse_triple->m_sig_string)) ;
         }
+
+
         appendRow(item_list);
     }
 }

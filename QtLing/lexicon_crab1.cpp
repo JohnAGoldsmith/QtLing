@@ -401,6 +401,10 @@ void CLexicon::step4_create_signatures(const QString& name_of_calling_function,
 
     qDebug() << "Core function step4 create signature, SuffixFlag"<< get_suffix_flag();
 
+
+
+
+
     //-->  create signatures, stems, affixes:  <--//
     m_ProgressBar->reset();
     m_ProgressBar->setMinimum(0);
@@ -413,6 +417,9 @@ void CLexicon::step4_create_signatures(const QString& name_of_calling_function,
        CWord* pWord = word_iter.next().value();
        pWord->clear_signatures();
        pWord->clear_parse_triple_map();
+       // Clear list of signatures associated with the word:
+       pWord->clear_signatures();  // July 1 2021.
+
    } // moved this from step 7b to here, Hanson, 7.31
 
     if (m_SuffixesFlag){
@@ -461,8 +468,9 @@ void CLexicon::step4_create_signatures(const QString& name_of_calling_function,
                 step4a_link_signature_and_affix(pSig,this_affix_t);
             }
             foreach (this_stem_t, *this_stem_set){
-                if (this_affix_list.length()==1)
+                if (this_affix_list.length()==1){
                   qDebug() << "  451"<<this_stem_t;
+                }
                 step4b_link_signature_and_stem_and_word(this_stem_t,pSig, this_signature_string, name_of_calling_function);
             }
 
@@ -562,8 +570,6 @@ void CLexicon::step4b_link_signature_and_stem_and_word
     int stem_count = 0;
     affix_list this_affix_list = this_signature_string.split("=");
     foreach (this_affix, this_affix_list){
-        // added this condition to detect if affix is associated with a signature
-        // -- added by Hanson 7.30
         if (!this_affix.contains('[')) {
             // word does not contain secondary affixes, same as before
             if (this_affix == "NULL"){
@@ -580,7 +586,7 @@ void CLexicon::step4b_link_signature_and_stem_and_word
                 qDebug() << this_word <<  "Step4: this_word not found among words."
                          << this_stem_t  << this_affix;
             } else {
-                stem_count += pWord->get_word_count();
+                stem_count += pWord->get_word_count();                
                 pWord->add_parse_triple(this_stem_t, this_affix, pSig->get_key());
                 QString message = this_affix_list.size() <= 50 ?
                             this_signature_string:
