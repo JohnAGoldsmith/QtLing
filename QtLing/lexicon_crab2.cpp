@@ -113,7 +113,7 @@ void CLexicon::step6_ReSignaturizeWithKnownAffixes()
 
  }
 /**
- * helper function for preceeding function.
+ * helper function for preceding function.
  *
  */
 //void CLexicon::step6a_create_temporary_map_from_stem_to_affix_set( )
@@ -143,6 +143,7 @@ void CLexicon::step6a_create_temporary_stem_to_sig_map()
             this_stem_t = this_parse->get_string1();
             this_affix_t = this_parse->get_string2();
             if (! m_Suffixes->contains(this_affix_t)){
+                //qDebug() << this_stem_t <<  this_affix_t << "crab2 drop this affix";
                 continue;
             }
         } else{
@@ -255,8 +256,14 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
             pSig->intersection_with(affixes_of_residual_sig, affix_intersection);
             if ( affix_intersection.length() > 1 &&
                  affix_intersection.size() > best_affix_list.size()){
-                 best_affix_list = affix_intersection;
+                     best_affix_list = affix_intersection;
             }
+            /*
+            if ( affix_intersection.length() > 1) {
+              if (this_stem == "bur"){
+                qDebug() << "bur" << affix_intersection;
+              }
+            } */
         }
         if (best_affix_list.size() == 0) {
             continue;
@@ -283,7 +290,7 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
             this_affix = affix_iter_2.next();
             step4a_link_signature_and_affix(pSig,this_affix);
         }
-        step4b_link_signature_and_stem_and_word(this_stem, pSig, "Crab2");
+        step4b_link_signature_and_stem_and_word(this_stem, pSig, "Good sigs inside bad");
    } // end of protostem loop
    signatures->sort_each_signatures_stems_alphabetically();
 }
