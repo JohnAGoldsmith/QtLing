@@ -78,9 +78,9 @@ void CLexicon::step8a_compute_sig_graph_edges()
                 m_SigGraphEdgeList.append(p_SigGraphEdge);
                 QString message1 = "sig graph edge #" + QString::number(analysis_number) + "=signature 1: ="
                         + this_stem + "=" +  this_sig + "=" + "difference =" + "="  + difference;
-                pWord->add_to_autobiography(message1);
+                add_to_word_autobiographies(pWord->get_key(), message1);
                 QString message2 = "=signature 2:   =" + the_other_stem + "=" + the_other_sig;
-                pWord->add_to_autobiography(message2);
+                add_to_word_autobiographies(pWord->get_key(),message2);
             } // end of looking at stems longer than this_stem
         } //end of looking at each stem in this word.
     } // each word

@@ -13,6 +13,8 @@ public:
     CParse(QString, QString, bool suffix_flag = true);
     QString get_string1() {return m_string1;}
     QString get_string2() {return m_string2;}
+    QString display() {return m_string1 + " " + m_string2;}
+    QString get_word();
 };
 
 

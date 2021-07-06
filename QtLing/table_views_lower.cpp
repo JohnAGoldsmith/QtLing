@@ -370,6 +370,7 @@ void LowerTableView::table_word(CWord* pWord){
         QListIterator<QString> line_iter(*(lexicon->get_word_autobiography(word_t)));
         while (line_iter.hasNext()){
             QString report_line = line_iter.next();
+            qDebug() << report_line;
             item_list.clear();
             QStringList report_line_items = report_line.split("=");
             for (int i = 0; i < report_line_items.size(); i++){

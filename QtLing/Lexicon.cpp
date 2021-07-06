@@ -47,7 +47,7 @@ protostem::~protostem()
 
 CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag):
     M_MINIMUM_STEM_LENGTH(3),
-    M_MINIMUM_STEM_COUNT(8),
+    M_MINIMUM_STEM_COUNT(2),
     M_MAXIMUM_AFFIX_LENGTH(10),
     M_MINIMUM_HYPOTHESIS_WORD_COUNT(6) // Moved to here, originally a fxn variable defined in step 9
 {
@@ -67,7 +67,7 @@ CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag):
     m_SuffixesFlag          = suffix_flag;
     m_Hypotheses            = new QList<CHypothesis*>;
     m_Hypothesis_map        = new QMap<QString, CHypothesis*>;
-    m_entropy_threshold_for_stems = 1.2;
+    m_entropy_threshold_for_stems = 0.6;
     m_parent_lexicon        = lexicon;
     m_goldstandard          = NULL;
     m_eval_parses      = NULL;
@@ -130,6 +130,53 @@ void CLexicon::clear_parses()
     foreach (p_parse, *m_Parses)
         delete p_parse;
     m_Parses->clear();
+}
+
+void CLexicon::remove_parse(QString parse_with_gap){
+    //if (m_Parses->contains(parse_with_gap)){
+    //    m_Parses->removeAll(parse_with_gap);
+   //}
+}
+
+bool CLexicon::verify_parses(){
+    QMap<QString, int> LexiconsParsesCopy;
+    QMap<QString, int> WordsParsesCopy;
+    // Make a copy of all the parses at the Lexicon level, and call this LexiconsParsesCopy
+
+    foreach (CParse* this_parse, *m_Parses){
+        if (LexiconsParsesCopy.contains(this_parse->display())){
+            qDebug()<< 140 << "Parse occurs twice" << this_parse->display();
+        }
+        LexiconsParsesCopy[this_parse->display()]= 1;
+    }
+
+    QMapIterator<QString, CWord*> i(*m_Words->get_map());
+    while (i.hasNext()) {
+        CWord* pWord = i.next().value();
+        // first check that parse_triples correspond to the morphemic_splits in each word.
+        //cout << i.key() << ": " << i.value() << Qt::endl;
+
+        // Now copy parses from the Word's parses up to our temporary QMap that is storing them
+        foreach (QString morphemic_split, pWord->get_morpheme_splits()){
+            QStringList morpheme_split = morphemic_split.split(" ");
+            for (int m = 0; m < morpheme_split.length()-1; m++){
+                QString bigram = morpheme_split[m] + " " + morpheme_split[m+1];
+                if ( WordsParsesCopy.contains(bigram)){
+                        continue;
+                   }
+                WordsParsesCopy[bigram] = 1;
+            }
+        }
+   }
+
+
+        // Now compare the 2 temporary holders
+
+
+
+
+
+
 }
 
 void CLexicon::clear_lexicon(){

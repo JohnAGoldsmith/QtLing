@@ -35,12 +35,17 @@ class CWord
 protected:
     QString                             m_Word;
     int                                 m_WordCount;
-//    QList<Parse_triple*>                m_Parse_triples;
     // Instead of keeping a list of parse_triples, we keep a map where the key is the stem, and the value is the parse_triple
     QMap<stem_t, Parse_triple*>         m_Parse_triple_map;
+    QStringList                         m_Morphemic_splits; // a morphemic split is a QString like: "pre bind ing s"
     QList<ptr_to_stem_sig_pair>         m_Signatures;
-    QList<QString>                      m_Autobiography;
     int                                 m_json_id;
+
+    // we want to allow a parse of a word to have more than two pieces, like "govern ment s". This is not entirely consistent with the philosphy behind the Parse_triple, which
+    // assumed all words had at most a stem and an affix.
+
+
+
 public:
     CWord(QString  Word);
     CWord(CWord&);
@@ -48,15 +53,17 @@ public:
 public:
     //Accessors
     void                                add_parse(CStem* stem, CSuffix* suffix, CSignature* signature);
-//    void                                add_parse_triple(QString stem, QString affix, CSignature*);
     void                                add_parse_triple(QString stem, QString affix, sigstring_t this_sig_string);
+    void                                add_morphemic_split(QString);
+    QStringList&                        get_morpheme_splits() {return m_Morphemic_splits;}
+    void                                remove_morphemic_split(QString morpheme_split);
     void                                add_to_autobiography(QString line);
     void                                clear_signatures() { m_Signatures.clear();}
     void                                clear_parse_triple_map();
-    QList<QString>*                     get_autobiography() {return & m_Autobiography;}
     QString                             get_key() {return m_Word;}
     int                                 get_word_count() const  { return m_WordCount; }
     QMap<stem_t,Parse_triple*>*         get_parse_triple_map()     { return & m_Parse_triple_map; }
+    bool                                contains_this_stem_among_parses (QString stem);
     QList<QPair<CStem*,CSignature*>*> * get_signatures ()   {return &m_Signatures;}
     QString                             get_word()      const { return m_Word; }
     void                                IncrementWordCount(int n = 1);

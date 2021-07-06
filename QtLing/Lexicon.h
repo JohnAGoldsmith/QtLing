@@ -281,7 +281,6 @@ public:
     QList<CHypothesis*>*                        get_hypotheses ()           {return m_Hypotheses;}
     QMap<QString, CHypothesis*>  *              get_hypothesis_map()        { return m_Hypothesis_map;}
     CHypothesis*                                get_hypothesis(QString hypothesis_label);
-//    QList<QPair<QString,QString> > *            get_parses()                {return m_Parses;}
     QList<CParse* > *                           get_parses()                {return m_Parses;}
     CSuffixCollection*                          get_parasuffixes()          { return m_ParaSuffixes;}
     CSignatureCollection*                       get_passive_signatures()    { return m_PassiveSignatures;}
@@ -325,7 +324,8 @@ public:
 
 
     void                                        time_stamp(const QString& message);
-
+    bool                                        verify_parses(); //check parses against the parses in each word;
+    void                                        remove_parse(QString parse_with_gap);
 
 public:
     // insert functions here

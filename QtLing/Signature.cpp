@@ -3,6 +3,7 @@
 #include "Suffix.h"
 #include <QDebug>
 #include <QChar>
+#include <QMap>
 #include <QtMath>
 #include "Lexicon.h"
 #include "WordCollection.h"
@@ -54,12 +55,11 @@ QStringList& CSignature::get_string_list(QStringList& affix_string_list){
     return affix_string_list;
 }
 
-QStringList& CSignature::get_stem_strings(QStringList & stem_list)
-{
+QStringList& CSignature::get_stem_strings(QStringList& stem_list)
+{   stem_list.clear();
     for (int stemno = 0; stemno < m_Stems->size(); stemno++){
         stem_list.append(m_Stems->at(stemno)->get_key());
     }
-
     return stem_list;
 }
 
@@ -341,6 +341,42 @@ void CSignature::remove_prefix(prefix_t this_prefix){
         }
     }
 }
+
+QString CSignature::get_highfreq_edge_letters(float frequency_threshold){
+    QMap<QString, int> counts;
+    QString letter, winner;
+    float totalcount =0.0, winner_count;
+    foreach (CStem* stem, *m_Stems){
+        totalcount += 1.0;
+        m_SuffixFlag?
+            letter = stem->get_key().right(1):
+            letter = stem->get_key().left(1);
+        if ( counts.contains(letter)){
+            counts[letter] += 1;
+        } else{
+            counts[letter] = 1;
+        }
+    }
+    QMapIterator<QString, int> i(counts);
+    while (i.hasNext()) {
+        i.next();
+        if (winner.length() == 0){
+                winner = i.key();
+                winner_count = i.value();
+        } else{
+            if (i.value() > winner_count){
+                    winner = i.key();
+                    winner_count = i.value();
+            }
+        }
+    }
+    if (winner_count / totalcount > frequency_threshold)
+        return winner;
+    else
+        return QString();
+
+
+}
 /////////////////////////////////////////////////////////////////////////
 //
 //      non-class functions dealing with signatures
@@ -364,4 +400,5 @@ sigstring_t restructure_signature(sigstring_t sig, QString morph, QStringList ne
     new_signature = new_sig.join("=");
     return new_signature;
 }
+
 

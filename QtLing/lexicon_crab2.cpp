@@ -71,35 +71,10 @@ void CLexicon::step6_ReSignaturizeWithKnownAffixes()
     m_ProgressBar->setMaximum(m_Parses->size());
     time_stamp("Resignaturize with known affixes");
 
-    /*
-    const int MINIMUM_NUMBER_OF_STEMS = 2;
-    CSignature*                 pSig;
-    QString                     this_stem_t, this_suffix_t, this_prefix, this_affix, this_signature_string, this_word;
-    stem_list *                 p_this_stem_list;
-    affix_set *                 this_ptr_to_affix_set;
-    CStem*                      pStem;
-    Stem_to_sig_map                    these_stem_to_sig_maps;
-    map_sigstring_to_stem_list    temp_signatures_to_stems;
-    */
-
-    //CWord *                     pWord;
     CStemCollection*            stems;
     m_SuffixesFlag ?
                stems = m_suffixal_stems:
                stems = m_prefixal_stems;
-
-    // clear signatures and parse_triple_map stored in each word
-
-   /*
-   map_string_to_word_ptr_iter word_iter (*m_Words->get_map());
-   while(word_iter.hasNext()){
-      pWord = word_iter.next().value();
-      pWord->clear_signatures();
-      pWord->clear_parse_triple_map();
-  } */
-   // Moved this to the beginning of step4; I think this step is necessary
-   // any time we call step4, as step4 must start with a "blank state" of
-   // everything. -- Hanson 7.31
 
    //--> We establish a temporary map from stems to sets of affixes as we iterate through parses. <--//
    //--> THIS is where the continuations that are not affixes are eliminated -- well, they are not
@@ -142,10 +117,6 @@ void CLexicon::step6a_create_temporary_stem_to_sig_map()
         if (m_SuffixesFlag){
             this_stem_t = this_parse->get_string1();
             this_affix_t = this_parse->get_string2();
-            if (! m_Suffixes->contains(this_affix_t)){
-                //qDebug() << this_stem_t <<  this_affix_t << "crab2 drop this affix";
-                continue;
-            }
         } else{
             this_stem_t = this_parse->get_string2();
             this_affix_t = this_parse->get_string1();
@@ -221,6 +192,10 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
         stem_t this_stem = this_protostem->get_stem();
         int stem_length = this_stem.length();
 
+        if (this_stem == "bat"){
+            qDebug() << 196 << "protostem is hop";
+        }
+
         //-----------------------------------------------------------------------------------------//
         m_ProgressBar->setValue(protostem_count++);
         qApp->processEvents();
@@ -257,6 +232,9 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
             if ( affix_intersection.length() > 1 &&
                  affix_intersection.size() > best_affix_list.size()){
                      best_affix_list = affix_intersection;
+                     if (this_stem == "bat"){
+                         qDebug() << 232 << affixes_of_residual_sig <<  best_affix_list;
+                     }
             }
             /*
             if ( affix_intersection.length() > 1) {
