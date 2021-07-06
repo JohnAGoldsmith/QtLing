@@ -74,7 +74,8 @@ void CLexicon::Crab_1()
 
     step4_create_signatures(QString("Crab1"));
 
-    step5a_replace_parse_pairs_from_current_signature_structure(); // from_
+    step5a_replace_parse_pairs_from_current_signature_structure();
+
 
     step5b_find_full_signatures();
 
@@ -252,7 +253,7 @@ void CLexicon::step2_from_protostems_to_parses()
                         continue;
                     }
                     suffix = word.right(suffix_length);
-                    CParse* this_parse = new CParse(stem, suffix);
+                    CParse* this_parse = new CParse(stem, suffix, true);
                     m_Parses->append(this_parse);
                     if (m_Words->contains(stem)){
                         CParse* that_parse = new CParse(stem, QString("NULL"), true );
@@ -267,10 +268,10 @@ void CLexicon::step2_from_protostems_to_parses()
                         continue;
                     }
                     prefix = word.left(prefix_length);
-                    CParse* this_parse = new CParse(prefix, stem);
+                    CParse* this_parse = new CParse(stem,  prefix, false);
                     m_Parses->append(this_parse);
                     if (m_Words->contains(stem)){
-                        CParse * that_parse = new CParse(QString("NULL"), stem, false);
+                        CParse * that_parse = new CParse(stem, QString("NULL"), false);
                         m_Parses->append(that_parse);
                     }
                 }
@@ -333,17 +334,12 @@ void CLexicon::step3a_from_parses_to_stem_to_sig_map(QList<CParse*> * parses, bo
     int i = 0;
     for (int parseno = 0; parseno < parses->size(); parseno++){
         CParse * this_pair = parses->at(parseno);
-        if (suffix_flag){
-            this_stem_t = this_pair->get_string1();
-            this_affix_t = this_pair->get_string2();
-        } else{
-            this_stem_t = this_pair->get_string2();
-            this_affix_t = this_pair->get_string1();
-        }
+        this_stem_t = this_pair->get_stem();
+        this_affix_t = this_pair->get_affix();
         i++;
         if (i == 10000) {
             i = 0;
-            m_StatusBar->showMessage("3a: "+ this_stem_t + this_affix_t);
+            m_StatusBar->showMessage("3a: "+ this_pair->display() );
             qApp->processEvents();
         }
         if (!m_intermediate_stem_to_sig_map.contains(this_stem_t)){
@@ -683,27 +679,23 @@ void add_initial_letter (QStringList & this_affix_list, QString letter, bool suf
 void CLexicon::step5a_replace_parse_pairs_from_current_signature_structure()
 {
     clear_parses();
-
     QList<CSignature*> *           these_signatures;
     m_SuffixesFlag?
             these_signatures = m_Signatures->get_signature_list():
             these_signatures = m_PrefixSignatures->get_signature_list();
     CSignature*                     pSig;
+    CParse*  this_parse;
+    QStringList affix_string_list;
     foreach (pSig, *these_signatures ){
-        const QStringList affixes = pSig->display().split("=");
+        affix_string_list = pSig->get_affix_string_list(affix_string_list);
         QList<CStem*>* stem_list = pSig->get_stems();
         CStem* pStem;
         foreach (pStem, *stem_list){
             const QString& this_stem = pStem->display();
             QString this_affix;
-            foreach (this_affix, affixes){
-                //if (this_affix == "NULL") this_affix = "";
-                CParse*                         this_parse;
-                m_SuffixesFlag?
-                        this_parse = new CParse(this_stem, this_affix, true):
-                        this_parse = new CParse(this_affix, this_stem, false);
+            foreach (this_affix, affix_string_list){
+                this_parse = new CParse(this_stem, this_affix, m_SuffixesFlag);
                 m_Parses->append(this_parse);
-
             }
         }
     }
@@ -772,28 +764,23 @@ void CLexicon::step5b_find_full_signatures()
         foreach (stem, pSig->get_stem_strings(stem_list)) {
             QString stem2 = stem.left(stem.length()-1);
             if (get_suffix_flag()){
-               foreach (QString suffix, pSig->get_string_list(affix_list) ){
+               foreach (QString suffix, pSig->get_affix_string_list(affix_list) ){
                     QString word = combine_stem_and_suffix(stem, suffix);
                     QString stem2 = stem.left(stem.length()-1);
                     CWord* pWord = get_words()->find_or_fail(word);
 
                     if (pWord->contains_this_stem_among_parses(stem2)){
                           this_morphemic_split = combine_stem_and_suffix_with_gap(stem,suffix);
-                          qDebug() << word << "remove stem: " << stem <<   766;
-                          //pWord->remove_morphemic_split(this_morphemic_split)
+                          qDebug() << word << "remove stem: " << stem <<   766 << pSig->display();
+                          pWord->remove_morphemic_split(this_morphemic_split);
                           remove_parse(this_morphemic_split);
                     }
-
                 }
-
             }else{ // prefix case
 
             }
 
-
         } // end of stems in this sig;
-
-
     } // end of signatures loops
 
     verify_parses(); //check complete list of parses in Lexicon with what's in the words;

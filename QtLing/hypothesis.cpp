@@ -76,8 +76,8 @@ void CLexicon::step9_from_sig_graph_edges_map_to_hypotheses()
         affixes1.clear();
         affixes2.clear();
         doomed_affixes.clear();
-        pSig1_longer_stem->get_string_list(affixes1);
-        pSig2_shorter_stem->get_string_list(affixes2);
+        pSig1_longer_stem->get_affix_string_list(affixes1);
+        pSig2_shorter_stem->get_affix_string_list(affixes2);
         //qDebug() << 44 << original_sig1_affixes_longer_stem << original_sig2_affixes_shorter_stem;
         bool success_flag = true;
         if (p_edge->get_number_of_words() < MINIMUM_NUMBER_OF_WORDS ){continue;}

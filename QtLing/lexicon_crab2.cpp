@@ -115,11 +115,11 @@ void CLexicon::step6a_create_temporary_stem_to_sig_map()
         }
 
         if (m_SuffixesFlag){
-            this_stem_t = this_parse->get_string1();
-            this_affix_t = this_parse->get_string2();
+            this_stem_t = this_parse->get_stem();
+            this_affix_t = this_parse->get_affix();
         } else{
-            this_stem_t = this_parse->get_string2();
-            this_affix_t = this_parse->get_string1();
+            this_stem_t = this_parse->get_stem();
+            this_affix_t = this_parse->get_affix();
             if (! m_Prefixes->contains(this_affix_t)){
                 continue;
             }

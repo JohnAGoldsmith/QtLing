@@ -64,7 +64,7 @@ public:
     double                      get_stem_entropy();
     QList<CStem*>*              get_stems()                             { return   m_Stems;}
     QStringList&                get_stem_strings(QStringList&);
-    QStringList&                get_string_list(QStringList&)  ;
+    QStringList&                get_affix_string_list(QStringList&)  ;
     //QStringList                 get_string_list();
     bool                        get_suffix_flag()                       { return m_SuffixFlag;}
     void                        set_suffix_flag(bool flag)              { m_SuffixFlag = flag;}
