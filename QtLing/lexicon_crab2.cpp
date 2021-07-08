@@ -117,6 +117,9 @@ void CLexicon::step6a_create_temporary_stem_to_sig_map()
         if (m_SuffixesFlag){
             this_stem_t = this_parse->get_stem();
             this_affix_t = this_parse->get_affix();
+            if (! m_Suffixes->contains(this_affix_t)){
+                    continue;
+            }
         } else{
             this_stem_t = this_parse->get_stem();
             this_affix_t = this_parse->get_affix();
@@ -232,9 +235,9 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
             if ( affix_intersection.length() > 1 &&
                  affix_intersection.size() > best_affix_list.size()){
                      best_affix_list = affix_intersection;
-                     if (this_stem == "bat"){
-                         qDebug() << 232 << affixes_of_residual_sig <<  best_affix_list;
-                     }
+                    // if (this_stem == "bat"){
+                         qDebug() << this_stem   << affixes_of_residual_sig <<  best_affix_list << 235;
+                    //´ }
             }
             /*
             if ( affix_intersection.length() > 1) {
