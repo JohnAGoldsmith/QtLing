@@ -211,25 +211,47 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     {   qDebug() << "main window line 238";
         if (ke->modifiers() == Qt::ControlModifier)
         {
-            qDebug() << "main window line 241";
-            if (get_lexicon()->get_suffix_flag()){
-              qDebug() << "main window line 243";
-              if (get_lexicon()->get_suffixal_stems()->get_count() > 0){
-                  if (get_lexicon()->get_suffix_signatures()->get_count() > 0){
-                       do_crab2_suffixes();
-                  }
-              }
-            }
+            if ( get_lexicon()->get_suffix_flag()
+                &&  get_lexicon()->get_suffixal_stems()->get_count() > 0
+                &&  get_lexicon()->get_suffix_signatures()->get_count() > 0 )
+                {
+                       do_crab2();
+                }
             else{
-                if (get_lexicon()->get_prefixal_stems()->get_count() > 0){
-                    if (get_lexicon()->get_prefix_signatures()->get_count() > 0){
-                         do_crab2_prefixes();
+                if (get_lexicon()->get_prefixal_stems()->get_count()  > 0)
+                {
+                    if (get_lexicon()->get_prefix_signatures()->get_count() > 0)
+                    {
+                         do_crab2();
                     }
                 }
             }
          }
          break;
     }
+    case Qt::Key_2:
+    {
+        if (ke->modifiers() == Qt::ControlModifier)
+        {
+            if (get_lexicon()->get_suffix_flag()){
+              if (get_lexicon()->get_suffixal_stems()->get_count() > 0){
+                  if (get_lexicon()->get_suffix_signatures()->get_count() > 0){
+                       do_crab4();
+                  }
+              }
+            }
+            else{
+                if (get_lexicon()->get_prefixal_stems()->get_count() > 0){
+                    if (get_lexicon()->get_prefix_signatures()->get_count() > 0){
+                         do_crab4();
+                    }
+                }
+            }
+         }
+         break;
+    }
+
+
     case  Qt::Key_3:
     {if (ke->modifiers() == Qt::ControlModifier)
     {
@@ -433,24 +455,14 @@ void MainWindow::do_crab1_suffixes()
 }
 void MainWindow::do_crab1_prefixes()
 {
-        get_lexicon()->set_prefixes_flag();
+    get_lexicon()->set_prefixes_flag();
     do_crab1();
     display_epositive_prefix_signatures(get_lexicon());
 }
-void MainWindow::do_crab2_suffixes()
-{
-    get_lexicon()->set_suffixes_flag();
-    do_crab2();
-    display_epositive_suffix_signatures(get_lexicon());
-}
-void MainWindow::do_crab2_prefixes()
-{
-    get_lexicon()->set_prefixes_flag();
-    do_crab2();
-    display_epositive_prefix_signatures(get_lexicon());
-}
+
+
 void MainWindow::do_crab1()
-{   statusBar()->showMessage("Entering the Crab Nebula.");
+{   statusBar()->showMessage("Entering the Crab Nebula, Phase 1.");
     CLexicon* lexicon = get_lexicon();
     lexicon->Crab_1();
     load_models(get_lexicon());
@@ -464,12 +476,43 @@ void MainWindow::do_crab1()
     statusBar()->showMessage("All models are loaded.");
     emit lexicon_ready();
 }
-
 void MainWindow::do_crab2()
-{
-    statusBar()->showMessage("Entering the Crab Nebula, phase 2");
+{   statusBar()->showMessage("Entering the Crab Nebula, Phase 2.");
     CLexicon* lexicon = get_lexicon();
     lexicon->Crab_2();
+    load_models(get_lexicon());
+    write_stems_and_words();
+    statusBar()->showMessage("We have returned from the Crab Nebula.");
+
+    create_or_update_TreeModel(get_lexicon());
+    m_graphics_scene->set_signature_collection(get_lexicon()->get_active_signature_collection());
+    m_leftTreeView->expandAll();
+    m_leftTreeView->resizeColumnToContents(0);
+    statusBar()->showMessage("All models are loaded.");
+    emit lexicon_ready();
+}
+void MainWindow::do_crab3()
+{   statusBar()->showMessage("Entering the Crab Nebula, Phase 3.");
+    CLexicon* lexicon = get_lexicon();
+            //lexicon->Crab_3();
+    load_models(get_lexicon());
+    write_stems_and_words();
+    statusBar()->showMessage("We have returned from the Crab Nebula.");
+
+    create_or_update_TreeModel(get_lexicon());
+    m_graphics_scene->set_signature_collection(get_lexicon()->get_active_signature_collection());
+    m_leftTreeView->expandAll();
+    m_leftTreeView->resizeColumnToContents(0);
+    statusBar()->showMessage("All models are loaded.");
+    emit lexicon_ready();
+}
+
+
+void MainWindow::do_crab4()
+{
+    statusBar()->showMessage("Entering the Crab Nebula, phase 4");
+    CLexicon* lexicon = get_lexicon();
+    lexicon->Crab_4();
     load_models(lexicon);
     statusBar()->showMessage("We have returned from the Crab Nebula.");
 

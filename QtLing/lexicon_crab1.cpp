@@ -62,12 +62,11 @@ void CLexicon::Crab_1()
 
     step4_create_signatures(QString("Crab1"));
 
-    step5a_replace_parse_pairs_from_current_signature_structure();
+   // step5a_replace_parse_pairs_from_current_signature_structure();
 
 
-    step5b_find_full_signatures();
 
-    collect_parasuffixes();
+    collect_parasuffixes(); // these are suffixes found in a signature with only one stem
 
     m_SuffixesFlag?
                 m_Signatures->compute_containment_list():
@@ -75,8 +74,6 @@ void CLexicon::Crab_1()
     m_SuffixesFlag?
                 m_Signatures->calculate_sig_robustness():
                 m_PrefixSignatures->calculate_sig_robustness();
-
-    //step10_find_compounds();
 
 }
 
@@ -134,6 +131,7 @@ void CLexicon::step1_from_words_to_protostems()
     m_ProgressBar->setMaximum(Words->size());
     m_StatusBar->showMessage("1. Find proto-stems.");
     m_Parses->clear();
+    m_ParseMap.clear();
  
     int temp_j = 0;
     for (int wordno=0; wordno<Words->size()-1; wordno ++) {
@@ -240,10 +238,10 @@ void CLexicon::step2_from_protostems_to_parses()
                     }
                     suffix = word.right(suffix_length);
                     CParse* this_parse = new CParse(stem, suffix, true);
-                    m_Parses->append(this_parse);
+                    add_parse(this_parse);
                     if (m_Words->contains(stem)){
                         CParse* that_parse = new CParse(stem, QString("NULL"), true );
-                        m_Parses->append(that_parse);
+                        add_parse(that_parse);
                     }
                 }
             }else{
@@ -255,10 +253,10 @@ void CLexicon::step2_from_protostems_to_parses()
                     }
                     prefix = word.left(prefix_length);
                     CParse* this_parse = new CParse(stem,  prefix, false);
-                    m_Parses->append(this_parse);
+                    add_parse(this_parse);
                     if (m_Words->contains(stem)){
                         CParse * that_parse = new CParse(stem, QString("NULL"), false);
-                        m_Parses->append(that_parse);
+                        add_parse(that_parse);
                     }
                 }
             } // end of prefixes.
@@ -286,6 +284,11 @@ QString convert_set_to_qstring(affix_set& this_affix_set){
 void   CLexicon::step3_from_parses_to_stem_to_sig_maps(QString name_of_calling_function)
 {  // const int MINIMUM_NUMBER_OF_STEMS = 2;
 
+    /* Since this is going to be used several times, and all but the first time
+     * there will be a previous set of stems, it would make sense to contrast
+     * the stems made here with the stems in the preceding step -- so we can
+     * keep track of what is gained and what is discarded.
+     */
     name_of_calling_function = " " ;
     Stem_to_sig_map                this_stem_to_sig_map;
     m_ProgressBar->reset();
@@ -655,7 +658,9 @@ void add_initial_letter (QStringList & this_affix_list, QString letter, bool suf
 
 void CLexicon::step5a_replace_parse_pairs_from_current_signature_structure()
 {
-    clear_parses();
+    m_Raw_parses = m_Parses;
+    m_Parses = new QList<CParse*> ;
+    m_ParseMap.clear();
     QList<CSignature*> *           these_signatures;
     m_SuffixesFlag?
             these_signatures = m_Signatures->get_signature_list():
@@ -668,7 +673,8 @@ void CLexicon::step5a_replace_parse_pairs_from_current_signature_structure()
             const QString& this_stem = pStem->display();
             foreach (QString this_affix, affix_string_list){
                 this_parse = new CParse(this_stem, this_affix, m_SuffixesFlag);
-                m_Parses->append(this_parse);
+                add_parse(this_parse);
+                qDebug() << 676 << m_ParseMap.size() << m_Parses->size() << this_parse->display_with_gap();
             }
         }
     }

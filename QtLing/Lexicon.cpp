@@ -123,13 +123,23 @@ CSignatureCollection* CLexicon::get_active_signature_collection(){
     }
 
 }
+void CLexicon::add_parse(CParse * parse){
 
+    if (m_ParseMap.contains(parse->display_with_gap())){
+        //qDebug() << 129 <<"Didn't add this parse" << parse->display_with_gap();
+                return;
+    }
+    m_Parses->append(parse);
+    m_ParseMap[parse->display_with_gap()] = parse;
+    //qDebug() << 133 << " added to parses" << parse->display_with_gap() << m_Parses->size() << m_ParseMap.size();
+}
 void CLexicon::clear_parses()
 {
     CParse* p_parse;
     foreach (p_parse, *m_Parses)
         delete p_parse;
     m_Parses->clear();
+    m_ParseMap.clear();
 }
 
 void CLexicon::remove_parse(QString parse_with_gap){

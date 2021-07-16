@@ -208,7 +208,9 @@ protected:
     CSignatureCollection *          m_Signatures;
     CSignatureCollection *          m_PrefixSignatures;
     CompoundWordCollection *        m_Compounds;
-    QList<CParse*> *                m_Parses; //
+    QList<CParse*> *                m_Raw_parses;
+    QList<CParse*> *                m_Parses; // get rid of this list, just use the QMap
+    QMap<QString, CParse*>          m_ParseMap;
 
     QMap<QString, protostem*>       m_suffix_protostems;
     QMap<QString, protostem*>       m_prefix_protostems;
@@ -272,7 +274,7 @@ public:
     void                                        dump_signatures_to_debug();
     // accessors and protostems
     void                                        dump_suffixes(QList<QString>*);
-
+    void                                        add_parse(CParse*);
     CSignatureCollection*                       get_active_signature_collection();
     QMap<QString, eComponentType> &             get_category_types()        { return m_category_types;}
     CompoundWordCollection*                     get_compounds()             { return m_Compounds; }
@@ -349,7 +351,9 @@ public:
 
     void step6_ReSignaturizeWithKnownAffixes();
     void step6a_create_temporary_map_from_stems_to_affix_sets(Stem_to_sig_map&); //map_sigstring_to_stem_list &); will delete this
-    void step6a_create_temporary_stem_to_sig_map(); // will replace preceding version;ß∫
+    //void step6a_create_temporary_stem_to_sig_map(); // will replace preceding version;
+    void step6a_create_new_parse_set();
+
     void step7_FindGoodSignaturesInsideParaSignatures();
     void step6c_from_stem_to_sig_maps_to_xxx(QString, Stem_to_sig_map ) {return;}
 
@@ -369,6 +373,8 @@ public:
 
     void Crab_1();
     void Crab_2();
+    void Crab_3();
+    void Crab_4();
     void create_sublexicon();
 
     void check_autobiography_consistency();

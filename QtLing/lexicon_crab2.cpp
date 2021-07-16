@@ -22,14 +22,33 @@
 
 extern bool contains(QList<QString> * list2, QList<QString> * list1);
 
-
-/**
- * @brief CLexicon::Crab_2
- * Crab_2 is a bit slower than Crab_1.
- */
 void CLexicon::Crab_2()
 {
+
     step6_ReSignaturizeWithKnownAffixes();
+    step5a_replace_parse_pairs_from_current_signature_structure();
+
+
+    m_SuffixesFlag?
+                m_Signatures->compute_containment_list():
+                m_PrefixSignatures->compute_containment_list();
+    m_SuffixesFlag?
+                m_Signatures->calculate_sig_robustness():
+                m_PrefixSignatures->calculate_sig_robustness();
+    //step10_find_compounds();
+}
+
+
+/**
+ * @brief CLexicon::Crab_4
+ *
+ */
+void CLexicon::Crab_4()
+{
+    step5a_replace_parse_pairs_from_current_signature_structure();
+    step5b_find_full_signatures();
+
+    collect_parasuffixes();
 
     step7_FindGoodSignaturesInsideParaSignatures();
 
@@ -60,7 +79,7 @@ void CLexicon::Crab_2()
 /*!
 * This is lke AssignSuffixesToStems, but crucially: with Suffixes known ahead of time.
 * This creates signatures and stems: signatures that only have approved affixes.
-* First function of Crab_2.
+* First function of Crab_4.
 * I need to refactorize this function.
 */
 void CLexicon::step6_ReSignaturizeWithKnownAffixes()
@@ -82,18 +101,19 @@ void CLexicon::step6_ReSignaturizeWithKnownAffixes()
     m_intermediate_sig_to_stem_map.clear();
     m_intermediate_stem_to_sig_map.clear();
 
-    step6a_create_temporary_stem_to_sig_map();
-    step3b_from_stem_to_sig_map_to_sig_to_stem_map();
-    step4_create_signatures("Resignaturize");
+
+    step6a_create_new_parse_set();
+    step3_from_parses_to_stem_to_sig_maps("Resignaturize with known affixes");
+    step4_create_signatures("Resignaturize with known affixes");
 
  }
 /**
  * helper function for preceding function.
  *
  */
-//void CLexicon::step6a_create_temporary_map_from_stem_to_affix_set( )
-void CLexicon::step6a_create_temporary_stem_to_sig_map()
+void CLexicon::step6a_create_new_parse_set()
 {
+
     m_StatusBar->showMessage("6 Resignaturize: temporary map from stem to affix set.");
     qApp->processEvents();
     CParse*                     this_parse;
@@ -104,33 +124,44 @@ void CLexicon::step6a_create_temporary_stem_to_sig_map()
                 stems = m_suffixal_stems:
                 stems = m_prefixal_stems;
 
+    m_Raw_parses = m_Parses;
+    qDebug() << 128 << " Size of parses" << m_Raw_parses->size();
+    m_Parses = new QList<CParse*>;
+    m_ParseMap.clear();
+
     // iterate through parselist, and assign to stem and affix collections;
-    for (int parseno = 0; parseno < m_Parses->size(); parseno++){
-        this_parse = m_Parses->at(parseno);
+    //m_Parses->clear();
+    //m_intermediate_stem_to_sig_map.clear();
+    for (int parseno = 0; parseno < m_Raw_parses->size(); parseno++){
+        this_parse = m_Raw_parses->at(parseno);
+        qDebug() << 136 << this_parse->display_with_gap();
         count++;
         if (count == 10000){
             count = 0;
             m_ProgressBar->setValue(parseno);
             qApp->processEvents();
         }
-
+        this_stem_t = this_parse->get_stem();
+        this_affix_t = this_parse->get_affix();
         if (m_SuffixesFlag){
-            this_stem_t = this_parse->get_stem();
-            this_affix_t = this_parse->get_affix();
             if (! m_Suffixes->contains(this_affix_t)){
+                   qDebug() << this_stem_t << this_affix_t << 121;
                     continue;
             }
         } else{
-            this_stem_t = this_parse->get_stem();
-            this_affix_t = this_parse->get_affix();
             if (! m_Prefixes->contains(this_affix_t)){
                 continue;
             }
         }
+        /*
         if (! m_intermediate_stem_to_sig_map.contains(this_stem_t)){
             m_intermediate_stem_to_sig_map[this_stem_t] = QSet<affix_t>();
         }
         m_intermediate_stem_to_sig_map[this_stem_t].insert(this_affix_t);
+        qDebug() << this_stem_t << this_affix_t << 131;
+        */
+        add_parse(this_parse);
+        qDebug() << this_parse->display()<<170 << m_ParseMap.size();
     }
 }
 

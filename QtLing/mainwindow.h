@@ -204,10 +204,10 @@ private slots:
 
     void                                    do_crab1_suffixes();
     void                                    do_crab1_prefixes();
-    void                                    do_crab2_suffixes();
-    void                                    do_crab2_prefixes();
     void                                    do_crab1();
     void                                    do_crab2();
+    void                                    do_crab3();
+    void                                    do_crab4();
     void                                    documentWasModified();
     void                                    newFile();
     void                                    print_prefix_signatures();
