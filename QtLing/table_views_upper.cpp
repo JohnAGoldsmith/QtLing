@@ -281,6 +281,11 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
             set_data_type(e_data_compound_words);
             sortByColumn(1);
         }
+        else if(component == "Parses"){
+            setModel(m_parent_window->m_proxy_models["Parses"]);
+            set_data_type(e_data_parses);
+            sortByColumn(1);
+        }
         // add component 10
     }
 

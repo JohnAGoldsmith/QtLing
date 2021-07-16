@@ -522,7 +522,7 @@ void MainWindow::load_models(CLexicon* lexicon)
 
     statusBar()->showMessage("Loading models: Words");
     m_Models["Words"]               ->load_words(lexicon->get_words());
-    QCoreApplication::processEvents();
+    m_Models["Parses"]              ->load_parses(lexicon->get_parses());
 
     statusBar()->showMessage("Loading models: Stems");
     m_Models["Suffixal stems"]      ->load_stems(lexicon->get_suffixal_stems());
@@ -546,38 +546,18 @@ void MainWindow::load_models(CLexicon* lexicon)
     /* Using the sorting function of the proxy models, we do not need duplicate source models,
      * removed them to save some memory, Hanson 11.2
      */
-    /*
-    m_Models["Signatures 2"]         ->load_signatures(lexicon->get_signatures(), SIG_BY_AFFIX_COUNT);
-    statusBar()->showMessage("Signatures 2.");
-    QCoreApplication::processEvents();
-
-    m_Models["Signatures 3"]         ->load_signatures(lexicon->get_signatures());
-    statusBar()->showMessage("Signatures 3.");
-    QCoreApplication::processEvents();
-    */
     m_Models["EPositive signatures"]->load_positive_signatures(lexicon->get_signatures());
-
-    /*
-    m_Models["EPositive signatures 2"]->load_positive_signatures(lexicon->get_signatures(),SIG_BY_AFFIX_COUNT);
-    statusBar()->showMessage("EPositive signatures 2.");
-    */
-    //QCoreApplication::processEvents();
-
     m_Models["Prefix signatures"]   ->load_signatures( lexicon->get_prefix_signatures());
-    //m_Models["Prefix signatures 2"] ->load_signatures(lexicon->get_prefix_signatures(), SIG_BY_AFFIX_COUNT);
     m_Models["EPositive prefix signatures"]->load_positive_signatures(lexicon->get_prefix_signatures());
-    //m_Models["EPositive prefix signatures 2"]->load_positive_signatures(lexicon->get_prefix_signatures(), SIG_BY_AFFIX_COUNT);
     QCoreApplication::processEvents();
 
     statusBar()->showMessage("Loading models: Parasignatures");
     m_Models["Residual parasignatures"]->load_parasignatures(lexicon->get_residual_signatures());
     m_Models["Parasuffixes"]        ->load_suffixes(lexicon->get_parasuffixes());
-    //QCoreApplication::processEvents();
     m_Models["Passive signatures"]  ->load_signatures(lexicon->get_passive_signatures());
     statusBar()->showMessage("Loading models: Hypotheses");
     m_Models["Hypotheses"]          ->load_hypotheses(lexicon->get_hypotheses());
     m_Models["Hypotheses 2"]        ->load_hypotheses_2(lexicon->get_hypotheses());
-    //QCoreApplication::processEvents();
     m_Models["SigGraphEdges_1"]        ->load_sig_graph_edges(lexicon->get_sig_graph_edge_map(),1);
     m_Models["SigGraphEdges_2"]        ->load_sig_graph_edges(lexicon->get_sig_graph_edge_map(),2);
     //QCoreApplication::processEvents();
@@ -626,26 +606,16 @@ void MainWindow::read_dx1_file()
                                  .arg(QDir::toNativeSeparators(m_name_of_data_file), file.errorString()));
             return;
      }
-
      QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
      settings.setValue("name_of_data_file", m_name_of_data_file );
-
      QTextStream in(&file);
      CWordCollection * Words = get_lexicon()->get_word_collection();
-
      while (!in.atEnd())
      {
-            QString line = in.readLine();
-            line = line.simplified(); // get rid of extra spaces
-            QStringList words = line.split(" ");
-            QString word = words[0];
-            word = word.toLower();
-            CWord* pWord = *Words <<  word;
-            //qDebug() << 486 << word<< 486;
+            QStringList words = in.readLine().simplified().split(" ");
+            CWord* pWord = *Words <<  words[0].toLower();
             if (words.size()> 1) {
                 pWord->SetWordCount(words[1].toInt());
-                //if (words[1].toInt() > 1000)
-                   // qDebug() << 489 << words[0] << words[1];
             }
      }
     Words->sort_word_list();

@@ -211,6 +211,10 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
     QStandardItem * hypothesis_item = new QStandardItem(QString("Hypotheses"));
     QStandardItem * hypothesis_count_item = new QStandardItem(QString::number(lexicon->get_hypotheses()->count()));
 
+    QStandardItem * parses_item = new QStandardItem(QString("Parses"));
+    QStandardItem * parses_count_item = new QStandardItem(QString::number(lexicon->get_parses()->count()));
+
+
 // This is part of an experiment:
 //  This code deals with the components in the Lexicon, so that that set can be easily updated by the programmer.
 //  it will eliminate above code and below code too:
@@ -333,11 +337,13 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
     passive_signature_items.append(passive_signature_item);
     passive_signature_items.append(passive_signature_count_item);
 
-
-
     QList<QStandardItem*> hypothesis_items;
     hypothesis_items.append(hypothesis_item);
     hypothesis_items.append(hypothesis_count_item);
+
+    QList<QStandardItem*> parses_items;
+    parses_items.append(parses_item);
+    parses_items.append(parses_count_item);
 
 // add component 7
 
@@ -364,5 +370,7 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
     lexicon_item->appendRow(parasuffix_items);
     lexicon_item->appendRow(passive_signature_items);
     lexicon_item->appendRow(hypothesis_items);
+    lexicon_item->appendRow(parses_items);
+
 // add component 8
 }

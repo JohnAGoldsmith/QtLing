@@ -74,7 +74,21 @@ void LxaStandardItemModel::load_words(CWordCollection* p_words)
         appendRow(item_list);
     }
 }
-
+void LxaStandardItemModel::load_parses(QList<CParse*> * Parses )
+{
+    QStringList labels;
+    labels << "parse";
+    setHorizontalHeaderLabels(labels);
+    m_Description = QString (" ");
+    clear();
+    foreach (CParse* parse, *Parses)
+    {
+        QList<QStandardItem*> item_list;
+        item_list.append(new QStandardItem(parse->get_left_string()));
+        item_list.append(new QStandardItem(parse->get_right_string()));
+        appendRow(item_list);
+    }
+}
 void LxaStandardItemModel::load_compounds(CompoundWordCollection *p_compounds)
 {
     typedef QStandardItem QSI;

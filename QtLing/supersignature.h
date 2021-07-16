@@ -3,6 +3,7 @@
 
 #include "generaldefinitions.h"
 #include "Typedefs.h"
+#include "Signature.h"
 
 class CSuffix;
 class CSignature;

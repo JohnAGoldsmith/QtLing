@@ -19,6 +19,8 @@ public:
     QString display();
     QString get_word();
     QString display_with_gap();
+    QString get_left_string();
+    QString get_right_string();
 };
 
 

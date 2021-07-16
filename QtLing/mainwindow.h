@@ -100,7 +100,8 @@ class MainWindow : public QMainWindow
         "Hypotheses 2",
         "Suffixal protostems",
         "Prefixal protostems",
-        "Compound words"
+        "Compound words",
+        "Parses"
     };
     QStringList m_duplicate_model_names {
         "Words 2",

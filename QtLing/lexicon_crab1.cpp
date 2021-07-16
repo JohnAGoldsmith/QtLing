@@ -21,18 +21,6 @@
 #include "evaluation.h"
 #include "cparse.h"
 #include "compound.h"
-QString combine_stem_and_suffix(QString stem, QString affix){
-    if (affix == "NULL")
-        return stem;
-    else
-        return stem + affix;
-}
-QString combine_stem_and_suffix_with_gap(QString stem, QString affix){
-    if (affix == "NULL")
-        return stem;
-    else
-        return stem + " " + affix;
-}
 
 
 void SortQStringListFromRight(QStringList& ThisStringList);
@@ -238,9 +226,7 @@ void CLexicon::step2_from_protostems_to_parses()
         word = word_iter->next().value()->get_word();
         if (word.contains('-')){
             continue;
-
         }
-
         wordno++;
         qApp->processEvents();
         m_ProgressBar->setValue(wordno);
@@ -474,15 +460,9 @@ void CLexicon::step4_create_signatures(const QString& name_of_calling_function,
         if (this_affix_list.count() < MINIMUM_NUMBER_OF_AFFIXES_IN_SIGNATURE){
             continue;
         }
-        if (this_signature_string == "NULL=s=ted=ting") {
-           // qDebug() << 460 << "null s ted ting" << this_stem_set->count() << M_MINIMUM_STEM_COUNT;
-        }
         if (min_stem_count_flag == MS_ignore_minimum_stem_count
                 || this_stem_set->count() >= M_MINIMUM_STEM_COUNT)
-        {   if (this_signature_string == "NULL=s=ted=ting") {
-                //qDebug() << 463 << "null s ted ting" << this_stem_set->size() << M_MINIMUM_STEM_COUNT;
-            }
-            if( m_SuffixesFlag) {
+        {   if( m_SuffixesFlag) {
                 pSig = *m_Signatures       << this_signature_string;
             } else {
                 pSig = *m_PrefixSignatures << this_signature_string;
@@ -499,9 +479,6 @@ void CLexicon::step4_create_signatures(const QString& name_of_calling_function,
         {   // if there are not enough stems for this signature: this is here just for words ability to remember where they were and how they were analyzed.
 
             foreach(this_stem_t, *this_stem_set){
-                if (this_signature_string == "NULL=s=ted=ting") {
-                    qDebug() << 479 << "null s ted ting" << this_stem_t;
-                }
                 stem_autobiography_negative_notice_not_enough_stems(this, this_stem_t, this_affix_list, this_signature_string, name_of_calling_function);
                 foreach (this_affix_t,this_affix_list){
                     if (this_affix_t == "NULL"){ this_affix_t = ""; }
@@ -683,17 +660,13 @@ void CLexicon::step5a_replace_parse_pairs_from_current_signature_structure()
     m_SuffixesFlag?
             these_signatures = m_Signatures->get_signature_list():
             these_signatures = m_PrefixSignatures->get_signature_list();
-    CSignature*                     pSig;
     CParse*  this_parse;
     QStringList affix_string_list;
-    foreach (pSig, *these_signatures ){
+    foreach (CSignature* pSig, *these_signatures ){
         affix_string_list = pSig->get_affix_string_list(affix_string_list);
-        QList<CStem*>* stem_list = pSig->get_stems();
-        CStem* pStem;
-        foreach (pStem, *stem_list){
+        foreach (CStem* pStem, *pSig->get_stems()){
             const QString& this_stem = pStem->display();
-            QString this_affix;
-            foreach (this_affix, affix_string_list){
+            foreach (QString this_affix, affix_string_list){
                 this_parse = new CParse(this_stem, this_affix, m_SuffixesFlag);
                 m_Parses->append(this_parse);
             }
@@ -715,7 +688,7 @@ void CLexicon::step5b_find_full_signatures()
     qApp->processEvents();
     CStemCollection * stems;
     CSignature * pSig;
-    QString letter, affix, stem, this_morphemic_split;
+    QString letter, affix, stem, stem2, this_morphemic_split;
     QStringList affix_list, stem_list;
     CSignatureCollection * signatures;
     m_SuffixesFlag ?
@@ -756,34 +729,27 @@ void CLexicon::step5b_find_full_signatures()
         if (pSig->get_stem_entropy() > m_entropy_threshold_for_stems ){
             continue;
         }
-
-        //qDebug() << 731 << pSig->display() ;
-
         int EdgeLetterPredominanceThreshold = 0.8;
         letter = pSig->get_highfreq_edge_letters(EdgeLetterPredominanceThreshold);
         foreach (stem, pSig->get_stem_strings(stem_list)) {
-            QString stem2 = stem.left(stem.length()-1);
-            if (get_suffix_flag()){
-               foreach (QString suffix, pSig->get_affix_string_list(affix_list) ){
-                    QString word = combine_stem_and_suffix(stem, suffix);
-                    QString stem2 = stem.left(stem.length()-1);
-                    CWord* pWord = get_words()->find_or_fail(word);
-
-                    if (pWord->contains_this_stem_among_parses(stem2)){
-                          this_morphemic_split = combine_stem_and_suffix_with_gap(stem,suffix);
-                          qDebug() << word << "remove stem: " << stem <<   766 << pSig->display();
+            stem2 = stem.left(stem.length()-1);
+            foreach (QString affix, pSig->get_affix_string_list(affix_list) ){
+                   CParse parse (stem,affix,get_suffix_flag());
+                   QString word = parse.display();
+                   QString stem2 = stem.left(stem.length()-1);
+                   CWord* pWord = get_words()->find_or_fail(word);
+                   if (pWord->contains_this_stem_among_parses(stem2)){
+                          this_morphemic_split = parse.display_with_gap();
                           pWord->remove_morphemic_split(this_morphemic_split);
                           remove_parse(this_morphemic_split);
-                    }
-                }
-            }else{ // prefix case
-
-            }
-
+                   }
+            } //end of affixes in this sig
         } // end of stems in this sig;
     } // end of signatures loops
 
-    verify_parses(); //check complete list of parses in Lexicon with what's in the words;
+    //verify_parses(); //check complete list of parses in Lexicon with what's in the words;
+
+
     step3_from_parses_to_stem_to_sig_maps(QString("Shift morpheme boundary leftward"));
     step4_create_signatures(QString("Shift morpheme boundary leftward"));
 
