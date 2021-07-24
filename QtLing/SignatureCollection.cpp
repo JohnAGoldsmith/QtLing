@@ -111,6 +111,10 @@ bool compare_affix_count(const CSignature* pSig1, const CSignature* pSig2)
      }
      return pSig1->get_number_of_affixes() > pSig2->get_number_of_affixes();
 }
+bool compare_robustness_reversed(const CSignature* pSig1, const CSignature* pSig2)
+{
+     return pSig1->get_robustness() >pSig2->get_robustness();
+}
 
 
 void CSignatureCollection::sort(eSortStyle sort_style)
@@ -122,11 +126,18 @@ void CSignatureCollection::sort(eSortStyle sort_style)
         sig_iter.next();
         m_SortList.append(sig_iter.value());
     }
-    if (sort_style == SIG_BY_AFFIX_COUNT) {
-          qSort(m_SortList.begin(), m_SortList.end(),  compare_affix_count);
-    } else{
+
+    switch (sort_style){
+    case SIG_BY_AFFIX_COUNT:
+         qSort(m_SortList.begin(), m_SortList.end(),  compare_affix_count);
+         break;
+    case SIG_BY_REVERSE_ROBUSTNESS:
+          qSort(m_SortList.begin(), m_SortList.end(),  compare_robustness_reversed);
+          break;
+    default:
           qSort(m_SortList.begin(), m_SortList.end(),  compare_stem_count);
     }
+
 
 }
 
@@ -221,6 +232,7 @@ void CSignatureCollection::get_epositive_signatures(QMap<CSignature*, int> sig_m
     }
 }
 
+// this is not used, I think, and should be removed.
 /*!
  * \brief CSignatureCollection::find_minimal_cover
  *

@@ -517,19 +517,19 @@ void CLexicon::step4a_link_signature_and_affix(CSignature * pSig, affix_t this_a
 }
 void stem_autobiography_positive_notice (CLexicon* lexicon, QString stem, QString calling_function, QString sig_string){
     lexicon->add_to_stem_autobiographies(stem,
-                                         QString("[%1]=Found signature=%2")
+                                         QString("[%1]==%2")
                                          .arg(calling_function)
                                          .arg(sig_string));
 }
 void word_autobiography_positive_notice(CLexicon* lexicon, QString word, QString stem, QString sig_string, QString calling_function){
     lexicon->add_to_word_autobiographies(word,
-                                QString("[%1]=Found signature=stem: %2=%3")
+                                QString("[%1]==stem: %2=%3")
                                 .arg(calling_function)
                                 .arg(stem)
                                 .arg(sig_string));
 }
 void word_autobiography_positive_notice_2(CLexicon* lexicon, QString word, QString stem, QString sig_string, QString calling_function)
-{ lexicon->add_to_word_autobiographies(word, QString("[%1]=Found signature=stem: %2=%3")
+{ lexicon->add_to_word_autobiographies(word, QString("[%1]==stem: %2=%3")
                                        .arg(calling_function)
                                        .arg(stem)
                                        .arg(sig_string));
@@ -568,8 +568,8 @@ void CLexicon::step4b_link_signature_and_stem_and_word
             // connect word and signature
             CWord* pWord = m_Words->get_word(this_word);
             if (pWord == NULL){
-                qDebug() << this_word <<  "Step4: this_word not found among words."
-                         << this_stem_t  << this_affix;
+                //qDebug() << this_word << 571 << "Step4: this_word not found among words."
+                //         << this_stem_t  << this_affix << name_of_calling_function;
             } else {
                 stem_count += pWord->get_word_count();                
                 pWord->add_parse_triple(this_stem_t, this_affix, pSig->get_key());
@@ -598,7 +598,7 @@ void CLexicon::step4b_link_signature_and_stem_and_word
                 // connecting word and signature
                 CWord* pWord = m_Words->get_word(this_word);
                 if (!pWord){
-                    qDebug() << this_word <<  "Step4: this_word not found among words."
+                    qDebug() << 611<<  this_word <<  "Step4: this_word not found among words."
                              << this_stem_t  << this_affix;
                 } else {
                     stem_count += pWord->get_word_count();
@@ -656,7 +656,7 @@ void add_initial_letter (QStringList & this_affix_list, QString letter, bool suf
     }
 }
 
-void CLexicon::step5a_replace_parse_pairs_from_current_signature_structure()
+void CLexicon::replace_parse_pairs_from_current_signature_structure()
 {
     m_Raw_parses = m_Parses;
     m_Parses = new QList<CParse*> ;
@@ -674,7 +674,7 @@ void CLexicon::step5a_replace_parse_pairs_from_current_signature_structure()
             foreach (QString this_affix, affix_string_list){
                 this_parse = new CParse(this_stem, this_affix, m_SuffixesFlag);
                 add_parse(this_parse);
-                qDebug() << 676 << m_ParseMap.size() << m_Parses->size() << this_parse->display_with_gap();
+                //qDebug() << 676 << m_ParseMap.size() << m_Parses->size() << this_parse->display_with_gap();
             }
         }
     }

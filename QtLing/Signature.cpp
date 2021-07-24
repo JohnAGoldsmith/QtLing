@@ -18,6 +18,7 @@ CSignature::CSignature(QString signature_string, bool suffix_flag, CSignatureCol
   m_SuffixFlag = suffix_flag;
   m_SignatureCollection = Signatures;
   m_stem_entropy = -1;
+  m_robustness = 0;
 }
 
 CSignature::CSignature(CSignature& signature) {
@@ -92,7 +93,7 @@ bool CSignature::contains_affix_string(affix_t affix)
     return false;
 }
 
-void CSignature::intersection_with(affix_list &in, affix_list &intersection)
+int CSignature::intersection_with(affix_list &in, affix_list &intersection)
 {
    intersection.clear();
    affix_list my_affixes = m_Signature.split("=");
@@ -103,10 +104,30 @@ void CSignature::intersection_with(affix_list &in, affix_list &intersection)
        }
    }
    intersection.sort();
-   return;
+   return intersection.length();
 }
 
-
+int  CSignature::get_size_of_intersection(CSignature* othersig){
+   int count = 0;
+   QStringList my_affixes = m_Signature.split("=");
+   QStringList other_affixes;
+   othersig->get_affix_string_list(other_affixes);
+   for (int affix_no = 0; affix_no < my_affixes.size(); affix_no ++ ){
+       if (other_affixes.contains( my_affixes[affix_no] ) ){
+               count++;
+        }
+   }
+   return count;
+}
+int  CSignature::get_size_of_intersection(QList<CSuffix*>* other_affixes){
+   int count = 0;  
+   foreach(CSuffix* pSuffix, *m_Suffixes){
+       if (other_affixes->contains( pSuffix) ){
+               count++;
+        }
+   }
+   return count;
+}
 
 // =============================================>  Functions involving string containment <===========================//
 

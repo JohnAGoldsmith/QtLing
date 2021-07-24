@@ -41,9 +41,9 @@ public:
     // functions dealing with string containment:
     bool                        contains_affix_string (affix_t affix);
     bool                        contains (CSignature* other);
-    void                        intersection_with(affix_list& in, affix_list& intersection);
-
-
+    int                         intersection_with(affix_list& in, affix_list& intersection);
+    int                         get_size_of_intersection(CSignature* othersig);
+    int                         get_size_of_intersection(QList<CSuffix*>*);
     void                        add_stem (QString);
     void                        add_stem_pointer(CStem*);
     void                        add_memo (QString memo)                 { m_Autobiography.append(memo);}

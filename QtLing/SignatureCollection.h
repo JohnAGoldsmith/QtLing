@@ -55,7 +55,7 @@ public:
     bool                                    contains (sigstring_t);
     CSignature*                             find_or_add (const QString&);         // same as operatorˆ=
     CSignature *                            find_or_fail(const QString&);
-    void                                    find_minimal_cover();
+    void                                    find_minimal_cover(); // not used, should be removed
     CSignature*                             get_at_sorted( uint n )         { return m_SortList[n];}
     QMap<CSignature*,QList<CSignature*>*> * get_containment_map()           {return & m_ContainmentMap;}
     QList<word_and_count_list*> *           get_count_vectors(QList<word_and_count_list*> * count_vectors);

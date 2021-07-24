@@ -46,7 +46,7 @@ protostem::~protostem()
 }
 
 CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag):
-    M_MINIMUM_STEM_LENGTH(3),
+    M_MINIMUM_STEM_LENGTH(2),
     M_MINIMUM_STEM_COUNT(2),
     M_MAXIMUM_AFFIX_LENGTH(10),
     M_MINIMUM_HYPOTHESIS_WORD_COUNT(6) // Moved to here, originally a fxn variable defined in step 9

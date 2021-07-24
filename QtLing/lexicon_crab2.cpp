@@ -25,8 +25,7 @@ extern bool contains(QList<QString> * list2, QList<QString> * list1);
 void CLexicon::Crab_2()
 {
 
-    step6_ReSignaturizeWithKnownAffixes();
-    step5a_replace_parse_pairs_from_current_signature_structure();
+    ReSignaturizeWithKnownAffixes();
 
 
     m_SuffixesFlag?
@@ -45,10 +44,13 @@ void CLexicon::Crab_2()
  */
 void CLexicon::Crab_4()
 {
-    step5a_replace_parse_pairs_from_current_signature_structure();
     step5b_find_full_signatures();
 
     collect_parasuffixes();
+
+    m_SuffixesFlag?
+                m_Signatures->calculate_sig_robustness():
+                m_PrefixSignatures->calculate_sig_robustness();
 
     step7_FindGoodSignaturesInsideParaSignatures();
 
@@ -82,9 +84,9 @@ void CLexicon::Crab_4()
 * First function of Crab_4.
 * I need to refactorize this function.
 */
-void CLexicon::step6_ReSignaturizeWithKnownAffixes()
+void CLexicon::ReSignaturizeWithKnownAffixes()
 {
-     m_StatusBar->showMessage("6: resignaturize with known affixes");
+    m_StatusBar->showMessage("Resignaturize with known affixes");
     m_ProgressBar->reset();
     m_ProgressBar->setMinimum(0);
     m_ProgressBar->setMaximum(m_Parses->size());
@@ -102,67 +104,76 @@ void CLexicon::step6_ReSignaturizeWithKnownAffixes()
     m_intermediate_stem_to_sig_map.clear();
 
 
-    step6a_create_new_parse_set();
+    create_new_parse_set_from_known_affixes();
     step3_from_parses_to_stem_to_sig_maps("Resignaturize with known affixes");
     step4_create_signatures("Resignaturize with known affixes");
+    replace_parse_pairs_from_current_signature_structure();
+
 
  }
 /**
  * helper function for preceding function.
  *
  */
-void CLexicon::step6a_create_new_parse_set()
+void CLexicon::create_new_parse_set_from_known_affixes()
 {
-
-    m_StatusBar->showMessage("6 Resignaturize: temporary map from stem to affix set.");
     qApp->processEvents();
     CParse*                     this_parse;
     int                         count = 0;
     QString                     this_stem_t, this_affix_t;
-    CStemCollection *           stems;
-    m_SuffixesFlag ?
-                stems = m_suffixal_stems:
-                stems = m_prefixal_stems;
-
     m_Raw_parses = m_Parses;
-    qDebug() << 128 << " Size of parses" << m_Raw_parses->size();
     m_Parses = new QList<CParse*>;
     m_ParseMap.clear();
 
     // iterate through parselist, and assign to stem and affix collections;
-    //m_Parses->clear();
-    //m_intermediate_stem_to_sig_map.clear();
     for (int parseno = 0; parseno < m_Raw_parses->size(); parseno++){
         this_parse = m_Raw_parses->at(parseno);
-        qDebug() << 136 << this_parse->display_with_gap();
         count++;
         if (count == 10000){
             count = 0;
             m_ProgressBar->setValue(parseno);
             qApp->processEvents();
         }
-        this_stem_t = this_parse->get_stem();
         this_affix_t = this_parse->get_affix();
         if (m_SuffixesFlag){
             if (! m_Suffixes->contains(this_affix_t)){
-                   qDebug() << this_stem_t << this_affix_t << 121;
                     continue;
             }
         } else{
             if (! m_Prefixes->contains(this_affix_t)){
                 continue;
             }
-        }
-        /*
-        if (! m_intermediate_stem_to_sig_map.contains(this_stem_t)){
-            m_intermediate_stem_to_sig_map[this_stem_t] = QSet<affix_t>();
-        }
-        m_intermediate_stem_to_sig_map[this_stem_t].insert(this_affix_t);
-        qDebug() << this_stem_t << this_affix_t << 131;
-        */
+        }        
         add_parse(this_parse);
-        qDebug() << this_parse->display()<<170 << m_ParseMap.size();
     }
+}
+
+bool Contains(QList<CSuffix*>* list1, QList<CSuffix*>* list2 ) {
+    foreach (CSuffix* suffix, *list2){
+        //qDebug() << 153 << suffix->GetSuffix();
+        if (! list1->contains(suffix)){
+            return false;
+        }
+    }
+    //qDebug() << 158 << "True";
+    return true;
+}
+bool Contains(QList<CPrefix*>* list1, QList<CPrefix*>* list2 ) {
+    foreach (CPrefix* prefix, *list2){
+        if (! list1->contains(prefix)){
+            return false;
+        }
+    }
+    return true;
+}
+int IntersectionCount(QList<CSuffix*>* list1, QList<CSuffix*>* list2){
+    int count = 0;
+    foreach (CSuffix* suffix, *list2){
+        if (list1->contains(suffix)){
+           count ++;
+        }
+    }
+    return count;
 }
 
 /*!
@@ -173,22 +184,22 @@ void CLexicon::step6a_create_new_parse_set()
  *
  * 2nd function of Crab 2.
  */
-
-
 void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
 {   stem_t                      this_stem;
     word_t                      this_word;
     affix_t                     this_affix;
     affix_list                  affixes_of_residual_sig;
-    CSuffix_ptr_list            this_residual_sig_suffix_pointer_list;
+    CSignature*                 pBestSig, *this_sig, *pSig;
     CSignatureCollection*       signatures;
     suffix_t                    Null_string ("NULL");
     CStemCollection*            stems;
-    m_SuffixesFlag ?
-                stems = m_suffixal_stems:
-                stems = m_prefixal_stems;
-
+    int                         best_intersection_count = 0;
     affix_list                  best_affix_list;
+    QList<CPrefix*>             working_prefix_list;
+    QList<CSuffix*>             working_suffix_list;
+    CSuffix*                    pSuffix;
+    CPrefix*                    pPrefix;
+
 
 
     m_StatusBar->showMessage("7: Find good signatures inside bad.");
@@ -197,21 +208,18 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
 
     //---->   We iterate through the list of Residual Signatures <-------//
 
+    QMap<QString, protostem*> * these_protostems;
     if (m_SuffixesFlag) {
          signatures = m_Signatures;
+         stems = m_suffixal_stems;
+         these_protostems = & m_suffix_protostems;
+
     } else{
          signatures = m_PrefixSignatures;
+         stems = m_prefixal_stems;
+         these_protostems = & m_prefix_protostems;
     }
-    signatures->sort(SIG_BY_AFFIX_COUNT);
-
-    signatures->find_minimal_cover();
-    // the signature collection finds a "cover", which is a set of signatures
-    // which are a superset of all the other signatures.
-
-    QMap<QString, protostem*> * these_protostems;
-    m_SuffixesFlag?
-                these_protostems = & m_suffix_protostems:
-                these_protostems = & m_prefix_protostems;
+    signatures->sort(SIG_BY_REVERSE_ROBUSTNESS);
 
     //--------------------------------------------------------------------------------//
     m_ProgressBar->reset();
@@ -222,15 +230,7 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
     int protostem_count = 0;
     int temp_i = 0;
     foreach (auto this_protostem, * these_protostems)
-    {   affixes_of_residual_sig.clear();
-        stem_t this_stem = this_protostem->get_stem();
-        int stem_length = this_stem.length();
-
-        if (this_stem == "bat"){
-            qDebug() << 196 << "protostem is hop";
-        }
-
-        //-----------------------------------------------------------------------------------------//
+    {   //-----------------------------------------------------------------------------------------//
         m_ProgressBar->setValue(protostem_count++);
         qApp->processEvents();
         temp_i++;
@@ -239,72 +239,103 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
             m_StatusBar->showMessage("7: Find good signatures inside bad: " + this_stem);
             qApp->processEvents();
         } //---------------------------------------------------------------------------------------//
-
+        affixes_of_residual_sig.clear();
+        working_suffix_list.clear();
+        working_prefix_list.clear();
+        stem_t this_stem = this_protostem->get_stem();
+        int stem_length = this_stem.length();
+        if (stems->find_or_fail( this_stem )){
+            continue;
+        }
 
         for (int wordno= this_protostem->get_start_word(); wordno <= this_protostem->get_end_word(); wordno++){
-            QString this_word, affix;
             if (m_SuffixesFlag){
                 this_word = m_Words->get_string_from_sorted_list(wordno);
-                affix = this_word.mid( stem_length );
+                this_affix = this_word.mid( stem_length );
+                if (this_affix.length() == 0){
+                    this_affix = "NULL";
+                }
+                pSuffix =  m_Suffixes->find_or_fail(this_affix);
+                if (! pSuffix ){
+                    continue;
+                }
+                working_suffix_list.append(pSuffix);
             } else{
                 this_word = m_Words->get_reverse_sort_list()->at(wordno);
-                affix = this_word.left(this_word.length()- stem_length);
+                this_affix = this_word.left(this_word.length()- stem_length);
+                if (this_affix.length() == 0){
+                    this_affix = "NULL";
+                }
+                pPrefix = m_Prefixes->find_or_fail(this_affix);
+                if (! pPrefix){
+                    continue;
+                }
+                working_prefix_list.append(pPrefix);
             }
-            if (!affix.isEmpty())
-                affixes_of_residual_sig.append( affix );
-        }
-        if (m_Words->contains(this_stem)) {
-                affixes_of_residual_sig.append("NULL");
         }
 
-        // 1. Find best subsignature.
-        best_affix_list.clear();
-        affix_list affix_intersection;
-        for (int i = 0; i <signatures->get_minimal_cover()->size(); i++ ){
-            CSignature* pSig = signatures->get_minimal_cover()->at(i);
-            pSig->intersection_with(affixes_of_residual_sig, affix_intersection);
-            if ( affix_intersection.length() > 1 &&
-                 affix_intersection.size() > best_affix_list.size()){
-                     best_affix_list = affix_intersection;
-                    // if (this_stem == "bat"){
-                         qDebug() << this_stem   << affixes_of_residual_sig <<  best_affix_list << 235;
-                    //´ }
+        //Sort signatures by decreasing robustness
+        // sort affixes of affixes_of_residual_sig -- MAKE SURE  THAT its affixes are properly sorted.
+
+        // go thru signatures, find the highest robustness sig in WorkingSig, and then successively larger sigs, always containing the previous best one found.
+        int i;
+
+        int best_intersection_count = 0;
+        pBestSig = NULL;
+        if (get_suffix_flag()){
+            for (i=0; i < signatures->get_count(); i++){
+                this_sig = signatures->get_at_sorted(i);
+                if (this_sig->get_robustness() < 50){
+                    break;
+                }
+                if (Contains( &working_suffix_list, this_sig->get_suffix_list())){
+                    pBestSig = this_sig;
+                    best_intersection_count = IntersectionCount(&working_suffix_list,pBestSig->get_suffix_list());
+                    break;
+                }
+            // there is no signature that appears inside the working affix list, so we give up on this stem.
             }
-            /*
-            if ( affix_intersection.length() > 1) {
-              if (this_stem == "bur"){
-                qDebug() << "bur" << affix_intersection;
-              }
-            } */
+        }else{
+            for (i=0; i < signatures->get_count(); i++){
+                this_sig = signatures->get_at_sorted(i);
+                if (Contains( &working_prefix_list, this_sig->get_prefix_list())){
+                    pBestSig = this_sig;
+                    // get best count;
+
+                    break;
+                }
+            // there is no signature that appears inside the working affix list, so we give up on this stem.
+            }
         }
-        if (best_affix_list.size() == 0) {
-            continue;
+        if (! pBestSig){
+            continue; // to next protostem
         }
-
-        // 2. add the signature string to the signature collection:
-        CSignature * pSig;
-        QString best_affix_list_string = best_affix_list.join("=");
-
-        // . This shouldn't happen: there are no affixes.
-        QMessageBox msgBox;
-        if (best_affix_list.length() == 0){
-            //qDebug() << 359 << "affix list with no entries; this should not happen."<<this_stem << best_affix_list;
-            msgBox.setText("Affix list with no entries. " + this_stem);
-            msgBox.exec();
-            continue;
+        for (; i < signatures->get_count(); i++){
+             pSig = signatures->get_at_sorted(i);
+             if (this_stem == "youth" && pSig->contains(pBestSig)){
+                 qDebug() << pSig->display();
+                 qDebug() << pSig->get_size_of_intersection(pBestSig);
+                 qDebug() << "best intersection count " << best_intersection_count;
+             }
+             if ( pSig->contains(pBestSig) &&
+                  Contains(&working_suffix_list, pSig->get_suffix_list()) &&
+                  pSig->get_size_of_intersection(&working_suffix_list) > best_intersection_count ){
+                    pBestSig = pSig;
+                    best_intersection_count = pBestSig->get_size_of_intersection(pBestSig);
+                    if (this_stem == "youth"){
+                        qDebug() << 313 << pBestSig->display();
+                    }
+             }
         }
-
-        pSig = *signatures << best_affix_list_string;
-        if (!m_SuffixesFlag){ pSig->set_suffix_flag(false);}
-
         QListIterator<QString> affix_iter_2(best_affix_list);
         while(affix_iter_2.hasNext()){
             this_affix = affix_iter_2.next();
-            step4a_link_signature_and_affix(pSig,this_affix);
+            qDebug() << 316 << this_affix;
+            step4a_link_signature_and_affix(pBestSig,this_affix);
+            //qDebug() << 318 << this_affix;
         }
-        step4b_link_signature_and_stem_and_word(this_stem, pSig, "Good sigs inside bad");
-   } // end of protostem loop
-   signatures->sort_each_signatures_stems_alphabetically();
+        qDebug() << 318 << "Find good inside bad" << this_stem;
+        step4b_link_signature_and_stem_and_word(this_stem, pBestSig, "Good sigs inside bad");
+   }// end of protostem loop
 }
-
 

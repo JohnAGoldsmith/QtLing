@@ -345,14 +345,14 @@ public:
     void step4a_link_signature_and_affix(CSignature*, affix_t);
     void step4b_link_signature_and_stem_and_word(stem_t , CSignature*, const QString& name_of_calling_function);
 
-    void step5a_replace_parse_pairs_from_current_signature_structure();
+    void replace_parse_pairs_from_current_signature_structure();
     void step5b_find_full_signatures();
      void collect_parasuffixes();
 
-    void step6_ReSignaturizeWithKnownAffixes();
+    void ReSignaturizeWithKnownAffixes();
     void step6a_create_temporary_map_from_stems_to_affix_sets(Stem_to_sig_map&); //map_sigstring_to_stem_list &); will delete this
     //void step6a_create_temporary_stem_to_sig_map(); // will replace preceding version;
-    void step6a_create_new_parse_set();
+    void create_new_parse_set_from_known_affixes();
 
     void step7_FindGoodSignaturesInsideParaSignatures();
     void step6c_from_stem_to_sig_maps_to_xxx(QString, Stem_to_sig_map ) {return;}
