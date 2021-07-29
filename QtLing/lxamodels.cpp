@@ -74,7 +74,7 @@ void LxaStandardItemModel::load_words(CWordCollection* p_words)
         appendRow(item_list);
     }
 }
-void LxaStandardItemModel::load_parses(QList<CParse*> * Parses )
+void LxaStandardItemModel::load_parses(QMap<QString, CParse*> * Parses )
 {
     QStringList labels;
     labels << "parse";
@@ -97,7 +97,7 @@ void LxaStandardItemModel::load_compounds(CompoundWordCollection *p_compounds)
     QStringList labels;
     labels << "Compound word" << "Possible Compositions";
     setHorizontalHeaderLabels(labels);
-
+    clear();
     QMap<QString, CompoundWord*>::ConstIterator compound_iter;
     const QMap<QString, CompoundWord*>& ref_map = p_compounds->get_map();
     for (compound_iter = ref_map.constBegin();
@@ -477,6 +477,7 @@ struct{
 
 void LxaStandardItemModel::load_sig_graph_edges( QMap<QString, sig_graph_edge*> * this_sig_graph_edge_map, int size )
 {
+    clear();
     QList<sig_graph_edge*>               temp_list;
     int MINIMUM_NUMBER_OF_SHARED_WORDS = 3;
     QMapIterator<word_t, sig_graph_edge*> * this_sig_graph_edge_iter

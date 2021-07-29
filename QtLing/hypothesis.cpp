@@ -237,7 +237,7 @@ void CLexicon::step9a_from_doomed_info_map_to_parses(DoomedSignatureInfoMap& ref
                 m_SuffixesFlag?
                         this_parse = new CParse(this_stem, this_affix, true):
                         this_parse = new CParse(this_affix, this_stem, false);
-                m_Parses->append(this_parse);
+                add_parse(this_parse);
             }
         }
     }

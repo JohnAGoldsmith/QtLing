@@ -27,6 +27,14 @@ QString CParse::display_with_gap(){
     }
     return m_affix + " " + m_stem;
 }
+QString CParse::display_full(){
+    if (m_suffix_flag){
+        return m_stem + " " + m_affix + " " + "SUFFIXAL" ;
+    } else{
+        return m_affix + " " + m_stem + " " + "PREFIXAL" ;
+    }
+ }
+
 QString CParse::get_left_string(){
     if(m_suffix_flag){
         return m_stem;

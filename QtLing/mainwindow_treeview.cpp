@@ -244,7 +244,7 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
 // add component 6
 
 
-
+/*
     QList<QStandardItem*> keyboard_1;
     keyboard_1.append(ctrl_1);
     keyboard_1.append(ctrl_1_key);
@@ -264,7 +264,7 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
     QList<QStandardItem*> keyboard_5;
     keyboard_5.append(ctrl_5);
     keyboard_5.append(ctrl_5_key);
-
+*/
 
 
     QList<QStandardItem*> lexicon_items;
@@ -348,11 +348,11 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
 // add component 7
 
     parent->appendRow(lexicon_items);
-    lexicon_item->appendRow(keyboard_1);
-    lexicon_item->appendRow(keyboard_2);
-    lexicon_item->appendRow(keyboard_3);
-    lexicon_item->appendRow(keyboard_4);
-    lexicon_item->appendRow(keyboard_5);
+    //lexicon_item->appendRow(keyboard_1);
+    //lexicon_item->appendRow(keyboard_2);
+    //lexicon_item->appendRow(keyboard_3);
+    //lexicon_item->appendRow(keyboard_4);
+    //lexicon_item->appendRow(keyboard_5);
     lexicon_item->appendRow(prefix_items);
     lexicon_item->appendRow(word_items);
     lexicon_item->appendRow(compound_items);

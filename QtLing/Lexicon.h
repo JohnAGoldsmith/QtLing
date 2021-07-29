@@ -208,8 +208,8 @@ protected:
     CSignatureCollection *          m_Signatures;
     CSignatureCollection *          m_PrefixSignatures;
     CompoundWordCollection *        m_Compounds;
-    QList<CParse*> *                m_Raw_parses;
-    QList<CParse*> *                m_Parses; // get rid of this list, just use the QMap
+    QMap<QString, CParse*>          m_Raw_parses;
+    //QList<CParse*> *                m_Parses; // get rid of this list, just use the QMap
     QMap<QString, CParse*>          m_ParseMap;
 
     QMap<QString, protostem*>       m_suffix_protostems;
@@ -283,7 +283,7 @@ public:
     QList<CHypothesis*>*                        get_hypotheses ()           {return m_Hypotheses;}
     QMap<QString, CHypothesis*>  *              get_hypothesis_map()        { return m_Hypothesis_map;}
     CHypothesis*                                get_hypothesis(QString hypothesis_label);
-    QList<CParse* > *                           get_parses()                {return m_Parses;}
+    QMap<QString, CParse* > *                   get_parses()                {return &m_ParseMap;}
     CSuffixCollection*                          get_parasuffixes()          { return m_ParaSuffixes;}
     CSignatureCollection*                       get_passive_signatures()    { return m_PassiveSignatures;}
     CSignatureCollection*                       get_prefix_signatures()     { return m_PrefixSignatures;}
@@ -313,8 +313,12 @@ public:
     bool                                        stem_autobiographies_contains(const QString& stem);
     QList<QString> *                            get_word_autobiography(const word_t& word) { return m_word_autobiographies[word];}
     void                                        add_to_word_autobiographies (const QString& word, const QString& message);
-    bool                                        word_autobiographies_contains(const QString& word);
 
+
+
+    bool                                        word_autobiographies_contains(const QString& word);
+    void                                        word_autobiography_positive_notice( QString word, QString stem, QString sig_string, QString calling_function);
+    void                                        word_autobiography_positive_notice_2( QString word, QString stem, QString sig_string, QString calling_function);
     void                                        set_progress_bar (QProgressBar * pPB) { m_ProgressBar = pPB;}
     void                                        set_status_bar(QStatusBar* pBar) {m_StatusBar = pBar;}
     void                                        set_prefixes_flag()         { m_SuffixesFlag = false;}
@@ -327,7 +331,8 @@ public:
 
     void                                        time_stamp(const QString& message);
     bool                                        verify_parses(); //check parses against the parses in each word;
-    void                                        remove_parse(QString parse_with_gap);
+    bool                                        remove_parse(QString full_display_of_parse);
+    bool                                        remove_parse(CParse*);
 
 public:
     // insert functions here
@@ -335,7 +340,7 @@ public:
     void step2_from_protostems_to_parses();
 
     void step3_from_parses_to_stem_to_sig_maps(QString name_of_calling_function);
-    void step3a_from_parses_to_stem_to_sig_map(QList<CParse*> * parses, bool suffix_flag);
+    void step3a_from_parses_to_stem_to_sig_map(bool suffix_flag);
     void step3b_from_stem_to_sig_map_to_sig_to_stem_map();
 
     //void step4_assign_affixes_to_stems(QString name_of_calling_function);
@@ -346,7 +351,7 @@ public:
     void step4b_link_signature_and_stem_and_word(stem_t , CSignature*, const QString& name_of_calling_function);
 
     void replace_parse_pairs_from_current_signature_structure();
-    void step5b_find_full_signatures();
+    void repair_low_entropy_signatures();
      void collect_parasuffixes();
 
     void ReSignaturizeWithKnownAffixes();

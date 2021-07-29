@@ -59,7 +59,7 @@ CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag):
     m_Suffixes              = new CSuffixCollection(this);
     m_Prefixes              = new CPrefixCollection(this);
     //    m_Parses                = new QList<QPair<QString,QString>>();
-    m_Parses                = new QList<CParse*>();
+    //m_Parses                = new QList<CParse*>();
     m_ParaSignatures        =  new CSignatureCollection(this, true);
     m_ParaSuffixes          = new CSuffixCollection(this);
     m_ResidualStems         = new CStemCollection(this);
@@ -112,7 +112,7 @@ CLexicon::~CLexicon()
     delete m_ParaSignatures;
     delete m_PassiveSignatures;
     delete m_goldstandard;
-    delete m_Parses;
+    //delete m_Parses;
 }
 
 CSignatureCollection* CLexicon::get_active_signature_collection(){
@@ -125,35 +125,45 @@ CSignatureCollection* CLexicon::get_active_signature_collection(){
 }
 void CLexicon::add_parse(CParse * parse){
 
-    if (m_ParseMap.contains(parse->display_with_gap())){
-        //qDebug() << 129 <<"Didn't add this parse" << parse->display_with_gap();
-                return;
+    if (m_ParseMap.contains(parse->display_full())){
+        return;
     }
-    m_Parses->append(parse);
-    m_ParseMap[parse->display_with_gap()] = parse;
-    //qDebug() << 133 << " added to parses" << parse->display_with_gap() << m_Parses->size() << m_ParseMap.size();
+    m_ParseMap[parse->display_full()] = parse;
 }
 void CLexicon::clear_parses()
 {
     CParse* p_parse;
-    foreach (p_parse, *m_Parses)
+    foreach (p_parse, m_ParseMap)
         delete p_parse;
-    m_Parses->clear();
+    //m_Parses->clear();
     m_ParseMap.clear();
 }
 
-void CLexicon::remove_parse(QString parse_with_gap){
-    //if (m_Parses->contains(parse_with_gap)){
-    //    m_Parses->removeAll(parse_with_gap);
-   //}
+bool CLexicon::remove_parse(QString full_display_of_parse){
+    if (m_ParseMap.contains(full_display_of_parse)){
+        m_ParseMap.remove(full_display_of_parse);
+        return  true;
+    } else{
+       qDebug() << 149 << "Failed to remove parse: " << full_display_of_parse;
+       return false;
+    }
 }
-
+bool CLexicon::remove_parse(CParse* parse){
+    if (m_ParseMap.contains(parse->display_full())){
+        m_ParseMap.remove(parse->display_full());
+        //qDebug() << 155 << " removed parse:" << parse->display_full();
+        return  true;
+    } else{
+       //qDebug() << 157 << "Failed to remove parse: " << parse->display_full();
+       return false;
+    }
+}
 bool CLexicon::verify_parses(){
     QMap<QString, int> LexiconsParsesCopy;
     QMap<QString, int> WordsParsesCopy;
     // Make a copy of all the parses at the Lexicon level, and call this LexiconsParsesCopy
 
-    foreach (CParse* this_parse, *m_Parses){
+    foreach (CParse* this_parse, m_ParseMap){
         if (LexiconsParsesCopy.contains(this_parse->display())){
             qDebug()<< 140 << "Parse occurs twice" << this_parse->display();
         }
@@ -185,7 +195,7 @@ bool CLexicon::verify_parses(){
 
 
 
-
+    return true;
 
 }
 
@@ -299,6 +309,20 @@ void CLexicon::add_to_word_autobiographies(const QString& word, const QString& m
     }
     //qDebug() << 244 << word << message;
 }
+void CLexicon::word_autobiography_positive_notice(QString word, QString stem, QString sig_string, QString calling_function){
+    add_to_word_autobiographies(word,
+                                QString("[%1]==stem: %2=%3")
+                                .arg(calling_function)
+                                .arg(stem)
+                                .arg(sig_string));
+}
+void CLexicon::word_autobiography_positive_notice_2( QString word, QString stem, QString sig_string, QString calling_function)
+{ add_to_word_autobiographies(word, QString("[%1]==stem: %2=%3")
+                                       .arg(calling_function)
+                                       .arg(stem)
+                                       .arg(sig_string));
+
+}
 
 void CLexicon::time_stamp(const QString& message)
 {
@@ -310,16 +334,6 @@ void CLexicon::time_stamp(const QString& message)
         { m_stem_autobiographies[stemstring] = new QStringList();}
         m_stem_autobiographies[stemstring]->append(message);
     }
-    /*
-    QMapIterator<QString, CWord*> word_iter (*m_Words->get_map());
-    while (word_iter.hasNext()){
-        word_iter.next();
-        QString wordstring = word_iter.key();
-        if (!m_word_autobiographies.contains(wordstring))
-        { m_word_autobiographies[wordstring] = new QStringList();qDebug() << 151 << wordstring << message;}
-        m_word_autobiographies[wordstring]->append(message);
-    }
-    */
 }
 
 

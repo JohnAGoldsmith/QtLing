@@ -55,16 +55,9 @@ void CLexicon::Crab_1()
 
     step2_from_protostems_to_parses();
 
-    time_stamp("crab 1");
-    // time_stamp does not work here because the stem collection is empty before step 4.
-
     step3_from_parses_to_stem_to_sig_maps(QString("crab_1"));
 
     step4_create_signatures(QString("Crab1"));
-
-   // step5a_replace_parse_pairs_from_current_signature_structure();
-
-
 
     collect_parasuffixes(); // these are suffixes found in a signature with only one stem
 
@@ -76,6 +69,80 @@ void CLexicon::Crab_1()
                 m_PrefixSignatures->calculate_sig_robustness();
 
 }
+
+
+void CLexicon::Crab_2()
+{
+
+    ReSignaturizeWithKnownAffixes();
+
+    m_SuffixesFlag?
+                m_Signatures->compute_containment_list():
+                m_PrefixSignatures->compute_containment_list();
+    m_SuffixesFlag?
+                m_Signatures->calculate_sig_robustness():
+                m_PrefixSignatures->calculate_sig_robustness();
+
+    replace_parse_pairs_from_current_signature_structure();
+
+    //step10_find_compounds();
+}
+
+
+/**
+ * @brief CLexicon::Crab_3
+ *
+ */
+void CLexicon::Crab_3()
+{    m_StatusBar->showMessage("Crab 3: Find good signatures inside bad.");
+
+    collect_parasuffixes();
+
+    step7_FindGoodSignaturesInsideParaSignatures();
+    m_StatusBar->showMessage("Crab 3: Find good signatures inside bad, completed.");
+    m_SuffixesFlag?
+        m_Signatures->calculate_sig_robustness():
+        m_PrefixSignatures->calculate_sig_robustness();
+    m_SuffixesFlag ?
+        m_Signatures->calculate_stem_entropy():
+        m_PrefixSignatures->calculate_stem_entropy();
+
+    replace_parse_pairs_from_current_signature_structure();
+
+}
+
+
+/**
+ * @brief CLexicon::Crab_4
+ *
+ */
+void CLexicon::Crab_4()
+{
+    replace_parse_pairs_from_current_signature_structure();
+
+    repair_low_entropy_signatures();
+
+    // Temporarily stop these, June 2021
+    //step8a_compute_sig_graph_edges();
+    //step8b_compute_sig_graph_edge_map();
+    //step9_from_sig_graph_edges_map_to_hypotheses();
+
+    // step10_find_compounds();
+
+    m_SuffixesFlag?
+                m_Signatures->calculate_sig_robustness():
+                m_PrefixSignatures->calculate_sig_robustness();
+
+    test_json_functionality();
+
+    qDebug() << "finished crab 2.";
+
+}
+
+
+
+
+
 
 //  <-------------->
 
@@ -129,8 +196,6 @@ void CLexicon::step1_from_words_to_protostems()
     m_ProgressBar->reset();
     m_ProgressBar->setMinimum(0);
     m_ProgressBar->setMaximum(Words->size());
-    m_StatusBar->showMessage("1. Find proto-stems.");
-    m_Parses->clear();
     m_ParseMap.clear();
  
     int temp_j = 0;
@@ -215,7 +280,7 @@ void CLexicon::step2_from_protostems_to_parses()
     m_ProgressBar->reset();
     m_ProgressBar->setMinimum(0);
     m_ProgressBar->setMaximum(m_Words->get_count());
-    m_StatusBar->showMessage("2: find stem-affix pairs.");
+    //m_StatusBar->showMessage("2: find stem-affix pairs.");
     QString                     stem, suffix, word, prefix;
     int                         suffix_length, prefix_length, wordno (0);
     map_string_to_word_ptr_iter *   word_iter = m_Words->get_iterator();
@@ -240,7 +305,7 @@ void CLexicon::step2_from_protostems_to_parses()
                     CParse* this_parse = new CParse(stem, suffix, true);
                     add_parse(this_parse);
                     if (m_Words->contains(stem)){
-                        CParse* that_parse = new CParse(stem, QString("NULL"), true );
+                        CParse* that_parse = new CParse(stem, QString("NULL"), true );                         
                         add_parse(that_parse);
                     }
                 }
@@ -289,25 +354,22 @@ void   CLexicon::step3_from_parses_to_stem_to_sig_maps(QString name_of_calling_f
      * the stems made here with the stems in the preceding step -- so we can
      * keep track of what is gained and what is discarded.
      */
-    name_of_calling_function = " " ;
+    //name_of_calling_function = " " ;
     Stem_to_sig_map                this_stem_to_sig_map;
     m_ProgressBar->reset();
     m_ProgressBar->setMinimum(0);
-    m_ProgressBar->setMaximum(m_Parses->size());
-    m_StatusBar->showMessage("3: assign affixes to stems.");
+    m_ProgressBar->setMaximum(m_ParseMap.size());
     qApp->processEvents();
     clear_lexicon();
 
     //--> We establish a temporary map from stems to sets of affixes as we iterate through parses. <--//
-
-    step3a_from_parses_to_stem_to_sig_map(m_Parses, m_SuffixesFlag);
-
+    m_intermediate_stem_to_sig_map.clear();
+    step3a_from_parses_to_stem_to_sig_map( m_SuffixesFlag);
     //--> We iterate through these stems and for each stem, create QStringLists of their affixes. <--//
     //--> then we create a "pre-signature" in a map that points to lists of stems. <--//
 
     step3b_from_stem_to_sig_map_to_sig_to_stem_map();
 
-    m_StatusBar->showMessage("3: completed.");
 }
 
 /*!
@@ -317,25 +379,18 @@ void   CLexicon::step3_from_parses_to_stem_to_sig_maps(QString name_of_calling_f
  * \param these_protosigs
  * This function is called by step3 (just below)
  */
-void CLexicon::step3a_from_parses_to_stem_to_sig_map(QList<CParse*> * parses, bool suffix_flag )
+void CLexicon::step3a_from_parses_to_stem_to_sig_map(bool suffix_flag )
 {
     QString this_stem_t, this_affix_t;
-    int i = 0;
-    for (int parseno = 0; parseno < parses->size(); parseno++){
-        CParse * this_pair = parses->at(parseno);
-        this_stem_t = this_pair->get_stem();
-        this_affix_t = this_pair->get_affix();
-        i++;
-        if (i == 10000) {
-            i = 0;
-            m_StatusBar->showMessage("3a: "+ this_pair->display() );
-            qApp->processEvents();
-        }
+    foreach (CParse* this_parse, m_ParseMap){
+        this_stem_t = this_parse->get_stem();
+        this_affix_t = this_parse->get_affix();
         if (!m_intermediate_stem_to_sig_map.contains(this_stem_t)){
             m_intermediate_stem_to_sig_map[this_stem_t] = QSet<affix_t>();
         }
         m_intermediate_stem_to_sig_map[this_stem_t].insert(this_affix_t);
     }
+
 }
 
 void CLexicon::step3b_from_stem_to_sig_map_to_sig_to_stem_map()
@@ -349,9 +404,7 @@ void CLexicon::step3b_from_stem_to_sig_map_to_sig_to_stem_map()
     int i(0);
     foreach(QString this_stem_t, m_intermediate_stem_to_sig_map.keys()){
         i++;
-        if (i == 100000) {
-            i = 0;
-            m_StatusBar->showMessage("3b: stem"+ this_stem_t);
+        if (i % 100000) {
             qApp->processEvents();
         }
         m_ProgressBar->setValue(count++);
@@ -390,9 +443,9 @@ void CLexicon::step3b_from_stem_to_sig_map_to_sig_to_stem_map()
 void stem_autobiography_negative_notice_not_enough_stems(CLexicon* lexicon, QString stem, QStringList affix_list, QString signature_string, QString calling_function){
     QString message = affix_list.size() <= 40 ?
                 signature_string:
-                QString("Super long list of affixes");
+                QString("many=many=affixes");
     lexicon->add_to_stem_autobiographies(stem,
-                                QString("[%1]=Not enough stems to make a signature=%2")
+                                QString("[%1]=[singleton stem]=%2")
                                 .arg(calling_function)
                                 .arg(message));
 
@@ -400,14 +453,14 @@ void stem_autobiography_negative_notice_not_enough_stems(CLexicon* lexicon, QStr
 void word_autobiography_negative_notice_not_enough_stems(CLexicon* lexicon, QString word, QString stem, QStringList affix_list, QString signature_string, QString calling_function){
     QString message = affix_list.size() <= 40 ?
                 signature_string:
-                QString("Super long list of affixes");
+                QString("many=many=affixes");
     lexicon->add_to_word_autobiographies(word,
-                                QString("[%1]=Not enough stems to make signature=stem: %2 = %3")
+                                QString("[%1]=[singleton stem]=stem: %2 = %3")
                                 .arg(calling_function)
-                                .arg(stem)
+                               .arg(stem)
                                 .arg(message));
     /*
-    qDebug() << word << QString("[%1]=Not enough stems to make signature=stem: %2 = %3")
+    qDebug() << word << QString("[%1]=singleton=stem: %2 = %3")
                 .arg(calling_function)
                 .arg(stem)
                 .arg(message);
@@ -429,7 +482,6 @@ void CLexicon::step4_create_signatures(const QString& name_of_calling_function,
     m_ProgressBar->reset();
     m_ProgressBar->setMinimum(0);
     m_ProgressBar->setMaximum(m_intermediate_sig_to_stem_map.m_core.count());
-    m_StatusBar->showMessage("4: create signatures.");
 
     map_string_to_word_ptr_iter word_iter (*m_Words->get_map());
     while(word_iter.hasNext()){
@@ -453,7 +505,6 @@ void CLexicon::step4_create_signatures(const QString& name_of_calling_function,
         qApp->processEvents();
         m_ProgressBar->setValue(count);
         if (count++ % 1000 == 0){
-            m_StatusBar->showMessage("4: create signatures: " + this_signature_string);
             qApp->processEvents();
         }
       //---------------------------------------------------------------------------------------------------------//
@@ -475,12 +526,18 @@ void CLexicon::step4_create_signatures(const QString& name_of_calling_function,
                 step4a_link_signature_and_affix(pSig,this_affix_t);
             }
             foreach (this_stem_t, *this_stem_set){
+
+                if (m_ParseMap.contains("populari")){
+                    qDebug() << 571 << "contains populari";
+                } else{
+                  //  qDebug() << 573 << " Doesn't contain populari" ;
+                }
+
                 step4b_link_signature_and_stem_and_word(this_stem_t,pSig, name_of_calling_function);
             }
         } // end of condition of having enough stems in the signature.
         else
         {   // if there are not enough stems for this signature: this is here just for words ability to remember where they were and how they were analyzed.
-
             foreach(this_stem_t, *this_stem_set){
                 stem_autobiography_negative_notice_not_enough_stems(this, this_stem_t, this_affix_list, this_signature_string, name_of_calling_function);
                 foreach (this_affix_t,this_affix_list){
@@ -493,6 +550,12 @@ void CLexicon::step4_create_signatures(const QString& name_of_calling_function,
             }
         } // all stems in this set
     }
+    if (m_ParseMap.contains("populari")){
+        qDebug() << 587 << "contains populari";
+    } else{
+       // qDebug() << 589 << " Doesn't contain populari" ;
+    }
+
     m_SuffixesFlag?
                 m_suffixal_stems->sort_alphabetically():
                 m_prefixal_stems->sort_alphabetically();
@@ -501,7 +564,6 @@ void CLexicon::step4_create_signatures(const QString& name_of_calling_function,
     m_SuffixesFlag ?
                 m_Signatures->calculate_stem_entropy():
                 m_PrefixSignatures->calculate_stem_entropy();
-    m_StatusBar->showMessage("Computation of Crab 1 completed.");
 }
 void CLexicon::step4a_link_signature_and_affix(CSignature * pSig, affix_t this_affix)
 {
@@ -520,20 +582,6 @@ void stem_autobiography_positive_notice (CLexicon* lexicon, QString stem, QStrin
                                          QString("[%1]==%2")
                                          .arg(calling_function)
                                          .arg(sig_string));
-}
-void word_autobiography_positive_notice(CLexicon* lexicon, QString word, QString stem, QString sig_string, QString calling_function){
-    lexicon->add_to_word_autobiographies(word,
-                                QString("[%1]==stem: %2=%3")
-                                .arg(calling_function)
-                                .arg(stem)
-                                .arg(sig_string));
-}
-void word_autobiography_positive_notice_2(CLexicon* lexicon, QString word, QString stem, QString sig_string, QString calling_function)
-{ lexicon->add_to_word_autobiographies(word, QString("[%1]==stem: %2=%3")
-                                       .arg(calling_function)
-                                       .arg(stem)
-                                       .arg(sig_string));
-
 }
 
 
@@ -568,14 +616,12 @@ void CLexicon::step4b_link_signature_and_stem_and_word
             // connect word and signature
             CWord* pWord = m_Words->get_word(this_word);
             if (pWord == NULL){
-                //qDebug() << this_word << 571 << "Step4: this_word not found among words."
-                //         << this_stem_t  << this_affix << name_of_calling_function;
             } else {
                 stem_count += pWord->get_word_count();                
                 pWord->add_parse_triple(this_stem_t, this_affix, pSig->get_key());
                 pWord->add_morphemic_split(this_word_split);
-                add_to_word_autobiographies(this_word, this_word_split);
-                word_autobiography_positive_notice(this, this_word, this_stem_t, this_signature_string, name_of_calling_function);
+                //add_to_word_autobiographies(this_word, this_word_split);
+                word_autobiography_positive_notice(this_word, this_stem_t, this_signature_string, name_of_calling_function);
             }
         } else {
             // Iterating through the list of affixes in the associated signatrue,
@@ -598,12 +644,12 @@ void CLexicon::step4b_link_signature_and_stem_and_word
                 // connecting word and signature
                 CWord* pWord = m_Words->get_word(this_word);
                 if (!pWord){
-                    qDebug() << 611<<  this_word <<  "Step4: this_word not found among words."
+                    qDebug() << 611<<  this_word <<  "Step4: this_word notfound among words."
                              << this_stem_t  << this_affix;
                 } else {
                     stem_count += pWord->get_word_count();
                     pWord->add_parse_triple(this_stem_t, this_affix, pSig->get_key());
-                    word_autobiography_positive_notice_2(this, this_word, this_stem_t, this_signature_string, name_of_calling_function);
+                    word_autobiography_positive_notice_2(this_word, this_stem_t, this_signature_string, name_of_calling_function);
                 }
             } // end of iterating through each secondary affix in sig associated with an affix
         } // end of dealing with affixes with associated signature -- added by Hanson 7.30
@@ -658,8 +704,7 @@ void add_initial_letter (QStringList & this_affix_list, QString letter, bool suf
 
 void CLexicon::replace_parse_pairs_from_current_signature_structure()
 {
-    m_Raw_parses = m_Parses;
-    m_Parses = new QList<CParse*> ;
+    //m_Raw_parses = new QMap<QString, CParse*> (m_ParseMap);
     m_ParseMap.clear();
     QList<CSignature*> *           these_signatures;
     m_SuffixesFlag?
@@ -674,22 +719,19 @@ void CLexicon::replace_parse_pairs_from_current_signature_structure()
             foreach (QString this_affix, affix_string_list){
                 this_parse = new CParse(this_stem, this_affix, m_SuffixesFlag);
                 add_parse(this_parse);
-                //qDebug() << 676 << m_ParseMap.size() << m_Parses->size() << this_parse->display_with_gap();
             }
         }
     }
 }
 
 
-void CLexicon::step5b_find_full_signatures()
+void CLexicon::repair_low_entropy_signatures()
 {
 /*  1. iterate through signatures.
         a. if the edge has zero-entropy, make a shorter stem, add the stem-affix pair to Parses, for all stems in sig.
         b. keep pairs of (new stem, whole word) and see if the set of new stems has zero-entropy. if so, repeat. If not, exit.
     2. Call AssignSuffixesToStems.
 */
-
-
 
     qApp->processEvents();
     CStemCollection * stems;
@@ -709,10 +751,7 @@ void CLexicon::step5b_find_full_signatures()
     m_ProgressBar->reset();
     m_ProgressBar->setMinimum(0);
     m_ProgressBar->setMaximum(signatures->get_count());
-    m_StatusBar->showMessage("5: Shift morpheme boundary inward.");
     //----------------------------------------------------------------------------//
-
-
     QMapIterator<sigstring_t,CSignature*> * sig_iter = new QMapIterator<sigstring_t,CSignature*> (* signatures->get_map() );
     while (sig_iter->hasNext()){
         pSig = sig_iter->next().value();
@@ -720,7 +759,7 @@ void CLexicon::step5b_find_full_signatures()
         //----------------------------------------------------------------------------//
         m_ProgressBar->setValue(progress_bar_count++);
         if (progress_bar_count % 10000 == 0){
-            m_StatusBar->showMessage("5: Shift morpheme break towards root: " + pSig->display() );
+            //m_StatusBar->showMessage("5: Shift morpheme break towards root: " + pSig->display() );
             qApp->processEvents();
         }
         //----------------------------------------------------------------------------//
@@ -735,7 +774,7 @@ void CLexicon::step5b_find_full_signatures()
         if (pSig->get_stem_entropy() > m_entropy_threshold_for_stems ){
             continue;
         }
-        int EdgeLetterPredominanceThreshold = 0.8;
+        float EdgeLetterPredominanceThreshold = 0.8;
         letter = pSig->get_highfreq_edge_letters(EdgeLetterPredominanceThreshold);
         foreach (stem, pSig->get_stem_strings(stem_list)) {
             stem2 = stem.left(stem.length()-1);
@@ -744,19 +783,24 @@ void CLexicon::step5b_find_full_signatures()
                    QString word = parse.display();
                    QString stem2 = stem.left(stem.length()-1);
                    CWord* pWord = get_words()->find_or_fail(word);
+                   if (stem2=="abducti"){
+                       qDebug() << 807 << " abducti" ;
+                   }
                    if (pWord->contains_this_stem_among_parses(stem2)){
                           this_morphemic_split = parse.display_with_gap();
                           pWord->remove_morphemic_split(this_morphemic_split);
-                          remove_parse(this_morphemic_split);
+                          remove_parse(&parse);
+                          qDebug() << 823 << this_morphemic_split;
                    }
             } //end of affixes in this sig
         } // end of stems in this sig;
     } // end of signatures loops
+/*
+    verify_parses(); //check complete list of parses in Lexicon with what's in the words;
 
-    //verify_parses(); //check complete list of parses in Lexicon with what's in the words;
-
-
+*/
     step3_from_parses_to_stem_to_sig_maps(QString("Shift morpheme boundary leftward"));
+    //MS_ignore_minimum_stem_count
     step4_create_signatures(QString("Shift morpheme boundary leftward"));
 
 
@@ -924,6 +968,7 @@ void CLexicon::collect_parasuffixes()
     {
         pSig = sig_iter.next().value();
         sigstring = pSig->get_key();
+        qDebug() << sigstring;
         suffixes = sigstring.split("=");
         foreach (suffix, suffixes){
             pSuffix = *m_ParaSuffixes <<  suffix;
@@ -931,5 +976,6 @@ void CLexicon::collect_parasuffixes()
         }
     }
     m_ParaSuffixes->sort_by_count();
+
 
 }

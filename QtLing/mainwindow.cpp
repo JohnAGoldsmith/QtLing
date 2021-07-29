@@ -207,7 +207,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     }
     switch(this_key){
 
-    case Qt::Key_1:
+    case Qt::Key_2:
     {   qDebug() << "main window line 238";
         if (ke->modifiers() == Qt::ControlModifier)
         {
@@ -229,7 +229,28 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
          }
          break;
     }
-    case Qt::Key_2:
+    case Qt::Key_3:
+    {
+        if (ke->modifiers() == Qt::ControlModifier)
+        {
+            if (get_lexicon()->get_suffix_flag()){
+              if (get_lexicon()->get_suffixal_stems()->get_count() > 0){
+                  if (get_lexicon()->get_suffix_signatures()->get_count() > 0){
+                       do_crab3();
+                  }
+              }
+            }
+            else{
+                if (get_lexicon()->get_prefixal_stems()->get_count() > 0){
+                    if (get_lexicon()->get_prefix_signatures()->get_count() > 0){
+                         do_crab3();
+                    }
+                }
+            }
+         }
+         break;
+    }
+    case Qt::Key_4:
     {
         if (ke->modifiers() == Qt::ControlModifier)
         {
@@ -251,8 +272,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
          break;
     }
 
-
-    case  Qt::Key_3:
+    case  Qt::Key_5:
     {if (ke->modifiers() == Qt::ControlModifier)
     {
         statusBar()->showMessage(tr("Read file."), 5000);
@@ -261,7 +281,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     }
         break;
     }
-    case Qt::Key_4:
+    case Qt::Key_6:
     {if (ke->modifiers() == Qt::AltModifier)
     {
         read_corpus();
@@ -270,7 +290,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     }
         break;
     }
-    case Qt::Key_5:
+    case Qt::Key_7:
     {if (ke->modifiers() == Qt::ControlModifier)
         {
             MainWindow* new_window = new MainWindow();
@@ -279,7 +299,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
             new_window->do_crab1();
             if (sublexicon->get_suffix_flag()){
                 new_window->display_epositive_suffix_signatures(sublexicon);
-            } else{
+            } else {
                 new_window->display_epositive_prefix_signatures(sublexicon);
             }
 
@@ -291,7 +311,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         }
         break;
     }
-    case Qt::Key_6:{
+    case Qt::Key_8:{
         get_lexicon()->set_prefixes_flag();
         break;
     }
@@ -451,71 +471,63 @@ void MainWindow::do_crab1_suffixes()
 {
     get_lexicon()->set_suffixes_flag();
     do_crab1();
-    display_epositive_suffix_signatures(get_lexicon());
+
 }
 void MainWindow::do_crab1_prefixes()
 {
     get_lexicon()->set_prefixes_flag();
     do_crab1();
-    display_epositive_prefix_signatures(get_lexicon());
+
 }
-
-
 void MainWindow::do_crab1()
-{   statusBar()->showMessage("Entering the Crab Nebula, Phase 1.");
+{   statusBar()->showMessage("Crab, phase 1.");
     CLexicon* lexicon = get_lexicon();
     lexicon->Crab_1();
     load_models(get_lexicon());
     write_stems_and_words();
-    statusBar()->showMessage("We have returned from the Crab Nebula.");
-
     create_or_update_TreeModel(get_lexicon());
     m_graphics_scene->set_signature_collection(get_lexicon()->get_active_signature_collection());
     m_leftTreeView->expandAll();
     m_leftTreeView->resizeColumnToContents(0);
-    statusBar()->showMessage("All models are loaded.");
+    get_lexicon()->get_suffix_flag()?
+          display_epositive_suffix_signatures(get_lexicon()):
+          display_epositive_prefix_signatures(get_lexicon());
+    statusBar()->showMessage("Crab, phase 1 completed.");
     emit lexicon_ready();
 }
 void MainWindow::do_crab2()
-{   statusBar()->showMessage("Entering the Crab Nebula, Phase 2.");
-    CLexicon* lexicon = get_lexicon();
+{   CLexicon* lexicon = get_lexicon();
+    statusBar()->showMessage("Crab 2: Resignaturize with known affixes.");
     lexicon->Crab_2();
     load_models(get_lexicon());
     write_stems_and_words();
-    statusBar()->showMessage("We have returned from the Crab Nebula.");
-
     create_or_update_TreeModel(get_lexicon());
     m_graphics_scene->set_signature_collection(get_lexicon()->get_active_signature_collection());
     m_leftTreeView->expandAll();
     m_leftTreeView->resizeColumnToContents(0);
-    statusBar()->showMessage("All models are loaded.");
+    statusBar()->showMessage("Crab 2: Resignaturize with known affixes, completed.");
     emit lexicon_ready();
 }
 void MainWindow::do_crab3()
-{   statusBar()->showMessage("Entering the Crab Nebula, Phase 3.");
+{   statusBar()->showMessage("Crab 3: Good sigs inside bad.");
     CLexicon* lexicon = get_lexicon();
-            //lexicon->Crab_3();
+    lexicon->Crab_3();
     load_models(get_lexicon());
     write_stems_and_words();
-    statusBar()->showMessage("We have returned from the Crab Nebula.");
-
     create_or_update_TreeModel(get_lexicon());
     m_graphics_scene->set_signature_collection(get_lexicon()->get_active_signature_collection());
     m_leftTreeView->expandAll();
     m_leftTreeView->resizeColumnToContents(0);
-    statusBar()->showMessage("All models are loaded.");
+    statusBar()->showMessage("Crab 3: Good sigs inside bad completed.");
     emit lexicon_ready();
 }
 
 
 void MainWindow::do_crab4()
-{
-    statusBar()->showMessage("Entering the Crab Nebula, phase 4");
+{   statusBar()->showMessage("Crab Nebula, phase 4: repair low entropy signatures.");
     CLexicon* lexicon = get_lexicon();
     lexicon->Crab_4();
     load_models(lexicon);
-    statusBar()->showMessage("We have returned from the Crab Nebula.");
-
     create_or_update_TreeModel(lexicon);
     if (lexicon->get_suffix_flag())
         print_suffix_signatures();
@@ -524,7 +536,7 @@ void MainWindow::do_crab4()
     m_leftTreeView->expandAll();
     m_leftTreeView->resizeColumnToContents(0);
     write_stems_and_words();
-    statusBar()->showMessage("All models are loaded.");
+    statusBar()->showMessage("Crab 4: repair low entropy signatures completed.");
 }
 
 void MainWindow::newFile()
@@ -563,26 +575,26 @@ void MainWindow::load_models(CLexicon* lexicon)
         m_proxy_models[str_model_name]->setSourceModel(nullptr);
     }
 
-    statusBar()->showMessage("Loading models: Words");
+    //statusBar()->showMessage("Loading models: Words");
     m_Models["Words"]               ->load_words(lexicon->get_words());
     m_Models["Parses"]              ->load_parses(lexicon->get_parses());
 
-    statusBar()->showMessage("Loading models: Stems");
+    //statusBar()->showMessage("Loading models: Stems");
     m_Models["Suffixal stems"]      ->load_stems(lexicon->get_suffixal_stems());
     QCoreApplication::processEvents();
 
     m_Models["Prefixal stems"]      ->load_stems(lexicon->get_prefixal_stems());
     QCoreApplication::processEvents();
 
-    statusBar()->showMessage("Loading models: Affixes");
+    //statusBar()->showMessage("Loading models: Affixes");
     m_Models["Suffixes"]            ->load_suffixes(lexicon->get_suffixes());
     QCoreApplication::processEvents();
 
     m_Models["Prefixes"]            ->load_prefixes(lexicon->get_prefixes());
-    statusBar()->showMessage("Prefixes.");
+    //statusBar()->showMessage("Prefixes.");
     QCoreApplication::processEvents();
 
-    statusBar()->showMessage("Loading models: Signatures");
+    //statusBar()->showMessage("Loading models: Signatures");
     m_Models["Signatures"]          ->load_signatures(lexicon->get_signatures());
     QCoreApplication::processEvents();
 
@@ -594,28 +606,28 @@ void MainWindow::load_models(CLexicon* lexicon)
     m_Models["EPositive prefix signatures"]->load_positive_signatures(lexicon->get_prefix_signatures());
     QCoreApplication::processEvents();
 
-    statusBar()->showMessage("Loading models: Parasignatures");
+    //statusBar()->showMessage("Loading models: Parasignatures");
     m_Models["Residual parasignatures"]->load_parasignatures(lexicon->get_residual_signatures());
     m_Models["Parasuffixes"]        ->load_suffixes(lexicon->get_parasuffixes());
     m_Models["Passive signatures"]  ->load_signatures(lexicon->get_passive_signatures());
-    statusBar()->showMessage("Loading models: Hypotheses");
+    //statusBar()->showMessage("Loading models: Hypotheses");
     m_Models["Hypotheses"]          ->load_hypotheses(lexicon->get_hypotheses());
     m_Models["Hypotheses 2"]        ->load_hypotheses_2(lexicon->get_hypotheses());
     m_Models["SigGraphEdges_1"]        ->load_sig_graph_edges(lexicon->get_sig_graph_edge_map(),1);
     m_Models["SigGraphEdges_2"]        ->load_sig_graph_edges(lexicon->get_sig_graph_edge_map(),2);
     //QCoreApplication::processEvents();
-    statusBar()->showMessage("Loading models: Protostems");
+    //statusBar()->showMessage("Loading models: Protostems");
     m_Models["Suffixal protostems"]->load_protostems(lexicon->get_suffixal_protostems());
     m_Models["Prefixal protostems"]->load_protostems(lexicon->get_prefixal_protostems());
     //QCoreApplication::processEvents();
-    statusBar()->showMessage("Loading models: Compound words");
+    //statusBar()->showMessage("Loading models: Compound words");
     m_Models["Compound words"]->load_compounds(lexicon->get_compounds());
     //QCoreApplication::processEvents();
-    qDebug() << "finished loading models";
-    qDebug() << "loading proxy models";
+    //qDebug() << "finished loading models";
+    //qDebug() << "loading proxy models";
 
     // Now all source models are loaded. Link them to proxy models.
-    statusBar()->showMessage("Loading models: Finishing up");
+    //statusBar()->showMessage("Loading models: Finishing up");
     foreach (str_model_name, m_Models.keys()) {
         m_proxy_models[str_model_name]->setSourceModel(m_Models[str_model_name]);
     }
@@ -628,8 +640,8 @@ void MainWindow::load_models(CLexicon* lexicon)
     m_proxy_models["EPositive signatures 2"]->setSourceModel(m_Models["EPositive signatures"]);
     m_proxy_models["EPositive prefix signatures 2"]->setSourceModel(m_Models["EPositive prefix signatures"]);
 
-    qDebug() << "finished loading proxy models";
-    statusBar()->showMessage("Finished loading models.");
+    //qDebug() << "finished loading proxy models";
+    //statusBar()->showMessage("Finished loading models.");
 
 }
 void MainWindow::read_file_do_crab()

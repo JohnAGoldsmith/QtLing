@@ -48,7 +48,7 @@ public:
     void        load_hypotheses_2(QList<CHypothesis*>*);
 // add component 11
     void        load_category(QString component_name, eComponentType);
-    void        load_parses(QList<CParse*>* );
+    void        load_parses(QMap<QString, CParse*>* );
 
     // for displaying protostems
     void        load_protostems(QMap<QString, protostem*>* p_protostems);
@@ -70,7 +70,6 @@ private:
     // function to support sorting by signature affix count
 
 };
-
 
 
 

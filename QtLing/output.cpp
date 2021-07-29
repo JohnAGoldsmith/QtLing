@@ -62,7 +62,7 @@ void MainWindow::read_stems_and_words()
         QStringList words = line.split("+");
         if (words.size() == 3){
             CParse* pParse = new CParse(words[1], words[2]);
-            lexicon->get_parses()->append(pParse);
+            lexicon->add_parse(pParse);
         }
         lexicon->get_words()->add(words[0]);
     }

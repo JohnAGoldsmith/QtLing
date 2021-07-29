@@ -19,6 +19,7 @@ public:
     QString display();
     QString get_word();
     QString display_with_gap();
+    QString display_full(); //like:  book NULL SUFFIXAL
     QString get_left_string();
     QString get_right_string();
 };
