@@ -24,7 +24,7 @@ class CHypothesis
 
 public:
     CHypothesis (eHypothesisType  );
-    CHypothesis (eHypothesisType, sig_graph_edge * );
+    CHypothesis (eHypothesisType, sig_pair * );
     CHypothesis (eHypothesisType,
                  const morph_t& this_morph,
                  const sigstring_t& sigstring_1,

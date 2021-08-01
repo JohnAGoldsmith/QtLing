@@ -783,7 +783,7 @@ void CWordCollection::write_json(QJsonObject& ref_json, eJsonType json_type)
                 QJsonObject obj_word;
                 p_word->write_json(obj_word);
                 QJsonArray arr_parses;
-                foreach (Parse_triple* p_parse, *(p_word->get_parse_triple_map())) {
+                foreach (Parse_triple* p_parse, *(p_word->get_parse_triple_list())) {
                     QJsonObject obj_parse;
                     const QString& str_affix = p_parse->m_suffix;
                     obj_parse["affix"] = str_affix;
@@ -860,7 +860,7 @@ void CWordCollection::write_json(QJsonObject& ref_json, eJsonType json_type)
                 QJsonObject obj_word;
                 p_word->write_json(obj_word, MAPPED);
                 QJsonArray arr_parses;
-                foreach (Parse_triple* p_parse, *(p_word->get_parse_triple_map())) {
+                foreach (Parse_triple* p_parse, *(p_word->get_parse_triple_list())) {
                     QJsonObject obj_parse;
                     obj_parse["affix"] = p_parse->m_suffix;
                     obj_parse["stem"] = p_parse->m_stem;

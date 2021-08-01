@@ -35,8 +35,7 @@ class CWord
 protected:
     QString                             m_Word;
     int                                 m_WordCount;
-    // Instead of keeping a list of parse_triples, we keep a map where the key is the stem, and the value is the parse_triple
-    QMap<stem_t, Parse_triple*>         m_Parse_triple_map;
+    QList<Parse_triple*>                m_Parse_triple_list;
     QStringList                         m_Morphemic_splits; // a morphemic split is a QString like: "pre bind ing s"
     QList<ptr_to_stem_sig_pair>         m_Signatures;
     int                                 m_json_id;
@@ -62,7 +61,7 @@ public:
     void                                clear_parse_triple_map();
     QString                             get_key() {return m_Word;}
     int                                 get_word_count() const  { return m_WordCount; }
-    QMap<stem_t,Parse_triple*>*         get_parse_triple_map()     { return & m_Parse_triple_map; }
+    QList<Parse_triple*>*         get_parse_triple_list()     { return & m_Parse_triple_list; }
     bool                                contains_this_stem_among_parses (QString stem);
     QList<QPair<CStem*,CSignature*>*> * get_signatures ()   {return &m_Signatures;}
     QString                             get_word()      const { return m_Word; }

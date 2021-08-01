@@ -118,6 +118,8 @@ void CLexicon::Crab_3()
  */
 void CLexicon::Crab_4()
 {
+    m_StatusBar->showMessage("Crab 4: eliminate low entropy sigs.");
+
     replace_parse_pairs_from_current_signature_structure();
 
     repair_low_entropy_signatures();
@@ -135,10 +137,34 @@ void CLexicon::Crab_4()
 
     test_json_functionality();
 
-    qDebug() << "finished crab 2.";
+     m_StatusBar->showMessage("Crab 4: eliminate low entropy sigs completed.");
 
 }
 
+/**
+ * @brief CLexicon::Crab_5
+ *
+ */
+void CLexicon::Crab_5()
+{   m_StatusBar->showMessage("Crab 5: split complex morphemes...");
+    replace_parse_pairs_from_current_signature_structure();
+
+
+
+    step8a_compute_word_sig_pairs();
+    step8b_compute_sig_pair_map();
+    step9_from_sig_pair_map_to_hypotheses();
+
+    // step10_find_compounds();
+
+    m_SuffixesFlag?
+                m_Signatures->calculate_sig_robustness():
+                m_PrefixSignatures->calculate_sig_robustness();
+
+    test_json_functionality();
+
+   m_StatusBar->showMessage("Crab 5: split complex morphemes completed.");
+}
 
 
 
@@ -620,7 +646,6 @@ void CLexicon::step4b_link_signature_and_stem_and_word
                 stem_count += pWord->get_word_count();                
                 pWord->add_parse_triple(this_stem_t, this_affix, pSig->get_key());
                 pWord->add_morphemic_split(this_word_split);
-                //add_to_word_autobiographies(this_word, this_word_split);
                 word_autobiography_positive_notice(this_word, this_stem_t, this_signature_string, name_of_calling_function);
             }
         } else {
@@ -878,7 +903,7 @@ void CLexicon::replace_parse_pairs_from_current_signature_structure()
  */
 void CLexicon::test_for_phonological_relations_between_signatures()
 {
-    lxa_sig_graph_edge_map_iter  sig_iter (m_SigGraphEdgeMap);
+    lxa_sig_graph_edge_map_iter  sig_iter (m_SigPairMap);
     QString difference;
     QSet<QString> differences_1_letter, differences_longer;
     while (sig_iter.hasNext()){
@@ -924,13 +949,13 @@ void CLexicon::test_for_phonological_relations_between_signatures()
  */
 
 void CLexicon::compare_opposite_sets_of_signatures(QSet<CSignature*>* sig_set_1, QSet<CSignature*>* sig_set_2, QString morph)
-{   sig_graph_edge * p_edge;
+{   sig_pair * p_edge;
     //TEMP:
     (void) sig_set_1;
     (void) sig_set_2;
     CSignature* pSig_1, *pSig_2;
     QHash<QString,int> Counts;
-    foreach(p_edge,  m_SigGraphEdgeMap){
+    foreach(p_edge,  m_SigPairMap){
         if (p_edge->morph == morph){
             pSig_1 = p_edge->m_sig_1;
             pSig_2 = p_edge->m_sig_2;

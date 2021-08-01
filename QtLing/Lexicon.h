@@ -70,23 +70,25 @@ public:
 
 //  end of experiment
 
+// a word_sig_pair expresses information about pairs of signatures that both contain a particular word
+// under two different stem-analyses.
 //-----------------------------------------------------------------------//
-class simple_sig_graph_edge{
+class word_sig_pair{
 //-----------------------------------------------------------------------//
 public:
     CSignature*         m_sig_1;
     CSignature*         m_sig_2;
     CLexicon *          m_Lexicon;
-    sigstring_t          m_sig_string_1;
-    sigstring_t          m_sig_string_2;
+    sigstring_t         m_sig_string_1;
+    sigstring_t         m_sig_string_2;
     double              m_sig_1_entropy = -1;
     double              m_sig_2_entropy = -1;
     morph_t             morph;
     word_t              word;
     stem_t              stem_1; // the longer stem
     stem_t              stem_2;
-    simple_sig_graph_edge();
-    simple_sig_graph_edge(CLexicon* lexicon, CSignature* pSig1, CSignature* pSig2, sigstring_t sig_string_1, sigstring_t sig_string_2,morph_t m,word_t w, stem_t stem1, stem_t stem2)
+    word_sig_pair();
+    word_sig_pair(CLexicon* lexicon, CSignature* pSig1, CSignature* pSig2, sigstring_t sig_string_1, sigstring_t sig_string_2,morph_t m,word_t w, stem_t stem1, stem_t stem2)
     {
 
         m_sig_1 = pSig1;
@@ -105,7 +107,7 @@ public:
 
 
 //-----------------------------------------------------------------------//
-class sig_graph_edge{
+class sig_pair{   // was: sig_graph_edge{
 //-----------------------------------------------------------------------//
 public:
     CSignature* m_sig_1;
@@ -117,21 +119,21 @@ public:
     double m_sig_2_entropy = -1;
     morph_t     morph;
     QMap<QString, word_stem_struct*>         shared_word_stems;
-    sig_graph_edge();
+    sig_pair();
 
-    sig_graph_edge(simple_sig_graph_edge this_edge){
-             m_lexicon = this_edge.m_Lexicon;
-             m_sig_1 = this_edge.m_sig_1;
-             m_sig_2 = this_edge.m_sig_2;
-             m_sig_string_1  = this_edge.m_sig_string_1;
-             m_sig_string_2  = this_edge.m_sig_string_2;
-             m_sig_1_entropy = this_edge.m_sig_1_entropy;
-             m_sig_2_entropy = this_edge.m_sig_2_entropy;
-             morph = this_edge.morph;
+    sig_pair(word_sig_pair this_word_sig_pair){
+             m_lexicon = this_word_sig_pair.m_Lexicon;
+             m_sig_1 = this_word_sig_pair.m_sig_1;
+             m_sig_2 = this_word_sig_pair.m_sig_2;
+             m_sig_string_1  = this_word_sig_pair.m_sig_string_1;
+             m_sig_string_2  = this_word_sig_pair.m_sig_string_2;
+             m_sig_1_entropy = this_word_sig_pair.m_sig_1_entropy;
+             m_sig_2_entropy = this_word_sig_pair.m_sig_2_entropy;
+             morph = this_word_sig_pair.morph;
              word_stem_struct * this_word_stems = new word_stem_struct;
-             this_word_stems->word = this_edge.word;
-             this_word_stems->stem_1 = this_edge.stem_1;
-             this_word_stems->stem_2 = this_edge.stem_2;
+             this_word_stems->word = this_word_sig_pair.word;
+             this_word_stems->stem_1 = this_word_sig_pair.stem_1;
+             this_word_stems->stem_2 = this_word_sig_pair.stem_2;
              shared_word_stems[this_word_stems->get_label()] = this_word_stems;
          }
     QString     label() {return morph + "/" + m_sig_string_1 + "/" + m_sig_string_2; }
@@ -144,7 +146,7 @@ public:
 };
 
 struct DoomedSignatureInfo {
-    sig_graph_edge* m_edge_ptr;
+    sig_pair* m_edge_ptr;
 
     QList<affix_t> m_doomed_affixes;
     sigstring_t m_str_revised_sig;
@@ -156,7 +158,7 @@ struct DoomedSignatureInfo {
         m_str_revised_sig = QString();
     }
 
-    DoomedSignatureInfo(sig_graph_edge* p_edge, QStringList& affixes) {
+    DoomedSignatureInfo(sig_pair* p_edge, QStringList& affixes) {
         m_edge_ptr = p_edge;
         m_doomed_affixes = affixes;
         m_str_revised_sig = QString();
@@ -228,8 +230,10 @@ protected:
     CSignatureCollection*           m_Subsignatures;
 
     // Finds the difference between signatures, e.g. {ed, es, er, e, ing} vs {d, s, r, NULL}
-    QList<simple_sig_graph_edge*>   m_SigGraphEdgeList; /*!< the sig_graph_edges in here contain only one word associated with each. */
-    lxa_sig_graph_edge_map          m_SigGraphEdgeMap;  /*!< the sig_graph_edges in here contain lists of words associated with them. */
+    QList<word_sig_pair*>                m_SigPairList; //m_SigGraphEdgeList; /*!< the sig_graph_edges in here contain only one word associated with each. */
+    //lxa_sig_graph_edge_map          m_SigGraphEdgeMap;  /*!< the sig_graph_edges in here contain lists of words associated with them. */
+   // sig_pair_map                    m_SigGraphEdgeMap;  /*!< the sig_graph_edges in here contain lists of words associated with them. */
+    sig_pair_map                    m_SigPairMap;  /*!< the sig_pair_edges in here contain lists of words associated with them. */
     CSignatureCollection *          m_PassiveSignatures;  /*!< these signatures have stems one letter off from another signature. */
     CSignatureCollection *          m_SequentialSignatures; /*! signatures where one affix leads to another signature. */
     // Generalizes repeating
@@ -298,10 +302,10 @@ public:
     CStemCollection *                           get_suffixal_stems()        { return m_suffixal_stems;}
     QMap<QString, protostem*>*                   get_suffixal_protostems()  { return &m_suffix_protostems; }
 //    QMap<QString,int>*                          get_protostems()            { return &m_suffix_protostems;}
-    QList<simple_sig_graph_edge*> *             get_sig_graph_edges()       { return &m_SigGraphEdgeList;}
-    lxa_sig_graph_edge_map *                    get_sig_graph_edge_map()    { return & m_SigGraphEdgeMap;}
-    sig_graph_edge*                             get_sig_graph_edge(QString label) {return m_SigGraphEdgeMap[label];}
-    QListIterator<simple_sig_graph_edge*>    *  get_sig_graph_edge_list_iter();
+    //QList<sig_pair*> *                          get_sig_pair_list()       { return &m_SigPairList;}
+    lxa_sig_graph_edge_map *                    get_sig_graph_edge_map()    { return & m_SigPairMap;}
+    sig_pair*                                   get_sig_graph_edge(QString label) {return m_SigPairMap[label];}
+    QListIterator<word_sig_pair*>    *          get_sig_graph_edge_list_iter();
     lxa_sig_graph_edge_map_iter *               get_sig_graph_edge_map_iter();
 
     bool                                        get_suffix_flag()           { return m_SuffixesFlag; }
@@ -362,11 +366,11 @@ public:
     void step7_FindGoodSignaturesInsideParaSignatures();
     void step6c_from_stem_to_sig_maps_to_xxx(QString, Stem_to_sig_map ) {return;}
 
-    void step8a_compute_sig_graph_edges();
-    void step8b_compute_sig_graph_edge_map();
+    void step8a_compute_word_sig_pairs();
+    void step8b_compute_sig_pair_map();
 
     typedef QMap<sigstring_t, DoomedSignatureInfo> DoomedSignatureInfoMap;
-    void step9_from_sig_graph_edges_map_to_hypotheses();
+    void step9_from_sig_pair_map_to_hypotheses();
     void step9a_from_doomed_info_map_to_parses(DoomedSignatureInfoMap& ref_doomed_info_map);
     void step9b_redirect_ptrs_in_sig_graph_edges_map(const DoomedSignatureInfoMap& ref_doomed_info_map);
     void step9c_from_doomed_info_map_to_hypotheses(const DoomedSignatureInfoMap& ref_doomed_info_map);
@@ -380,6 +384,7 @@ public:
     void Crab_2();
     void Crab_3();
     void Crab_4();
+    void Crab_5();
     void create_sublexicon();
 
     void check_autobiography_consistency();

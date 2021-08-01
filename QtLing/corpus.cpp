@@ -12,7 +12,7 @@ void MainWindow::analyze_corpus()
         m_corpus.removeFirst();
         CWord* pWord = get_lexicon()->get_words()->get_word(word);
         //if (pWord) { qDebug() << "   found " << word;}
-        if (pWord && pWord->get_parse_triple_map()->count() > 0){
+        if (pWord && pWord->get_parse_triple_list()->count() > 0){
            // qDebug() << pWord->get_key() << pWord->get_parse_triples()->first()->p_signature->get_key();
         } else
         {

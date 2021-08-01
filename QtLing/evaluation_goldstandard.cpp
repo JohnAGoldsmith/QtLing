@@ -95,7 +95,7 @@ bool GoldStandard::evaluate(CWordCollection* p_word_collection,
     Parse_triple_collection::const_iterator gs_ptm_iter, lxa_ptm_iter;
     const Parse_triple_collection *p_lxa_ptm, *p_gs_ptm;
     CWord *p_word;
-
+/*
     for (gs_pm_iter = m_gs_parses->constBegin();
          gs_pm_iter != m_gs_parses->constEnd();
          gs_pm_iter++) {
@@ -167,7 +167,7 @@ bool GoldStandard::evaluate(CWordCollection* p_word_collection,
     results.set_overlap_word_count(temp_overlap_word_count);
 
     results.calculate_precision_recall();
-
+*/
     //qDebug() << "True positives: " << true_positives;
     //qDebug() << "Total # of correct parses in GS: " << total_correct;
     //qDebug() << "Total # retrieved: " << total_retrieved;

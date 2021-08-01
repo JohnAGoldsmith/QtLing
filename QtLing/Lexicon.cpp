@@ -93,15 +93,15 @@ CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag):
 }
 
 
-QListIterator<simple_sig_graph_edge*> * CLexicon::get_sig_graph_edge_list_iter()
+QListIterator<word_sig_pair*> * CLexicon::get_sig_graph_edge_list_iter()
 {
-    QListIterator<simple_sig_graph_edge*> * iter = new QListIterator<simple_sig_graph_edge*>(m_SigGraphEdgeList);
+    QListIterator<word_sig_pair*> * iter = new QListIterator<word_sig_pair*>(m_SigPairList);
     return iter;
 }
 
-QMapIterator<QString, sig_graph_edge*> * CLexicon::get_sig_graph_edge_map_iter()
+QMapIterator<QString, sig_pair*> * CLexicon::get_sig_graph_edge_map_iter()
 {
-    QMapIterator<QString, sig_graph_edge*> * iter = new QMapIterator<QString, sig_graph_edge*>(m_SigGraphEdgeMap);
+    QMapIterator<QString, sig_pair*> * iter = new QMapIterator<QString, sig_pair*>(m_SigPairMap);
     return iter;
 }
 

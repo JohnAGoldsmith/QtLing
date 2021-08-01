@@ -28,20 +28,24 @@ void CWord::add_parse_triple(QString stem, QString affix, QString sig_string)
 {
     Parse_triple * this_triple = new Parse_triple(stem, affix, sig_string);
    // m_Parse_triples.append(this_triple);
-    m_Parse_triple_map[stem]= this_triple;
+    m_Parse_triple_list.append(this_triple);
 
 }
 
 void CWord::clear_parse_triple_map()
 {
-    foreach (Parse_triple* p_parse_triple, m_Parse_triple_map) {
+    foreach (Parse_triple* p_parse_triple, m_Parse_triple_list) {
         delete p_parse_triple;
     }
-    m_Parse_triple_map.clear();
-} // simplified and modified by Hanson, 7.31
-
+    m_Parse_triple_list.clear();
+}
 bool CWord::contains_this_stem_among_parses(QString stem){
-    return m_Parse_triple_map.contains(stem);
+    foreach (Parse_triple* triple, m_Parse_triple_list){
+       if (triple->m_stem == stem){
+           return true;
+       }
+    }
+    return false;
 }
 void CWord::add_morphemic_split(QString split){
     if (m_Morphemic_splits.contains(split)){

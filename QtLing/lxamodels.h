@@ -40,7 +40,7 @@ public:
     void        load_signatures(CSignatureCollection * p_signatures, eSortStyle = SIG_BY_STEM_COUNT);
     void        load_parasignatures(CSignatureCollection * p_signatures);
     void        sort_signatures(eSortStyle);
-    void        load_sig_graph_edges(QMap<QString, sig_graph_edge*> *, int size);
+    void        load_sig_graph_edges(QMap<QString, sig_pair*> *, int size);
     void        load_passive_signatures (CSignatureCollection* p_passive_signatures);
     void        load_positive_signatures(CSignatureCollection* p_positive_signatures,  eSortStyle = SIG_BY_STEM_COUNT);
     void        load_positive_prefix_signatures(CSignatureCollection* p_positive_prefix_signatures);

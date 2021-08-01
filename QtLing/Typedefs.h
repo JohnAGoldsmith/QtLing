@@ -6,7 +6,7 @@
 class CStem;
 class CWord;
 class CPrefix;
-class sig_graph_edge;
+class sig_pair;
 class CSuffix;
 
 //class CSignature;
@@ -87,8 +87,9 @@ typedef QMapIterator<QString, CWord*>       map_string_to_word_ptr_iter;
 typedef QMapIterator<QString, CSuffix*>     map_string_to_suffix_ptr_iter;
 typedef QMapIterator<QString, CStem*>       map_string_to_stem_ptr_iter;
 
-typedef QMap<QString,sig_graph_edge*>        lxa_sig_graph_edge_map;
-typedef QMapIterator<QString,sig_graph_edge*>        lxa_sig_graph_edge_map_iter;
+typedef QMap<QString,sig_pair*>             lxa_sig_graph_edge_map; // get rid of this
+typedef QMap<QString,sig_pair*>             sig_pair_map;
+typedef QMapIterator<QString,sig_pair*>        lxa_sig_graph_edge_map_iter;
 
 typedef  QMap<stem_t , QSet<affix_t>>      Stem_to_sig_map;// was Protosigs;
 

@@ -34,12 +34,23 @@ CHypothesis* CLexicon::get_hypothesis(QString hypothesis)
  *      separate affixes: "ation" and "ations"
  * 2.   Made similar revision in compound discovery.
  */
-void CLexicon::step9_from_sig_graph_edges_map_to_hypotheses()
+QString F1(QString affix, QString morph, bool suffix_flag){
+    QString doomed_affix;
+    if (affix == "NULL"){
+        doomed_affix = morph;
+    } else{
+        suffix_flag?
+           doomed_affix = morph + affix:
+           doomed_affix = affix + morph;
+    }
+ return doomed_affix;
+}
+void CLexicon::step9_from_sig_pair_map_to_hypotheses()
 {
     m_StatusBar->showMessage("9: Generating Hypotheses");
 
-    sig_graph_edge * p_edge;
-    lxa_sig_graph_edge_map_iter edge_iter (m_SigGraphEdgeMap);
+    sig_pair * p_sig_pair;
+    lxa_sig_graph_edge_map_iter sig_pair_iter (m_SigPairMap);
     QString affix_1, doomed_affix;
     QStringList affixes1, affixes2, doomed_affixes;
     // Map from string representation of signature containing doomed affixes
@@ -55,11 +66,11 @@ void CLexicon::step9_from_sig_graph_edges_map_to_hypotheses()
 
     QStringList affected_signatures;
 
-    while (edge_iter.hasNext()){
-        p_edge = edge_iter.next().value();
-        QString this_morph = p_edge->get_morph();
-        sigstring_t original_sig1_affixes_longer_stem = p_edge->m_sig_string_1;
-        sigstring_t original_sig2_affixes_shorter_stem = p_edge->m_sig_string_2;
+    while (sig_pair_iter.hasNext()){
+        p_sig_pair = sig_pair_iter.next().value();
+        QString this_morph = p_sig_pair->get_morph();
+        sigstring_t original_sig1_affixes_longer_stem = p_sig_pair->m_sig_string_1;
+        sigstring_t original_sig2_affixes_shorter_stem = p_sig_pair->m_sig_string_2;
 
         CSignature* pSig1_longer_stem  = p_signatures->find_or_fail(original_sig1_affixes_longer_stem);
         CSignature* pSig2_shorter_stem = p_signatures->find_or_fail(original_sig2_affixes_shorter_stem);
@@ -78,22 +89,13 @@ void CLexicon::step9_from_sig_graph_edges_map_to_hypotheses()
         doomed_affixes.clear();
         pSig1_longer_stem->get_affix_string_list(affixes1);
         pSig2_shorter_stem->get_affix_string_list(affixes2);
-        //qDebug() << 44 << original_sig1_affixes_longer_stem << original_sig2_affixes_shorter_stem;
         bool success_flag = true;
-        if (p_edge->get_number_of_words() < MINIMUM_NUMBER_OF_WORDS ){continue;}
+        if (p_sig_pair->get_number_of_words() < MINIMUM_NUMBER_OF_WORDS ){continue;}
         //--> doomed_affixes is the set of affixes that sig1 proposes to sig2  for retirement
         int matching_affixes_count = 0;
         for (int affixno = 0; affixno < affixes1.count(); affixno++){
             affix_1 = affixes1[affixno];
-            if (affix_1 == "NULL"){
-                doomed_affix = this_morph;
-            } else{
-                if (m_SuffixesFlag){
-                    doomed_affix = this_morph + affix_1;
-                } else {
-                    doomed_affix = affix_1 + this_morph;
-                }
-            }
+            doomed_affix = F1(affix_1, this_morph, m_SuffixesFlag);
             doomed_affixes.append(doomed_affix);
             if (affixes2.contains(doomed_affix)){
                 matching_affixes_count++;
@@ -121,7 +123,7 @@ void CLexicon::step9_from_sig_graph_edges_map_to_hypotheses()
 
         // -- created new data structure to store relevant info of valid hypotheses
         doomed_signature_info_map[original_sig2_affixes_shorter_stem]
-                = DoomedSignatureInfo(p_edge, doomed_affixes);
+                = DoomedSignatureInfo(p_sig_pair, doomed_affixes);
         // -- added by Hanson 7.30
 
         // --- Beginning of code that needs to be fixed ---
@@ -193,7 +195,7 @@ void CLexicon::step9a_from_doomed_info_map_to_parses(DoomedSignatureInfoMap& ref
         // see if the current signature is affected by hypothesis generation
         if (iter != ref_doomed_info_map.end()) {
             DoomedSignatureInfo& ref_info = iter.value();
-            sig_graph_edge* p_edge = ref_info.m_edge_ptr;
+            sig_pair* p_edge = ref_info.m_edge_ptr;
             const QList<affix_t>& ref_doomed_affixes = ref_info.m_doomed_affixes;
             // remove doomed affixes from this signature
             // e.g. NULL=s=ed=ation=ations --> NULL=s=ed
@@ -209,10 +211,8 @@ void CLexicon::step9a_from_doomed_info_map_to_parses(DoomedSignatureInfoMap& ref
             // add into new affix representation
             // e.g. NULL=s=ed --> NULL=s=ed=ation[NULL~s]
             sigstring_t secondary_sig = p_edge->get_sig1_string();
-            qDebug() << secondary_sig << 212;
             secondary_sig.replace('=','~');
             const affix_t new_affix = p_edge->get_morph() + "[" + secondary_sig + "]";
-            qDebug() << new_affix << 215;
             affixes.append(new_affix);
             std::sort(affixes.begin(), affixes.end());
             ref_info.m_str_revised_sig = affixes.join('=');
@@ -223,15 +223,6 @@ void CLexicon::step9a_from_doomed_info_map_to_parses(DoomedSignatureInfoMap& ref
         CStem* pStem;
         foreach (pStem, *stem_list){
             const stem_t& this_stem = pStem->display();
-            qDebug() << 226 << this_stem;
-            /*
-            if (this_stem == "call") {
-                qDebug() << "Found affixes for [call]:" << affixes.join(",");
-                if (sig_is_doomed)
-                    qDebug() << "Generated from a doomed signature";
-                else
-                    qDebug() << "Not generated from a doomed signature";
-            }*/
             foreach (affix_t this_affix, affixes){
                 CParse* this_parse;
                 m_SuffixesFlag?
@@ -255,16 +246,14 @@ void CLexicon::step9b_redirect_ptrs_in_sig_graph_edges_map(const DoomedSignature
 {
     CSignatureCollection* p_signatures = m_SuffixesFlag?
                 m_Signatures : m_PrefixSignatures;
-    QMap<QString,sig_graph_edge*>::iterator edge_map_iter;
-    for (edge_map_iter = m_SigGraphEdgeMap.begin();
-         edge_map_iter != m_SigGraphEdgeMap.end();
+    QMap<QString,sig_pair*>::iterator edge_map_iter;
+    for (edge_map_iter = m_SigPairMap.begin();
+         edge_map_iter != m_SigPairMap.end();
          edge_map_iter++) {
-        sig_graph_edge* p_edge = edge_map_iter.value();
+        sig_pair* p_edge = edge_map_iter.value();
         const sigstring_t& str_sig_1 = p_edge->get_sig1_string();
         const sigstring_t& str_sig_2 = p_edge->get_sig2_string();
-        // QString message("Checking edge: " + p_edge->label());
         CSignature *p_new_sig_1, *p_new_sig_2;
-        //bool not_found_flag = false;
         p_new_sig_1 = p_signatures->find_or_fail(str_sig_1);
         if (p_new_sig_1 == NULL) {
             QMap<sigstring_t, DoomedSignatureInfo>::ConstIterator info_map_iter
@@ -283,12 +272,6 @@ void CLexicon::step9b_redirect_ptrs_in_sig_graph_edges_map(const DoomedSignature
         }
         p_edge->m_sig_2 = p_new_sig_2;
 
-        if (p_new_sig_1 == NULL)
-            qDebug() << "Did not find signature1" << str_sig_1;
-        if (p_new_sig_2 == NULL)
-            qDebug() << "Did not find signature2" << str_sig_2;
-        /*if (not_found_flag)
-            qDebug() << message;*/
     }
 }
 
@@ -300,7 +283,7 @@ void CLexicon::step9c_from_doomed_info_map_to_hypotheses(const DoomedSignatureIn
          info_map_iter != ref_doomed_info_map.constEnd();
          info_map_iter++) {
         const DoomedSignatureInfo& ref_info = info_map_iter.value();
-        sig_graph_edge* p_edge = info_map_iter.value().m_edge_ptr;
+        sig_pair* p_edge = info_map_iter.value().m_edge_ptr;
         CHypothesis * this_hypothesis = new CHypothesis( this_hypothesis_type, p_edge->get_morph(),
                                                          p_edge->get_sig1_string(),
                                                          p_edge->get_sig2_string(),
@@ -353,7 +336,7 @@ void CLexicon::check_autobiography_consistency()
 
 
 
-CHypothesis::CHypothesis(eHypothesisType HypothesisT,   sig_graph_edge*  p_edge)
+CHypothesis::CHypothesis(eHypothesisType HypothesisT,   sig_pair*  p_edge)
 {
     m_hypothesis_type  = HypothesisT;
     m_number_of_words_saved = 0;

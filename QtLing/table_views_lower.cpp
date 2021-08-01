@@ -156,7 +156,7 @@ void LowerTableView::display_this_item( const  QModelIndex & index )
             column = index.column();
         }
         QString               edge_key = index.sibling(row,6).data().toString();
-        sig_graph_edge*       this_edge = this_lexicon->get_sig_graph_edge_map()->value(edge_key);
+        sig_pair*       this_edge = this_lexicon->get_sig_graph_edge_map()->value(edge_key);
         CSignature*           pSig1 = this_edge->m_sig_1;
         CSignature*           pSig2 = this_edge->m_sig_2;
         QStandardItem*        p_item;
@@ -296,13 +296,13 @@ void LowerTableView::display_this_item( const  QModelIndex & index )
  */
 void LowerTableView::graphics_sig_graph_edges(CSignature* pSig, CLexicon* p_lexicon)
 {
-    sig_graph_edge *       psig_graph_edge;
+    sig_pair *       psig_graph_edge;
     //-->  Graphic display in lower right window <--//
     // "Signatures" is what should be sent to the Model in the mainwindow.
     CSignatureCollection Signatures(p_lexicon);
     Signatures << pSig;
     // We iterate through the SigTreeEdges in the SigTreeEdgeMap. If its Sig1 is pSig, then we enter it into Signatures;
-    QMap<QString,sig_graph_edge*>::iterator edge_iter = p_lexicon->get_sig_graph_edge_map()->begin();
+    QMap<QString,sig_pair*>::iterator edge_iter = p_lexicon->get_sig_graph_edge_map()->begin();
     while (edge_iter !=  p_lexicon->get_sig_graph_edge_map()->constEnd()){
         psig_graph_edge = edge_iter.value();
         if (psig_graph_edge->m_sig_1 == pSig){
@@ -584,10 +584,10 @@ void LowerTableView::table_passive_signature(CSignature *p_this_sig)
     QMap<CSignature*, QString>  Morphs;
 
     // put signatures in a Map, values are numbers of stems shared
-    QMap<QString, sig_graph_edge*> * pMap = get_lexicon()->get_sig_graph_edge_map();
-    QMapIterator<QString, sig_graph_edge*> this_sig_graph_edge_iter (*pMap);
+    QMap<QString, sig_pair*> * pMap = get_lexicon()->get_sig_graph_edge_map();
+    QMapIterator<QString, sig_pair*> this_sig_graph_edge_iter (*pMap);
     while (this_sig_graph_edge_iter.hasNext()){
-        sig_graph_edge * p_edge  = this_sig_graph_edge_iter.next().value();
+        sig_pair * p_edge  = this_sig_graph_edge_iter.next().value();
         if (p_this_sig == p_edge->m_sig_1){
             stem_counter[p_edge->m_sig_2] = p_edge->get_number_of_words();
             Morphs[p_edge->m_sig_2] = p_edge->morph;
