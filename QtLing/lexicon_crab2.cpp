@@ -92,12 +92,10 @@ void CLexicon::create_new_parse_set_from_known_affixes()
 
 bool Contains(QList<CSuffix*>* list1, QList<CSuffix*>* list2 ) {
     foreach (CSuffix* suffix, *list2){
-        //qDebug() << 153 << suffix->GetSuffix();
         if (! list1->contains(suffix)){
             return false;
         }
     }
-    //qDebug() << 158 << "True";
     return true;
 }
 bool Contains(QList<CPrefix*>* list1, QList<CPrefix*>* list2 ) {
@@ -269,10 +267,9 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
         QListIterator<QString> affix_iter_2(pBestSig->get_affix_string_list(best_affix_list));
         while(affix_iter_2.hasNext()){
             this_affix = affix_iter_2.next();
-            //qDebug() << 270 << this_affix;
             step4a_link_signature_and_affix(pBestSig,this_affix);
         }
-        //qDebug() << 274 << "Find good inside bad" << this_stem << pBestSig->display();
+
 
         step4b_link_signature_and_stem_and_word(this_stem, pBestSig, "Good sigs inside bad");
 

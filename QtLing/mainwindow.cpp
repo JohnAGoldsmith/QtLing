@@ -271,8 +271,28 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
          }
          break;
     }
-
-    case  Qt::Key_5:
+    case Qt::Key_5:
+    {
+        if (ke->modifiers() == Qt::ControlModifier)
+        {
+            if (get_lexicon()->get_suffix_flag()){
+              if (get_lexicon()->get_suffixal_stems()->get_count() > 0){
+                  if (get_lexicon()->get_suffix_signatures()->get_count() > 0){
+                       do_crab5();
+                  }
+              }
+            }
+            else{
+                if (get_lexicon()->get_prefixal_stems()->get_count() > 0){
+                    if (get_lexicon()->get_prefix_signatures()->get_count() > 0){
+                         do_crab5();
+                    }
+                }
+            }
+         }
+         break;
+    }
+    case  Qt::Key_6:
     {if (ke->modifiers() == Qt::ControlModifier)
     {
         statusBar()->showMessage(tr("Read file."), 5000);
@@ -281,15 +301,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     }
         break;
     }
-    case Qt::Key_6:
-    {if (ke->modifiers() == Qt::AltModifier)
-    {
-        read_corpus();
-        analyze_corpus();
-        break;
-    }
-        break;
-    }
+
     case Qt::Key_7:
     {if (ke->modifiers() == Qt::ControlModifier)
         {
@@ -538,7 +550,21 @@ void MainWindow::do_crab4()
     write_stems_and_words();
     statusBar()->showMessage("Crab 4: repair low entropy signatures completed.");
 }
-
+void MainWindow::do_crab5()
+{   statusBar()->showMessage("Crab 5: split complex morphemes.");
+    CLexicon* lexicon = get_lexicon();
+    lexicon->Crab_5();
+    load_models(lexicon);
+    create_or_update_TreeModel(lexicon);
+    if (lexicon->get_suffix_flag())
+        print_suffix_signatures();
+    else
+        print_prefix_signatures();
+    m_leftTreeView->expandAll();
+    m_leftTreeView->resizeColumnToContents(0);
+    write_stems_and_words();
+    statusBar()->showMessage("Crab 5: split complex morphemes completed.");
+}
 void MainWindow::newFile()
 {
     if (ask_to_save()) {
@@ -606,17 +632,13 @@ void MainWindow::load_models(CLexicon* lexicon)
     m_Models["EPositive prefix signatures"]->load_positive_signatures(lexicon->get_prefix_signatures());
     QCoreApplication::processEvents();
 
-    //statusBar()->showMessage("Loading models: Parasignatures");
     m_Models["Residual parasignatures"]->load_parasignatures(lexicon->get_residual_signatures());
     m_Models["Parasuffixes"]        ->load_suffixes(lexicon->get_parasuffixes());
     m_Models["Passive signatures"]  ->load_signatures(lexicon->get_passive_signatures());
-    //statusBar()->showMessage("Loading models: Hypotheses");
     m_Models["Hypotheses"]          ->load_hypotheses(lexicon->get_hypotheses());
     m_Models["Hypotheses 2"]        ->load_hypotheses_2(lexicon->get_hypotheses());
     m_Models["SigGraphEdges_1"]        ->load_sig_graph_edges(lexicon->get_sig_graph_edge_map(),1);
     m_Models["SigGraphEdges_2"]        ->load_sig_graph_edges(lexicon->get_sig_graph_edge_map(),2);
-    //QCoreApplication::processEvents();
-    //statusBar()->showMessage("Loading models: Protostems");
     m_Models["Suffixal protostems"]->load_protostems(lexicon->get_suffixal_protostems());
     m_Models["Prefixal protostems"]->load_protostems(lexicon->get_prefixal_protostems());
     //QCoreApplication::processEvents();

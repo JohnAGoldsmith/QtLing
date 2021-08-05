@@ -301,7 +301,11 @@ void lxa_graphics_scene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         graphic_signature2 * this_graph_sig = dynamic_cast<graphic_signature2*> (item);
         if (item && this_graph_sig) {
             {  // qDebug() << this_graph_sig->get_key()<<288;
+
+
                 set_focus_signature_and_move(this_graph_sig);
+
+
             }
         }
     }

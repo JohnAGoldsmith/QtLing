@@ -49,7 +49,7 @@ CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag):
     M_MINIMUM_STEM_LENGTH(2),
     M_MINIMUM_STEM_COUNT(2),
     M_MAXIMUM_AFFIX_LENGTH(10),
-    M_MINIMUM_HYPOTHESIS_WORD_COUNT(6) // Moved to here, originally a fxn variable defined in step 9
+    M_MINIMUM_HYPOTHESIS_WORD_COUNT(2) // Moved to here, originally a fxn variable defined in step 9
 {
     m_Signatures            = new CSignatureCollection(this, true);
     m_PrefixSignatures      = new CSignatureCollection(this,false);
@@ -95,7 +95,7 @@ CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag):
 
 QListIterator<word_sig_pair*> * CLexicon::get_sig_graph_edge_list_iter()
 {
-    QListIterator<word_sig_pair*> * iter = new QListIterator<word_sig_pair*>(m_SigPairList);
+    QListIterator<word_sig_pair*> * iter = new QListIterator<word_sig_pair*>(m_WordSigPairList);
     return iter;
 }
 
@@ -103,6 +103,12 @@ QMapIterator<QString, sig_pair*> * CLexicon::get_sig_graph_edge_map_iter()
 {
     QMapIterator<QString, sig_pair*> * iter = new QMapIterator<QString, sig_pair*>(m_SigPairMap);
     return iter;
+}
+QString sig_pair::display(){
+    QString response;
+    qDebug() << label();
+    response += label();
+    return response;
 }
 
 CLexicon::~CLexicon()
@@ -227,8 +233,10 @@ void CLexicon::clear_lexicon(){
     m_ResidualStems = new CStemCollection(this);
     delete m_PassiveSignatures;
     m_PassiveSignatures = new CSignatureCollection(this);
-    delete m_Hypotheses;
-    m_Hypotheses = new QList<CHypothesis*>;
+
+
+    //delete m_Hypotheses;
+    //m_Hypotheses = new QList<CHypothesis*>;
 
 
 }

@@ -178,8 +178,8 @@ void LowerTableView::display_this_item( const  QModelIndex & index )
             // -->   Tabular display in lower right window <--//
         {   foreach (this_word_stem_item, this_edge->shared_word_stems){
                 words.append(     this_word_stem_item->word);
-                sig1_stems.append(this_word_stem_item->stem_1);
-                sig2_stems.append(this_word_stem_item->stem_2);
+                sig1_stems.append(this_word_stem_item->longer_stem);
+                sig2_stems.append(this_word_stem_item->shorter_stem);
             }
             if (m_my_current_model) {
                 delete m_my_current_model;

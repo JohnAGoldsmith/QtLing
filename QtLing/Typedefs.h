@@ -89,7 +89,7 @@ typedef QMapIterator<QString, CStem*>       map_string_to_stem_ptr_iter;
 
 typedef QMap<QString,sig_pair*>             lxa_sig_graph_edge_map; // get rid of this
 typedef QMap<QString,sig_pair*>             sig_pair_map;
-typedef QMapIterator<QString,sig_pair*>        lxa_sig_graph_edge_map_iter;
+typedef QMapIterator<QString,sig_pair*>     sig_pair_iter;//   lxa_sig_graph_edge_map_iter;
 
 typedef  QMap<stem_t , QSet<affix_t>>      Stem_to_sig_map;// was Protosigs;
 
@@ -135,9 +135,10 @@ struct Sig_to_stem_map
 struct word_stem_struct
 {
     word_t word;
-    stem_t stem_1;
-    stem_t stem_2;
-    QString get_label() { return word + "=" + stem_1 + "=" + stem_2;}
+    stem_t longer_stem;// was:  stem_1;
+    stem_t shorter_stem;// was: stem_2;
+    word_stem_struct(QString w,QString s1, QString s2): word (w), longer_stem(s1), shorter_stem(s2){};
+    QString get_label() { return word + "=" + longer_stem + "=" + shorter_stem;}
 };
 
 

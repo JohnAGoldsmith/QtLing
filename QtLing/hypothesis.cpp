@@ -50,7 +50,7 @@ void CLexicon::step9_from_sig_pair_map_to_hypotheses()
     m_StatusBar->showMessage("9: Generating Hypotheses");
 
     sig_pair * p_sig_pair;
-    lxa_sig_graph_edge_map_iter sig_pair_iter (m_SigPairMap);
+    sig_pair_iter sig_pair_iter (m_SigPairMap);
     QString affix_1, doomed_affix;
     QStringList affixes1, affixes2, doomed_affixes;
     // Map from string representation of signature containing doomed affixes
@@ -77,13 +77,14 @@ void CLexicon::step9_from_sig_pair_map_to_hypotheses()
         if (this_morph.length() < 2){
             continue;
         }
-
+        /*
+        qDebug() << 80 << pSig1_longer_stem ->display() <<pSig2_shorter_stem->display();
         if (pSig1_longer_stem ->get_stem_entropy() < m_entropy_threshold_for_stems ||
             pSig2_shorter_stem->get_stem_entropy() < m_entropy_threshold_for_stems  ){
             // probably we should kill these rather than keep them around;
             continue;
         }
-
+        */
         affixes1.clear();
         affixes2.clear();
         doomed_affixes.clear();
@@ -112,9 +113,11 @@ void CLexicon::step9_from_sig_pair_map_to_hypotheses()
          // -- Test code for checking valid doomed signatures that are found
         const sigstring_t& str_affected_signature = pSig2_shorter_stem->display();
         const sigstring_t& str_affected_signature1 = pSig1_longer_stem->display();
+        /*
         qDebug() << "Affected signatures:" << str_affected_signature << str_affected_signature1
                  << "| Doomed affixes:" << doomed_affixes.join(",")
                  << "| Num of affected stems:" << pSig2_shorter_stem->get_number_of_stems();
+                 */
         if (affected_signatures.contains(str_affected_signature))
             qDebug() << "  This signature is not unique!";
         else
@@ -191,7 +194,7 @@ void CLexicon::step9a_from_doomed_info_map_to_parses(DoomedSignatureInfoMap& ref
         DoomedSignatureInfoMap::iterator iter
                 = ref_doomed_info_map.find(str_old_signature);
         affixes = str_old_signature.split('=');
-        qDebug() << affixes << 192;
+        //qDebug() << affixes << 192;
         // see if the current signature is affected by hypothesis generation
         if (iter != ref_doomed_info_map.end()) {
             DoomedSignatureInfo& ref_info = iter.value();
@@ -202,7 +205,7 @@ void CLexicon::step9a_from_doomed_info_map_to_parses(DoomedSignatureInfoMap& ref
             QList<affix_t>::iterator aff_iter;
             for (aff_iter = affixes.begin(); aff_iter != affixes.end(); ) {
                 const affix_t& curr_affix = *aff_iter;
-                qDebug() << 203 << curr_affix;
+                //qDebug() << 203 << curr_affix;
                 if (ref_doomed_affixes.contains(curr_affix))
                     affixes.erase(aff_iter);
                 else

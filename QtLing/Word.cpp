@@ -27,7 +27,6 @@ void CWord::IncrementWordCount (int n )
 void CWord::add_parse_triple(QString stem, QString affix, QString sig_string)
 {
     Parse_triple * this_triple = new Parse_triple(stem, affix, sig_string);
-   // m_Parse_triples.append(this_triple);
     m_Parse_triple_list.append(this_triple);
 
 }

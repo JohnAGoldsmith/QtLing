@@ -85,8 +85,8 @@ public:
     double              m_sig_2_entropy = -1;
     morph_t             morph;
     word_t              word;
-    stem_t              stem_1; // the longer stem
-    stem_t              stem_2;
+    stem_t              longer_stem; // the longer stem, was stem_1
+    stem_t              shorter_stem;  // was stem_2
     word_sig_pair();
     word_sig_pair(CLexicon* lexicon, CSignature* pSig1, CSignature* pSig2, sigstring_t sig_string_1, sigstring_t sig_string_2,morph_t m,word_t w, stem_t stem1, stem_t stem2)
     {
@@ -98,8 +98,11 @@ public:
         m_sig_string_2 = sig_string_2;
         morph = m;
         word = w;
-        stem_1 = stem1;
-        stem_2 = stem2;
+        longer_stem = stem1;
+        shorter_stem = stem2;
+        if (longer_stem.length() < shorter_stem.length()){
+            qDebug() << "constructor of word_sig_pair, the stems are in reversed order.";
+        }
     };
     QString label() {return morph + "/" + m_sig_string_1 + "/" + m_sig_string_2; }
 };
@@ -130,10 +133,16 @@ public:
              m_sig_1_entropy = this_word_sig_pair.m_sig_1_entropy;
              m_sig_2_entropy = this_word_sig_pair.m_sig_2_entropy;
              morph = this_word_sig_pair.morph;
+             /*
              word_stem_struct * this_word_stems = new word_stem_struct;
              this_word_stems->word = this_word_sig_pair.word;
              this_word_stems->stem_1 = this_word_sig_pair.stem_1;
              this_word_stems->stem_2 = this_word_sig_pair.stem_2;
+             */
+             word_stem_struct * this_word_stems = new word_stem_struct (
+                         this_word_sig_pair.word,
+                         this_word_sig_pair.longer_stem,
+                         this_word_sig_pair.shorter_stem);
              shared_word_stems[this_word_stems->get_label()] = this_word_stems;
          }
     QString     label() {return morph + "/" + m_sig_string_1 + "/" + m_sig_string_2; }
@@ -143,6 +152,7 @@ public:
     sigstring_t get_sig1_string() { return m_sig_string_1;}
     sigstring_t get_sig2_string() { return m_sig_string_2;}
     morph_t     get_morph() {return morph;}
+    QString     display();
 };
 
 struct DoomedSignatureInfo {
@@ -230,7 +240,7 @@ protected:
     CSignatureCollection*           m_Subsignatures;
 
     // Finds the difference between signatures, e.g. {ed, es, er, e, ing} vs {d, s, r, NULL}
-    QList<word_sig_pair*>                m_SigPairList; //m_SigGraphEdgeList; /*!< the sig_graph_edges in here contain only one word associated with each. */
+    QList<word_sig_pair*>                m_WordSigPairList; //m_SigGraphEdgeList; /*!< the sig_graph_edges in here contain only one word associated with each. */
     //lxa_sig_graph_edge_map          m_SigGraphEdgeMap;  /*!< the sig_graph_edges in here contain lists of words associated with them. */
    // sig_pair_map                    m_SigGraphEdgeMap;  /*!< the sig_graph_edges in here contain lists of words associated with them. */
     sig_pair_map                    m_SigPairMap;  /*!< the sig_pair_edges in here contain lists of words associated with them. */
@@ -300,13 +310,11 @@ public:
     CSignatureCollection*                       get_suffix_signatures()     { return m_Signatures;}
     CSuffixCollection*                          get_suffixes()              {return m_Suffixes;}
     CStemCollection *                           get_suffixal_stems()        { return m_suffixal_stems;}
-    QMap<QString, protostem*>*                   get_suffixal_protostems()  { return &m_suffix_protostems; }
-//    QMap<QString,int>*                          get_protostems()            { return &m_suffix_protostems;}
-    //QList<sig_pair*> *                          get_sig_pair_list()       { return &m_SigPairList;}
+    QMap<QString, protostem*>*                  get_suffixal_protostems()  { return &m_suffix_protostems; }
     lxa_sig_graph_edge_map *                    get_sig_graph_edge_map()    { return & m_SigPairMap;}
     sig_pair*                                   get_sig_graph_edge(QString label) {return m_SigPairMap[label];}
     QListIterator<word_sig_pair*>    *          get_sig_graph_edge_list_iter();
-    lxa_sig_graph_edge_map_iter *               get_sig_graph_edge_map_iter();
+    sig_pair_iter *                             get_sig_graph_edge_map_iter();
 
     bool                                        get_suffix_flag()           { return m_SuffixesFlag; }
     CWordCollection*                            get_word_collection()       { return m_Words; }
@@ -338,6 +346,7 @@ public:
     bool                                        remove_parse(QString full_display_of_parse);
     bool                                        remove_parse(CParse*);
 
+
 public:
     // insert functions here
     void step1_from_words_to_protostems();
@@ -368,6 +377,7 @@ public:
 
     void step8a_compute_word_sig_pairs();
     void step8b_compute_sig_pair_map();
+    void step8c_from_sig_pairs_to_parses();
 
     typedef QMap<sigstring_t, DoomedSignatureInfo> DoomedSignatureInfoMap;
     void step9_from_sig_pair_map_to_hypotheses();

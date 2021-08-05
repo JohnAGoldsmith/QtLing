@@ -152,9 +152,11 @@ void CLexicon::Crab_5()
 
 
     step8a_compute_word_sig_pairs();
-    step8b_compute_sig_pair_map();
-    step9_from_sig_pair_map_to_hypotheses();
+    //step8b_compute_sig_pair_map(); // this definitely isn't needed anymore. I put its functionality into step8a.
 
+    step8c_from_sig_pairs_to_parses();
+
+    //step9_from_sig_pair_map_to_hypotheses(); //NOTE: this step works but only if we do not first run step 8c; 8c will mess up step 9.
     // step10_find_compounds();
 
     m_SuffixesFlag?
@@ -576,11 +578,6 @@ void CLexicon::step4_create_signatures(const QString& name_of_calling_function,
             }
         } // all stems in this set
     }
-    if (m_ParseMap.contains("populari")){
-        qDebug() << 587 << "contains populari";
-    } else{
-       // qDebug() << 589 << " Doesn't contain populari" ;
-    }
 
     m_SuffixesFlag?
                 m_suffixal_stems->sort_alphabetically():
@@ -903,7 +900,7 @@ void CLexicon::replace_parse_pairs_from_current_signature_structure()
  */
 void CLexicon::test_for_phonological_relations_between_signatures()
 {
-    lxa_sig_graph_edge_map_iter  sig_iter (m_SigPairMap);
+    sig_pair_iter  sig_iter (m_SigPairMap);
     QString difference;
     QSet<QString> differences_1_letter, differences_longer;
     while (sig_iter.hasNext()){

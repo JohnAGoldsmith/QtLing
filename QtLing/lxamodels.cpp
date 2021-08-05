@@ -68,7 +68,7 @@ void LxaStandardItemModel::load_words(CWordCollection* p_words)
         pItem2->setData(pWord->get_word_count(), Qt::DisplayRole); // --- Numerical data
         item_list.append(pItem2);
 
-        foreach (const Parse_triple* this_parse_triple, *pWord->get_parse_triple_map())  {
+        foreach (const Parse_triple* this_parse_triple, *pWord->get_parse_triple_list())  {
             item_list.append(new QStandardItem(this_parse_triple->m_sig_string)) ;
         }
         appendRow(item_list);
@@ -462,7 +462,7 @@ struct{
 */
 
 struct{
-    bool operator ()(sig_graph_edge* a, sig_graph_edge* b) const
+    bool operator ()(sig_pair* a, sig_pair* b) const
     {  if (a->morph == b->morph)
         {
                 return a->m_sig_1 < b->m_sig_1;
@@ -475,13 +475,13 @@ struct{
 }custom_compare_2;
 
 
-void LxaStandardItemModel::load_sig_graph_edges( QMap<QString, sig_graph_edge*> * this_sig_graph_edge_map, int size )
+void LxaStandardItemModel::load_sig_graph_edges( QMap<QString, sig_pair*> * this_sig_graph_edge_map, int size )
 {
     clear();
-    QList<sig_graph_edge*>               temp_list;
+    QList<sig_pair*>               temp_list;
     int MINIMUM_NUMBER_OF_SHARED_WORDS = 3;
-    QMapIterator<word_t, sig_graph_edge*> * this_sig_graph_edge_iter
-            = new QMapIterator<word_t, sig_graph_edge*>( * this_sig_graph_edge_map );
+    QMapIterator<word_t, sig_pair*> * this_sig_graph_edge_iter
+            = new QMapIterator<word_t, sig_pair*>( * this_sig_graph_edge_map );
     while (this_sig_graph_edge_iter->hasNext())    {
         this_sig_graph_edge_iter->next();
 
@@ -490,10 +490,10 @@ void LxaStandardItemModel::load_sig_graph_edges( QMap<QString, sig_graph_edge*> 
         }
     }
     std::sort( temp_list.begin(),  temp_list.end(), custom_compare_2);
-    QListIterator<sig_graph_edge*> temp_list_iter (temp_list);
+    QListIterator<sig_pair*> temp_list_iter (temp_list);
     while (temp_list_iter.hasNext())
      {
-        sig_graph_edge * p_sig_graph_edge = temp_list_iter.next();
+        sig_pair * p_sig_graph_edge = temp_list_iter.next();
         if (size == 1 && p_sig_graph_edge->morph.length() > 1){
             continue;
         }else if (size == 2 && p_sig_graph_edge->morph.length()< 2){
