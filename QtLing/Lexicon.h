@@ -233,7 +233,8 @@ protected:
     // all of the possible continuations
     // affixes that are "thrown out" in Crab2
     CSignatureCollection*           m_ParaSignatures;   /*!<  the information we have about stems which we have not yet integrated into a morphological system. */
-    CSuffixCollection *             m_ParaSuffixes;
+    //CSuffixCollection *             m_ParaSuffixes;
+    QMap<QString, QStringList*>*      m_ParaSuffixes;
     CStemCollection *               m_ResidualStems;
     CSignatureCollection *          m_ResidualPrefixSignatures;
     CStemCollection *               m_StemsFromSubsignatures;
@@ -289,6 +290,7 @@ public:
     // accessors and protostems
     void                                        dump_suffixes(QList<QString>*);
     void                                        add_parse(CParse*);
+    void                                        add_parasuffix(QString parasuffix, QString word);
     CSignatureCollection*                       get_active_signature_collection();
     QMap<QString, eComponentType> &             get_category_types()        { return m_category_types;}
     CompoundWordCollection*                     get_compounds()             { return m_Compounds; }
@@ -298,7 +300,8 @@ public:
     QMap<QString, CHypothesis*>  *              get_hypothesis_map()        { return m_Hypothesis_map;}
     CHypothesis*                                get_hypothesis(QString hypothesis_label);
     QMap<QString, CParse* > *                   get_parses()                {return &m_ParseMap;}
-    CSuffixCollection*                          get_parasuffixes()          { return m_ParaSuffixes;}
+    //CSuffixCollection*                          get_parasuffixes()          { return m_ParaSuffixes;}
+    QMap<QString,QStringList*> *                 get_parasuffixes()          {return m_ParaSuffixes;}
     CSignatureCollection*                       get_passive_signatures()    { return m_PassiveSignatures;}
     CSignatureCollection*                       get_prefix_signatures()     { return m_PrefixSignatures;}
     CStemCollection *                           get_prefixal_stems()        { return m_prefixal_stems;}
@@ -395,6 +398,7 @@ public:
     void Crab_3();
     void Crab_4();
     void Crab_5();
+    void Crab_6();
     void create_sublexicon();
 
     void check_autobiography_consistency();

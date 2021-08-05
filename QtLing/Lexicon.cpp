@@ -61,7 +61,8 @@ CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag):
     //    m_Parses                = new QList<QPair<QString,QString>>();
     //m_Parses                = new QList<CParse*>();
     m_ParaSignatures        =  new CSignatureCollection(this, true);
-    m_ParaSuffixes          = new CSuffixCollection(this);
+    //m_ParaSuffixes          = new CSuffixCollection(this);
+    m_ParaSuffixes          = new QMap<QString, QStringList*>;
     m_ResidualStems         = new CStemCollection(this);
     m_PassiveSignatures     = new CSignatureCollection(this, true);
     m_SuffixesFlag          = suffix_flag;
@@ -228,7 +229,8 @@ void CLexicon::clear_lexicon(){
     delete m_ParaSignatures;
     m_ParaSignatures = new CSignatureCollection(this, true);
     delete m_ParaSuffixes;
-    m_ParaSuffixes = new CSuffixCollection(this);
+    //m_ParaSuffixes = new CSuffixCollection(this);
+    m_ParaSuffixes = new QMap<QString , QStringList*>;
     delete m_ResidualStems;
     m_ResidualStems = new CStemCollection(this);
     delete m_PassiveSignatures;
@@ -356,4 +358,10 @@ void CLexicon::dump_signatures_to_debug()
     }
     qDebug() << "******** end of signature dump ********************* ";
 
+}
+void  CLexicon::add_parasuffix(QString parasuffix, QString word){
+    if (! m_ParaSuffixes->contains(parasuffix)){
+        m_ParaSuffixes->insert(parasuffix, new QStringList());
+    }
+    m_ParaSuffixes->value(parasuffix)->append(word);
 }

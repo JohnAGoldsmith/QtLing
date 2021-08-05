@@ -25,11 +25,6 @@ void CLexicon::step10_find_compounds()
     // placeholder:
     (void)  ref_protostem_map;
 
-    if (false) {
-
-
-
-
     QMap<QString, CWord*>::ConstIterator word_iter;
     for (word_iter = m_Words->get_map()->constBegin();
          word_iter != m_Words->get_map()->constEnd();
@@ -57,7 +52,7 @@ void CLexicon::step10_find_compounds()
     // non-hyphenated compound words.
 
 
-    }
+
 
 
 

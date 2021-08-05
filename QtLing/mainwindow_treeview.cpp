@@ -200,7 +200,8 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
     QStandardItem * residual_sig_count_item = new QStandardItem(QString::number(lexicon->get_residual_signatures()->get_count()));
 
     QStandardItem * parasuffix_item = new QStandardItem(QString("Parasuffixes"));
-    QStandardItem * parasuffix_count_item = new QStandardItem(QString::number(lexicon->get_parasuffixes()->get_count()));
+    //QStandardItem * parasuffix_count_item = new QStandardItem(QString::number(lexicon->get_parasuffixes()->get_count()));
+    QStandardItem * parasuffix_count_item = new QStandardItem(QString::number(lexicon->get_parasuffixes()->count()));
 
     QStandardItem * sig_graph_edge_item = new QStandardItem(QString("Signature graph edges"));
     QStandardItem * sig_graph_edge_count_item = new QStandardItem(QString::number(lexicon->get_sig_graph_edge_map()->size()));

@@ -55,6 +55,7 @@ public:
     void        load_compounds(CompoundWordCollection* p_compounds);
 
     void        load_parsemap_from_gs(GoldStandard* p_gs, ParseMapHandler parsemap, const QString &type);
+    void        load_parasuffixes(QMap<QString,QStringList*>* p_parasuffixes);
 };
 
 

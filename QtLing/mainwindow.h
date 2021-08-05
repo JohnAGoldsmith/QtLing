@@ -209,6 +209,7 @@ private slots:
     void                                    do_crab3();
     void                                    do_crab4();
     void                                    do_crab5();
+    void                                    do_crab6();
     void                                    documentWasModified();
     void                                    newFile();
     void                                    print_prefix_signatures();

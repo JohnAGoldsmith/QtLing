@@ -294,14 +294,11 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     }
     case  Qt::Key_6:
     {if (ke->modifiers() == Qt::ControlModifier)
-    {
-        statusBar()->showMessage(tr("Read file."), 5000);
-        ask_for_project_file();
+        {
+           do_crab6();
+        }
         break;
     }
-        break;
-    }
-
     case Qt::Key_7:
     {if (ke->modifiers() == Qt::ControlModifier)
         {
@@ -565,6 +562,17 @@ void MainWindow::do_crab5()
     write_stems_and_words();
     statusBar()->showMessage("Crab 5: split complex morphemes completed.");
 }
+void MainWindow::do_crab6(){
+    statusBar()->showMessage("Crab 6: simple compounds...");
+        CLexicon* lexicon = get_lexicon();
+        lexicon->Crab_6();
+        load_models(lexicon);
+        create_or_update_TreeModel(lexicon);
+        m_leftTreeView->expandAll();
+        m_leftTreeView->resizeColumnToContents(0);
+        statusBar()->showMessage("Crab 6: simple compounds completed.");
+}
+
 void MainWindow::newFile()
 {
     if (ask_to_save()) {
@@ -604,23 +612,13 @@ void MainWindow::load_models(CLexicon* lexicon)
     //statusBar()->showMessage("Loading models: Words");
     m_Models["Words"]               ->load_words(lexicon->get_words());
     m_Models["Parses"]              ->load_parses(lexicon->get_parses());
-
-    //statusBar()->showMessage("Loading models: Stems");
     m_Models["Suffixal stems"]      ->load_stems(lexicon->get_suffixal_stems());
-    QCoreApplication::processEvents();
-
     m_Models["Prefixal stems"]      ->load_stems(lexicon->get_prefixal_stems());
     QCoreApplication::processEvents();
-
-    //statusBar()->showMessage("Loading models: Affixes");
     m_Models["Suffixes"]            ->load_suffixes(lexicon->get_suffixes());
     QCoreApplication::processEvents();
-
     m_Models["Prefixes"]            ->load_prefixes(lexicon->get_prefixes());
-    //statusBar()->showMessage("Prefixes.");
     QCoreApplication::processEvents();
-
-    //statusBar()->showMessage("Loading models: Signatures");
     m_Models["Signatures"]          ->load_signatures(lexicon->get_signatures());
     QCoreApplication::processEvents();
 
@@ -630,10 +628,8 @@ void MainWindow::load_models(CLexicon* lexicon)
     m_Models["EPositive signatures"]->load_positive_signatures(lexicon->get_signatures());
     m_Models["Prefix signatures"]   ->load_signatures( lexicon->get_prefix_signatures());
     m_Models["EPositive prefix signatures"]->load_positive_signatures(lexicon->get_prefix_signatures());
-    QCoreApplication::processEvents();
-
     m_Models["Residual parasignatures"]->load_parasignatures(lexicon->get_residual_signatures());
-    m_Models["Parasuffixes"]        ->load_suffixes(lexicon->get_parasuffixes());
+    m_Models["Parasuffixes"]        ->load_parasuffixes(lexicon->get_parasuffixes()); // these are continuations after any protostem.
     m_Models["Passive signatures"]  ->load_signatures(lexicon->get_passive_signatures());
     m_Models["Hypotheses"]          ->load_hypotheses(lexicon->get_hypotheses());
     m_Models["Hypotheses 2"]        ->load_hypotheses_2(lexicon->get_hypotheses());

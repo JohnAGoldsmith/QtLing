@@ -199,12 +199,10 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
                 this_word = m_Words->get_string_from_sorted_list(wordno);
                 //qDebug() << 205 << this_word;
                 this_affix = this_word.mid( stem_length );
-                if (this_affix.length() == 0){
-
-                    this_affix = "NULL";
-                }
+                if (this_affix.length() == 0){this_affix = "NULL";}
                 pSuffix =  m_Suffixes->find_or_fail(this_affix);
                 if (! pSuffix ){
+                    add_parasuffix(this_affix, this_word);
                     continue;
                 }
                 working_suffix_list.append(pSuffix);

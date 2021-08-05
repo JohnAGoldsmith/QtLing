@@ -59,7 +59,7 @@ void CLexicon::Crab_1()
 
     step4_create_signatures(QString("Crab1"));
 
-    collect_parasuffixes(); // these are suffixes found in a signature with only one stem
+    //collect_parasuffixes(); // these are suffixes found in a signature with only one stem
 
     m_SuffixesFlag?
                 m_Signatures->compute_containment_list():
@@ -96,7 +96,7 @@ void CLexicon::Crab_2()
 void CLexicon::Crab_3()
 {    m_StatusBar->showMessage("Crab 3: Find good signatures inside bad.");
 
-    collect_parasuffixes();
+    //collect_parasuffixes();
 
     step7_FindGoodSignaturesInsideParaSignatures();
     m_StatusBar->showMessage("Crab 3: Find good signatures inside bad, completed.");
@@ -157,7 +157,7 @@ void CLexicon::Crab_5()
     step8c_from_sig_pairs_to_parses();
 
     //step9_from_sig_pair_map_to_hypotheses(); //NOTE: this step works but only if we do not first run step 8c; 8c will mess up step 9.
-    // step10_find_compounds();
+
 
     m_SuffixesFlag?
                 m_Signatures->calculate_sig_robustness():
@@ -168,6 +168,16 @@ void CLexicon::Crab_5()
    m_StatusBar->showMessage("Crab 5: split complex morphemes completed.");
 }
 
+
+/**
+ * @brief CLexicon::Crab_6
+ *
+ */
+void CLexicon::Crab_6()
+{
+   step10_find_compounds();
+   m_StatusBar->showMessage("Crab 6:simple compounds completed.");
+}
 
 
 
@@ -976,7 +986,7 @@ void CLexicon::dump_suffixes(QList<QString> * pList)
  *
  *
  */
-
+/*
 void CLexicon::collect_parasuffixes()
 {
     sigstring_t     sigstring;
@@ -985,7 +995,6 @@ void CLexicon::collect_parasuffixes()
     CSuffix *       pSuffix;
     QStringList     suffixes;
     map_sigstring_to_sig_ptr_iter sig_iter (* m_ParaSignatures->get_map());
-
     while (sig_iter.hasNext())
     {
         pSig = sig_iter.next().value();
@@ -998,6 +1007,5 @@ void CLexicon::collect_parasuffixes()
         }
     }
     m_ParaSuffixes->sort_by_count();
-
-
 }
+*/
