@@ -24,6 +24,7 @@ class QProgressBar;
 class CHypothesis;
 class CParse;
 class CompoundWordCollection;
+class CompoundComponentCollection;
 
 
 /* The principal objects we use on the way to morphological analysis are:
@@ -220,6 +221,7 @@ protected:
     CSignatureCollection *          m_Signatures;
     CSignatureCollection *          m_PrefixSignatures;
     CompoundWordCollection *        m_Compounds;
+    CompoundComponentCollection *   m_CompoundComponents;
     QMap<QString, CParse*>          m_Raw_parses;
     //QList<CParse*> *                m_Parses; // get rid of this list, just use the QMap
     QMap<QString, CParse*>          m_ParseMap;

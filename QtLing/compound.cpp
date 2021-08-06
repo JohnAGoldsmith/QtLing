@@ -104,6 +104,7 @@ void CLexicon::step10_find_compounds()
                 if (lengthOfSecondPart < min_component_length){ stemno2++; continue; }
                 QString secondPiece = thisStem.right(lengthOfSecondPart);
                 if (stems->find_or_fail(secondPiece))
+
                 {
                         //qDebug() << possibleFirstComponent <<  thisStem << secondPiece << 94 << "Stems: Found one!";
                         //m_Compounds->add_compound_word(str_word, piece1, piece2);

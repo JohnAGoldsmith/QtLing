@@ -203,8 +203,8 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
     //QStandardItem * parasuffix_count_item = new QStandardItem(QString::number(lexicon->get_parasuffixes()->get_count()));
     QStandardItem * parasuffix_count_item = new QStandardItem(QString::number(lexicon->get_parasuffixes()->count()));
 
-    QStandardItem * sig_graph_edge_item = new QStandardItem(QString("Signature graph edges"));
-    QStandardItem * sig_graph_edge_count_item = new QStandardItem(QString::number(lexicon->get_sig_graph_edge_map()->size()));
+    //QStandardItem * sig_graph_edge_item = new QStandardItem(QString("Signature graph edges"));
+    //QStandardItem * sig_graph_edge_count_item = new QStandardItem(QString::number(lexicon->get_sig_graph_edge_map()->size()));
 
     QStandardItem * passive_signature_item = new QStandardItem(QString("Passive signatures"));
     QStandardItem * passive_signature_count_item = new QStandardItem(QString::number(lexicon->get_passive_signatures()->get_count()));
@@ -330,9 +330,11 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
     parasuffix_items.append(parasuffix_item);
     parasuffix_items.append(parasuffix_count_item);
 
+    /*
     QList<QStandardItem*> sig_graph_edge_items;
     sig_graph_edge_items.append(sig_graph_edge_item);
     sig_graph_edge_items.append(sig_graph_edge_count_item);
+    */
 
     QList<QStandardItem*> passive_signature_items;
     passive_signature_items.append(passive_signature_item);
@@ -354,23 +356,34 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
     //lexicon_item->appendRow(keyboard_3);
     //lexicon_item->appendRow(keyboard_4);
     //lexicon_item->appendRow(keyboard_5);
-    lexicon_item->appendRow(prefix_items);
+    if (m_my_lexicon->get_prefixes()->get_count() > 0 )
+        lexicon_item->appendRow(prefix_items);
+
     lexicon_item->appendRow(word_items);
     lexicon_item->appendRow(compound_items);
     lexicon_item->appendRow(suffixal_protostem_items);
-    lexicon_item->appendRow(prefixal_protostem_items);
+    if (m_my_lexicon->get_prefixal_protostems()->count() > 0 )
+        lexicon_item->appendRow(prefixal_protostem_items);
+
     lexicon_item->appendRow(suffixal_stem_items);
-    lexicon_item->appendRow(prefixal_stem_items);
+    if (m_my_lexicon->get_prefixal_stems()->get_count() > 0 )
+        lexicon_item->appendRow(prefixal_stem_items);
+
     lexicon_item->appendRow(suffix_items);
     lexicon_item->appendRow(sig_items);
     lexicon_item->appendRow(pos_sig_items);
-    lexicon_item->appendRow(prefix_sig_items);
-    lexicon_item->appendRow(pos_prefix_sig_items);
-    lexicon_item->appendRow(sig_graph_edge_items);
+    if (m_my_lexicon->get_prefix_signatures()->get_count() > 0 ){
+        lexicon_item->appendRow(prefix_sig_items);
+        lexicon_item->appendRow(pos_prefix_sig_items);}
+
+    //lexicon_item->appendRow(sig_graph_edge_items);
     lexicon_item->appendRow(residual_sig_items);
     lexicon_item->appendRow(parasuffix_items);
     lexicon_item->appendRow(passive_signature_items);
-    lexicon_item->appendRow(hypothesis_items);
+
+    if (m_my_lexicon->get_hypotheses()->count() > 0 )
+        lexicon_item->appendRow(hypothesis_items);
+
     lexicon_item->appendRow(parses_items);
 
 // add component 8

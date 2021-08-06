@@ -193,11 +193,9 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
         if (stems->find_or_fail( this_stem )){
             continue;
         }
-        //qDebug() << 201 << this_stem;
         for (int wordno= this_protostem->get_start_word(); wordno <= this_protostem->get_end_word(); wordno++){
             if (m_SuffixesFlag){
                 this_word = m_Words->get_string_from_sorted_list(wordno);
-                //qDebug() << 205 << this_word;
                 this_affix = this_word.mid( stem_length );
                 if (this_affix.length() == 0){this_affix = "NULL";}
                 pSuffix =  m_Suffixes->find_or_fail(this_affix);
@@ -206,7 +204,6 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
                     continue;
                 }
                 working_suffix_list.append(pSuffix);
-                //qDebug() << this_protostem << pSuffix->get_key() << 214;
             } else{
                 this_word = m_Words->get_reverse_sort_list()->at(wordno);
                 this_affix = this_word.left(this_word.length()- stem_length);
@@ -220,7 +217,6 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
                 working_prefix_list.append(pPrefix);
             }
         }
-
         // go thru signatures, find the highest robustness sig in WorkingSig, and then successively larger sigs, always containing the previous best one found.
         int i;
         best_intersection_count = 0;
@@ -234,7 +230,6 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
                 if (Contains( &working_suffix_list, this_sig->get_suffix_list())){
                     pBestSig = this_sig;
                     best_intersection_count = IntersectionCount(&working_suffix_list,pBestSig->get_suffix_list());
-                    //qDebug() << pBestSig->display() << best_intersection_count;
                     break;
                 }
             // there is no signature that appears inside the working affix list, so we give up on this stem.
@@ -267,7 +262,7 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
             this_affix = affix_iter_2.next();
             step4a_link_signature_and_affix(pBestSig,this_affix);
         }
-
+        // this is the right place to identify parasuffixes -- the extensions of *real* stems, not protostems (as is currently done).
 
         step4b_link_signature_and_stem_and_word(this_stem, pBestSig, "Good sigs inside bad");
 

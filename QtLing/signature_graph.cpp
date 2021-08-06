@@ -220,11 +220,14 @@ void CLexicon::step8c_from_sig_pairs_to_parses(){
             if (m_SuffixesFlag){
                 foreach(word_stem_struct * this_word_stem_struct, p_sig_pair->shared_word_stems ){
                     foreach(QString suffix, affixes_from_longer_stem){
+
                         CParse this_parse(this_word_stem_struct->longer_stem,
                                               suffix,
                                               m_SuffixesFlag);
-                        remove_parse(this_parse.display_full());
-                        qDebug() << 227 << "Removing parse:" << this_parse.display_full();
+                        if (suffix.startsWith(this_morph)){
+                            remove_parse(this_parse.display_full());
+                            qDebug() << 227 << "Removing parse:" << this_parse.display_full();
+                        }
                     }
                 }
             }

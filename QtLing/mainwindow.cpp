@@ -613,6 +613,8 @@ void MainWindow::load_models(CLexicon* lexicon)
     m_Models["Words"]               ->load_words(lexicon->get_words());
     m_Models["Parses"]              ->load_parses(lexicon->get_parses());
     m_Models["Suffixal stems"]      ->load_stems(lexicon->get_suffixal_stems());
+
+
     m_Models["Prefixal stems"]      ->load_stems(lexicon->get_prefixal_stems());
     QCoreApplication::processEvents();
     m_Models["Suffixes"]            ->load_suffixes(lexicon->get_suffixes());
@@ -628,6 +630,7 @@ void MainWindow::load_models(CLexicon* lexicon)
     m_Models["EPositive signatures"]->load_positive_signatures(lexicon->get_signatures());
     m_Models["Prefix signatures"]   ->load_signatures( lexicon->get_prefix_signatures());
     m_Models["EPositive prefix signatures"]->load_positive_signatures(lexicon->get_prefix_signatures());
+
     m_Models["Residual parasignatures"]->load_parasignatures(lexicon->get_residual_signatures());
     m_Models["Parasuffixes"]        ->load_parasuffixes(lexicon->get_parasuffixes()); // these are continuations after any protostem.
     m_Models["Passive signatures"]  ->load_signatures(lexicon->get_passive_signatures());

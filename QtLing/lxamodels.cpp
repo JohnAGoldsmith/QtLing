@@ -327,6 +327,29 @@ void LxaStandardItemModel::load_parasignatures(CSignatureCollection* p_signature
     }
 }
 
+
+void LxaStandardItemModel::load_parasuffixes(QMap<QString, QStringList *> *  continuations ){
+    CWord* pWord;
+    QStringList labels = {tr("continuation"), tr("word count"), tr("??")};
+    setHorizontalHeaderLabels(labels);
+    m_Description = QString (" ");
+    clear();
+    QMapIterator<QString, QStringList*> iter(*continuations);
+    while (iter.hasNext())
+    {   iter.next();
+        QList<QStandardItem*> item_list;
+        item_list.append(new QStandardItem(iter.key()));
+
+        QStandardItem* pItem2 = new QStandardItem();
+        pItem2->setData(iter.value()->length(), Qt::DisplayRole); // --- Numerical data
+        item_list.append(pItem2);
+        appendRow(item_list);
+    }
+
+
+
+}
+
 bool sort_function_1(const QPair<QString ,int >  * a ,  QPair<QString , int >  * b)
 {
     if (a->second==b->second){return a->first < b->first;}
