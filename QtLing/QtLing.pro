@@ -34,7 +34,6 @@ HEADERS += allosignatures.h \
            lxamodels.h \
            mainwindow.h \
            mainwindow_find.h \
-           mainwindow_menu_copy.h \
            mainwindow_menubar.h \
            parsings.h \
            Signature.h \

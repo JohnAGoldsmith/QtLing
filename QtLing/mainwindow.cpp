@@ -609,18 +609,26 @@ void MainWindow::load_models(CLexicon* lexicon)
         m_proxy_models[str_model_name]->setSourceModel(nullptr);
     }
 
-    //statusBar()->showMessage("Loading models: Words");
+    statusBar()->showMessage("Loading models: Words");
     m_Models["Words"]               ->load_words(lexicon->get_words());
+    statusBar()->showMessage("Loading models: Parses");
+    QCoreApplication::processEvents();
     m_Models["Parses"]              ->load_parses(lexicon->get_parses());
+
+    statusBar()->showMessage("Loading models: Suffixal stems");
+    QCoreApplication::processEvents();
     m_Models["Suffixal stems"]      ->load_stems(lexicon->get_suffixal_stems());
 
-
+    statusBar()->showMessage("Loading models: Prefixal stems");
     m_Models["Prefixal stems"]      ->load_stems(lexicon->get_prefixal_stems());
     QCoreApplication::processEvents();
+    statusBar()->showMessage("Loading models: Suffixes");
     m_Models["Suffixes"]            ->load_suffixes(lexicon->get_suffixes());
     QCoreApplication::processEvents();
+    statusBar()->showMessage("Loading models: Prefixes");
     m_Models["Prefixes"]            ->load_prefixes(lexicon->get_prefixes());
     QCoreApplication::processEvents();
+        statusBar()->showMessage("Loading models: Signatures");
     m_Models["Signatures"]          ->load_signatures(lexicon->get_signatures());
     QCoreApplication::processEvents();
 
@@ -630,7 +638,7 @@ void MainWindow::load_models(CLexicon* lexicon)
     m_Models["EPositive signatures"]->load_positive_signatures(lexicon->get_signatures());
     m_Models["Prefix signatures"]   ->load_signatures( lexicon->get_prefix_signatures());
     m_Models["EPositive prefix signatures"]->load_positive_signatures(lexicon->get_prefix_signatures());
-
+    statusBar()->showMessage("Loading models: residual parasignatures.");
     m_Models["Residual parasignatures"]->load_parasignatures(lexicon->get_residual_signatures());
     m_Models["Parasuffixes"]        ->load_parasuffixes(lexicon->get_parasuffixes()); // these are continuations after any protostem.
     m_Models["Passive signatures"]  ->load_signatures(lexicon->get_passive_signatures());
@@ -662,7 +670,7 @@ void MainWindow::load_models(CLexicon* lexicon)
     m_proxy_models["EPositive prefix signatures 2"]->setSourceModel(m_Models["EPositive prefix signatures"]);
 
     //qDebug() << "finished loading proxy models";
-    //statusBar()->showMessage("Finished loading models.");
+    statusBar()->showMessage("Finished loading models.");
 
 }
 void MainWindow::read_file_do_crab()

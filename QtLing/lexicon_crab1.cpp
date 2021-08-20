@@ -117,28 +117,12 @@ void CLexicon::Crab_3()
  *
  */
 void CLexicon::Crab_4()
-{
-    m_StatusBar->showMessage("Crab 4: eliminate low entropy sigs.");
-
-    replace_parse_pairs_from_current_signature_structure();
-
+{   replace_parse_pairs_from_current_signature_structure();
     repair_low_entropy_signatures();
-
-    // Temporarily stop these, June 2021
-    //step8a_compute_sig_graph_edges();
-    //step8b_compute_sig_graph_edge_map();
-    //step9_from_sig_graph_edges_map_to_hypotheses();
-
-    // step10_find_compounds();
-
     m_SuffixesFlag?
                 m_Signatures->calculate_sig_robustness():
                 m_PrefixSignatures->calculate_sig_robustness();
-
     test_json_functionality();
-
-     m_StatusBar->showMessage("Crab 4: eliminate low entropy sigs completed.");
-
 }
 
 /**
@@ -822,7 +806,7 @@ void CLexicon::repair_low_entropy_signatures()
                           this_morphemic_split = parse.display_with_gap();
                           pWord->remove_morphemic_split(this_morphemic_split);
                           remove_parse(&parse);
-                          qDebug() << 823 << this_morphemic_split;
+                          //qDebug() << 823 << this_morphemic_split;
                    }
             } //end of affixes in this sig
         } // end of stems in this sig;
@@ -831,8 +815,10 @@ void CLexicon::repair_low_entropy_signatures()
     verify_parses(); //check complete list of parses in Lexicon with what's in the words;
 
 */
+    qDebug() << 818;
     step3_from_parses_to_stem_to_sig_maps(QString("Shift morpheme boundary leftward"));
     //MS_ignore_minimum_stem_count
+    qDebug() << 821;
     step4_create_signatures(QString("Shift morpheme boundary leftward"));
 
 

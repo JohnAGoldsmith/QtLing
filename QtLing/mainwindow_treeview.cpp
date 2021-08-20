@@ -129,6 +129,7 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
 
      //QStandardItem * command_item = new QStandardItem(QString("Keyboard commands"));
 
+    /*
      QStandardItem * ctrl_1 = new QStandardItem(QString("Prefixes step 2"));
      QStandardItem * ctrl_1_key = new QStandardItem("Ctrl 1");
 
@@ -143,7 +144,7 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
 
      QStandardItem * ctrl_5 = new QStandardItem(QString("Sublexicon"));
      QStandardItem * ctrl_5_key = new QStandardItem("Ctrl 5");
-
+    */
 
 
     //  this pair of lines must stay here after experiment:
@@ -360,12 +361,19 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
         lexicon_item->appendRow(prefix_items);
 
     lexicon_item->appendRow(word_items);
-    lexicon_item->appendRow(compound_items);
-    lexicon_item->appendRow(suffixal_protostem_items);
+
+    if (m_my_lexicon->get_compounds()->get_count() > 0 )
+        lexicon_item->appendRow(compound_items);
+
+    if (m_my_lexicon->get_suffixal_protostems()->count() > 0 )
+        lexicon_item->appendRow(suffixal_protostem_items);
+
     if (m_my_lexicon->get_prefixal_protostems()->count() > 0 )
         lexicon_item->appendRow(prefixal_protostem_items);
 
-    lexicon_item->appendRow(suffixal_stem_items);
+    if (m_my_lexicon->get_suffixal_stems()->get_count() > 0 )
+        lexicon_item->appendRow(suffixal_stem_items);
+
     if (m_my_lexicon->get_prefixal_stems()->get_count() > 0 )
         lexicon_item->appendRow(prefixal_stem_items);
 

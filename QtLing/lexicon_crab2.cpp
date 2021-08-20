@@ -27,7 +27,6 @@ extern bool contains(QList<QString> * list2, QList<QString> * list1);
 /*!
 * This is lke AssignSuffixesToStems, but crucially: with Suffixes known ahead of time.
 * This creates signatures and stems: signatures that only have approved affixes.
-* First function of Crab_4.
 * I need to refactorize this function.
 */
 void CLexicon::ReSignaturizeWithKnownAffixes()
@@ -151,7 +150,7 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
 
 
 
-    m_StatusBar->showMessage("Crab 3: Find good signatures inside bad.");
+    //m_StatusBar->showMessage("Crab 3: Find good signatures inside bad.");
     qApp->processEvents();
 
     QMap<QString, protostem*> * these_protostems;
@@ -182,7 +181,7 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
         temp_i++;
         if (temp_i == 1000){
             temp_i = 0;
-            m_StatusBar->showMessage("7: Find good signatures inside bad: " + this_stem);
+            m_StatusBar->showMessage("Crab 3: Find good signatures inside bad: " + this_stem);
             qApp->processEvents();
         } //---------------------------------------------------------------------------------------//
         affixes_of_residual_sig.clear();
