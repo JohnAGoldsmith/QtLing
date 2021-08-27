@@ -612,40 +612,48 @@ void MainWindow::load_models(CLexicon* lexicon)
     statusBar()->showMessage("Loading models: Words");
     m_Models["Words"]               ->load_words(lexicon->get_words());
     statusBar()->showMessage("Loading models: Parses");
-    QCoreApplication::processEvents();
+    //QCoreApplication::processEvents();
     m_Models["Parses"]              ->load_parses(lexicon->get_parses());
 
     statusBar()->showMessage("Loading models: Suffixal stems");
-    QCoreApplication::processEvents();
+    //QCoreApplication::processEvents();
     m_Models["Suffixal stems"]      ->load_stems(lexicon->get_suffixal_stems());
 
     statusBar()->showMessage("Loading models: Prefixal stems");
     m_Models["Prefixal stems"]      ->load_stems(lexicon->get_prefixal_stems());
-    QCoreApplication::processEvents();
+    //QCoreApplication::processEvents();
     statusBar()->showMessage("Loading models: Suffixes");
     m_Models["Suffixes"]            ->load_suffixes(lexicon->get_suffixes());
-    QCoreApplication::processEvents();
+    //QCoreApplication::processEvents();
     statusBar()->showMessage("Loading models: Prefixes");
     m_Models["Prefixes"]            ->load_prefixes(lexicon->get_prefixes());
-    QCoreApplication::processEvents();
-        statusBar()->showMessage("Loading models: Signatures");
-    m_Models["Signatures"]          ->load_signatures(lexicon->get_signatures());
-    QCoreApplication::processEvents();
+    //QCoreApplication::processEvents();
 
+    statusBar()->showMessage("Loading models: Signatures");
+    m_Models["Signatures"]          ->load_signatures(lexicon->get_signatures());
+    //QCoreApplication::processEvents();
+    qDebug() << 635 << "Left loading of signatures model";
+    statusBar()->showMessage("Loading models: Signatures completed");
     /* Using the sorting function of the proxy models, we do not need duplicate source models,
      * removed them to save some memory, Hanson 11.2
      */
+    statusBar()->showMessage("Loading models: EPositive signatures");
     m_Models["EPositive signatures"]->load_positive_signatures(lexicon->get_signatures());
+
     m_Models["Prefix signatures"]   ->load_signatures( lexicon->get_prefix_signatures());
     m_Models["EPositive prefix signatures"]->load_positive_signatures(lexicon->get_prefix_signatures());
-    statusBar()->showMessage("Loading models: residual parasignatures.");
-    m_Models["Residual parasignatures"]->load_parasignatures(lexicon->get_residual_signatures());
-    m_Models["Parasuffixes"]        ->load_parasuffixes(lexicon->get_parasuffixes()); // these are continuations after any protostem.
+    //statusBar()->showMessage("Loading models: residual parasignatures.");
+    //m_Models["Residual parasignatures"]->load_parasignatures(lexicon->get_residual_signatures()); // problem -- these are too big!
+    //m_Models["Parasuffixes"]        ->load_parasuffixes(lexicon->get_parasuffixes()); // these are continuations after any protostem.
     m_Models["Passive signatures"]  ->load_signatures(lexicon->get_passive_signatures());
+
+    statusBar()->showMessage("Loading models: Hypotheses");
     m_Models["Hypotheses"]          ->load_hypotheses(lexicon->get_hypotheses());
     m_Models["Hypotheses 2"]        ->load_hypotheses_2(lexicon->get_hypotheses());
     m_Models["SigGraphEdges_1"]        ->load_sig_graph_edges(lexicon->get_sig_graph_edge_map(),1);
     m_Models["SigGraphEdges_2"]        ->load_sig_graph_edges(lexicon->get_sig_graph_edge_map(),2);
+
+    statusBar()->showMessage("Loading models: Suffixal protostems");
     m_Models["Suffixal protostems"]->load_protostems(lexicon->get_suffixal_protostems());
     m_Models["Prefixal protostems"]->load_protostems(lexicon->get_prefixal_protostems());
     //QCoreApplication::processEvents();
@@ -659,8 +667,11 @@ void MainWindow::load_models(CLexicon* lexicon)
     //statusBar()->showMessage("Loading models: Finishing up");
     foreach (str_model_name, m_Models.keys()) {
         m_proxy_models[str_model_name]->setSourceModel(m_Models[str_model_name]);
+            qDebug() << 670 << str_model_name;
     }
     // Link duplicate proxy models to their corresponding source models. Hanson 11.2
+        qDebug() << 672 << "duplicate proxy";
+    statusBar()->showMessage("Loading models: proxymodels");
     m_proxy_models["Words 2"]->setSourceModel(m_Models["Words"]);
     m_proxy_models["Prefixes 2"]->setSourceModel(m_Models["Prefixes"]);
     m_proxy_models["Suffixes 2"]->setSourceModel(m_Models["Suffixes"]);

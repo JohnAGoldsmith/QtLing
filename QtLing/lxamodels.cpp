@@ -239,12 +239,12 @@ void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures, e
     labels  << tr("signature") << "stem count" << "robustness"<< "fullness";
     setHorizontalHeaderLabels(labels);
 
-    //qDebug() << 133 << "number of signatures"<< p_signatures->get_count() <<  "in Models file";
+    qDebug() << 133 << "number of signatures"<< p_signatures->get_count() <<  "in Models file";
     for (int signo = 0; signo<p_signatures->get_count(); signo++)
     {
         sig = p_signatures->get_at_sorted(signo);
         QList<QStandardItem*> items;
-
+        //qDebug() << 247 << signo << sig->GetSignature();
         const QString& str_sig = sig->GetSignature();
         QStandardItem * item1 = new QStandardItem(str_sig);
         QStandardItem * item2 = new QStandardItem();
@@ -260,7 +260,7 @@ void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures, e
         items.append(item4);
         appendRow(items);
     }
-
+   qDebug() << 263 << "Leaving load_signatures";
 }
 void LxaStandardItemModel::load_positive_signatures(CSignatureCollection* p_signatures, eSortStyle this_sort_style)
 {
