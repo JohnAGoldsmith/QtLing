@@ -60,7 +60,7 @@ void LowerTableView::display_this_item( const  QModelIndex & index )
     eDataType                  UpperView_data_type = m_parent_window->m_tableView_upper_left->get_data_type();
     QString                    word, stem, prefix, suffix, signature;
     CLexicon *                 this_lexicon = get_parent_window()->get_lexicon();
-    int                        row(0), column;
+    int                        row(0), column(0);
     //QStandardItem*             p_item;
     QList<QStandardItem*>      item_list;
 
@@ -156,7 +156,7 @@ void LowerTableView::display_this_item( const  QModelIndex & index )
             column = index.column();
         }
         QString               edge_key = index.sibling(row,6).data().toString();
-        sig_pair*       this_edge = this_lexicon->get_sig_graph_edge_map()->value(edge_key);
+        sig_pair*             this_edge = this_lexicon->get_sig_graph_edge_map()->value(edge_key);
         CSignature*           pSig1 = this_edge->m_sig_1;
         CSignature*           pSig2 = this_edge->m_sig_2;
         QStandardItem*        p_item;

@@ -39,7 +39,7 @@ void MainWindow::write_stems_and_words()
 //                    << std::setw(20)<< this_triple->p_suffix
 //                    << std::setw(15) << this_triple->p_stem;
                 out.setFieldWidth(20);
-                out << pWord->get_key() << "+" <<  this_triple->m_stem  << "+"<< this_triple->m_suffix << endl ;
+                out << pWord->get_key() << "+" <<  this_triple->m_stem  << "+"<< this_triple->m_suffix << Qt::endl ;
         }
     }
 }

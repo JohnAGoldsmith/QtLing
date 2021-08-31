@@ -39,7 +39,7 @@ public:
     CSuffix*                find_or_fail(const QString&); //same as ˆ= (find if it is there, else void)
     CSuffix*                GetAt( uint );
     int                     get_count() const               { return m_SuffixMap.size(); }
-    void                    get_set_of_suffixes (QSet<QString> * p_string_set);
+    //void                    get_set_of_suffixes (QSet<QString> * p_string_set);
     QMap<QString,CSuffix*>* GetMap()                        { return & m_SuffixMap; }
     QMap<QString,CSuffix*>* get_map()                       { return & m_SuffixMap; }
     void                    get_suffixes(QList<QString>*);
@@ -76,7 +76,7 @@ public:
     CPrefix*                find_or_fail        (const QString&); //same as ˆ= (find if it is there, else void)
     CPrefix*                GetAt( uint );
     int                     get_count() const { return m_PrefixMap.size(); }
-    void                    get_set_of_prefixes (QSet<QString> * p_string_set);
+    //void                    get_set_of_prefixes (QSet<QString> * p_string_set);
     QMap<QString,CPrefix*>* GetMap()               { return & m_PrefixMap;         }
     QMap<QString,CPrefix*>* get_map()              { return & m_PrefixMap;         }
     void                    get_prefixes(QList<QString>*);

@@ -391,7 +391,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     }
     case Qt::Key_Q:
     {   // reset scene scale
-        m_graphics_view->resetMatrix();
+        //m_graphics_view->resetMatrix();  TODO: What was this for? this idiom is deprecated anyway.
          break;
     }
     case Qt::Key_S:
@@ -783,7 +783,7 @@ void MainWindow::print_suffix_signatures()
     for (int signo = 0; signo<signatures->get_count(); signo++)
     {   pSig = signatures->get_at_sorted(signo);
         if (pSig->get_stem_entropy() < threshold){continue;}
-        stream << pSig->get_key()    << endl << endl;
+        stream << pSig->get_key()    << Qt::endl << Qt::endl;
         CStem_ptr_list_iterator stem_iter (*pSig->get_stems());
         while (stem_iter.hasNext()){
             pStem = stem_iter.next();
@@ -791,13 +791,13 @@ void MainWindow::print_suffix_signatures()
             count++;
             if (count ==5){
                 count = 0;
-                stream << endl;
+                stream << Qt::endl;
             }
         }
-        stream << endl << endl;
+        stream << Qt::endl << Qt::endl;
         count = 0;
      }
-     stream << endl;
+     stream << Qt::endl;
      }
      file.close();
 }
@@ -823,7 +823,7 @@ void MainWindow::print_prefix_signatures()
     for (int signo = 0; signo<signatures->get_count(); signo++)
     {   pSig = signatures->get_at_sorted(signo);
         if (pSig->get_stem_entropy() < threshold){continue;}
-        stream << pSig->get_key()    << endl << endl;
+        stream << pSig->get_key()    << Qt::endl << Qt::endl;
         CStem_ptr_list_iterator stem_iter (*pSig->get_stems());
         while (stem_iter.hasNext()){
             pStem = stem_iter.next();
@@ -831,13 +831,13 @@ void MainWindow::print_prefix_signatures()
             count++;
             if (count ==5){
                 count = 0;
-                stream << endl;
+                stream << Qt::endl;
             }
         }
-        stream << endl << endl;
+        stream << Qt::endl << Qt::endl;
         count = 0;
      }
-     stream << endl;
+     stream << Qt::endl;
      }
      file.close();
 }

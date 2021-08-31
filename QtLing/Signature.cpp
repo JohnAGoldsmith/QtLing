@@ -5,6 +5,7 @@
 #include <QChar>
 #include <QMap>
 #include <QtMath>
+#include <algorithm>
 #include "Lexicon.h"
 #include "WordCollection.h"
 #include "Word.h"
@@ -176,10 +177,12 @@ bool compare_stems_of_sig_by_count(const CStem* pStem1, const CStem* pStem2)
  return  pStem1->get_count() >pStem2->get_count();
 }
 void CSignature::sort_stems(){
-    qSort(m_Stems->begin(), m_Stems->end(), compare_stems_of_sig);
+    //qSort(m_Stems->begin(), m_Stems->end(), compare_stems_of_sig);
+     std::sort(m_Stems->begin(), m_Stems->end(), compare_stems_of_sig);
 }
 void CSignature::sort_stems_by_count(){
-    qSort(m_Stems->begin(), m_Stems->end(), compare_stems_of_sig_by_count);
+    //qSort(m_Stems->begin(), m_Stems->end(), compare_stems_of_sig_by_count);
+    std::sort(m_Stems->begin(), m_Stems->end(), compare_stems_of_sig_by_count);
 }
 
 
@@ -366,7 +369,7 @@ void CSignature::remove_prefix(prefix_t this_prefix){
 QString CSignature::get_highfreq_edge_letters(float frequency_threshold){
     QMap<QString, int> counts;
     QString letter, winner;
-    float totalcount =0.0, winner_count;
+    float totalcount =0.0, winner_count(0);
     foreach (CStem* stem, *m_Stems){
         totalcount += 1.0;
         m_SuffixFlag?

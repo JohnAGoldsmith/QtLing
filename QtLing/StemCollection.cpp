@@ -6,7 +6,7 @@ CStemCollection::CStemCollection(CLexicon* lexicon)
 {
     m_StringToStemMap       = new map_string_to_stem();
     m_CorpusCount			= 0;
-    m_MemberName			= QString::null;
+    m_MemberName			= QString();
     m_SortValidFlag			= 0;
     m_SortStyle				= KEY;
     m_Lexicon               = lexicon;

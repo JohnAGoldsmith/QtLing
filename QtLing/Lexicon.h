@@ -358,7 +358,7 @@ public:
     void step2_from_protostems_to_parses();
 
     void step3_from_parses_to_stem_to_sig_maps(QString name_of_calling_function);
-    void step3a_from_parses_to_stem_to_sig_map(bool suffix_flag);
+    void step3a_from_parses_to_stem_to_sig_map( );
     void step3b_from_stem_to_sig_map_to_sig_to_stem_map();
 
     //void step4_assign_affixes_to_stems(QString name_of_calling_function);
@@ -381,7 +381,7 @@ public:
     void step6c_from_stem_to_sig_maps_to_xxx(QString, Stem_to_sig_map ) {return;}
 
     void step8a_compute_word_sig_pairs();
-    void step8b_compute_sig_pair_map();
+    //void step8b_compute_sig_pair_map();
     void step8c_from_sig_pairs_to_parses();
 
     typedef QMap<sigstring_t, DoomedSignatureInfo> DoomedSignatureInfoMap;

@@ -22,7 +22,7 @@ void lxa_graphics_scene::show_hypothesis_1(CHypothesis* hypothesis)
 
 
 void  lxa_graphics_scene::implement_hypothesis(const QModelIndex &  index )
-{   int row;
+{   int row(0);
 //    int column;
 
 //    Qt::GlobalColor color_target_1,

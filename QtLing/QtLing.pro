@@ -44,7 +44,6 @@ HEADERS += allosignatures.h \
            stringalignment.h \
            Suffix.h \
            SuffixCollection.h \
-           supersignature.h \
            table_views.h \
            Typedefs.h \
            ui_mainwindow.h \
@@ -87,7 +86,6 @@ SOURCES += allosignatures.cpp \
            stringalignment.cpp \
            Suffix.cpp \
            SuffixCollection.cpp \
-           supersignature.cpp \
            table_display_functions.cpp \
            table_views_lower.cpp \
            table_views_upper.cpp \

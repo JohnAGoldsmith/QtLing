@@ -52,11 +52,11 @@ CSuffix* CSuffixCollection::operator << (const QString& suffix)
 {
     return this->find_or_add(suffix);
 }
-
+/*
 void CSuffixCollection::get_set_of_suffixes(QSet<QString> *p_string_set){
     p_string_set->fromList(m_SuffixMap.uniqueKeys());
 }
-
+*/
 void  CSuffixCollection::get_suffixes(QList<QString>* pList)
 {   QMapIterator<QString,CSuffix*> iter (m_SuffixMap);
     while (iter.hasNext()){
@@ -134,11 +134,11 @@ CPrefix* CPrefixCollection::operator << (const QString& prefix)
 {
     return this->find_or_add(prefix);
 }
-
+/*
 void CPrefixCollection::get_set_of_prefixes(QSet<QString> *p_string_set){
     p_string_set->fromList(m_PrefixMap.uniqueKeys());
 }
-
+*/
 void  CPrefixCollection::get_prefixes(QList<QString>* pList)
 {   QMapIterator<QString,CPrefix*> iter (m_PrefixMap);
     while (iter.hasNext()){

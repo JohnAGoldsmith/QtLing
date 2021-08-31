@@ -111,49 +111,7 @@ void CLexicon::step8a_compute_word_sig_pairs()
     } // each word
 }
 
-/*!
- * This function takes the word-sig-pair list, and makes a smaller list composed of
- * sig_pair which share the same signature pair and string-difference. This
- * flavor of sig_graph_edge contains a list of all the words that participate in
- * this particular sig_graph_edge.
- *
- * This is Part 2 of the 3rd major function of Crab 2.
- */
-void CLexicon::step8b_compute_sig_pair_map() {
-    morph_t         word_sig_pair_label;
-    word_t          this_word;
-    word_sig_pair   * p_word_sig_pair;
-    sig_pair        * p_sig_pair;
 
-    m_StatusBar->showMessage("8b: Generating map of signature graph edges");
-    m_ProgressBar->reset();
-    m_ProgressBar->setMinimum(0);
-    m_ProgressBar->setMaximum(m_WordSigPairList.size());
-    int progresscount = 0;
-
-    for (int i = 0; i < m_WordSigPairList.size(); i++)
-    {   m_ProgressBar->setValue(progresscount++);
-        p_word_sig_pair = m_WordSigPairList[i];
-        word_sig_pair_label = p_word_sig_pair->label();
-        this_word  = p_word_sig_pair->word;
-        if (m_SigPairMap.contains(word_sig_pair_label)){
-            p_sig_pair = m_SigPairMap.value(word_sig_pair_label);
-            word_stem_struct * this_word_stem_struct = new word_stem_struct (
-                        this_word,
-                        p_word_sig_pair->longer_stem,
-                        p_word_sig_pair->shorter_stem
-                        );
-            qDebug() << 143 << this_word_stem_struct->get_label();
-            QString this_label = this_word_stem_struct->get_label();
-            if ( ! p_sig_pair->shared_word_stems.contains(this_label)){
-                   p_sig_pair->shared_word_stems[this_label] = this_word_stem_struct;
-            }
-        } else {
-            p_sig_pair = new sig_pair(*p_word_sig_pair);
-            m_SigPairMap.insert(p_sig_pair->label(),p_sig_pair);
-        }
-    }
-}
 QString F2(QString affix, QString morph, bool suffix_flag){
     QString doomed_affix;
     if (affix == "NULL"){
@@ -180,7 +138,7 @@ QStringList F3(QStringList affixes, QString morph, bool suffix_flag){
 }
 void CLexicon::step8c_from_sig_pairs_to_parses(){
     sig_pair_iter sig_pair_iter (m_SigPairMap);
-    CSignatureCollection * p_signatures;
+    //CSignatureCollection * p_signatures;
     //m_SuffixesFlag ?
     //    p_signatures = m_Signatures:
     //    p_signatures = m_PrefixSignatures;

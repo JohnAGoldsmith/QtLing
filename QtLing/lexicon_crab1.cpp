@@ -85,7 +85,6 @@ void CLexicon::Crab_2()
 
     replace_parse_pairs_from_current_signature_structure();
 
-    //step10_find_compounds();
 }
 
 
@@ -95,8 +94,6 @@ void CLexicon::Crab_2()
  */
 void CLexicon::Crab_3()
 {    m_StatusBar->showMessage("Crab 3: Find good signatures inside bad.");
-
-    //collect_parasuffixes();
 
     step7_FindGoodSignaturesInsideParaSignatures();
     m_StatusBar->showMessage("Crab 3: Find good signatures inside bad, completed.");
@@ -354,7 +351,11 @@ void CLexicon::step2_from_protostems_to_parses()
 // ==========================================================================  //
 
 QString convert_set_to_qstring(affix_set& this_affix_set){
-    QStringList temp_presignature = this_affix_set.toList();
+
+    QStringList temp_presignature;
+    foreach (QString affix, this_affix_set){
+        temp_presignature.append(affix);
+    }
     temp_presignature.sort();
     return temp_presignature.join("=");
 
@@ -376,7 +377,7 @@ void   CLexicon::step3_from_parses_to_stem_to_sig_maps(QString name_of_calling_f
      * the stems made here with the stems in the preceding step -- so we can
      * keep track of what is gained and what is discarded.
      */
-    //name_of_calling_function = " " ;
+    name_of_calling_function = " " ; // TODO is this correct? We are not using it here?
     Stem_to_sig_map                this_stem_to_sig_map;
     m_ProgressBar->reset();
     m_ProgressBar->setMinimum(0);
@@ -386,7 +387,7 @@ void   CLexicon::step3_from_parses_to_stem_to_sig_maps(QString name_of_calling_f
 
     //--> We establish a temporary map from stems to sets of affixes as we iterate through parses. <--//
     m_intermediate_stem_to_sig_map.clear();
-    step3a_from_parses_to_stem_to_sig_map( m_SuffixesFlag);
+    step3a_from_parses_to_stem_to_sig_map(  );
     //--> We iterate through these stems and for each stem, create QStringLists of their affixes. <--//
     //--> then we create a "pre-signature" in a map that points to lists of stems. <--//
 
@@ -401,7 +402,7 @@ void   CLexicon::step3_from_parses_to_stem_to_sig_maps(QString name_of_calling_f
  * \param these_protosigs
  * This function is called by step3 (just below)
  */
-void CLexicon::step3a_from_parses_to_stem_to_sig_map(bool suffix_flag )
+void CLexicon::step3a_from_parses_to_stem_to_sig_map(  )
 {
     QString this_stem_t, this_affix_t;
     foreach (CParse* this_parse, m_ParseMap){
@@ -909,7 +910,11 @@ void CLexicon::test_for_phonological_relations_between_signatures()
         }
     }
 
-    QStringList differences = differences_1_letter.toList();
+    //QStringList differences = differences_1_letter.toList();
+    QStringList differences;
+    foreach (QString diff, differences_1_letter){
+        differences.append(diff);
+    }
     differences.sort();
     QSet<CSignature*> SignatureSet_1, SignatureSet_2;
 

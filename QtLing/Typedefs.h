@@ -64,7 +64,6 @@ typedef QSet<affix_t>                       affix_set;
 typedef QSetIterator<suffix_t>              suffix_set_iter;
 typedef QSet<prefix_t>                      prefix_set;
 typedef QSetIterator<prefix_t>              prefix_set_iter;
-typedef QSet<affix_t>                       affix_set;
 typedef QSetIterator<affix_t>               affix_set_iter;
 
 typedef QMap<suffix_t, int>                 map_suffix_to_int;

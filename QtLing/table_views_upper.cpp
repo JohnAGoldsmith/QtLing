@@ -2,6 +2,7 @@
 #include <QMessageBox>
 #include <QAbstractItemView>
 #include <QTableView>
+#include <algorithm>
 #include "table_views.h"
 #include "lxamodels.h"
 #include "mainwindow_find.h"
@@ -167,6 +168,9 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         } else if (component == "Gold Standard Words") {
             component = "Gold Standard Parses";
             curr_data_type = e_data_gs_gold_standard_parses;
+        } else {
+            // TODO: needs proper default type here.
+            curr_data_type = e_data_gs_true_positive_parses; //not correct default case;
         }
         set_data_type(curr_data_type);
 
@@ -249,7 +253,7 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
             setModel(m_parent_window->m_proxy_models["Parasuffixes"]);
             //m_proxy_model->setSourceModel(m_parent_window->m_Models["Parasuffixes"]);
             set_data_type ( e_data_suffixes );
-            sortByColumn(1);
+            sortByColumn(1,Qt::AscendingOrder);
         }
         else     if (component == "Singleton signatures"){
 
@@ -258,7 +262,7 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
             setModel(m_parent_window->m_proxy_models["Passive signatures"]);
             //m_proxy_model->setSourceModel(m_parent_window->m_Models["Passive signatures"]);
             set_data_type ( e_data_hollow_suffixal_signatures );
-            sortByColumn(1);
+            sortByColumn(1,Qt::AscendingOrder);
         }
         else     if (component == "Hypotheses"){
             m_parent_window->display_hypotheses();
@@ -267,24 +271,24 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
             setModel(m_parent_window->m_proxy_models["Suffixal protostems"]);
             //m_proxy_model->setSourceModel(m_parent_window->m_Models["Suffixal protostems"]);
             set_data_type(e_data_suffixal_protostems);
-            sortByColumn(1);
+            sortByColumn(1,Qt::AscendingOrder);
         }
         else     if (component == "Prefixal protostems"){
             setModel(m_parent_window->m_proxy_models["Prefixal protostems"]);
             //m_proxy_model->setSourceModel(m_parent_window->m_Models["Prefixal protostems"]);
             set_data_type(e_data_prefixal_protostems);
-            sortByColumn(1);
+            sortByColumn(1,Qt::AscendingOrder);
         }
         else     if (component == "Compound words"){
             setModel(m_parent_window->m_proxy_models["Compound words"]);
             //m_proxy_model->setSourceModel(m_parent_window->m_Models["Compound words"]);
             set_data_type(e_data_compound_words);
-            sortByColumn(1);
+            sortByColumn(1,Qt::AscendingOrder);
         }
         else if(component == "Parses"){
             setModel(m_parent_window->m_proxy_models["Parses"]);
             set_data_type(e_data_parses);
-            sortByColumn(1);
+            sortByColumn(1,Qt::AscendingOrder);
         }
         // add component 10
     }
@@ -336,7 +340,8 @@ void UpperTableView::remap_indeces_and_highlight()
         m_indeces_found.append(proxy_model->mapFromSource(item_found->index()));
     }
 
-    qSort(m_indeces_found.begin(), m_indeces_found.end(), index_row_less_than);
+//  qSort(m_indeces_found.begin(), m_indeces_found.end(), index_row_less_than);
+    std::sort(m_indeces_found.begin(), m_indeces_found.end(), index_row_less_than);
     //Debug() << "Found" << num_items_found << "occurrences of" << str;
 }
 
@@ -369,7 +374,8 @@ int UpperTableView::find_all_strings(const QString& str, bool exact_match)
         // qDebug() << str << "was not found";
         return 0;
     } else {
-        qSort(m_items_found.begin(), m_items_found.end(), qsi_row_less_than);
+//        qSort(m_items_found.begin(), m_items_found.end(), qsi_row_less_than);
+        std::sort(m_items_found.begin(), m_items_found.end(), qsi_row_less_than);
         remap_indeces_and_highlight();
         return num_items_found;
     }

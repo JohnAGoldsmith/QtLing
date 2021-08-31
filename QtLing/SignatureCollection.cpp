@@ -7,7 +7,7 @@ CSignatureCollection::CSignatureCollection(CLexicon* p_lexicon, bool suffix_flag
 {
     //m_SignatureList         = QList<CSignature*>();
     m_CorpusCount			= 0;
-    m_MemberName			= QString::null;
+    m_MemberName			= QString();
     m_SortValidFlag			= 0;
     m_SortStyle				= KEY;
     m_SortedListIterator    = new     QListIterator<CSignature*> (m_SortList);
@@ -129,13 +129,16 @@ void CSignatureCollection::sort(eSortStyle sort_style)
 
     switch (sort_style){
     case SIG_BY_AFFIX_COUNT:
-         qSort(m_SortList.begin(), m_SortList.end(),  compare_affix_count);
+         //qSort(m_SortList.begin(), m_SortList.end(),  compare_affix_count);
+         std::sort(m_SortList.begin(), m_SortList.end(),  compare_affix_count);
          break;
     case SIG_BY_REVERSE_ROBUSTNESS:
-          qSort(m_SortList.begin(), m_SortList.end(),  compare_robustness_reversed);
+          //qSort(m_SortList.begin(), m_SortList.end(),  compare_robustness_reversed);
+          std::sort(m_SortList.begin(), m_SortList.end(),  compare_robustness_reversed);
           break;
     default:
-          qSort(m_SortList.begin(), m_SortList.end(),  compare_stem_count);
+          //qSort(m_SortList.begin(), m_SortList.end(),  compare_stem_count);
+        std::sort(m_SortList.begin(), m_SortList.end(),  compare_stem_count);
     }
 
 
