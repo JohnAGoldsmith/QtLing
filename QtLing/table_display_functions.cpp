@@ -165,12 +165,13 @@ void MainWindow::display_signature_graph_edges(CLexicon* ){
  */
 void MainWindow::display_hypotheses()
 {
-    m_tableView_upper_left->setModel(m_proxy_models["Hypotheses"]);
+    m_tableView_upper_left->setModel(m_proxy_models["Hypotheses 2"]);
     //m_tableView_upper_left->set_proxy_source_model(m_Models["Hypotheses"]);
     m_tableView_upper_left->set_data_type ( e_data_hypotheses );
     m_tableView_upper_left->resizeColumnsToContents();
+    m_tableView_upper_left->model()->sort(4, Qt::DescendingOrder); // word count column
 
-    m_tableView_upper_left->setModel(m_proxy_models["Hypotheses 2"]);
+    //m_tableView_upper_left->setModel(m_proxy_models["Hypotheses 2"]);
     //m_tableView_upper_right->set_proxy_source_model(m_Models["Hypotheses 2"]);
     m_tableView_upper_right->set_data_type ( e_data_hypotheses );
     m_tableView_upper_right->resizeColumnsToContents();

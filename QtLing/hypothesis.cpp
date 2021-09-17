@@ -194,7 +194,6 @@ void CLexicon::step9a_from_doomed_info_map_to_parses(DoomedSignatureInfoMap& ref
         DoomedSignatureInfoMap::iterator iter
                 = ref_doomed_info_map.find(str_old_signature);
         affixes = str_old_signature.split('=');
-        //qDebug() << affixes << 192;
         // see if the current signature is affected by hypothesis generation
         if (iter != ref_doomed_info_map.end()) {
             DoomedSignatureInfo& ref_info = iter.value();
@@ -395,7 +394,6 @@ CHypothesis::CHypothesis (eHypothesisType HypothesisT,
         m_morpheme          = this_morph;
         m_new_edge          = new QPair<QString, sigstring_t>(m_morpheme, m_signature_1_longer_stem);
         m_number_of_words_saved = number_of_words_saved;
-        //m_number_of_stems   =
         (void) new_affixes; // placeholder.
     }
 }

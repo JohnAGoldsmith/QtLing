@@ -338,11 +338,7 @@ void LxaStandardItemModel::load_parasuffixes(QMap<QString, QStringList *> *  con
         item_list.append(pItem2);
         appendRow(item_list);
     }
-
-
-
 }
-
 bool sort_function_1(const QPair<QString ,int >  * a ,  QPair<QString , int >  * b)
 {
     if (a->second==b->second){return a->first < b->first;}
@@ -358,8 +354,6 @@ void LxaStandardItemModel::load_hypotheses(QList<CHypothesis*>* p_hypotheses)
     QMap<QString,QList<CHypothesis*> >  Hypothesis_map;
     QMap<QString,int>                   Key_counts;
     QList<QPair<QString,int>*>           pairs;
-
-
 
     for (int hypno = 0; hypno<p_hypotheses->count(); hypno++)
     {   hypothesis = p_hypotheses->at(hypno);
@@ -382,13 +376,11 @@ void LxaStandardItemModel::load_hypotheses(QList<CHypothesis*>* p_hypotheses)
         QStandardItem* item1 = new QStandardItem();
         item1->setData(pPair->second, Qt::DisplayRole);     // --- Numerical data --- //
         items.append(item1);
-
         QString this_key = pPair->first;
         QStringList key_list = this_key.split("@");
         foreach (QString key, key_list){
             QStandardItem * this_item = new QStandardItem(key);
-            items.append(this_item);
-        }
+            items.append(this_item);        }
         appendRow(items);
     }
 }
@@ -400,61 +392,30 @@ void LxaStandardItemModel::load_hypotheses_2(QList<CHypothesis*>* p_hypotheses)
     QMap<QString,QList<CHypothesis*> >  Hypothesis_map;
     QMap<QString,int>                   Key_counts;
     QList<QPair<QString,int>*>           pairs;
-/*
-    for (int hypno = 0; hypno<p_hypotheses->count(); hypno++)
-    {   hypothesis = p_hypotheses->at(hypno);
-        QString key = hypothesis->get_key();
-        if (Key_counts.contains(key))  {
-                Key_counts[key] += hypothesis->get_number_of_words_saved();
-            } else{
-                Key_counts[key] = hypothesis->get_number_of_words_saved();
-            }
-    }
-    foreach (QString key, Key_counts.keys()){
-            QPair<QString,int> * pair = new QPair<QString, int>(key, Key_counts[key]);
-        pairs.append(pair);
-    }
-    std::sort(pairs.begin(),pairs.end(),sort_function_1);
-    QListIterator<QPair<QString,int>*> iter (pairs);
-    while (iter.hasNext()){
-        QList<QStandardItem*> items;
-        QPair<QString,int>* pPair = iter.next();
-        QStandardItem* item1 = new QStandardItem(QString::number(pPair->second));
-        items.append(item1);
 
-        QString this_key = pPair->first;
-        QStringList key_list = this_key.split("@");
-        foreach (QString key, key_list){
-            QStandardItem * this_item = new QStandardItem(key);
-            items.append(this_item);
-        }
-        appendRow(items);
-    }
-*/
     QStringList labels;
-    labels  <<  "rule input"<<"" << " rule output (orig sig 2)" << "original sig 1"
-             << "modified sig 1"
+    labels  <<  "rule input" << "" << "" << "original sig 1"
              << "word count";
     setHorizontalHeaderLabels(labels);
-
-
     for (int hypno = 0; hypno<p_hypotheses->count(); hypno++)
     {   hypothesis = p_hypotheses->at(hypno);
         QList<QStandardItem*> items;
-        QStringList pieces = hypothesis->express();
-        pieces << hypothesis->express_as_string();
-        //qDebug() << 316 <<"lxamodels"<< pieces;
-        for (int i = 0; i < pieces.count(); i++){
-             QStandardItem * item1 = new QStandardItem(pieces[i]);
-             items.append(item1);
-        }
+        QStandardItem * item1 = new QStandardItem(hypothesis->get_morpheme());
+        items.append(item1);
+        item1 = new QStandardItem("=>");
+        items.append(item1);
+        item1 = new QStandardItem(hypothesis->get_sig1());
+        items.append(item1);
+        item1 = new QStandardItem(hypothesis->get_sig2());
+        items.append(item1);
+        item1 = new QStandardItem();
+        item1->setData(hypothesis->get_number_of_words_saved(), Qt::DisplayRole);
+        items.append(item1);
         appendRow(items);
     }
 }
 
 
-
-// add component 12
 
 
 

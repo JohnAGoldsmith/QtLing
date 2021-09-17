@@ -33,6 +33,10 @@ public:
                  const QStringList& new_affixes,
                  const int number_of_words_saved);
     QString                         get_key();
+    QString                         get_morpheme() {return m_morpheme;}
+    QString                         get_sig1() {return m_signature_1_longer_stem;}
+    QString                         get_sig2() {return m_signature_2_shorter_stem;}
+    QString                         get_new_sig2() {return m_new_signature_2;}
     QStringList                     express();
     QString                         express_as_string();
     int                             get_number_of_words_saved();

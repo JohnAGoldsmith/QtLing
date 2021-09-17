@@ -148,7 +148,7 @@ void CLexicon::step8c_from_sig_pairs_to_parses(){
     CSignature* pSig1_longer_stem;
     CSignature* pSig2_shorter_stem;
     sig_pair*   p_sig_pair;
-    int MINIMUM_NUMBER_OF_WORDS = M_MINIMUM_HYPOTHESIS_WORD_COUNT;
+    int MINIMUM_NUMBER_OF_WORDS = M_MINIMUM_HYPOTHESIS_WORD_COUNT; // usually 2
     int morph_length;
     while (sig_pair_iter.hasNext())
     {
@@ -167,13 +167,13 @@ void CLexicon::step8c_from_sig_pairs_to_parses(){
              pSig2_shorter_stem->get_stem_entropy() < m_entropy_threshold_for_stems  ){
              continue;
          }
-         if (p_sig_pair->get_number_of_words() < MINIMUM_NUMBER_OF_WORDS ){continue;}
+         if (p_sig_pair->get_number_of_words() < MINIMUM_NUMBER_OF_WORDS ){ continue;}
 
          doomed_affixes.clear();
          pSig1_longer_stem->get_affix_string_list(affixes_from_longer_stem);
          pSig2_shorter_stem->get_affix_string_list(affixes_from_shorter_stem);
 
-         qDebug() << 230 <<  p_sig_pair->m_sig_string_2 <<  p_sig_pair->m_sig_string_1;
+         //qDebug() << 230 <<  p_sig_pair->m_sig_string_2 <<  p_sig_pair->m_sig_string_1;
          for (int affixno = 0; affixno < affixes_from_longer_stem.count(); affixno++){
             if (m_SuffixesFlag){
                 foreach(word_stem_struct * this_word_stem_struct, p_sig_pair->shared_word_stems ){
@@ -184,7 +184,7 @@ void CLexicon::step8c_from_sig_pairs_to_parses(){
                                               m_SuffixesFlag);
                         if (suffix.startsWith(this_morph)){
                             remove_parse(this_parse.display_full());
-                            qDebug() << 227 << "Removing parse:" << this_parse.display_full();
+                            //qDebug() << 227 << "Removing parse:" << this_parse.display_full();
                         }
                     }
                 }
@@ -198,7 +198,7 @@ void CLexicon::step8c_from_sig_pairs_to_parses(){
                  if (morph_piece.length() == 0) { morph_piece = "NULL";}
                  if (! affixes_from_longer_stem.contains(morph_piece) ){
                      affixes_from_longer_stem.append(morph_piece);
-                     qDebug() << 221 << "Added new suffix to morph" <<morph_piece;
+                     //qDebug() << 221 << "Added new suffix to morph" <<morph_piece;
                  }
                  if (m_SuffixesFlag){
                      foreach(word_stem_struct * this_word_stem_struct, p_sig_pair->shared_word_stems ){
@@ -207,16 +207,14 @@ void CLexicon::step8c_from_sig_pairs_to_parses(){
                                                    suffix,
                                                    m_SuffixesFlag);
                              remove_parse(this_parse.display_full());
-                             qDebug() << 248 << "Removing parse:" << this_parse.display_full();
+                             //qDebug() << 248 << "Removing parse:" << this_parse.display_full();
                          }
                      }
                  }
-                 qDebug() << 223 << this_affix << " deleted." ;
+                 //qDebug() << 223 << this_affix << " deleted." ;
              }
           }
           affixes_from_shorter_stem.append(this_morph);
-
-
           CHypothesis * this_hypothesis = new CHypothesis( HT_affix_goes_to_signature,
                                                            this_morph,
                                                            pSig1_longer_stem->display(),
@@ -226,13 +224,11 @@ void CLexicon::step8c_from_sig_pairs_to_parses(){
                                                            p_sig_pair->get_number_of_words());
           m_Hypotheses->append(this_hypothesis);
           m_Hypothesis_map->insert (this_hypothesis->express_as_string(),  this_hypothesis);
-
     }
 
 
     step3_from_parses_to_stem_to_sig_maps("Splitting up complex morphemes");
     step4_create_signatures("Splitting up complex morphemes.");
-
 }
 
 

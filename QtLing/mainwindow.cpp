@@ -667,7 +667,6 @@ void MainWindow::load_models(CLexicon* lexicon)
     //statusBar()->showMessage("Loading models: Finishing up");
     foreach (str_model_name, m_Models.keys()) {
         m_proxy_models[str_model_name]->setSourceModel(m_Models[str_model_name]);
-            qDebug() << 670 << str_model_name;
     }
     // Link duplicate proxy models to their corresponding source models. Hanson 11.2
         qDebug() << 672 << "duplicate proxy";
@@ -679,8 +678,6 @@ void MainWindow::load_models(CLexicon* lexicon)
     m_proxy_models["Prefix signatures 2"]->setSourceModel(m_Models["Prefix signatures"]);
     m_proxy_models["EPositive signatures 2"]->setSourceModel(m_Models["EPositive signatures"]);
     m_proxy_models["EPositive prefix signatures 2"]->setSourceModel(m_Models["EPositive prefix signatures"]);
-
-    //qDebug() << "finished loading proxy models";
     statusBar()->showMessage("Finished loading models.");
 
 }
