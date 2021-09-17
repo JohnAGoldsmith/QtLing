@@ -151,7 +151,7 @@ bool CLexicon::remove_parse(QString full_display_of_parse){
         m_ParseMap.remove(full_display_of_parse);
         return  true;
     } else{
-       qDebug() << 149 << "Failed to remove parse: " << full_display_of_parse;
+       qDebug() <<  "       Failed to remove parse: " << full_display_of_parse << 149;´
        return false;
     }
 }

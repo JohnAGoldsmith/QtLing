@@ -5,6 +5,11 @@
 #include "WordCollection.h"
 #include "SuffixCollection.h"
 
+
+//  I don't think the principal functions here are used anymore -- JG Sept 2021
+// of course the "hypothesis" class functions are used.
+
+
 CHypothesis* CLexicon::get_hypothesis(QString hypothesis)
 {
     return m_Hypothesis_map->value( hypothesis );
@@ -77,14 +82,7 @@ void CLexicon::step9_from_sig_pair_map_to_hypotheses()
         if (this_morph.length() < 2){
             continue;
         }
-        /*
-        qDebug() << 80 << pSig1_longer_stem ->display() <<pSig2_shorter_stem->display();
-        if (pSig1_longer_stem ->get_stem_entropy() < m_entropy_threshold_for_stems ||
-            pSig2_shorter_stem->get_stem_entropy() < m_entropy_threshold_for_stems  ){
-            // probably we should kill these rather than keep them around;
-            continue;
-        }
-        */
+
         affixes1.clear();
         affixes2.clear();
         doomed_affixes.clear();
@@ -113,11 +111,7 @@ void CLexicon::step9_from_sig_pair_map_to_hypotheses()
          // -- Test code for checking valid doomed signatures that are found
         const sigstring_t& str_affected_signature = pSig2_shorter_stem->display();
         const sigstring_t& str_affected_signature1 = pSig1_longer_stem->display();
-        /*
-        qDebug() << "Affected signatures:" << str_affected_signature << str_affected_signature1
-                 << "| Doomed affixes:" << doomed_affixes.join(",")
-                 << "| Num of affected stems:" << pSig2_shorter_stem->get_number_of_stems();
-                 */
+
         if (affected_signatures.contains(str_affected_signature))
             qDebug() << "  This signature is not unique!";
         else
@@ -130,33 +124,12 @@ void CLexicon::step9_from_sig_pair_map_to_hypotheses()
         // -- added by Hanson 7.30
 
         // --- Beginning of code that needs to be fixed ---
-        /*
-            // we remove all of the newaffixes from pSig2, and replace them with this_morph, and
-            // this_morph poiznts directly to pSig1.
-            foreach (QString this_affix, affixes2){
-                if (doomed_affixes.contains(this_affix)){
-                    m_SuffixesFlag?
-                        pSig2_shorter_stem->remove_suffix(this_affix):
-                        pSig2_shorter_stem->remove_prefix(this_affix);
-                }
-            }
-            pSig2_shorter_stem->add_affix_string(this_morph); */
+
             // !! this signature needs to send itself to the Dict in Signatures to be updated.
 
             // Then pSig2 loses all of the stems that created the shared words here.
             // But that has not yet been implemented.
-            /*
-            eHypothesisType this_hypothesis_type = HT_affix_goes_to_signature;
-            CHypothesis (this_hypothesis_type, p_edge);
-            CHypothesis * this_hypothesis = new CHypothesis( this_hypothesis_type, this_morph,
-                                                             original_sig1_affixes_longer_stem,
-                                                             original_sig2_affixes_shorter_stem,
-                                                             pSig2_shorter_stem->display(),
-                                                             doomed_affixes,
-                                                             p_edge->get_number_of_words());
-            m_Hypotheses->append(this_hypothesis);
-            m_Hypothesis_map->insert (this_hypothesis->express_as_string(),  this_hypothesis);
-            */ // this part is moved to step9c
+          // this part is moved to step9c
         // --- End of code that needs to be fixed -- commented out by Hanson, 7.30
     }
     // -- Remaining steps for hypothesis generation

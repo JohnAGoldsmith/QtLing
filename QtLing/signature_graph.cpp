@@ -138,10 +138,6 @@ QStringList F3(QStringList affixes, QString morph, bool suffix_flag){
 }
 void CLexicon::step8c_from_sig_pairs_to_parses(){
     sig_pair_iter sig_pair_iter (m_SigPairMap);
-    //CSignatureCollection * p_signatures;
-    //m_SuffixesFlag ?
-    //    p_signatures = m_Signatures:
-    //    p_signatures = m_PrefixSignatures;
     QString     this_affix, doomed_affix, morph_piece;
     QStringList affixes_from_shorter_stem, affixes_from_longer_stem, doomed_affixes;
     QStringList affected_signatures;
@@ -172,24 +168,27 @@ void CLexicon::step8c_from_sig_pairs_to_parses(){
          doomed_affixes.clear();
          pSig1_longer_stem->get_affix_string_list(affixes_from_longer_stem);
          pSig2_shorter_stem->get_affix_string_list(affixes_from_shorter_stem);
-
-         //qDebug() << 230 <<  p_sig_pair->m_sig_string_2 <<  p_sig_pair->m_sig_string_1;
+         qDebug() << "";
+         qDebug() << "   Longer stem";
+         qDebug() << 230 <<  p_sig_pair->m_sig_string_2 <<  p_sig_pair->m_sig_string_1;
          for (int affixno = 0; affixno < affixes_from_longer_stem.count(); affixno++){
             if (m_SuffixesFlag){
                 foreach(word_stem_struct * this_word_stem_struct, p_sig_pair->shared_word_stems ){
+                    qDebug() << "   stem: " << this_word_stem_struct->longer_stem;
                     foreach(QString suffix, affixes_from_longer_stem){
-
+                        qDebug() << "     affix:"<< suffix;
                         CParse this_parse(this_word_stem_struct->longer_stem,
                                               suffix,
                                               m_SuffixesFlag);
-                        if (suffix.startsWith(this_morph)){
+                        if (this_word_stem_struct->longer_stem.endsWith(this_morph)){
                             remove_parse(this_parse.display_full());
-                            //qDebug() << 227 << "Removing parse:" << this_parse.display_full();
+                            qDebug() << "     Removing parse:" << this_parse.display_full() << 187;
                         }
                     }
                 }
             }
          }
+         qDebug() << 191<< "    Shorter stem";
          for (int affixno = 0; affixno < affixes_from_shorter_stem.count(); affixno++){
              this_affix = affixes_from_shorter_stem[affixno];
              if (this_affix.left(morph_length) == this_morph ){
@@ -198,20 +197,21 @@ void CLexicon::step8c_from_sig_pairs_to_parses(){
                  if (morph_piece.length() == 0) { morph_piece = "NULL";}
                  if (! affixes_from_longer_stem.contains(morph_piece) ){
                      affixes_from_longer_stem.append(morph_piece);
-                     //qDebug() << 221 << "Added new suffix to morph" <<morph_piece;
+                     qDebug() << 221 << "      Added new suffix to morph" <<morph_piece;
                  }
                  if (m_SuffixesFlag){
                      foreach(word_stem_struct * this_word_stem_struct, p_sig_pair->shared_word_stems ){
+                         qDebug() << "";
                          foreach(QString suffix, affixes_from_shorter_stem){
                              CParse this_parse(this_word_stem_struct->shorter_stem,
                                                    suffix,
                                                    m_SuffixesFlag);
                              remove_parse(this_parse.display_full());
-                             //qDebug() << 248 << "Removing parse:" << this_parse.display_full();
+                             qDebug() << 211 << "  Removing parse:" << this_parse.display_full();
                          }
                      }
                  }
-                 //qDebug() << 223 << this_affix << " deleted." ;
+                 qDebug() << 223 << "  " <<this_affix << "deleted." ;
              }
           }
           affixes_from_shorter_stem.append(this_morph);
