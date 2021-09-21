@@ -107,7 +107,6 @@ QMapIterator<QString, sig_pair*> * CLexicon::get_sig_graph_edge_map_iter()
 }
 QString sig_pair::display(){
     QString response;
-    qDebug() << label();
     response += label();
     return response;
 }
@@ -151,7 +150,7 @@ bool CLexicon::remove_parse(QString full_display_of_parse){
         m_ParseMap.remove(full_display_of_parse);
         return  true;
     } else{
-       qDebug() <<  "       Failed to remove parse: " << full_display_of_parse << 149;´
+       qDebug() <<  "       Failed to remove parse: " << full_display_of_parse << 149;
        return false;
     }
 }
@@ -162,6 +161,16 @@ bool CLexicon::remove_parse(CParse* parse){
         return  true;
     } else{
        //qDebug() << 157 << "Failed to remove parse: " << parse->display_full();
+       return false;
+    }
+}
+bool CLexicon::remove_parse(CParse& parse){
+    if (m_ParseMap.contains(parse.display_full())){
+        m_ParseMap.remove(parse.display_full());
+        //qDebug() << 155 << " removed parse:" << parse.display_full();
+        return  true;
+    } else{
+       //qDebug() << 157 << "Failed to remove parse: " << parse.display_full();
        return false;
     }
 }

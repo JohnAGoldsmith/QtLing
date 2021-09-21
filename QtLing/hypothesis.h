@@ -29,8 +29,6 @@ public:
                  const morph_t& this_morph,
                  const sigstring_t& sigstring_1,
                  const sigstring_t& sigstring_2,
-                 const sigstring_t& new_sig,
-                 const QStringList& new_affixes,
                  const int number_of_words_saved);
     QString                         get_key();
     QString                         get_morpheme() {return m_morpheme;}

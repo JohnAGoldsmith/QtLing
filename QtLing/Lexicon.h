@@ -123,8 +123,18 @@ public:
     double m_sig_2_entropy = -1;
     morph_t     morph;
     QMap<QString, word_stem_struct*>         shared_word_stems;
+    QStringList my_stems;
     sig_pair();
-
+    sig_pair(QString amorph, CSignature* sig1, CSignature* sig2){
+        morph = amorph;
+        m_sig_1 = sig1;
+        m_sig_2 = sig2;
+    }
+    sig_pair(QString a_morph, QString shorter_stem_sig_string, QString longer_stem_sig_string){
+        morph = a_morph;
+        m_sig_string_1 = shorter_stem_sig_string;
+        m_sig_string_2 = longer_stem_sig_string;
+    }
     sig_pair(word_sig_pair this_word_sig_pair){
              m_lexicon = this_word_sig_pair.m_Lexicon;
              m_sig_1 = this_word_sig_pair.m_sig_1;
@@ -147,13 +157,16 @@ public:
              shared_word_stems[this_word_stems->get_label()] = this_word_stems;
          }
     QString     label() {return morph + "/" + m_sig_string_1 + "/" + m_sig_string_2; }
-    int         get_number_of_words() {return shared_word_stems.size();}
+    int         get_number_of_words() {return my_stems.size();}
     CSignature* get_sig_1() {return m_sig_1;}
     CSignature* get_sig_2() {return m_sig_2;}
     sigstring_t get_sig1_string() { return m_sig_string_1;}
     sigstring_t get_sig2_string() { return m_sig_string_2;}
     morph_t     get_morph() {return morph;}
     QString     display();
+    void        add_stem(QString stem) {my_stems.append(stem);}
+    QStringList& get_my_stems() {return my_stems;}
+    bool        contains_stem(QString stem) {return my_stems.contains(stem);}
 };
 
 struct DoomedSignatureInfo {
@@ -350,6 +363,7 @@ public:
     bool                                        verify_parses(); //check parses against the parses in each word;
     bool                                        remove_parse(QString full_display_of_parse);
     bool                                        remove_parse(CParse*);
+    bool                                        remove_parse(CParse&);
 
 
 public:

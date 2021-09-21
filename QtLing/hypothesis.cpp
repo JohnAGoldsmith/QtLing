@@ -262,8 +262,6 @@ void CLexicon::step9c_from_doomed_info_map_to_hypotheses(const DoomedSignatureIn
         CHypothesis * this_hypothesis = new CHypothesis( this_hypothesis_type, p_edge->get_morph(),
                                                          p_edge->get_sig1_string(),
                                                          p_edge->get_sig2_string(),
-                                                         ref_info.m_str_revised_sig,
-                                                         ref_info.m_str_revised_sig.split('='),
                                                          p_edge->get_number_of_words());
         m_Hypotheses->append(this_hypothesis);
         m_Hypothesis_map->insert (this_hypothesis->express_as_string(),  this_hypothesis);
@@ -354,8 +352,6 @@ CHypothesis::CHypothesis (eHypothesisType HypothesisT,
                           const morph_t& this_morph,
                           const sigstring_t& sig1,
                           const sigstring_t& sig2,
-                          const sigstring_t& new_sig,
-                          const QStringList& new_affixes,
                           const int number_of_words_saved)
 {
     if (HypothesisT == HT_affix_goes_to_signature){
@@ -363,11 +359,10 @@ CHypothesis::CHypothesis (eHypothesisType HypothesisT,
         m_number_of_words_saved = 0;
         m_signature_1_longer_stem       = sig1;
         m_signature_2_shorter_stem       = sig2;
-        m_new_signature_2   = new_sig;
         m_morpheme          = this_morph;
         m_new_edge          = new QPair<QString, sigstring_t>(m_morpheme, m_signature_1_longer_stem);
         m_number_of_words_saved = number_of_words_saved;
-        (void) new_affixes; // placeholder.
+
     }
 }
 
