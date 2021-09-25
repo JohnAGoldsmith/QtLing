@@ -514,6 +514,9 @@ void MainWindow::do_crab2()
     m_graphics_scene->set_signature_collection(get_lexicon()->get_active_signature_collection());
     m_leftTreeView->expandAll();
     m_leftTreeView->resizeColumnToContents(0);
+    get_lexicon()->get_suffix_flag()?
+          display_epositive_suffix_signatures(get_lexicon()):
+          display_epositive_prefix_signatures(get_lexicon());
     statusBar()->showMessage("Crab 2: Resignaturize with known affixes, completed.");
     emit lexicon_ready();
 }
@@ -527,6 +530,9 @@ void MainWindow::do_crab3()
     m_graphics_scene->set_signature_collection(get_lexicon()->get_active_signature_collection());
     m_leftTreeView->expandAll();
     m_leftTreeView->resizeColumnToContents(0);
+    get_lexicon()->get_suffix_flag()?
+          display_epositive_suffix_signatures(get_lexicon()):
+          display_epositive_prefix_signatures(get_lexicon());
     statusBar()->showMessage("Crab 3: Good sigs inside bad completed.");
     emit lexicon_ready();
 }
@@ -545,6 +551,9 @@ void MainWindow::do_crab4()
     m_leftTreeView->expandAll();
     m_leftTreeView->resizeColumnToContents(0);
     write_stems_and_words();
+    get_lexicon()->get_suffix_flag()?
+          display_epositive_suffix_signatures(get_lexicon()):
+          display_epositive_prefix_signatures(get_lexicon());
     statusBar()->showMessage("Crab 4: repair low entropy signatures completed.");
 }
 void MainWindow::do_crab5()
@@ -560,6 +569,9 @@ void MainWindow::do_crab5()
     m_leftTreeView->expandAll();
     m_leftTreeView->resizeColumnToContents(0);
     write_stems_and_words();
+    get_lexicon()->get_suffix_flag()?
+          display_epositive_suffix_signatures(get_lexicon()):
+          display_epositive_prefix_signatures(get_lexicon());
     statusBar()->showMessage("Crab 5: split complex morphemes completed.");
 }
 void MainWindow::do_crab6(){

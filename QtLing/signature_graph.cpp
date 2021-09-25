@@ -31,8 +31,6 @@ void CLexicon::step8a_compute_word_sig_pairs()
     QString         shorter_stem, longer_stem, shorter_stem_sig_string, longer_stem_sig_string, label;
     Parse_triple *  shorter_stem_triple, * longer_stem_triple;
 
-
-
     m_StatusBar->showMessage("5 Split morphemes: find words with multiple analyses...");
     m_ProgressBar->reset();
     m_ProgressBar->setMinimum(0);
@@ -48,8 +46,7 @@ void CLexicon::step8a_compute_word_sig_pairs()
         for (int i = 0; i < pWord->get_parse_triple_list()->size(); i++)
         {   Parse_triple * this_triple = pWord->get_parse_triple_list()->at(i);
             analysis_number += 1;
-            this_stem = this_triple->m_stem;
-
+            this_stem = this_triple->m_stem;       
             for (int j = i+1; j <pWord->get_parse_triple_list()->size(); j++ )
             {   Parse_triple* the_other_triple = pWord->get_parse_triple_list()->at(j);
                 the_other_stem = the_other_triple->m_stem;                
@@ -75,6 +72,7 @@ void CLexicon::step8a_compute_word_sig_pairs()
                     longer_stem_sig_ptr = m_PrefixSignatures->find_or_fail(longer_stem_triple->m_sig_string);
                     difference = longer_stem.left(length_of_difference);
                 }
+
                 shorter_stem_sig_string = shorter_stem_sig_ptr->display();
                 longer_stem_sig_string = longer_stem_sig_ptr->display();
                 if ( shorter_stem_sig_ptr == longer_stem_sig_ptr){continue;}
@@ -87,25 +85,22 @@ void CLexicon::step8a_compute_word_sig_pairs()
                         continue;
                     }
                     p_sig_pair->add_stem(shorter_stem);
-                    //qDebug() << "  add new stem "<< shorter_stem << label;
+
                 }else{
                     p_sig_pair = new sig_pair(difference, shorter_stem_sig_string, longer_stem_sig_string);
                     p_sig_pair->add_stem(shorter_stem);
                     m_SigPairMap.insert(label, p_sig_pair);
-                    //qDebug() << "  add pair and stem"<< shorter_stem << label << "count "<<m_SigPairMap.count();
+
                 }
-
-
 
                 QString message1 = "sig graph edge #" + QString::number(analysis_number) + "=signature 1:="
                         + shorter_stem + "/" +  shorter_stem_sig_string + "/" + "difference" + "="  + difference;
                 add_to_word_autobiographies(pWord->get_key(), message1);
+
                 QString message2 = "=signature 2:   =" + longer_stem + "=" + longer_stem_sig_string;
                 add_to_word_autobiographies(pWord->get_key(),message2);
-                //qDebug() << "\n" << this_word<< i << j << analysis_number;
-                //qDebug() << label;
-                //qDebug() << message1;
-                //qDebug() << message2;
+
+                //qDebug() << "\n" << this_word<< i << j << analysis_number << "\n" << label << "\n" << message1 << "\n" << message2;
             } // end of looking at stems longer than this_stem
         } //end of looking at each stem in this word.
     } // each word
@@ -166,7 +161,7 @@ void add_suffixes_to_signature_stringlist(QString difference,
             if (remnant.length() == 0) { remnant= "NULL";}
             if (! affixes_from_longer_stem.contains(remnant)) {
                 affixes_from_longer_stem.append(remnant);
-                qDebug() << 201 << "      Added new suffix to morph" << remnant;
+                //qDebug() << 201 << "      Added new suffix to morph" << remnant;
             }
         }
     }
@@ -177,9 +172,11 @@ void CLexicon::step8c_from_sig_pairs_to_parses(){
     QString shorter_stem, longer_stem;
     QString shorter_stem_sig_string, longer_stem_sig_string;
     QStringList affected_signatures;
+    QString extended_difference_name;
     sig_pair*   p_sig_pair;
     int MINIMUM_NUMBER_OF_WORDS = M_MINIMUM_HYPOTHESIS_WORD_COUNT; // usually 2
     int difference_length;
+    int count;
     while (sig_pair_iter.hasNext())
     {
          p_sig_pair = sig_pair_iter.next().value();
@@ -197,6 +194,10 @@ void CLexicon::step8c_from_sig_pairs_to_parses(){
          QStringList affixes_from_longer_stem  = p_sig_pair->get_sig2_string().split("=");
 
          if (m_SuffixesFlag){
+
+             int count = get_internal_affix_count(difference + ":");
+             extended_difference_name = difference + ":" + QString::number(count);
+
              // remove parses of longer-stem + affixes in long-stem signature.
              remove_parses_1 (this, p_sig_pair->get_my_stems(), affixes_from_longer_stem, difference);
 
@@ -208,12 +209,12 @@ void CLexicon::step8c_from_sig_pairs_to_parses(){
 
              // add a parse of difference (=stem) + each of the suffixes of the long-stem signature.
              foreach (QString suffix, affixes_from_longer_stem){
-                 CParse * pParse = new CParse(difference, suffix, m_SuffixesFlag);
+                 CParse * pParse = new CParse(extended_difference_name, suffix, m_SuffixesFlag);
                  add_parse(pParse);
              }
              // add a parse of shorter-stem plus difference
              foreach (QString stem, p_sig_pair->get_my_stems()){
-                 CParse * pParse = new CParse(stem, difference, m_SuffixesFlag);
+                 CParse * pParse = new CParse(stem, extended_difference_name, m_SuffixesFlag);
                  add_parse(pParse);
              }
          }
@@ -221,7 +222,7 @@ void CLexicon::step8c_from_sig_pairs_to_parses(){
          longer_stem_sig_string = affixes_from_longer_stem.join("=");
 
           CHypothesis * this_hypothesis = new CHypothesis( HT_affix_goes_to_signature,
-                                                           difference,
+                                                           extended_difference_name,
                                                            longer_stem_sig_string,
                                                            p_sig_pair->get_sig1_string(),
                                                            p_sig_pair->get_number_of_words());

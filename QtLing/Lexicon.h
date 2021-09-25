@@ -244,6 +244,8 @@ protected:
 
     bool                            m_SuffixesFlag;
     CLexicon*                       m_parent_lexicon;
+    QMap<QString, int>              m_internal_suffix_counts;
+    QMap<QString, int>              m_internal_prefix_counts; // we assign numbers to the names of word-internal affixes, like ":5" to the end of a suffix, and "5:" to the beginning of a prefix.
 
     // all of the possible continuations
     // affixes that are "thrown out" in Crab2
@@ -307,6 +309,8 @@ public:
     void                                        add_parse(CParse*);
     void                                        add_parasuffix(QString parasuffix, QString word);
     CSignatureCollection*                       get_active_signature_collection();
+    int                                         get_affix_count(QString affix);
+    QStringList                                 get_affix_continuation(QString affix);
     QMap<QString, eComponentType> &             get_category_types()        { return m_category_types;}
     CompoundWordCollection*                     get_compounds()             { return m_Compounds; }
     double                                      get_entropy_threshold_for_positive_signatures() {return m_entropy_threshold_for_stems;}
@@ -314,6 +318,7 @@ public:
     QList<CHypothesis*>*                        get_hypotheses ()           {return m_Hypotheses;}
     QMap<QString, CHypothesis*>  *              get_hypothesis_map()        { return m_Hypothesis_map;}
     CHypothesis*                                get_hypothesis(QString hypothesis_label);
+    int                                         get_internal_affix_count(QString );
     QMap<QString, CParse* > *                   get_parses()                {return &m_ParseMap;}
     //CSuffixCollection*                          get_parasuffixes()          { return m_ParaSuffixes;}
     QMap<QString,QStringList*> *                 get_parasuffixes()          {return m_ParaSuffixes;}

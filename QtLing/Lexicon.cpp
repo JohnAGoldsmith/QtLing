@@ -273,6 +273,31 @@ bool CLexicon::do_gs_evaluation()
         return true;
     } else return false;
 }
+int CLexicon::get_internal_affix_count(QString affix){
+    if (affix.endsWith(":")){
+        affix.truncate(affix.length()-1);
+        if (! m_internal_suffix_counts.contains(affix)){
+            m_internal_suffix_counts[affix] = 1;
+            return 1;
+        }else{
+            m_internal_suffix_counts[affix] += 1;
+            return m_internal_suffix_counts[affix];
+        }
+    } else {
+        if (affix.startsWith(":")){
+            affix = affix.mid(1);
+            if (! m_internal_prefix_counts.contains(affix)){
+                m_internal_prefix_counts[affix] = 1;
+                return 1;
+            } else{
+                m_internal_prefix_counts[affix] += 1;
+                return m_internal_prefix_counts[affix];
+            }
+        }else{
+            return 0;
+        }
+    }
+}
 
 EvalParses* CLexicon::new_eval_parses_from_txt(QString& file_name)
 {
@@ -373,4 +398,15 @@ void  CLexicon::add_parasuffix(QString parasuffix, QString word){
         m_ParaSuffixes->insert(parasuffix, new QStringList());
     }
     m_ParaSuffixes->value(parasuffix)->append(word);
+}
+
+QStringList CLexicon::get_affix_continuation(QString affix){
+    QStringList continuations;
+   if (m_SuffixesFlag){
+
+
+   } else{
+
+   }
+   return continuations;
 }

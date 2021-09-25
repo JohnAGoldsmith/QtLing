@@ -299,11 +299,9 @@ void CLexicon::step2_from_protostems_to_parses()
     m_ProgressBar->reset();
     m_ProgressBar->setMinimum(0);
     m_ProgressBar->setMaximum(m_Words->get_count());
-    //m_StatusBar->showMessage("2: find stem-affix pairs.");
     QString                     stem, suffix, word, prefix;
     int                         suffix_length, prefix_length, wordno (0);
     map_string_to_word_ptr_iter *   word_iter = m_Words->get_iterator();
-    // bool                        DoNotParseCompoundsFlag = true;
     while (word_iter->hasNext())   {
         word = word_iter->next().value()->get_word();
         if (word.contains('-')){
@@ -386,8 +384,10 @@ void   CLexicon::step3_from_parses_to_stem_to_sig_maps(QString name_of_calling_f
     clear_lexicon();
 
     //--> We establish a temporary map from stems to sets of affixes as we iterate through parses. <--//
+
     m_intermediate_stem_to_sig_map.clear();
     step3a_from_parses_to_stem_to_sig_map(  );
+
     //--> We iterate through these stems and for each stem, create QStringLists of their affixes. <--//
     //--> then we create a "pre-signature" in a map that points to lists of stems. <--//
 
@@ -404,14 +404,14 @@ void   CLexicon::step3_from_parses_to_stem_to_sig_maps(QString name_of_calling_f
  */
 void CLexicon::step3a_from_parses_to_stem_to_sig_map(  )
 {
-    QString this_stem_t, this_affix_t;
+    QString this_stem, this_affix;
     foreach (CParse* this_parse, m_ParseMap){
-        this_stem_t = this_parse->get_stem();
-        this_affix_t = this_parse->get_affix();
-        if (!m_intermediate_stem_to_sig_map.contains(this_stem_t)){
-            m_intermediate_stem_to_sig_map[this_stem_t] = QSet<affix_t>();
+        this_stem = this_parse->get_stem();
+        this_affix = this_parse->get_affix();
+        if (!m_intermediate_stem_to_sig_map.contains(this_stem)){
+            m_intermediate_stem_to_sig_map[this_stem] = QSet<affix_t>();
         }
-        m_intermediate_stem_to_sig_map[this_stem_t].insert(this_affix_t);
+        m_intermediate_stem_to_sig_map[this_stem].insert(this_affix);
     }
 
 }
@@ -524,13 +524,13 @@ void CLexicon::step4_create_signatures(const QString& name_of_calling_function,
     // -->  Iterate through tentative signatures.    <-- //
     int count (0);
     foreach (this_signature_string, m_intermediate_sig_to_stem_map.m_core.keys() )
-    { //---------------------------------------------------------------------------------------------------------//
+    {   //---------------------------------------------------------------------------------------------------------//
         qApp->processEvents();
         m_ProgressBar->setValue(count);
         if (count++ % 1000 == 0){
-            qApp->processEvents();
+              qApp->processEvents();
         }
-      //---------------------------------------------------------------------------------------------------------//
+        //---------------------------------------------------------------------------------------------------------//
         QSet<stem_t>* this_stem_set = m_intermediate_sig_to_stem_map.get_stem_set(this_signature_string);
         affix_list this_affix_list = this_signature_string.split("=");
 
@@ -548,14 +548,8 @@ void CLexicon::step4_create_signatures(const QString& name_of_calling_function,
             foreach (QString this_affix_t, this_affix_list){
                 step4a_link_signature_and_affix(pSig,this_affix_t);
             }
+            // NEXT LOOP  cannot stay here; the current signature might contain an internal affix in a signature that has not yet been treated.
             foreach (this_stem_t, *this_stem_set){
-
-                if (m_ParseMap.contains("populari")){
-                    qDebug() << 571 << "contains populari";
-                } else{
-                  //  qDebug() << 573 << " Doesn't contain populari" ;
-                }
-
                 step4b_link_signature_and_stem_and_word(this_stem_t,pSig, name_of_calling_function);
             }
         } // end of condition of having enough stems in the signature.
@@ -619,59 +613,33 @@ void CLexicon::step4b_link_signature_and_stem_and_word
     int stem_count = 0;
     affix_list this_affix_list = this_signature_string.split("=");
     foreach (this_affix, this_affix_list){
-        if (!this_affix.contains('[')) {
-            // word does not contain secondary affixes, same as before
-            if (this_affix == "NULL"){ this_word = this_stem_t; }
-            else {
+        if (this_affix == "NULL"){
+                this_word = this_stem_t; }
+        else {
+            if (! this_affix.contains(":")) {
                 if (m_SuffixesFlag){
-                    this_word = this_stem_t + this_affix;
-                    this_word_split = this_stem_t + " " + this_affix;
-                   }else{
-                        this_word = this_affix + this_stem_t ;
-                        this_word_split = this_affix + " " + this_stem_t;
-                   }
+                      this_word = this_stem_t + this_affix;
+                      this_word_split = this_stem_t + " " + this_affix;
+                } else {
+                      this_word = this_affix + this_stem_t ;
+                      this_word_split = this_affix + " " + this_stem_t;
+                }
+            }else{
+                // this_affix is internal, and contains a ":"
             }
-            // connect word and signature
-            CWord* pWord = m_Words->get_word(this_word);
-            if (pWord == NULL){
-            } else {
+        }
+        // connect word and signature
+        CWord* pWord = m_Words->get_word(this_word);
+        if (pWord == NULL){
+                // this section will contain code once we generate new unseen words; their virtual status will be marked on the words' autobiographies.
+        } else {
                 stem_count += pWord->get_word_count();                
                 pWord->add_parse_triple(this_stem_t, this_affix, pSig->get_key());
                 pWord->add_morphemic_split(this_word_split);
                 word_autobiography_positive_notice(this_word, this_stem_t, this_signature_string, name_of_calling_function);
-            }
-        } else {
-            // Iterating through the list of affixes in the associated signatrue,
-            // e.g. iterating through the list {NULL, s} in ment[NULL~s]
-            int bracket_start_i = this_affix.indexOf('[');
-            const QString reduced_affix = this_affix.left(bracket_start_i);
-            const QString str_secondary_affixes =
-                    this_affix.mid(bracket_start_i+1, this_affix.length()-bracket_start_i-2);
-            const QStringList secondary_affixes = str_secondary_affixes.split('~');
-            foreach (QString secondary_affix, secondary_affixes) {
-                if (secondary_affix == "NULL")
-                    secondary_affix = "";
-                m_SuffixesFlag ?
-                        this_affix = reduced_affix + secondary_affix:
-                        this_affix = secondary_affix + reduced_affix;
-                m_SuffixesFlag ?
-                        this_word = this_stem_t + this_affix:
-                        this_word = this_affix + this_stem_t;
-
-                // connecting word and signature
-                CWord* pWord = m_Words->get_word(this_word);
-                if (!pWord){
-                    qDebug() << 611<<  this_word <<  "Step4: this_word notfound among words."
-                             << this_stem_t  << this_affix;
-                } else {
-                    stem_count += pWord->get_word_count();
-                    pWord->add_parse_triple(this_stem_t, this_affix, pSig->get_key());
-                    word_autobiography_positive_notice_2(this_word, this_stem_t, this_signature_string, name_of_calling_function);
-                }
-            } // end of iterating through each secondary affix in sig associated with an affix
-        } // end of dealing with affixes with associated signature -- added by Hanson 7.30
-    }
-    pStem->set_count(stem_count);
+        }
+     }
+     pStem->set_count(stem_count);
 }
 
 bool contains(QList<QString> * list2, QList<QString> * list1){
