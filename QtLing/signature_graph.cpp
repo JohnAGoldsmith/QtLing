@@ -45,10 +45,11 @@ void CLexicon::step8a_compute_word_sig_pairs()
         analysis_number = 0;
         for (int i = 0; i < pWord->get_parse_triple_list()->size(); i++)
         {   Parse_triple * this_triple = pWord->get_parse_triple_list()->at(i);
-            analysis_number += 1;
+
             this_stem = this_triple->m_stem;       
             for (int j = i+1; j <pWord->get_parse_triple_list()->size(); j++ )
             {   Parse_triple* the_other_triple = pWord->get_parse_triple_list()->at(j);
+                analysis_number += 1;
                 the_other_stem = the_other_triple->m_stem;                
                 if (this_stem.length() > the_other_stem.length()){
                     shorter_stem = the_other_stem;
@@ -93,8 +94,8 @@ void CLexicon::step8a_compute_word_sig_pairs()
 
                 }
 
-                QString message1 = "sig graph edge #" + QString::number(analysis_number) + "=signature 1:="
-                        + shorter_stem + "/" +  shorter_stem_sig_string + "/" + "difference" + "="  + difference;
+                QString message1 = "Comparison #" + QString::number(analysis_number) + "=signature 1:="
+                        + shorter_stem + "=" +  shorter_stem_sig_string + "=" + "difference" + "="  + difference;
                 add_to_word_autobiographies(pWord->get_key(), message1);
 
                 QString message2 = "=signature 2:   =" + longer_stem + "=" + longer_stem_sig_string;
@@ -145,6 +146,11 @@ void remove_parses_2(CLexicon* lexicon, QStringList& stems, QStringList& affixes
        foreach(QString suffix, affixes ){
              if (suffix.startsWith(difference)){
                     CParse this_parse(stem, suffix, lexicon->get_suffix_flag());
+                    //qDebug() << stem << suffix;
+                    if (stem.startsWith("summari")){
+                        int i = 1;
+                        qDebug() << stem << suffix;
+                    }
                     lexicon->remove_parse(this_parse);
              }
        }
@@ -231,6 +237,7 @@ void CLexicon::step8c_from_sig_pairs_to_parses(){
 
     }
 
+    //  !! Note: here we want to allow stems that only occur once -- they are pre-approved, so to speak.
 
     step3_from_parses_to_stem_to_sig_maps("Splitting up complex morphemes");
     step4_create_signatures("Splitting up complex morphemes.");

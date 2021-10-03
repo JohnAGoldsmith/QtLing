@@ -296,21 +296,20 @@ public:
     GoldStandard*                               new_goldstandard_from_xml(QString& file_name);
     void                                        delete_goldstandard()       { delete m_goldstandard; m_goldstandard = NULL; }
     bool                                        do_gs_evaluation();
-
     EvalParses*                                 get_eval_parses()      { return m_eval_parses; }
     EvalParses*                                 new_eval_parses_from_txt(QString& file_name);
     void                                        delete_eval_parses();
     bool                                        do_gs_evaluation_on_eval_parses();
-
-
     void                                        dump_signatures_to_debug();
+
     // accessors and protostems
     void                                        dump_suffixes(QList<QString>*);
     void                                        add_parse(CParse*);
     void                                        add_parasuffix(QString parasuffix, QString word);
+    CSignature *                                find_signature_of_stem(QString stem, bool suffix_flag);
     CSignatureCollection*                       get_active_signature_collection();
     int                                         get_affix_count(QString affix);
-    QStringList                                 get_affix_continuation(QString affix);
+    QStringList                                 get_affix_continuation(QString affix, bool suffix_flag ,QStringList continuations );
     QMap<QString, eComponentType> &             get_category_types()        { return m_category_types;}
     CompoundWordCollection*                     get_compounds()             { return m_Compounds; }
     double                                      get_entropy_threshold_for_positive_signatures() {return m_entropy_threshold_for_stems;}
@@ -386,6 +385,7 @@ public:
                                  eMinimumStemCountFlag min_stem_count_flag = MS_respect_mininmum_stem_count);
     void step4a_link_signature_and_affix(CSignature*, affix_t);
     void step4b_link_signature_and_stem_and_word(stem_t , CSignature*, const QString& name_of_calling_function);
+    void link_signatures_with_words(QString& name_of_calling_function);
 
     void replace_parse_pairs_from_current_signature_structure();
     void repair_low_entropy_signatures();

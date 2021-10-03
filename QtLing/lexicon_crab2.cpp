@@ -29,7 +29,7 @@ extern bool contains(QList<QString> * list2, QList<QString> * list1);
 * This creates signatures and stems: signatures that only have approved affixes.
 * I need to refactorize this function.
 */
-void CLexicon::ReSignaturizeWithKnownAffixes()
+void CLexicon::ReSignaturizeWithKnownAffixes()  // step 2
 {
     m_StatusBar->showMessage("Crab 2: Resignaturize with known affixes");
     m_ProgressBar->reset();
@@ -132,7 +132,7 @@ int IntersectionCount(QList<CPrefix*>* list1, QList<CPrefix*>* list2){
  *
  * 2nd function of Crab 2.
  */
-void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
+void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()  // step 3
 {   stem_t                      this_stem;
     word_t                      this_word;
     affix_t                     this_affix;
@@ -256,15 +256,24 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()
                     best_intersection_count = pBestSig->get_size_of_intersection(pBestSig);
              }
         }
+        // get rid of this... just add parses.
         QListIterator<QString> affix_iter_2(pBestSig->get_affix_string_list(best_affix_list));
         while(affix_iter_2.hasNext()){
             this_affix = affix_iter_2.next();
-            step4a_link_signature_and_affix(pBestSig,this_affix);
+            //step4a_link_signature_and_affix(pBestSig,this_affix);
+            CParse* pParse = new CParse(this_stem, this_affix, m_SuffixesFlag);
+            add_parse(pParse);
         }
         // this is the right place to identify parasuffixes -- the extensions of *real* stems, not protostems (as is currently done).
+        // Get rid of this, just add parses to parselist:
 
-        step4b_link_signature_and_stem_and_word(this_stem, pBestSig, "Good sigs inside bad");
+        //step4b_link_signature_and_stem_and_word(this_stem, pBestSig, "Good sigs inside bad");
 
     }// end of protostem loop
+
+    step3_from_parses_to_stem_to_sig_maps("Good sigs inside bad");
+    step4_create_signatures("Good sigs inside bad");
+    replace_parse_pairs_from_current_signature_structure();
+
 }
 

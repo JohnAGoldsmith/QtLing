@@ -400,13 +400,29 @@ void  CLexicon::add_parasuffix(QString parasuffix, QString word){
     m_ParaSuffixes->value(parasuffix)->append(word);
 }
 
-QStringList CLexicon::get_affix_continuation(QString affix){
-    QStringList continuations;
-   if (m_SuffixesFlag){
+QStringList CLexicon::get_affix_continuation(QString affix, bool suffix_flag, QStringList continuations){
+    if (suffix_flag){
+        CStem * pStem_from_affix = m_suffixal_stems->find_or_fail(affix);
+    }
+    CSignature* pSig = find_signature_of_stem(affix, suffix_flag);
+   if (pSig->get_suffix_flag()){
+       foreach (QString this_affix, pSig->get_key().split("=")){
+           if (this_affix.contains(":")){
+                   foreach (QString new_affix,  get_affix_continuation(this_affix, pSig->get_suffix_flag(), continuations) ){
+                       continuations.append(this_affix + "=" +  new_affix);
+                   }
 
-
+            } else {
+                continuations.append(this_affix);
+            }
+        }
    } else{
-
+    // prefixes
    }
    return continuations;
+}
+CSignature* CLexicon::find_signature_of_stem(QString stem, bool suffix_flag){
+    if (suffix_flag){
+
+    }
 }

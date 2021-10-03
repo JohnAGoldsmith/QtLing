@@ -21,6 +21,7 @@
 #include "evaluation.h"
 #include "cparse.h"
 #include "compound.h"
+#include "Stem.h"
 
 
 void SortQStringListFromRight(QStringList& ThisStringList);
@@ -596,6 +597,54 @@ void stem_autobiography_positive_notice (CLexicon* lexicon, QString stem, QStrin
                                          .arg(sig_string));
 }
 
+QString clean(QString string){
+    string.remove(QChar(' '));
+    string.remove(QChar(':'));
+}
+void CLexicon::link_signatures_with_words(QString& name_of_calling_function){
+    QString word;
+    if (m_SuffixesFlag){
+        foreach (CSignature* pSig, *m_Signatures->get_signature_list()){
+            foreach (CStem* pStem, *pSig->get_stems()){
+                QString stem = pStem->get_key();
+                foreach (QString affix, pSig->get_key().split("=")){
+                    if (affix=="NULL"){
+                        word = stem;
+                        CWord* pWord = m_Words->find_or_fail(word);
+                        if (pWord){
+
+                        }
+                    }
+                    else{if (affix.contains(":")){
+                            QStringList continuations;
+                            foreach (QString continuation, get_affix_continuation(affix, m_SuffixesFlag, continuations )){
+                                continuation = clean(continuation);
+                                word = pStem->get_key() + continuation;
+                                qDebug() << 613 << word;
+                                CWord* pWord = m_Words->find_or_fail(word);
+                                if (pWord){
+
+                                }
+                            }
+                         } else {
+                            word = stem + affix;
+                            CWord* pWord = m_Words->find_or_fail(word);
+                            if (pWord){
+
+                            }
+                         }
+                    }
+                }
+            }
+
+
+        }
+
+
+    }else{
+
+    }
+}
 
 void CLexicon::step4b_link_signature_and_stem_and_word
 (stem_t this_stem_t, CSignature* pSig, const QString& name_of_calling_function)
@@ -610,6 +659,8 @@ void CLexicon::step4b_link_signature_and_stem_and_word
     pStem->add_signature(pSig);
     pSig->add_stem_pointer(pStem);
     stem_autobiography_positive_notice(this, this_stem_t, name_of_calling_function, this_signature_string);
+
+    // remove what follows, is for words;
     int stem_count = 0;
     affix_list this_affix_list = this_signature_string.split("=");
     foreach (this_affix, this_affix_list){
@@ -628,7 +679,7 @@ void CLexicon::step4b_link_signature_and_stem_and_word
                 // this_affix is internal, and contains a ":"
             }
         }
-        // connect word and signature
+        // connect word and signature NO this has to be done separately (and later than the stem thing)
         CWord* pWord = m_Words->get_word(this_word);
         if (pWord == NULL){
                 // this section will contain code once we generate new unseen words; their virtual status will be marked on the words' autobiographies.
@@ -639,6 +690,10 @@ void CLexicon::step4b_link_signature_and_stem_and_word
                 word_autobiography_positive_notice(this_word, this_stem_t, this_signature_string, name_of_calling_function);
         }
      }
+     // remove up to here
+
+
+
      pStem->set_count(stem_count);
 }
 
@@ -768,14 +823,10 @@ void CLexicon::repair_low_entropy_signatures()
                    QString word = parse.display();
                    QString stem2 = stem.left(stem.length()-1);
                    CWord* pWord = get_words()->find_or_fail(word);
-                   if (stem2=="abducti"){
-                       qDebug() << 807 << " abducti" ;
-                   }
                    if (pWord->contains_this_stem_among_parses(stem2)){
                           this_morphemic_split = parse.display_with_gap();
                           pWord->remove_morphemic_split(this_morphemic_split);
                           remove_parse(&parse);
-                          //qDebug() << 823 << this_morphemic_split;
                    }
             } //end of affixes in this sig
         } // end of stems in this sig;
@@ -784,10 +835,8 @@ void CLexicon::repair_low_entropy_signatures()
     verify_parses(); //check complete list of parses in Lexicon with what's in the words;
 
 */
-    qDebug() << 818;
+
     step3_from_parses_to_stem_to_sig_maps(QString("Shift morpheme boundary leftward"));
-    //MS_ignore_minimum_stem_count
-    qDebug() << 821;
     step4_create_signatures(QString("Shift morpheme boundary leftward"));
 
 
