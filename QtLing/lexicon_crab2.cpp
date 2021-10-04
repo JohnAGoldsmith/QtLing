@@ -256,18 +256,13 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()  // step 3
                     best_intersection_count = pBestSig->get_size_of_intersection(pBestSig);
              }
         }
-        // get rid of this... just add parses.
         QListIterator<QString> affix_iter_2(pBestSig->get_affix_string_list(best_affix_list));
         while(affix_iter_2.hasNext()){
             this_affix = affix_iter_2.next();
-            //step4a_link_signature_and_affix(pBestSig,this_affix);
-            CParse* pParse = new CParse(this_stem, this_affix, m_SuffixesFlag);
-            add_parse(pParse);
+            add_parse(new CParse(this_stem, this_affix, m_SuffixesFlag));
+
         }
         // this is the right place to identify parasuffixes -- the extensions of *real* stems, not protostems (as is currently done).
-        // Get rid of this, just add parses to parselist:
-
-        //step4b_link_signature_and_stem_and_word(this_stem, pBestSig, "Good sigs inside bad");
 
     }// end of protostem loop
 
