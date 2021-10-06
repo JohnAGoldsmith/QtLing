@@ -206,7 +206,7 @@ void CSignatureCollection::calculate_stem_entropy()
     while (sig_iter.hasNext())
     {
         sig_iter.next();
-        qDebug() << 209 << sig_iter.value()->get_key();
+        //qDebug() << 209 << sig_iter.value()->get_key();
         sig_iter.value()->calculate_stem_entropy();
     }
 }

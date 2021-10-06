@@ -138,6 +138,9 @@ void remove_parses_1 (CLexicon* lexicon,    QStringList& stems, QStringList&  af
            foreach(QString suffix, affixes){
                CParse this_parse(longer_stem, suffix, lexicon->get_suffix_flag());
                lexicon->remove_parse(& this_parse);
+               if (stem=="abnormal" ){
+                   qDebug() << 142 << longer_stem << suffix;
+               }
            }
     }
 }
@@ -147,9 +150,9 @@ void remove_parses_2(CLexicon* lexicon, QStringList& stems, QStringList& affixes
              if (suffix.startsWith(difference)){
                     CParse this_parse(stem, suffix, lexicon->get_suffix_flag());
                     //qDebug() << stem << suffix;
-                    if (stem.startsWith("summari")){
+                    if (stem.startsWith("abnorm")){
                         int i = 1;
-                        qDebug() << stem << suffix;
+                        qDebug() << 155 <<  stem << suffix;
                     }
                     lexicon->remove_parse(this_parse);
              }

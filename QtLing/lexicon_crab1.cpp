@@ -130,24 +130,13 @@ void CLexicon::Crab_4()
 void CLexicon::Crab_5()
 {   m_StatusBar->showMessage("Crab 5: split complex morphemes...");
     replace_parse_pairs_from_current_signature_structure();
-
-
-
     step8a_compute_word_sig_pairs();
-    //step8b_compute_sig_pair_map(); // this definitely isn't needed anymore. I put its functionality into step8a.
-
     step8c_from_sig_pairs_to_parses();
-
-    //step9_from_sig_pair_map_to_hypotheses(); //NOTE: this step works but only if we do not first run step 8c; 8c will mess up step 9.
-
-
     m_SuffixesFlag?
                 m_Signatures->calculate_sig_robustness():
                 m_PrefixSignatures->calculate_sig_robustness();
-
     test_json_functionality();
 
-   m_StatusBar->showMessage("Crab 5: split complex morphemes completed.");
 }
 
 
@@ -504,8 +493,9 @@ void CLexicon::step4_create_signatures(const QString& name_of_calling_function,
                 pSig->set_suffix_flag(false);
             }
             foreach (QString stem, *this_stem_set){
+                link_signature_with_stem(pSig, this_signature_string, stem, name_of_calling_function);
                 foreach (QString this_affix_t, this_affix_list){
-                    step4a_link_signature_with_stem_and_affix(pSig, stem, this_affix_t, name_of_calling_function);
+                    step4a_link_signature_with_affix(pSig, stem, this_affix_t, name_of_calling_function);
                 }
             }
         } // end of condition of having enough stems in the signature.
@@ -540,7 +530,18 @@ void stem_autobiography_positive_notice (CLexicon* lexicon, QString stem, QStrin
                                          .arg(calling_function)
                                          .arg(sig_string));
 }
-void CLexicon::step4a_link_signature_with_stem_and_affix(CSignature * pSig, stem_t this_stem, affix_t this_affix, QString name_of_calling_function)
+void CLexicon::link_signature_with_stem(CSignature * pSig, QString this_signature_string, QString stem, QString name_of_calling_function){
+    CStem* pStem;
+    m_SuffixesFlag ?
+                pStem = m_suffixal_stems->find_or_add(stem):
+                pStem = m_prefixal_stems->find_or_add(stem);
+    pStem->add_signature(pSig);
+    pSig->add_stem_pointer(pStem);
+    stem_autobiography_positive_notice(this, stem, name_of_calling_function, this_signature_string);
+
+}
+
+void CLexicon::step4a_link_signature_with_affix(CSignature * pSig, stem_t this_stem, affix_t this_affix, QString name_of_calling_function)
 {   CStem* pStem;
     QString this_signature_string = pSig->get_key();
     m_SuffixesFlag ?
@@ -562,56 +563,68 @@ void CLexicon::step4a_link_signature_with_stem_and_affix(CSignature * pSig, stem
 }
 
 QString clean(QString string){
-    string.remove(QChar(' '));
-    string.remove(QChar(':'));
+    QStringList parts = string.split(":");
+    if (parts.length() == 1) return string;
+    if (parts.length() > 2) return QString();
+    bool test0, test1;
+    int i = parts[0].toInt(&test0);
+    i = parts[1].toInt(&test1);
+    if (!test0 && test1) {return parts[0];}
+    if (test0 && !test1) {return parts[1];}
+    return QString();
 }
 
 void CLexicon::step4b_link_all_words_to_signatures(QString name_of_calling_function){
-    QString word, word_split;
+    QString word, word_split, stem, sig_string;
 
     if (m_SuffixesFlag){
         foreach (CSignature* pSig, *m_Signatures->get_signature_list()){
+            sig_string = pSig->get_key();
             foreach (CStem* pStem, *pSig->get_stems()){
-                QString stem = pStem->get_key();
-                foreach (QString affix, pSig->get_key().split("=")){
+                stem = pStem->get_key();
+                foreach (QString affix, sig_string.split("=")){                  
                     if (affix=="NULL"){
                         word = stem;
                         word_split = stem;
                         CWord* pWord = m_Words->find_or_fail(word);
                         if (pWord){
                             //stem_count += pWord->get_word_count();  TODO
-                            pWord->add_parse_triple(stem, affix, pSig->get_key());
+                            pWord->add_parse_triple(stem, affix, sig_string);
                             pWord->add_morphemic_split(word_split);
                             word_autobiography_positive_notice(word, stem, pSig->get_key(), name_of_calling_function);
                         }
                     }
                     else{if (affix.contains(":")){
-                            CStem* pStem = m_suffixal_stems->find_or_fail(affix);
-                            if (pStem)
-                            {    QString key = pStem->get_key();
-                                 CSignature* pSig = m_Signatures->find_or_fail(pStem->get_key());
-                                 foreach (QString suffix, pStem->get_key())
-                                 {
-                                    word = pStem->get_key() + suffix;
+                            CStem* inner_suffix = m_suffixal_stems->find_or_fail(affix);
+                            if (inner_suffix)
+                            {
+                                 CSignature* pLocalSig = inner_suffix->get_last_signature();
+                                 QStringList temp;
+                                 foreach (QString suffix, pLocalSig->get_affix_string_list(temp))
+                                 {  if (suffix == "NULL") suffix = "";
+                                    word =  stem + clean(affix) + suffix;
                                     CWord* pWord = m_Words->find_or_fail(word);
                                     if (pWord)
                                     {
                                         //stem_count += pWord->get_word_count();  TODO
+
                                         pWord->add_parse_triple(stem, affix, pSig->get_key());
                                         pWord->add_morphemic_split(word_split);
                                         word_autobiography_positive_notice(word, stem, pSig->get_key(), name_of_calling_function);
                                     }
                                  }
                             }
-                         } else {
+                         }
+                        else
+                        {
                             word = stem + affix;
                             word_split = stem + " " + affix;
                             CWord* pWord = m_Words->find_or_fail(word);
                             if (pWord){
                                 //stem_count += pWord->get_word_count();  TODO
-                                pWord->add_parse_triple(stem, affix, pSig->get_key());
+                                pWord->add_parse_triple(stem, affix, sig_string);
                                 pWord->add_morphemic_split(word_split);
-                                word_autobiography_positive_notice(word, stem, pSig->get_key(), name_of_calling_function);
+                                word_autobiography_positive_notice(word, stem, sig_string, name_of_calling_function);
                             }
                          }
                     }
@@ -623,58 +636,6 @@ void CLexicon::step4b_link_all_words_to_signatures(QString name_of_calling_funct
     }
 }
 
-/*
-void CLexicon::step4b_link_signature_and_stem_and_word
-(stem_t this_stem_t, CSignature* pSig, const QString& name_of_calling_function)
-{
-    CStem* pStem;
-    QString this_affix, this_word, this_word_split;
-    QString this_signature_string = pSig->get_key();
-    //m_SuffixesFlag ?
-    //        pStem = m_suffixal_stems->find_or_add(this_stem_t):
-    //        pStem = m_prefixal_stems->find_or_add(this_stem_t);
-
-    //pStem->add_signature(pSig);
-    //pSig->add_stem_pointer(pStem);
-    //stem_autobiography_positive_notice(this, this_stem_t, name_of_calling_function, this_signature_string);
-
-    // remove what follows, is for words;
-    int stem_count = 0;
-    affix_list this_affix_list = this_signature_string.split("=");
-    foreach (this_affix, this_affix_list){
-        if (this_affix == "NULL"){
-                this_word = this_stem_t; }
-        else {
-            if (! this_affix.contains(":")) {
-                if (m_SuffixesFlag){
-                      this_word = this_stem_t + this_affix;
-                      this_word_split = this_stem_t + " " + this_affix;
-                } else {
-                      this_word = this_affix + this_stem_t ;
-                      this_word_split = this_affix + " " + this_stem_t;
-                }
-            }else{
-                // this_affix is internal, and contains a ":"
-            }
-        }
-        // connect word and signature NO this has to be done separately (and later than the stem thing)
-        CWord* pWord = m_Words->get_word(this_word);
-        if (pWord == NULL){
-                // this section will contain code once we generate new unseen words; their virtual status will be marked on the words' autobiographies.
-        } else {
-                stem_count += pWord->get_word_count();                
-                pWord->add_parse_triple(this_stem_t, this_affix, pSig->get_key());
-                pWord->add_morphemic_split(this_word_split);
-                word_autobiography_positive_notice(this_word, this_stem_t, this_signature_string, name_of_calling_function);
-        }
-     }
-     // remove up to here
-
-
-
-     pStem->set_count(stem_count);
-}
-*/
 bool contains(QList<QString> * list2, QList<QString> * list1){
     for (int i=0; i < list1->length();i++){
         bool success = false;

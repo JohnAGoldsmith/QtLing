@@ -318,7 +318,7 @@ double CSignature::calculate_stem_entropy()
     double entropy =0.0;
     foreach (pStem, *m_Stems){
         stem_t this_stem = pStem->get_key();
-        qDebug() << 321 << this_stem;
+        //qDebug() << 321 << this_stem;
         // check for only the first/last letter
         m_SuffixFlag?
             letter = this_stem.at(this_stem.length()-1):

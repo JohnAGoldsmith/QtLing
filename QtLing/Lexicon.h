@@ -383,9 +383,10 @@ public:
     //void step4_create_signatures(QString name_of_calling_function);
     void step4_create_signatures(const QString& name_of_calling_function,
                                  eMinimumStemCountFlag min_stem_count_flag = MS_respect_mininmum_stem_count);
-    void step4a_link_signature_with_stem_and_affix(CSignature*, stem_t, affix_t, QString name_of_calling_function);
+    void step4a_link_signature_with_affix(CSignature*, stem_t, affix_t, QString name_of_calling_function);
     //void step4b_link_signature_and_stem_and_word(stem_t , CSignature*, const QString& name_of_calling_function);
     void step4b_link_all_words_to_signatures(QString name_of_calling_function);
+    void link_signature_with_stem(CSignature*, QString this_signature_string,  QString stem, QString name_of_calling_function);
     void link_signatures_with_words(QString& name_of_calling_function);
 
     void replace_parse_pairs_from_current_signature_structure();

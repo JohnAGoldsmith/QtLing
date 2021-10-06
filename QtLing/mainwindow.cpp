@@ -681,7 +681,7 @@ void MainWindow::load_models(CLexicon* lexicon)
         m_proxy_models[str_model_name]->setSourceModel(m_Models[str_model_name]);
     }
     // Link duplicate proxy models to their corresponding source models. Hanson 11.2
-        qDebug() << 672 << "duplicate proxy";
+
     statusBar()->showMessage("Loading models: proxymodels");
     m_proxy_models["Words 2"]->setSourceModel(m_Models["Words"]);
     m_proxy_models["Prefixes 2"]->setSourceModel(m_Models["Prefixes"]);
