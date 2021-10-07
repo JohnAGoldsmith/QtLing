@@ -233,6 +233,7 @@ protected:
     CPrefixCollection *             m_Prefixes;
     CSignatureCollection *          m_Signatures;
     CSignatureCollection *          m_PrefixSignatures;
+    CSignatureCollection *           m_VirtualSignatures; // a temporary group of "virtual signatures"; a signature is virtual if it is a proper subsignature of an empirical signature.
     CompoundWordCollection *        m_Compounds;
     CompoundComponentCollection *   m_CompoundComponents;
     QMap<QString, CParse*>          m_Raw_parses;
@@ -312,6 +313,9 @@ public:
     QStringList                                 get_affix_continuation(QString affix, bool suffix_flag ,QStringList continuations );
     QMap<QString, eComponentType> &             get_category_types()        { return m_category_types;}
     CompoundWordCollection*                     get_compounds()             { return m_Compounds; }
+
+    void                                        generate_virtual_signatures();
+
     double                                      get_entropy_threshold_for_positive_signatures() {return m_entropy_threshold_for_stems;}
     //void                                        get_epositive_signatures(QList<CSignature*> *);
     QList<CHypothesis*>*                        get_hypotheses ()           {return m_Hypotheses;}
@@ -339,6 +343,7 @@ public:
     sig_pair_iter *                             get_sig_graph_edge_map_iter();
 
     bool                                        get_suffix_flag()           { return m_SuffixesFlag; }
+    CSignatureCollection*                       get_virtual_signatures()    {return m_VirtualSignatures;}
     CWordCollection*                            get_word_collection()       { return m_Words; }
     CWordCollection *                           get_words()                 { return m_Words;}
 

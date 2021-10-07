@@ -309,3 +309,13 @@ void CSignatureCollection::calculate_sig_robustness()
     qDebug() << "Calculated signature robustness";
 }
 
+void CSignatureCollection::add_this_and_all_subsignatures(QString this_sig_string){
+    find_or_add(this_sig_string);
+    QStringList affixes = this_sig_string.split("=");
+    if (affixes.length() == 1) return;
+    for (int affix_no = 0; affix_no < affixes.length(); affix_no++){
+        QStringList smaller_sig (affixes);
+        smaller_sig.removeAt(affix_no);
+        add_this_and_all_subsignatures(smaller_sig.join("="));
+    }
+}

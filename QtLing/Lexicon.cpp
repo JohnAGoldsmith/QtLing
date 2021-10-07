@@ -53,6 +53,7 @@ CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag):
 {
     m_Signatures            = new CSignatureCollection(this, true);
     m_PrefixSignatures      = new CSignatureCollection(this,false);
+    m_VirtualSignatures     = new CSignatureCollection(this, true);
     m_Words                 = new CWordCollection(this);
     m_prefixal_stems        = new CStemCollection(this);
     m_suffixal_stems        = new CStemCollection(this);
@@ -424,5 +425,13 @@ QStringList CLexicon::get_affix_continuation(QString affix, bool suffix_flag, QS
 CSignature* CLexicon::find_signature_of_stem(QString stem, bool suffix_flag){
     if (suffix_flag){
 
+    }
+}
+
+void CLexicon::generate_virtual_signatures(){
+    if (m_SuffixesFlag){
+       foreach (CSignature* pSig, *m_Signatures->get_signature_list()){
+            m_VirtualSignatures->add_this_and_all_subsignatures(pSig->display());
+        }
     }
 }

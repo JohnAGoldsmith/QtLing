@@ -607,7 +607,6 @@ void CLexicon::step4b_link_all_words_to_signatures(QString name_of_calling_funct
                                     if (pWord)
                                     {
                                         //stem_count += pWord->get_word_count();  TODO
-
                                         pWord->add_parse_triple(stem, affix, pSig->get_key());
                                         pWord->add_morphemic_split(word_split);
                                         word_autobiography_positive_notice(word, stem, pSig->get_key(), name_of_calling_function);

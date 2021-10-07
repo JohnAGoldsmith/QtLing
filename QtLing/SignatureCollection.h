@@ -49,6 +49,7 @@ public:
     CSignature*                             operator^= (const QString&);
     CSignature*                             operator[] (int n)              { return m_SortList[n];}
 
+    void                                    add_this_and_all_subsignatures(QString sig_string);
     void                                    calculate_stem_entropy();
     void                                    clear();
     void                                    compute_containment_list(); //this gives   for each signature the largest signatures it contains.

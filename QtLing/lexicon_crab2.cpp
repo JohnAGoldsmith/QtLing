@@ -153,6 +153,11 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()  // step 3
     //m_StatusBar->showMessage("Crab 3: Find good signatures inside bad.");
     qApp->processEvents();
 
+
+    generate_virtual_signatures();
+
+
+
     QMap<QString, protostem*> * these_protostems;
     if (m_SuffixesFlag) {
          signatures = m_Signatures;
