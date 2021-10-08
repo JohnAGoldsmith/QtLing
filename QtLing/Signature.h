@@ -28,7 +28,7 @@ protected:
     CSignatureCollection*           m_SignatureCollection;
     double                          m_stem_entropy;
     int                             m_json_id;
-
+    int                             m_secondary_stem_count;
     int                             m_robustness;
 
 public:
@@ -60,16 +60,16 @@ public:
     QString                     GetSignature()              const       { return m_Signature; }
     QString                     get_key()                   const       { return m_Signature;}
     QList<CPrefix*>*            get_prefix_list()                       {return m_Prefixes;}
-    //int                         get_robustness() const;
     double                      get_stem_entropy();
     QList<CStem*>*              get_stems()                             { return   m_Stems;}
     QStringList&                get_stem_strings(QStringList&);
-    QStringList&                get_affix_string_list(QStringList&)  ;
-    //QStringList                 get_string_list();
+    QStringList                 get_affix_string_list();
+    int                         get_secondary_stem_count()              {return m_secondary_stem_count;}
     bool                        get_suffix_flag()                       { return m_SuffixFlag;}
     void                        set_suffix_flag(bool flag)              { m_SuffixFlag = flag;}
     QList<CSuffix*>*            get_suffix_list()                       {return m_Suffixes;}
     word_and_count_list *       get_word_and_count_vectors(word_and_count_list* );
+    void                        increment_secondary_stem_count(int increment) { m_secondary_stem_count += increment;}
     void                        remove_suffix(suffix_t);
     void                        remove_prefix(prefix_t);
     void                        sort_stems();
@@ -80,7 +80,9 @@ public:
     void                        write_json(QJsonObject& ref_json, eJsonType json_type = INDEXED) const;
 
     void                        calculate_robustness();
-    int                         get_robustness() const                  { return m_robustness; }
+    int                         calculate_secondary_robustness(); // does not take into consideration the number of letters in each stem, just *how many* there are and affix letters
+    int                         get_robustness()  ;
+    int                         increment_robustness(int increment) {m_robustness += increment;}
     QString                     get_highfreq_edge_letters(float frequency_threshold);
 };
 

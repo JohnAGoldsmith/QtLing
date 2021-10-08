@@ -86,8 +86,8 @@ void CLexicon::step9_from_sig_pair_map_to_hypotheses()
         affixes1.clear();
         affixes2.clear();
         doomed_affixes.clear();
-        pSig1_longer_stem->get_affix_string_list(affixes1);
-        pSig2_shorter_stem->get_affix_string_list(affixes2);
+        affixes1 = pSig1_longer_stem->get_affix_string_list( );
+        affixes2 = pSig2_shorter_stem->get_affix_string_list( );
         bool success_flag = true;
         if (p_sig_pair->get_number_of_words() < MINIMUM_NUMBER_OF_WORDS ){continue;}
         //--> doomed_affixes is the set of affixes that sig1 proposes to sig2  for retirement

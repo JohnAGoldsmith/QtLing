@@ -205,7 +205,7 @@ bool compare_stem_count_2(const CSignature* pSig1, const CSignature* pSig2){
     return pSig1->get_number_of_stems() > pSig2->get_number_of_stems();
 }
 //--------------------------------------------------------------------------//
- bool compare_robustness(const CSignature* pSig1, const CSignature* pSig2)
+ bool compare_robustness(  CSignature* pSig1,   CSignature* pSig2)
 {
  return  pSig1->get_robustness() > pSig2->get_robustness();
 }

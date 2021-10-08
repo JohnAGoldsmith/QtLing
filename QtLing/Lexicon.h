@@ -253,6 +253,7 @@ protected:
     CSignatureCollection*           m_ParaSignatures;   /*!<  the information we have about stems which we have not yet integrated into a morphological system. */
     //CSuffixCollection *             m_ParaSuffixes;
     QMap<QString, QStringList*>*      m_ParaSuffixes;
+    QMap<QString, QStringList*>*    m_ParaPrefixes;
     CStemCollection *               m_ResidualStems;
     CSignatureCollection *          m_ResidualPrefixSignatures;
     CStemCollection *               m_StemsFromSubsignatures;
@@ -306,6 +307,7 @@ public:
     // accessors and protostems
     void                                        dump_suffixes(QList<QString>*);
     void                                        add_parse(CParse*);
+    void                                        add_paraprefix(QString paraprefix, QString word);
     void                                        add_parasuffix(QString parasuffix, QString word);
     CSignature *                                find_signature_of_stem(QString stem, bool suffix_flag);
     CSignatureCollection*                       get_active_signature_collection();

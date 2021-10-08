@@ -63,6 +63,7 @@ CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag):
     //m_Parses                = new QList<CParse*>();
     m_ParaSignatures        =  new CSignatureCollection(this, true);
     //m_ParaSuffixes          = new CSuffixCollection(this);
+    m_ParaPrefixes          = new QMap<QString, QStringList*>;
     m_ParaSuffixes          = new QMap<QString, QStringList*>;
     m_ResidualStems         = new CStemCollection(this);
     m_PassiveSignatures     = new CSignatureCollection(this, true);
@@ -241,6 +242,9 @@ void CLexicon::clear_lexicon(){
     delete m_ParaSuffixes;
     //m_ParaSuffixes = new CSuffixCollection(this);
     m_ParaSuffixes = new QMap<QString , QStringList*>;
+    delete m_ParaPrefixes;
+    //m_ParaSuffixes = new CSuffixCollection(this);
+    m_ParaPrefixes = new QMap<QString , QStringList*>;
     delete m_ResidualStems;
     m_ResidualStems = new CStemCollection(this);
     delete m_PassiveSignatures;
@@ -400,7 +404,12 @@ void  CLexicon::add_parasuffix(QString parasuffix, QString word){
     }
     m_ParaSuffixes->value(parasuffix)->append(word);
 }
-
+void  CLexicon::add_paraprefix(QString paraprefix, QString word){
+    if (! m_ParaPrefixes->contains(paraprefix)){
+        m_ParaPrefixes->insert(paraprefix, new QStringList());
+    }
+    m_ParaPrefixes->value(paraprefix)->append(word);
+}
 QStringList CLexicon::get_affix_continuation(QString affix, bool suffix_flag, QStringList continuations){
     if (suffix_flag){
         CStem * pStem_from_affix = m_suffixal_stems->find_or_fail(affix);
@@ -429,9 +438,12 @@ CSignature* CLexicon::find_signature_of_stem(QString stem, bool suffix_flag){
 }
 
 void CLexicon::generate_virtual_signatures(){
+    QStringList signature_check_list;
     if (m_SuffixesFlag){
        foreach (CSignature* pSig, *m_Signatures->get_signature_list()){
-            m_VirtualSignatures->add_this_and_all_subsignatures(pSig->display());
+           signature_check_list.clear();
+           //qDebug() << 436 << pSig->display();
+           m_VirtualSignatures->add_this_and_all_subsignatures(pSig->display(), pSig->get_robustness(), signature_check_list);
         }
     }
 }

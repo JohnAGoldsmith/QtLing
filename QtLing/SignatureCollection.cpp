@@ -111,9 +111,15 @@ bool compare_affix_count(const CSignature* pSig1, const CSignature* pSig2)
      }
      return pSig1->get_number_of_affixes() > pSig2->get_number_of_affixes();
 }
-bool compare_robustness_reversed(const CSignature* pSig1, const CSignature* pSig2)
+bool compare_robustness_reversed(  CSignature* pSig1,   CSignature* pSig2)
 {
      return pSig1->get_robustness() >pSig2->get_robustness();
+}
+bool compare_secondary_robustness(CSignature* pSig1, CSignature* pSig2)
+{
+     qDebug() << 121 << pSig1->calculate_secondary_robustness() << pSig2->calculate_secondary_robustness();
+     return pSig1->calculate_secondary_robustness() >pSig2->calculate_secondary_robustness();
+
 }
 
 
@@ -135,6 +141,12 @@ void CSignatureCollection::sort(eSortStyle sort_style)
     case SIG_BY_REVERSE_ROBUSTNESS:
           //qSort(m_SortList.begin(), m_SortList.end(),  compare_robustness_reversed);
           std::sort(m_SortList.begin(), m_SortList.end(),  compare_robustness_reversed);
+          break;
+    case SIG_BY_SECONDARY_ROBUSTNESS:
+          //qSort(m_SortList.begin(), m_SortList.end(),  compare_robustness_reversed);
+          std::sort(m_SortList.begin(), m_SortList.end(),  compare_secondary_robustness);
+          for (int i = 0; i < 15; i++)
+              qDebug() << 147 << "sig collection" << m_SortList.at(i)->display();
           break;
     default:
           //qSort(m_SortList.begin(), m_SortList.end(),  compare_stem_count);
@@ -161,6 +173,21 @@ void CSignatureCollection::sort_signatures_by_affix_count()
     qSort(m_SortList.begin(), m_SortList.end(),  compare_affix_count);
 }
 */
+bool compare_secondary_stem_count(CSignature* pSig1,CSignature* pSig2)
+{
+ return  pSig1->get_secondary_stem_count() > pSig2->get_secondary_stem_count();
+}
+void CSignatureCollection::sort_signatures_by_secondary_stem_count(){
+      m_SortList.clear();
+       map_sigstring_to_sig_ptr_iter sig_iter (m_SignatureMap);
+       while (sig_iter.hasNext())
+       {
+           sig_iter.next();
+           m_SortList.append(sig_iter.value());
+       }
+       qSort(m_SortList.begin(), m_SortList.end(),  compare_secondary_stem_count);
+
+}
 
 void CSignatureCollection::compute_containment_list()
 {   CSignature* pSig, *qSig;
@@ -309,13 +336,28 @@ void CSignatureCollection::calculate_sig_robustness()
     qDebug() << "Calculated signature robustness";
 }
 
-void CSignatureCollection::add_this_and_all_subsignatures(QString this_sig_string){
-    find_or_add(this_sig_string);
+void CSignatureCollection::add_this_and_all_subsignatures(QString this_sig_string, int robustness, QStringList & signature_check_list){ // this is only used when creating "virtual signatures"
+    if (signature_check_list.contains(this_sig_string)){
+          //qDebug() << 350 << "already processed this signature, quitting for this signature"<< this_sig_string;
+          return;
+    }
     QStringList affixes = this_sig_string.split("=");
-    if (affixes.length() == 1) return;
+    if (affixes.length() == 1) {
+        //qDebug() << 347 << "just one affix now, quitting." ;
+        return;
+    }
+    signature_check_list.append(this_sig_string);
+    CSignature * pSig = find_or_add(this_sig_string);
+    pSig->increment_robustness(robustness);
+    //qDebug() << 344 << this_sig_string << "new robustness"<< robustness << "total robustness" << pSig->get_robustness();
+    if (affixes.length() < 3){
+        //qDebug() << 354 << "Reached sig with two elements, not descending any further.";
+        return;
+    }
     for (int affix_no = 0; affix_no < affixes.length(); affix_no++){
         QStringList smaller_sig (affixes);
         smaller_sig.removeAt(affix_no);
-        add_this_and_all_subsignatures(smaller_sig.join("="));
+        QString sig_string_2 = smaller_sig.join("=");
+        add_this_and_all_subsignatures(sig_string_2, robustness, signature_check_list);
     }
 }

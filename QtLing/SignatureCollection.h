@@ -49,7 +49,7 @@ public:
     CSignature*                             operator^= (const QString&);
     CSignature*                             operator[] (int n)              { return m_SortList[n];}
 
-    void                                    add_this_and_all_subsignatures(QString sig_string);
+    void                                    add_this_and_all_subsignatures(QString sig_string, int stem_count, QStringList & signature_check_list);
     void                                    calculate_stem_entropy();
     void                                    clear();
     void                                    compute_containment_list(); //this gives   for each signature the largest signatures it contains.
@@ -74,6 +74,7 @@ public:
     void                                    sort(eSortStyle);
     void                                    sort_signatures_by_affix_count();
     void                                    sort_each_signatures_stems_alphabetically();
+    void                                    sort_signatures_by_secondary_stem_count();
 
     void                                    assign_json_id();
     void                                    write_json(QJsonObject& ref_json, eJsonType json_type = INDEXED) const;

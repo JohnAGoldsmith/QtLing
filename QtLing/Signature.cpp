@@ -10,6 +10,16 @@
 #include "WordCollection.h"
 #include "Word.h"
 
+QString QStringList2QString(QStringList string_list){
+    QString string;
+    if (string_list.length() == 0) return string;
+    for (int i =0; i< string_list.length()-1; i++){
+        string += string_list[i] + "=";
+    }
+    string += string_list.last();
+    return string;
+}
+
 CSignature::CSignature(QString signature_string, bool suffix_flag, CSignatureCollection* Signatures)
 {
   m_Signature = signature_string;
@@ -20,6 +30,7 @@ CSignature::CSignature(QString signature_string, bool suffix_flag, CSignatureCol
   m_SignatureCollection = Signatures;
   m_stem_entropy = -1;
   m_robustness = 0;
+  m_secondary_stem_count = 0;
 }
 
 CSignature::CSignature(CSignature& signature) {
@@ -29,6 +40,8 @@ CSignature::CSignature(CSignature& signature) {
     m_Stems = new CStem_ptr_list();
     m_SuffixFlag = signature.get_suffix_flag();
     m_stem_entropy = signature.get_stem_entropy();
+    m_secondary_stem_count = signature.get_secondary_stem_count();
+    m_robustness = signature.get_robustness();
 }
 CSignature::~CSignature()
 {
@@ -51,8 +64,8 @@ CSignature::~CSignature()
   delete m_Prefixes;
   delete m_Suffixes;
 };
-QStringList& CSignature::get_affix_string_list(QStringList& affix_string_list){
-    affix_string_list.clear();
+QStringList CSignature::get_affix_string_list(){
+    QStringList affix_string_list;
     affix_string_list = m_Signature.split("=");
     return affix_string_list;
 }
@@ -112,7 +125,7 @@ int  CSignature::get_size_of_intersection(CSignature* othersig){
    int count = 0;
    QStringList my_affixes = m_Signature.split("=");
    QStringList other_affixes;
-   othersig->get_affix_string_list(other_affixes);
+   other_affixes = othersig->get_affix_string_list();
    for (int affix_no = 0; affix_no < my_affixes.size(); affix_no ++ ){
        if (other_affixes.contains( my_affixes[affix_no] ) ){
                count++;
@@ -212,6 +225,31 @@ QString CSignature::display_stems()
 }
 
 
+int CSignature::calculate_secondary_robustness(){
+    int affix_letters = 0;
+    if (m_SuffixFlag){
+        foreach (CSuffix* p_suffix, *m_Suffixes) {
+            const QString& str_suffix = p_suffix->get_key();
+            if (str_suffix == "NULL") {
+                affix_letters += 1;
+            } else {
+                affix_letters += str_suffix.length();
+            }
+        }
+    } else {
+        foreach (CPrefix* p_prefix, *m_Prefixes) {
+            const QString& str_prefix = p_prefix->get_key();
+            if (str_prefix == "NULL") {
+                affix_letters += 1;
+            } else {
+                affix_letters += str_prefix.length();
+            }
+        }
+    }
+    qDebug() << 238 << "sig.cpp"<< display() << m_secondary_stem_count << affix_letters;
+    return (m_secondary_stem_count-1) * affix_letters;
+}
+
 void CSignature::calculate_robustness()
 {
     int stem_letters = 0;
@@ -225,14 +263,6 @@ void CSignature::calculate_robustness()
                 affix_letters += str_suffix.length();
             }
         }
-        /*
-        for (int suffix_no=0; suffix_no < m_Suffixes->size(); suffix_no++){
-            if (m_Suffixes->at(suffix_no)->get_key() == "NULL"){
-                suffix_letters += 1;
-            } else{
-                suffix_letters += m_Suffixes->at(suffix_no)->get_key().length();
-            }
-        } */
     } else {
         foreach (CPrefix* p_prefix, *m_Prefixes) {
             const QString& str_prefix = p_prefix->get_key();
@@ -254,7 +284,10 @@ void CSignature::calculate_robustness()
     }*/
     m_robustness = stem_letters * (get_number_of_affixes()-1)  +  affix_letters * (get_number_of_stems()-1);
 }
-
+int CSignature::get_robustness() {
+    if (m_robustness == 0)  calculate_robustness();
+    return m_robustness;
+}
  int CSignature::get_number_of_affixes() const
 {    if (m_SuffixFlag){
          if (m_Suffixes->count() > 0)
@@ -399,9 +432,9 @@ QString CSignature::get_highfreq_edge_letters(float frequency_threshold){
         return winner;
     else
         return QString();
-
-
 }
+
+
 /////////////////////////////////////////////////////////////////////////
 //
 //      non-class functions dealing with signatures

@@ -39,6 +39,16 @@ QString combine_stem_and_prefix_with_gap(QString stem, QString prefix){
     else
         return prefix + "  " + stem;
 }
+QString QStringList2signature(QStringList list){
+    QString result;
+    for (int i = 0; i < list.length()-1; i++){
+        result += list[i] + "=";
+    }
+    if (list.length() > 1){
+        result += list[list.length()-1];
+    }
+    return result;
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //linguistic methods
 /**
@@ -599,8 +609,8 @@ void CLexicon::step4b_link_all_words_to_signatures(QString name_of_calling_funct
                             if (inner_suffix)
                             {
                                  CSignature* pLocalSig = inner_suffix->get_last_signature();
-                                 QStringList temp;
-                                 foreach (QString suffix, pLocalSig->get_affix_string_list(temp))
+                                 //QStringList temp;
+                                 foreach (QString suffix, pLocalSig->get_affix_string_list())
                                  {  if (suffix == "NULL") suffix = "";
                                     word =  stem + clean(affix) + suffix;
                                     CWord* pWord = m_Words->find_or_fail(word);
@@ -635,21 +645,17 @@ void CLexicon::step4b_link_all_words_to_signatures(QString name_of_calling_funct
     }
 }
 
-bool contains(QList<QString> * list2, QList<QString> * list1){
-    for (int i=0; i < list1->length();i++){
-        bool success = false;
-        for (int j = 0; j < list2->length();j++){
-            if (list1->at(i) == list2->at(j)){
-                success = true;
-            }
-        }
-        if (success == false){
+
+bool contains(QStringList& list1, QStringList & list2) {
+    foreach (QString string2, list2){
+        //qDebug() << 641 << "contains"<< string2;
+        if (! list1.contains(string2)){
+            //qDebug() << 643 << "false";
             return false;
         }
     }
     return true;
 }
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //      End of Crab 1
@@ -691,7 +697,7 @@ void CLexicon::replace_parse_pairs_from_current_signature_structure()
     CParse*  this_parse;
     QStringList affix_string_list;
     foreach (CSignature* pSig, *these_signatures ){
-        affix_string_list = pSig->get_affix_string_list(affix_string_list);
+        affix_string_list = pSig->get_affix_string_list();
         foreach (CStem* pStem, *pSig->get_stems()){
             const QString& this_stem = pStem->display();
             foreach (QString this_affix, affix_string_list){
@@ -759,7 +765,7 @@ void CLexicon::repair_low_entropy_signatures()            // step 4.
         letter = pSig->get_highfreq_edge_letters(EdgeLetterPredominanceThreshold);
         foreach (stem, pSig->get_stem_strings(stem_list)) {
             stem2 = stem.left(stem.length()-1);
-            foreach (QString affix, pSig->get_affix_string_list(affix_list) ){
+            foreach (QString affix, pSig->get_affix_string_list() ){
                    CParse parse (stem,affix,get_suffix_flag());
                    QString word = parse.display();
                    QString stem2 = stem.left(stem.length()-1);
