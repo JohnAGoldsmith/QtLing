@@ -44,7 +44,7 @@ QString QStringList2signature(QStringList list){
     for (int i = 0; i < list.length()-1; i++){
         result += list[i] + "=";
     }
-    if (list.length() > 1){
+    if (list.length() >= 1){
         result += list[list.length()-1];
     }
     return result;
@@ -82,32 +82,17 @@ void CLexicon::Crab_1()
 }
 
 
-void CLexicon::Crab_2()
-{
-
-    ReSignaturizeWithKnownAffixes();
-
-    m_SuffixesFlag?
-                m_Signatures->compute_containment_list():
-                m_PrefixSignatures->compute_containment_list();
-    m_SuffixesFlag?
-                m_Signatures->calculate_sig_robustness():
-                m_PrefixSignatures->calculate_sig_robustness();
-
-    replace_parse_pairs_from_current_signature_structure();
-
-}
 
 
 /**
- * @brief CLexicon::Crab_3
+ * @brief CLexicon::Crab_2
  *
  */
-void CLexicon::Crab_3()
-{    m_StatusBar->showMessage("Crab 3: Find good signatures inside bad.");
+void CLexicon::Crab_2()
+{    m_StatusBar->showMessage("Crab 2: Find good signatures inside bad.");
 
     step7_FindGoodSignaturesInsideParaSignatures();
-    m_StatusBar->showMessage("Crab 3: Find good signatures inside bad, completed.");
+    m_StatusBar->showMessage("Crab 2: Find good signatures inside bad, completed.");
     m_SuffixesFlag?
         m_Signatures->calculate_sig_robustness():
         m_PrefixSignatures->calculate_sig_robustness();
@@ -121,10 +106,10 @@ void CLexicon::Crab_3()
 
 
 /**
- * @brief CLexicon::Crab_4
+ * @brief CLexicon::Crab_3
  *
  */
-void CLexicon::Crab_4()
+void CLexicon::Crab_3()
 {
     repair_low_entropy_signatures();
     m_SuffixesFlag?
@@ -134,11 +119,11 @@ void CLexicon::Crab_4()
 }
 
 /**
- * @brief CLexicon::Crab_5
+ * @brief CLexicon::Crab_4
  *
  */
-void CLexicon::Crab_5()
-{   m_StatusBar->showMessage("Crab 5: split complex morphemes...");
+void CLexicon::Crab_4()
+{   m_StatusBar->showMessage("Crab 4: split complex morphemes...");
     replace_parse_pairs_from_current_signature_structure();
     step8a_compute_word_sig_pairs();
     step8c_from_sig_pairs_to_parses();
@@ -151,13 +136,13 @@ void CLexicon::Crab_5()
 
 
 /**
- * @brief CLexicon::Crab_6
+ * @brief CLexicon::Crab_5
  *
  */
-void CLexicon::Crab_6()
+void CLexicon::Crab_5()
 {
    step10_find_compounds();
-   m_StatusBar->showMessage("Crab 6:simple compounds completed.");
+   m_StatusBar->showMessage("Crab 5:simple compounds completed.");
 }
 
 
@@ -645,7 +630,7 @@ void CLexicon::step4b_link_all_words_to_signatures(QString name_of_calling_funct
     }
 }
 
-
+/*
 bool contains(QStringList& list1, QStringList & list2) {
     foreach (QString string2, list2){
         //qDebug() << 641 << "contains"<< string2;
@@ -656,7 +641,32 @@ bool contains(QStringList& list1, QStringList & list2) {
     }
     return true;
 }
-
+*/
+bool contains(QStringList& list1, QStringList & list2) {
+    int i(0), j(0);
+    if (list1.length()< list2.length()) { return false;}
+    while (i < list1.length() && j < list2.length()){
+            if (list1[i] == list2[j]){
+                i++;
+                j++;
+                continue;
+            } else {
+                if (list1[i] < list2[j]){
+                    i++;
+                    continue;
+                } else{
+                    //qDebug() << 658 << QStringList2signature(list1)<< QStringList2signature(list2) << "False" << i <<j;
+                    return false;
+                }
+            }
+    }
+    if (j == list2.length()){
+        //qDebug() << 665 << QStringList2signature(list1)<< QStringList2signature(list2) << "True" << i << j;
+        return true;
+        }
+    //qDebug() << 668 << QStringList2signature(list1)<< QStringList2signature(list2) << "False" << i << j;
+    return false;
+}
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //      End of Crab 1
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////

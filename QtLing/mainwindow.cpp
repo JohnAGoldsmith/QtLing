@@ -504,6 +504,7 @@ void MainWindow::do_crab1()
     statusBar()->showMessage("Crab, phase 1 completed.");
     emit lexicon_ready();
 }
+/*
 void MainWindow::do_crab2()
 {   CLexicon* lexicon = get_lexicon();
     statusBar()->showMessage("Crab 2: Resignaturize with known affixes.");
@@ -519,11 +520,11 @@ void MainWindow::do_crab2()
           display_epositive_prefix_signatures(get_lexicon());
     statusBar()->showMessage("Crab 2: Resignaturize with known affixes, completed.");
     emit lexicon_ready();
-}
-void MainWindow::do_crab3()
-{   statusBar()->showMessage("Crab 3: Good sigs inside bad.");
+}*/
+void MainWindow::do_crab2()
+{   statusBar()->showMessage("Crab 2: Good sigs inside bad.");
     CLexicon* lexicon = get_lexicon();
-    lexicon->Crab_3();
+    lexicon->Crab_2();
     load_models(get_lexicon());
     write_stems_and_words();
     create_or_update_TreeModel(get_lexicon());
@@ -538,10 +539,10 @@ void MainWindow::do_crab3()
 }
 
 
-void MainWindow::do_crab4()
-{   statusBar()->showMessage("Crab Nebula, phase 4: repair low entropy signatures.");
+void MainWindow::do_crab3()
+{   statusBar()->showMessage("Crab Nebula, phase 3: repair low entropy signatures.");
     CLexicon* lexicon = get_lexicon();
-    lexicon->Crab_4();
+    lexicon->Crab_3();
     load_models(lexicon);
     create_or_update_TreeModel(lexicon);
     if (lexicon->get_suffix_flag())
@@ -556,10 +557,10 @@ void MainWindow::do_crab4()
           display_epositive_prefix_signatures(get_lexicon());
     statusBar()->showMessage("Crab 4: repair low entropy signatures completed.");
 }
-void MainWindow::do_crab5()
-{   statusBar()->showMessage("Crab 5: split complex morphemes.");
+void MainWindow::do_crab4()
+{   statusBar()->showMessage("Crab 4: split complex morphemes.");
     CLexicon* lexicon = get_lexicon();
-    lexicon->Crab_5();
+    lexicon->Crab_4();
     load_models(lexicon);
     create_or_update_TreeModel(lexicon);
     if (lexicon->get_suffix_flag())
@@ -574,17 +575,19 @@ void MainWindow::do_crab5()
           display_epositive_prefix_signatures(get_lexicon());
     statusBar()->showMessage("Crab 5: split complex morphemes completed.");
 }
-void MainWindow::do_crab6(){
-    statusBar()->showMessage("Crab 6: simple compounds...");
+void MainWindow::do_crab5(){
+    statusBar()->showMessage("Crab 5: simple compounds...");
         CLexicon* lexicon = get_lexicon();
-        lexicon->Crab_6();
+        lexicon->Crab_5();
         load_models(lexicon);
         create_or_update_TreeModel(lexicon);
         m_leftTreeView->expandAll();
         m_leftTreeView->resizeColumnToContents(0);
-        statusBar()->showMessage("Crab 6: simple compounds completed.");
+        statusBar()->showMessage("Crab 5: simple compounds completed.");
 }
-
+void MainWindow::do_crab6(){
+    statusBar()->showMessage("Crab 6 not defined.");
+}
 void MainWindow::newFile()
 {
     if (ask_to_save()) {
