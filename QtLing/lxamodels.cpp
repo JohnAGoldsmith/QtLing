@@ -94,6 +94,7 @@ void LxaStandardItemModel::load_compounds(CompoundWordCollection *p_compounds)
     typedef QStandardItem QSI;
     typedef CompoundWord::CompoundComposition CompoundComposition;
 
+    qDebug() << 97 << "Number of compounds"<< p_compounds->get_count();
     QStringList labels;
     labels << "Compound word" << "Possible Compositions";
     setHorizontalHeaderLabels(labels);

@@ -141,8 +141,19 @@ void CLexicon::Crab_4()
  */
 void CLexicon::Crab_5()
 {
+   m_StatusBar->showMessage("Crab 5:find simple compounds.");
    step10_find_compounds();
    m_StatusBar->showMessage("Crab 5:simple compounds completed.");
+}
+/**
+ * @brief CLexicon::Crab_compounds
+ *
+ */
+void CLexicon::Crab_compounds()
+{
+   m_StatusBar->showMessage("Crab compounds:find simple compounds.");
+   step10_find_compounds();
+   m_StatusBar->showMessage("Crab compounds:simple compounds completed.");
 }
 
 

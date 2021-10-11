@@ -417,7 +417,6 @@ public:
     void step9a_from_doomed_info_map_to_parses(DoomedSignatureInfoMap& ref_doomed_info_map);
     void step9b_redirect_ptrs_in_sig_graph_edges_map(const DoomedSignatureInfoMap& ref_doomed_info_map);
     void step9c_from_doomed_info_map_to_hypotheses(const DoomedSignatureInfoMap& ref_doomed_info_map);
-
     void step10_find_compounds();
 
     void clear_lexicon();
@@ -429,6 +428,7 @@ public:
     void Crab_4();
     void Crab_5();
     void Crab_6();
+    void Crab_compounds();
     void create_sublexicon();
 
     void check_autobiography_consistency();

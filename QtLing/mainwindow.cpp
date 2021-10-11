@@ -326,8 +326,8 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     }
     case Qt::Key_C:
     {if (ke->modifiers() == Qt::ControlModifier)
-        {   qDebug() << "key c";
-            get_lexicon()->step10_find_compounds();
+        {
+            do_crab_compounds();
         }
         break;
     }
@@ -585,6 +585,18 @@ void MainWindow::do_crab5(){
         m_leftTreeView->resizeColumnToContents(0);
         statusBar()->showMessage("Crab 5: simple compounds completed.");
 }
+void MainWindow::do_crab_compounds(){
+    statusBar()->showMessage("Crab compounds: simple compounds...");
+        CLexicon* lexicon = get_lexicon();
+        lexicon->Crab_compounds();
+        load_models(lexicon);
+        create_or_update_TreeModel(lexicon);
+        m_leftTreeView->expandAll();
+        m_leftTreeView->resizeColumnToContents(0);
+        statusBar()->showMessage("Crab compounds: simple compounds completed.");
+}
+
+
 void MainWindow::do_crab6(){
     statusBar()->showMessage("Crab 6 not defined.");
 }

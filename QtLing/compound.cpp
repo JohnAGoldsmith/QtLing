@@ -44,7 +44,8 @@ void CLexicon::step10_find_compounds()
         }
         if (components.length() == 2 && compound_valid) {
             m_Compounds->add_compound_word(word, components);
-            qDebug() << word << components << 44;
+            //qDebug() << 47 << "number of compounds"<<m_Compounds->get_count();
+            //qDebug() << word << components << 44;
         }
     }
     // END OF PART 1a
@@ -55,13 +56,13 @@ void CLexicon::step10_find_compounds()
 
 
 
-
-
+    const int min_component_length = 4;
+    if (true){
 
 
     CStemCollection * stems;
-    QString str_word;
-    int wordno;
+
+
     //QStringList * Words = m_Words->GetSortedStringArray();
     if (m_SuffixesFlag){
         stems = get_suffixal_stems();
@@ -70,7 +71,7 @@ void CLexicon::step10_find_compounds()
     }
     // CStemCollection * Stems = m_suffixal_stems maybe put this back in.
 
-    const int min_component_length = 3;
+
 
 
     m_ProgressBar->reset();
@@ -79,46 +80,43 @@ void CLexicon::step10_find_compounds()
     m_StatusBar->showMessage("Looking for compounds.");
     int temp_k = 0;
     // temp, just placeholder:
-    wordno= 0;
-    for (int stemno = 0; stemno < stems->get_count(); stemno++)
+    for (int stemno1 = 0; stemno1 < stems->get_count(); stemno1++)
     {
         temp_k++;
         if (temp_k++ == 5000) {
             temp_k = 0;
-            m_ProgressBar->setValue(wordno);
+            m_ProgressBar->setValue(stemno1);
             qApp->processEvents();
          }
-
-
-        QString possibleFirstComponent = stems->get_string_from_sorted_list(stemno);
-        int lengthOfPossibleFirstComponent = possibleFirstComponent.length();
-        if (lengthOfPossibleFirstComponent < min_component_length){continue;}
-        int stemno2 = stemno + 1;
-        while (stemno2 < stems->get_count())
-        {   QString thisStem = stems->get_string_from_sorted_list( stemno2 );
-
-            if (thisStem.startsWith(possibleFirstComponent))
-            {
-
-                int lengthOfSecondPart = thisStem.length() - lengthOfPossibleFirstComponent;
-                if (lengthOfSecondPart < min_component_length){ stemno2++; continue; }
-                QString secondPiece = thisStem.right(lengthOfSecondPart);
-                if (stems->find_or_fail(secondPiece))
-
-                {
-                        //qDebug() << possibleFirstComponent <<  thisStem << secondPiece << 94 << "Stems: Found one!";
-                        //m_Compounds->add_compound_word(str_word, piece1, piece2);
-
-                }
-            }
-            else
-            {
-                break;
-            }
-            stemno2++;
+        QString stem1 = stems->get_string_from_sorted_list(stemno1);
+        //qDebug() << 93 << stem1 << "number:" << stemno1;
+        int stem1_length = stem1.length();
+        if (stem1_length < min_component_length) continue;
+        int stemno2 = stemno1 + 1;
+        if (stemno2 >= stems->get_count()){
+            break;
         }
-    }
+        QString this_stem = stems->get_string_from_sorted_list(stemno2);
+        while (this_stem.startsWith(stem1))
+        {
+                QString stem2 = this_stem.mid(stem1_length);
+                //qDebug() << 104 << this_stem << stem1 << stem2;
+                if (stem2.length() >= min_component_length) {
+                      if (stems->find_or_fail(stem2))
+                       {
+                          qDebug() << stem1 <<  this_stem << stem2 << 108 << "Stems: Found one!";
+                          QStringList components;
+                          components << stem1 << stem2;
 
+                          m_Compounds->add_compound_word(stem1 + stem2, components);
+                       }
+                }
+                stemno2++;
+                this_stem = stems->get_string_from_sorted_list(stemno2);
+        }
+        //qDebug() << 115 << "end of " <<stem1;
+    }
+    }
 
     if (false)
     {
@@ -169,9 +167,11 @@ void CLexicon::step10_find_compounds()
     return;  // get rid of this
 
     // PART 2: remove invalid components
+
+
     m_StatusBar->showMessage("8: Finding Compounds - part 2: "
                              "removing invalid components.");
-    m_Compounds->remove_invalid_components(m_ProgressBar);
+  //  m_Compounds->remove_invalid_components(m_ProgressBar);
 
 }
 
@@ -270,7 +270,7 @@ CompoundComponent* CompoundComponentCollection::add_or_find_compound_component
     if (comp_iter == m_map_words_to_compound_components.constEnd()) {
         CompoundComponent* new_component = new CompoundComponent(str_word);
         m_map_words_to_compound_components.insert(str_word, new_component);
-        qDebug() << str_word<< 183;
+        //qDebug() << str_word<< 183;
         return new_component;
     } else {
         return comp_iter.value();
