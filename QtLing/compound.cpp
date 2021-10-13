@@ -21,15 +21,11 @@ void CLexicon::step10_find_compounds()
     m_ProgressBar->setMinimum(0);
     m_ProgressBar->setMaximum(m_Words->get_count() + p_stems->get_count());
     m_StatusBar->showMessage("8: Finding Compounds - part 1.");
-    int progress_count = 0;
 
     // placeholder:
     (void)  ref_protostem_map;
 
     int MINIMUM_COMPOUND_STEM_LENGTH (4);
-
-
-
     m_ProgressBar->reset();
     m_ProgressBar->setMinimum(0);
     //m_ProgressBar->setMaximum(stems->get_count());
@@ -52,24 +48,20 @@ void CLexicon::step10_find_compounds()
                     j == m_Words->get_count()-1) {
                     break;
                 }
-                i++;
-                stem = m_suffixal_stems->get_at(i)->get_key();
-                j++;
-                word = m_Words->get_string_from_sorted_list(j);
+                stem = m_suffixal_stems->get_at(++i)->get_key();
+                word = m_Words->get_string_from_sorted_list(++j);
                 continue;
             }
             else
             {
                 if ( stem < word ){
                     if (i == m_suffixal_stems->get_count()-1) {break;}
-                    i++;
-                    stem = m_suffixal_stems->get_at(i)->get_key();
+                    stem = m_suffixal_stems->get_at(++i)->get_key();
                     continue;
                 }
                 else{
                     if (j == m_Words->get_count()-1){ break;}
-                    j++;
-                    word = m_Words->get_string_from_sorted_list(j);
+                    word = m_Words->get_string_from_sorted_list(++j);
                 }
             }
     }
@@ -81,9 +73,8 @@ void CLexicon::step10_find_compounds()
         if (word.startsWith(stem)  )
         {   CWord* pWord = m_Words->get_word(word);
             QString end = word.mid(stem.length());
-            if (end.length()==0 || pWord->get_morpheme_splits().count() > 1)
-            {
-                if (j == m_Words->get_count()-1){ break; }
+            if (end.length()==0 || pWord->get_morpheme_splits().count() > 0)
+            {   if (j == m_Words->get_count()-1){ break; }
                 word = m_Words->get_string_from_sorted_list(++j);
                 continue;
             }
@@ -93,34 +84,24 @@ void CLexicon::step10_find_compounds()
                 m_Compounds->add_compound_word(word, components);
                 qDebug() << 96 << word << stem << end  ;
             }
-            j++;
-            word = m_Words->get_string_from_sorted_list(j);
+            word = m_Words->get_string_from_sorted_list(++j);
             continue;
         }
         if (stem < word){
             if (i==free_standing_stems.count()-1){ break;}
-            i++;
-            stem = free_standing_stems[i];
+            stem = free_standing_stems[++i];
             continue;
         }
         if (stem > word){
             if (j== m_Words->get_count()-1){ break; }
-            j++;
-            word = m_Words->get_string_from_sorted_list(j);
+            word = m_Words->get_string_from_sorted_list(++j);
             continue;
         }
 
     }
 
 
-    return;  // get rid of this
-
-    // PART 2: remove invalid components
-
-
-    m_StatusBar->showMessage("8: Finding Compounds - part 2: "
-                             "removing invalid components.");
-  //  m_Compounds->remove_invalid_components(m_ProgressBar);
+    return;
 
 }
 
