@@ -7,7 +7,7 @@ CStemCollection::CStemCollection(CLexicon* lexicon)
     m_StringToStemMap       = new map_string_to_stem();
     m_CorpusCount			= 0;
     m_MemberName			= QString();
-    m_SortValidFlag			= 0;
+    m_forward_sort_valid_flag			= 0;
     m_SortStyle				= KEY;
     m_Lexicon               = lexicon;
 }
@@ -40,7 +40,7 @@ CStem* CStemCollection::add(const QString& stem)
 {
     CStem* pStem = new CStem(stem);
     m_StringToStemMap->insert(stem, pStem);
-    m_SortValidFlag = false;
+    m_forward_sort_valid_flag = false;
     return pStem;
 }
 CStem* CStemCollection::operator <<(const QString& stem)
@@ -54,14 +54,15 @@ CStem* CStemCollection::operator ^=(const QString& stem)
 }
 
 
-CStem* CStemCollection::GetAtKey( QString stem)
+CStem* CStemCollection::get_from_string( QString stem)
 {
     return m_StringToStemMap->value(stem);
 }
 
 CStem* CStemCollection::get_at( int stemno)
 {
-    return GetAtKey( m_SortedStringList.at(stemno) );
+    if (!m_forward_sort_valid_flag){ sort_alphabetically();}
+    return m_StringToStemMap->value( m_SortedStringList[stemno]);
 }
 /*
 QListIterator<CStem*> * CStemCollection::get_sorted_list_iterator()
@@ -75,7 +76,7 @@ QListIterator<CStem*> * CStemCollection::get_sorted_list_iterator()
 */
 CStem* CStemCollection::find_or_add(const QString& stem)
 {
-    if (!m_SortValidFlag){
+    if (!m_forward_sort_valid_flag){
         sort_alphabetically();
     }
     if (m_StringToStemMap->contains(stem)){
@@ -95,12 +96,16 @@ CStem* CStemCollection::find_or_fail(const QString& stem)
     }
 }
 void CStemCollection::sort_alphabetically()
-{
+{   m_SortedStringList.clear();
     foreach(QString word, m_StringToStemMap->keys()){
         m_SortedStringList.append(word);
     }
 
     m_SortedStringList.sort();
-    m_SortValidFlag = true;
+    m_forward_sort_valid_flag = true;
 }
 
+QString CStemCollection::get_string_at(int index) {
+    if (!m_forward_sort_valid_flag) { sort_alphabetically();}
+        return m_SortedStringList[index];
+}

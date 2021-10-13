@@ -29,6 +29,10 @@ CWord* CWordCollection::get_word(const QString& word){
     }
     return word_iter.value();
 }
+CWord* CWordCollection::get_word(const int n){
+    QString word = get_string_from_sorted_list(n);
+    return get_word(word);
+}
 
 CWord* CWordCollection::find_or_add(const QString& word_string){
     QMap<QString,CWord*>::const_iterator word_iter = m_WordMap.find(word_string);
@@ -116,7 +120,8 @@ bool new_reverse_string_compare(QString s1, QString s2)
 }
 
 void CWordCollection::sort_word_list()
-{
+{   m_SortedStringArray.clear();
+
     foreach(QString word, m_WordMap.keys()){
         m_SortedStringArray.append(word);
     }

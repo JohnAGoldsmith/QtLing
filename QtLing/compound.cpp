@@ -1,6 +1,7 @@
 #include "compound.h"
 #include "Lexicon.h"
 #include "StemCollection.h"
+#include "SuffixCollection.h"
 #include "WordCollection.h"
 #include "Word.h"
 #include <QApplication>
@@ -25,144 +26,92 @@ void CLexicon::step10_find_compounds()
     // placeholder:
     (void)  ref_protostem_map;
 
-    QMap<QString, CWord*>::ConstIterator word_iter;
-    for (word_iter = m_Words->get_map()->constBegin();
-         word_iter != m_Words->get_map()->constEnd();
-         word_iter++) {
-        m_ProgressBar->setValue(progress_count++);
-        const QString& word = word_iter.key();
-
-        QStringList components = word.split('-');
-        bool compound_valid = true;
-        foreach (QString curr_component, components) {
-            if (curr_component.length() < M_MINIMUM_STEM_LENGTH
-                    || m_Words->get_word(curr_component) == NULL
-                    || p_stems->find_or_fail(curr_component) == NULL) {
-                compound_valid = false;
-                break;
-            }
-        }
-        if (components.length() == 2 && compound_valid) {
-            m_Compounds->add_compound_word(word, components);
-            //qDebug() << 47 << "number of compounds"<<m_Compounds->get_count();
-            //qDebug() << word << components << 44;
-        }
-    }
-    // END OF PART 1a
-    // PART 1b: go through list of stems and protostems to find potential
-    // non-hyphenated compound words.
-
-
-
-
-
-    const int min_component_length = 4;
-    if (true){
-
-
-    CStemCollection * stems;
-
-
-    //QStringList * Words = m_Words->GetSortedStringArray();
-    if (m_SuffixesFlag){
-        stems = get_suffixal_stems();
-    }else{
-        stems = get_prefixal_stems();
-    }
-    // CStemCollection * Stems = m_suffixal_stems maybe put this back in.
-
+    int MINIMUM_COMPOUND_STEM_LENGTH (4);
 
 
 
     m_ProgressBar->reset();
     m_ProgressBar->setMinimum(0);
-    m_ProgressBar->setMaximum(stems->get_count());
+    //m_ProgressBar->setMaximum(stems->get_count());
     m_StatusBar->showMessage("Looking for compounds.");
-    int temp_k = 0;
-    // temp, just placeholder:
-    for (int stemno1 = 0; stemno1 < stems->get_count(); stemno1++)
-    {
-        temp_k++;
-        if (temp_k++ == 5000) {
-            temp_k = 0;
-            m_ProgressBar->setValue(stemno1);
-            qApp->processEvents();
-         }
-        QString stem1 = stems->get_string_from_sorted_list(stemno1);
-        //qDebug() << 93 << stem1 << "number:" << stemno1;
-        int stem1_length = stem1.length();
-        if (stem1_length < min_component_length) continue;
-        int stemno2 = stemno1 + 1;
-        if (stemno2 >= stems->get_count()){
-            break;
-        }
-        QString this_stem = stems->get_string_from_sorted_list(stemno2);
-        while (this_stem.startsWith(stem1))
-        {
-                QString stem2 = this_stem.mid(stem1_length);
-                //qDebug() << 104 << this_stem << stem1 << stem2;
-                if (stem2.length() >= min_component_length) {
-                      if (stems->find_or_fail(stem2))
-                       {
-                          qDebug() << stem1 <<  this_stem << stem2 << 108 << "Stems: Found one!";
-                          QStringList components;
-                          components << stem1 << stem2;
 
-                          m_Compounds->add_compound_word(stem1 + stem2, components);
-                       }
+    QStringList free_standing_stems;
+    // Find all stems that are free-standing words
+    m_suffixal_stems->sort_alphabetically();
+    m_Words->sort_word_list();
+    int i(0), j(0);
+    QString stem = m_suffixal_stems->get_at(i)->get_key();
+    QString word = m_Words->get_string_from_sorted_list(j);
+    while (i < m_suffixal_stems->get_count() and j < m_Words->get_count()){
+            if (stem == word) {
+                if (stem.length() >= MINIMUM_COMPOUND_STEM_LENGTH) {
+                    free_standing_stems.append(stem);
+                    qDebug() << 49 << stem << word;
                 }
-                stemno2++;
-                this_stem = stems->get_string_from_sorted_list(stemno2);
-        }
-        //qDebug() << 115 << "end of " <<stem1;
-    }
-    }
-
-    if (false)
-    {
-    CWordCollection * words = get_words();
-    m_ProgressBar->reset();
-    m_ProgressBar->setMinimum(0);
-    m_ProgressBar->setMaximum(words->get_count());
-    m_StatusBar->showMessage("Looking for compounds.");
-    int temp_j = 0;
-    for (int wordno = 0; wordno < words->get_count(); wordno++)
-    {
-       temp_j++;
-       if (temp_j++ == 5000) {
-           temp_j = 0;
-           m_ProgressBar->setValue(wordno);
-           qApp->processEvents();
-        }
-
-        QString possibleFirstComponent = words->get_string_from_sorted_list(wordno);
-        int lengthOfPossibleFirstComponent = possibleFirstComponent.length();
-        if (lengthOfPossibleFirstComponent < min_component_length){continue;}
-        int wordno2 = wordno + 1;
-        while (wordno2 < words->get_count())
-        {   QString thisWord = words->get_string_from_sorted_list( wordno2 );
-            if (thisWord.startsWith(possibleFirstComponent))
-            {
-                int lengthOfSecondPart = thisWord.length() - lengthOfPossibleFirstComponent;
-                if (lengthOfSecondPart < min_component_length){ wordno2++; continue; }
-                QString possibleSecondComponent = thisWord.right(lengthOfSecondPart);
-                if (words->find_or_fail(possibleSecondComponent))
-                {
-                    m_Compounds->add_compound_word(thisWord, possibleFirstComponent, possibleSecondComponent);
-                    qDebug() << possibleFirstComponent <<  thisWord << possibleSecondComponent << 94 << "Words: Found one!" << wordno <<wordno2;
-                    /*add_to_word_autobiographies(str_word,
-                                                QString("[Compound]=I am a compound!=Components:=%1=%2")
-                                                  .arg(str_stem).arg(str_continuation));*/
-                } // end of compound detected
+                if (i == m_suffixal_stems->get_count()-1 ||
+                    j == m_Words->get_count()-1) {
+                    break;
+                }
+                i++;
+                stem = m_suffixal_stems->get_at(i)->get_key();
+                j++;
+                word = m_Words->get_string_from_sorted_list(j);
+                continue;
             }
             else
             {
-                break;
+                if ( stem < word ){
+                    if (i == m_suffixal_stems->get_count()-1) {break;}
+                    i++;
+                    stem = m_suffixal_stems->get_at(i)->get_key();
+                    continue;
+                }
+                else{
+                    if (j == m_Words->get_count()-1){ break;}
+                    j++;
+                    word = m_Words->get_string_from_sorted_list(j);
+                }
             }
-            wordno2++;
+    }
+
+    i =0; j = 0;
+    stem = free_standing_stems[i];
+    word = m_Words->get_string_from_sorted_list(j);
+    while (i < free_standing_stems.size() and j < m_Words->get_count()){
+        if (word.startsWith(stem) &&  m_Words->get_word(j)->get_signatures()->length() == 0  )
+        {
+            QString end = word.mid(stem.length());
+            if (end.length()==0)
+                {
+                if (j == m_Words->get_count()-1){ break; }
+                word = m_Words->get_string_from_sorted_list(++j);
+                continue;
+            }
+            if (free_standing_stems.contains(end)){
+                QStringList components;
+                components << stem << end;
+                m_Compounds->add_compound_word(word, components);
+                //qDebug() << 96 << word << stem << end;
+            }
+            j++;
+            word = m_Words->get_string_from_sorted_list(j);
+            continue;
         }
+        if (stem < word){
+            if (i==free_standing_stems.count()-1){ break;}
+            i++;
+            stem = free_standing_stems[i];
+            continue;
+        }
+        if (stem > word){
+            if (j== m_Words->get_count()-1){ break; }
+            j++;
+            word = m_Words->get_string_from_sorted_list(j);
+            continue;
+        }
+
     }
-    }
+
 
     return;  // get rid of this
 

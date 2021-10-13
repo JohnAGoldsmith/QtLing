@@ -20,8 +20,8 @@ protected:
     int                         m_CorpusCount;
     QString                     m_MemberName;
     //QList<CStem*>               m_SortedStemList;
-    QList<QString>              m_SortedStringList;
-    bool                        m_SortValidFlag;
+    QStringList                 m_SortedStringList;
+    bool                        m_forward_sort_valid_flag;
     enum   eSortStyle           m_SortStyle;
     CLexicon*                   m_Lexicon;
 public:
@@ -43,12 +43,13 @@ public:
     void                            clear();
     CStem*                          find_or_add (const QString&);  // same as <<
     CStem*                          find_or_fail (const QString&); // same as ^=
-    CStem*                          GetAtKey( QString);
+    CStem*                          get_from_string( QString);
     CStem*                          get_at(int index);
+    QString                         get_string_at(int index);
     int                             get_count() const { return m_StringToStemMap->size(); }
     map_string_to_stem *            get_map() { return m_StringToStemMap;}         //       FIX THIS< DO IT RIGHT;
     QListIterator<CStem*> *         get_sorted_list_iterator();
-    QString                         get_string_from_sorted_list(int n) {return m_SortedStringList[n];}
+    //QString                         get_string_from_sorted_list(int n) {return m_SortedStringList[n];}
     map_string_to_stem *            get_stem_map() { return m_StringToStemMap;}
     void                            sort_alphabetically();
     CStem*                          operator<< (const QString& );
