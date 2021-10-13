@@ -78,11 +78,11 @@ void CLexicon::step10_find_compounds()
     stem = free_standing_stems[i];
     word = m_Words->get_string_from_sorted_list(j);
     while (i < free_standing_stems.size() and j < m_Words->get_count()){
-        if (word.startsWith(stem) &&  m_Words->get_word(j)->get_signatures()->length() == 0  )
-        {
+        if (word.startsWith(stem)  )
+        {   CWord* pWord = m_Words->get_word(word);
             QString end = word.mid(stem.length());
-            if (end.length()==0)
-                {
+            if (end.length()==0 || pWord->get_morpheme_splits().count() > 1)
+            {
                 if (j == m_Words->get_count()-1){ break; }
                 word = m_Words->get_string_from_sorted_list(++j);
                 continue;
@@ -91,7 +91,7 @@ void CLexicon::step10_find_compounds()
                 QStringList components;
                 components << stem << end;
                 m_Compounds->add_compound_word(word, components);
-                //qDebug() << 96 << word << stem << end;
+                qDebug() << 96 << word << stem << end  ;
             }
             j++;
             word = m_Words->get_string_from_sorted_list(j);
