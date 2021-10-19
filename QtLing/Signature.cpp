@@ -20,14 +20,19 @@ QString QStringList2QString(QStringList string_list){
     return string;
 }
 
-CSignature::CSignature(QString signature_string, bool suffix_flag, CSignatureCollection* Signatures)
+CSignature::CSignature(QString signature_string, bool suffix_flag, QObject * parent): QObject(parent)
 {
   m_Signature = signature_string;
+  m_SuffixFlag = suffix_flag;
+  /*
   m_Stems = new CStem_ptr_list();
   m_Suffixes = new CSuffix_ptr_list();
   m_Prefixes = new CPrefix_ptr_list();
   m_SuffixFlag = suffix_flag;
-  m_SignatureCollection = Signatures;
+  */
+
+  // oct 2021 removed the next line, made it the parent with qobject:
+  //m_SignatureCollection = Signatures;
   m_stem_entropy = -1;
   m_robustness = 0;
   m_secondary_stem_count = 0;
@@ -35,9 +40,21 @@ CSignature::CSignature(QString signature_string, bool suffix_flag, CSignatureCol
 
 CSignature::CSignature(CSignature& signature) {
     m_Signature = signature.GetSignature();
-    m_Prefixes = signature.get_prefix_list();
-    m_Suffixes = signature.get_suffix_list();
-    m_Stems = new CStem_ptr_list();
+    if (signature.get_prefix_list()->count() > 0){
+        foreach (CPrefix* pPrefix, *signature.get_prefix_list()){
+            m_Prefixes.append(pPrefix);
+        }
+    }
+    if (signature.get_suffix_list()->count() > 0){
+        foreach (CSuffix* pSuffix, *signature.get_suffix_list()){
+            m_Suffixes.append(pSuffix);
+        }
+    }
+    if (signature.get_stems()->count() > 0){
+        foreach (CStem* pStem, *signature.get_stems()){
+            m_Stems.append(pStem);
+        }
+    }
     m_SuffixFlag = signature.get_suffix_flag();
     m_stem_entropy = signature.get_stem_entropy();
     m_secondary_stem_count = signature.get_secondary_stem_count();
@@ -45,14 +62,13 @@ CSignature::CSignature(CSignature& signature) {
 }
 CSignature::~CSignature()
 {
+    /*
     for (int i = 0; i < m_Stems->size();i++){
         if (m_Stems->at(i)){
-            //delete m_Stems->at(i);
             (*m_Stems)[i] = nullptr;}
     }
     for (int i = 0; i < m_Prefixes->size();i++){
         if (m_Prefixes->at(i)){
-            //delete m_Prefixes->at(i);
             (*m_Prefixes)[i] = nullptr;
         }
     }
@@ -60,9 +76,12 @@ CSignature::~CSignature()
         //delete m_Suffixes->at(i);
     }
 
+
+
   delete m_Stems;
   delete m_Prefixes;
   delete m_Suffixes;
+  */
 };
 QStringList CSignature::get_affix_string_list(){
     QStringList affix_string_list;
@@ -72,8 +91,8 @@ QStringList CSignature::get_affix_string_list(){
 
 QStringList& CSignature::get_stem_strings(QStringList& stem_list)
 {   stem_list.clear();
-    for (int stemno = 0; stemno < m_Stems->size(); stemno++){
-        stem_list.append(m_Stems->at(stemno)->get_key());
+    for (int stemno = 0; stemno < m_Stems.size(); stemno++){
+        stem_list.append(m_Stems[stemno]->get_key());
     }
     return stem_list;
 }
@@ -135,7 +154,7 @@ int  CSignature::get_size_of_intersection(CSignature* othersig){
 }
 int  CSignature::get_size_of_intersection(QList<CSuffix*>* other_affixes){
    int count = 0;  
-   foreach(CSuffix* pSuffix, *m_Suffixes){
+   foreach(CSuffix* pSuffix, m_Suffixes){
        if (other_affixes->contains( pSuffix) ){
                count++;
         }
@@ -158,25 +177,25 @@ void CSignature::add_affix_string(QString this_affix){
 
 void CSignature::add_stem_pointer(CStem* pStem)
 {
-    if (m_Stems->contains(pStem)){
+    if (m_Stems.contains(pStem)){
         return;
     }
-    m_Stems->append(pStem);
+    m_Stems.append(pStem);
 }
 
 void CSignature::add_affix_ptr(CPrefix *pPrefix) {
-    if (m_Prefixes->contains(pPrefix)){
+    if (m_Prefixes.contains(pPrefix)){
         return;
     } else{
-        m_Prefixes->append(pPrefix);
+        m_Prefixes.append(pPrefix);
     }
     return;
 }
 void CSignature::add_affix_ptr(CSuffix *pSuffix) {
-    if (m_Suffixes->contains(pSuffix)){
+    if (m_Suffixes.contains(pSuffix)){
         return;
     } else{
-        m_Suffixes->append(pSuffix);
+        m_Suffixes.append(pSuffix);
     }
     return;
 }
@@ -191,11 +210,11 @@ bool compare_stems_of_sig_by_count(const CStem* pStem1, const CStem* pStem2)
 }
 void CSignature::sort_stems(){
     //qSort(m_Stems->begin(), m_Stems->end(), compare_stems_of_sig);
-     std::sort(m_Stems->begin(), m_Stems->end(), compare_stems_of_sig);
+     std::sort(m_Stems.begin(), m_Stems.end(), compare_stems_of_sig);
 }
 void CSignature::sort_stems_by_count(){
     //qSort(m_Stems->begin(), m_Stems->end(), compare_stems_of_sig_by_count);
-    std::sort(m_Stems->begin(), m_Stems->end(), compare_stems_of_sig_by_count);
+    std::sort(m_Stems.begin(), m_Stems.end(), compare_stems_of_sig_by_count);
 }
 
 
@@ -218,8 +237,8 @@ QString CSignature::display()
 QString CSignature::display_stems()
 {
     QString outstring;
-    for (int stem_no = 0; stem_no < m_Stems->size(); stem_no ++ ){
-        outstring += m_Stems->at(stem_no)->display();
+    for (int stem_no = 0; stem_no < m_Stems.size(); stem_no ++ ){
+        outstring += m_Stems[stem_no]->display();
     }
     return outstring;
 }
@@ -228,7 +247,7 @@ QString CSignature::display_stems()
 int CSignature::calculate_secondary_robustness(){
     int affix_letters = 0;
     if (m_SuffixFlag){
-        foreach (CSuffix* p_suffix, *m_Suffixes) {
+        foreach (CSuffix* p_suffix, m_Suffixes) {
             const QString& str_suffix = p_suffix->get_key();
             if (str_suffix == "NULL") {
                 affix_letters += 1;
@@ -237,7 +256,7 @@ int CSignature::calculate_secondary_robustness(){
             }
         }
     } else {
-        foreach (CPrefix* p_prefix, *m_Prefixes) {
+        foreach (CPrefix* p_prefix, m_Prefixes) {
             const QString& str_prefix = p_prefix->get_key();
             if (str_prefix == "NULL") {
                 affix_letters += 1;
@@ -255,7 +274,7 @@ void CSignature::calculate_robustness()
     int stem_letters = 0;
     int affix_letters = 0;
     if (m_SuffixFlag){
-        foreach (CSuffix* p_suffix, *m_Suffixes) {
+        foreach (CSuffix* p_suffix, m_Suffixes) {
             const QString& str_suffix = p_suffix->get_key();
             if (str_suffix == "NULL") {
                 affix_letters += 1;
@@ -264,7 +283,7 @@ void CSignature::calculate_robustness()
             }
         }
     } else {
-        foreach (CPrefix* p_prefix, *m_Prefixes) {
+        foreach (CPrefix* p_prefix, m_Prefixes) {
             const QString& str_prefix = p_prefix->get_key();
             if (str_prefix == "NULL") {
                 affix_letters += 1;
@@ -274,7 +293,7 @@ void CSignature::calculate_robustness()
         }
     }
 
-    foreach (CStem* p_stem, *m_Stems) {
+    foreach (CStem* p_stem, m_Stems) {
         const QString& str_stem = p_stem->get_key();
         stem_letters += str_stem.length();
     }
@@ -290,13 +309,13 @@ int CSignature::get_robustness() {
 }
  int CSignature::get_number_of_affixes() const
 {    if (m_SuffixFlag){
-         if (m_Suffixes->count() > 0)
-         {return m_Suffixes->count();}
+         if (m_Suffixes.count() > 0)
+         {return m_Suffixes.count();}
          else {return m_Signature.count("=") + 1; }
      }
      else{
-         if (m_Prefixes->count() > 0)
-         {return m_Prefixes->count();}
+         if (m_Prefixes.count() > 0)
+         {return m_Prefixes.count();}
          else {return m_Signature.count("=") + 1; }
      }
 }
@@ -306,10 +325,10 @@ word_and_count_list * CSignature::get_word_and_count_vectors(word_and_count_list
 // this produces a list of word_and_count's: each is a word and its corpus count, one for each affix in the signature.
 {   QString this_word;
     if (m_SuffixFlag){
-        for (int stem_no = 0; stem_no < m_Stems->size(); stem_no++){
-            stem_t this_stem = m_Stems->at(stem_no)->get_key();
-            for (int suff_no = 0; suff_no < m_Suffixes->size();suff_no++){
-                suffix_t this_suffix = m_Suffixes->at(suff_no)->get_key();
+        for (int stem_no = 0; stem_no < m_Stems.size(); stem_no++){
+            stem_t this_stem = m_Stems[stem_no]->get_key();
+            for (int suff_no = 0; suff_no < m_Suffixes.size();suff_no++){
+                suffix_t this_suffix = m_Suffixes[suff_no]->get_key();
                 if (this_suffix == "NULL"){
                     this_word = this_stem;
                 } else{
@@ -349,7 +368,7 @@ double CSignature::calculate_stem_entropy()
     CStem* pStem;
     QChar  letter;
     double entropy =0.0;
-    foreach (pStem, *m_Stems){
+    foreach (pStem, m_Stems){
         stem_t this_stem = pStem->get_key();
         //qDebug() << 321 << this_stem;
         // check for only the first/last letter
@@ -381,9 +400,9 @@ void CSignature::remove_suffix(suffix_t this_suffix){
     QStringList old_sig = m_Signature.split("=");
     old_sig.removeOne(this_suffix);
     m_Signature = old_sig.join("=");
-    foreach (CSuffix * psuffix, *m_Suffixes){
+    foreach (CSuffix * psuffix, m_Suffixes){
         if (psuffix->get_key()==this_suffix){
-            m_Suffixes->removeOne(psuffix);
+            m_Suffixes.removeOne(psuffix);
             break;
         }
     }
@@ -392,9 +411,9 @@ void CSignature::remove_prefix(prefix_t this_prefix){
     QStringList old_sig = m_Signature.split("=");
     old_sig.removeOne(this_prefix);
     m_Signature = old_sig.join("=");
-    foreach (CPrefix * pprefix, *m_Prefixes){
+    foreach (CPrefix * pprefix, m_Prefixes){
         if (pprefix->get_key()==this_prefix){
-            m_Prefixes->removeOne(pprefix);
+            m_Prefixes.removeOne(pprefix);
             break;
         }
     }
@@ -404,7 +423,7 @@ QString CSignature::get_highfreq_edge_letters(float frequency_threshold){
     QMap<QString, int> counts;
     QString letter, winner;
     float totalcount =0.0, winner_count(0);
-    foreach (CStem* stem, *m_Stems){
+    foreach (CStem* stem, m_Stems){
         totalcount += 1.0;
         m_SuffixFlag?
             letter = stem->get_key().right(1):
@@ -434,6 +453,11 @@ QString CSignature::get_highfreq_edge_letters(float frequency_threshold){
         return QString();
 }
 
+int CSignature::increment_robustness(int increment) {
+    qDebug() << 438;
+    m_robustness += increment;
+        qDebug() << 440 << m_robustness;
+}
 
 /////////////////////////////////////////////////////////////////////////
 //

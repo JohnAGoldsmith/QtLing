@@ -58,7 +58,7 @@ CSignature* CSignatureCollection::operator <<(const QString& this_sigstring)
     {
         pSig = m_SignatureMap[this_sigstring];
     }
-
+    pSig->setParent(this);
     return pSig;
 }
 
@@ -70,6 +70,7 @@ void CSignatureCollection::operator<< (CSignature * pSig)
         m_suffix_flag?
             pSig->set_suffix_flag(true):
             pSig->set_suffix_flag(false);
+        pSig->setParent(this);
     }
 }
 
@@ -79,11 +80,11 @@ CSignature* CSignatureCollection::operator ^=(const QString& szSignature)
 }
 CSignature* CSignatureCollection::find_or_add (const QString& sigstring )
 {   if (m_SignatureMap.contains(sigstring))
-    {
+    {   qDebug() << 83 << "sig string already existed";
         return m_SignatureMap[sigstring];
     } else
     {
-        CSignature* pSig = new CSignature(sigstring);
+        CSignature* pSig = new CSignature(sigstring, m_suffix_flag, this);
         m_SignatureMap[sigstring] = pSig;
         m_signature_list.append(pSig);
         return pSig;
@@ -185,7 +186,7 @@ void CSignatureCollection::sort_signatures_by_secondary_stem_count(){
            sig_iter.next();
            m_SortList.append(sig_iter.value());
        }
-       qSort(m_SortList.begin(), m_SortList.end(),  compare_secondary_stem_count);
+       std::sort(m_SortList.begin(), m_SortList.end(),  compare_secondary_stem_count);
 
 }
 
@@ -338,20 +339,20 @@ void CSignatureCollection::calculate_sig_robustness()
 
 void CSignatureCollection::add_this_and_all_subsignatures(QString this_sig_string, int robustness, QStringList & signature_check_list){ // this is only used when creating "virtual signatures"
     if (signature_check_list.contains(this_sig_string)){
-          //qDebug() << 350 << "already processed this signature, quitting for this signature"<< this_sig_string;
           return;
     }
     QStringList affixes = this_sig_string.split("=");
     if (affixes.length() == 1) {
-        //qDebug() << 347 << "just one affix now, quitting." ;
         return;
     }
     signature_check_list.append(this_sig_string);
     CSignature * pSig = find_or_add(this_sig_string);
-    pSig->increment_robustness(robustness);
-    //qDebug() << 344 << this_sig_string << "new robustness"<< robustness << "total robustness" << pSig->get_robustness();
+
+    // this is the problem:
+    // pSig->increment_robustness(robustness);
+    pSig->m_robustness += robustness;
+
     if (affixes.length() < 3){
-        //qDebug() << 354 << "Reached sig with two elements, not descending any further.";
         return;
     }
     for (int affix_no = 0; affix_no < affixes.length(); affix_no++){

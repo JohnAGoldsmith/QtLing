@@ -586,7 +586,7 @@ void CSignature::write_json(QJsonObject &ref_json, eJsonType json_type) const
         case INDEXED: {
             if (m_SuffixFlag) {
                 QJsonArray arr_suffixes;
-                foreach (CSuffix* p_suffix, *m_Suffixes) {
+                foreach (CSuffix* p_suffix, m_Suffixes) {
                     QJsonObject obj_suffix;
                     obj_suffix["suffix"] = p_suffix->get_key();
                     obj_suffix["id"] = p_suffix->get_json_id();
@@ -595,7 +595,7 @@ void CSignature::write_json(QJsonObject &ref_json, eJsonType json_type) const
                 ref_json["suffixes"] = arr_suffixes;
             } else {
                 QJsonArray arr_prefixes;
-                foreach (CPrefix* p_prefix, *m_Prefixes) {
+                foreach (CPrefix* p_prefix, m_Prefixes) {
                     QJsonObject obj_prefix;
                     obj_prefix["prefix"] = p_prefix->get_key();
                     obj_prefix["id"] = p_prefix->get_json_id();
@@ -605,7 +605,7 @@ void CSignature::write_json(QJsonObject &ref_json, eJsonType json_type) const
             }
 
             QJsonArray arr_stems;
-            foreach (CStem* p_stem, *m_Stems) {
+            foreach (CStem* p_stem, m_Stems) {
                 QJsonObject obj_stem;
                 obj_stem["stem"] = p_stem->get_key();
                 obj_stem["id"] = p_stem->get_json_id();
@@ -622,20 +622,20 @@ void CSignature::write_json(QJsonObject &ref_json, eJsonType json_type) const
         case MAPPED: {
             if (m_SuffixFlag) {
                 QJsonArray arr_suffixes;
-                foreach (CSuffix* p_suffix, *m_Suffixes) {
+                foreach (CSuffix* p_suffix, m_Suffixes) {
                     arr_suffixes.append(p_suffix->get_key());
                 }
                 ref_json["suffixes"] = arr_suffixes;
             } else {
                 QJsonArray arr_prefixes;
-                foreach (CPrefix* p_prefix, *m_Prefixes) {
+                foreach (CPrefix* p_prefix, m_Prefixes) {
                     arr_prefixes.append(p_prefix->get_key());
                 }
                 ref_json["prefixes"] = arr_prefixes;
             }
 
             QJsonArray arr_stems;
-            foreach (CStem* p_stem, *m_Stems) {
+            foreach (CStem* p_stem, m_Stems) {
                 arr_stems.append(p_stem->get_key());
             }
             ref_json["stems"] = arr_stems;

@@ -16,25 +16,30 @@ class QJsonObject;
 
 sigstring_t restructure_signature(sigstring_t, QString morph, QStringList new_affixes);
 
-class CSignature
+class CSignature : public QObject
 {
+
+    //Oct 2021 test:
+    Q_OBJECT
+
 protected:
     QString                         m_Signature;
-    QList<CSuffix*> *               m_Suffixes;
-    QList<CPrefix*> *               m_Prefixes;
-    QList<CStem*>   *               m_Stems;
+    QList<CSuffix*>                 m_Suffixes;
+    QList<CPrefix*>                 m_Prefixes;
+    QList<CStem*>                   m_Stems;
     QStringList                     m_Autobiography;
     bool                            m_SuffixFlag;
     CSignatureCollection*           m_SignatureCollection;
     double                          m_stem_entropy;
     int                             m_json_id;
     int                             m_secondary_stem_count;
+public:
     int                             m_robustness;
 
 public:
 
     CSignature(CSignature&);
-    CSignature( QString, bool suffix_flag = true, CSignatureCollection* m_SignatureCollection = NULL);
+    CSignature( QString, bool suffix_flag = true, QObject *parent = 0);
     ~CSignature();
 public:
 
@@ -54,20 +59,20 @@ public:
     QString                     display();
     QString                     display_stems() ;
     void                        dump_string_set_of_suffixes(QSet<QString> & this_StringSet);
-    int                         get_number_of_stems() const             { return m_Stems->count();}
+    int                         get_number_of_stems() const             { return m_Stems.count();}
     int                         get_number_of_affixes() const ;
     CSignatureCollection*       get_signatures()            const       {return m_SignatureCollection;}
     QString                     GetSignature()              const       { return m_Signature; }
     QString                     get_key()                   const       { return m_Signature;}
-    QList<CPrefix*>*            get_prefix_list()                       {return m_Prefixes;}
+    QList<CPrefix*>*            get_prefix_list()                       {return &m_Prefixes;}
     double                      get_stem_entropy();
-    QList<CStem*>*              get_stems()                             { return   m_Stems;}
+    QList<CStem*>*              get_stems()                             { return   &m_Stems;}
     QStringList&                get_stem_strings(QStringList&);
     QStringList                 get_affix_string_list();
     int                         get_secondary_stem_count()              {return m_secondary_stem_count;}
     bool                        get_suffix_flag()                       { return m_SuffixFlag;}
     void                        set_suffix_flag(bool flag)              { m_SuffixFlag = flag;}
-    QList<CSuffix*>*            get_suffix_list()                       {return m_Suffixes;}
+    QList<CSuffix*>*            get_suffix_list()                       {return &m_Suffixes;}
     word_and_count_list *       get_word_and_count_vectors(word_and_count_list* );
     void                        increment_secondary_stem_count(int increment) { m_secondary_stem_count += increment;}
     void                        remove_suffix(suffix_t);
@@ -82,7 +87,7 @@ public:
     void                        calculate_robustness();
     int                         calculate_secondary_robustness(); // does not take into consideration the number of letters in each stem, just *how many* there are and affix letters
     int                         get_robustness()  ;
-    int                         increment_robustness(int increment) {m_robustness += increment;}
+    int                         increment_robustness(int increment) ;
     QString                     get_highfreq_edge_letters(float frequency_threshold);
 };
 

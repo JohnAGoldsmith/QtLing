@@ -172,7 +172,6 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()  // step 2
     replace_parse_pairs_from_current_signature_structure();
     generate_virtual_signatures();
 
-
     QMap<QString, protostem*> * these_protostems;
     if (m_SuffixesFlag) {
          signatures = m_Signatures;  // TODO remove this;

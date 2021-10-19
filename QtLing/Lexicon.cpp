@@ -442,7 +442,6 @@ void CLexicon::generate_virtual_signatures(){
     if (m_SuffixesFlag){
        foreach (CSignature* pSig, *m_Signatures->get_signature_list()){
            signature_check_list.clear();
-           //qDebug() << 436 << pSig->display();
            m_VirtualSignatures->add_this_and_all_subsignatures(pSig->display(), pSig->get_robustness(), signature_check_list);
         }
     }

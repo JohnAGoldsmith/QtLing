@@ -12,8 +12,9 @@
 class CLexicon;
 
 
-class CSignatureCollection
-{
+class CSignatureCollection : public QObject
+{  //October 2021 test:
+    Q_OBJECT
 protected:
     //QMap<QString, CSignature*>
     map_string_to_sig                       m_SignatureMap;

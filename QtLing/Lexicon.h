@@ -233,7 +233,7 @@ protected:
     CPrefixCollection *             m_Prefixes;
     CSignatureCollection *          m_Signatures;
     CSignatureCollection *          m_PrefixSignatures;
-    CSignatureCollection *           m_VirtualSignatures; // a temporary group of "virtual signatures"; a signature is virtual if it is a proper subsignature of an empirical signature.
+    CSignatureCollection *          m_VirtualSignatures; // a temporary group of "virtual signatures"; a signature is virtual if it is a proper subsignature of an empirical signature.
     CompoundWordCollection *        m_Compounds;
     CompoundComponentCollection *   m_CompoundComponents;
     QMap<QString, CParse*>          m_Raw_parses;
