@@ -217,7 +217,7 @@ class CLexicon
 {
 protected:
     const int                       M_MINIMUM_STEM_LENGTH;
-    const int                       M_MINIMUM_STEM_COUNT;
+    int                             M_MINIMUM_STEM_COUNT;
     const int                       M_MAXIMUM_AFFIX_LENGTH;
     const int                       M_MINIMUM_HYPOTHESIS_WORD_COUNT;
                                                          // this is part of an experiment.
@@ -309,6 +309,7 @@ public:
     void                                        add_parse(CParse*);
     void                                        add_paraprefix(QString paraprefix, QString word);
     void                                        add_parasuffix(QString parasuffix, QString word);
+    void                                        change_minimum_stem_count(int count) {M_MINIMUM_STEM_COUNT = count;}
     CSignature *                                find_signature_of_stem(QString stem, bool suffix_flag);
     CSignatureCollection*                       get_active_signature_collection();
     int                                         get_affix_count(QString affix);

@@ -10,6 +10,9 @@
 #include <QDebug>
 #include <QProgressBar>
 
+
+extern QString QStringList2QString(QStringList);
+
 void CLexicon::step10_find_compounds()
 {
 
@@ -30,6 +33,19 @@ void CLexicon::step10_find_compounds()
     m_ProgressBar->setMinimum(0);
     //m_ProgressBar->setMaximum(stems->get_count());
     m_StatusBar->showMessage("Looking for compounds.");
+
+    for (int wordno = 0; wordno < m_Words->get_count(); wordno++){
+        QString word = m_Words->get_string_from_sorted_list(wordno);
+        if (word.contains("-")){
+            QStringList components = word.split("-");
+            QString compound_string = QStringList2QString(components);
+            CWord* pWord = m_Words->get_word(word);
+            if (pWord){
+                pWord->add_compound(compound_string);
+            }
+        }
+    }
+
 
     QStringList free_standing_stems;
     // Find all stems that are free-standing words
@@ -78,10 +94,11 @@ void CLexicon::step10_find_compounds()
                 word = m_Words->get_string_from_sorted_list(++j);
                 continue;
             }
-            if (free_standing_stems.contains(end)){
+            if (free_standing_stems.contains(end) || (end.length() > MINIMUM_COMPOUND_STEM_LENGTH &&  m_Words->contains(end) ) ){
                 QStringList components;
                 components << stem << end;
                 m_Compounds->add_compound_word(word, components);
+                pWord->add_compound(QStringList2QString(components));
                 qDebug() << 96 << word << stem << end  ;
             }
             word = m_Words->get_string_from_sorted_list(++j);

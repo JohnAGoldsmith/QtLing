@@ -39,6 +39,7 @@ protected:
     QStringList                         m_Morphemic_splits; // a morphemic split is a QString like: "pre bind ing s"
     QList<ptr_to_stem_sig_pair>         m_Signatures;
     int                                 m_json_id;
+    QStringList                         m_Compounds;
 
     // we want to allow a parse of a word to have more than two pieces, like "govern ment s". This is not entirely consistent with the philosphy behind the Parse_triple, which
     // assumed all words had at most a stem and an affix.
@@ -51,6 +52,7 @@ public:
     ~CWord();
 public:
     //Accessors
+    void                                add_compound(QString string);
     void                                add_parse(CStem* stem, CSuffix* suffix, CSignature* signature);
     void                                add_parse_triple(QString stem, QString affix, sigstring_t this_sig_string);
     void                                add_morphemic_split(QString);
@@ -61,8 +63,9 @@ public:
     void                                clear_parse_triple_map();
     QString                             get_key() {return m_Word;}
     int                                 get_word_count() const  { return m_WordCount; }
-    QList<Parse_triple*>*         get_parse_triple_list()     { return & m_Parse_triple_list; }
+    QList<Parse_triple*>*               get_parse_triple_list()     { return & m_Parse_triple_list; }
     bool                                contains_this_stem_among_parses (QString stem);
+    QStringList                         get_compounds(){return m_Compounds;}
     QList<QPair<CStem*,CSignature*>*> * get_signatures ()   {return &m_Signatures;}
     QString                             get_word()      const { return m_Word; }
     void                                IncrementWordCount(int n = 1);

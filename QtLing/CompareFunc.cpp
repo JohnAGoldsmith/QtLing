@@ -8,6 +8,17 @@
 #include <QChar>
 #include <QDebug>
 
+QString QStringList2QString(QStringList string_list){
+    QString string;
+    if (string_list.length() == 0) return string;
+    for (int i =0; i< string_list.length()-1; i++){
+        string += string_list[i] + "=";
+    }
+    string += string_list.last();
+    return string;
+}
+
+
 bool signature_1_contains_signature_2(QString sig1, QString sig2)
 {
     QStringList list_1 = sig1.split("=");

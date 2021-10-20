@@ -149,11 +149,6 @@ void remove_parses_2(CLexicon* lexicon, QStringList& stems, QStringList& affixes
        foreach(QString suffix, affixes ){
              if (suffix.startsWith(difference)){
                     CParse this_parse(stem, suffix, lexicon->get_suffix_flag());
-                    //qDebug() << stem << suffix;
-                    if (stem.startsWith("abnorm")){
-                        int i = 1;
-                        qDebug() << 155 <<  stem << suffix;
-                    }
                     lexicon->remove_parse(this_parse);
              }
        }
@@ -185,7 +180,6 @@ void CLexicon::step8c_from_sig_pairs_to_parses(){
     sig_pair*   p_sig_pair;
     int MINIMUM_NUMBER_OF_WORDS = M_MINIMUM_HYPOTHESIS_WORD_COUNT; // usually 2
     int difference_length;
-    int count;
     while (sig_pair_iter.hasNext())
     {
          p_sig_pair = sig_pair_iter.next().value();

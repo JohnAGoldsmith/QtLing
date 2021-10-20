@@ -18,6 +18,12 @@ CWord::~CWord()
     clear_parse_triple_map();
 }
 
+void CWord::add_compound(QString string){
+    if (m_Compounds.contains(string)){
+        return;
+    }
+    m_Compounds.append(string);
+}
 void CWord::IncrementWordCount (int n )
 {
   m_WordCount += n;

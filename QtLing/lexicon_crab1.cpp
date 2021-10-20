@@ -26,6 +26,7 @@
 
 void SortQStringListFromRight(QStringList& ThisStringList);
 bool reverse_string_compare(QString,QString);
+extern QString QStringList2QString(QStringList);
 
 QString combine_stem_and_prefix(QString stem, QString prefix){
     if (prefix == "NULL")
@@ -39,16 +40,8 @@ QString combine_stem_and_prefix_with_gap(QString stem, QString prefix){
     else
         return prefix + "  " + stem;
 }
-QString QStringList2signature(QStringList list){
-    QString result;
-    for (int i = 0; i < list.length()-1; i++){
-        result += list[i] + "=";
-    }
-    if (list.length() >= 1){
-        result += list[list.length()-1];
-    }
-    return result;
-}
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //linguistic methods
 /**
@@ -212,8 +205,7 @@ void CLexicon::step1_from_words_to_protostems()
     m_ProgressBar->setMinimum(0);
     m_ProgressBar->setMaximum(Words->size());
     m_ParseMap.clear();
- 
-    int temp_j = 0;
+
     for (int wordno=0; wordno<Words->size()-1; wordno ++) {
         if (wordno % 5000 == 0) {
             m_ProgressBar->setValue(wordno);
@@ -782,6 +774,9 @@ void CLexicon::repair_low_entropy_signatures()            // step 4.
         if (pSig->get_stem_entropy() > m_entropy_threshold_for_stems ){
             continue;
         }
+        // this has a problem: e.g. with abort: it shifts (wrongly) the split to the left of the t for abort and aborted, and then deletes the analyses of the other abort-stem words. TODO
+        // the main reason it did badly was that there was only one stem in the signature! so the test for whether it was left-definite was no test at all.
+        // otherwise, the signature has lots of great suffixes: NULL ed ion ive.
         float EdgeLetterPredominanceThreshold = 0.8;
         letter = pSig->get_highfreq_edge_letters(EdgeLetterPredominanceThreshold);
         foreach (stem, pSig->get_stem_strings(stem_list)) {

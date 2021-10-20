@@ -306,7 +306,11 @@ void   CLexicon::step7_FindGoodSignaturesInsideParaSignatures()  // step 2
     }// end of protostem loop
 
     step3_from_parses_to_stem_to_sig_maps("Good sigs inside bad");
-    step4_create_signatures("Good sigs inside bad", MS_ignore_minimum_stem_count);
+
+    // We have to drop the condition now -- and in the future -- that all signatures have at least 2 stems...
+    change_minimum_stem_count(1);
+
+    step4_create_signatures("Good sigs inside bad");
     replace_parse_pairs_from_current_signature_structure();
 
 }

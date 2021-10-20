@@ -71,6 +71,9 @@ void LxaStandardItemModel::load_words(CWordCollection* p_words)
         foreach (const Parse_triple* this_parse_triple, *pWord->get_parse_triple_list())  {
             item_list.append(new QStandardItem(this_parse_triple->m_sig_string)) ;
         }
+        foreach(QString compound, pWord->get_compounds()){
+            item_list.append(new QStandardItem(compound));
+        }
         appendRow(item_list);
     }
 }

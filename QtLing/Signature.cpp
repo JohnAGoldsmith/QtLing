@@ -10,15 +10,9 @@
 #include "WordCollection.h"
 #include "Word.h"
 
-QString QStringList2QString(QStringList string_list){
-    QString string;
-    if (string_list.length() == 0) return string;
-    for (int i =0; i< string_list.length()-1; i++){
-        string += string_list[i] + "=";
-    }
-    string += string_list.last();
-    return string;
-}
+
+extern QString QStringList2QString(QString);
+
 
 CSignature::CSignature(QString signature_string, bool suffix_flag, QObject * parent): QObject(parent)
 {

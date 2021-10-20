@@ -80,10 +80,8 @@ CSignature* CSignatureCollection::operator ^=(const QString& szSignature)
 }
 CSignature* CSignatureCollection::find_or_add (const QString& sigstring )
 {   if (m_SignatureMap.contains(sigstring))
-    {   qDebug() << 83 << "sig string already existed";
-        return m_SignatureMap[sigstring];
-    } else
-    {
+    { return m_SignatureMap[sigstring];
+    } else {
         CSignature* pSig = new CSignature(sigstring, m_suffix_flag, this);
         m_SignatureMap[sigstring] = pSig;
         m_signature_list.append(pSig);
