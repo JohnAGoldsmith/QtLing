@@ -58,7 +58,7 @@ void CLexicon::step10_find_compounds()
             if (stem == word) {
                 if (stem.length() >= MINIMUM_COMPOUND_STEM_LENGTH) {
                     free_standing_stems.append(stem);
-                    qDebug() << 49 << stem << word;
+                    //qDebug() << 49 << stem << word;
                 }
                 if (i == m_suffixal_stems->get_count()-1 ||
                     j == m_Words->get_count()-1) {
@@ -89,17 +89,19 @@ void CLexicon::step10_find_compounds()
         if (word.startsWith(stem)  )
         {   CWord* pWord = m_Words->get_word(word);
             QString end = word.mid(stem.length());
+            // TODO this does not allow us to determine that "doorstep" is a compound, because it has the signature NULL=s! This should be changed.
             if (end.length()==0 || pWord->get_morpheme_splits().count() > 0)
             {   if (j == m_Words->get_count()-1){ break; }
                 word = m_Words->get_string_from_sorted_list(++j);
                 continue;
             }
+            // the next block adds a compound if the second part is a free-standing stem OR it is a word of sufficient length.
             if (free_standing_stems.contains(end) || (end.length() > MINIMUM_COMPOUND_STEM_LENGTH &&  m_Words->contains(end) ) ){
                 QStringList components;
                 components << stem << end;
                 m_Compounds->add_compound_word(word, components);
                 pWord->add_compound(QStringList2QString(components));
-                qDebug() << 96 << word << stem << end  ;
+                //qDebug() << 96 << word << stem << end  ;
             }
             word = m_Words->get_string_from_sorted_list(++j);
             continue;
