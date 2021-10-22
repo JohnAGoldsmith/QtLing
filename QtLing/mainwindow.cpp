@@ -504,23 +504,6 @@ void MainWindow::do_crab1()
     statusBar()->showMessage("Crab, phase 1 completed.");
     emit lexicon_ready();
 }
-/*
-void MainWindow::do_crab2()
-{   CLexicon* lexicon = get_lexicon();
-    statusBar()->showMessage("Crab 2: Resignaturize with known affixes.");
-    lexicon->Crab_2();
-    load_models(get_lexicon());
-    write_stems_and_words();
-    create_or_update_TreeModel(get_lexicon());
-    m_graphics_scene->set_signature_collection(get_lexicon()->get_active_signature_collection());
-    m_leftTreeView->expandAll();
-    m_leftTreeView->resizeColumnToContents(0);
-    get_lexicon()->get_suffix_flag()?
-          display_epositive_suffix_signatures(get_lexicon()):
-          display_epositive_prefix_signatures(get_lexicon());
-    statusBar()->showMessage("Crab 2: Resignaturize with known affixes, completed.");
-    emit lexicon_ready();
-}*/
 void MainWindow::do_crab2()
 {   statusBar()->showMessage("Crab 2: Good sigs inside bad.");
     CLexicon* lexicon = get_lexicon();
@@ -537,8 +520,6 @@ void MainWindow::do_crab2()
     statusBar()->showMessage("Crab 3: Good sigs inside bad completed.");
     emit lexicon_ready();
 }
-
-
 void MainWindow::do_crab3()
 {   statusBar()->showMessage("Crab Nebula, phase 3: repair low entropy signatures.");
     CLexicon* lexicon = get_lexicon();
@@ -595,8 +576,6 @@ void MainWindow::do_crab_compounds(){
         m_leftTreeView->resizeColumnToContents(0);
         statusBar()->showMessage("Crab compounds: simple compounds completed.");
 }
-
-
 void MainWindow::do_crab6(){
     statusBar()->showMessage("Crab 6 not defined.");
 }
@@ -639,27 +618,17 @@ void MainWindow::load_models(CLexicon* lexicon)
     statusBar()->showMessage("Loading models: Words");
     m_Models["Words"]               ->load_words(lexicon->get_words());
     statusBar()->showMessage("Loading models: Parses");
-    //QCoreApplication::processEvents();
     m_Models["Parses"]              ->load_parses(lexicon->get_parses());
-
     statusBar()->showMessage("Loading models: Suffixal stems");
-    //QCoreApplication::processEvents();
     m_Models["Suffixal stems"]      ->load_stems(lexicon->get_suffixal_stems());
-
     statusBar()->showMessage("Loading models: Prefixal stems");
     m_Models["Prefixal stems"]      ->load_stems(lexicon->get_prefixal_stems());
-    //QCoreApplication::processEvents();
     statusBar()->showMessage("Loading models: Suffixes");
     m_Models["Suffixes"]            ->load_suffixes(lexicon->get_suffixes());
-    //QCoreApplication::processEvents();
     statusBar()->showMessage("Loading models: Prefixes");
     m_Models["Prefixes"]            ->load_prefixes(lexicon->get_prefixes());
-    //QCoreApplication::processEvents();
-
     statusBar()->showMessage("Loading models: Signatures");
     m_Models["Signatures"]          ->load_signatures(lexicon->get_signatures());
-    //QCoreApplication::processEvents();
-    qDebug() << 635 << "Left loading of signatures model";
     statusBar()->showMessage("Loading models: Signatures completed");
     /* Using the sorting function of the proxy models, we do not need duplicate source models,
      * removed them to save some memory, Hanson 11.2
@@ -669,11 +638,9 @@ void MainWindow::load_models(CLexicon* lexicon)
 
     m_Models["Prefix signatures"]   ->load_signatures( lexicon->get_prefix_signatures());
     m_Models["EPositive prefix signatures"]->load_positive_signatures(lexicon->get_prefix_signatures());
-    //statusBar()->showMessage("Loading models: residual parasignatures.");
     //m_Models["Residual parasignatures"]->load_parasignatures(lexicon->get_residual_signatures()); // problem -- these are too big!
     //m_Models["Parasuffixes"]        ->load_parasuffixes(lexicon->get_parasuffixes()); // these are continuations after any protostem.
     m_Models["Passive signatures"]  ->load_signatures(lexicon->get_passive_signatures());
-
     statusBar()->showMessage("Loading models: Hypotheses");
     m_Models["Hypotheses"]          ->load_hypotheses(lexicon->get_hypotheses());
     m_Models["Hypotheses 2"]        ->load_hypotheses_2(lexicon->get_hypotheses());
@@ -683,12 +650,7 @@ void MainWindow::load_models(CLexicon* lexicon)
     statusBar()->showMessage("Loading models: Suffixal protostems");
     m_Models["Suffixal protostems"]->load_protostems(lexicon->get_suffixal_protostems());
     m_Models["Prefixal protostems"]->load_protostems(lexicon->get_prefixal_protostems());
-    //QCoreApplication::processEvents();
-    //statusBar()->showMessage("Loading models: Compound words");
     m_Models["Compound words"]->load_compounds(lexicon->get_compounds());
-    //QCoreApplication::processEvents();
-    //qDebug() << "finished loading models";
-    //qDebug() << "loading proxy models";
 
     // Now all source models are loaded. Link them to proxy models.
     //statusBar()->showMessage("Loading models: Finishing up");
@@ -708,12 +670,12 @@ void MainWindow::load_models(CLexicon* lexicon)
     statusBar()->showMessage("Finished loading models.");
 
 }
+
 void MainWindow::read_file_do_crab()
 {       read_dx1_file();
         statusBar()->showMessage(tr("Ready"));
         do_crab1();
 }
-
 
 void MainWindow::read_dx1_file()
 {
@@ -740,20 +702,6 @@ void MainWindow::read_dx1_file()
     Words->sort_word_list();
     setCurrentFile(m_name_of_data_file);
     statusBar()->showMessage(tr("File loaded"), 5000);
-    QStringList word_pair;
-    QString common;
-
-    if (false){
-    for (int i = 500; i < 600; i++){
-        word_pair.clear();
-        word_pair.append(Words->get_reverse_sort_list()->at(i-1));
-        word_pair.append(Words->get_reverse_sort_list()->at(i));
-
-        left_string_diff(word_pair,common);
-        qDebug() << Words->get_reverse_sort_list()->at(i-1) << Words->get_reverse_sort_list()->at(i);
-        qDebug() << word_pair.first() << word_pair.last() << common << 494;
-    }
-    }
 }
 
 
@@ -791,7 +739,6 @@ void MainWindow::documentWasModified()
 
 void MainWindow::print_suffix_signatures()
 {
-    //CSignature* pSig;
     int count = 0;
     CStem *  pStem;
     QString filename = "swahili-suffix-signatures.txt";

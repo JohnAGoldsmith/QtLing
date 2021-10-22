@@ -345,11 +345,7 @@ void CSignatureCollection::add_this_and_all_subsignatures(QString this_sig_strin
     }
     signature_check_list.append(this_sig_string);
     CSignature * pSig = find_or_add(this_sig_string);
-
-    // this is the problem:
-    // pSig->increment_robustness(robustness);
-    pSig->m_robustness += robustness;
-
+    pSig->increment_robustness(robustness);
     if (affixes.length() < 3){
         return;
     }

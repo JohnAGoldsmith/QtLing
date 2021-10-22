@@ -33,7 +33,6 @@ protected:
     double                          m_stem_entropy;
     int                             m_json_id;
     int                             m_secondary_stem_count;
-public:
     int                             m_robustness;
 
 public:
@@ -87,7 +86,7 @@ public:
     void                        calculate_robustness();
     int                         calculate_secondary_robustness(); // does not take into consideration the number of letters in each stem, just *how many* there are and affix letters
     int                         get_robustness()  ;
-    int                         increment_robustness(int increment) ;
+    void                        increment_robustness(int increment) ;
     QString                     get_highfreq_edge_letters(float frequency_threshold);
 };
 

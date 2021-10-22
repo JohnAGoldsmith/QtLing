@@ -56,31 +56,13 @@ CSignature::CSignature(CSignature& signature) {
 }
 CSignature::~CSignature()
 {
-    /*
-    for (int i = 0; i < m_Stems->size();i++){
-        if (m_Stems->at(i)){
-            (*m_Stems)[i] = nullptr;}
-    }
-    for (int i = 0; i < m_Prefixes->size();i++){
-        if (m_Prefixes->at(i)){
-            (*m_Prefixes)[i] = nullptr;
-        }
-    }
-    for (int i = 0; i < m_Suffixes->size();i++){
-        //delete m_Suffixes->at(i);
-    }
-
-
-
-  delete m_Stems;
-  delete m_Prefixes;
-  delete m_Suffixes;
-  */
+ // nothing needs to be deleted.
 };
 QStringList CSignature::get_affix_string_list(){
-    QStringList affix_string_list;
-    affix_string_list = m_Signature.split("=");
-    return affix_string_list;
+    //QStringList affix_string_list;
+    //affix_string_list = m_Signature.split("=");
+    //return affix_string_list;
+    return m_Signature.split("=");
 }
 
 QStringList& CSignature::get_stem_strings(QStringList& stem_list)
@@ -447,10 +429,8 @@ QString CSignature::get_highfreq_edge_letters(float frequency_threshold){
         return QString();
 }
 
-int CSignature::increment_robustness(int increment) {
-    qDebug() << 438;
+void CSignature::increment_robustness(int increment) {
     m_robustness += increment;
-        qDebug() << 440 << m_robustness;
 }
 
 /////////////////////////////////////////////////////////////////////////

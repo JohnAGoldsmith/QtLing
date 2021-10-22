@@ -22,7 +22,7 @@ void MainWindow::write_stems_and_words()
 
     if (! out_file.open(QFile::WriteOnly | QFile::Text))
     {
-        qDebug() << "************  no file opened 17";
+        qDebug() << "************  no file opened for writing output, file output.cpp";
         return;
     }
 

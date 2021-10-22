@@ -98,13 +98,11 @@ void MainWindow::display_epositive_prefix_signatures(CLexicon* lexicon)
 void MainWindow::display_suffix_signatures(CLexicon* lexicon)
 {
     m_tableView_upper_left->setModel(m_proxy_models["Signatures"]);
-    //m_tableView_upper_left->set_proxy_source_model(m_Models["Signatures"]);
     m_tableView_upper_left->set_data_type( e_data_suffixal_signatures );
-    m_tableView_upper_left->resizeColumnsToContents();
     m_tableView_upper_left->model()->sort(2, Qt::DescendingOrder);
+    m_tableView_upper_left->resizeColumnsToContents();
 
     m_tableView_upper_right->setModel(m_proxy_models["Signatures 2"]);
-    //m_tableView_upper_right->set_proxy_source_model(m_Models["Signatures 2"]);
     m_tableView_upper_right->set_data_type( e_data_suffixal_signatures );
     m_tableView_upper_right->resizeColumnsToContents();
     m_tableView_upper_right->model()->sort(0, Qt::DescendingOrder);

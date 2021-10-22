@@ -32,6 +32,8 @@ extern QString QStringList2signature(QStringList);
 */
 // this functionality is already present in FindGoodSignaturesInsideBad, below, so it's not needed.
 // Not used, should be removed. Oct 9 2021. JG.
+
+/*
 void CLexicon::ReSignaturizeWithKnownAffixes()  // step 2
 {
     m_StatusBar->showMessage("Crab 2: Resignaturize with known affixes");
@@ -58,10 +60,12 @@ void CLexicon::ReSignaturizeWithKnownAffixes()  // step 2
 
 
  }
+ */
 /**
  * helper function for preceding function.
  *
  */
+/*
 void CLexicon::create_new_parse_set_from_known_affixes()
 {
     qApp->processEvents();
@@ -91,7 +95,8 @@ void CLexicon::create_new_parse_set_from_known_affixes()
         add_parse(this_parse);
     }
 }
-
+*/
+/*
 bool Contains(QList<CSuffix*>* list1, QList<CSuffix*>* list2 ) {
     foreach (CSuffix* suffix, *list2){
         qDebug() << 94 << suffix;
@@ -109,6 +114,7 @@ bool Contains(QList<CPrefix*>* list1, QList<CPrefix*>* list2 ) {
     }
     return true;
 }
+*/
 int IntersectionCount(QList<CSuffix*>* list1, QList<CSuffix*>* list2){
     int count = 0;
     foreach (CSuffix* suffix, *list2){
