@@ -216,7 +216,7 @@ void FindDialog::do_clear_search()
 
 void FindDialog::item_found(int n)
 {
-    //qDebug() << "item_found slot recieved signal with int n =" << n;
+    //qDebug() << "item_found slot received signal with int n =" << n;
     if (sender() == m_mainwindow->get_upper_left_tableview())
         m_left_items_found = n;
     if (sender() == m_mainwindow->get_upper_right_tableview())

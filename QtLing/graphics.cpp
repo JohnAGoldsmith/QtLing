@@ -440,7 +440,7 @@ void lxa_graphics_scene::create_and_place_signatures()
                 sig_circle * this_sig_circle = new sig_circle(this, pSig);
                 addItem(this_sig_circle);
                 this_sig_circle->setPos(x,y+ this_sig_circle->get_radius());
-                qDebug() << 437 << x << y;
+                //qDebug() << 437 << x << y;
                 m_map_from_sig_to_pgraphsig[pSig]=this_sig_circle;
                 m_graphic_signature_lattice[row]->append(this_sig_circle);
                 col++;

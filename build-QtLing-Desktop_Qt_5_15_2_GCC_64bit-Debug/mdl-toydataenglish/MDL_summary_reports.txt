@@ -1,0 +1,373 @@
+===========================================================
+Suffixal analysis.
+Type count of words:                                         0.00
+Type count of unanalyzed words:                              0.00              
+Type count of analyzed words:                                0.00              
+Token count of all words:                                    0.00              
+Token count of unanalyzed words:                             0.00              
+Token count of analyzed words:                               0.00              
+Total token count of words:                                  0.00              
+Type count of words from Lxa:                               12.00              
+Token count of words from Lxa:                              15.00              
+Number of signatures:                                        0.00              
+Number of stems:                                             0.00              
+Number of affixes:                                           0.00              
+Total letter count in stems:                                 0.00              
+total letter count in affixes:                               0.00              
+total letter count:                                          0.00              
+Size of alphabet:                                               0              
+Bits per letter:                                            0.000              
+Running total of stem content (bits) :                       0.00              
+Running total of affix content (bits):                       0.00              
+Stem plus affix content: **                                  0.00              
+Cost of affix choices within signatures: **                  0.00              
+Cost of a set of pointers to each signature: **              0.00              
+Cost of stem-choice within signatures **                     0.00              
+bit cost of flagging analyzed words: **                      0.00              
+bit cost of flagging unanalyzed words: **                    0.00              
+Grammar length in bits:                                      0.00              
+corpus description from analyzed words:                      0.00              
+corpus description from unanalyzed words:                    0.00              
+corpus description:                                          0.00              
+Total description length:                                    0.00              
+===========================================================              
+1 process signatures              
+===========================================================              
+Suffixal analysis.
+Type count of words:                                        10.00
+Type count of unanalyzed words:                              0.00              
+Type count of analyzed words:                               10.00              
+Token count of all words:                                   13.00              
+Token count of unanalyzed words:                             0.00              
+Token count of analyzed words:                              13.00              
+Total token count of words:                                 13.00              
+Type count of words from Lxa:                               12.00              
+Token count of words from Lxa:                              15.00              
+Number of signatures:                                        2.00              
+Number of stems:                                             4.00              
+Number of affixes:                                           3.00              
+Total letter count in stems:                                20.00              
+total letter count in affixes:                               0.00              
+total letter count:                                         20.00              
+Size of alphabet:                                              13              
+Bits per letter:                                            0.000              
+Running total of stem content (bits) :                       0.00              
+Running total of affix content (bits):                       0.00              
+Stem plus affix content: **                                  0.00              
+Cost of affix choices within signatures: **                  7.01              
+Cost of a set of pointers to each signature: **              0.00              
+Cost of stem-choice within signatures **                     0.00              
+bit cost of flagging analyzed words: **                      0.00              
+bit cost of flagging unanalyzed words: **                    0.00              
+Grammar length in bits:                                      7.01              
+corpus description from analyzed words:                      0.00              
+corpus description from unanalyzed words:                    0.00              
+corpus description:                                          0.00              
+Total description length:                                    7.01              
+===========================================================              
+2 compute stem pointers within signatures (choice)              
+===========================================================              
+Suffixal analysis.
+Type count of words:                                        10.00
+Type count of unanalyzed words:                              0.00              
+Type count of analyzed words:                               10.00              
+Token count of all words:                                   13.00              
+Token count of unanalyzed words:                             0.00              
+Token count of analyzed words:                              13.00              
+Total token count of words:                                 13.00              
+Type count of words from Lxa:                               12.00              
+Token count of words from Lxa:                              15.00              
+Number of signatures:                                        2.00              
+Number of stems:                                             4.00              
+Number of affixes:                                           3.00              
+Total letter count in stems:                                20.00              
+total letter count in affixes:                               0.00              
+total letter count:                                         20.00              
+Size of alphabet:                                              13              
+Bits per letter:                                            0.000              
+Running total of stem content (bits) :                       0.00              
+Running total of affix content (bits):                       0.00              
+Stem plus affix content: **                                  0.00              
+Cost of affix choices within signatures: **                  7.01              
+Cost of a set of pointers to each signature: **              0.00              
+Cost of stem-choice within signatures **                     4.20              
+bit cost of flagging analyzed words: **                      0.00              
+bit cost of flagging unanalyzed words: **                    0.00              
+Grammar length in bits:                                     11.21              
+corpus description from analyzed words:                      0.00              
+corpus description from unanalyzed words:                    0.00              
+corpus description:                                          0.00              
+Total description length:                                   11.21              
+===========================================================              
+3. compute signature pointer length (choice)              
+===========================================================              
+Suffixal analysis.
+Type count of words:                                        10.00
+Type count of unanalyzed words:                              0.00              
+Type count of analyzed words:                               10.00              
+Token count of all words:                                   13.00              
+Token count of unanalyzed words:                             0.00              
+Token count of analyzed words:                              13.00              
+Total token count of words:                                 13.00              
+Type count of words from Lxa:                               12.00              
+Token count of words from Lxa:                              15.00              
+Number of signatures:                                        2.00              
+Number of stems:                                             4.00              
+Number of affixes:                                           3.00              
+Total letter count in stems:                                20.00              
+total letter count in affixes:                               0.00              
+total letter count:                                         20.00              
+Size of alphabet:                                              13              
+Bits per letter:                                            3.700              
+Running total of stem content (bits) :                       0.00              
+Running total of affix content (bits):                       0.00              
+Stem plus affix content: **                                  0.00              
+Cost of affix choices within signatures: **                  7.01              
+Cost of a set of pointers to each signature: **              2.01              
+Cost of stem-choice within signatures **                     4.20              
+bit cost of flagging analyzed words: **                      0.00              
+bit cost of flagging unanalyzed words: **                    0.00              
+Grammar length in bits:                                     13.22              
+corpus description from analyzed words:                      0.00              
+corpus description from unanalyzed words:                    0.00              
+corpus description:                                          0.00              
+Total description length:                                   13.22              
+===========================================================              
+4. Process stems (content)              
+===========================================================              
+Suffixal analysis.
+Type count of words:                                        10.00
+Type count of unanalyzed words:                              0.00              
+Type count of analyzed words:                               10.00              
+Token count of all words:                                   13.00              
+Token count of unanalyzed words:                             0.00              
+Token count of analyzed words:                              13.00              
+Total token count of words:                                 13.00              
+Type count of words from Lxa:                               12.00              
+Token count of words from Lxa:                              15.00              
+Number of signatures:                                        2.00              
+Number of stems:                                             4.00              
+Number of affixes:                                           3.00              
+Total letter count in stems:                                20.00              
+total letter count in affixes:                               0.00              
+total letter count:                                         20.00              
+Size of alphabet:                                              13              
+Bits per letter:                                            3.700              
+Running total of stem content (bits) :                      74.01              
+Running total of affix content (bits):                       0.00              
+Stem plus affix content: **                                 74.01              
+Cost of affix choices within signatures: **                  7.01              
+Cost of a set of pointers to each signature: **              2.01              
+Cost of stem-choice within signatures **                     4.20              
+bit cost of flagging analyzed words: **                      0.00              
+bit cost of flagging unanalyzed words: **                    0.00              
+Grammar length in bits:                                     87.22              
+corpus description from analyzed words:                      0.00              
+corpus description from unanalyzed words:                    0.00              
+corpus description:                                          0.00              
+Total description length:                                   87.22              
+===========================================================              
+5. Process unanalyzed words              
+===========================================================              
+Suffixal analysis.
+Type count of words:                                        12.00
+Type count of unanalyzed words:                              2.00              
+Type count of analyzed words:                               10.00              
+Token count of all words:                                   15.00              
+Token count of unanalyzed words:                             2.00              
+Token count of analyzed words:                              13.00              
+Total token count of words:                                 15.00              
+Type count of words from Lxa:                               12.00              
+Token count of words from Lxa:                              15.00              
+Number of signatures:                                        2.00              
+Number of stems:                                             4.00              
+Number of affixes:                                           3.00              
+Total letter count in stems:                                20.00              
+total letter count in affixes:                               0.00              
+total letter count:                                         20.00              
+Size of alphabet:                                              13              
+Bits per letter:                                            3.700              
+Running total of stem content (bits) :                      74.01              
+Running total of affix content (bits):                       0.00              
+Stem plus affix content: **                                 74.01              
+Cost of affix choices within signatures: **                  7.01              
+Cost of a set of pointers to each signature: **              2.01              
+Cost of stem-choice within signatures **                     4.20              
+bit cost of flagging analyzed words: **                      0.00              
+bit cost of flagging unanalyzed words: **                    0.00              
+Grammar length in bits:                                     87.22              
+corpus description from analyzed words:                      0.00              
+corpus description from unanalyzed words:                    0.00              
+corpus description:                                          0.00              
+Total description length:                                   87.22              
+===========================================================              
+6. weigh analyzed and unanalyzed words              
+===========================================================              
+Suffixal analysis.
+Type count of words:                                        12.00
+Type count of unanalyzed words:                              2.00              
+Type count of analyzed words:                               10.00              
+Token count of all words:                                   15.00              
+Token count of unanalyzed words:                             2.00              
+Token count of analyzed words:                              13.00              
+Total token count of words:                                 15.00              
+Type count of words from Lxa:                               12.00              
+Token count of words from Lxa:                              15.00              
+Number of signatures:                                        2.00              
+Number of stems:                                             4.00              
+Number of affixes:                                           3.00              
+Total letter count in stems:                                20.00              
+total letter count in affixes:                               0.00              
+total letter count:                                         20.00              
+Size of alphabet:                                              13              
+Bits per letter:                                            3.700              
+Running total of stem content (bits) :                      74.01              
+Running total of affix content (bits):                       0.00              
+Stem plus affix content: **                                 74.01              
+Cost of affix choices within signatures: **                  7.01              
+Cost of a set of pointers to each signature: **              2.01              
+Cost of stem-choice within signatures **                     4.20              
+bit cost of flagging analyzed words: **                      2.68              
+bit cost of flagging unanalyzed words: **                    5.81              
+Grammar length in bits:                                     95.72              
+corpus description from analyzed words:                      0.00              
+corpus description from unanalyzed words:                    0.00              
+corpus description:                                          0.00              
+Total description length:                                   95.72              
+===========================================================              
+7. Process affixes              
+===========================================================              
+Suffixal analysis.
+Type count of words:                                        12.00
+Type count of unanalyzed words:                              2.00              
+Type count of analyzed words:                               10.00              
+Token count of all words:                                   15.00              
+Token count of unanalyzed words:                             2.00              
+Token count of analyzed words:                              13.00              
+Total token count of words:                                 15.00              
+Type count of words from Lxa:                               12.00              
+Token count of words from Lxa:                              15.00              
+Number of signatures:                                        2.00              
+Number of stems:                                             4.00              
+Number of affixes:                                           3.00              
+Total letter count in stems:                                20.00              
+total letter count in affixes:                               7.00              
+total letter count:                                         27.00              
+Size of alphabet:                                              13              
+Bits per letter:                                            3.700              
+Running total of stem content (bits) :                      74.01              
+Running total of affix content (bits):                      25.90              
+Stem plus affix content: **                                 99.91              
+Cost of affix choices within signatures: **                  7.01              
+Cost of a set of pointers to each signature: **              2.01              
+Cost of stem-choice within signatures **                     4.20              
+bit cost of flagging analyzed words: **                      2.68              
+bit cost of flagging unanalyzed words: **                    5.81              
+Grammar length in bits:                                    121.62              
+corpus description from analyzed words:                      0.00              
+corpus description from unanalyzed words:                    0.00              
+corpus description:                                          0.00              
+Total description length:                                  121.62              
+===========================================================              
+8. Process signatures, part 2              
+===========================================================              
+Suffixal analysis.
+Type count of words:                                        12.00
+Type count of unanalyzed words:                              2.00              
+Type count of analyzed words:                               10.00              
+Token count of all words:                                   15.00              
+Token count of unanalyzed words:                             2.00              
+Token count of analyzed words:                              13.00              
+Total token count of words:                                 15.00              
+Type count of words from Lxa:                               12.00              
+Token count of words from Lxa:                              15.00              
+Number of signatures:                                        2.00              
+Number of stems:                                             4.00              
+Number of affixes:                                           3.00              
+Total letter count in stems:                                20.00              
+total letter count in affixes:                               7.00              
+total letter count:                                         27.00              
+Size of alphabet:                                              13              
+Bits per letter:                                            3.700              
+Running total of stem content (bits) :                      74.01              
+Running total of affix content (bits):                      25.90              
+Stem plus affix content: **                                 99.91              
+Cost of affix choices within signatures: **                  7.01              
+Cost of a set of pointers to each signature: **              2.01              
+Cost of stem-choice within signatures **                     4.20              
+bit cost of flagging analyzed words: **                      2.68              
+bit cost of flagging unanalyzed words: **                    5.81              
+Grammar length in bits:                                    129.23              
+corpus description from analyzed words:                      0.00              
+corpus description from unanalyzed words:                    0.00              
+corpus description:                                          0.00              
+Total description length:                                  129.23              
+===========================================================              
+9. Corpus description              
+===========================================================              
+Suffixal analysis.
+Type count of words:                                        12.00
+Type count of unanalyzed words:                              2.00              
+Type count of analyzed words:                               10.00              
+Token count of all words:                                   15.00              
+Token count of unanalyzed words:                             2.00              
+Token count of analyzed words:                              13.00              
+Total token count of words:                                 15.00              
+Type count of words from Lxa:                               12.00              
+Token count of words from Lxa:                              15.00              
+Number of signatures:                                        2.00              
+Number of stems:                                             4.00              
+Number of affixes:                                           3.00              
+Total letter count in stems:                                20.00              
+total letter count in affixes:                               7.00              
+total letter count:                                         27.00              
+Size of alphabet:                                              13              
+Bits per letter:                                            3.700              
+Running total of stem content (bits) :                      74.01              
+Running total of affix content (bits):                      25.90              
+Stem plus affix content: **                                 99.91              
+Cost of affix choices within signatures: **                  7.01              
+Cost of a set of pointers to each signature: **              2.01              
+Cost of stem-choice within signatures **                     4.20              
+bit cost of flagging analyzed words: **                      2.68              
+bit cost of flagging unanalyzed words: **                    5.81              
+Grammar length in bits:                                    129.23              
+corpus description from analyzed words:                     44.44              
+corpus description from unanalyzed words:                    7.81              
+corpus description:                                         52.25              
+Total description length:                                  181.49              
+===========================================================              
+  Final report.              
+===========================================================              
+Suffixal analysis.
+Type count of words:                                        12.00
+Type count of unanalyzed words:                              2.00              
+Type count of analyzed words:                               10.00              
+Token count of all words:                                   15.00              
+Token count of unanalyzed words:                             2.00              
+Token count of analyzed words:                              13.00              
+Total token count of words:                                 15.00              
+Type count of words from Lxa:                               12.00              
+Token count of words from Lxa:                              15.00              
+Number of signatures:                                        2.00              
+Number of stems:                                             4.00              
+Number of affixes:                                           3.00              
+Total letter count in stems:                                20.00              
+total letter count in affixes:                               7.00              
+total letter count:                                         27.00              
+Size of alphabet:                                              13              
+Bits per letter:                                            3.700              
+Running total of stem content (bits) :                      74.01              
+Running total of affix content (bits):                      25.90              
+Stem plus affix content: **                                 99.91              
+Cost of affix choices within signatures: **                  7.01              
+Cost of a set of pointers to each signature: **              2.01              
+Cost of stem-choice within signatures **                     4.20              
+bit cost of flagging analyzed words: **                      2.68              
+bit cost of flagging unanalyzed words: **                    5.81              
+Grammar length in bits:                                    129.23              
+corpus description from analyzed words:                     44.44              
+corpus description from unanalyzed words:                    7.81              
+corpus description:                                         52.25              
+Total description length:                                  181.49              
+===========================================================              

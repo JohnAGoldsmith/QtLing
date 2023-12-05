@@ -121,7 +121,7 @@ eSortStyle CJsonInfo::string_to_eSortStyle(const QString &str)
 /******************************************/
 void CLexicon::assign_json_id()
 {
-    if (m_SuffixesFlag) {
+    if (m_suffix_flag) {
         m_Suffixes->assign_json_id();
         m_suffixal_stems->assign_json_id();
         m_Signatures->assign_json_id();
@@ -137,9 +137,9 @@ void CLexicon::assign_json_id()
 void CLexicon::write_json(QJsonObject& ref_json, eJsonType json_type)
 {
     assign_json_id();
-    ref_json["suffixesFlag"] = m_SuffixesFlag;
-
-    if (m_SuffixesFlag) {
+    ref_json["suffixesFlag"] = m_suffix_flag;
+    
+    if (m_suffix_flag) {
         QJsonObject obj_words;
         QJsonObject obj_signatures;
         QJsonObject obj_stems;

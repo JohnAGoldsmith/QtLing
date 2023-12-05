@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QStringList>
+#include <QtMath>
 #include "generaldefinitions.h"
 
 
@@ -18,6 +19,10 @@ class StringAlignment
     QStringList m_strings1;
     QStringList m_strings2;
 
+    QVector<int>  my_best_match;
+    QVector<int> other_best_match;
+    double tightness;
+
     QStringList m_edge_strings1;
     QStringList m_edge_strings2;
 
@@ -25,7 +30,11 @@ class StringAlignment
 
    public:
     StringAlignment(QStringList, QStringList, eDirectionality = Dir_left_to_right);
-    void find_edge_strings ();
+    void find_edge_strings (); // no longer used?
+
+    void match_up();
+    QString display();
+    bool properly_aligned();
 
    private:
     void end_sort();

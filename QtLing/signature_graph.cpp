@@ -7,6 +7,7 @@
 #include <QProgressBar>
 #include <hypothesis.h>
 
+
 /*!
  * We can build a graph whose nodes are the signatures, where an edge connects
  * any pair of signatures if there exists a word that they both analyze.
@@ -19,51 +20,37 @@
  */
 void CLexicon::step8a_compute_word_sig_pairs()
 {
-    map_string_to_word *            WordMap = m_Words->GetMap();
-    map_string_to_word_ptr_iter     word_iter(*WordMap);
+    //map_string_to_word *            WordMap = m_Words->get_map();
+    //map_string_to_word_ptr_iter     word_iter(*WordMap);
     CSignature *                    shorter_stem_sig_ptr, * longer_stem_sig_ptr;
     CWord*                          pWord;
     morph_t                         difference;
-    stem_t                          this_stem, the_other_stem;
     int                             analysis_number = 0, length_of_difference;
     word_t          this_word;
     sig_pair        * p_sig_pair;
-    QString         shorter_stem, longer_stem, shorter_stem_sig_string, longer_stem_sig_string, label;
-    Parse_triple *  shorter_stem_triple, * longer_stem_triple;
+    QString         shorter_stem, longer_stem;
+    QString shorter_stem_sig_string, longer_stem_sig_string, label;
 
     m_StatusBar->showMessage("5 Split morphemes: find words with multiple analyses...");
     m_ProgressBar->reset();
     m_ProgressBar->setMinimum(0);
-    m_ProgressBar->setMaximum(WordMap->size());
+    m_ProgressBar->setMaximum(m_Words->get_count());
     int progresscount = 0;
 
-    while (word_iter.hasNext())   {
+    for (int i = 0; i < m_Words->get_word_count(); i++){
         m_ProgressBar->setValue(progresscount++);
-
-        pWord = word_iter.next().value();
+        pWord = m_Words->get_word(i);
         this_word = pWord->get_key();
         analysis_number = 0;
         for (int i = 0; i < pWord->get_parse_triple_list()->size(); i++)
-        {   Parse_triple * this_triple = pWord->get_parse_triple_list()->at(i);
-
-            this_stem = this_triple->m_stem;       
+        {   Parse_triple * shorter_stem_triple = pWord->get_parse_triple_list()->at(i);
+            shorter_stem = shorter_stem_triple->m_stem;
             for (int j = i+1; j <pWord->get_parse_triple_list()->size(); j++ )
-            {   Parse_triple* the_other_triple = pWord->get_parse_triple_list()->at(j);
+            {   Parse_triple* longer_stem_triple = pWord->get_parse_triple_list()->at(j);
                 analysis_number += 1;
-                the_other_stem = the_other_triple->m_stem;                
-                if (this_stem.length() > the_other_stem.length()){
-                    shorter_stem = the_other_stem;
-                    longer_stem = this_stem;
-                    shorter_stem_triple = the_other_triple;
-                    longer_stem_triple = this_triple;
-                } else{
-                    shorter_stem = this_stem;
-                    longer_stem = the_other_stem;
-                    shorter_stem_triple = this_triple;
-                    longer_stem_triple = the_other_triple;
-                }
+                longer_stem = longer_stem_triple->m_stem;
                 length_of_difference = longer_stem.length() - shorter_stem.length();
-                if (m_SuffixesFlag)
+                if (m_suffix_flag)
                 {
                     shorter_stem_sig_ptr = m_Signatures->find_or_fail(shorter_stem_triple->m_sig_string);
                     longer_stem_sig_ptr = m_Signatures->find_or_fail(longer_stem_triple->m_sig_string);
@@ -72,28 +59,25 @@ void CLexicon::step8a_compute_word_sig_pairs()
                     shorter_stem_sig_ptr = m_PrefixSignatures->find_or_fail(shorter_stem_triple->m_sig_string);
                     longer_stem_sig_ptr = m_PrefixSignatures->find_or_fail(longer_stem_triple->m_sig_string);
                     difference = longer_stem.left(length_of_difference);
-                }
-
+                }                
                 shorter_stem_sig_string = shorter_stem_sig_ptr->display();
                 longer_stem_sig_string = longer_stem_sig_ptr->display();
-                if ( shorter_stem_sig_ptr == longer_stem_sig_ptr){continue;}
-                label = difference + "/" + shorter_stem_sig_string + "/" + longer_stem_sig_string;
-
+                if ( shorter_stem_sig_ptr == longer_stem_sig_ptr){
+                    continue;}
+                else {
+                    label = difference + "/" + shorter_stem_sig_string + "/" + longer_stem_sig_string;
+                }
                 if (m_SigPairMap.contains(label)){
                     p_sig_pair = m_SigPairMap[label];
                     if (p_sig_pair->contains_stem(shorter_stem)){
-                        //qDebug() << "skipping "<< shorter_stem;
                         continue;
                     }
                     p_sig_pair->add_stem(shorter_stem);
-
                 }else{
                     p_sig_pair = new sig_pair(difference, shorter_stem_sig_string, longer_stem_sig_string);
                     p_sig_pair->add_stem(shorter_stem);
                     m_SigPairMap.insert(label, p_sig_pair);
-
                 }
-
                 QString message1 = "Comparison #" + QString::number(analysis_number) + "=signature 1:="
                         + shorter_stem + "=" +  shorter_stem_sig_string + "=" + "difference" + "="  + difference;
                 add_to_word_autobiographies(pWord->get_key(), message1);
@@ -170,7 +154,7 @@ void add_suffixes_to_signature_stringlist(QString difference,
         }
     }
 }
-void CLexicon::step8c_from_sig_pairs_to_parses(){
+void CLexicon::step8c_from_sig_pairs_to_parses_Create_hypotheses(){
     sig_pair_iter sig_pair_iter (m_SigPairMap);
     QString     this_affix, doomed_affix, remnant, difference;
     QString shorter_stem, longer_stem;
@@ -195,8 +179,8 @@ void CLexicon::step8c_from_sig_pairs_to_parses(){
 
          QStringList affixes_from_shorter_stem = p_sig_pair->get_sig1_string().split("=");
          QStringList affixes_from_longer_stem  = p_sig_pair->get_sig2_string().split("=");
-
-         if (m_SuffixesFlag){
+         
+         if (m_suffix_flag){
 
              int count = get_internal_affix_count(difference + ":");
              extended_difference_name = difference + ":" + QString::number(count);
@@ -212,30 +196,26 @@ void CLexicon::step8c_from_sig_pairs_to_parses(){
 
              // add a parse of difference (=stem) + each of the suffixes of the long-stem signature.
              foreach (QString suffix, affixes_from_longer_stem){
-                 CParse * pParse = new CParse(extended_difference_name, suffix, m_SuffixesFlag);
+                 CParse * pParse = new CParse(extended_difference_name, suffix, m_suffix_flag);
                  add_parse(pParse);
              }
              // add a parse of shorter-stem plus difference
              foreach (QString stem, p_sig_pair->get_my_stems()){
-                 CParse * pParse = new CParse(stem, extended_difference_name, m_SuffixesFlag);
+                 CParse * pParse = new CParse(stem, extended_difference_name, m_suffix_flag);
                  add_parse(pParse);
              }
          }
          affixes_from_longer_stem.sort();
          longer_stem_sig_string = affixes_from_longer_stem.join("=");
-
-          CHypothesis * this_hypothesis = new CHypothesis( HT_affix_goes_to_signature,
+         CHypothesis * this_hypothesis = new CHypothesis( HT_affix_goes_to_signature,
                                                            extended_difference_name,
                                                            longer_stem_sig_string,
                                                            p_sig_pair->get_sig1_string(),
                                                            p_sig_pair->get_number_of_words());
-          m_Hypotheses->append(this_hypothesis);
-          m_Hypothesis_map->insert (this_hypothesis->express_as_string(),  this_hypothesis);
-
+         m_Hypotheses->append(this_hypothesis);
+         m_Hypothesis_map->insert (this_hypothesis->express_as_string(),  this_hypothesis);
     }
-
     //  !! Note: here we want to allow stems that only occur once -- they are pre-approved, so to speak.
-
     step3_from_parses_to_stem_to_sig_maps("Splitting up complex morphemes");
     step4_create_signatures("Splitting up complex morphemes.");
 }

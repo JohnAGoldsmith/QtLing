@@ -50,6 +50,7 @@ QString F1(QString affix, QString morph, bool suffix_flag){
     }
  return doomed_affix;
 }
+//this is not currently used:
 void CLexicon::step9_from_sig_pair_map_to_hypotheses()
 {
     m_StatusBar->showMessage("9: Generating Hypotheses");
@@ -65,7 +66,7 @@ void CLexicon::step9_from_sig_pair_map_to_hypotheses()
     //int MINIMUM_AFFIX_OVERLAP = 10;
     int MINIMUM_NUMBER_OF_WORDS = M_MINIMUM_HYPOTHESIS_WORD_COUNT;
     CSignatureCollection * p_signatures;
-    m_SuffixesFlag ?
+    m_suffix_flag ?
         p_signatures = m_Signatures:
         p_signatures = m_PrefixSignatures;
 
@@ -94,7 +95,7 @@ void CLexicon::step9_from_sig_pair_map_to_hypotheses()
         int matching_affixes_count = 0;
         for (int affixno = 0; affixno < affixes1.count(); affixno++){
             affix_1 = affixes1[affixno];
-            doomed_affix = F1(affix_1, this_morph, m_SuffixesFlag);
+            doomed_affix = F1(affix_1, this_morph, m_suffix_flag);
             doomed_affixes.append(doomed_affix);
             if (affixes2.contains(doomed_affix)){
                 matching_affixes_count++;
@@ -148,6 +149,8 @@ void CLexicon::step9_from_sig_pair_map_to_hypotheses()
  * \param ref_doomed_info_map
  *
  * -- added by Hanson 7.30
+ *
+ * This is not currently used. 2022.
  */
 void CLexicon::step9a_from_doomed_info_map_to_parses(DoomedSignatureInfoMap& ref_doomed_info_map)
 {
@@ -155,7 +158,7 @@ void CLexicon::step9a_from_doomed_info_map_to_parses(DoomedSignatureInfoMap& ref
     clear_parses();
 
     QList<CSignature*>* p_old_signature_list;
-    m_SuffixesFlag?
+    m_suffix_flag?
             p_old_signature_list = m_Signatures->get_signature_list():
             p_old_signature_list = m_PrefixSignatures->get_signature_list();
     CSignature* pSig;
@@ -200,7 +203,7 @@ void CLexicon::step9a_from_doomed_info_map_to_parses(DoomedSignatureInfoMap& ref
             const stem_t& this_stem = pStem->display();
             foreach (affix_t this_affix, affixes){
                 CParse* this_parse;
-                m_SuffixesFlag?
+                m_suffix_flag?
                         this_parse = new CParse(this_stem, this_affix, true):
                         this_parse = new CParse(this_affix, this_stem, false);
                 add_parse(this_parse);
@@ -216,10 +219,12 @@ void CLexicon::step9a_from_doomed_info_map_to_parses(DoomedSignatureInfoMap& ref
  * \param ref_doomed_info_map
  *
  * -- added by Hanson 7.30
+ *
+ * This is not currently used. 2022.
  */
 void CLexicon::step9b_redirect_ptrs_in_sig_graph_edges_map(const DoomedSignatureInfoMap &ref_doomed_info_map)
 {
-    CSignatureCollection* p_signatures = m_SuffixesFlag?
+    CSignatureCollection* p_signatures = m_suffix_flag?
                 m_Signatures : m_PrefixSignatures;
     QMap<QString,sig_pair*>::iterator edge_map_iter;
     for (edge_map_iter = m_SigPairMap.begin();
@@ -250,6 +255,7 @@ void CLexicon::step9b_redirect_ptrs_in_sig_graph_edges_map(const DoomedSignature
     }
 }
 
+// this is not currently used. 2022.
 void CLexicon::step9c_from_doomed_info_map_to_hypotheses(const DoomedSignatureInfoMap& ref_doomed_info_map)
 {
     eHypothesisType this_hypothesis_type = HT_affix_goes_to_signature;
@@ -257,7 +263,7 @@ void CLexicon::step9c_from_doomed_info_map_to_hypotheses(const DoomedSignatureIn
     for (info_map_iter = ref_doomed_info_map.constBegin();
          info_map_iter != ref_doomed_info_map.constEnd();
          info_map_iter++) {
-        const DoomedSignatureInfo& ref_info = info_map_iter.value();
+        //const DoomedSignatureInfo& ref_info = info_map_iter.value();
         sig_pair* p_edge = info_map_iter.value().m_edge_ptr;
         CHypothesis * this_hypothesis = new CHypothesis( this_hypothesis_type, p_edge->get_morph(),
                                                          p_edge->get_sig1_string(),

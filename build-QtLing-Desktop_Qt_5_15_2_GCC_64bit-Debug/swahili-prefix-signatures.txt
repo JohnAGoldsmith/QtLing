@@ -1,0 +1,5304 @@
+NULL=b=c
+
+aa's	abas	aber	ache	addie	
+ain's	aird	aldo	ali's	all's	
+allan	allard	allen	aller	allin	
+ally	alms	anal	anas	andy	
+anfield	anker	anna	anton	arbs	
+arden	ares	arley	arman	armen	
+arna	arnett	arney	arns	aron	
+arrington	arron	arrow	arrows	art's	
+artel	arts	arty	asco	ashes	
+asks	atty	ayer	ella	elle	
+eres	erna	hp's	inder	lack	
+lacking	lair	lank	lare	lass	
+latter	leary	lick	link	linked	
+linking	lips	lock	lock's	locked	
+lockers	locking	locks	loggers	logging	
+logs	long	lots	louse	lower	
+lubber	luff	luster	oats	oded	
+odes	oiled	oiling	oils	olden	
+older	oldest	olen	oles	olin	
+olle	oller	one's	ones	oney	
+onus	oral	order	order's	orel	
+oren	ores	orman	otton	ough	
+outs	owed	owen	owens	ower	
+owes	rack	rags	rain	rain's	
+rampton	ranford	rash	rave	raved	
+raver	raves	raving	rawl	rawley	
+rawls	ray's	rays	reach	ream	
+reed	reed's	reeds	reeks	renna	
+rest	rick	ringing	rock	rogan	
+roker	rook	rooke	rooks	room	
+ross	rows	ruder	rush	rushed	
+rushes	rushing	rust	utter	utters	
+
+
+NULL=c=g
+
+abby	able	addy	age's	al's	
+allaway	alle	alles	alley	allie	
+alling	alloway	alton	alvin	alvin's	
+andy's	anis	antos	ap's	arland	
+armon	arson	arvin	aston	auld	
+ayton	encor	entex	erin	hana	
+hose	lamour	lasses	laus	lean	
+leaned	leaning	lint	linton	lore	
+loss	love	lover	loves	loyd	
+luck	oats'	ofer	oldfield	olds	
+olson	omer	orin	orrell	ostin	
+otten	ould	rabb	raft	rafted	
+rafting	rafts	rail	ramps	rams	
+rape	rate	rated	rates	rating	
+raven	raze	razed	rear	reek	
+ress	rime	rimes	rips	rist	
+ronk	ross'	rosse	rosser	rossman	
+rouch	rouse	rout	rowe	rowed	
+rowing	rumble	rumbled	rumbles	rumbling	
+rump	
+
+NULL=c=s
+
+ages	allies	allis	alma	alves	
+andi	ante	appy	ara's	arava	
+ardis	avers	axton	dollars	ensor	
+enter	hain	haka	hand	hang	
+hannon	hard	hari	haring	harm	
+hatter	hatters	haves	heer	heng	
+her's	herries	hick	hill	hiller	
+hilling	hills	hilton	hine	hing	
+hinn	hipper	hips	hock	hone	
+hopped	hopper	hoppers	hopping	hops	
+how's	hows	huck	hula	inco	
+lang	lapp	lapped	lapping	laps	
+lash	lashed	lashes	lashing	lawson	
+lays	layton	lemons	lews	licked	
+licks	lime	ling	linger	lipped	
+lipper	logged	lone	loth	lough	
+lump	lumped	lumping	lumps	lung	
+ole's	olver	orley	otto	ours	
+ub's	upped	upping	
+
+NULL=c=t
+
+abello	ackles	adman	albert	allow	
+amas	amino	amped	apes	arte	
+aster	asters	ater	ease	eased	
+eases	easing	elia	heater	heaters	
+hicken	hien	hong	hough	huan	
+hugs	hump	humps	hums	hunk	
+organ	orso	otter	ouch	racked	
+racking	racks	ramp	ramped	ramping	
+rank	raps	rashed	rashes	reason	
+rick's	ried	ries	roll	rost	
+rude	rusted	rusts	rusty	
+
+NULL=d=r
+
+after	ailey	aina	ales	allied	
+allying	am's	amin	amon	amps	
+ando	anger	angers	anson	aven	
+avid	ayon	ears	eckard	ecker	
+eduction	egan	ejected	ejection	elman	
+emote	emus	enunciation	esch	eskin	
+evaluation	evaluations	evolution	evolutionary	evolve	
+evolved	evolves	evolving	icky	igby	
+imes	inger	ingo	ings	inna	
+itch	ivers	ives	obie	odgers	
+oe's	oman	oster	osti	otting	
+ouse	over	umps	un's	usted	
+ustin	
+
+NULL=de=re
+
+activate	activated	activation	ad's	ader	
+bate	bated	bates	buts	cant	
+canted	cent	certification	certified	claim	
+claimed	claiming	claims	classification	classified	
+classify	classifying	cline	clines	commissioned	
+construct	constructed	constructing	construction	constructs	
+duce	file	filed	filing	fine	
+fined	fines	fining	forest	forested	
+form	formation	formed	fuse	fused	
+fuses	fusing	generate	generated	generates	
+generating	generation	generative	graded	grading	
+hydrate	hydration	laying	legation	light	
+lighting	main	mand	mark	mick	
+mote	nationalization	nault	nominated	nomination	
+port	portable	ports	pose	posed	
+position	press	pressed	pressing	regulation	
+segregation	serve	served	serves	serving	
+sign	signed	signing	signs	skin	
+spite	stocking	tail	tailed	tailing	
+tails	tain	test	tested	tour	
+tract	tracts	valuation	valuations	value	
+valued	valuing	vere	vise	
+
+NULL=dis=re
+
+appear	appearance	appeared	appearing	appears	
+appoint	appointed	appointing	appointment	armament	
+arming	assemble	assembled	assembling	charge	
+charged	charges	charging	connect	connected	
+connecting	connection	cord	count	counted	
+counting	counts	course	cover	covered	
+covering	covers	integrate	integrated	integrating	
+integration	invest	invested	investment	located	
+locating	location	locations	member	miss	
+mounted	ordered	orders	organised	organization	
+organized	orient	orientation	oriented	orienting	
+pels	place	placed	placement	placements	
+places	placing	play	played	playing	
+plays	possessed	possession	qualify	sent	
+solution	solve	solved	solves	solving	
+tort	torts	traction	united	used	
+
+
+NULL=dis=un
+
+affected	approved	armed	belief	believers	
+believing	credited	infected	interested	like	
+proved	qualified	quiet	satisfied	tended	
+
+
+NULL=inter=re
+
+acted	acting	action	actions	active	
+acts	cede	ceded	ceding	group	
+groups	marriage	married	mediation	mission	
+missions	nationalisation	nationalise	nationalised	public	
+public's	state	states	tainer	view	
+viewed	viewer	viewer's	viewers	viewing	
+views	
+
+NULL=mac=mc
+
+adam	adams	allister	andrews	arthur	
+arthur's	bean	beth	bride	callum	
+cauley	coll	cormack	dermott	donald	
+donald's	donell	donnell	dougal	dougall	
+dowell	dowell's	duff	ewen	farland	
+gibbon	gowan	gregor	gregor's	innes	
+innis	ivor	kay's	kenna	lachlan	
+lagan	laughlin	lean's	master	michael	
+millan	millan's	mullan	murray	nair	
+naughton	neal	neil	neil's	neill	
+nicol	queen	rae's	robert	roberts	
+shane	sharry	sween	taggart	vicar	
+williams	
+
+NULL=mc=o'
+
+brien	cain	carroll	connell	connell's	
+grady	grady's	henry	kane	loughlin	
+neal's	neill's	
+
+NULL=mis=re
+
+aligned	alignment	allocated	applied	applying	
+calculate	calculated	calculating	calculation	cast	
+directed	direction	education	fits	heard	
+interpret	interpretation	interpretations	interpreted	interpreting	
+interprets	labeling	laid	match	matches	
+named	print	prints	read	reading	
+stated	statement	statements	stating	take	
+taken	takes	taking	took	treat	
+treated	treating	treats	trial	trials	
+using	
+
+NULL=non=un
+
+aggressive	commercial	competitive	controversial	conventional	
+economic	musical	political	productive	professional	
+regulated	specific	threatening	traditional	
+
+NULL=over=un
+
+ambitious	amplified	billed	built	burden	
+burdened	compensated	cooked	crowded	developed	
+doing	done	dressed	exposed	filled	
+funded	heated	load	loaded	loading	
+loads	manned	matched	paid	populated	
+produced	represented	ripe	seen	sold	
+spent	staffed	stuffed	taxed	turned	
+written	
+
+NULL=over=under
+
+achieved	achiever	achievers	achieving	development	
+estimate	estimated	estimates	estimating	growth	
+lying	pass	passes	paying	payment	
+payments	powered	priced	pricing	selling	
+shoot	sized	spend	spending	staffing	
+subscribed	threw	thrown	tone	tones	
+weight	
+
+NULL=pre=re
+
+ached	aches	aching	arranged	cedes	
+cognition	election	heat	late	launch	
+occupation	occupied	occupy	occupying	packaged	
+packaging	printed	sale	selection	sentencing	
+side	sided	sides	siding	sorted	
+
+
+NULL=re=un
+
+acquainted	adjusted	attached	authorized	balance	
+born	bound	bounded	buried	called	
+capped	checked	collected	committed	confirmed	
+considered	converted	decorated	defined	discovered	
+distributed	drafted	dress	dressing	elected	
+examined	finished	fitted	flagging	focused	
+imposing	incorporated	injured	inspected	insured	
+investigated	issued	learn	learned	leased	
+made	make	marked	mold	moved	
+moving	opened	packing	painted	paved	
+payable	planted	processed	published	scheduled	
+sealed	seeded	settle	settled	settling	
+sound	structured	thinking	tiring	titled	
+told	touched	trained	tried	usable	
+wind	winding	wound	
+
+NULL=s=sc
+
+ag's	andal	hack	hafer	haffner	
+hall	harp	hein	hell	hell's	
+henk	herer	herman	hillings	hiro	
+holtz	hubert	hubert's	human	human's	
+hutt	illy	later	orta	upper	
+
+
+de=e=re
+
+ckard	cker	duction	jected	jection	
+lman	mote	nunciation	valuations	volve	
+volved	volves	volving	
+
+h=sch=sh
+
+afer	affner	ell's	enk	erer	
+erman	iller	illing	illings	oltz	
+ubert	ubert's	uman	uman's	utt	
+
+
+NULL=a
+
+aliyah	alto	aronson	baba	bacha	
+badia	balkin	bandon	barbanel	bashed	
+bassi	be's	bedi	bell	bello	
+below	belson	bets	betting	bide	
+bided	bides	biding	biola	biomed	
+blaze	bode	bodes	bout	bove	
+boyne	braham	brahim	bram	bramson	
+breast	brecht	bridge	bridged	bt's	
+buse	bused	buser	buses	busing	
+buzz	cela	ching	coma	costa's	
+cres	cross	cute	cutely	cuteness	
+dair	dalian	dam's	dame	dames	
+dams	dams'	damson	dan's	dana	
+dela	dele	delle	delman	delphi	
+delphia	delson	dena	dept	dieu	
+dina	dios	dolph	dora	dore	
+dorn	dragon	drain	drift	droit	
+dwan	egon	eros	esop	esop's	
+etna	field	flame	flutter	forethought	
+foul	gape	gate	gave	ge's	
+geist	gere	gers	gile	glow	
+gnostic	gnostics	gora	gran	greed	
+gustin	gutter	hearne	ichi	ilsa	
+isle	isles	issa	izawa	jello	
+kali	keli	kiko	kili	kira	
+kita	kiva	kiyoshi	kram	kron	
+lami	lamos	lana	lani	latas	
+leman	leta	lexi	lexie	lexis	
+licea	lida	lien	liens	liev	
+lisa	lissa	liza	loft	lois	
+londra	longside	loni	lonzo	lou's	
+lumina	lunan	lwin	maker	malek	
+malfitano	malia	mana	manda	mani	
+mano	mare	mari	maru	mass	
+massed	masses	massing	mato	max's	
+maya	maze	mazes	mazon	melia	
+mend	mended	mending	mends	mens	
+meri	merman	meron	midst	mies	
+miga	min's	mina	mino	mira	
+miri	mish	mole	monte	moral	
+morality	more	mores	mounting	mounts	
+mtech	muse	mused	muses	musing	
+na's	nanda	nast	niko	nima	
+nita	pache	panel	pathetic	piece	
+ping	plastic	plenty	pollo	polo	
+ponte	popa	pres	propos	ptos	
+ramco	ramesh	ramis	raya	rena	
+renal	renberg	repas	rica	risen	
+rising	riza	rocha	romas	round-the-clock	
+round-the-world	sada	sahara	sante	saraf	
+sari	sawa	scher	scot	scot's	
+sean	sean's	septic	shamed	shanti	
+sharq	she's	shen	sher	sher's	
+shia	shore	sia's	sian	skew	
+skins	slam	spens	spic	spin	
+spire	spires	st's	stern	steroid	
+steroids	stray	stride	stringency	stringent	
+stute	swan	symmetrical	symmetrically	symmetry	
+symptomatic	tari	they	though	tolls	
+tomic	toms	tonal	torino	trophy	
+twitter	typically	untie	vallone	vary	
+veda	venal	venger	ventura	versa	
+vesta	vignon	vila	vina	vino	
+vins	vista	vital	viva	voided	
+voiding	voids	vowed	wait	waited	
+waiting	waits	wake	waken	wakened	
+wakening	wakes	ward's	ware	wash	
+weigh	weil	while	woke	woken	
+xing	yano	zarow	zide	zillion	
+zinger	zoff	
+
+NULL=ab
+
+adan	arca	basi	bess	bett	
+botsford	dalla	della	dullah	errant	
+ilene	lest	lett	normal	normality	
+normally	originals	out-turn	rams'	rego	
+salon	scam	shire	sorber	stain	
+stained	staining	stains	users	
+
+NULL=ac
+
+climate	companies	cordingly	corsi	costed	
+costing	count's	crue	cumulation	cumulative	
+curate	cursed	idly	kerley	kerman	
+kert	knowledge	lu's	nielsen	quaint	
+quiescent	quit	quits	quitting	tion	
+tions	
+
+NULL=ad
+
+alberto	amant	amec	apted	apter	
+cock	dresses	ecco	equate	jani	
+juster	lard	makers	minister	ministered	
+ministering	ministers	ministrations	mire	mired	
+mirer	mires	opted	opting	option	
+options	oration	steam	vance	vani	
+vantage	venture	venture's	venturers	ventures	
+venturesome	venturing	vest	visor	visors	
+week	
+
+NULL=al
+
+ban's	bani	bans	barn	baugh	
+beck	bee's	beit	bert's	berta	
+berti	bertini	bion	bright	bright's	
+britton	bum's	bums	cantara	chemical	
+chemist	chemists	cove	coves	croft	
+dinger	dona	dred	dredge	dubi	
+fama	faro	fonseca	fred	fresco	
+goma	italia	lanson	leys	lies'	
+liman	lures	luring	mada	manac	
+mario	mera	mighty	most	ness	
+omar's	pena	pers	pert	quist	
+sace	schuler	stead	stott	tener	
+tera	thea	ther	thorp	together	
+truism	varo	verno	
+
+NULL=am
+
+alfi	base's	bled	blin	brit	
+brose	brosius	brus	bush	bushes	
+dahl	dahl's	dura	elio	erica	
+erica's	erika	itri	man's	munition	
+munitions	para	phenol	raam	south	
+star	stel	trak	way's	west	
+
+
+NULL=an
+
+aerobic	aesthetic	aesthetics	archy	chor	
+dante	dean	dino	do's	doni	
+dover	dre's	drei	drew's	drews	
+dries	gell	gels	golan	gotti	
+grier	imus	kara	kiel	krom	
+krum	notations	reder	saldo	schutz	
+sett	tara	them	thill	tics	
+tonelli	toni	tonia	tonino	tony's	
+toon	trim	tron	tuan	twain	
+twerp	
+
+NULL=ant
+
+acid	acids	agonise	agonised	agonising	
+agonize	agonized	agonizing	arctic	elope	
+hems	tila	
+
+NULL=anti
+
+abortion	aircraft	bacterial	ballistic	bodies	
+body	christ	climactic	climax	depressant	
+depressants	dote	dotes	drug	dumping	
+etam	gens	guan	hero	matter	
+microbial	missile	mony	nori	pasto	
+personnel	pollution	psychotic	semitism	submarine	
+takeover	thesis	viral	
+
+NULL=ar
+
+benz	biter	boles	boreal	buckle	
+cana	cand	cane	cari	chaos	
+cher's	chive	chives	deer	dent	
+dith	dour	duthie	giro	gyle	
+gyll	gyros	june	kady	kansan	
+kansas	kansas'	kush	leen	lena	
+lindo	mando	mijo	moire	mone	
+monk	nason	nelle	none	nott	
+notts	pino	rangers	ranging	rears	
+redondo	rigo	rival	rivals	rojo	
+roni	royo	shad	sons	thurs	
+tola	undo	usha	vida	
+
+NULL=arch
+
+angels	bishop	bishop's	bishops	bold	
+conservative	deacon	diocesan	diocese	diocese's	
+dioceses	duke	enemies	enemy	ives'	
+
+
+NULL=as
+
+casio	cendant	four	gari	hrawi	
+hurst	ians	kamp	king	lund	
+mussen	pen's	pirated	prey	sail	
+sailed	sailing	sails	sams	sault	
+set's	sizes	syrian	syrians	trov	
+under	
+
+NULL=b
+
+abajian	abe's	abel	abington	acker	
+acker's	ackley	aden	adham	adia	
+aggie	aggies	ahman	ahram	aida	
+ailed	ailes	ailey's	ailing	ails	
+ajaj	aker	akers	akhtar	akker	
+akst	alan	albo	alcor	aldi	
+aldridge	alen	alis	allard's	allen's	
+allo	allon	allot	alloted	allots	
+ally's	almy	alter	amber	anda	
+ands	angle	angles	anja	anka	
+anke	annen	antle	anus	arad	
+arak	aram	aran	arba	arbed	
+arbel	arbet	arbi	arbour	arco	
+arco's	ardo	ardsley	arend	arens	
+arkan	arkin	army	arons	arras	
+arria	arris	arrow's	arthel	asch	
+ascom	asha	asher	asia	asic	
+asics	asil	asked	askin	asking	
+assa	assam	asses	asset	assi	
+assist	assists	asta	astin	athos	
+attie	auer	avis	ayer's	aylor	
+azar	b-plus	bb-plus	ca's	each	
+eads	eady	eagle	eagles	eaker	
+eales	eamer	eames	eamon	ears'	
+easley	easley's	eason	east	east's	
+eaten	eater	eaters	eating	eaton	
+eaton's	eats	eaux	eban	ebel	
+eckel	eckford	eckman	eckmann	ecks	
+eckstein	ed's	eddington	edell	eder	
+eggar	egged	egging	eggs	ehrman	
+eiser	eland	elated	elden	elder	
+elem	elie	elin	elka	elkin	
+ella's	elland	eller	elles	elling	
+ellis	ellman	ellwood	elly	elmar	
+elmont	elson	elton	elva	ended	
+ender	enders	ending	ends	enfield	
+ennis	ente	eran	ergen	ergs	
+erie	erland	erle	erling	erne	
+ernie	ernie's	ernstein	erring	erringer	
+ershad	erte	ertha	essa	esser	
+essie	esson	ester	eta's	ethel	
+etter	etty	evan	evan's	evel	
+even	ever	everage	everly	evin	
+evins	exley	extra	haji	hutto	
+icc's	iden	ides	ike's	ilbo	
+illig	ills	ing's	inge	ingham	
+inks	inning	inns	iola	ionic	
+iran	irks	iroc	iron	ishi	
+ison	itches	itching	itchy	iter	
+itsy	ivins	joern	jorling	jorn	
+lacher	lacked	lacks	ladder	ladders	
+lain	laine	lairs	lais	lake	
+lake's	lakeman	lakey	lame	land	
+landa	lander	landing	landon	lane	
+laney	lanning	lassie	last	lasted	
+laster	lasting	lasts	latch	lather	
+latter's	lauer	laze	lazer	lazers	
+lazing	leach	leached	leaches	leaching	
+leak	leaker	lech	lecher	leeds	
+leitz	lend	lender	lenders	lending	
+lends	less	lessing	lessing's	levin	
+levins	lewes	lighted	lights	limp	
+limps	lind	linder	lini	links	
+linn	liss	lister	lithe	liven	
+lobby	lobs	loch	loch's	locher	
+locker	lockhead	londe	londell	loom	
+loomed	loomer	looming	looms	loop	
+looped	looper	lowdown	lowers	lows	
+lunden	lundin	lunt	lush	lusher	
+luth	lyth	ma's	marc	marc's	
+mg's	nfl's	nl's	oars	oatman	
+oban	ober	oberg	obst	oden	
+odin	odle	ogle	ohana	ohman	
+oiler	oilers	oingo	olam	olea	
+olita	olivia	olivia's	ollman	omar	
+omb's	one-in	ono's	ooze	oozing	
+orchard	orden	ordering	orders'	orenstein	
+orland	orne	ornstein	orton	osman	
+ostrom	otello	otero	otha	other	
+others	ought	ounce	ounces	out's	
+ovary	ovine	owen's	owing	owl's	
+owls	race	race's	raced	races	
+racing	racket	rackets	racy	radford	
+radford's	radish	radley	radleys	radtke	
+raff	raga	ragged	ragging	rahim	
+rahimi	raid	raided	raiding	raids	
+rains	rainstorm	rainstorms	rainy	raise	
+raised	raises	raising	rake	raked	
+rakes	raking	raley	raman	ramble	
+rambles	ranch	ranch's	ranches	ranching	
+ranco	rand	rand's	rande	randi	
+rando	rands	randt	randy	rankin	
+ranson	rant	rashly	rats	ratt	
+ratty	rauch	rawer	rea's	reached	
+reaches	reaching	reads	reaux	recht	
+recker	recon	reda	reds	reece	
+reeder	rees	reese	rehm	rehme	
+reit	reitman	renda	rendon	renner	
+rent	renton	resler	resnick	ressler	
+retton	reve	reza	rian	ribe	
+rice	ricker	rickman	ricks	ride	
+ride's	rides	ridge	ridge's	ridged	
+ridges	riem	rien	riggs	right	
+right's	righter	rightly	rightness	rights	
+rigid	riles	riley	rill	rimmed	
+rimmer	rimming	rims	ring	ringer	
+rings	rink	rink's	rinker	rinks	
+risa	risk	risley	rison	rita	
+rite	ritt	ritz	roach	roaches	
+road	road's	roads	roadside	roadsides	
+roadway	roadway's	roca	rocco	rocco's	
+roch	rock's	rocket	rocklin	rockman	
+rockville	rockway	rode	roderick	roderick's	
+rogue	rogues	roil	roiled	roiling	
+rolly	romberg	romley	ronco	rondell	
+ronson	ronson's	rood	rooker	rooms	
+rose	roten	roth	rother	rother's	
+rothwell	rough	rower	ruch	ruck	
+rucker	rugge	rugger	ruin	ruins	
+rumbaugh	rummel	rundle	rune	runner	
+runs	runt	russ	ryan	ryan's	
+ryans	ryden	ryden's	rymer	ryon	
+uber	ueno	uhler	uist	ullmann	
+ulmer	unions	unter	urban	urch	
+urge	urman	urns	urton	us's	
+user	uses	usines	usta	uttered	
+uttering	uzzi	years	yu's	yung	
+
+
+NULL=ba
+
+bayan	berton	bette	bich	boon	
+brak	chop	doer	duel	gaza	
+gert	gian	hamas	ilie	infield	
+jamar	jeux	katin	kula	kunin	
+laban	lata	lian	liles	loney	
+mako	mieh	nana	ngor	reback	
+rely	rents	ring's	rings'	rolo	
+roque	salt	semen	sham	shed	
+sheer	shing	shir	shur	sica	
+silica	singer	singer's	sotho	sten	
+stille	tali	then	thing	tons	
+tres	varian	yard	yeux	yona	
+yous	
+
+NULL=back
+
+beat	bench	bencher	benchers	benches	
+biting	boards	bone	bones	breaking	
+burner	cloth	country	courts	door	
+drop	drops	fields	gammon	grounds	
+packer	packers	packs	pedal	pedaled	
+pedaling	slapping	slide	sliding	stabbing	
+streets	stroke	strom	swing	track	
+tracking	waters	woods	woodsmen	yards	
+
+
+NULL=bar
+
+bach	bara	bash	bato	beau	
+bells	berie	bering	bier	buda	
+cella	clay's	clays	dach	dong	
+dwell	etta	flies	gainer	gainers	
+keep	low's	maid	maids	nitz	
+rage	raged	rages	raging	raza	
+reto	rowland	rowlands	shay	shop	
+stool	stow	wick	
+
+NULL=be
+
+amish	anies	arable	ardmore	aune	
+bear	beto	bitch	calmed	cause	
+chet	dazzled	decked	delia	devil	
+deviled	devils	ekman	ers'	fallen	
+falling	falls	fell	fore	forehand	
+friend	friends	gaye	gelman	gets	
+gin's	gins	gotten	grudge	grudging	
+grudgingly	guile	half	headed	heading	
+headings	held	hinds	holden	holder	
+holding	hooves	jeweled	labor	labored	
+langer's	lfas	linda	linsky	little	
+littles	longed	longing	longings	longs	
+low-cost	moan	moaned	moaning	moans	
+nazir	nest	neville	reuter	ribboned	
+schloss	siege	speaks	stowed	stowing	
+strode	thal	thune	tide	tween	
+twixt	van's	wailing	wilder	xtra	
+
+
+NULL=bi
+
+annual	athlete	athlon	carbonate	centenary	
+centennial	coastal	cyclist	cyclist's	cyclists	
+dart	dets	dini	dwells	elsa	
+fu's	gamy	lateral	laterally	lion	
+lotta	mbos	mini	monthly	noche	
+partisanship	plane	planes	polar	scotti	
+sexuality	shara	shop's	shops	shops'	
+smarck	tingly	tumen	valve	valves	
+weekly	
+
+NULL=bio
+
+chemistry	cine	cure	degradable	diesel	
+diversity	engineered	ethicist	ethicists	ethics	
+feedback	fuels	graphical	logical	logically	
+mechanics	medicine	metric	metrics	pharmaceutical	
+physics	pure	remediation	safety	sciences	
+sphere	spheres	systems	technical	technological	
+technologies	technology	technology's	terror	terrorism	
+terrorist	therapeutics	weapons	
+
+NULL=black
+
+balled	berries	bird	birds	burn's	
+currant	currants	feet	friars	hawk	
+hawks	hawks'	jack	lists	mailed	
+mailer	mailers	mailing	mails	pool's	
+shaw	shear	smith	smith's	smiths	
+stone	stone's	thorn	welder	well's	
+
+
+NULL=bo
+
+brow	celli	chum	degas	dice	
+dine	fors	gans	garde	gart	
+gies	gland	gota	iman	kassa	
+land's	lita	livia	nanni	ngos	
+nino	nomi	okies	rodin's	rough's	
+russia	sanski	sco's	skin's	swell	
+swells	tham	thies	tula	twin	
+urbon	vespa	vines	water's	wery	
+wring	xers	yett	zena	
+
+NULL=bull
+
+dogs'	doze	dozed	dozer	dozing	
+fight	fighter	fighters	fighting	fights	
+frog	frogs	frogs'	shit	whip	
+
+
+NULL=c
+
+ab's	abbie	abell	aborn	addo	
+adena	aged	ahn's	ahora	alder	
+alderwood	alfa	alix	all-girl	all-in	
+all-out	alla	allander	allens	allison	
+alpers	alpine	alum	alva	aman	
+amarillo	amaro	amberley	ambridge	amelia	
+ameron	amre	andover	andrea	annan	
+annes	anon	antara	anted	antley	
+anton's	antone	antoni	aparo	apell	
+appel	apra	apron	aral	argo	
+argos	arla	arlan	arleen	arlen	
+arlene	arles	arlie	arlin	arline	
+arlo	arne	arnell	arnie	arnot	
+arousing	arrol	arse	artesian	aruba	
+ash's	ashen	ashley	ashman	ast's	
+astle	astor	astro	astro's	atherwood	
+athey	austin	ayman	bo's	dc's	
+eilidh	elan	elan's	elik	energy	
+energy's	ensure	ensured	ensures	ensuring	
+entel	entered	entering	enters	entre	
+entrust	ftc's	ha's	haim	haining	
+hair	hair's	haired	hairs	halon	
+halos	hamblin	han's	hance	handler	
+handler's	handlers	handra	haney	haney's	
+hanged	hanger	hangers	hanging	hangs	
+hanning	hanson	hansons	hants	happy	
+hardin	haris	harley	harley's	harlot	
+harmed	harmer	harming	harmless	harms	
+harness	harney	haro	harring	harrow	
+hart	harter	harting	harton	harts	
+hartwell	hasen	hasse	haste	hastened	
+hastening	hater	hatfield	hats	haus	
+hava	hawkins	haya	heaney	heap	
+heating	heats	heck	heck's	hecker	
+helios	hema	hen's	henin	herne	
+herrington	hess	hessman	hester	hester's	
+hesters	hewed	hewing	hews	hick's	
+hicks	hicks'	hide	hides	hiding	
+hild	hillas	hillier	hillin	hilly	
+hime	himes	hina	hino	hintz	
+hippy	hits	hitty	hive	hives	
+ho's	hoke	hoose	hoppy	hord	
+horus	hoses	hosing	hristo	hu's	
+huang	hubby	huda	huffed	hugged	
+hugging	hung	hung's	hunks	hunky	
+inch	inched	inching	indy	indy's	
+irca	it's	laar	lach	lamp	
+lamping	lampitt	lamps	langer	lans	
+lapham	lapper	lara	lara's	larisa	
+larissa	lark	larks	lary	lassic	
+laud	laude	lavell	lavelle	laver	
+laws	lay's	layman	leaner	leanest	
+leanings	leans	lear	lears	leave	
+leaver	leavers	leaves	leaving	left	
+legg	leghorn	leland	leland's	lemmons	
+lemon	lench	leo's	leon	lepper	
+lever	licking	liffe	lifford	lift	
+lifton	limb	limber	limbs	limes	
+line	line's	lines	linton's	live	
+lokey	looney	loris	lose	loser	
+loser's	losers	loses	losing	loud	
+lout	lovers	lowes	lubbers	luchey	
+lucked	lucking	lucks	lune	lunes	
+lunker	lute	lyne	nbc's	oakley	
+oates	oates'	offered	offers	okie	
+olin's	olla	ollie	ollie's	ollins	
+olson's	olwyn	omission	omit	oops	
+optic	opts	orea	ornish	orona	
+orsi	orsini	orson	orson's	orum	
+orzo	osby	ottey	oven	overage	
+overalls	overs	overt	overtly	oxon	
+pc's	rabby	rafter	rafters	ragin	
+ramer	ramin	rammed	ramming	randall	
+randall's	randell	ranked	ranking	ranks	
+ratch	raters	ravens	ravings	rayon	
+reag	reagan	reamer	reams	reche	
+redo	reel	remi	renshaw	rested	
+resting	reston	rests	ribbed	ribbing	
+ribbs	ribs	rickets	rider	rieff	
+ringed	ripple	rippled	ripples	rippling	
+ripps	rises	risman	rites	ritter	
+rocker	rocker's	rockery	rockford	rocks	
+roll's	rolla	romar	romer	ronan	
+rone	ronin	rony	rosetti	ross's	
+rossen	rossley	rosson	route	row's	
+rowe's	rowell	rowell's	rowley	rowley's	
+rozier	ruddy	rudely	rudeness	rudes	
+rudest	rummy	rumpled	ruse	rusher	
+rushers	saba	so's	sun's	uche	
+umbria	umbrian	up's	ures	urie	
+uriel	zech	
+
+NULL=ca
+
+bala	banas	bins	brera	brillo	
+ceres	chao	chia	dogan	fe's	
+fiero	fritz	hill's	icos	lamine	
+libra	libre	lipari	lite	lorie	
+lumet	macho	maguey	margo	mel's	
+melina	melon	milli	millo	milo	
+minos	morra	mp's	mps'	naan	
+nada	nady	naga	nani	nasta	
+navan	nedo	nepa	nine	nines	
+noes	noga	nola	nova's	paras	
+pasa	pelle	pelli	pita	pizzi	
+plan	plan's	pone	pote	prices	
+prow	r-wash	radon	rafe	remark	
+retaking	reyes	riso	rla's	rolan	
+role	rollo	rvers	rving	saca	
+sein	sella	sera	shel	shew	
+shin	sillas	sings	sita	solo	
+solo's	son's	spar	sseb	stell	
+stella	stello	stings	tania	valli	
+vern	
+
+NULL=car
+
+acas	apace	away	ballo	bonneau	
+bons	case	cases	cass	diss	
+downie	dross	henge	jacked	jacking	
+lile	lin's	liner	lo's	loadings	
+lucci	luke	lyle's	many	mela	
+mella	melo	men's	michael's	mona	
+mona's	mouche	nahan	nation	nations	
+naval	nero	pets	pooling	rasco	
+reno	rizo	rozzo	stairs	toons	
+washes	
+
+NULL=ch
+
+abad	aiken	aikin	air's	aired	
+airing	airlift	airlifts	airman	airmen	
+airmen's	airs	alco	allah	amber's	
+angi	antal	apla	appell	apple	
+arlene's	armin	armless	arnel	arness	
+artist	artists	eerily	eeriness	enel	
+essen	everton	icas	illingworth	imps	
+loral	ristic	utes	
+
+NULL=co
+
+author	authored	authors	axial	bain's	
+balt	bourne	bras	caine	caine's	
+chez	chin	coon	coons	decision	
+delco	determination	educational	efficient	ehlo	
+existed	exists	fide	founder	gema	
+gently	habit	habitation	hans	incidence	
+incidences	incident	incidental	incidentally	incineration	
+lada	loma	lome	loring	lusa	
+mair	median	medians	medic	medically	
+met's	meta	meth	mets	mets'	
+mins	moran	moros	munn	nyers	
+oder	operate	operated	operates	operation	
+operations	operatives	ordination	pilot	pious	
+piously	plans	rado	rals	responsibility	
+restates	rinna	scan	shep	sla's	
+sponsors	stanza	stello's	sway	unterman	
+upland	upon	uric	vets	
+
+NULL=com
+
+andante	bats	batted	batting	best	
+bing	bust	cast's	data	disco	
+edie	fort	forts	inco's	mander	
+manders	merce	mision	mission's	mode	
+modification	mutation	mutations	mute	muted	
+mutes	muting	pact	pacts	padres	
+parable	patriot	patriots	pere	pete	
+petes	pile	piled	piles	piling	
+plain	plainer	plains	plaint	pleat	
+plex	pliant	poser	positional	post	
+posted	posting	posts	pound's	pounding	
+pounds	promise	promised	promises	sat's	
+stock's	
+
+NULL=con
+
+agra	cannon	cave	census	centric	
+cert	certs	chita	cordes	currently	
+dado	dense	denser	descend	descended	
+descending	descends	diment	don's	dones	
+federal	federated	federation	federation's	federations	
+fess	fessed	fides	figuration	firm	
+firmed	firming	firms	forte	found	
+founding	front	fronted	fronting	fronts	
+fusions	genial	geniality	genital	gest	
+greve	jure	kling	nacht	nell's	
+nelly	nelly's	nick's	notation	script	
+scripts	seco	seil	sensual	sensus	
+sequence	sequences	sequent	sequential	siders	
+sole	soles	somme	stable's	stables	
+stance	stant	stine	summation	tact	
+template	templates	tempo	temporaries	temporary	
+tempt	tented	tenting	tessa	test's	
+textual	tiki	tractor's	trail	trails	
+trite	verge	verged	verges	verging	
+version's	versions	vince	
+
+NULL=cor
+
+busier	chado	doba	dons	leone	
+neas	niche	rales	rector	relate	
+relates	relating	relations	respond	responded	
+respondent	respondents	respondents'	responding	responds	
+sair	sica's	tese	tines	vette	
+yell	zine	
+
+NULL=counter
+
+attack	attacked	attacking	attacks	clockwise	
+culture	demonstration	demonstrations	demonstrators	espionage	
+force	insurgency	intelligence	intuitive	measure	
+measures	offensive	pane	parties	party	
+proposal	proposals	punch	punching	revolution	
+revolutionaries	revolutionary	sued	suit	suits	
+tenor	trade	weights	
+
+NULL=d
+
+abney	acosta	ahab	ahlberg	ahlgren	
+airy	aiwa	alai	alby	alek	
+allaire	alliance	alliances	amani	amore	
+anica	annenberg	annie	anse	antes	
+anza	arby's	arfur	aria	arian	
+arkie	arlington	arpa	ashwood	assault	
+auster	avalos	avie	avignon	avila	
+avila's	avison	awning	base	baye	
+eakin	eakins	early	earth	easy	
+ebay	ebit	eckert	elaine	elbert	
+electable	elfin	eli's	elisha	elmore	
+elon	elude	eluded	eluding	emerge	
+emerged	emerging	emery	emme	emoting	
+emotion	emotions	enver	eric	erick	
+erickson	errick	erwin	esai	esmond	
+evers'	every	evil	evil's	evils	
+evita	evry	ewald	ewan	ibos	
+iced	icey	icing	ilger	inca	
+inky	ione	iorio	irani	irian	
+israeli	istel	itched	ither	izon	
+jakarta	jing	jinn	johar	odds	
+offed	offing	oily	onate	oneness	
+oodles	oppelt	orcas	orff	osage	
+oumar	ouro	owners	owning	rabble	
+ragan	rago	ragone	rake's	rama	
+raped	raper	raping	rapkin	raws	
+re's	redd	reich	reidel	reiser	
+rift	rifts	rive	riven	river	
+river's	rivers	rivers'	rives	rome	
+rossin	rovers	rubbed	rugged	rugs	
+rums	ryland	ti's	uddingston	ulli	
+umber	union	unst	urell	utta	
+weller	wellings	welt	wight	work	
+workin	
+
+NULL=d'
+
+abruzzo	affaires	affairs	agostino	alessandro	
+alessio	amato	amato's	amico	amour	
+antonio	arrigo	cruz	electricite	elegance	
+escoto	estaing	etat	hotel	jamila	
+minter	oeuvre	orleans	orsay	rivera	
+wildcat	yquem	
+
+NULL=da
+
+bord	chas	chau	cron	deland	
+gobert	kota	kotas	lilia	lyell	
+maged	maine	marcus	maris	maso	
+miano	mien	mita	moose	nang	
+niell	niels	nielson	nilo	noli	
+puzzo	qing	sani	shon	viau	
+vidovich	vies	
+
+NULL=de
+
+akins	andre	angelis	angelo	anne	
+arie	barge	barking	barred	bartolo	
+based	basement	basing	beers	benham	
+berg	berry	bits	boer	bolt	
+bora	bose	brief	briefed	briefing	
+briefings	bris	bunk	bunked	bunker	
+bunking	bunks	busk	cade	cadence	
+caffeinated	camped	canter	canters	carlo	
+caro	castro	cays	ceased	centralisation	
+centralise	centralised	centralising	centralization	centralize	
+centralized	centralizing	certify	cherney	cider	
+cipher	clan	clare	clawed	clercq	
+code	coded	coding	colonisation	colonization	
+commission	commissioning	compose	composed	composes	
+composing	composition	compress	compression	concentration	
+constructivist	contaminate	contaminated	contaminating	contamination	
+control	controlled	corum	costa	couple	
+coupled	coupling	crane	crease	creased	
+creases	creasing	cried	cries	criminalisation	
+criminalised	criminalising	criminalization	criminalize	criminalized	
+criminalizing	crying	derick	duct	ducting	
+ducts	eley	elites	er's	face	
+faced	facing	fame	famed	fanged	
+fault	faulted	faulting	faults	fazio	
+feat	feats	fence	fences	fend	
+fended	fender	fender's	fenders	fending	
+fends	ferment	ferments	fiance	fibrillation	
+finite	finney	foe's	ford	formations	
+forrest	francesco	franco	frantz	fraud	
+fray	frayed	fraying	freitas	fries	
+frock	frost	frosted	frosting	gaetano	
+gassing	george	georgia	glaze	grade	
+grades	greasing	gregorio	groot	groote	
+guzman	humanize	humanized	humanizing	hydrated	
+hydrating	jean	jesus	johnette	joie	
+jong	juan	kalb	lacey	lacroix	
+lacy	lage	lange	lano	lany	
+latorre	latour	laurentiis	laval	laware	
+le's	lete	li's	liberate	liberated	
+liberates	liberating	liberation	lilah	lillo	
+lima	limitation	limited	lino	lisha	
+lisle	list	listed	listing	livery	
+loach	long's	lorean	lorenzo	luca	
+luge	luise	luxe	lyle	marche	
+marches	marco	marco's	maree	maria	
+mars	martinis	martino	mean	meaning	
+means	mello	ment	merge	merged	
+merger	merging	merits	meter	metra	
+metz	mian	militarisation	militarised	militarization	
+militarized	mille	mille's	ming	mitra	
+mobbed	mobilisation	mobilised	mobilization	mobilize	
+mobilized	mobilizing	monaco	mong	mons	
+mont	moralising	moralize	moralizing	moro	
+moss	motion	motions	motivated	motivating	
+muth	mystified	mystifies	mystify	mystifying	
+nari	nationalize	nationalized	nationalizing	natured	
+ng's	nice	nied	nims	niro	
+nominations	nominator	note	noted	notes	
+noting	nova	nude	nunzio	palma	
+paola	part	parted	parting	parts	
+pasquale	paul	paul's	pendant	pendants	
+personalize	personalized	petris	pict	picts	
+ploy	ploys	politicize	population	posing	
+posit	posited	positing	positions	posits	
+pot's	predation	presses	prez	priest	
+privation	privations	prive	ranged	regulate	
+regulating	regulatory	revere	riding	rogatory	
+rosa	rosario	sama	santis	scent	
+scents	scribe	scribes	segregate	segregated	
+segregating	selected	sensitized	serie	shaun	
+shawn	shields	shields'	sign's	signee	
+signer	signers	silva	simone	sire	
+sired	sires	soto	souza	spain	
+spina	spoil	spoiled	spoiling	spot	
+spots	stabilisation	stabilise	stabilised	stabilises	
+stabilising	stabilization	stabilize	stabilized	stabilizes	
+stabilizing	stefano	terminate	termination	terminations	
+terrence	testable	tests	throne	toth	
+toured	touring	tours	tractor	tractors	
+values	vane	vaughn	vault	vein	
+veined	veney	vera	veron	very	
+vice	vices	ville	vine	vine's	
+vita	vito	vitt	void	von's	
+vore	vote	voted	votes	voting	
+vries	wald	wane	war's	weese	
+witt	witte	wolf	young	
+
+NULL=di
+
+abate	agnostic	agnostics	aries	bella	
+blasi	bley	bona	camillo	caprio	
+cello	chiara	dion	dion's	gable	
+gennaro	giovanna	giovanni	girolamo	gits	
+guilio	lutes	maggio	maio	massa	
+muro	nara	nars	nesen	nuba	
+oxide	paolo	pietro	rector's	rectors	
+rectory	sable	sables	saia	sano	
+sown	spenser	spirited	spiriting	splayed	
+staff	stances	still	stilled	stiller	
+stills	stress	stressed	stresses	stressful	
+stressing	tullio	vested	vesting	vestments	
+vides	vining	visible	vision's	wali	
+
+
+NULL=dis
+
+abilities	ability	abuse	abused	advantage	
+advantaged	advantageous	advantages	affection	agree	
+agreeable	agreed	agreeing	agreement	agreements	
+agrees	allowance	allowed	allowing	appearances	
+appointments	appoints	approval	approve	approves	
+approving	approvingly	arms	array	assembly	
+associate	associated	associating	avowed	band	
+banded	banding	bands	believe	believed	
+card	carded	carding	cards	cern	
+claimer	claimers	close	closed	closes	
+closing	closure	closures	color	coloration	
+colored	comfort	comforting	comforts	concert	
+concerted	connections	content	contented	contents	
+continuance	continuation	continue	continued	continuing	
+continuity	continuous	counter	counters	courage	
+courses	courteous	courtesy	credit	creditable	
+crediting	credits	crete	cursive	cuss	
+cussed	cussing	dain	embark	embarkation	
+embarked	embarking	embodied	empowered	enchanted	
+enchantment	enfranchise	enfranchised	enfranchisement	engage	
+engaged	engagement	engaging	entangle	entangled	
+entangling	equilibrium	favor	figure	figured	
+figuring	gorge	gorged	gorging	grace	
+graced	graceful	gracefully	graces	guise	
+guises	gust	gusted	gusting	gusts	
+harmony	heartened	heartening	honest	honestly	
+honesty	honor	honorable	honorably	honored	
+honour	honourable	illusion	incentive	incentives	
+inclination	inclined	infect	infecting	infection	
+inflation	inflationary	information	ingenuous	inherit	
+inherited	integrates	interest	interred	jointed	
+junction	liked	liking	lodge	lodged	
+lodging	loyal	loyalty	mantle	mantles	
+mays	missed	misses	missing	missive	
+mount	neyland	obedience	obedient	obeyed	
+obeying	obeys	orderly	orientated	parities	
+parity	passion	passionate	passionately	patch	
+patched	patches	patching	perse	please	
+pleased	pleases	pleasing	pleasure	poses	
+proportion	proportionate	proportionately	prove	proving	
+qualification	qualifications	qualifies	qualifying	quieting	
+regard	regarded	regarding	regards	repair	
+reputable	repute	respect	respected	respectful	
+respecting	robe	robed	satisfaction	sect	
+section	sections	sects	senter	service	
+similar	solver	suasion	taste	tasteful	
+temper	tillers	tillers'	tilling	tribute	
+tributes	trust	trusted	trusting	trusts	
+unity	
+
+NULL=do
+
+berman	bermans	brin	broth	como	
+drill	gali	lenz	manic	minelli	
+mingo	minici	minion	minions	minis	
+minus	nath	nati	nella	nelson	
+nen's	nghia	niger	noho	remus	
+than	umar	uris	wager	whan	
+zing	
+
+NULL=du
+
+bois	buffet	champ	champ's	chemin	
+chess	clos	commun	dack	ende	
+esberg	glas	gout	guay	guid	
+hamel	isenberg	mais	manis	menil	
+noon	page	perron	plessis	pont	
+pont's	ration	rations	razo	repo	
+rocher	saidi	stan	ties	toit	
+val's	
+
+NULL=e
+
+astern	bay's	bell's	bens	berle	
+berling	berz	bola	boni	bony	
+chan	chavarria	co-management	cole	costar	
+dens	denton	deral	dita	europe	
+excel	frat	fron	glinton	goro	
+idc's	katerina	lam's	layne	lazar	
+leanora	lena's	leni	leonora	leven	
+levens	liana	liane	liason	liel	
+lise	lites	liza's	lizardo	locution	
+louise	machines	manuel	merges	merson	
+migrant	migrants	migrate	migrated	migrates	
+migrating	migration	motionless	motive	music	
+nasa	numerate	ogintz	peron	pics	
+poch	proms	quality	quine	quines	
+quip	quipped	quipping	quips	rath	
+rato	rica's	rika	salen	scape	
+shelman	shoo	slinger	smeralda	sops	
+space	special	specially	spey	spinosa	
+spinoza	spirito	spousal	spouse	spouses	
+spy's	squire	squire's	stadio	stai	
+states'	stefan	stefans	stelle	stevan	
+steve	strada	thane	toys	unice	
+universe	vader	vander	vans	vans'	
+velina	verex	walt	xcel	xpress	
+xtreme	yzaguirre	
+
+NULL=em
+
+bark	barked	barks	battled	bedded	
+bedding	boden	bolden	bossed	brace	
+braced	braces	bracing	braer	bree	
+brey	broil	broiled	broiling	cees	
+hart's	ilia	irate	merich	mitt	
+mott	paneled	phases	presa	
+
+NULL=en
+
+brel	canto	carta	cased	casing	
+chant	chanted	chanting	chants	circle	
+circled	circles	circling	compass	compasses	
+countered	countering	crusted	crypt	cyclical	
+danger	dangers	dara	dear	dearing	
+dears	dings	dive	dives	during	
+emas	fant	forces	forcing	franchise	
+franchised	gage	gender	genders	gesser	
+gilman	gines	grave	graver	grossed	
+grossing	gulf	gulfs	joys	large	
+lighten	lightened	lightening	lightens	livened	
+livens	mesh	meshed	riches	rique	
+shrine	shrines	shrouding	slave	slaved	
+slaving	slow	snare	snared	snares	
+snarled	sues	suing	suite	terra	
+thrall	tice	titles	titling	tomb	
+trance	treaties	treaty	tree	trees	
+tremont	trenches	tries	vied	visage	
+visages	vying	
+
+NULL=es
+
+calera	camilla	capades	caped	capers	
+capes	carole	chew	chewed	chewing	
+chews	cort	coto	crow	crowed	
+crows	iason	kimo	panola	sabar	
+sayed	says	sick	teem	teemed	
+tela	trin	
+
+NULL=euro
+
+barometer	bond	bonds	central	centrism	
+copter	copy	corps	council	crash	
+currency	disney	disneyland	dollar	markets	
+mediterranean	money	phobia	region	sceptic	
+scepticism	sceptics	sport	stat	sterling	
+system	trash	tunnel	tunnel's	
+
+NULL=ex
+
+celan	cels	change's	changer	changers	
+changes'	chequers	communicate	communicated	convicts	
+hume	moor	pensive	pensively	port-related	
+press'	press's	pressly	terminated	terminating	
+terminator	tolled	tolling	tradition	traditions	
+
+
+NULL=f
+
+abiola	action's	actors'	acts'	actual	
+actually	adel	adil	aerie	ahad	
+aire	airey	airfield	airless	airlie	
+airplay	airport	airway	airways	alcon	
+altering	alters	alun	alvey	ama's	
+ancier	arace	arc's	argo's	arias	
+arm's	arms'	armstead	arts'	atal	
+attest	auldhouse	auria	aust	earn	
+earns	easter	ederal	eigen	einstein	
+einstein's	elder's	eltham	emmes	erno	
+errey	etch	etched	etches	etching	
+ifa's	iggy	inches	inland	inland's	
+inlay	iona	irma	laco	lagged	
+lags	lail	lakes	lambeau	lamm	
+lamson	landers'	lawless	leas	leder	
+leece	leer	lees	leets	leishman	
+leming	lemming	lesh	lesher	light's	
+lippo	lockhart	logger	lohr	lopped	
+lora	lorenz	lorin	lossie	louts	
+lowe	lowery	loyd's	luker	lukes	
+lyin	lynn's	odder	omon	orth	
+ortis	ortner	osler	oxen	oxley	
+oxman	rahm	ranck	rank's	rankle	
+rappe	raus	raye	red's	reddy	
+reddy's	redman	ricke	riedel	rieder	
+rightful	rightfully	risked	risking	risky	
+ritsch	ritts	roley	romm	romme	
+rosh	rosty	ryman	unfair	ungo	
+
+
+NULL=fi
+
+berglas	bula	del's	delis	edler	
+elders	gura	ji's	jian	lament	
+laments	lets	lippi	nagle	nance	
+nicky	re-sale	rearm	rehouse	replace	
+replaces	reproof	reside	resign	rewire	
+rework	reworks	scally	sherman	sherman's	
+sons'	ve-day	
+
+NULL=for
+
+bade	bath	bears	bids	dyce	
+evermore	getting	give	given	gives	
+giving	lorn	martine	mats	matted	
+matting	mica	sake	sakes	sook	
+swear	sworn	sythe	tuna	tune	
+tune's	tunes	warder	warders	
+
+NULL=fr
+
+agile	agility	anc's	ancona	anglais	
+ansen	antic	eckles	eddie	eddie's	
+eight	eire	inge's	ontal	
+
+NULL=g
+
+abel's	addis	agen	aims	alan's	
+alanis	alas	alesi	alice	alicia	
+alicia's	alina	alka	alleys	alli	
+allows	alperin	alston	amal	ambit	
+amble	ambled	ambler	ambles	amblin	
+ambling	ambon	amer	ames	ames'	
+ammon	ammons	angling	ann's	annett	
+ants	aping	arda	arden's	arvin's	
+arza	askins	aspe	astronomic	astronomy	
+aubert	audi	audi's	audio	auger	
+ault	aunt	avert	avina	azillion	
+da's	dansk	eared	earhart	earhart's	
+ec's	edda	edney	eiger	eisler	
+elber	elco	eller's	elsey	emma	
+emmy	encor's	engler	ensley	enstar	
+entry	enzyme	erhard	erhart	erstad	
+ervin	esso	este	hada	haith	
+hani	hassan	hens	host	host's	
+hosted	hosts	iago	ibbs	ibes	
+il's	ilan	iles	ilford	ines	
+inn's	intel	inter	irl's	irvan	
+isler	issing	izzard	lace	lance	
+lanced	lances	lancing	lands	lantz	
+laser	laser's	lasser	lauber	lave	
+lavin	lavine	lazier	leeson	leich	
+lennie	lennon	lens	likes	lina	
+listen	listened	listening	listens	litman	
+litter	littered	littering	litters	lobe	
+lobes	lobo	loria	lory	losses	
+loster	loved	lover's	lowered	lowering	
+luckman	lueck	luing	lymph	lynn	
+mac's	mtv's	nash	nats	nehm	
+nome	nvqs	offs	ogar	olde	
+oldie	oldman	oleta	omel	opal	
+oran	orton's	otay	ovett	owned	
+owns	rabe	raber	rade	rader	
+radin	rads	raeber	raef	rael	
+raf's	raffin	rained	rall	rambling	
+ramm	rammy	rana	randa	range	
+range's	ranger	ranges	ranier	rano	
+ranted	ranting	rants	rapes	rasp	
+rasped	rasping	rasps	rassi	rata	
+ratification	ratified	ratify	ratifying	rattan	
+ravel	razing	reaves	reedy	regan	
+reider	reif	reiff	rein	reiner	
+renier	renz	reta	rey's	ribbon	
+rich	riddle	riddles	ridley	rids	
+riese	riff	rigg	rigor	rind	
+rinds	ringo	riot	ripen	rippe	
+ripped	ripping	rise	roan	roberg	
+rodin	roff	rohl	roman	room's	
+roomed	rooming	rooms'	root	rope	
+roped	ropes	roping	rosset	rossi	
+rossmann	rosso	rote	rotting	round	
+round-up	roundball	rounded	rounder	rounders	
+rounding	rounds	roup	roused	rouses	
+rousing	routing	rove	rove's	rover	
+rover's	roves	rowers	rowling	rubbing	
+rube	rubin	rubs	rucci	rudge	
+ruff	rumblings	runge	rutter	ryder	
+sa's	tech	ullah	upton	usher	
+ushers	went	winn	winner	wynn	
+wynn's	wynne	
+
+NULL=glen
+
+afton	cairn	corse	cullen	dale	
+dale's	denning	dinning	dora's	dower	
+fed's	finnan	goyne	isla	luce	
+mavis	muir	ochil	rothes	urquhart	
+
+
+NULL=grand
+
+child's	children	children's	daddy	daughter	
+daughter's	daughters	father	father's	fathered	
+fathering	fatherly	fathers	maison	masters	
+mother's	motherly	nephew	niece	parent's	
+parents	parents'	
+
+NULL=green
+
+acres	back's	backs	baum	belt	
+belts	berg's	berger	berger's	bergs	
+blatt	brier	burg	castle	dykes	
+faulds	field's	gold	grass	grocer	
+grocers	houses	keeper	keepers	keeping	
+meadow	peace	peace's	slade	sleeves	
+span	spun	stein	sward	wald's	
+wich	
+
+NULL=h
+
+adrian	adrian's	agopian	aig's	airbrush	
+airline	akeem	akim	almos	alpern	
+alpert	alstead	amid	amman	anania	
+and-over	anna's	annas	anno	annum	
+ansa	ansel	ansell	appier	arbor	
+arbors	arjo	arkin's	armful	arrogate	
+artson	arum	aslam	atwood	ausman	
+auteur	avner	ayao	aycock	ayling	
+azen	bj's	cfcs	ebert's	echo	
+eckart	ecke	edberg	edberg's	edged	
+edges	edging	edlund	efter	eights	
+eirs	eisen	eisenberg	eisley	elena's	
+elfman	elium	elmer	elmets	elms	
+eloise	embree	enrich	enrico	enrique	
+enriquez	eras	erat	erbes	erdman	
+ermine	etherington	ettinger	etzel	ewes	
+ijaz	indus	inman	isao	isham	
+itt's	mmmm	mo's	nida	oisin	
+olguin	olli	olmstead	olstein	olsten	
+ostler	ousley	ouston	sbc's	sieh	
+umberto	uneven	unger	wang's	yams	
+yannis	yong	
+
+NULL=ha
+
+bibi	eberle	ft's	german	gi's	
+inline	islip	kim's	kuna	lama	
+levi	madan	madi	med's	melin	
+midi	mill	mill's	milton	milton's	
+mister	neef	noun	nour	pless	
+rada	rare	rems	rold	shana	
+shem	shim	shish	shoah	shomer	
+sina	skins'	slip	slop	torah	
+tori	user's	vana	wass	wick's	
+worth	zara	
+
+NULL=hair
+
+dresser	dresser's	dressers	dryer	dryers	
+pieces	spray	style	styles	stylist	
+stylists	
+
+NULL=he
+
+adage	address	addresses	ads'	art-related	
+artless	athens	atherton	brews	brides	
+bron	ebner	els'	fley	irs'	
+rat's	riots	rod's	rtz's	witt's	
+
+
+NULL=hi
+
+cham	ga's	jacks	jinks	kmet	
+malaya	malayan	polito	ppos	spano	
+stories	story	story's	story-the	tomi	
+toshi	
+
+NULL=i
+
+barra	basco	beria	bish	bp's	
+brahimi	cahn	cahn's	caza	ceman	
+cons	dea's	deal	deals	deas	
+euan	fans	i-aa	ii's	ii-a	
+ii-aa	leto	locos	macs	mager	
+masco	mola	niki	nuit	nuits	
+numa	omega	photo	rene	rene's	
+s-and	s-the	sabel	sabella	scor	
+selin	shaq	sherwood	slander	slanders	
+slay	smail	sobel	soda	talia	
+tamar	tami	thier	toman	v-aa	
+veco	vica	village	
+
+NULL=in
+
+accessibility	accessible	accuracy	accurate	accurately	
+adequacy	adequate	adequately	admissibility	admissible	
+advisable	animate	applicable	appropriately	appropriateness	
+articulate	attention	attentive	attentiveness	audible	
+auspicious	auspiciously	authentic	authenticity	bred	
+capable	carnation	carnations	choate	civility	
+coherence	coherent	coherently	comer	comers	
+communicado	comparable	comparably	compatibility	compatible	
+competence	competency	competent	competently	complete	
+completely	completeness	completion	completions	comprehensible	
+comprehension	conceivable	conclusive	conclusively	congruent	
+consequential	considerable	considerate	consistency	consistent	
+consistently	conspicuous	conspicuously	contestable	continent	
+convenience	conveniences	convenient	conveniently	corporate	
+corporates	corporation	corporations	correct	correctly	
+correctness	credible	credibly	credulity	credulous	
+curable	decency	decent	decently	decisive	
+decisiveness	defensible	definite	definitely	delicate	
+dented	denture	dentures	dependents	determinate	
+dian	diana	diana's	dien	difference	
+different	differently	digestible	digestion	dignity	
+directly	discipline	discreet	discretion	discriminate	
+dispensable	disputable	distinct	distinguishable	divisible	
+doors	edible	effective	effectively	effectiveness	
+efficiencies	efficiency	efficiently	elegant	eligibility	
+eligible	equality	equitable	equities	equity	
+estimable	exact	excusable	expensive	expensively	
+experience	experienced	expert	explicable	fallibility	
+fallible	famous	famously	fancy	fanta	
+fante	ferno	fertile	fertility	fest	
+fidel	fidelity	fielder	fielders	filtration	
+flamed	flames	flaming	flammable	flexibility	
+flexible	formal	formality	formally	formative	
+fractions	frequency	frequent	frequently	fringe	
+fringed	fringes	fringing	galls	genius	
+genuity	glorious	golf	graham	grained	
+grate	gratitude	gres	grid	gush	
+habitable	habits	hospitable	humane	humanely	
+humanity	humanly	judicious	junctions	juries	
+justice	justices	mate	mate's	mates	
+mates'	opportune	organic	patients	puts	
+putting	salata	sane	sanity	sead	
+sect's	secure	securities	security	sensitive	
+sensitively	sensitivity	shallah	significance	significant	
+significantly	sincere	sincerity	site	slaw	
+solent	soluble	solvency	solvent	spector's	
+stability	stall	stalled	staller	stalling	
+stalls	subordinate	subordination	substantial	sufficiency	
+sufficient	sufficiently	surer	surmountable	tangible	
+tangibles	temperate	tensely	tolerable	tolerance	
+tolerant	tourist	tuition	tuitions	undated	
+valid	validate	validated	validates	validating	
+validation	validity	valuable	variable	vertebrate	
+vertebrates	vesco	vestcorp	vests	violate	
+visibility	visibly	vitro	voice	voiced	
+voices	voicing	voluntarily	voluntary	vulnerability	
+vulnerable	
+
+NULL=inter
+
+actively	activity	agency	american	bank	
+brand	breeding	brew	cable	cept	
+change	changes	city	club	collegiate	
+communal	community	company	coms	conference	
+connectedness	connector	continental	cultural	dealer	
+denominational	departmental	dependence	dependency	dependent	
+diction	disciplinary	divisional	ethnic	faces	
+faith	first	first's	fraternity	galactic	
+generational	governmental	graph	group's	institutional	
+leaf	league	loper	market	media	
+mediate	mediates	medics	mezzo	mingle	
+mingled	mingling	ministerial	modal	modality	
+mountain	nacional	nally	national	national's	
+nationale	nationalism	nationalist	nationalists	nationally	
+nationals	nazionale	net's	ning	nist	
+office	operable	parliamentary	personal	planetary	
+pret	provincial	racial	regional	relation	
+relationship	relationships	religious	scholastic	scope	
+sectional	session	species	sputnik	state's	
+stellar	tidal	toto	twine	twining	
+vals	weave	weaves	weaving	woven	
+
+
+NULL=j
+
+abril	affray	aime	aimee	amal's	
+ames's	ancker	anette	argon	asari	
+aunty	awad	earl	ebsen	elks	
+ellison	emea	epson	erez	esper	
+iffy	indo	ocular	ones'	ostling	
+ousts	
+
+NULL=ja
+
+bari	cobe	cobi	cobin	cobo	
+cobs	coby	guar	lili	maal	
+maat	mali	maran	mila	muna	
+nicki	nina	pan's	shari	siri	
+skol	
+
+NULL=jo
+
+achim	bless	chen	gani	hanes	
+hann	hannes	hanns	hansen	kester	
+khang	kingly	liet	lyon	nathan	
+nathan's	vial	
+
+NULL=k
+
+abc's	abc-tv	abc-tv's	abul	alani	
+alban	aleta	arch	archer's	arun	
+asay	asem	ayla	azadi	azem	
+bryant	cal's	cbs'	cbs-tv	cop's	
+ellard	ellen	ellett	ellie	enya	
+eppel	eppie	eppler	erik	etten	
+eyed	gori	hadar	heel	hieu	
+houri	ilian	inane	indle	iowa	
+ira's	irby	issel	jell	lamon	
+lasky	lassen	latches	lax's	leber	
+leiber	leiner	leist	lesko	lesko's	
+lotz	luger	lutz	nauss	nave	
+nbc-tv	neel	neels	nicks'	night's	
+nightly	nights'	nits	nobel	noll	
+nots	notting	oester	olya	onno	
+osaka	osher	otani	oval	ragen	
+rahn	rakow	rakow's	rakowski	rasnow	
+raul	ravitz	reber	reis	reiss	
+riegel	rieger	riegler	rimsky	risher	
+roger	roger's	rohn	ronstadt	ruger	
+uhlmann	vetch	wong	yi's	
+
+NULL=ka
+
+beer	bila	boom	china	dare	
+davy	dish	dosh	jima	mala	
+minsky	node	nu's	pyong	raja	
+rami	rima	seberg	shani	shima	
+tana	trina	weah	yaks	zarian	
+zoos	
+
+NULL=ko
+
+bart	blitz	bren	chis	csis	
+daly	daly's	dori	hala	izumi	
+konin	matsu	modo	mori	nantz	
+pelson	pietz	sova	tani	teas	
+telly	ufos	
+
+NULL=l
+
+abbe	ackland	acuna	adas	agers	
+airds	akehurst	akey	alive	amaze	
+ament	amonte	andes	andress	andrus	
+anguish	anguished	anguishing	anni	apis	
+apse	apsley	arose	ascher	ashbrook	
+askar	asko	astra	atex	aude	
+aura	aura's	aurel	avery	awful	
+awfully	awfulness	awry	earner	earner's	
+earners	earning	eben	ecce	eclair	
+edger	eggy	egos	ehmann	ehrich	
+ember	emmons	enfant	erma	esko	
+ethridge	eu's	evander	everett	everette	
+ilja	imitation	imitations	inked	inwood	
+iu's	jung	lamas	lanes	lego	
+leyton	one-parent	orca	otte	ouisa	
+ovitz	pga's	ucas	ukman	
+
+NULL=l'
+
+affaire	ambiance	auberge	espresso	express	
+homme	opera	orange	unita	
+
+NULL=la
+
+bahn	barbera	bastida	baton	batt	
+belle	bianca	bonge	bored	borer	
+borers	boring	brum	buan	bute	
+bute's	byron	calle	cava	chaise	
+chance	chapelle	chasse	combe	croix	
+croix's	crosse	dinos	donna	fave	
+favre	fayette	fleur	fond	free	
+goon	goons	grange	guardia	hint	
+hood	kaye	keisha	loggia	lumiere	
+mancha	marca	marque	marr	monica	
+mott's	motta	motte	paglia	pham	
+pierre	pietra	plante	pointe	porte	
+puente	quinta	radio	raine	rimer	
+rios'	rocca	rochelle	rocque	rossa	
+russa	russo	salle	scola	tasha	
+teran	thon	timer	tino	tins	
+tonya	torre	toya	tricia	troy	
+valle	vallee	verne	vigne	violette	
+volpe	zelle	
+
+NULL=le
+
+ad-free	baron	baron's	blanc	blond	
+boeuf	bow's	bowa	brun	cavalier	
+claire	clerc	comte	conte	croy	
+deen	donne	doyen	fever	gacy	
+gato	gere's	gless	goland	grand	
+groom	gros	jeune	maire	mans	
+marsh	melson	moore	nin's	noire	
+nora	onetti	page's	roux	sabre	
+schick	slee	tourneau	tran	vada	
+vinson	wallen	winter	zion	
+
+NULL=li
+
+belous	berate	berated	berates	berating	
+berte	beskind	censor	censure	dove	
+endo	feline	felines	lacs	near	
+near's	pari	puma	sandro	santi	
+sotto	
+
+NULL=lo
+
+casale	casto	cate	cater	chee	
+chore	cke's	coco	duca	meli	
+mita's	pata	piano	rca's	reena	
+rentz	renzi	renzo	rimar	thar	
+udon	vato	
+
+NULL=m
+
+abie	adama	adame	adding	adeline	
+adina	agana	agee	agee's	agid	
+agness	agri	aid's	aiden	aimed	
+aiming	akiko	akita	alawi	alden	
+alec	alloy	almquist	aloof	amadou	
+anju	anser	arai	arana	aranda	
+arcade	arcel	arched	archers	arches	
+arcos	argot	ariana	ariane	arianna	
+arianne	arica	arie's	ariel	aris'	
+ariza	arjan	arkle	arlena	arlette	
+armor	arquette	arquette's	artic	artie	
+artin	asada	asai	ascot	ashburn	
+atta's	attias	attila	aulana	aung	
+ayotte	cadam	callen	calpine	calpine's	
+corp	corp's	dash	edgar	edina	
+eglin	elba	eldrick	elgar	elisa	
+elissa	ellon	eloy	embers	emory	
+erode	essick	ethane	ethanol	ethyl	
+ethylene	eyskens	fume	gm's	iata	
+inet	iras	irell	irna	istook	
+offit	ohr's	orally	organ's	organs	
+oriel	orpheus	orser	oshinsky	others'	
+otley	ulan	ulla	urad	urals	
+urine	wadi	
+
+NULL=ma
+
+bees	callan	caller	cao's	cara	
+caray	chair	chine	chol	ciel	
+cleans	condo	crame	dani	delene	
+delon	doff	donna's	donnas	drone	
+gary	hal's	hanke	homes	honing	
+in-line	kati	kela	kings	kino	
+koto	ladies	lady	langa	larkey	
+laya	ldef	leng	lingering	llano	
+nager	noel	nolo	otai	puche	
+rais	renco	rengo	rosi	rous	
+saki	sala	sami	sato	satoshi	
+scis	scots	sonic	stiff	stiffs	
+tata	theis	thematically	this	this'	
+tilda	tsuda	tsui	turin	turing	
+yumi	zingo	zinho	zola	
+
+NULL=mac
+
+arena	beath	beth's	calman	connel	
+dill	erich	hines'	hold	kays	
+kovic	laurin	lyman	ritchie	willie	
+world	
+
+NULL=mal
+
+abed	administration	adroit	function	functioned	
+functioning	functions	leny	linson	lorca	
+nutrition	odorous	practice	practices	thus	
+vo's	
+
+NULL=man
+
+agua	avian	chester	chester's	chester-based	
+chin's	cilla	cinelli	darin	datum	
+dell's	deville	dingo	dolin	drake	
+drell	fully	gano	gini	gino	
+grove	groves	heim	hole	hunter	
+iacs	kato	killer	mohan	power's	
+servant	slaughter	sour	suri	tooth	
+waring	
+
+NULL=mar
+
+abou	cell	celle	chand	cia's	
+ciano	coni	gallo	golin	grit	
+itza	jorie	jory	key's	kisha	
+lins	lowe's	mots	quart	schalk	
+schall	shack	shall	tens	tian	
+tina's	tita	yann	yellen	zouk	
+
+
+NULL=mc
+
+alexander	alister	anally	andrew	bain	
+beal	birney	bride's	broom	burney	
+burnie	cadden	cafferty	caffrey	cahill	
+cain's	caleb	calla	calley	callister	
+cambridge	campbell	cann	carley	carney	
+carrick	carron	cart	carter	carty	
+carver	cash	cathie	caughey	chesney	
+chord	clair	clary	clay	cleary	
+cleave	clelland	clement	cleon	clinton	
+cloud	clue	clune	clung	collister	
+colm	comas	comb	combs	conkey	
+conville	cook	court	court's	courtney	
+covey	cowan	cowan's	crary	craw	
+cray	crone	crossan	cullum	curtis	
+dade	daniel	daniel's	daniels	david	
+devitt	dole	duffy	dyess	elroy	
+entire	fall	fall's	feeley	feely	
+ferrin	gann	garr	garrity	garry	
+garvey	garvin	gavin	geary	gee's	
+ghee	gill	gill's	gilligan	gillis	
+ginn	ginty	glade	glasson	glennon	
+glory	glynn	gough	govern	gown	
+grain	grew	griff	grigor	gruff	
+guiness	guinn	guinness	guinness'	guinness's	
+hale's	hardy	holland	hugh	hugh's	
+kagan	kain	kale	kean	kean's	
+keegan	keel	keever	keith	kellar	
+kellen	kendrick	kenney	kennon	keon	
+keown	kern	kernan	kiernan	kinley	
+kinney	kinney's	kinsey	kinsey's	kissick	
+knight	knight's	kone	lane's	lardy	
+levy	liam	lucas	lure	mackin	
+mahan	mahon	mahon's	mann	martin	
+master's	millen	millin	millon	minn	
+morris	muffin	mullin	murdo	murry	
+nair's	nall	nary	naught	nealy	
+neeley	neely	neilly	nichol	nicholas	
+nichols	night	niven	nuggets	nulty	
+nutt	peek	phillips	quade	quaid	
+quarters	queen's	quillen	raney	reynolds	
+robbie	ronald	sherry	skimming	sleep	
+sorley	stay	sweeney	sweeney's	taggart's	
+teague	tear	tiernan	tigue	tyre	
+whinney	william	williams'	
+
+NULL=me
+
+bane	daka	deva	dina's	dinah	
+drano	echan	ek's	gumi	kong	
+lanie	lido	lilla	moir	morial	
+nace	nahem	norah	shell	skis	
+tris	
+
+NULL=mi
+
+ami's	asma	brag	chela	d-day	
+d-ohio	d-west	esque	grant	grants	
+grated	grates	grating	hail	kael	
+kelson	khel	klos	lanese	lazzo	
+lenski	lieu	lingo	mura	nardi	
+nicam	niver	norco	series	shandling	
+shap	sled	sprint	sprints	stake	
+stakes	staking	toma	yagi	yake	
+yake's	yoshi	zuno	
+
+NULL=micro
+
+biological	biologist	biologists	biology	breweries	
+brewery	burst	bursts	chips	circuits	
+computer	computers	cosmic	electronic	electronics	
+fibres	fiche	film	filmed	grammes	
+gravity	organism	organisms	phone	phones	
+polis	processor	processors	scopes	semi	
+soft	surgery	systems'	ware's	wave	
+waved	waves	waving	
+
+NULL=mid
+
+afternoon	america	eastern	fielder's	getman	
+lands'	level	life	lothian	morning	
+riffs	shipman	shires	stream	summer	
+summer's	terms	west's	western	westerner	
+westerners	wife	wives	year	
+
+NULL=mis
+
+adventure	adventures	application	apprehension	apprehensions	
+appropriate	appropriated	appropriating	appropriation	appropriations	
+begotten	behave	behaved	behaving	behavior	
+behaviour	calculations	carriage	carriages	carried	
+carry	carrying	characterization	characterized	chief	
+communication	communications	conceived	conception	conceptions	
+conduct	construe	construed	cues	deed	
+deeds	demeanor	demeanors	demeanour	diagnosis	
+fire	fired	fires	firing	fortune	
+fortunes	handle	handled	identification	impression	
+inform	informing	judge	judged	judging	
+judgment	judgments	kito	lead	leading	
+leads	manage	management	managing	perceived	
+perception	perceptions	pronounce	pronounced	pronouncing	
+quoting	reporting	represent	representation	representations	
+representing	represents	rule	siles	sion	
+soni	speak	spelled	spelling	spellings	
+spoke	step	steps	timed	treatment	
+understand	understanding	understandings	understands	understood	
+
+
+NULL=mo
+
+allem	ammar	bile	dano	delo	
+dems	dern	docs	hamad	hammad	
+hammadi	hammed	lars	lester	lucca	
+nets	nieson	nique	ntt's	odier	
+rally	ratti	re-established	reno's	rita's	
+roney	scone	shav	toren	town's	
+usa's	uzis	watt	
+
+NULL=mon
+
+crieff	davi	day's	day-night	days	
+dello	desi	fils	golia	golia's	
+goose	jardin	karsh	kees	keys	
+kish	mouth	roe's	santo	signor	
+soon	tague	tana's	termini	
+
+NULL=mu
+
+barak	barak's	gabe	kasey	lally	
+nakata	scat	slim	slim's	slims	
+staffa	stang	tatis	tinies	tiny	
+
+
+NULL=multi
+
+billion	billion-dollar	billionaire	candidate	dimensional	
+faceted	family	foods	foods'	functional	
+functionality	hued	layered	million	million-dollar	
+million-selling	millionaire	millionaires	player	purpose	
+screen	specialty	tiered	trillion-dollar	unit	
+vitamin	vitamins	
+
+NULL=n
+
+abet	ahas	ahem	aish	ajar	
+amur	andina	armada	ascent	aslund	
+athalie	caa's	cube	eco's	edelman	
+eelam	either	ellie's	eons	etherton	
+euro	eworld	extel	ghia	ishida	
+ishikawa	oakes	omura	on-a	on-call	
+on-farm	on-road	on-target	on-u	ormandy	
+orval	orville	orville's	orwell	ozawa	
+ozick	tsb's	utri	
+
+NULL=na
+
+bobs	goya	jimy	kagawa	kajima	
+kano	kashima	kata	kaya	kuru	
+math	palm	poli	quin	ropa	
+scar	seem	shiri	stier	tale's	
+tivo	utica	
+
+NULL=ne
+
+beker	ely's	gated	gates	gating	
+gras	grete	moto	osho	pal's	
+pali	phew	reid	ruda	tanya	
+urological	urologist	urologists	urology	wall	
+wall's	wark	wham	
+
+NULL=neuro
+
+crine	genesis	muscular	pathologist	psychiatric	
+psychologist	psychology	scientist	scientists	surgeon	
+surgeons	transmitter	transmitters	
+
+NULL=news
+
+agent	agent's	bites	boys	caster	
+casters	features	gathering	hour	letter	
+letter's	letters	magazine	magazines	paper	
+paper's	papering	papers	papers'	people	
+reader	reels	week's	wires	woman	
+worthiness	
+
+NULL=ni
+
+clas	colas	cole's	coletta	colette	
+coli	colino	colle	colo	cols	
+colson	colson's	dorf	erenberg	klas	
+kola	pomo	twit	twits	yazov	
+
+
+NULL=non
+
+academic	accrual	aggression	agricultural	alcoholic	
+aviation	banking	banks	believer	binding	
+business	callable	carbonated	citizen	citizens	
+combat	combatant	combatants	committal	communist	
+compete	competition	compliance	conforming	conformist	
+conformists	conformity	confrontational	contract	convertible	
+deductible	defense	disabled	disclosure	discrimination	
+discriminatory	durable	durables	electrical	emergency	
+entities	entity	essential	event	exclusive	
+executive	existence	existent	farm	fatal	
+ferrous	fiction	financial	food	government	
+intervention	invasive	judgmental	jury	lethal	
+linear	medical	military	native	negotiable	
+nuclear	operating	partisan	performers	performing	
+polluting	prescription	profit	profits	proliferation	
+reactive	recurring	refundable	resident	residential	
+residents	roster	sectarian	sense	sexual	
+smoker	smokers	smokers'	smoking	starter	
+stick	stop	stops	strategic	such	
+supervisory	surgical	taxable	title	toxic	
+unionized	utility	verbal	violence	violent	
+voters	white	whites	
+
+NULL=o
+
+bando	bata	berlin	beron	blast	
+blige	blong	boes	buchi	cta's	
+dalis	deon	domes	estrogen	estrogens	
+grin	jala	koshi	kubo	kuma	
+lathe	leander	leanders	linda's	live's	
+maha	mar's	marr's	mega	nesta	
+neworld	noda	oooh	pals	paque	
+pera	pined	pining	pinion	porto	
+possum	possums	rbis	rinda	romo	
+ronde	roya	scars	shawa	shiro	
+stanek	sumi	suna	switch	toyo	
+varies	verdone	wada	zaki	
+
+NULL=o'
+
+bannon	barry	beirne	boyle	brian	
+brian's	bryan	byrne	callaghan	campo	
+casey	casey's	clock	conner	connor	
+connor's	doherty	donoghue	donohue	donovan	
+dowd	driscoll	dwyer	fallon	farrell	
+ferrell	ferrell's	flaherty	glove	gorman	
+groats	hagan	halloran	hanlon	hearn	
+herlihy	higgins	jays	keefe	keefe's	
+kelley	leary's	mahony	mara	mary	
+mccarthy	meara	nuts	quinn	reilly	
+reilly's	riordan	rourke	rourke's	shanter	
+shaughnessy	shea	shea's	solomon	steen	
+sullivan	sullivan's	toole	
+
+NULL=out
+
+break	breaks	buildings	classed	coached	
+crop	cropping	crops	distance	distanced	
+distancing	draws	dueled	dueling	fitter	
+fitters	flank	flanked	goings	growing	
+grows	guess	gunned	hustled	jumped	
+kicked	law's	let's	maneuver	maneuvered	
+maneuvering	muscled	number	numbered	numbering	
+numbers	performs	pitched	polled	pouring	
+rebounded	rebounding	riders	shine	shined	
+shines	shining	shone	skirts	smart	
+smarting	smarts	strip	stripped	stripping	
+strips	weighed	weighing	weighs	with	
+
+
+NULL=over
+
+abundance	allotment	allotments	anxious	arching	
+bearing	billing	blown	board	booked	
+booking	bought	broad	brook	burdening	
+came	capacity	cautious	coat	coats	
+come	comes	coming	compensate	compensation	
+confidence	confident	consumption	cooking	crossing	
+crowd	crowding	does	dose	dosed	
+doses	dosing	drafts	drive	dubs	
+emphasis	emphasized	excited	exertion	expansion	
+exploitation	exposure	extend	extended	extending	
+fished	fishing	flight	flights	flow	
+flowed	flowing	flows	flying	gaard	
+grazed	grazing	grown	hauled	hauling	
+hauls	hauser	head	heads	hyped	
+indulgence	laden	leveraged	look	looked	
+looking	looks	lord	lords	manning	
+myer	nights	nite	optimistic	power	
+powering	powers	producers	protective	react	
+reacted	reacting	reaction	reactions	reliance	
+ridden	ruled	rules	ruling	seas	
+seas'	seeing	seer	seers	sees	
+shadow	shadowed	shadowing	shadows	shooting	
+sight	sights	simplification	simplified	simplifies	
+simplify	simplifying	size	slept	spill	
+stayed	staying	stays	stepped	stepping	
+stimulated	street	stretch	stretched	subscription	
+throw	throwing	throws	time	times	
+toun	town	ture	watering	wrought	
+zealous	zealously	zealousness	
+
+NULL=p
+
+act's	added	agni	airings	alda	
+alimony	allais	alma's	alomar	annick	
+appert	aragon	arcs	arise	arsons	
+article	articles	articulates	artisan	artisans	
+aulin	avia	earl's	earlie	earls	
+eden	elvis	enchant	feffer	feiffer	
+fister	fizer	fund's	g-rated	hage	
+halen	halle	ham's	harr	harris	
+helps	hillis	hobos	hola	honed	
+hooey	huong	icon	inter's	ious	
+iranian	laca	lace's	laces	lacing	
+laines	lanes'	lanner	lath	latini	
+latitude	latitudes	latte	lavan	lay-in	
+lay-off	lay-offs	layers	layin	layoff	
+layoffs	ledger	lexus	lockton	lot's	
+lowden	lowman	lumas	lumb	lumley	
+lunge	lunged	lunges	lunging	ocho	
+olay	oona	orgy	rather	rattle	
+rattling	re-arranged	re-development	re-election	re-employment	
+re-formed	re-launch	re-match	re-opening	re-recorded	
+re-release	re-set	re-sold	re-state	re-trial	
+rearranged	recede	receded	recedes	receding	
+recognition	reelection	refer	refered	reference	
+references	referential	referred	referring	refers	
+reheat	relaunch	reoccupation	reoccupied	reoccupy	
+reoccupying	rep's	repackaged	repackaging	repaid	
+reparation	reparations	repay	repaying	repayment	
+repayments	reprinted	reps	resale	reselection	
+resent	resented	resentencing	resenting	resents	
+reservation	reserve	reserve's	reserves	reserving	
+reset	resided	residencies	residency	resident's	
+residental	residents'	resides	residing	resorted	
+reston's	resume	resumed	resumes	resuming	
+resumption	retrial	reuss	review	reviewed	
+reviewing	reviews	rice's	ricer	richard	
+rideaux	rison's	rivet	robes	rods	
+roehl	roles	rong	roof	roofing	
+roofs	roper	rose's	rosen	rotas	
+roust	roven	roving	roxy	rueter	
+rugh	runes	russian	ryde	skov	
+ullman	ullman's	unto	ursell	urwin	
+
+
+NULL=pa
+
+blum	checo	ciotti	csun	gonis	
+jama	kora	ladin	latka	lomas	
+navision	nel's	nels	nera	nicked	
+nicking	nics	nucci	pacy	paya	
+peete	pery	quito	ramo	rental	
+renting	ribas	risi	scale	silla	
+stora	taki	tria	trice	tricia's	
+trick's	tron's	
+
+NULL=para
+
+chute	chutes	glider	gliding	graphs	
+meters	militaries	noid	phrased	phrases	
+sites	transit	troop	trooper	trooper's	
+troopers	troops	
+
+NULL=pe
+
+arce's	corelli	dalling	king's	layo	
+losi	loza	nile	plum	relman	
+ruses	seta	tits	trillo	trino	
+trova	
+
+NULL=per
+
+cent-owned	dido	domo	former's	fumed	
+fumes	isic	saud	seid	severance	
+severe	severed	severing	share	simmons	
+sona	
+
+NULL=photo
+
+copied	copier	copiers	copies	copying	
+dynamic	finishers	graphic	journalism	journalist	
+journalists	synthesis	
+
+NULL=poly
+
+chlorinated	chrome	cystic	phony	propylene	
+rhythmic	silicon	styrene	technics	technique	
+unsaturated	urethane	vinyl	
+
+NULL=post
+
+codes	doctoral	humus	industrial	menopausal	
+mistress	modern	modernism	modernist	modernists	
+mortem	seasons	secondary	
+
+NULL=pre
+
+accession	achy	cancerous	caution	cautionary	
+cautions	condition	conditions	cursor	date	
+dates	dating	dawn	deceased	destination	
+destined	determine	dispose	disposed	disposes	
+disposition	dock	dominance	dominant	dominate	
+dominated	dominates	dominating	drag	eminence	
+eminent	existing	fabricated	fixes	fontaine	
+frontal	game	gerson	go's	historic	
+history	holiday	jean's	judice	judicial	
+marin	marital	mature	maturely	maturity	
+meditated	meditation	menstrual	mier	mises	
+natal	nuptial	occupations	occupies	operative	
+ordained	pubescent	registration	requisite	requisites	
+sage	sages	sant	school	school-age	
+school-aged	schooler	schoolers	schools	science	
+scott	scott's	season	server	servers	
+sevo	sumptuous	suppose	supposed	supposes	
+suppositions	teens	tend	tender	tenders	
+tending	tends	tense	tenses	tension	
+tensions	term	text	texts	vail	
+valence	valent	vent	vented	venting	
+vents	
+
+NULL=pro
+
+chaska	curator	curators	cures	curing	
+fane	feta	filer	filers	files	
+fumo	gramme	grammer	grammer's	jets	
+logue	nouns	portions	position's	sectors	
+spero	static	tease	tester	testers	
+thro	verbs	vigil	vigo	vince's	
+
+
+NULL=psycho
+
+analysis	analyst	analysts	analytic	analytical	
+babble	drama	paths	pharmacology	somatic	
+therapist	therapists	therapy	tropic	
+
+NULL=r
+
+abid	abta	ace's	aced	acer	
+aces	adames	adin	adios	adley	
+adwan	agin	aging	aided	aiders	
+aiding	aids	amat	amen	amey	
+amis	amos'	ampal	ange	angel	
+angel's	anger's	anil	ankle	ankles	
+aptly	ashly	asim	asmussen	auth	
+avenel	aviv	eade	eagan	eaps	
+eaves	ebbe	eber	ebert	econ	
+econnect	eddin	edington	edlin	edmond	
+edmond's	edon	eds'	eels	efrain	
+egan's	eggie	egress	egret	egrets	
+eichel	eichler	eichman	eichmann	eider	
+eiffel	eiland	eisman	eisner	eitzel	
+eject	ejecting	ejections	ejects	elapse	
+elapsed	elapses	elation	elearning	emission	
+emissions	emit	emits	emitted	emitting	
+employ	enberg	eno's	enumeration	enzi	
+enzo	essam	estate	estates	eston	
+ettl	eva's	evert	everts	eves	
+evie	evocation	evocations	evoke	evoked	
+evokes	evoking	evolutions	ex's	exam	
+exene	exon	eye's	eyes	eyes'	
+heal	hind	hoda	hodes	honda	
+hones	honey	hymer	ibis	icco	
+igby's	igor	ilya	inda	itchen	
+iyad	izzi	izzo	ko's	oath	
+obed	ocher	ochs	odell	odio	
+oman's	omani	onda	orem	oslin	
+ossana	ossie	osso	osten	other's	
+othman	oust	ousted	ousting	oxford	
+oxy's	oyster	oyston	ozanne	reef	
+sc's	sno's	ua's	udder	ueda	
+ural	ustica	utley	ving	wanda	
+yoko	yuichi	
+
+NULL=re
+
+absorbed	acquaint	acquire	acquired	activating	
+actor	actor's	actors	adjust	adjusting	
+adjustment	adjustments	admission	admit	admitted	
+affiliation	affirm	affirmation	affirmed	affirming	
+affirms	afforestation	agents	align	aligning	
+alignments	allocate	allocating	allocation	allocations	
+animation	apply	apportion	apportioned	apportionment	
+appraisal	appraisals	appraise	appraised	arrange	
+arrangement	arranges	arranging	arrest	arrested	
+assembles	assert	asserted	asserting	assertion	
+asserts	assess	assessed	assessing	assessment	
+assessments	assign	assigned	assigning	assignment	
+assignments	assume	assumed	assurance	assurances	
+assure	assured	assures	assuring	atta	
+attach	authorization	authorize	authorizing	awaken	
+awakened	awakening	awakens	back	balancing	
+becca	belling	bennack	bert	birth	
+book	boot	boulet	bounder	bounding	
+bounds	bozo	branding	broadcast	broadcasts	
+buff	buffed	buffing	buffs	build	
+building	builds	burial	burn	bury	
+butted	butting	calibrate	call	call's	
+calling	calls	capitalisation	capitalization	capitalizations	
+capitalize	capitalized	capitalizing	capitulate	capitulates	
+capitulation	capping	caps	capture	captured	
+captures	capturing	casting	casts	cess	
+channel	char	chargeable	checking	chem	
+christened	circulate	circulated	circulation	citation	
+citations	cite	cited	cites	citing	
+cognizance	coil	coiled	coiling	coils	
+collect	collecting	collection	collections	collects	
+combine	combined	commence	commend	commendation	
+commendations	commended	commending	commends	commit	
+commitment	conciliation	conciliations	conditioned	conditioning	
+configuration	configure	configured	confirm	confirmation	
+confirming	confirms	conquer	conquest	consider	
+consideration	considering	considers	constitute	constituted	
+constituting	constitution	constructions	constructive	convene	
+convened	convenes	convening	conversion	convert	
+corder	corder's	cording	cords	coup	
+coups	create	created	creates	creating	
+creation	creationists	creations	current	cycle	
+cycled	cycles	cycling	decorate	decorating	
+decoration	dedicate	dedicated	dedication	deem	
+deemed	deeming	deems	define	defines	
+defining	definition	dell	deploy	deployed	
+deploying	deployment	deployments	design	designed	
+designing	designs	develop	developer	developing	
+developments	dial	dick	diffusion	ding	
+direct	directing	directs	discover	discovering	
+discovers	discovery	distribute	distributes	distributing	
+distribution	distributive	districting	dondo	double	
+doubled	doubling	doubt	doubts	draft	
+drafting	draw	drawing	drawn	drew	
+eked	eking	emergence	emphasize	enact	
+enacted	enacting	enactment	enactments	engineering	
+enlisted	establish	established	establishing	establishment	
+evaluate	evaluated	evaluating	eve's	examination	
+examine	examining	fashion	fashioned	fashioning	
+fill	filling	fills	finance	financed	
+finances	financing	financings	finer	finery	
+finish	finisher	finishing	fitting	flagged	
+flex	flexes	float	floated	flux	
+focus	focuses	focusing	form's	forma	
+formatted	former	formers	forming	forms	
+formulate	formulated	formulating	formulation	fraction	
+frain	frame	fresh	fresher	fried	
+fuel	fueled	fueling	fuelled	fuelling	
+fugees	fund	funding	fundings	funds	
+gain	gained	gaining	gains	gal's	
+gala	gale	gales	gals	gard	
+gent	gents	gina	gina's	gress	
+grouped	grouping	grow	hash	hashed	
+hashing	hearse	hearses	hired	hiring	
+housed	housing	ignite	ignited	ignites	
+igniting	impose	imposed	imposition	incarnate	
+incarnated	incarnation	incarnations	incorporate	incorporation	
+inert	injected	insch	insert	inserted	
+insertion	inspect	inspection	inspections	install	
+installed	installing	institute	instituted	instituting	
+insurance	insure	insurer	insurers	introduce	
+introduced	introduces	introducing	introduction	invent	
+invented	inventing	invention	invents	investing	
+invigorate	invigorated	invigorating	issuing	iteration	
+jada	jigger	join	joined	joining	
+joins	kindle	kindled	kindles	kindling	
+lapse	lapsed	lapses	lapsing	launched	
+launches	launching	learning	lease	leases	
+leasing	lent	lents	levant	liability	
+liable	licensing	lied	lief	lies	
+lived	lives	living	locate	locates	
+mains	makes	making	manufacturing	mapping	
+marketing	marking	marks	marries	marry	
+marrying	mastered	mastering	medial	members	
+mind	minded	minder	minders	minding	
+minds	mixed	mixes	mixing	model	
+modeled	modeling	modelled	modelling	models	
+morse	mortgage	mortgaging	motes	movable	
+move	mover	movers	moves	name	
+names	naming	nate	nationalising	nato	
+ne's	negotiate	negotiated	negotiating	negotiation	
+negotiations	news	nicks	nilson	noir	
+noirs	nominate	occur	occurrence	occurring	
+offending	offering	open	opening	openings	
+opens	organisation	organisations	organise	organising	
+organizations	organize	organizes	organizing	package	
+packages	paint	painting	pair	paired	
+pairing	pairs	partee	past	pave	
+paving	pays	peal	pealed	pealing	
+peals	peat	percussion	petition	petitions	
+phrase	phrasing	plant	planting	plied	
+plies	plying	pola	populate	populating	
+porter's	porters	positioned	positioning	possess	
+possessions	povich	present	presentation	presentational	
+presentations	presented	presenting	presents	price	
+prise	prised	prising	probate	process	
+processing	produce	produces	producing	production	
+productions	program	programme	programmed	programming	
+proof	publican	publicans	publics	publish	
+pulse	pulsed	pulsing	purchase	purchased	
+purchases	purchasing	quest	questing	quests	
+register	routed	running	sales	schedule	
+schedules	scheduling	search	searched	searcher	
+searchers	searches	searching	seda	seed	
+seeding	sell	seller	sellers	sells	
+semblance	sentence	sentenced	sets	setting	
+settlement	settlers	shape	shaped	shapes	
+shaping	shot	shuffle	shuffled	shuffles	
+shuffling	sins	sisters	snick	solutions	
+sort	sorting	sorts	sounded	sounding	
+sounds	source	sourced	sources	sources'	
+sourcing	specter	stage	staged	staging	
+start	started	starting	starts	stenosis	
+sting	stock	stocked	store	stored	
+storer	stores	storing	strain	strained	
+straining	strains	strict	structure	structures	
+structuring	study	styled	styling	submit	
+submitted	supplied	supply	supplying	surface	
+surfaced	surfaces	surfacing	surge	surged	
+surging	telling	tells	testing	think	
+thinks	thought	tina	tire	tired	
+tiree	tires	tooled	tooling	tornados	
+touching	trace	traced	traces	tracing	
+tractable	transmission	transmit	transmitted	tread	
+treads	trench	trenching	trying	tuned	
+turn	turner	turners	turning	turns	
+unification	unified	unify	unifying	unite	
+unites	uniting	vamp	vamped	vamping	
+vamps	veal	vell	vels	venue	
+venue's	venues	verb	veres	verse	
+versed	verses	version	vert	verts	
+view's	viewable	viewers'	vile	vision	
+visions	visit	visited	visiting	visits	
+vive	vives	vocation	vocations	voir	
+volt	volts	warded	warding	wards	
+weighting	wired	wiring	worded	wording	
+worked	working	workings	works	write	
+writers	writes	writing	wrote	yes'	
+zone	zoned	zoning	
+
+NULL=ro
+
+bards	belo	berge	berson	bina	
+bings	bison	busta	card's	cha's	
+chat	chereau	dents	deric	dime	
+dime's	goff	jahn	lando	magna	
+mance	mania	manoff	mario's	mero	
+miti	salina	sana	sarita	seau	
+sedale	sedell	sen's	sener	seville	
+sewell	shan	skelly	smus	snes	
+strum	wand	yale	
+
+NULL=s
+
+abaya	abra	acco	acre	adat	
+addam	adder	addington	addled	adie	
+adler	adler's	afar	afford	afire	
+agar	aint	akin	alam	alami	
+aldana	alem	alford	alick	alida	
+alih	aline	allee	almon	almond	
+alon	alquist	alta	altman	amano	
+amar	amari	amcor	amie	amina	
+amir	amira	amos	ample	anabel	
+ancho	andel	andelin	anders	anders'	
+anderson	anderson's	andie	andino	andra	
+anti	antis	anya	arabia	argent	
+arid	aris	arno	askia	attar	
+audis	avant	avary	aviano	avino	
+avion	avon	awed	axes	axon	
+ayers	ayre	ba's	bics	cabs	
+cads	cala	cala's	cale	cali	
+cally	calpers	camp	camper	campers	
+cams	canned	cannell	canner	canners	
+canning	cans	canty	capa	cape	
+care	cared	cares	carey	cargill	
+cargill's	caring	carp	cars	carves	
+cary	cates	cats	cents	chad	
+chalk	chap	chea	check	cheer	
+chemed	cher	chey	chick	chick's	
+child	chill	chiller	chilling	chip	
+chism	chock	chon	chone	chub	
+chubb	chuck	co's	coggin	coggins	
+cola	cold	colds	cone	cones	
+conyers	coop	cooped	cooper	coopers	
+coops	coot	cooter	coots	cope	
+coped	copes	coping	core	cored	
+cores	corn	corned	corning	corns	
+cots	cott	cotten	cotto	cour	
+cours	couts	cowl	cowling	cram	
+crap	crape	crappy	craps	cratch	
+crawl	crawled	crawling	crawls	cream	
+creamed	creamer	creaming	creams	cree	
+creech	creed	creeds	crew	crewed	
+crewing	crews	crim	crimp	crimped	
+crimping	crip	cripps	croll	crum	
+crunch	crunched	cuba	cuff	cuffed	
+cuffing	cull	culley	cullin	culling	
+culls	curried	curries	curry	currying	
+curvy	cyphers	di's	eager	ealing	
+earle	earle's	earles	edge	edin	
+edition	edley	egal	eger	eide	
+eiden	eiichi	eiji	eiko	eine	
+elbe	eldon	elect	electing	elections	
+elective	elector	electors	electric	elects	
+elena	elke	ellin	elma	elves	
+elvin	elway	elwyn	entries	erving	
+eton	evens	evered	everest	evers	
+everson	ewell	ewers	ewing	exist	
+extant	exton	ezer	fa's	forza	
+goil	gurr	haber	hackles	hacks	
+hades	hadid	haft	hafts	hags	
+hahn	hake	hakes	hale	hales	
+hallman	halt	haman	hamar	hame	
+hamed	hames	hami	hamrock	hams	
+hand's	handling	handong	hands	handy	
+hania	hank	hanker	hanks	hanley	
+hanley's	hanna	hara	hare	hare's	
+hares	hark	harkey	harking	harks	
+harman	harmon	harp's	harpe	harper	
+harpies	harps	harry	hasta	haul	
+haun	have	haven	haver	havers	
+having	hawa	hawn	hawn's	haye	
+hayne	hays	he'd	he'll	he's	
+heaf	healy	hear	hearing	hearings	
+hears	heath	heaths	heaves	hedd	
+hedden	heeley	heffer	heist	hellfire	
+helling	hells	helman	help	helter	
+helton	helton's	hemp	henson	hera	
+here	herman's	herren	herri	herrin	
+herrod	herron	hetland	heza	higa	
+higley	hilo	hines	hinkle	hipp	
+hire	hires	hirt	hite	hoar	
+hocker	hockey	hocking	hocks	hoeing	
+hoes	hogan	homer	hook	hoop	
+hoot	hooter	hooters	hooting	hoots	
+hoppe	hopper's	horn	horten	hots	
+houlder	house	hout	hove	hovel	
+hovels	hoving	huey	hull	huns	
+hunt	hunted	hunting	hunts	hushed	
+huts	hutter	hutting	hyer	iberia	
+iberia's	iberian	icily	ideman	idle	
+idled	idles	idling	igman	ignore	
+ilva	ilva's	imply	inan	ince	
+indal	ingle	ingles	inking	inner	
+intra	irena	irene	isley	ivan	
+kala	kari	kase	kate	kates	
+keels	keen	keeter	kelly	kelton	
+ketch	kews	kidded	kidding	kids	
+kier	kies	kiff	kill	killed	
+killin	killing	kills	kimble	kims	
+kink	kinning	kipper	kippers	kirt	
+kits	kittles	klar	koda	koff	
+kool	kull	la's	labs	lagging	
+landers	lasher	laski	lathered	laughter	
+lava	lavery	lavish	lavishly	layer	
+ledge	ledges	leek	leeper	leet	
+leeves	leigh	lerp	lezak	lice	
+lifer	lightest	lightly	ligo	lim's	
+limed	liver	livers	loan	loan's	
+loans	locum	logan	loops	lope	
+loped	lopes	loping	lopping	losh	
+lott	low-down	low-growing	low-growth	low-speed	
+lower-than-expected	lowest	lowly	lugged	lugging	
+lugs	luis	luman	lumber	lumbered	
+lumbering	lumbers	lyke	mack	mail	
+male	mall	mall's	malley	malls	
+maltz	mart	mart's	marten	marts	
+mash	mashed	masher	mashing	mathers	
+maus	meal	mear	mears	medley	
+mell	melly	melt	melter	melting	
+meltzer	midge	mike	mile	miler	
+miles	miley	milla	milla's	millie	
+miser	mite	mithers	mitten	mitty	
+mock	mocks	moke	molder	moldering	
+molders	moley	mollar	moller	mollett	
+mooch	mooching	moot	mother	mothering	
+mothers	mouldering	mudge	mullen	myers	
+myrna	myth	nack	nagged	nagging	
+nags	nail	nail's	nails	naked	
+nape	napped	napper	napping	nappy	
+naps	natch	natcher	nearly	need	
+neer	nell	nick	nigger	niggers	
+nipped	nipping	nippy	nips	no's	
+noble	noble's	nobs	noddy	nook	
+now's	nowy	nubs	nuff	oaks	
+oaps	oberly	ochi	odium	odom	
+offer	often	oil's	olberg	omen	
+onesta	opel	oper	orkin	outer	
+pace	pace's	paced	paceman	paces	
+pacing	pago	pain	pain's	pall	
+pallone	pander	panned	panning	panos	
+pans	par's	parc	pare	pared	
+pares	pargo	paring	park	parked	
+parkes	parking	parkman	parks	parks'	
+parra	parred	pars	parse	paso	
+pate	pates	path	pats	patter	
+paulding	pawn	pawned	pawning	pawns	
+payed	peak	peaking	peaks	pear	
+pearman	pears	pecht	peck	pecks	
+pecs	peed	peer	peers	peiser	
+pell	peller	pellman	pelt	peltz	
+pence	pender	penders	pending	pens	
+pent	perm	pero	peroni	peros	
+perry	pews	peyer	pi's	pickard	
+pied	piel	piers	pies	pike	
+pike's	piker	pikes	pill	pill's	
+pillage	pillar	piller	pilling	pills	
+pina	pindler	pine	pines	pink	
+pinks	pinner	pinney	pinning	pins	
+pira	pire	pires	pits	pitting	
+pittle	pitzer	plat	platter	platters	
+poke	pokes	polin	pong	poof	
+pook	pool	pools	poon	poor	
+pore	pores	port's	portage	porter	
+ports'	pots	potted	potter	potters	
+potting	potty	pout	pouted	pouting	
+pouts	prague	prague's	prang	prat	
+pratt	pray	prayed	prayer	prayers	
+praying	prays	prig	pring	printer	
+printers	printing	proles	prouse	prout	
+punk	punky	purge	purr	purred	
+purring	putter	puttering	putters	pyro	
+quad	quads	qualls	quare	quash	
+quashed	quashing	quid	quint	quints	
+roda	spca	tabbed	table	table's	
+tabled	tables	tabling	tabs	tack	
+tacked	tacking	tacks	tag's	tage	
+tagg	tagger	taggers	tags	tais	
+takeout	takis	tale	talk	talked	
+talker	talkers	talking	talks	tall	
+taller	tallman	talon	tamas	tamberg	
+tamm	tamp	tampa	tamped	tamper	
+tamping	tan's	tang	tanger	tank	
+tans	tant	tapp	tarbuck	tare	
+tark	tarr	tarred	tarring	tarry	
+tars	tart	tarted	tarter	tarts	
+tash	tassel	tate	tate's	tater	
+tates	tatham	tatin	tatler	taub	
+tauber	taunton	tays	teak	teal	
+team	teamed	teaming	teams	teck	
+teed	teel	teen	teen's	telco	
+tell	tella	teller	tello	temp	
+temple	templer	tena	tench	tenner	
+tennis	tent	tents	tepper	tern	
+terns	terry	tevin	tick	ticker	
+ticking	ticks	tier	tiers	tiff	
+tiffs	tigers	tiles	till	tilled	
+tiller	tillie	tillman	tillman's	tills	
+tilson	tilt	tilted	tilton	tilts	
+timpson	tine	ting	tingley	tinker	
+tinkers	tint	tinting	tints	tober	
+tock	toga	tolar	toll	tolle	
+tolley	toned	toner	toney	tong	
+toning	tony	tool	tools	top's	
+topped	topper	toppers	topping	tops	
+tora	torch	tore	torey	torie	
+tories	tories'	toring	torrie	tory	
+tory's	tout	towed	towers	towing	
+trader	trafford	trahan	train	trainer	
+trainers	training	trains	trait	traits	
+tram	trang	trap	trapped	trapping	
+traps	traub	tray	trays	treed	
+tress	tresses	trick	tricker	trident	
+tring	trip	trip's	tripe	tripling	
+tripped	trippers	tripping	trips	troll	
+trolled	trolling	trolls	trom	troup	
+trout	trove	truck	trung	trunk	
+truth	trutt	tubbs	tubby	tuber	
+tubing	tubs	tuc's	tuck	tuckey	
+tuff	tuffy	tull	tumble	tumbled	
+tumbles	tumbling	tung	tupa	turgeon	
+turman	tv's	tyne	umana	umma	
+unblock	unburned	undress	unless	unlit	
+uppers	uprising	urged	urges	urging	
+usman	uzan	waddled	waddling	wags	
+wail	wain	wale	wales	wallow	
+wallowed	wallowing	wallows	wamp	wan's	
+wango	wann	wapping	ward	warm	
+warmed	warming	warms	wart	watch	
+watches	wats	watter	wayne	ways	
+wear	wearing	wears	web's	ween	
+weep	weeper	weeping	weeps	weitzer	
+well	welled	welling	wells	welter	
+wept	werve	wigs	wilken	will	
+willing	wimmer	windle	windon	wine	
+wing	wing's	winger	wingers	winging	
+wingman	wings	winson	winton	wipe	
+wiped	wipes	wiping	wire	wish	
+wished	wishes	wishing	witch	witches	
+witching	wofford	wonk	woon	word	
+wordplay	words	wore	worn	zell	
+zeman	
+
+NULL=sa
+
+balan	casa	cred	cristy	dist	
+faris	fina	fran	garin	hadi	
+kurai	lado	lads	lazar's	lemme	
+loon	loons	maki	mangan	mbas	
+meer	monsky	mora	moth	murai	
+polsky	royan	tele	tish	toru	
+triano	turd	usage	usages	vanna	
+viers	xena	
+
+NULL=sc
+
+alfaro	alpay	alper	alps	arce	
+arpino	arsdale	avenge	avenged	avenger	
+avengers	avenging	hager	haller	hama	
+hander	hardt	harlin	harping	hatten	
+haub	hauer	hayes	heid	heidegger	
+heider	heller	henley	hering	herr	
+heyer	hickel	hieber	himmel	hoch	
+hoeller	holes	holey	holl	holl's	
+hooley	hoon	hori	hott	hotz	
+houten	hudson	hugel	huss	once	
+opus	orza	rambled	rambler	ramblers	
+riba	roggin	roggin's	rubber	rubbers	
+rummage	rummages	rummaging	
+
+NULL=se
+
+a-level	aboard	afield	agate	amount	
+ashore	aside	award	aways	bald	
+bastian	bring	caucus	coda	condi	
+crest	cretin	crist	dalia	dans	
+gall	lassie's	maza	mele	mester	
+molina	nate's	renata	rota	same	
+tubal	verity	vero	villa	wage	
+
+
+NULL=semi
+
+annually	autobiographical	automatic	automatics	autonomous	
+circular	conductor	conductor's	conductors	final	
+finalist	finalists	finals	precious	private	
+retired	rural	sweet	trailer	
+
+NULL=sh
+
+aidan	akira	amateurism	ambra	arif	
+arora	easby	escape	imada	irked	
+irking	osha	owings	redder	redding	
+rivels	rubbery	
+
+NULL=si
+
+brie	chuan	debar	delight	delights	
+delong	doti	ebens	egbert	fuentes	
+menon	mitzi	monet	monson	phoned	
+phoning	sulu	
+
+NULL=sky
+
+blue	boxes	diver	divers	diving	
+dome	rocketed	rocketing	rockets	scraper	
+scrapers	walker	
+
+NULL=sp
+
+angler	angler's	ices	ilka	isak	
+ivey	ivey's	lawn	linter	readers	
+rigs	rizzo	routs	
+
+NULL=st
+
+abex	and-in	and-up	ardent	avro	
+effi	eichen	engel	eppes	epping	
+epps	ernest	ewart	illness	ranger's	
+rangers'	reicher	remick	renn	ricken	
+rife	riker	rikers	ringers	riper	
+ripper	ritch	rober	roh's	roller	
+rollers	ruan	ruble	ruggles	ruth's	
+ruts	rutted	rutting	
+
+NULL=su
+
+burban	burbs	chard	danese	garland	
+garman	khoi	matra	miko	perman	
+peroxide	sann	spender	spenders	spends	
+zhou	
+
+NULL=sub
+
+acute	assemblies	atomic	category	comittee	
+commander	committee	committee's	committees	compact	
+compacts	continent's	contracted	contracting	contractor	
+contractors	contracts	cultures	district	divide	
+dividing	division	divisions	dudes	dues	
+floor	genre	letting	machine	machine-gun	
+marine	marine's	mariner	mariners	marines	
+minimum	notebook	notebooks	orbital	paragraph	
+plot	plots	prime	standard	station	
+stations	tropical	urbanite	urbanites	urbanization	
+zero	
+
+NULL=super
+
+bike	bikes	bowl	carrier	centers	
+charger	collider	computing	conducting	conductive	
+conductivity	fast	heroes	highway	highways	
+lotto	majority	market's	markets'	minicomputers	
+montage	naturals	novas	powers'	quarry	
+regionals	saver	secret	sonics	speedway	
+star's	stardom	stars	tanker	tankers	
+unknown	
+
+NULL=t
+
+acoma	adic	aggers	agus	aiko	
+akashi	akis	albert's	alcott	alia	
+alley's	allman	alone	amils	ana's	
+angier	angled	ania	annoy	ansley	
+apia	appin	araki	arango	aras	
+archer	arik	arnaud	arps	arrant	
+ashi	ashia	aska	asman	aube	
+aunts	axed	axing	axis	earful	
+easdale	eddies	eddy	eddy's	eich	
+eicher	eichner	elam	enable	engelmann	
+engen	epee	epic	erkel	erm's	
+errington	error	errors	erse	esta	
+esters	estes	esty	ether	exel	
+extron	gower	h-hour	hacker	hacker's	
+hanh	hanks'	hat's	hatch	hatched	
+hatcher	hatcher's	hawed	hawing	heft	
+heir	heirs	heisen	heiss	hence	
+here's	here-and	here-the	hereabouts	hereafter	
+hereby	herein	heriot	herms	hern	
+heron	heuer	hiam	hier	high	
+highs	hille	hird	hirst	his'	
+hither	homa	homan	home	home's	
+hongs	hora	horn's	horne	horne's	
+horns	horny	hors	horton	hoth	
+humped	humping	hurston	iger	illich	
+imber	imes'	inkling	insley	into	
+ints	ions	issue	issues	itanium	
+ito's	izzy	oberman	obey	odai	
+oddy	odor	ogas	okay	oliver	
+onto	opic	orben	orchy	orit	
+orme	oshiro	otters	outed	outing	
+owner	oyama	ozer	racer	racers	
+rail's	railed	railhead	railing	rails	
+railways	raina	rainer	rainer's	raining	
+rajan	rammell	rampling	rance	rang	
+rani	rans	ransom	ranter	rapp	
+rapped	rapper	rappers	rapping	ratner	
+raub	raum	ravel's	raveling	ravers	
+raynor	reger	release	remain	rending	
+reva	riad	rial	rials	rias	
+ribble	rickles	ricky	rico	rifle	
+rifled	rifles	rifling	rigger	riggers	
+rina	rini	rino	rio's	rios	
+ripp	rish	roche	rodden	rolled	
+rolling	rolls	roma	romped	romping	
+ron's	rona	roop	rots	rotted	
+rotter	rouble	roubles	roughs	rouser	
+rousseau	roy's	royer	ruby	rucked	
+rucker's	rucking	rucks	rudi	rudie	
+rudy	ruffle	ruffles	rumps	rung	
+rupp	russes	rust's	rusting	ruth	
+ruxton	saban	sang	savo	se's	
+semel	seng	shabalala	sing	suzuki	
+uc's	ucan	ulin	unica	va's	
+waddle	wang	weak	weed	weeds	
+weedy	wellman	wigged	wiggs	wiggy	
+win's	wingo	wining	winkle	winkles	
+winning	wins	witchy	wits	witter	
+witty	ying	zedek	zemel	
+
+NULL=ta
+
+boos	dashi	gore	iwan	jiri	
+kaji	keshi	lega	libs	males	
+maron	mayo	mika	mraz	patio	
+pings	verna	verner	
+
+NULL=tele
+
+com's	communications'	commute	commuters	commuting	
+conferences	conferencing	flora	globe	marketer	
+marketers	mundo	novela	phone's	pictures	
+prompter	rate's	scoped	scoping	shopping	
+squash	type	visa	visa's	visual	
+workers	
+
+NULL=tr
+
+achtenberg	amiel	amway	amway's	anent	
+ashy	avail	avanti	averse	end's	
+endless	imac	ipod	udell	
+
+NULL=trans
+
+actions'	africa	america's	american's	atlantic	
+border	boundary	canada	canada's	capital	
+caucasian	cisco	european	fixing	frontier	
+lucent	oceanic	ohio	pacific	ponder	
+ponders	rapid	shipment	vaal	world's	
+
+
+NULL=un
+
+abashed	abated	abridged	acceptability	acceptable	
+acceptably	accompanied	accountability	accountable	accounted	
+accredited	accustomed	achievable	acknowledged	addressed	
+adorned	adulterated	adventurous	advertised	affiliated	
+affordable	afraid	alaska	altered	ambiguous	
+ambiguously	amended	announced	answerable	answered	
+anticipated	apologetic	apologetically	appealing	appetising	
+appetizing	appreciated	appreciative	approachable	arguable	
+arguably	armored	ashamed	assimilated	assisted	
+assuming	attainable	attended	attractive	attributed	
+audited	authorised	availability	available	availing	
+avoidable	aware	awareness	balanced	bearable	
+beatable	beaten	becoming	believable	believably	
+bending	biased	bleached	blemished	blinking	
+block	blocked	blocking	bolted	bowed	
+branded	breakable	bridled	broken	buildable	
+bundle	bundled	bundling	bureaucratic	burned	
+buttered	buttoned	cabaret	caged	cannily	
+canny	cashed	catchable	ceasing	censored	
+ceremoniously	certain	certainly	certainties	certainty	
+chain	chained	challenged	challenging	changeable	
+changed	changing	chaperoned	characteristic	characteristically	
+charismatic	charitable	charted	chartered	christian	
+circumcised	civil	civilised	civilized	clean	
+clear	clog	clogging	clothed	cluttered	
+co-operative	co-ordinated	coated	collectable	collectible	
+comfortable	comfortably	common	commonly	communicative	
+complaining	completed	complicated	comprehending	compromised	
+compromising	concealed	concern	concerned	conditional	
+conditionally	confined	congenial	conscious	consciously	
+consciousness	consolidated	constitutional	constitutionality	constitutionally	
+constrained	consummated	containable	contained	contentious	
+contested	controllable	convinced	convincing	convincingly	
+cool	cooperative	coordinated	cork	corked	
+corking	corrected	corroborated	creative	critical	
+critically	crowned	cultivated	cured	damaged	
+dated	daunted	dead	decided	declared	
+defeated	defended	definable	deliverable	delivered	
+demanding	democratic	democratically	demonstrative	dependable	
+derwent	deserved	deservedly	deserving	desirable	
+desired	detectable	detected	determined	deterred	
+diagnosed	dies	differentiated	digested	dignified	
+diluted	diminished	dimmed	diplomatic	disciplined	
+disclosed	disguised	dismayed	disputed	distinguished	
+distorted	disturbed	divided	documented	doubted	
+dramatic	dreamed	drinkable	duly	dying	
+earned	earthly	easily	economical	edifying	
+edited	educated	embarrassed	emotional	employable	
+employed	employment	encumbered	enforceable	enforced	
+enlightened	enthusiastic	enviable	equal	equaled	
+equalled	equally	equipped	equivocal	escorted	
+ethical	ethically	evenly	evenness	eventful	
+exceptional	exciting	excused	exercised	expected	
+expired	explainable	explained	exploded	exploited	
+explored	expressed	failing	fair	fair-trade	
+fairly	fairness	faithful	faltering	familiar	
+familiarity	fancied	fashionable	fashionably	fasten	
+fastened	favorable	favorably	favourable	favourably	
+fazed	feasible	feeling	fenced	fettered	
+filtered	fitness	fixed	flattering	flavored	
+flinching	flustered	fold	folded	folding	
+folds	forced	foreseeable	foreseen	forgettable	
+forgivable	forgiven	forgiving	fortunate	fortunately	
+founded	framed	freeze	freezing	friendly	
+frozen	fulfilled	fulfilling	funny	furled	
+furnished	fussy	garo	gass	geared	
+generous	gentlemanly	glamorous	glazed	glued	
+godly	gracious	grateful	greased	guaranteed	
+guarded	guided	hackneyed	hampered	happiest	
+happily	happiness	harvested	healthful	healthily	
+healthy	hedged	heeded	helpful	heralded	
+heroic	hindered	hinged	holy	hooked	
+hurried	hurt	identifiable	identified	ifil	
+imaginable	imaginative	imagined	impaired	impeachable	
+impeded	important	impressed	impressive	improved	
+indicted	informative	informed	inhabitable	inhabited	
+inhibited	initiated	inspired	inspiring	installer	
+insurable	intelligent	intelligible	intended	intentional	
+intentionally	interesting	interrupted	interruptible	invited	
+inviting	involved	involving	ionization	ionized	
+ionizing	itel	just	justifiable	justifiably	
+justified	justly	kept	kind	kindest	
+kindly	knowable	knowing	knowingly	known	
+labeled	laced	ladylike	lamented	lawful	
+lawfully	leaded	leash	leashed	leashes	
+leavened	lettered	licensed	likable	likeliest	
+likely	limited's	lined	livable	lovable	
+lovely	loving	luckiest	luckily	lucky	
+manageable	managed	mapped	marketable	marred	
+mask	masked	masking	measured	memorable	
+mentioned	mercifully	merited	metered	mindful	
+mitigated	modified	molested	monitored	moored	
+natural	naturally	necessarily	necessary	needed	
+nerve	nerves	noticeable	noticed	objectionable	
+observed	obstructed	obtainable	obtrusive	official	
+officially	opposed	original	orthodox	pack	
+packed	palatable	paralleled	pardonable	pasteurised	
+pasteurized	patriotic	peeled	persuaded	persuasive	
+perturbed	pick	picked	planned	playable	
+pleasant	pleasantly	pleasantness	pleasantries	pledged	
+plowed	plug	plugged	plugging	polished	
+polluted	popular	popularity	predictability	predictable	
+predictably	prejudiced	premeditated	prepared	pretentious	
+principled	printable	problematic	profitability	profitable	
+promising	promoted	prompted	prosecuted	protected	
+provable	proven	provoked	publicized	punished	
+quantifiable	quantified	questionable	questionably	questioned	
+questioning	quote	quoted	reachable	readable	
+ready	real	realised	realistic	realistically	
+reality	realized	reasonable	reasonably	receptive	
+recognisable	recognised	recognizable	recognized	reconciled	
+reconstructed	recorded	recoverable	redeemed	refined	
+reformed	refrigerated	regenerate	registered	rehearsed	
+reimbursed	reinforced	related	released	relenting	
+reliability	reliable	relieved	remarkable	remarked	
+remitting	remunerated	repaired	repeatable	repentant	
+reported	representative	reserved	resolved	responsive	
+responsiveness	restrained	restricted	returned	rewarded	
+rewarding	rivaled	rivalled	roasted	romantic	
+ruffled	safe	said	salable	saleable	
+salted	salvageable	sanctioned	sanitary	satisfactorily	
+satisfactory	satisfying	saturated	savory	savoury	
+scarred	scented	schooled	scientific	scramble	
+scrambled	screened	screw	screwed	screwing	
+scripted	scrupulous	scrupulously	seal	sealing	
+seasonable	seasonal	seasonally	seasoned	seat	
+seated	seating	seaworthy	secured	self-conscious	
+selfish	selfishly	selfishness	sellable	sentimental	
+serious	settles	sexy	shackled	shaken	
+shaven	shelled	showy	skilled	smiling	
+social	solicited	solvable	sophisticated	sought	
+sparing	sparingly	specified	spectacular	spoilt	
+spoken	sponsored	spool	sporting	sprayed	
+stable	steadily	steadiness	steady	sterilized	
+stinting	stoned	strung	stuck	stylish	
+subsidised	subsidized	substantiated	subtle	successful	
+successfully	sucessfully	suitability	suitable	suited	
+sullied	sung	supervised	supportable	supported	
+supportive	sure	surpassed	surprised	surprising	
+surprisingly	suspected	suspecting	sustainable	sustainably	
+swayed	sweetened	swerving	sympathetic	tainted	
+talented	tamed	tangle	tangled	tangles	
+tangling	tapped	tarnished	tenable	terman	
+tethered	thinkable	threatened	tidy	tied	
+timely	touchable	toward	traceable	tracked	
+translated	treatable	trendy	trimmed	troubled	
+true	trustworthy	truthful	truths	tucked	
+tutored	tying	typical	usual	usually	
+utilised	vaccinated	varnished	varying	veil	
+veiled	veiling	veils	verifiable	verified	
+viable	wanted	warranted	wary	washed	
+watchable	watched	wavering	welcome	welcoming	
+whipped	wholesome	willingly	willingness	winds	
+winnable	wise	wisely	witting	wittingly	
+workable	worldly	worried	worthy	wrap	
+wrapped	wrapping	wraps	yielding	zipped	
+zips	
+
+NULL=under
+
+belly	bidding	boss	brush	capitalised	
+class	clothes	currents	cuts	cutting	
+dogs	estimation	foot	garment	garments	
+gird	girding	goes	going	gone	
+grad	grads	graduate	graduates	ground	
+handed	lining	mine	mined	mines	
+mining	neath	nourished	nourishment	pants	
+perform	performance	performed	pinned	privileged	
+report	score	scored	scores	scoring	
+secretaries	secretary	secretary-general	sheriff	shirt	
+shirts	shorts	soil	stand	standing	
+standings	stands	stood	strength	studied	
+studies	studying	taker	takers	takings	
+utilisation	utilization	utilized	water	weighted	
+wood	wood's	writer	writers'	writings	
+
+
+NULL=up
+
+braid	braided	bringing	church	dike	
+gradings	holds	holstered	john	john's	
+lifted	lifters	lifting	lifts	pity	
+roar	rooted	rooting	stages	swings	
+tight	trend	
+
+NULL=v
+
+acuity	akili	almont	alois	eazy	
+eeco	enables	era's	estey	iii's	
+ince's	indicate	indicated	indicates	indicating	
+indication	irus	italy	ivica	ladislav	
+olga	olney	omits	roman's	
+
+NULL=va
+
+blais	dakin	grant's	guest	inglorious	
+lenti	lentini	lento	lukas	nous	
+porous	pour	pours	renne	slav	
+tanen	
+
+NULL=vi
+
+bist	brant	car's	gil's	glen	
+kings'	nci's	olins	pond	sited	
+siting	sits	tally	viana	viane	
+vien	vienne	yella	
+
+NULL=w
+
+adkins	afula	akil	albeck	alcott's	
+alther	alvis	alwyn	ashington	assail	
+assef	atkin	atkins	atkins'	atkinson	
+easel	easels	ebbed	ebbers	ebbing	
+ebbs	eddings	edel	edgewood	ednesday	
+eighty	ellington	ellington's	escott	essex	
+eyler	hacked	hacking	hacky	haley	
+halley	hammy	hatley	hatta	heatley	
+heaton	heeled	heeling	heels	heels'	
+higham	hinge	hinging	hiskey	hitman	
+hitt	hittle	holly	hooped	hooper	
+hoops	ickes	impey	impish	index	
+indies	innings	instead	internationals	isda	
+isely	isps	nba's	olcott	omens	
+raith	rexham	riggle	rigley	
+
+NULL=water
+
+beds	borne	colorist	colors	colour	
+colours	craft	cress	dance	ford's	
+fowl	house's	lilies	melons	proofing	
+proofs	sheds	skiers	skiing	sports	
+spout	spouts	stones	
+
+NULL=y
+
+annis	aqui	arnall	atom	barras	
+earnings	efim	egorova	ekaterinburg	evgeni	
+evgenia	evgeny	israel	itzhak	mca's	
+mcas	oung	ourself	ourselves	saye	
+
+
+a=co
+
+-head	-listed	bb's	ckles	ddled	
+gency	hn's	in's	lbaugh	lbert's	
+lborn	lden	lder	leman's	llard	
+llege	lleges	llen	llene	lley	
+lley's	llie	llies	llin	lling	
+llis	llison	llister	llude	lluded	
+lluding	lston	lter	lwyn	mado	
+mcast	merica	merica's	mex's	mity	
+mmon	mmons	mputations	niston	niston's	
+nnick	nnie's	nnotations	nsett	ntin	
+ntos	ppel	ppell	ppin	pter	
+rbet	rdis	rley	rliss	rman	
+rnel	rnell	rnett	rney	rson	
+rtes	ster	stin	unt's	unties	
+unty	verage	verages	
+
+a=e
+
+-flat	-ticket	bner	ddie	delman's	
+delstein	dema	dler	dley	ffect	
+ffected	ffecting	ffective	ffects	ffluent	
+fter	ggers	gnos	hlers	hsan	
+ileen	inar	kins	laina	lan's	
+lber	lders	ldred	ldredge	ldridge	
+ldridge's	lias	llen's	lles	llison's	
+llman	llon	llyn	lmont	lvira	
+lvis	mber	mi's	mory	ndre	
+ngel	ngel's	ngels	ngle	ngler's	
+ngstrom	nnals	nsley	pperson	pple	
+rgenbright	rland	rm's	rnie	rnie's	
+rrant	rrol	rshad	rvin	scom	
+spen	squith	ssay	ssure	sters	
+therton	thos	tsuko	vian	xton	
+
+
+a=o
+
+-level	-levels	bject	cc's	ccidental	
+dder	hhhh	hlgren	lcott	lmos	
+ltman	ltmann	mbac	mdahl	pec's	
+pposite	pted	rbit	rbiter	rbiters	
+rcadian	rchy	rden	riana	riel	
+rkin	rmes	rritt	rtis	skar	
+sman	sprey	stro	ttaway	twell	
+wning	
+
+a=su
+
+bduction	blett	bnormal	ccess	ccess'	
+ccesses	ccession	ccor	ction	ffix	
+llied	llying	ltan	ndress	ndries	
+pplicant	pplicants	pplication	pplied	pplies	
+pply	pplying	rrogate	
+
+b=br
+
+ach's	ackman	agged	agging	agman	
+anca	anded	anding	andon	andow	
+ands'	anham	anyan	asel	assey	
+awdy	awled	awling	aying	eached	
+eaches	eaching	eaded	eading	eakers	
+eaks	easts	echer	echtel	eech	
+eeches	eene	egel	en's	enda	
+endel	enes	enner	entwood	esse	
+essette	essler	ett's	ickley	iere	
+ierley	igham	ill's	indley	inkley	
+isson	itten	ock's	odie	odies	
+ogin	ogue	ogues	ookings	ookman	
+othwell	oughton	owne	owser	oyles	
+ozman	uckner	uckner's	uford	unch	
+unches	undle	unton	ushes	uss'	
+yars	
+
+b=c
+
+-minor	-minus	-plus	-word	addies	
+adger	ae's	aine	ains	airn	
+airns	aixa	aked	akes	aley	
+allas	alled	alls	alman	almer	
+amping	andido	andied	anister	anisters	
+anned	anner	anners	anning	annister	
+annock	annon	anter	antered	antering	
+antu	ar's	arat	ard's	ardin	
+ardon	ards	ardwell	ared	aretta	
+aring	arnaby	arner	arnes	arney's	
+arona	arone	arr's	arra	arre	
+arre's	arrera	arreras	arrero	arri	
+arrick	arrie	arrie's	arrier	arriers	
+arrio	arrot	arry	ars'	arta	
+artels	arter	artha	arton	arucci	
+aruso	arve	ase's	ased	aseload	
+asement	ases	ases'	asey	ashed	
+ashing	asing	asket	askets	ason	
+assin	asson	aste	astille	asting	
+at's	atch	atches	ates	ates'	
+ather	aton	attle	attle's	aucus	
+aulk	ayard	ayne	aywood	ee's	
+elinda	elli	ellini	ello	ells	
+ells'	ellucci	elts	eman	ement	
+ents	eron	erro	hasin	ia's	
+id's	inders	ites	iting	lair's	
+laire	lanked	lanking	lanton	lass'	
+leat	leats	lotted	lotting	lown	
+lues	luett	lustered	lustering	oard	
+oase	oast	oasted	oasting	oasts	
+oated	oating	obble	obbled	obbling	
+oddington	odger	oding	ody's	offin	
+offins	ogan	ohan	oldly	oldness	
+oleslaw	oley	olinas	ollard	ollards	
+olling	olt's	olton	olton's	olts	
+ombe	ombed	ombing	ombs	ombs'	
+onde	onder	ondi	ondo	oneheads	
+onga	ongo	onnell	onner	onner's	
+onnie	onnie's	onny	onwell	oody	
+ooed	ooing	ook's	ooke	ooked	
+ooker	ookers	ookie	ookies	ookin	
+ooking	ookout	ooks	ooks'	oomer	
+oors	oots	opped	opper	opping	
+ora's	ordes	ordon	ored	orella	
+ork's	orman's	orrie	orsa	osco	
+osell	osley	oston	osworth	otes	
+otta	ottle	ottrell	oughs	oulter	
+ounties	ounty	ourse	ourse's	ourses	
+outin	ovey	ovina	ow's	owden	
+owers	owie	owie's	owles	owling	
+ox's	oxed	oxes	oyle	oyle's	
+oyne	raddock	ragg	rame	ranham	
+ranston	rasher	rass	rawled	rawler	
+rawlers	rawley's	rawling	rawly	rayton	
+razier	reak	reaking	reaks	reaky	
+rean	reech	resse	resson	rewed	
+rewing	rews	rier	riers	righton	
+rine	risco	rompton	rook's	rooklyn	
+rooks'	roon	rothers	rowder	rown	
+rown's	rowne	rowned	rowner	rowning	
+rowns	ruces	ruise	ruised	ruiser	
+ruisers	ruises	ruising	rumley	runch	
+runches	ubby	ucci	uddle	uddy	
+uffed	uffing	uffs	uffy	ulled	
+ullen	uller	ulls	ummer	umming	
+unin	unning	urbs	uries	urley	
+urling	urly	urry	urson	ushman	
+ushy	ussed	ussing	uster	uster's	
+utler	utler's	utting	uttitta	utts	
+
+
+b=ch
+
+acon	affin	ailly	alin	alked	
+alking	alks	alky	allenger	allet	
+an's	andelier	anged	anging	angs	
+anning's	anos	arest	arge	arged	
+arger	arges	arging	arred	arren	
+arring	arros	artered	artering	aser	
+asin	asse	ateau	atman	atman's	
+atted	attered	attering	atting	eadle	
+eck's	eckers	eers	eers'	eery	
+eevers	enin	erney	ernov	errie	
+erry	erry's	eryl	ested	ests	
+ided	iding	illed	itty	oc's	
+oice	rister	uck's	uckie	uckle	
+uckled	uckles	uckling	ucky	ugged	
+ugging	unks	urchill	urned	urnin	
+urning	urro	urros	yron	
+
+b=d
+
+abbled	abbles	abbling	acha	agger	
+aggett	aily	akar	aldry	alian	
+amian	anbury	anish	anner's	anville	
+arker	arrel	arrs	ayan	aylon	
+eacon	eacon's	eacons	eals'	ean's	
+eane	eans	earden	earer	eaver	
+eaver's	ecca	ecker's	ecor	eeper	
+eeps	eer's	ees'	eets	eezer	
+ejesus	elker	ellinger	elong	ench	
+enham	enice	enko	ennett	enning	
+ennison	enny's	enon	enson's	ergan	
+erryman	erstler	erwyn	ickering	iddy	
+ikes	illingham	illman	illon	illow	
+ills'	ilson	innie	ittman	obbe	
+oers	ogged	ogging	oggy	oing	
+oling	ollan	ollywood	oner	onington	
+onta	oogie	oorman	oozy	oren's	
+orger	oric	oris	oron	orough	
+orsch	orst	oulton	owel	owels	
+owler	oyens	ravo	ravo's	rawn	
+razen	readed	reck	rennan	resser	
+rewery	reyer	reyer's	rogin	rought	
+ruce	rumm	ucks'	uffer	uffers	
+ump's	umped	umper	umpers	umping	
+umpy	unce	undy	unked	unker	
+unkers	unking	unnet	uran	urden	
+uren	urness	uron	urrell	urrell's	
+urst	urum	usan	ust-up	usters	
+utch	utcher	utcher's	utton	yers	
+
+
+b=f
+
+agel	aits	akery	anjul	anta	
+arber	arber's	arish	arlow	arnum	
+asted	asten	atboy	athers	attened	
+attening	attier	ausch	eira	eith	
+ellas	ellini's	ellow	ellow's	ellows	
+elsen	ender's	enno	enton's	erber	
+ergeson	eria	erner	erns	ertel	
+ettered	etters	ickle	ierce	iery	
+iggie	ilion	ille	illet	illeted	
+illets	illy's	inding	indings	inds	
+inney	irkin	irth	ischel	ischoff	
+itter	itters	lamed	lames	laming	
+lanks	lared	lares	laring	latt	
+lecha	lemish	lier	lighty	linders	
+loat	loated	loating	lood	lood's	
+looded	loods	loor	lowers'	lowing	
+luffed	lume	lurry	lushed	lushes	
+lushing	ly's	obbed	ogey	ogies	
+olar	olding	olger	olick	olles	
+ollini	ooted	ooty	oppish	orage	
+oreman	orer	orge	orgers	orges	
+ortier	ortin	osse	ouchard	ound	
+ounded	ounder	ounding	ouquet	owler's	
+oyer	rackman	rady	ramson	ranca	
+rayed	raying	razzle	reeze	reezes	
+reezing	remer	rewer	riar	righten	
+rightened	rightening	rightens	risson	rith	
+rito	ritto	rodo	udge	udged	
+udging	uhrmann	umbled	umbles	umbling	
+unds	unnell	unnies	unny	urby	
+urnish	urnished	urnishing	urr's	urrow	
+urrowed	urrowing	urrows	ussell	uzzy	
+yrom	
+
+b=g
+
+aby's	ahler	aines	alkin	allinger	
+allou	amba	ambino	ambol	amut	
+anishes	arfield	arnet	arnett's	arnier	
+arratt	arret	arrett	arrett's	arth's	
+ator	ayfield	aynes	azan	azer	
+ear's	eary	ehring	ehringer	eier	
+elding	elding's	ellhorn	enet	erard	
+ergen's	eringer	ermans	erms	errard	
+erson	ersten	erth	ertie	etting	
+etty's	ibbins	ibby	iddings	ien's	
+iffen	iggles	igot	ilby	illes	
+illiard	illick	illie	irder	irders	
+irding	irds	irling	ivens	lackens	
+lade	lades	lasberg	lase	lazed	
+lazes	leacher	leed	lenda	lendon	
+litz	oat's	oater	obbi	odine	
+odkin	odley	oeken	oetsch	oggle	
+oggles	oland	oldin	ongs	onzo	
+oonies	orda	oring	otch	otham	
+otti	oulet	racey	raden	rady's	
+raham	ramley	randee	randes	randly	
+rant's	ranton	rassy	ratton	ratton's	
+rauer	ravely	raves'	ravest	reen	
+reen's	reene	retz	reuel	rief	
+riefers	riefs	rill's	rillo	rimley	
+rindle	ristle	rits	ritten	roome	
+runer	uild	uilder	uilders	uilds	
+uilt	ullet	ullett	ullies	ullion	
+ummed	undy's	urnett	urney	utted	
+uy's	uyer	
+
+b=h
+
+acked	ackers	acking	adly	alts	
+ammer	andstand	ang-up	ank's	ankers	
+ankies	anks'	arbour's	arford	arked	
+arlow's	arn's	arrick's	arris'	arry's	
+artle	artley	artz	aseman	ashers	
+assett	asso	atley	atter's	augh	
+aute	ayles	ayley	ci's	eard	
+eard's	eart	eaven	eckler	eckman's	
+elen	elford	elge	elper	elzer	
+enninger	enzie	erbers	erge	erger	
+erta	erwick	ess'	ettie	iked	
+iker	iker's	ikers	ikers'	iking	
+ilal	illington	inges	ittner	oarded	
+oarders	oarding	oardings	oards	obbies	
+obby	obos	oesch	offa	olland	
+olster	olstered	olsters	oned	oning	
+onking	ooker's	oole	ormann	oss'	
+ossa	ounds	ovis	owden's	owe's	
+owled	owlin	sn's	ubble	ubble's	
+ud's	udgens	uell	uffington	ufford	
+uggers	uggies	uggy	ulking	ull's	
+umbler	unched	unching	undt	unkered	
+unkering	urdman	urt's	urts	urtt	
+uskers	ussey	ustle	ustled	ustles	
+ustling	yatt	yatt's	yler	ynes	
+
+
+b=j
+
+ack's	acked-up	acot	agels	agger's	
+ailers	anachowski	avier	eanfield	eanie	
+eepers	ehan	ellies	enest	ergens	
+erks	essie's	esting	et's	imbo	
+imbo's	ob's	obbing	olted	olting	
+onge	oost	ourdain	oy's	oyce	
+ozic	udd's	udds	unco	ungle	
+ungled	ungles	uried	
+
+b=k
+
+aaba	aratz	arnette	artell	asler	
+astrup	athe	eane's	eeler	eeping	
+eeton	ehar	eita	eitel	eker	
+elch	ellet	ellum	endall	enji	
+ennet	ennington	entz	enyon	erlin	
+erndt	ernes	erridge	errigan	eswick	
+ettering	ettles	fi's	idder	idder's	
+idding	idwell	iehl's	illie's	illion	
+inion	irch	irkby	irtley	ishton	
+itchin	lm's	lunder	oger	onin	
+osak	oskie	otkin	rause	ringle	
+ristol	ristol's	ubis	uehler	ugler	
+utner	uttner	
+
+b=l
+
+achman	aird's	akas	akers'	aldy	
+andini	armore	asix	athes	attin	
+auder	aumann	each's	eaked	eaman	
+eaned	eaning	eant	eavers	eavis	
+edford	eeson	ento	estor	ethal	
+etts	eveled	evis	eysen	iederman	
+inford	obby's	ochner	ogie	ombard	
+ondra	oomer's	ortel	osses	osses'	
+otts	ouie	owery	owman	oyd's	
+ubber	uckey	umpkin	umpkins	ungs	
+unney	urgan	urks	utte	
+
+b=m
+
+achar	addest	adge	adness	aggio	
+aggy	ahar	ahre	aize	aker's	
+akri	alcom	aldonado	allets	aloney	
+althus	altin	anana	anias	annings	
+anque	arcella	arcelo	arkers	arkley	
+aroni	arque	arrack	arsa	arwick	
+asham	asque	asques	ass'	aths	
+atra	atson	atus	ayport	azin	
+e-and	eacham	eall	eaty	edlam	
+elcher	elies	ellowed	ellowing	elnick	
+elted	elting	ercy	erger's	erigan	
+erkowitz	erlin's	ernick	ersin	ertens	
+erton	ette	eyers	ikel	iliary	
+ilked	ilking	illion-a-year	illion-and	illion-barrel	
+illion-dollar	illion-franc	illion-mark	illion-plus	illion-pound	
+illion-the	illion-to	illion-year-old	illionaire	illionaire's	
+illionaires	illions	illionth	illionths	inkow	
+innie's	oehringer	oise	onet	onnet	
+oorish	oreland	oros	orrow	oseman	
+osque	osson	ossy	othering	ottled	
+ourn	ourne	outon	oyer's	oyes	
+oylan	uckler	uddies	ueller's	ug's	
+uggs	ugsy	um's	unch's	unich	
+urrill	uses'	
+
+b=n
+
+achmann	adal	afta	ahai	akken	
+anking	asal	asir	auman	ava's	
+aylor's	bc's	bc-tv	eale	eeman	
+evell	icol	ieman	oone	oorda	
+orek	otched	otching	ystrom	
+
+b=p
+
+adgett	adilla	adillo	ailin	akula	
+alance	aled	aler	anda's	andit	
+anzer	arents	arham	arker's	arlett	
+arnevik	arsky	artee	arton's	ath's	
+athetic	atna	ayless	eachy	ear-shaped	
+eate	eattie	eckham	enn's	erea	
+erle's	ernice	ettis	ickford	iffle	
+iggies	ilas	illows	illowy	inned	
+itzer	ixel	laschke	lasters	lotter	
+lundered	lundering	lunkett	oland's	ond's	
+onds	onzi	oras	ounced	ouncing	
+owers'	owis	ozos	ozzo	rechtel	
+revin	ricked	rion	rize	rowse	
+runing	runo	ryce	udding	uffa	
+urbeck	urdon	urnell	ush's	ushkin	
+yres	
+
+b=r
+
+abbit	abbitt	abbo	abies	affle	
+affled	affles	affling	anked	arely	
+attled	attler	attlers	attles	attling	
+eams	eckon	eckoned	eckoning	eckons	
+edding	edford's	eefs	efit	efits	
+efitting	egala	elied	elief	eliefs	
+elieve	elieved	eliever	elievers	elieves	
+elieving	elying	encher	equest	equests	
+erating	eset	esets	esetting	eside	
+esides	evill	iggio	iggs'	igler	
+imini	isque	occa	oeck	oehm	
+ohrer	ookie's	oom's	oosted	ooster	
+ooster's	oosters	oosting	oosts	oots'	
+ootsy	oselli	oss's	ossi	ossi's	
+ostock	oswell	ourke	owling's	ozell	
+uffalo	uffo	umpus	unyan	usch	
+usse	uxton	
+
+b=s
+
+abar	abic	abri	ackcloth	ackings	
+alah	alata	alerno	alkind	alsa	
+alzer	amford	assoon	ce's	eale's	
+eamed	eatings	eeped	egun	eige	
+eigel	elsky	emis	ennett's	erra	
+erra's	haer	hatt	iderman	iskind	
+itar	lacken	lackened	lackening	lacker	
+lackman	lackness	lathering	leep	leeping	
+leeps	linky	lurred	lurring	lurs	
+np's	oar's	obek	odhi	ogen	
+ol's	omber	onar	onnets	onnett	
+oothe	org's	orrows	oundless	ouza	
+uffered	ui's	ulked	ulky	ullied	
+ullying	unia	unny's	
+
+b=st
+
+aglin	artles	asis	atus'	eaming	
+ernbach	ingley	ites'	ojan	oneham	
+randed	randing	ratten	reaker	reakers	
+reakin	ricklin	roder	roke	roking	
+ubbly	urgess	urridge	
+
+b=t
+
+abak	ake-off	anker's	arbell	armac	
+ayside	eenie	erezin	est's	ethers	
+ihar	omba	onelli	onino	ooth	
+orgeson	orsos	ossed	ouvier	oys'	
+rabant	racts	rains'	ravado	rent's	
+rewin	ribes	ribes'	riton	riton's	
+ritons	ritons'	ritton	rophy	rotman	
+rott	roughton	uchman	ulloch	ully's	
+urk's	urks'	urlington	urn-out	urned-out	
+urner	urners	urnham	urnout	urnouts	
+yner	
+
+b=tr
+
+ackless	acks'	ackside	eatable	eeby	
+enches	enching	iathlete	iathlon	ible	
+iceps	icycle	icycles	iennial	ilateral	
+ilingual	undled	undles	undling	
+
+b=v
+
+alderrama	aldivieso	alladares	allance	anished	
+anishing	arela	aseline	asile	elasco	
+ernal	ikram	lasi	oucher	ouchers	
+ulgarian	uono	
+
+b=w
+
+aited	aiting	aitz	aldemar	alkman	
+all-size	all-sized	allack	alloch	alloon	
+alloons	alser	arrens	athen	attenberg	
+atts	augh's	earable	earers	ebber	
+edded	ell-shaped	ellville	erke	esson's	
+idders	olch	reath	reathed	reaths	
+ren's	
+
+ba=be
+
+ck's	cker's	ckers	ckley	ckman	
+gged	gging	gley	ilin	lding	
+lfour	lfour's	ll's	llas	llboy	
+llet	llinger	llot	lser	lzer	
+ndana	nded	nham	rbera	rbers	
+rend	rens	retta	rger	rggren	
+rgmann	rkey	rkley	rnard	rnard's	
+rnardo	rner	rnes	rnhardt	rnier	
+rquist	rrie	rring	rrios	rry's	
+rt's	rtel	rtelson	rtha	rton	
+rtram	rwick	sson	sted	th's	
+thers	ttenberg	tter	ttered	ttering	
+tters	ttie	tting	ttles	xley	
+
+
+br=l
+
+abant	acey	acher	acing	ady's	
+aham	akeman	ampton	amson	ande	
+andman	ansford	anston	aswell	augher	
+auner	awler	azier	eakage	eaking	
+eaky	eather	eathers	echt	eece	
+eeks	emen	evity	ewin	ewis	
+iana	ianna	ianne	icked	iefer	
+ight	ight's	ight-colored	ight-green	ighten	
+ightened	ightening	ightens	ighter	ightest	
+ightly	ightman	ightness	ights	illo	
+ink's	inson	inton	ister	ittle	
+itton	itton's	oach	oader	oads	
+ockie	ocklin	ocksmith	ockton	oken	
+oker	ondell	owder	ubeck	uce's	
+uder	uise	umley	unetta	unner	
+uria	uton	yden	ydon	
+
+br=t
+
+ackett	aggart	anney	assy	awny	
+een's	empt	endon	ener	ickell	
+idal	ide's	idies	iers	inker	
+itian	itian's	obeck	occo	omine	
+oome	own's	owne's	ownie	ownies	
+ownley	owns'	ownson	ownsville	unell	
+uner	uning	utus	yson	yson's	
+
+
+c=ch
+
+abot	abrol	adwell	aisson	amomile	
+amp's	ampaign	ampion	ampion's	amplin	
+ampus	ancel	ancer	anin	annell	
+anute	apek	apel	apel's	apelle	
+arbonneau	arisma	arlton	arlton's	arny	
+arpentier	arter's	arteris	artier	arting	
+assis	avan	erny	okes	oking	
+ollet	omps	opra	ording	ords	
+orus	retin	riss	rissy	risti	
+ristian	ristiana	ristiani	ristie	ristin	
+ristina	risto	ristophe	risty	rystal	
+
+
+c=d
+
+amron	anby	ancer's	ancers	andies	
+arling	arling's	arman's	arrell	arvel	
+aryl	ashin	atron	awood	elis	
+emented	iller's	ivvy	obbs	olby	
+oleman	ollar	ollars	ollies	ollison	
+onkey	onlan	onley	onlon	onned	
+onnelly	onnelly's	onor	onte	ooley's	
+oonan	oors'	orado	orian	orking	
+orks	orms	orn's	orset	ozens	
+raft's	raftsman	raftsmanship	raftsmen	rafty	
+reamed	reaminess	reaming	reamy	ressy	
+rew's	rewe	rinan	ropped	ropping	
+rops	ryer	ulling	unnigan	uomo	
+urable	urrant	
+
+c=f
+
+ablevision	ablevision's	all-back	all-off	allback	
+amille	anmore	araway	ashion	asts	
+atalist	athi	athy	bi's	eline	
+ernan	erus	etes	etus	laim	
+lattered	lattering	latters	lawed	linch	
+linched	linches	linching	lubbed	lubs	
+lunking	lunky	lutter	luttered	luttering	
+lutters	nn's	oale	oley's	olino	
+ollen	ollette	olmar	olston	oote	
+ordell	orked	ornes	orti	ossey	
+ount	owley	ranky	reaked	reetown	
+reon	ringe	ringes	ullerton	ulminated	
+ulminating	ults	urio	urious	uriously	
+urled	urrier	
+
+c=g
+
+-major	abin	able's	abled	abler	
+ables	achet	aetano	affe	affey	
+affrey	aiman	ala's	ale's	alef	
+allery	alloway's	allup	amco	amel	
+amper	anes	annon's	ansler	ao's	
+aped	aray	arbo	aren	arey	
+arin	arnock	arrard	arrey	arrigan	
+arrott	arters	artland	artman	arver	
+arvey	arvey's	ary's	aspar	asper	
+assman	atlin	atto	atton	ause	
+avil	avin	ellar	erda	handi	
+illey	indi	lamor	lamorous	lancy	
+lancy's	lass's	lasswork	lassy	laus'	
+leaners	lued	luttons	oals	obain	
+obbles	oble	oggin	oins	oldwater	
+olic	ollis	omes	onchar	ondry	
+oober	ooney	oons	op's	oram	
+orby	ordis	ordons	orey	oria	
+orie	orky	orney	orse	osta	
+ottman	oulston	owan	rabbed	rabbers	
+rabbing	rabs	rafton	raig	ranberry	
+rannies	ranny	rater	razes	reaney	
+rease	reased	reases	reasing	reasy	
+reditor	rete	rimes'	rimson	risanti	
+ritters	roat	roats	roce	ropper	
+rosfield	rossed	rosses	rossing	rotty	
+rowl	ruden	ruel	ulley	ushing	
+utty	
+
+c=h
+
+abana	achette	adden	alf's	alf-length	
+allwood	amby	amden	ammack	andle	
+andles	andyman	annibal	ardboard	arder	
+arding	arel	arle	arless	arlin's	
+arped	arradine	arried	arrier's	arries	
+arrington's	arrying	askie	assell	atcher's	
+atching	aters	aughey	ausa	awthorn	
+ellos	erts	oarse	oarseness	oaxes	
+ocke	ockney	offman	offman's	oggan	
+olborn	olford	olladay	ollier	ollings	
+ollister	olmes	omely	oming	onked	
+ooped	ooper	ooper's	ooperman	oover	
+ope's	oppin	orned	orner	ornet	
+orning	orns	orny	orrigan	ossack	
+ostas	osted	osting	osts	osts'	
+overed	overing	oward's	ubie	uddled	
+uddles	uddling	urdle	urdled	urdles	
+urdling	urls	urried	urries	urrying	
+urtin	
+
+c=k
+
+adre	aitlin	alifornia	alvert	anaan	
+anani	antor	antor's	apital	aplan	
+aplan's	aramanlis	areen	arl's	arlsson	
+arol	arolyn	arsten	assar	atarina	
+aterina	atharine	atherine	atherine's	athie	
+athleen	athryn	athy's	atrine	avalier	
+avanagh	avanaugh	elso	fc's	imco	
+lansman	lansmen	lausen	lement	lerk	
+lerk's	liff	ohrs	olodny	olter	
+ombat	omex	ommunist	ondos	onrad	
+onstantin	onstantinos	ontos	oontz	oppel	
+oppell	orea's	ornell	ostner	otler	
+ountry	ovell	owal	rabbe	razy	
+reditanstalt	reep	reme	respi	resta	
+rispy	ristal	roft	ronenberg	ronos	
+rusoe	uito	ullberg	ulpa	ultura	
+ulture	umin	urds	urtis	ustom	
+yber	
+
+c=l
+
+afferty	anty	apps	arded	arson's	
+ease's	ebrun	oach's	oben	ock-up	
+oco's	oggins	ohse	oire	ondon	
+ondon's	onger	ongest	ongo's	ookouts	
+oretta	orri	orries	oughlin	ousy	
+oved	over's	ured	ycos	
+
+c=m
+
+abey	acao	adigan	adres	ahal	
+aine's	andela	andelas	anion	annes'	
+anoa	antel	aples	aputo	aracas	
+arer	arib	arino	arlyn	armel	
+arquest	arriage	arriages	aryville	asino	
+askey	ason's	assaro	atch-up	atchup	
+ementos	iera	inelli	iro's	odification	
+odified	odifies	odify	odifying	ohon	
+olina	olony	omma	ommies	onahan	
+onroe	onroy	onsey	onte's	ontel	
+onti	orals	orelli	orelli's	orita	
+orning's	osier	ossman	ostar	ostly	
+oulson	ounted	ounties'	ounting	ounts	
+outhy	ozart	ta's	ullen's	ulligan	
+ullin	urren	urrin	usick	ustard	
+ustards	utely	ystic	
+
+c=n
+
+agle	airn's	aveh	ellist	evaer	
+fl's	icely	itric	o-decision	ote's	
+otman	ottage	ottingham	ovas	ovello	
+ovia	ueva	uevas	ursed	urses	
+ursing	
+
+c=p
+
+alais	almed	ampas	anam	anela	
+annella	anola	anova	apen	apon	
+arole	arolee	aroling	arrillo	arrots	
+artridge	artridges	asillas	astel	asto	
+astors	atchy	aused	auses	ausing	
+bs's	emex	endant	erplex	ertain	
+hase	hased	hases	hasing	helan	
+hillies	iccone	laque	layhouse	lods	
+luses	oached	oaching	olice	olonia	
+ombo	ontin	oppa	opulate	opulation	
+orker	ortland	ostings	otter's	oupon	
+reate	rescott	rime's	rimped	rimping	
+uesta	ullum	ulver	urves	ut-back	
+ut-down	utback	
+
+c=r
+
+abin's	abins	apacious	apacity	aptor	
+aptors	aptors'	apture	aptures	astelli	
+ats'	eding	enter's	enters'	hino's	
+hinos	oaches	obb's	ochin	ockettes	
+ockfield	ockwell	ocky	ollins'	ollinson	
+omare	omley	ookery	osetti	ossin	
+oughing	owan's	
+
+c=s
+
+-class	abotage	afes	aille	alif	
+alve	alved	alver	alvi	alving	
+alvo	amara	ammie	ammy	amra	
+anada	andis	andler	andor	anny	
+anter's	anto	apped	apper	apping	
+arina	arlos	atcher	ato's	ave's	
+aved	aves	aving	ecchi	edillo	
+edrick	eles	elina	ellars	ensor's	
+ensors	ensus	enta	eo's	haiken	
+haikin	halet	hallah	handa	handon	
+hange	hante	hanter	happell	haran	
+harleen	harlene	haron	harron	haryn	
+hattered	hattering	hatto	heboygan	heep	
+heers	heri	herif	herilyn	hernoff	
+herrie	herry	herry's	heryl	hetty	
+hinn's	hins	hip's	hipboard	hipman	
+hipped	hippers	hipping	hips'	hiyah	
+hop's	hore	hores	howed	howing	
+hubb	hucked	hucking	hucks	hute	
+iano	iena	ierra	ifuentes	illa	
+imons	ingular	iriaco	isco	isneros	
+issy	ited	lammed	lams	langing	
+layton's	leeve	licker	linging	lings	
+lip-on	lippers	lipping	lobber	lobbering	
+loths	lunk	obell	obre	ocked	
+ocking	ocks	ocom	olas	oler	
+olley's	olon	omers	omme	onoco	
+opes	orbet	orgi	orina	orry	
+oup's	oupe	oups	oward	owell	
+s-div	ubic	uong	urrey	urrey's	
+urtain	uter	utter's	
+
+c=st
+
+allings	ar-free	ar-making	arved	arves	
+arving	atic	okely	oker's	oller's	
+oppage	radling	rappy	rathie	unningly	
+upid	upidity	
+
+c=t
+
+abling	ackle	ackling	ahir	aira	
+aleb	aliban	amera	ammi	ampa	
+ampa's	ampers	anneries	annery	anyon	
+ape's	aper	apering	apers	aplin	
+ar-like	ardiff	arleton	arom	arted	
+arver's	aryn	assel	assels	assie	
+astes	astings	aught	avern	averns	
+elex	eradyne	errell	hant	hapa	
+hemed	hickened	hickens	hief	hief's	
+hink	hinks	horley	iara	ichy	
+oad's	oady	oaster	oasters	obin	
+oddle	oddled	oddling	offee	olbert	
+ollett	olley	ollin	olman	oltec	
+om's	omas	omey	omic	ommie	
+onal	ooled	ooling	ools	ootie	
+opley	oppers	opps	ops'	orell	
+oronado	orrado	orte	ortes	ory's	
+osca	oscan	otten's	ouched	ouches	
+ouching	oughed	owards	owered	owering	
+owle	rack's	racker	rackers	rane	
+rashing	reated	reating	roquet	rumpets	
+runk	ryin	rying	ubes	uring	
+urley's	uthill	wa's	
+
+c=w
+
+addell	aldron	algrove	allace	aller's	
+aned	aning	ar-related	ariso	asden	
+ash-out	astell	atchable	atchers	atchword	
+atered	atering	averly	heedle	hile	
+hiles	homp	obblers	oburn	omack	
+ooler	oolly	ordless	ould've	oulda	
+ouldn't	rinkle	rinkled	rinkles	rinkling	
+rinkly	ussler	
+
+c=z
+
+abala	ampese	anetti	anuck	edillo's	
+elaya	enith	epeda	hang's	ukor	
+uppa	
+
+ch=k
+
+a-ching	alos	ang's	apala	aput	
+eever	eynes	iang	ile's	illin	
+ippers	rista	risten	ristensen	ristiansen	
+ristine	ristof	ristoff	untz	
+
+co=e
+
+dger	dification	difying	ggan	ldest	
+ller's	llett	llie's	llingwood	lton's	
+lwell	mbed	mden	nable	nclave	
+nclaves	njoined	nseco	nsign	ntrails	
+nvoy	nvoys	pping	tten	ve's	
+wers	
+
+co=i
+
+ke's	lford	llusion	llusive	minco	
+mmune	mmunities	mmunity	mpact	mpacted	
+mpacting	mpacts	mpasses	mpel	mpelled	
+mpelling	mpels	mplement	mplemented	mplementing	
+mplements	mplicate	mplicated	mplicates	mplicating	
+mplication	mplications	mplicit	mplied	mplies	
+mply	mplying	mport	mpose	mposed	
+mposes	mposing	mposition	mpositions	mpost	
+mpound	mpounded	mpounding	mpress	mpressed	
+mpresses	mpressing	mpression	mpulsive	mpulsively	
+mputation	mpute	mputed	mrie	nception	
+nclude	ncluded	ncludes	ncluding	nclusion	
+nclusions	nclusive	ncur	ncurred	ncurring	
+ncurs	nder	ndie	ndolence	nduct	
+nducted	nfection	nfections	nfer	nference	
+nferences	nferred	nferring	nfers	nflate	
+nflation	nflict	nflicted	nflicting	nflicts	
+nfluence	nform	nformation	nformed	nforming	
+nforms	nfuse	nfused	nfuses	nfusing	
+nfusion	nfusions	nger	ngest	ngested	
+ngestion	njuction	njunction	njure	njured	
+njures	njuring	nked	nkling	nman	
+nner	nning	nquests	nscription	nsist	
+nsisted	nsistent	nsistently	nsisting	nsists	
+nsoles	nspire	nspired	nspires	nspiring	
+nstance	nstant	nstantly	nstants	nstitutes	
+nstitution's	nstitutional	nstitutionalisation	nstitutionally	nstitutions	
+nstructors	nstructors'	nsular	nsulate	nsulates	
+nsulation	nsult	nsulted	nsulting	nsults	
+ntact	ntel	ntel's	ntend	ntended	
+ntending	ntends	ntent	ntention	ntentions	
+ntents	ntra	nvent	nvention	nventions	
+nvents	nverse	nversely	nversions	nverts	
+nvocation	ra's	rell	rked	rking	
+rwin	rwin's	slet	sley	ssey	
+
+
+co=reco
+
+iled	iling	llect	llects	mbine	
+mmit	rder	rding	unted	unting	
+unts	urse	vered	vering	
+
+con=in
+
+curred	curring	curs	ducted	fection	
+fections	firm	flate	flation	flict	
+flicted	flicting	flicts	fluence	gested	
+gestion	jured	quest	sider	siders	
+sisted	sistent	sistently	sisting	sists	
+spired	spiring	stantly	stants	stitution	
+stitutions	struct	structed	structing	struction	
+structions	structive	structs	sulate	sulates	
+sulation	sult	sulted	sulting	sults	
+tel's	tentions	vention	ventions	versely	
+version	vert	verted	
+
+con=pro
+
+cessional	cessions	cordia	cordia's	ductivity	
+fesses	fessing	fession	fessional	fessionals	
+fessions	fessor	gress'	gresses	testant	
+testants	vinces	
+
+con=re
+
+ceivable	cessionary	cord's	currence	ferees	
+ferencing	finement	formist	formists	ifer	
+spirator	spirators	straint	straints	stricted	
+stricting	striction	strictions	strictor	stricts	
+sultant	tainers	tinue	versing	verting	
+vulsion	
+
+cr=l
+
+adle	adled	adles	adling	amond	
+andell	ane's	aner	anky	awford	
+azily	aziness	eaney	eche	eighton	
+eighton's	emaster	ew's	ewman	imped	
+imping	iner	isanti	itchfield	ockett	
+ocus	ofting	ofton	ofts	owther	
+uella	umbly	
+
+d=f
+
+airies	airy's	ame's	ancy	ante's	
+arrah	arrell's	asani	assler	avor	
+awned	awns	ecal	eeding	emur	
+eral	iction	iddly	ilbert	ilip	
+ined	ining	iscus	ish's	ished	
+ishes	ishing	ishman	ishy	isk's	
+ixit	oes'	ong's	orma	ormer	
+orsey	orward	raught	rench	renches	
+resher	rills	ryers	ueled	ueling	
+uels	ugard	ullest	ullness	urcal	
+
+
+d=g
+
+abbing	alal	anske	avitt	ayle	
+ebbie	ebre	eere	enger	enial	
+enies	enis	enser	eter	ijon	
+illen	immick	ina's	inette	inny	
+iscard	iulio	iving	odson	oering	
+oings	olly's	onella	onen	oodling	
+rifter	rifters	rilled	rilling	rizzled	
+rizzly	uffey	umbo	unga	unn's	
+unned	unson	
+
+d=h
+
+agens	ammam	anae	anns	anson's	
+argis	arken	arkens	arkness	arned	
+artford	asan	ata's	aunted	aunting	
+auntingly	awes	awkins	awkins'	ead-on	
+eadline	eadlines	eadlock	ealed	ealer	
+ealers	ealey	eath's	eeded	elene	
+elmed	elsing	emming	emond	enman	
+etrick	ewitt	exter	ickerson	ickey's	
+ickson	illard	illinger	insdale	ippie	
+ippy	issed	isses	ived	ixson	
+odge	odge's	odges	odgson	og's	
+ogg's	ogwood	oled	ollas	omed	
+omos	onors	opson	osed	osing	
+otel	ottie	ouri	owry	owson	
+uarte	udek	udley	ulce	umpty	
+unan	usky	utton's	
+
+d=l
+
+'amour	-shaped	akota	ance's	anced	
+ancers'	ances	ancing	anese	anie	
+arwin	atas	auber	aughter	avar	
+awson's	ay-in	ay-out	eaden	eann	
+eanne	ebow	ecaro	eeming	eering	
+egree	eitch	eming	emon	emons	
+emont	emos	emurs	essens	ettori	
+eval	evein	evine	evine's	evitt	
+evon	iane	iener	ietz	igue	
+imas	imed	ineen	iner's	iners	
+inkin	ion's	ipstick	oan's	odged	
+odging	orre	ot's	ublin	ubowski	
+ucey	uckett	uke's	ukes	ulac	
+umas	uper	uque	urex	ustman	
+ynda	
+
+d=m
+
+ahan	aher	aland	ango	anisco	
+anny's	anzi	arci	arcie	arcy	
+arek	ario	arion	arius	ariusz	
+arkman	arko	arya	ashti	assu	
+aucher	aynard	ayron	eana	edicate	
+edicated	edication	edications	ehli	ekel	
+el's	elange	elee	elillo	enzel	
+erricks	eters	etra	ickens	illard's	
+inard	iners'	ini's	inos	ischarging	
+iscounted	isinformation	isplace	isplaced	isplacing	
+isplayed	isplays	istress	istresses	istrust	
+istrusted	istrustful	istrusts	isuse	isused	
+ithers	ohrmann	onell	onkey's	onkeys	
+oor's	opey	oran's	oretti	orrell's	
+orris	ozes	ummies	unford	unitz	
+
+
+d=n
+
+abbed	ahrin	avies	avstar	avy's	
+earest	emetz	eville	ewberry	ixon's	
+ixons	o-good	obler	olan's	ominate	
+ominated	ominates	ominating	omination	ominator	
+onato	oodle	oreen	oted	oting	
+uart	uffield	uked	uking	umbed	
+umbing	unno	ylex	
+
+d=p
+
+addy's	anko	arke	arkening	armet	
+artington	atek	ayton's	earman	ecked	
+ecking	ei's	ele's	eng's	enzer	
+ervis	harma	ickens'	ickens's	ictionary	
+ieter	ilate	ilfer	imple	imples	
+inero	inon	isano	ivot	ivots	
+ixie	olce	ons'	otty	ress'	
+ressed	resser's	resses	ressing	ressings	
+riest	rive's	uma's	uree	urer	
+uritz	ursley	
+
+d=r
+
+-ala	-ariz	-ark	-calif	-colo	
+-conn	-del	-fla	-fresno	-garden	
+-huntington	-ill	-ind	-iowa	-kan	
+-long	-maine	-mass	-mich	-minn	
+-miss	-mont	-neb	-nev	-ohio	
+-okla	-ore	-riverside	-sacramento	-san	
+-santa	-tenn	-tex	-texas	-wash	
+-whittier	-wis	abah	abble	af's	
+agan	aley's	amage	ammed	amming	
+amon's	amone	ams'	ance	anco	
+anford	anks	ate's	ated	ating	
+auch	awley	awson	ay's	aymond	
+ayna	ays'	azed	e-emphasize	e-emphasized	
+e-regulation	ea's	eactivate	eactivated	eactivation	
+ead's	eader	eal's	eals	earing	
+ebar	ebate	ebated	ebates	ebating	
+ebut	ebuts	ecant	ecanted	ecanting	
+eceive	eceived	eceiver	eceives	eceiving	
+ecent	ecently	eception	eceptions	eceptive	
+ecertification	ecertified	echy	eclaim	eclaimed	
+eclaiming	eclaims	eclamation	eclassification	eclassified	
+eclassify	eclassifying	ecline	eclined	ecliners	
+eclines	eclining	ecommissioned	econstruct	econstructed	
+econstructing	econstruction	econstructionist	econstructs	edeaux	
+edman	edmon	educe	educed	educing	
+eductions	eductive	eeds	eena	efer	
+eference	eferential	eferral	eferrals	eferred	
+eferring	efers	efile	efiled	efiling	
+efine	efined	efines	efining	eflect	
+eflected	eflecting	eflection	eflections	eflector	
+eflects	eforest	eforestation	eforested	eform	
+eformation	eformed	efuse	efused	efuses	
+efusing	egas	egenerate	egenerated	egenerates	
+egenerating	egeneration	egenerative	egraded	egrading	
+egressive	ehydrate	ehydration	eign	eigned	
+elay	elayed	elaying	elays	elegate	
+elegated	elegates	elegating	elegation	elic	
+elight	elighting	emain	emand	emanded	
+emark	emick	emonstrate	emonstrated	enard	
+enationalization	enault	enier	enison	enne	
+enney	ennie	enny	enominated	enomination	
+enounce	enounced	enounces	enouncing	ense	
+ental	ented	enting	enton	eplete	
+eport	eportable	eported	eporting	eports	
+epose	eposed	eposition	epositories	epository	
+epot	eppe	epress	epressed	epressing	
+epression	epressions	epressive	eputation	epute	
+eregulation	esegregation	eserve	eserved	eserves	
+eserving	esign	esignation	esignations	esigned	
+esigning	esigns	esist	esler	espite	
+espond	espondent	estitution	estocking	etail	
+etailed	etailing	etails	etain	etained	
+etaining	etains	etention	etest	etested	
+etour	etract	etracted	etracting	etracts	
+euss	evalue	evalued	evaluing	evere	
+eviled	evise	evised	evises	evising	
+ewey	ials	ibble	ichter	ick's	
+icken	icker	ickey	ickie	ickman	
+icks	iddle	iehl	igger	iggers	
+igging	iggins	iggle	iggs	igney	
+immed	immer	imming	inged	inse	
+ipped	ipper	ipping	iskin	isks	
+itzy	ivas	iver	iver's	ivers'	
+ixon	oane	obben	obbie	obbin	
+obbins	obson	obson's	ocker	ockers	
+ockery	ocket	ockets	od's	oddie	
+odgers'	odman	olan	oll's	olled	
+ollinger	olls	olly	olph	omain	
+omaine	ome's	on's	onald	onald's	
+onaldo	onan	onna	onne	onney	
+onning	oomed	ooming	ooms	oped	
+oping	osas	oses	osser	ossier	
+otan	otted	ouble	oubles	oughy	
+oused	ousing	ove's	oves	owdy	
+owell's	owland	owny	oyal	ozier	
+uane	ubbed	ubbers	ubbing	ubin	
+ucked	ucker	ucking	uckman	ucks	
+udes	uff's	uffin	uffle	uffner	
+ugger	umble	ummy	unaway	unes	
+unkel	unkle	usting	usts	usty	
+usty's	uthie	ylan	
+
+d=s
+
+ahaf	ahlin	ampen	eberg	eemed	
+eems	eibel	ejong	emler	ibley	
+iegan	ignified	ignifies	ignify	imona	
+inners	itka	onat	onji	ooner	
+ouris	ourness	udikoff	ummit	unkin	
+upes	utra	uzanne	windled	windles	
+windling	ykes	
+
+d=sh
+
+ah's	allal	awna	elve	elved	
+elving	rinking	rivel	rugging	runken	
+
+
+d=st
+
+ahl's	arkest	arkly	arlings	ate-a	
+ate-based	ateline	aubach	eepened	eepening	
+eepest	eeply	enholm	enmark	iffer	
+ingy	ockings	ockyards	odgy	rawbridge	
+reamers	riving	rummed	rummer	rumming	
+ruthers	
+
+d=t
+
+aegu	affy	alat	aloa	amaris	
+anielian	atum	eepak	eeside	ejas	
+elos	embo	enby	ennis'	ensely	
+errel	eutsch	hondup	idier	ie-in	
+igre	igress	irado	o-and	obkin	
+odd's	ollhouse	orrance	ownes	oyon	
+renching	rippy	rooped	rooping	roops	
+runks	uley	uran's	uxford	
+
+d=w
+
+ahlstrom	alton's	arren's	ashboard	eikel	
+ellins	estin	iemer	iesel	ilkes	
+ingman	ithered	ithering	on't	orthy	
+renched	ryly	
+
+de=e
+
+aling	arly	arth	ckert	lbert	
+lectable	lfin	lmar	lmore	lson	
+lton	lude	luded	luding	lves	
+lvin	mery	moting	ngler	nnis	
+nver	rickson	rrick	rrington	smond	
+ssie	vens	vers'	vils	
+
+de=re
+
+-regulation	bating	ceive	ceived	ceiver	
+ceives	ceiving	cently	ception	ceptions	
+ceptive	clamation	clined	deaux	dman	
+dmon	duced	ducing	ductions	ductive	
+ference	ferential	ferred	ferring	fers	
+flected	flection	flections	forestation	gressive	
+igned	layed	legate	manded	nard	
+nier	nison	nney	nnie	nounce	
+nounced	nounces	nouncing	ntal	nted	
+nting	nton	plete	ported	porting	
+positories	pository	pression	pressions	pressive	
+putation	pute	signation	signations	sist	
+sler	stitution	tained	taining	tains	
+tention	tracted	tracting	vised	vises	
+vising	
+
+dis=re
+
+coveries	covery	covery's	crimination	criminations	
+hman	membered	membering	pelled	pelling	
+putable	puted	semble	sembling	sented	
+senting	sents	sidence	sident	sidents	
+sidents'	solute	sonance	sonances	sonant	
+torted	tractions	tribution	tributive	
+
+e=i
+
+bsen	dris	mbedded	mmanuel	mpaneled	
+mpey	nfant	nfants	nglewood	nglish	
+ngram	nquire	nquired	nquirer	nquirer's	
+nquiries	nquiring	nquiry	nsure	nsured	
+nsures	nsuring	ntertainer	ntertainment	nvision	
+rvine	sfahan	slamabad	smael	smat	
+tched	tches	tching	vanovich	verson	
+vonne	
+
+e=re
+
+ddin	ddington	ddy's	dington	dlin	
+gan's	ggie	gret	ichel	icher	
+ichler	ichman	ider	iffel	iland	
+iser	isman	isner	itzel	lated	
+lation	lkin	mits	mitted	mitting	
+nberg	nding	nfield	nter	nters	
+ssam	voke	voked	vokes	voking	
+volutions	xene	ye's	
+
+e=sy
+
+dney	dney's	lvia	mbolism	mpathetic	
+mpathise	mpathize	mpathized	mpathizes	mpathizing	
+mpathy	ncor	ncor's	nergie	nergies	
+nergy	ngman	ntex	
+
+ex=in
+
+-service	cised	cision	citement	clude	
+cluded	cludes	cluding	clusion	clusions	
+clusive	clusiveness	crement	cursion	cursions	
+halation	haled	haling	hibitor	hibitors	
+tensification	tensive	tensively	terior	teriors	
+ternal	ternalisation	ternally	tra-community	tramural	
+tricate	trovert	troverted	troverts	
+
+ex=pro
+
+-communist	-military	-nazi	-police	-soviet	
+ceed	ceeded	ceeding	ceeds	cess'	
+cesses	clamations	hibitionist	ponent	ponents	
+pound	pounded	pulsion	
+
+f=g
+
+ail's	aither	amers	amine	ans'	
+arces	arnham	athered	athering	athers'	
+atos	aye's	azes	elled	ellner	
+idel	idget	igueres	iler	illers	
+illies	ingers	inola	ittings	lints	
+loats	lossing	lowed	oaled	ogel	
+ood's	oodie	oodies	oods	oods'	
+orged	orging	orgo	ormless	ossett	
+oulds	ranz	raph	razer	reely	
+reer	rierson	roggy	rumpy	ulke	
+unnels	uste	utterman	
+
+f=h
+
+aber's	abre	agen's	agins	aith	
+alagan	alkirk	annin	arley's	armer	
+arrowing	arwell	astened	astening	astens	
+ateful	avas	avre	awke	awkes	
+earon	eather's	eeling	einer	eiss	
+elix	ence	ernandez	ernandez's	ernando	
+erons	errera	errero	ibbing	ickling	
+ierro	igueras	ilemon	ineman	ired	
+iring	irings	irst	irst's	itting	
+oist	oisted	oisting	old-up	olders	
+ollow	ollowed	ollowing	ollows	onda's	
+orde	ormats	ormell	orno	orsman	
+our's	our-and-a-half	our-plus	ourie	ugues	
+ulton	umes	umus	unky	urtado	
+uson	ussy	
+
+f=k
+
+-series	addish	ading	ariba	atale	
+eeble	eely	eeney	eltner	ennel	
+ennelly	enner's	ettle	ielder	ilner	
+ilter	inkel	inley	inney's	itted	
+itts	izer	lesch	lores	oehn	
+ortney	rantz	renzel	urash	urth	
+
+
+f=l
+
+ace-up	ahd's	ahey	astest	aure	
+azio	azio's	eathery	ederer	ederman	
+eininger	etterman	ibre	iege	ife's	
+ifers	ighters	ighting	inck	ine's	
+ingered	ingering	inke	innell	ists	
+ive's	oamy	ocal	oggia	ollo	
+omond	ord's	umet	und's	uther	
+
+
+f=m
+
+aggot	ailings	aison	arano	arfan	
+arinelli	arkas	armont	ather's	atso	
+auna	edco	eehan	eher	elons	
+eola	erc's	errier	essed	etal	
+eted	etzer	iddler	iddles	iddling	
+idgets	idler	ilers	inis	ischer	
+ishel	ishin	issile	ission	ix-up	
+ixed	ixer	ixers	ixes	ixing	
+ixture	ixtures	mc's	olded	oment	
+oments	ontana	ontes	ontes'	onzie	
+oray	orbid	orehead	orro	ortification	
+ortified	ortifying	orty	ountain	ountain's	
+ountains	oyers	uerte	ukai	ulford	
+uller's	urillo	
+
+f=n
+
+annies	aulty	awaz	endick	ewer	
+ewest	iche	ields	ifty	orbert	
+orm's	ormal	ormalisation	ormalise	ormalised	
+ormalising	ormality	ormalize	ormalized	ormalizing	
+ormally	ormative	orster	orthside	udges	
+
+
+f=p
+
+acio	agans	ainted	ainter	ainting	
+aints	anelli	armar	ayed	ayette	
+ennell	erfin	erreira	erret	erretti	
+erris	errone	estered	estering	ickett	
+icus	iero	ig's	igment	igments	
+ilings	ilipino	lateau	ledged	ledging	
+letcher	liers	lops	lumes	lunked	
+lunks	olio	olk's	onts	ool's	
+ort's	ortas	orts	osse's	ossil	
+ossum	osters	ounders	rances	rida	
+udgy	uente	uentes	ull-back	ull-out	
+ullback	ullbacks	ullers	unk's	
+
+f=r
+
+ace-off	acial	acially	ahim	ahima	
+aith's	ancher	andom	asulo	ealty	
+eckless	ecklessness	eeder	eigning	eigns	
+eingold	enwick	escue	estive	ibbed	
+ico's	iddled	ieger	isher	iske	
+oaming	oams	ogerson	oot's	orex	
+ossen	tc's	ussell's	usses	
+
+f=s
+
+ackler	aintly	alk's	arah	arah's	
+avored	avoring	avors	avour	avoured	
+avouring	avours	eedings	eiler	ellers	
+errato	erried	iesta	ingers'	izzle	
+izzled	izzles	izzling	lats	latten	
+lattery	lickers	lits	litting	loppy	
+old-out	orest	orties	ouls	udan	
+umiko	un-filled	un-loving	unnier	unniest	
+uture	utures	uzhou	
+
+f=t
+
+earfully	eeny	erran	erre	erree	
+errell's	esco	iber	igard	ire's	
+isch	isherman	oday	ootsie	orres	
+oula	ournier	raction	ran's	ree's	
+reiman	rembling	remont	resco	unnel	
+unneled	unneling	unnelling	
+
+f=v
+
+alletta	alse	argas	argas'	astness	
+aulted	aulting	aults	elde	eldt	
+eltman	ermin	leck	ollmer	reeland	
+reni	
+
+f=w
+
+aded	areham	armers	armington	arrior	
+eathered	eathering	eatherstone	einberg	einberg's	
+einman	endi	idell	ield	ielded	
+ielding	ilkins	illmore	ilms	inery	
+intry	ishbone	istful	itch's	itness	
+ittingly	ood-products	oolery	ormed	orming	
+uhrer	
+
+g=h
+
+aarder	aggle	aidar	aile	aining	
+alligan	alpin	ambro	amma	ampel	
+arang	ardened	ardening	ardens	argan	
+arrison	arrison's	arrisons	arveys	arwood	
+askell	atchell	auge	avel	awked	
+awkers	awking	azing	eico	eise	
+elfand	endron	enie	ensler	eraghty	
+erald	ere's	erges	erken	ermiston	
+erold	ersh	ershman	ertz	etman	
+ilda	ilder	illis	illis'	obert	
+ofman	olden's	olding's	oldings	ooch	
+ooey	oofed	oofing	oofs	oose	
+osford	ouda	ovan	oya's	uang	
+uard	uber's	ubler	uizar	unter's	
+uston	
+
+g=j
+
+aafar	alil	amil	angly	annet	
+ardel	arreau	enco	ennifer	eoffrey	
+ermaine	erome	eronimo	iggled	iggling	
+iggly	illette	illian	imenez	imme	
+iraffe	ordan	uice	ustine	usto	
+
+
+g=k
+
+antner	arate	arni	asparian	eisha	
+endell	ennady	eren	erstein	esner	
+eyser	ieron	iesler	iffin	ilbride	
+ilday	ilmer	ilroy	ilts	ingery	
+irton	issin	itano	ittens	lemp	
+obus	oodrich	ratz	ravis	reil	
+remlin	rieg	rimm	ulick	unduz	
+urza	wala	wangju	
+
+g=m
+
+abon	acy's	addi	agne	agner	
+anga	anges	anic	arbled	arcia	
+arcia's	arcin	arten	assed	assing	
+att's	atti	attis	aughan	auldin	
+auzy	aynor	azza	echem	eese	
+eisel	ekas	elded	enrad	enus	
+ershon	ilden	iles'	illan	illett	
+illigan	illigan's	inty	oines	old-related	
+oldy	oma's	oody's	ore's	orsel	
+oths	oulding	oure	ovin	ulch	
+ullane	uzzle	uzzled	uzzling	
+
+g=p
+
+ained	ainful	ainfully	alette	anache	
+andolfi	antries	antry	arrish	artner	
+artner's	asser	avin's	awky	eary's	
+enmar	eri's	esek	hillie	ilkey	
+ilot	iven	lante	lebe	oacher	
+orky's	ough's	owrie	rayer	reening	
+reens	reminger	remio	reying	reys	
+rimly	rins	roton	rowled	rowls	
+uccio	ulped	ulping	ulps	uppies	
+uppy	utman	uzzler	
+
+g=r
+
+ainer	aines'	ainey	amaa	amblers	
+amblers'	amiz	ammell	ascon	asped	
+asping	asps	aucci	aza's	ehman	
+ene's	esell	estating	ibbon	ibbons	
+iblets	idley	iese	ifts	odber	
+odden	oggin's	oh's	olfing	omans	
+omberg	orke	othenburg	ouge	owans	
+uano	unner's	unners	uttenberg	uttman	
+
+
+g=s
+
+abino	abor	agarin	alant	ame-day	
+angster	ant's	arde	as's	erena	
+ervais	et-up	et-ups	hali	ibert	
+ibson	idon	ievers	ifted	ifting	
+ilman	immers	inger's	irola	lide	
+lider	liders	lides	liding	limmer	
+luts	narled	narly	obel	pa's	
+ummer's	unfire	uns'	urin	uzman	
+
+
+g=st
+
+affed	atehouse	ately	ateside	effen	
+impy	oddard	oddard's	ompers	oners	
+ores'	rasse	reet	reeter	reeters	
+reets	riped	ripes	riping	ruver	
+
+
+g=t
+
+abor's	aiwan	allus	amely	aming	
+amsin	ansu	arnish	arnished	arnishes	
+arnishing	arot	enet's	erminal	erminate	
+erminated	erminates	erminating	ermination	iant	
+ipsy	o-go	obar	odde	oradze	
+racie	rade's	raded	raders	rades	
+rading	reat	reats	rinder	risha	
+roupe	rouper	rudges	rudging	ufeld	
+
+
+g=w
+
+allop	alloped	alloping	allops	ardner	
+arlock	arner's	arners	atling	eissler	
+ilding	illiam	illiam's	ilmore	iora	
+itte	olf's	olfed	oodall	ooden	
+ooden's	oodhill	ooding	oodman	oodson	
+ordy	uest	
+
+h=j
+
+acek	acky	ammers	aney	ansen's	
+ansons	anssen	aret	arrod	arrold	
+arvie	asen	asna	avelin	awing	
+aymes	enkin	enna	ennings	erod	
+ersey	ervey	esse's	essel	ester's	
+ewett	ockey's	oists	okey	osey	
+osie	udkins	udson's	ung's	uppe	
+
+
+h=k
+
+adar	allstrom	anan	arem	arsh	
+askel	assan	ayden	azell	earin	
+earse	edren	eeled	eenan	eifer	
+eino	eizer	emmer	emsley	enan	
+endrick	endricks	enwood	epner	ermit	
+ilborn	ilburn	immelman	inchen	ingston	
+irsch	irsh	itchens	obart	och's	
+oenig	oerner	onig	ooky	opple	
+udler	uhne	ussman	yman	
+
+h=l
+
+abib	aden's	adera	aggard	aing	
+ambros	ampson	andless	anes'	angen	
+arbert	ardy	arissa	arkins	asley	
+atched	aughton	aunches	auter	averty	
+ayman's	azard	azards	eaders	eadman	
+eaf's	eaped	eaping	eave	eavens	
+eaving	eavy	ebron	edgers	efty	
+einen	eitz	emmings	eyden	eydon	
+inde	indley's	ines'	inton's	ippo	
+itman	obbyist	obbyists	ogan's	owey	
+owrey	su's	uffman	yman's	ynde	
+
+
+h=m
+
+adden's	addock	addon	adson	aggs	
+ai's	ainline	alicki	allett	alted	
+alting	andel's	ankey	ankin	ansard	
+arbury	arlins	aroun	arshfield	asek	
+asina	atch's	atchett	auck	auled	
+auling	auls	auser	avens	awkish	
+aydee	eat's	eidt	ellion	emel	
+enke	enkes	ens'	eritage	idden	
+ilburn's	illhouse	illwood	ilton's	ingst	
+inted	inting	intz	odel	odel's	
+olten	oneyed	oneys	onks	orse's	
+ortons	ostel	otel's	otels	oule	
+ouse's	owat	owatt	ummers	urrah	
+urray	usker	
+
+h=n
+
+agler	arada	arrower	astily	asty	
+atori	aughtiness	aughty	azel	eedless	
+eedlessly	eiman	erco	erds	erve	
+ewson	icklin	icks'	odding	olte	
+orsemen	orwitz	orwood	unley	ycor	
+
+
+h=p
+
+ampered	ampering	aque	ardee	ardee's	
+arkes	artings	enry	enry's	ermits	
+eron's	iatt	inault	inging	ommes	
+oncho	onchos	opkin	oppy	orcher	
+ost's	ostage	ostel's	othead	otshots	
+uberty	uerta	ugh's	ulse	ummel	
+unters	unters'	
+
+h=r
+
+aider	aider's	allye	amada	amadan	
+atchet	atchets	avel's	avens'	ayford	
+eadier	eadings	ector	ector's	eggie's	
+eimann	einecke	eineman	einisch	einke	
+eins	eitman	empel	enshaw	eston's	
+exham	eyman	ideout	iegert	iga's	
+itter's	oeg's	olland's	ollers	ome-based	
+omer's	omero	oofer	oofers	ouser	
+ouses	ubley	umor	umored	umors	
+umour	umoured	uppert	ustler	ustlers	
+yder	yland	ymer	
+
+h=s
+
+abre's	aggar	alim	alima	almi	
+alonen	alons	amad	and-colored	andbag	
+andbags	andler's	anwa	artwell	eated	
+echler	eeger	erbs	ermon	ewed	
+exes	ideouts	ighs	illas	illerman	
+illier	ilty	oliday	olloway	ombre	
+omebody	onora	ourly	owells	uggett	
+ulks	usak	ymon	
+
+h=sch
+
+ager	ander	ardt	arping	atten	
+ayes	enley	ering	euer	eyer	
+ickel	ieber	immel	oeller	ooley	
+udson	ugel	
+
+h=sh
+
+acks	ades	adid	afts	amed	
+and's	anley	anley's	are's	arkey	
+arking	arks	arp's	arpe	arper	
+atters	aver	awn's	e'll	ealy	
+earings	eath	eaths	edden	eeley	
+effer	eist	elter	elton's	enson	
+erman's	erren	erri	erries	errin	
+errod	erron	etland	igley	ilton	
+inkle	ires	ockey	oeing	ooter	
+ooters	ooting	oppe	opper's	orten	
+oulder	ovel	ovels	oving	ushed	
+
+
+h=st
+
+acia	ammered	ammering	anaway	and-out	
+andley	andoff	andoffs	andout	andouts	
+ankie	ealth	ealthily	ealthy	elios	
+emmed	enhouse	illman's	ubbs	ymie	
+
+
+h=t
+
+abash	abla	aft's	ague	akkinen	
+ankering	ardies	ardiness	artt	auke	
+ecla	endler	essman	etchy	imberg	
+ipster	ipsters	orii	orrid	ours'	
+oying	ubers	urco	urtle	urtles	
+usks	ut's	utto	yped	ypes	
+yping	
+
+h=w
+
+ageman	aggling	arburg	arnick	asn't	
+avering	aves'	ayward	ealthier	ealthiest	
+eaved	einrich	eitzman	erder	essels	
+i-fi	iggins'	ilde	illock	interland	
+iskey	itless	its'	onky	ooded	
+orsham	orsley	yche	yper	
+
+h=y
+
+adda	agman's	amamoto	amanaka	arborough	
+ard-line	awkey	elped	elping	elps	
+ippies	oshino	urok	
+
+ho=te
+
+bbit	ch's	eing	llers	lly's	
+nors	pper	rmell	rrible	rribly	
+rrific	rrifically	rrified	rrifies	rrify	
+rrifying	rrifyingly	rror	rrors	sts'	
+
+
+ill=l
+
+egalities	egality	egally	egible	egitimacy	
+egitimate	egitimately	iquid	iquidity	iteracy	
+iterate	ogic	ogical	
+
+in=pro
+
+duces	fusion	gram	gram's	grams	
+jector	jectors	scribed	scription	spect	
+specting	spector	spectors	spects	stitute	
+stitute's	stituted	stitutes	stitutes'	stituting	
+trude	trudes	truding	
+
+in=re
+
+-form	cantation	cipient	cumbent	dolent	
+novate	novating	novation	novations	novator	
+novators	quire	quired	quires	quiring	
+quisition	sistence	spected	spiration	surgent	
+surrection	trospection	trospective	verie	
+
+inter=re
+
+-state	ceptor	ceptors	cession	fered	
+ject	jecting	jections	jects	
+
+k=l
+
+abat	ainz	ampe	anai	appe	
+atif	atin	atina	atona	aufer	
+azoo	eahey	ehrer	eith's	emper	
+ennard	ennon	essee	evin's	ibbey	
+icking	idded	ieser	im's	inburn	
+inks'	insey	insky	inzer	isha	
+iska	isting	ittles	ochan	oop's	
+orean	udlow	unar	unde	yle's	
+yles	
+
+k=m
+
+achin	achina	adison	ahane	aliniak	
+alinowski	aran's	arez	arine	arita	
+atell	atey	atia	atsu	eister	
+essinger	ettler	iley	illers'	ilos	
+imura	indel	irin	irka	iss'	
+itchel	itchell	itsch	iyoshi	ochis	
+oehler	ohler	onica	onza	oon's	
+ooning	oshi	osko	ulti	urai	
+uramoto	wanza	
+
+k=p
+
+aige	aige's	angas	anther	appa	
+arma	aroo	atella	eele	elham	
+elley	erley	ick-off	icker's	ickers	
+ickin	ickoff	illory	ilmuir	indling	
+innock	intail	io's	iper	ippen	
+lein	oplin	ostal	resa	unta	
+
+
+k=r
+
+abbani	adar's	adish	aiser	ajan	
+aylene	eefer	engo	epel	ey's	
+iley's	ings'	ingwood	ivlin	ostov	
+otas	ovner	ovno	uehl	
+
+k=s
+
+abbah	abir	agan's	agawa	angyo	
+arnoff	atie	aunas	eats'	eiko's	
+elberg	emira	idney	ilber	ilted	
+imba	ingly	irk's	ite's	lammer	
+nake	nead	nickers	nobby	noop	
+notty	nowing	nows	okol	omis	
+onya	
+
+k=t
+
+ajima	arim	arpan	ashima	atsumi	
+awana	eeter	elly's	empe	emps	
+iernan	immins	immy	insley's	offler	
+omei	omori	oscher	ovar	ransco	
+ravis'	ropp	ruer	urki	
+
+k=w
+
+elty	idman	illens	imberly	inberg	
+inship	inston	olff	oo's	urtz	
+ylie	ylie's	
+
+l=m
+
+abus	ac's	acerated	ackey	add's	
+adonna	agoon	ahood	anchester	andale	
+angan	angum	antra	archmont	ariam	
+arisa	arkham	arva	arval	ascola	
+assie's	atte	attes	aureen	auri	
+auro	ax's	ayhew	eadville	eander	
+eanders	eaner	eanest	eanings	eanness	
+edeen	eg's	eggett	eitner	essing	
+ezak	ezin	illi	iming	inden	
+ingus	inus	isted	itigate	itigated	
+itigating	itigation	itigations	itre	oaned	
+oaning	oans	obster	obsters	ochrie	
+ockup	orain	oraine	orena	orenz	
+ori's	oser	otion	otions	ott's	
+ouche	ounger	outh	ovable	ove-in	
+oveable	ovie	ovingly	ucha	udford	
+umford	ungo's	
+
+l=n
+
+abors	aila	antz	atasha	athan	
+atoya	aval	awal	eeds'	eeson's	
+egation	egros	evada	exis	exus	
+eyland	icht	idia	idia's	iebler	
+ights'	isbet	otah	ovato	ovell's	
+ow-and	umbered	umbering	umbers	uminous	
+ydia	ymph	
+
+l=p
+
+aid-off	aino	alau	apin	atent	
+athon	atino	atino's	atricia	aunch	
+auper	auper's	ay-off	ay-offs	ayoff	
+ayoffs	ayout	ayouts	eake	eavey	
+eered	eeves	ena's	eppard	epper	
+eyton	ipkin	ippi	iston	itchman	
+ommel	ooping	orch	osada	otteries	
+ottery	utin	
+
+l=r
+
+adner	ake's	ambeau	ambert	amle	
+ange's	anier	apid	auda	avine	
+avinia	avish	avished	avishing	eader's	
+eaders'	eadership	eaper	egion	egion's	
+egions	ehder	einsdorf	eiter	enoir	
+eser	euven	eveille	eveler	eveling	
+evelled	evellers	evelling	evels	ibera	
+ichfield	iddell	ieder	ight-footed	ight-handed	
+ighted	isotto	ivonia	obes	ockport	
+ockwood	ococo	oper's	overs'	owlands	
+oyalist	oyalists	oyally	oyalties	oyalty	
+uby's	uger	uing	undgren	unge	
+uskin	
+
+l=s
+
+aabs	aban	abella	abine	achs	
+ameness	ampley	andbank	antana	antos'	
+atins	aunders	avoie	avvy	awers	
+awyer	awyer's	awyers	ayin	dp's	
+efton	elas	enora	enses	eona	
+eong	eroux	etran	ettings	etup	
+eung	even's	evering	evier	iberians	
+icko	iebe	iebert	ieges	ifters	
+ilting	imon	imon's	imos	indh	
+inkage	inkages	ister's	ithe	obero	
+ofty	oong	orber	ouder	uchey	
+uckow	ucre	udden	ugar	ugar's	
+uker	undberg	undin	undquist	upine	
+ymington	ynch	
+
+l=str
+
+achey	andings	angford	ansky	aw's	
+ength	engthen	engthened	engthening	engthens	
+engths	ichen	indberg	indberg's	ongman	
+udwick	
+
+l=t
+
+aconic	actic	ambs	ankan	asers	
+asker	atham	eague	eela	egge	
+emkin	ibor	imbering	imor	ipton	
+itan	itle	oews	omita	ongue	
+
+
+l=w
+
+akefield	ashings	eatherby	eatherhead	eatherman	
+eavings	ehner	eigh	einbach	enders'	
+erner's	esley	iens	ilco	ilco's	
+inemaker	ingfield	isteria	ittmann	izard	
+izard's	izards	orded	ords'	ynette	
+ynn's	ynne	ynton	
+
+m=mo
+
+ehlman	ises	oney's	onies	ujahedeen	
+ulder	umia	unir	ussa	ustache	
+ustaches	ustachioed	ustafa	ustapha	utrie	
+yers'	
+
+m=n
+
+acchio	acho	achos	acht	ahin	
+apa's	ardi	assif	atan	ature	
+atured	atures	azak	edved	ets'	
+evius	ichelle	ichol	icki	iguel	
+iguel's	ikki	ikko	ikos	ista	
+itze	obility	oche	odal	odules	
+oises	orio	orris'	orristown	oshing	
+oten	udie	unis	
+
+m=p
+
+achuca	adlock	alty	altz	anama	
+anella	anhandle	anhandling	arche	archment	
+arella	arga	ariah	ark's	arkland	
+arks'	arriot	arriott	arsee	arti	
+artial	artita	arty's	arwan	aso's	
+assage	assages	assive	assively	assport	
+aternal	aternity	atriarch	atriarchal	atriarchs	
+atrimony	atrons	attern	attison	aus'	
+axson	ayday	edal	edals	eddle	
+eddled	eddler	eddling	eet's	eltzer	
+erce	eretz	erlis	errett	erriman	
+erritt	etals	etered	etering	etre	
+etric	etris	etro	etropolis	etros	
+ickler	ilgrim	illage	illar	illay	
+inot	irko	onied	onson	ontell	
+oore	oorer	oorhouse	op-up	ortage	
+ortal	ortals	oulin	uffins	ullan	
+uppet	uppets	urdy	utsch	uzzles	
+
+
+m=r
+
+aben	acal	achel	aggi	ahal's	
+ambo	andell's	angy	azor	eddick	
+edial	edstone	eeker	eese's	einers	
+einert	einhold	eneau	enken	etex	
+ethinks	euse	eza's	ichelson	ichie	
+idge	idges	ighty	ilke	inella	
+ingling	ita's	itchie	ocha	ockler	
+oeser	olex	omper	ooney's	oselle	
+oses'	otor	otors	oxie	uffled	
+uffling	ules	ules'	uncie	unyon	
+ussel	usset	usso	
+
+m=s
+
+abry	acro	addened	addening	addens	
+ailer	ailer's	ajid	ales'	alle's	
+amet	ancha	antas	antee	argen	
+arosi	artre	asaki	atloff	attley	
+aturation	aurer	auve	callion	cenery	
+edaka	edan	edlar	eneses	enor	
+erkin	errins	ichelman	ilken	ilks	
+ilky	imic	imms	ingled	inister	
+innett	inuses	isters	isto	olano	
+oldering	onier	ontag	orgen	ousa	
+ousa's	uite	ultan	unday	undial	
+urat	usser	
+
+m=st
+
+agnate	agnates	aleness	anescu	ansfield	
+aple	argate	arkov	athis	atute	
+atutes	effan	ello's	erckx	iffed	
+orehouse	ravinsky	
+
+m=t
+
+ake-over	ake-overs	ake-up	akeover	akeovers	
+akings	alev	almo	anager	angos	
+aoism	aoist	arasco	arkovsky	aster's	
+atar	atsuno	atsuo	aupin	aurine	
+eacher	edium	ehran	eisinger	enace	
+erril	errill	essier	icha	icheli	
+icor	igra	ikal	ikva	ilbury	
+inkler	iree	irza	itford	oby's	
+oister	ommy	ommy's	orino	oro's	
+ortilla	ullis	urano	utti	
+
+m=w
+
+acko	aist	akeup	aldon	anly	
+arble	arbles	arbling	ardian	ariner	
+arriner	arwick's	atchmaker	atchmaking	atteau	
+ayans	ayland	edlock	eek's	eekly	
+elbourn	elds	elsby	endy	etzler	
+ilberg	ildest	ildly	ildness	ilkens	
+ilkman	illner	inced	incing	ind's	
+inded	indless	innick	innow	instar	
+izner	offord	offord's	orley's	orrall	
+unsch	yrick	
+
+ma=me
+
+dlock	dnick	hmood	hran	ier's	
+lisse	llick	llow	lted	lting	
+nage	nchu	ndel	ndell	ndelson	
+ngers	nges	rc's	rcedes	rchant	
+rcia	rinos	rkle	rkowitz	rlene	
+rlin	rlin's	rlyn	rten	rtens	
+ssage	ssaged	ssages	ssaging	ssed	
+sses	ssing	ters	theny	trix	
+tros	yer's	yersohn	
+
+mac=mc
+
+auley	carthy	clure	intosh	intosh's	
+intyre	kinnon	leish	phee	pherson	
+
+
+n=r
+
+abhan	abih	adja	aimi	ajah	
+ambla	apier	apkin	aquin	ation	
+ationale	ationalisation	ationalise	ationalised	ationalising	
+ationalism	ationalist	ationalization	ationalize	ationalized	
+ationalizing	ations	d-quarter	d-ranked	eedy	
+egele	egev	eilly	euter	icer	
+iches	ickles	icky's	iddrie	ight-and	
+imer	ipple	ipples	ippon	ique	
+issman	obles	oelle	omo's	ostrum	
+otary	otation	otations	oyan	oyce's	
+pr's	ubia	uland	
+
+n=s
+
+aito	akamoto	akata	akatani	arnia	
+asser's	cr's	eedier	eediness	eedling	
+erves	ettled	eville's	ewell's	ieves	
+igel	immons	othern	uits	umac	
+yrup	
+
+n=t
+
+akano	akao	akase	akayama	algo	
+astier	astiest	avarez	ettleton	ibbles	
+iger's	inian	orah	orrington	orrington's	
+orstar	ussle	yack	
+
+non=un
+
+-american	-christian	-islamic	believers	competitive	
+economic	political	productive	professional	qualified	
+regulated	
+
+o=su
+
+bject's	bjected	bjecting	bjection	bjective	
+bjectively	bjectivity	bjects	ffer	ffered	
+ffering	fferings	ffers	ffice	ffices	
+gden	nscreen	nset	nward	ppose	
+pposed	pposes	pposing	pposition	ppositions	
+ppress	ppressed	ppresses	ppressing	ppression	
+ppressive	ppressor	ppressors	tton	zanne	
+
+
+p=r
+
+acers	acers'	acket	ackets	agone	
+anting	apan	arities	arity	ascal	
+atio	atios	aul's	aunchy	aymer	
+eeked	eeking	eeve	enal	enick	
+etard	etry	icard	icardo	ickard	
+ickets	iesner	iney	izza	ocketed	
+ocketing	ockets'	oehl	olish	osen	
+osner	ound's	utten	
+
+p=s
+
+addle	addler	addles	addling	aget	
+aladin	app's	arong	axman	earcy	
+ectoral	ediment	ediments	eeing	enile	
+erps	ettee	haler	hish	illars	
+imen	ipes	itner	lant	lanted	
+lanting	lants	lating	loughed	loughing	
+loughs	lums	oiree	olaris	olich	
+olis	olo's	olos	onders	orter	
+orters	oundings	ounds'	ru's	uckered	
+uede	urely	urest	urvey	urveyed	
+urveying	urveyor	urveyors	
+
+p=st
+
+ainless	allone	eel's	eeples	eerage	
+encil	enciled	encilled	encils	epin	
+eppers	ickier	ickup	oked	opover	
+opovers	ronger	roud	uffiness	
+
+p=t
+
+alac	ansy	apas	aper's	apered	
+artly	atties	awnee	eeters	enfold	
+ennant	ennies	ension	ensions	ermed	
+errine	haros	icket	icketed	icketing	
+ickled	inker's	irelli	lc's	ollner	
+onton	orches	orras	ottering	oussaint	
+ower's	reble	ricking	rimark	rosper	
+ruett	ruitt	
+
+p=w
+
+achter	andered	andering	asilla	aterson	
+atterson	ayne's	essin	etted	hinney	
+ilcher	iped	ipers	iping	itcher	
+itkin	itney	olsky	ondered	ondering	
+orkers	rongs	
+
+pre=re
+
+-development	-election	-employment	-established	-formed	
+-match	-opening	-release	-sale	-set	
+-sold	-trial	ferences	lates	servation	
+serve's	ssler	ston	ston's	sume	
+sumed	sumes	suming	sumption	
+
+r=s
+
+adek	affi	agas	ampling	ansom	
+ansome	atay	avage	avaged	avages	
+avaging	avings	avitch	avitz	easonable	
+easoned	easoning	easons	easons'	ecchia	
+ecede	eceded	ecedes	eceding	ecession	
+ecession's	ecord	ecord's	ectors	educer	
+educes	egal's	eidel	emmel	enate	
+eparation	eparations	eward	hona	ica's	
+iders	ieff	iegel	iegels	iegle	
+iegler	ingel	oared	oaring	oeder	
+ohmer	oloff	onni	osa's	oundly	
+oundness	ue's	undown	unup	
+
+r=st
+
+adio	adium	anch	angeland	ationed	
+ationing	ayner	eadied	eadies	eadily	
+eadiness	eadying	eiff	eina	eindl	
+einer's	einhardt	einhardt's	einhart	ep's	
+euben	ewarding	ewards	iffing	iffs	
+ifle	ifled	ifles	ifling	ock-based	
+ockman	ockpile	ocks'	omped	omping	
+oute	udy's	
+
+r=t
+
+abbi	appers	auscher	eachable	easer	
+ejada	endered	endering	etzlaff	hyme	
+hymes	hyne	ibet	ice's	imar	
+ip-off	ip-offs	ipoff	ippling	iverton	
+ivoli	oadies	obin's	ognoni	oque	
+osado	otem	otenberg	othe	ougher	
+oughest	oughly	oughness	owboat	owboats	
+oyko	ucker's	umours	yrie	
+
+r=w
+
+afted	afting	aitt	aives	andsworth	
+aspy	ayburn	edding's	edick	eichert	
+eimer	eisz	ettig	exford	ichard	
+igged	iggin	ishon	ittenberg	olfe	
+outers	yden's	
+
+s=sc
+
+acchi	andals	andia	atter	eptic	
+hade	haeffer	haffer	hankman	hapiro	
+hatz	heff	hifrin	hifter	hindler	
+hoen	horr	hrader	hrager	hrank	
+hrum	htick	huit	huler	hulman	
+hulman's	hultz	hultz's	hultze	humann	
+hure	huster	olari	oured	ouring	
+ully	uttle	ylla	ythe	
+
+s=sch
+
+eidler	enden	iebel	lesinger	lesinger's	
+midt	mucker	neiderman	nyder	ooners	
+wartz	wartz's	weig	wensen	winden	
+
+
+s=st
+
+andiford	anford's	apling	eamers	eamier	
+eamy	einfeld	emple	erling's	igma	
+impson	imson	imulate	imulated	imulates	
+imulating	imulation	imulator	imulators	inkers	
+offel	olarz	olid	olidly	urgeon	
+
+
+s=t
+
+adao	ahara	aiga	ailor	ailor's	
+ailors	aipan	amaki	ammy's	apir	
+eaford	eething	ellers'	enga	ensed	
+hakur	hane	hanked	haw's	haws	
+hiel	hies	hinkin	hree	hrew	
+hrift	hrill	idings	imers	imex	
+imone	ofas	onia	onic	onics	
+onja	ony's	oothed	uckers	urfed	
+urgut	wain's	weet	wirl	wirled	
+wirling	wirls	witched	witchers	
+
+s=w
+
+achs'	ade's	alter's	ampler	eddon	
+eidman	eitzer	elby	ell-off	etback	
+heeler	heen	hined	hiner	hining	
+hiny	ieck	iegner	olters	olves	
+orrier	ynder	
+
+s=z
+
+abol	aidi	akai	akharov	aldivar	
+amora	amudio	apien	avala	ealand	
+elig	eneca	iegler's	ilberman	lotnick	
+lotnik	
+
+sch=sh
+
+affer	ankman	apiro	ifter	indler	
+rager	uler	ulman	ultz	umann	
+
+
+so=spe
+
+aking	cialist	cialists	cialists'	cializes	
+lich	ller	nders	rber	
+
+st=w
+
+alker	alker's	alkers	anek	arbucks	
+arship	egman	egner	einberger	enstrom	
+itchery	olpe	olper	raight	rangle	
+rangled	rangler	ranglers	rangles	rangling	
+retch	retched	retches	robel	rongly	
+
+
+t=th
+
+alib	ankful	eresa	eresa's	erese	
+okoza	omasson	omlinson	ompkins	omsen	
+omson	urman's	urow	
+
+t=w
+
+ackiness	aite	aken	asteful	astefully	
+ests'	exas	hat'd	hat'll	here'd	
+hereof	hereupon	hich	hicker	hirled	
+histle	histles	ireless	irelessly	issot	
+onka	ontons	rappings	restle	restles	
+yler's	
+
+

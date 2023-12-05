@@ -33,7 +33,7 @@ CSignature::CSignature(QString signature_string, bool suffix_flag, QObject * par
 }
 
 CSignature::CSignature(CSignature& signature) {
-    m_Signature = signature.GetSignature();
+    m_Signature = signature.get_key();
     if (signature.get_prefix_list()->count() > 0){
         foreach (CPrefix* pPrefix, *signature.get_prefix_list()){
             m_Prefixes.append(pPrefix);
@@ -59,9 +59,6 @@ CSignature::~CSignature()
  // nothing needs to be deleted.
 };
 QStringList CSignature::get_affix_string_list(){
-    //QStringList affix_string_list;
-    //affix_string_list = m_Signature.split("=");
-    //return affix_string_list;
     return m_Signature.split("=");
 }
 
@@ -72,7 +69,29 @@ QStringList& CSignature::get_stem_strings(QStringList& stem_list)
     }
     return stem_list;
 }
-
+int CSignature::get_letter_count_in_stems(){
+    int count = 0;
+    for (int stemno = 0; stemno < m_Stems.size(); stemno++){
+        count += m_Stems[stemno]->get_key().length();
+    }
+    return count;
+}
+int CSignature::get_letter_count_in_affixes(){
+    int count = 0;
+    if (m_SuffixFlag){
+        for (int suffixno = 0; suffixno < m_Suffixes.size(); suffixno++){
+         count += m_Suffixes[suffixno]->get_key().length();
+        }
+    } else{
+        for (int prefixno = 0; prefixno < m_Prefixes.size(); prefixno++){
+         count += m_Prefixes[prefixno]->get_key().length();
+        }
+    }
+    return count;
+}
+int CSignature::get_letter_count_in_stems_and_affixes(){
+    return get_letter_count_in_stems() + get_letter_count_in_affixes();
+}
 // =============================================>  Functions involving string containment <===========================//
 bool CSignature::contains(CSignature *other) {
     if (m_SuffixFlag){
@@ -102,10 +121,10 @@ bool CSignature::contains_affix_string(affix_t affix)
     return false;
 }
 
-int CSignature::intersection_with(affix_list &in, affix_list &intersection)
+int CSignature::intersection_with(Affix_list &in, Affix_list &intersection)
 {
    intersection.clear();
-   affix_list my_affixes = m_Signature.split("=");
+    Affix_list my_affixes = m_Signature.split("=");
    for (int affix_no = 0; affix_no < in.size(); affix_no++){
        affix_t affix = in.at(affix_no);
        if (my_affixes.contains(affix)) {
@@ -432,6 +451,26 @@ QString CSignature::get_highfreq_edge_letters(float frequency_threshold){
 void CSignature::increment_robustness(int increment) {
     m_robustness += increment;
 }
+
+void CSignature::compute_signature_transforms(bool suffix_flag, QTextStream & sig_transforms){
+    for (int n=0; n<m_Stems.size();n++ )
+    {   QString stem, word;
+        if (suffix_flag){
+            stem = m_Stems[n]->get_stem();
+            for(int s = 0; s < get_suffix_list()->length(); s++){
+                QString suffix = get_suffix_list()->at(s)->get_key();
+                if (suffix == "NULL")
+                    word = stem;
+                else
+                    word = stem + suffix;
+                QString transform (m_Signature + "_" + suffix);
+                sig_transforms << word + " " + transform << Qt::endl;
+
+            }
+        }
+    }
+}
+
 
 /////////////////////////////////////////////////////////////////////////
 //

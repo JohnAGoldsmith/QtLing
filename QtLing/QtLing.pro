@@ -6,7 +6,8 @@ TEMPLATE = app
 TARGET = QtLing
 INCLUDEPATH += .
 
-QT += gui widgets
+QT += gui
+QT += widgets
 QT += xml
 
 # The following define makes your compiler warn you if you use any
@@ -35,11 +36,13 @@ HEADERS += allosignatures.h \
            mainwindow.h \
            mainwindow_find.h \
            mainwindow_menubar.h \
+           mdl.h \
            parsings.h \
            Signature.h \
            SignatureCollection.h \
            Stem.h \
            StemCollection.h \
+           spine.h \
            string_group.h \
            stringalignment.h \
            Suffix.h \
@@ -66,7 +69,9 @@ SOURCES += allosignatures.cpp \
            Lexicon.cpp \
            lexicon_crab1.cpp \
            lexicon_crab2.cpp \
+           lexicon_crab_allomorphy.cpp \
            lexicon_json.cpp \
+           lexicon_output.cpp \
            lexicon_sublexicon.cpp \
            lxamodels.cpp \
            main.cpp \
@@ -75,6 +80,7 @@ SOURCES += allosignatures.cpp \
            mainwindow_find.cpp \
            mainwindow_menubar.cpp \
            mainwindow_treeview.cpp \
+           mdl.cpp \
            output.cpp \
            parsings.cpp \
            Signature.cpp \
@@ -82,6 +88,7 @@ SOURCES += allosignatures.cpp \
            SignatureCollection.cpp \
            Stem.cpp \
            StemCollection.cpp \
+           spine.cpp \
            string_group.cpp \
            stringalignment.cpp \
            Suffix.cpp \

@@ -43,7 +43,7 @@ typedef  QPair<word_t, stem_string_pair*>           word_stem_pair_pair;
 typedef QList<CParse>                       parse_list;
 typedef QList<stem_t>                       stem_list;
 typedef QList<suffix_t>                     suffix_list;
-typedef QList<affix_t>                      affix_list;
+typedef QList<affix_t>                      Affix_list;
 typedef QList<QString>                      word_list;
 typedef QList<CSignature*>                  SignatureList;
 typedef QList<CSuffix*>                     CSuffix_ptr_list;

@@ -18,30 +18,26 @@ void CLexicon::step10_find_compounds()
 
     // PART 1a: go through list of words to find hyphenated compounds
     const QMap<QString, protostem*>& ref_protostem_map
-            = m_SuffixesFlag ? m_suffix_protostems : m_prefix_protostems;
-    CStemCollection* p_stems = m_SuffixesFlag ? m_suffixal_stems : m_prefixal_stems;
-    m_ProgressBar->reset();
-    m_ProgressBar->setMinimum(0);
-    m_ProgressBar->setMaximum(m_Words->get_count() + p_stems->get_count());
+        = m_suffix_flag ? m_suffix_protostems : m_prefix_protostems;
+    
+    CStemCollection* p_stems = m_suffix_flag ? m_suffixal_stems : m_prefixal_stems;
+    initialize_progress(m_Words->get_count() + p_stems->get_count());
     m_StatusBar->showMessage("8: Finding Compounds - part 1.");
 
     // placeholder:
     (void)  ref_protostem_map;
 
     int MINIMUM_COMPOUND_STEM_LENGTH (4);
-    m_ProgressBar->reset();
-    m_ProgressBar->setMinimum(0);
-    //m_ProgressBar->setMaximum(stems->get_count());
-    m_StatusBar->showMessage("Looking for compounds.");
 
     for (int wordno = 0; wordno < m_Words->get_count(); wordno++){
         QString word = m_Words->get_string_from_sorted_list(wordno);
-        if (word.contains("-")){
+        if (word.contains("-")){             
             QStringList components = word.split("-");
             QString compound_string = QStringList2QString(components);
             CWord* pWord = m_Words->get_word(word);
             if (pWord){
                 pWord->add_compound(compound_string);
+                m_Compounds->add_compound_word(word, components); // 2023
             }
         }
     }
@@ -50,7 +46,7 @@ void CLexicon::step10_find_compounds()
     QStringList free_standing_stems;
     // Find all stems that are free-standing words
     m_suffixal_stems->sort_alphabetically();
-    m_Words->sort_word_list();
+    m_Words->sort_word_lists();
     int i(0), j(0);
     QString stem = m_suffixal_stems->get_at(i)->get_key();
     QString word = m_Words->get_string_from_sorted_list(j);
@@ -219,7 +215,7 @@ CompoundComponent* CompoundComponentCollection::add_or_find_compound_component
     if (comp_iter == m_map_words_to_compound_components.constEnd()) {
         CompoundComponent* new_component = new CompoundComponent(str_word);
         m_map_words_to_compound_components.insert(str_word, new_component);
-        //qDebug() << str_word<< 183;
+        qDebug() << str_word<< 183;
         return new_component;
     } else {
         return comp_iter.value();
@@ -310,7 +306,7 @@ CompoundWord* CompoundWordCollection::add_compound_word
     if (iter == m_map.end()) {
         p_this_word = new CompoundWord(str_word);
         m_map.insert(str_word, p_this_word);
-        //qDebug() << str_word << 276;
+        qDebug() << str_word << 276;
     } else {
         p_this_word = iter.value();
     }
@@ -346,23 +342,19 @@ void CompoundWordCollection::remove_compound_word(CompoundWord* p_word)
 
 }
 
+// to do: remove poitner to progress bar as argument; not needed.
 void CompoundWordCollection::remove_invalid_components(QProgressBar *p_progressbar)
-{
-    QList<CompoundComponent*> list_to_remove;
+{    QList<CompoundComponent*> list_to_remove;
     //QList<QString> list_to_remove;
     QMap<word_t, CompoundComponent*>& ref_components_map
             = m_component_collection->get_map();
+    m_lexicon->initialize_progress(ref_components_map.size());
     int itercount = 0;
-    if (p_progressbar != nullptr) {
-        p_progressbar->reset();
-        p_progressbar->setMinimum(0);
-        p_progressbar->setMaximum(ref_components_map.size());
-    }
+
     QMap<word_t, CompoundComponent*>::iterator components_iter;
     CompoundComponent* p_component;
     foreach (p_component, ref_components_map) {
-        if (p_progressbar != nullptr)
-            p_progressbar->setValue(itercount++);
+        m_lexicon->mark_progress(itercount++);
         if (!p_component->check_valid()) {
             list_to_remove.append(p_component);
         }

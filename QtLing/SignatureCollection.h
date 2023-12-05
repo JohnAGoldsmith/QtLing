@@ -49,11 +49,14 @@ public:
     void                                    operator<< ( CSignature* );
     CSignature*                             operator^= (const QString&);
     CSignature*                             operator[] (int n)              { return m_SortList[n];}
+    CSignature*                             at(int n) {return m_SortList[n];}
 
     void                                    add_this_and_all_subsignatures(QString sig_string, int stem_count, QStringList & signature_check_list);
     void                                    calculate_stem_entropy();
     void                                    clear();
     void                                    compute_containment_list(); //this gives   for each signature the largest signatures it contains.
+    void                                    compute_signature_transforms(bool suffix_flag, QTextStream & sig_transforms);
+
     bool                                    contains (sigstring_t);
     CSignature*                             find_or_add (const QString&);         // same as operatorˆ=
     CSignature *                            find_or_fail(const QString&);
@@ -72,10 +75,13 @@ public:
     QMap<QString, CSignature*> *            get_signature_map()             {  return & m_SignatureMap;}
     QListIterator<CSignature*>   *          get_sorted_list_iterator();
     bool                                    get_suffix_flag()               { return m_suffix_flag;}
+    int                                     get_total_count_of_letters_in_all_signatures();
+    double                                  get_description_length();
     void                                    sort(eSortStyle);
     void                                    sort_signatures_by_affix_count();
     void                                    sort_each_signatures_stems_alphabetically();
     void                                    sort_signatures_by_secondary_stem_count();
+
 
     void                                    assign_json_id();
     void                                    write_json(QJsonObject& ref_json, eJsonType json_type = INDEXED) const;

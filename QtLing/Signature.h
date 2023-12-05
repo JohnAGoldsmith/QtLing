@@ -43,9 +43,10 @@ public:
 public:
 
     // functions dealing with string containment:
+    void                        compute_signature_transforms(bool suffix_flag, QTextStream & sig_transforms);
     bool                        contains_affix_string (affix_t affix);
     bool                        contains (CSignature* other);
-    int                         intersection_with(affix_list& in, affix_list& intersection);
+    int                         intersection_with(Affix_list& in, Affix_list& intersection);
     int                         get_size_of_intersection(CSignature* othersig);
     int                         get_size_of_intersection(QList<CSuffix*>*);
     void                        add_stem (QString);
@@ -61,8 +62,10 @@ public:
     int                         get_number_of_stems() const             { return m_Stems.count();}
     int                         get_number_of_affixes() const ;
     CSignatureCollection*       get_signatures()            const       {return m_SignatureCollection;}
-    QString                     GetSignature()              const       { return m_Signature; }
     QString                     get_key()                   const       { return m_Signature;}
+    int                         get_letter_count_in_stems();
+    int                         get_letter_count_in_affixes();
+    int                         get_letter_count_in_stems_and_affixes();
     QList<CPrefix*>*            get_prefix_list()                       {return &m_Prefixes;}
     double                      get_stem_entropy();
     QList<CStem*>*              get_stems()                             { return   &m_Stems;}

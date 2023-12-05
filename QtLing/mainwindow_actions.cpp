@@ -118,6 +118,15 @@ void MainWindow::createActions()
     setMenuBar(m_main_menu_bar);
 
 
+    // MDL calculation: Control M
+
+    const QIcon MDL_Icon = QIcon::fromTheme("edit-paste", QIcon("./images/to-left.png"));
+    crab_MDL_Act = new QAction(MDL_Icon, tr("&MDL"), this);
+    crab_MDL_Act->setShortcut(QKeySequence(tr("Ctrl+M")));
+    crab_MDL_Act->setStatusTip(tr("Compute MDL"));
+    connect(crab_MDL_Act, &QAction::triggered, this, &MainWindow::do_MDL);
+
+
     // Crab Suffix Part 1: Control S
     const QIcon crab_suffix_1_Icon = QIcon::fromTheme("edit-paste", QIcon("./images/to-left.png"));
     crab_suffix_1_Act = new QAction(crab_suffix_1_Icon, tr("&Crab suffix part 1"), this);
@@ -142,6 +151,7 @@ void MainWindow::createActions()
 
     editToolBar->addAction(crab_suffix_1_Act);
     editToolBar->addAction(crab_prefix_1_Act);
+    editToolBar->addAction(crab_MDL_Act);
 
 
  }

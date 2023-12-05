@@ -26,20 +26,15 @@ void MainWindow::write_stems_and_words()
         return;
     }
 
-    QTextStream out (&out_file);
-    out.setFieldAlignment(QTextStream::AlignRight);
+    QTextStream textstream1 (&out_file);
+    textstream1.setFieldAlignment(QTextStream::AlignRight);
 
-    QMapIterator<QString,CWord*> word_iter (*lexicon->get_words()->get_map());
-    while (word_iter.hasNext()){
-        CWord* pWord = word_iter.next().value();
+    for (int n=0; n < lexicon->get_words()->get_word_count(); n++   ){
+        CWord* pWord = lexicon->get_words()->get_word(n);
         for (int i =0; i<pWord->get_parse_triple_list()->size(); i++){
                 Parse_triple *  this_triple =pWord->get_parse_triple_list()->at(i);
-//                out << std::left<< std::setfill(' ');// << std::left;
-//                    << std::setw(20)<< pWord->get_key()
-//                    << std::setw(20)<< this_triple->p_suffix
-//                    << std::setw(15) << this_triple->p_stem;
-                out.setFieldWidth(20);
-                out << pWord->get_key() << "+" <<  this_triple->m_stem  << "+"<< this_triple->m_suffix << Qt::endl ;
+                textstream1.setFieldWidth(20);
+                textstream1 << pWord->get_key() << "+" <<  this_triple->m_stem  << "+"<< this_triple->m_suffix << Qt::endl ;
         }
     }
 }
@@ -48,7 +43,7 @@ void MainWindow::read_stems_and_words()
 {
     CLexicon* lexicon = get_lexicon();
     QFile in_file (m_name_of_project_file);
-    QTextStream in(&in_file);
+    QTextStream out_corpus_costs(&in_file);
 
     if (! in_file.open(QFile::ReadOnly | QIODevice::Text))
     {
@@ -63,7 +58,7 @@ void MainWindow::read_stems_and_words()
             CParse* pParse = new CParse(words[1], words[2]);
             lexicon->add_parse(pParse);
         }
-        lexicon->get_words()->add(words[0]);
+        lexicon->add_word(words[0]);
     }
     lexicon->step2_from_protostems_to_parses();
     lexicon->step3_from_parses_to_stem_to_sig_maps("Reading stems and words");

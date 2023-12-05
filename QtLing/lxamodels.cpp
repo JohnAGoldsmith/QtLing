@@ -55,13 +55,13 @@ void  LxaStandardItemModel::load_category(QString , eComponentType)
 
 void LxaStandardItemModel::load_words(CWordCollection* p_words)
 {
-    CWord* pWord;
     QStringList labels = {tr("word"), tr("word count"), tr("signatures")};
     setHorizontalHeaderLabels(labels);
     m_Description = QString (" ");
     clear();
-    foreach (pWord, *p_words->get_map())
-    {   QList<QStandardItem*> item_list;
+    for (int i = 0; i < p_words->get_count(); i++){
+        CWord* pWord = p_words->get_word(i);
+        QList<QStandardItem*> item_list;
         item_list.append(new QStandardItem(pWord->get_key()));
 
         QStandardItem* pItem2 = new QStandardItem();
@@ -96,8 +96,6 @@ void LxaStandardItemModel::load_compounds(CompoundWordCollection *p_compounds)
 {
     typedef QStandardItem QSI;
     typedef CompoundWord::CompoundComposition CompoundComposition;
-
-    qDebug() << 97 << "Number of compounds"<< p_compounds->get_count();
     QStringList labels;
     labels << "Compound word" << "Possible Compositions";
     setHorizontalHeaderLabels(labels);
@@ -110,7 +108,6 @@ void LxaStandardItemModel::load_compounds(CompoundWordCollection *p_compounds)
         QList<QSI*> item_list;
         QSI* item0 = new QSI(compound_iter.key());
         item_list.append(item0);
-
         CompoundWord* p_compoundword = compound_iter.value();
         const QList<CompoundComposition*>& composition_list = p_compoundword->get_compositions();
         QList<CompoundComposition*>::ConstIterator composition_iter;
@@ -133,7 +130,6 @@ void LxaStandardItemModel::load_protostems(QMap<QString, protostem *>* p_protost
     QStringList labels;
     labels << "Protostem" << "Word Count";
     setHorizontalHeaderLabels(labels);
-
     while (iter.hasNext()) {
         curr_protostem = iter.next().value();
         QList<QSI*> item_list;
@@ -152,23 +148,17 @@ void LxaStandardItemModel::load_stems(CStemCollection * p_stems)
 {
     CStem*                          stem;
     QMapIterator<QString, CStem*>  iter ( * p_stems->get_map() ) ;
-
     clear();
     while (iter.hasNext())
     {
         QList<QStandardItem*> item_list;
-
         stem = iter.next().value();
         QStandardItem *item = new QStandardItem(stem->get_key());
         item_list.append(item);
-
         QStandardItem *item2 = new QStandardItem();
         item2->setData(stem->get_count(), Qt::DisplayRole); // --- Numerical data --- //
-        // changed: let data have type int //
         item_list.append(item2);
-
         QListIterator<CSignature*> sig_iter(*stem->GetSignatures());
-
         while (sig_iter.hasNext()){
            sigstring_t sig = sig_iter.next()->get_key();
            QStandardItem *item = new QStandardItem(sig);
@@ -177,15 +167,12 @@ void LxaStandardItemModel::load_stems(CStemCollection * p_stems)
         appendRow(item_list);
     }
 }
-
-
 void LxaStandardItemModel::load_suffixes(CSuffixCollection * p_suffixes)
 {
     clear();
     QStringList labels;
     labels << "Suffix" << "# of signatures";
     setHorizontalHeaderLabels(labels);
-    //map_string_to_suffix_ptr_iter suffix_iter(*p_suffixes->get_map());
     CSuffix_ptr_list_iterator suffix_iter(*p_suffixes->get_sorted_list());
     while (suffix_iter.hasNext())
     {
@@ -202,11 +189,9 @@ void LxaStandardItemModel::load_suffixes(CSuffixCollection * p_suffixes)
 void LxaStandardItemModel::load_prefixes(CPrefixCollection * p_prefixes)
 {
     clear();
-    //map_string_to_suffix_ptr_iter suffix_iter(*p_suffixes->get_map());
     QStringList labels;
     labels << "Prefix" << "# of signatures";
     setHorizontalHeaderLabels(labels);
-
     double totalcount = 0;
     CPrefix_ptr_list_iterator prefix_iter1(*p_prefixes->get_sorted_list());
     while (prefix_iter1.hasNext())
@@ -245,7 +230,7 @@ void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures, e
     {
         sig = p_signatures->get_at_sorted(signo);
         QList<QStandardItem*> items;
-        const QString& str_sig = sig->GetSignature();
+        const QString& str_sig = sig->get_key();//GetSignature();
         QStandardItem * item1 = new QStandardItem(str_sig);
         QStandardItem * item2 = new QStandardItem();
         QStandardItem * item3 = new QStandardItem();
@@ -284,7 +269,7 @@ void LxaStandardItemModel::load_positive_signatures(CSignatureCollection* p_sign
         item3->setData(sig->get_robustness(), Qt::DisplayRole);     // --- Numerical data --- //
         item4->setData(sig->get_stem_entropy(), Qt::DisplayRole);   // --- Numerical data --- //
 
-        items.append(new QStandardItem(sig->GetSignature()));
+        items.append(new QStandardItem(sig->get_key()));
         items.append(item2);
         items.append(item3);
         items.append(item4);
@@ -320,7 +305,7 @@ void LxaStandardItemModel::load_parasignatures(CSignatureCollection* p_signature
         item3->setData(sig->get_robustness(), Qt::DisplayRole); // --- Numerical data --- //
         items.append(item1);
         items.append(item3);
-        items.append(new QStandardItem(sig->GetSignature()));
+        items.append(new QStandardItem(sig->get_key()));
         appendRow(items);
     }
 }

@@ -1,0 +1,367 @@
+# Affix list
+20 #  number of affixes
+NULL #  0
+t #  1
+ly #  2
+e #  3
+n't #  4
+d #  5
+k #  6
+l #  7
+n #  8
+er #  9
+self #  10
+'s #  11
+le #  12
+ow #  13
+ry #  14
+s #  15
+g #  16
+friend #  17
+w #  18
+y #  19
+NULL;  NULL=ly 
+ly;  NULL=ly 
+NULL;  NULL=n't 
+n't;  NULL=n't 
+NULL;  NULL=e 
+e;  NULL=e 
+NULL;  NULL=n 
+n;  NULL=n 
+NULL;  NULL=t 
+t;  NULL=t 
+NULL;  NULL=er 
+er;  NULL=er 
+e;  e=t 
+t;  e=t 
+NULL;  NULL=self 
+self;  NULL=self 
+ry;  ry=t 
+t;  ry=t 
+NULL;  's=NULL 
+'s;  's=NULL 
+l;  l=t 
+t;  l=t 
+k;  k=l 
+l;  k=l 
+e;  e=w 
+w;  e=w 
+d;  d=t 
+t;  d=t 
+d;  d=s 
+s;  d=s 
+NULL;  NULL=y 
+y;  NULL=y 
+NULL;  NULL=ow 
+ow;  NULL=ow 
+NULL;  NULL=le 
+le;  NULL=le 
+NULL;  NULL=k 
+k;  NULL=k 
+NULL;  NULL=g 
+g;  NULL=g 
+NULL;  NULL=friend 
+friend;  NULL=friend 
+NULL=ly
+NULL=n't
+NULL=e
+NULL=n
+NULL=t
+NULL=er
+e=t
+NULL=self
+ry=t
+'s=NULL
+l=t
+k=l
+e=w
+d=t
+d=s
+NULL=y
+NULL=ow
+NULL=le
+NULL=k
+NULL=g
+NULL=friend
+# A pointer to each signature, followed by running total of MDL
+5.06609 5.06609 # 's=NULL
+3.74416 8.81025 # NULL=e
+4.48113 13.2914 # NULL=er
+5.06609 18.3575 # NULL=friend
+5.06609 23.4236 # NULL=g
+5.06609 28.4896 # NULL=k
+5.06609 33.5557 # NULL=le
+2.74416 36.2999 # NULL=ly
+4.06609 40.366 # NULL=n
+2.89616 43.2621 # NULL=n't
+5.06609 48.3282 # NULL=ow
+4.48113 52.8094 # NULL=self
+4.06609 56.8755 # NULL=t
+5.06609 61.9415 # NULL=y
+5.06609 67.0076 # d=s
+5.06609 72.0737 # d=t
+4.48113 76.5548 # e=t
+5.06609 81.6209 # e=w
+5.06609 86.687 # k=l
+5.06609 91.7531 # l=t
+5.06609 96.8192 # ry=t
+
+## Add the cost of a marker that the signature list is over.
+
+
+## DL from signature pointers only:
+96.8192 96.8192
+## Second version of stem bits 
+
+# 's=NULL
+22.9248 22.9248 # that
+27.5098 50.4346 # there
+
+# NULL=e
+18.3399 68.7744 # mad
+32.0947 100.869 # breath
+18.3399 119.209 # cut
+18.3399 137.549 # bit
+18.3399 155.889 # hug
+
+# NULL=er
+22.9248 178.814 # show
+22.9248 201.738 # both
+22.9248 224.663 # lock
+
+# NULL=friend
+22.9248 247.588 # girl
+18.3399 265.928 # boy
+
+# NULL=g
+18.3399 284.268 # ran
+18.3399 302.608 # son
+
+# NULL=k
+22.9248 325.532 # than
+18.3399 343.872 # too
+
+# NULL=le
+22.9248 366.797 # hand
+18.3399 385.137 # who
+
+# NULL=ly
+36.6797 421.817 # serious
+27.5098 449.326 # quiet
+22.9248 472.251 # near
+22.9248 495.176 # slow
+27.5098 522.686 # usual
+27.5098 550.196 # quick
+41.2647 591.46 # complete
+18.3399 609.8 # ear
+22.9248 632.725 # soft
+32.0947 664.82 # sudden
+
+# NULL=n
+22.9248 687.744 # give
+22.9248 710.669 # know
+22.9248 733.594 # take
+27.5098 761.104 # broke
+
+# NULL=n't
+18.3399 779.444 # did
+22.9248 802.368 # were
+22.9248 825.293 # have
+18.3399 843.633 # had
+22.9248 866.558 # does
+13.7549 880.313 # is
+18.3399 898.653 # was
+27.5098 926.162 # would
+27.5098 953.672 # could
+
+# NULL=ow
+22.9248 976.597 # wind
+18.3399 994.937 # all
+
+# NULL=self
+22.9248 1017.86 # your
+13.7549 1031.62 # my
+18.3399 1049.96 # him
+
+# NULL=t
+32.0947 1082.05 # though
+22.9248 1104.98 # sigh
+22.9248 1127.9 # pain
+22.9248 1150.83 # mean
+
+# NULL=y
+22.9248 1173.75 # read
+22.9248 1196.68 # part
+
+# d=s
+18.3399 1215.02 # he'
+22.9248 1237.94 # she'
+
+# d=t
+18.3399 1256.28 # foo
+22.9248 1279.2 # spen
+
+# e=t
+18.3399 1297.54 # fac
+18.3399 1315.88 # lif
+18.3399 1334.22 # los
+
+# e=w
+22.9248 1357.15 # thre
+18.3399 1375.49 # kne
+
+# k=l
+18.3399 1393.83 # wal
+18.3399 1412.17 # tal
+
+# l=t
+18.3399 1430.51 # fee
+18.3399 1448.85 # fel
+
+# ry=t
+18.3399 1467.19 # hur
+18.3399 1485.53 # sor
+
+## Stem content, approach 2: 1485.53
+## Using this value for stem content: 1485.53; MDL = 1582.35
+
+# Signature pointers and stem content included so far.
+
+##   Affixes   count: 20 Number of analyzed words: 134
+# DL for affix content; length of pointer to this affix; running total of affix content. # affix; Use count
+4.58496 1.36565 4.58496 # NULL
+13.7549 6.06609 18.3399 # 's
+9.16993 5.06609 27.5098 # d
+9.16993 3.74416 36.6797 # e
+13.7549 5.48113 50.4346 # er
+32.0947 6.06609 82.5293 # friend
+9.16993 6.06609 91.6993 # g
+9.16993 5.06609 100.869 # k
+9.16993 5.06609 110.039 # l
+13.7549 6.06609 123.794 # le
+13.7549 3.74416 137.549 # ly
+9.16993 5.06609 146.719 # n
+18.3399 3.89616 165.059 # n't
+13.7549 6.06609 178.814 # ow
+13.7549 6.06609 192.568 # ry
+9.16993 6.06609 201.738 # s
+22.9248 5.48113 224.663 # self
+9.16993 3.36565 233.833 # t
+9.16993 6.06609 243.003 # w
+9.16993 6.06609 252.173 # y
+
+## Bits for affix letters; total MDL so far (sig pointers, stem and affix content) 
+
+252.173  1834.52
+
+
+
+
+## Use of affix pointers in signatures
+# 's=NULL
+    6.06609 # 's . Running total of affix pointer use: 6.06609
+    0 # NULL . Running total of affix pointer use: 6.06609
+# running total DL of affix pointer use 6.06609
+# NULL=e
+    0 # NULL . Running total of affix pointer use: 0
+    3.74416 # e . Running total of affix pointer use: 3.74416
+# running total DL of affix pointer use 9.81025
+# NULL=er
+    0 # NULL . Running total of affix pointer use: 0
+    5.48113 # er . Running total of affix pointer use: 5.48113
+# running total DL of affix pointer use 15.2914
+# NULL=friend
+    0 # NULL . Running total of affix pointer use: 0
+    6.06609 # friend . Running total of affix pointer use: 6.06609
+# running total DL of affix pointer use 21.3575
+# NULL=g
+    0 # NULL . Running total of affix pointer use: 0
+    6.06609 # g . Running total of affix pointer use: 6.06609
+# running total DL of affix pointer use 27.4236
+# NULL=k
+    0 # NULL . Running total of affix pointer use: 0
+    5.06609 # k . Running total of affix pointer use: 5.06609
+# running total DL of affix pointer use 32.4896
+# NULL=le
+    0 # NULL . Running total of affix pointer use: 0
+    6.06609 # le . Running total of affix pointer use: 6.06609
+# running total DL of affix pointer use 38.5557
+# NULL=ly
+    0 # NULL . Running total of affix pointer use: 0
+    3.74416 # ly . Running total of affix pointer use: 3.74416
+# running total DL of affix pointer use 42.2999
+# NULL=n
+    0 # NULL . Running total of affix pointer use: 0
+    5.06609 # n . Running total of affix pointer use: 5.06609
+# running total DL of affix pointer use 47.366
+# NULL=n't
+    0 # NULL . Running total of affix pointer use: 0
+    3.89616 # n't . Running total of affix pointer use: 3.89616
+# running total DL of affix pointer use 51.2621
+# NULL=ow
+    0 # NULL . Running total of affix pointer use: 0
+    6.06609 # ow . Running total of affix pointer use: 6.06609
+# running total DL of affix pointer use 57.3282
+# NULL=self
+    0 # NULL . Running total of affix pointer use: 0
+    5.48113 # self . Running total of affix pointer use: 5.48113
+# running total DL of affix pointer use 62.8094
+# NULL=t
+    0 # NULL . Running total of affix pointer use: 0
+    3.36565 # t . Running total of affix pointer use: 3.36565
+# running total DL of affix pointer use 66.175
+# NULL=y
+    0 # NULL . Running total of affix pointer use: 0
+    6.06609 # y . Running total of affix pointer use: 6.06609
+# running total DL of affix pointer use 72.2411
+# d=s
+    5.06609 # d . Running total of affix pointer use: 5.06609
+    6.06609 # s . Running total of affix pointer use: 11.1322
+# running total DL of affix pointer use 83.3733
+# d=t
+    5.06609 # d . Running total of affix pointer use: 5.06609
+    3.36565 # t . Running total of affix pointer use: 8.43174
+# running total DL of affix pointer use 91.805
+# e=t
+    3.74416 # e . Running total of affix pointer use: 3.74416
+    3.36565 # t . Running total of affix pointer use: 7.10981
+# running total DL of affix pointer use 98.9148
+# e=w
+    3.74416 # e . Running total of affix pointer use: 3.74416
+    6.06609 # w . Running total of affix pointer use: 9.81025
+# running total DL of affix pointer use 108.725
+# k=l
+    5.06609 # k . Running total of affix pointer use: 5.06609
+    5.06609 # l . Running total of affix pointer use: 10.1322
+# running total DL of affix pointer use 118.857
+# l=t
+    5.06609 # l . Running total of affix pointer use: 5.06609
+    3.36565 # t . Running total of affix pointer use: 8.43174
+# running total DL of affix pointer use 127.289
+# ry=t
+    6.06609 # ry . Running total of affix pointer use: 6.06609
+    3.36565 # t . Running total of affix pointer use: 9.43174
+# running total DL of affix pointer use 136.721
+
+# Running total of signature pointer use in bits 136.721
+# MDL so far: 1971.24
+# Includes signature pointers, stem and affix content, and pointers to affixes inside signatures.
+
+# Number of unanalyzed words: 856
+# Number of analyzed words: 134
+# Bits per letter: 4.58496
+# Pointers to the signatures: 96.8192
+# Bits for stem content: 1485.53
+# Bits for affix content: 252.173
+# Bits for affix pointers inside signatures: 136.721
+# Bits for unanalyzed words: 23195.3
+# Total bits 25166.6
+
+Corpus count analyzed words: 134 and of unanalyzed words: 856 Total: 990
+326.246 # Corpus Description of analyzed words.
+
+8338.7 # Corpus Description of unanalyzed words.
+
+566.22 # Cost of flagging which are analyzed.
+
+34397.7 # Grammar + corpus description.

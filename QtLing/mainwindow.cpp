@@ -134,7 +134,11 @@ MainWindow::MainWindow()
     readSettings();
 
     // resize the main window
-    resize(QDesktopWidget().availableGeometry(this).size() * 0.9);
+
+    //resize(QDesktopWidget().availableGeometry(this).size() * 0.9);
+    resize(QSize(1000,1000));
+
+
     // set sizes of children of main splitter, i.e. left tree view and tables on the right
     m_mainSplitter->setSizes(QList<int>() << 800 <<2000);
 
@@ -324,6 +328,10 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         get_lexicon()->set_prefixes_flag();
         break;
     }
+    case Qt::Key_9:{
+        get_lexicon()->step11_find_allomorphic_signatures();
+        break;
+    }
     case Qt::Key_C:
     {if (ke->modifiers() == Qt::ControlModifier)
         {
@@ -331,8 +339,10 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         }
         break;
     }
+    // __input
     case Qt::Key_D:     {
-        read_dx1_file();
+        qDebug() << "we hit key d";
+        read_previous_data_file();
         break;
     }
     case Qt::Key_G:
@@ -375,6 +385,10 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         m_graphics_view->zoom_up();
         break;
     }
+    case Qt::Key_O:{
+        ask_for_filename();
+        break;
+    }
     case Qt::Key_P:
     {
         // this has been moved to the "Actions" which can link themselves to the keyboard shortcuts.
@@ -411,6 +425,10 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         }
         break;
         }
+    }
+    // __input
+    case Qt::Key_T: // read text (not word list, not dx1)
+    {
     }
     case Qt::Key_V:
     {
@@ -481,6 +499,11 @@ void MainWindow::do_crab1_suffixes()
     get_lexicon()->set_suffixes_flag();
     do_crab1();
 
+}
+void MainWindow::do_MDL()
+{
+
+    get_lexicon()->compute_MDL();
 }
 void MainWindow::do_crab1_prefixes()
 {
@@ -586,13 +609,6 @@ void MainWindow::newFile()
     }
 }
 
-void MainWindow::ask_for_filename()
-{
-    // qDebug() << " ask for filename" ;
-    m_name_of_data_file = QFileDialog::getOpenFileName(this);
-    qDebug() << m_name_of_data_file;
-    read_dx1_file();
-}
 
 void MainWindow::ask_for_project_file()
 {
@@ -670,15 +686,44 @@ void MainWindow::load_models(CLexicon* lexicon)
     statusBar()->showMessage("Finished loading models.");
 
 }
+// ask_for_new_filenmae_for_input
+//
+// read_text_file
+// read_dx1_file
+// do_crab1
 
-void MainWindow::read_file_do_crab()
-{       read_dx1_file();
-        statusBar()->showMessage(tr("Ready"));
-        do_crab1();
+
+
+// __input
+void MainWindow::ask_for_filename()
+{   QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
+    m_name_of_data_file = QFileDialog::getOpenFileName(this);
+    QFile file(m_name_of_data_file);
+    QString previous_data_file;
+    previous_data_file = settings.value( "data_file" ).toString() ;
+    if ( previous_data_file != m_name_of_data_file){
+        settings.setValue("name_of_previous_data_file", m_name_of_data_file);
+        settings.setValue("name_of_data_file", m_name_of_data_file );
+    }
+    setCurrentFile(m_name_of_data_file);
+    if (!file.open(QFile::ReadOnly | QFile::Text))
+    {
+           QMessageBox::warning(this, tr("Application"),
+                                tr("Cannot read file %1:\n%2.")
+                                .arg(QDir::toNativeSeparators(m_name_of_data_file), file.errorString()));
+           return;
+    }
+    settings.setValue("data_file", m_name_of_data_file);
+    QTextStream instream(&file);
+    if (m_name_of_data_file.endsWith(".dx1")){
+        read_dx1_file(instream);
+    } else{
+        read_text_file(instream);
+    }
 }
-
-void MainWindow::read_dx1_file()
-{
+void MainWindow::read_previous_data_file(){
+     QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
+     m_name_of_data_file = settings.value("data_file").toString();
      QFile file(m_name_of_data_file);
      if (!file.open(QFile::ReadOnly | QFile::Text))
      {
@@ -687,26 +732,56 @@ void MainWindow::read_dx1_file()
                                  .arg(QDir::toNativeSeparators(m_name_of_data_file), file.errorString()));
             return;
      }
-     QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
-     settings.setValue("name_of_data_file", m_name_of_data_file );
-     QTextStream in(&file);
-     CWordCollection * Words = get_lexicon()->get_word_collection();
-     while (!in.atEnd())
-     {
-            QStringList words = in.readLine().simplified().split(" ");
-            CWord* pWord = *Words <<  words[0].toLower();
-            if (words.size()> 1) {
-                pWord->SetWordCount(words[1].toInt());
-            }
+     QTextStream in_stream(&file);
+     if (m_name_of_data_file.endsWith(".dx1")){
+         read_dx1_file(in_stream);
+     } else{
+         read_text_file(in_stream);
      }
-    Words->sort_word_list();
-    setCurrentFile(m_name_of_data_file);
-    statusBar()->showMessage(tr("File loaded"), 5000);
+}
+// __input
+
+void MainWindow::read_dx1_file (QTextStream & in_stream){
+    QMap<QString, int> word_counts;
+    while (!in_stream.atEnd()){
+        QStringList items = in_stream.readLine().simplified().split(" ");
+        QString word = items[0];
+        if (items.size()> 1) {
+            bool ok;
+            int count = items[1].toInt(&ok);
+            if (ok) {
+                    word_counts[word] = count;
+            } else{
+                word_counts[word] = 1;
+            }
+        }
+    }
+    get_lexicon()->input_words(word_counts);
+}
+void MainWindow::read_text_file (QTextStream & in_stream){
+    QMap<QString, int> word_counts;
+    while (!in_stream.atEnd()){
+        QStringList items = in_stream.readLine().simplified().split(" ");
+        foreach (QString word, items){
+            if (word_counts.contains(word)){
+                word_counts[word] += 1;
+            } else{
+                word_counts[word] = 1;
+            }
+        }
+    }
+    get_lexicon()->input_words(word_counts);
 }
 
 
+// __input
+
+void MainWindow::read_file_do_crab()
+{
+}
 
 
+//__output
 bool MainWindow::save()
 {
     if (curFile.isEmpty()) {
@@ -734,9 +809,6 @@ void MainWindow::documentWasModified()
 {
 
 }
-
-
-
 void MainWindow::print_suffix_signatures()
 {
     int count = 0;
@@ -744,7 +816,7 @@ void MainWindow::print_suffix_signatures()
     QString filename = "swahili-suffix-signatures.txt";
     QFile file (filename);
     if (file.open(QIODevice::ReadWrite)){
-        QTextStream stream( &file);
+        QTextStream textstream1( &file);
     QStringList labels;
     labels  << tr("signature") << "stem count" << "robustness"<< "fullness";
     CSignatureCollection * signatures = get_lexicon()->get_suffix_signatures();
@@ -754,28 +826,24 @@ void MainWindow::print_suffix_signatures()
     for (int signo = 0; signo<signatures->get_count(); signo++)
     {   pSig = signatures->get_at_sorted(signo);
         if (pSig->get_stem_entropy() < threshold){continue;}
-        stream << pSig->get_key()    << Qt::endl << Qt::endl;
+        textstream1 << pSig->get_key()    << Qt::endl << Qt::endl;
         CStem_ptr_list_iterator stem_iter (*pSig->get_stems());
         while (stem_iter.hasNext()){
             pStem = stem_iter.next();
-            stream << pStem->get_key() << "\t";
+            textstream1 << pStem->get_key() << "\t";
             count++;
             if (count ==5){
                 count = 0;
-                stream << Qt::endl;
+                textstream1 << Qt::endl;
             }
         }
-        stream << Qt::endl << Qt::endl;
+        textstream1 << Qt::endl << Qt::endl;
         count = 0;
      }
-     stream << Qt::endl;
+     textstream1 << Qt::endl;
      }
      file.close();
 }
-
-
-
-
 void MainWindow::print_prefix_signatures()
 {
     //CSignature* pSig;
@@ -784,7 +852,7 @@ void MainWindow::print_prefix_signatures()
     QString filename = "swahili-prefix-signatures.txt";
     QFile file (filename);
     if (file.open(QIODevice::ReadWrite)){
-        QTextStream stream( &file);
+        QTextStream textstream1( &file);
     QStringList labels;
     labels  << tr("signature") << "stem count" << "robustness"<< "fullness";
     CSignatureCollection * signatures = get_lexicon()->get_prefix_signatures();
@@ -794,25 +862,24 @@ void MainWindow::print_prefix_signatures()
     for (int signo = 0; signo<signatures->get_count(); signo++)
     {   pSig = signatures->get_at_sorted(signo);
         if (pSig->get_stem_entropy() < threshold){continue;}
-        stream << pSig->get_key()    << Qt::endl << Qt::endl;
+        textstream1 << pSig->get_key()    << Qt::endl << Qt::endl;
         CStem_ptr_list_iterator stem_iter (*pSig->get_stems());
         while (stem_iter.hasNext()){
             pStem = stem_iter.next();
-            stream << pStem->get_key() << "\t";
+            textstream1 << pStem->get_key() << "\t";
             count++;
             if (count ==5){
                 count = 0;
-                stream << Qt::endl;
+                textstream1 << Qt::endl;
             }
         }
-        stream << Qt::endl << Qt::endl;
+        textstream1 << Qt::endl << Qt::endl;
         count = 0;
      }
-     stream << Qt::endl;
+     textstream1 << Qt::endl;
      }
      file.close();
 }
-
 void MainWindow::launch_find_dock()
 {
     FindDialog* find_dialog = m_find_dock_widget->get_child_dialog();
@@ -825,6 +892,7 @@ void MainWindow::launch_find_dock()
     m_find_dock_widget->setVisible(true);
 }
 
+// __input
 /*!
  * \brief Opens up a dialogue to get directory for a Gold Standard xml file.
  * Parses that file and stores parse results in a GoldStandard object.
@@ -952,7 +1020,8 @@ void MainWindow::readSettings()
 
     const QByteArray geometry = settings.value("geometry", QByteArray()).toByteArray();
     if (geometry.isEmpty()) {
-        const QRect availableGeometry = QApplication::desktop()->availableGeometry(this);
+        //const QRect availableGeometry = QApplication::desktop()->availableGeometry(this);
+        QRect availableGeometry = QRect(0,0,1000,1000);
         resize(availableGeometry.width() / 3, availableGeometry.height() / 2);
         move((availableGeometry.width() - width()) / 2,
              (availableGeometry.height() - height()) / 2);
@@ -999,7 +1068,7 @@ bool MainWindow::saveFile(const QString &fileName)
         return false;
     }
 
-    QTextStream out(&file);
+    QTextStream out_corpus_costs(&file);
     setCurrentFile(fileName);
     statusBar()->showMessage(tr("File saved"), 2000);
     return true;

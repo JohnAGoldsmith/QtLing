@@ -117,6 +117,7 @@ class MainWindow : public QMainWindow
     CLexicon*                               m_my_lexicon;
     QStringList                             m_corpus;
     QString                                 m_name_of_data_file;
+    QString                                 m_name_of_previous_data_file;
     QString                                 m_name_of_project_file;
     QProgressBar *                          m_ProgressBar;
     QStatusBar *                            m_status_bar;
@@ -169,6 +170,7 @@ class MainWindow : public QMainWindow
     QAction *                               crab_prefix_1_Act;
     QAction *                               crab_suffix_2_Act;
     QAction *                               crab_prefix_2_Act;
+    QAction *                               crab_MDL_Act;
 
 
 public:
@@ -211,6 +213,7 @@ private slots:
     void                                    do_crab5();
     void                                    do_crab6();
     void                                    do_crab_compounds();
+    void                                    do_MDL();
     void                                    documentWasModified();
     void                                    newFile();
     void                                    print_prefix_signatures();
@@ -241,9 +244,9 @@ public:
     void createSplitter();
     void ask_for_filename();
     void ask_for_project_file();
-    void read_dx1_file();
-    void read_text_file();
-
+    void read_dx1_file(QTextStream&);
+    void read_text_file(QTextStream&);
+    void read_previous_data_file();
     void                    createFindDockWidget(UpperTableView* p_tableview);
 
 //          Qt-style modesl

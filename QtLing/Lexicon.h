@@ -114,16 +114,16 @@ public:
 class sig_pair{   // was: sig_graph_edge{
 //-----------------------------------------------------------------------//
 public:
-    CSignature* m_sig_1;
-    CSignature* m_sig_2;
-    CLexicon*   m_lexicon;
+    CSignature*  m_sig_1;
+    CSignature*  m_sig_2;
+    CLexicon*    m_lexicon;
     sigstring_t  m_sig_string_1;
     sigstring_t  m_sig_string_2;
-    double m_sig_1_entropy = -1;
-    double m_sig_2_entropy = -1;
-    morph_t     morph;
-    QMap<QString, word_stem_struct*>         shared_word_stems;
-    QStringList my_stems;
+    double       m_sig_1_entropy = -1;
+    double       m_sig_2_entropy = -1;
+    morph_t      morph;
+    QStringList  my_stems;
+    QMap<QString, word_stem_struct*> shared_word_stems;
     sig_pair();
     sig_pair(QString amorph, CSignature* sig1, CSignature* sig2){
         morph = amorph;
@@ -243,7 +243,7 @@ protected:
     QMap<QString, protostem*>       m_suffix_protostems;
     QMap<QString, protostem*>       m_prefix_protostems;
 
-    bool                            m_SuffixesFlag;
+    bool                            m_suffix_flag;
     CLexicon*                       m_parent_lexicon;
     QMap<QString, int>              m_internal_suffix_counts;
     QMap<QString, int>              m_internal_prefix_counts; // we assign numbers to the names of word-internal affixes, like ":5" to the end of a suffix, and "5:" to the beginning of a prefix.
@@ -309,9 +309,23 @@ public:
     void                                        add_parse(CParse*);
     void                                        add_paraprefix(QString paraprefix, QString word);
     void                                        add_parasuffix(QString parasuffix, QString word);
+    CSignature*                                 add_signature(QString);
+    CStem*                                      add_stem(QString);
+    CWord*                                      add_word(QString);
+    void                                        add_affix_to_signature(QString affix, CSignature*  pSig);
+    void                                        add_analysis_to_word_for_suffix_case(QString stem, QString affix, CSignature* pSig,
+                                                        QString name_of_calling_function);
+    void                                        add_suffix_analysis_to_word(CWord* pWord,QString stem, QString affix, QString sig_string,
+                                                                            QString word_split, QString name_of_calling_function);
+    void                                        add_prefix_analysis_to_word(CWord* pWord,QString stem, QString affix, QString sig_string,
+                                                                            QString word_split, QString name_of_calling_function);
     void                                        change_minimum_stem_count(int count) {M_MINIMUM_STEM_COUNT = count;}
+    //double                                      compute_MDL_1(); // for MDL project with Marina E.
+    double                                      compute_MDL(); // for MDL project with Marina E.
     CSignature *                                find_signature_of_stem(QString stem, bool suffix_flag);
     CSignatureCollection*                       get_active_signature_collection();
+    CStemCollection*                            get_active_stem_collection();
+
     int                                         get_affix_count(QString affix);
     QStringList                                 get_affix_continuation(QString affix, bool suffix_flag ,QStringList continuations );
     QMap<QString, eComponentType> &             get_category_types()        { return m_category_types;}
@@ -345,10 +359,29 @@ public:
     QListIterator<word_sig_pair*>    *          get_sig_graph_edge_list_iter();
     sig_pair_iter *                             get_sig_graph_edge_map_iter();
 
-    bool                                        get_suffix_flag()           { return m_SuffixesFlag; }
+    bool                                        get_suffix_flag()           { return m_suffix_flag; }
     CSignatureCollection*                       get_virtual_signatures()    {return m_VirtualSignatures;}
     CWordCollection*                            get_word_collection()       { return m_Words; }
     CWordCollection *                           get_words()                 { return m_Words;}
+
+    void                                        input_words(QMap<QString, int> word_counts);
+
+    //helper functions:
+    // Crab1:
+    void                                        make_protostem_objects_suffix_case(const QStringList* Words);
+    void                                        make_protostem_objects_prefix_case(const QStringList* Words);
+    void                                        make_protostem_if_appropriate_suffix_case(QString this_word, QString next_word);
+    void                                        make_protostem_if_appropriate_prefix_case(QString this_word, QString next_word);
+
+    void                                        mark_progress(int); // mark progress bar and process events too.
+    void                                        initialize_progress(int max_value);
+    void                                        scan_word_for_protostems_suffix_case(QString word);
+    void                                        scan_word_for_protostems_prefix_case(QString word);
+    void                                        attach_affix_to_intermediate_stem(CParse*);
+    void                                        attach_stem_to_intermediate_signature(QString stem);
+
+
+    void                                        keep_only_one_parse_per_word();
 
     QList<QString> *                            get_stem_autobiography(const stem_t& stem)   { return m_stem_autobiographies[stem];}
     void                                        add_to_stem_autobiographies (const QString& stem, const QString& message);
@@ -360,24 +393,37 @@ public:
 
     bool                                        word_autobiographies_contains(const QString& word);
     void                                        word_autobiography_positive_notice( QString word, QString stem, QString sig_string, QString calling_function);
-    void                                        word_autobiography_positive_notice_2( QString word, QString stem, QString sig_string, QString calling_function);
+    //void                                        word_autobiography_positive_notice_2( QString word, QString stem, QString sig_string, QString calling_function);
     void                                        set_progress_bar (QProgressBar * pPB) { m_ProgressBar = pPB;}
     void                                        set_status_bar(QStatusBar* pBar) {m_StatusBar = pBar;}
-    void                                        set_prefixes_flag()         { m_SuffixesFlag = false;}
-    void                                        set_suffixes_flag()         { m_SuffixesFlag = true;}
-    void                                        set_suffix_flag(bool flag)  { m_SuffixesFlag = flag;}
+    void                                        set_prefixes_flag()         { m_suffix_flag = false;}
+    void                                        set_suffixes_flag()         { m_suffix_flag = true;}
+    void                                        set_suffix_flag(bool flag)  { m_suffix_flag = flag;}
     void                                        set_window(MainWindow* window) { m_main_window = window; }
+
+    void                                        sort_parse_triples_on_all_words(bool suffixes_flag);
 
     CLexicon *                                  build_sublexicon(MainWindow* = NULL);
 
 
     void                                        time_stamp(const QString& message);
-    bool                                        verify_parses(); //check parses against the parses in each word;
     bool                                        remove_parse(QString full_display_of_parse);
     bool                                        remove_parse(CParse*);
     bool                                        remove_parse(CParse&);
+//MDL:
+    /*void                                        MDL_process_each_signature(CSignature*, QString,
+                                                                           QMap<QString, QMap<QString, int>* >&,
+                                                                           QMap<QString,int>, // word counts
+                                                                           double,            // type counts of analyzed words
+                                                                           double,          // corpus count of analyzed words
+                                                                           QMap<QString,int>&, // stems
+                                                                           QMap<QString, int>&, // affixes
+                                                                           QMap<QString, QString>,
+                                                                           QMap<QString, QString>,
+                                                                           QMap<QString, QString>);
 
 
+*/
 public:
     // insert functions here
     void step1_from_words_to_protostems();
@@ -386,13 +432,9 @@ public:
     void step3_from_parses_to_stem_to_sig_maps(QString name_of_calling_function);
     void step3a_from_parses_to_stem_to_sig_map( );
     void step3b_from_stem_to_sig_map_to_sig_to_stem_map();
-
-    //void step4_assign_affixes_to_stems(QString name_of_calling_function);
-    //void step4_create_signatures(QString name_of_calling_function);
     void step4_create_signatures(const QString& name_of_calling_function,
                                  eMinimumStemCountFlag min_stem_count_flag = MS_respect_mininmum_stem_count);
     void step4a_link_signature_with_affix(CSignature*, stem_t, affix_t, QString name_of_calling_function);
-    //void step4b_link_signature_and_stem_and_word(stem_t , CSignature*, const QString& name_of_calling_function);
     void step4b_link_all_words_to_signatures(QString name_of_calling_function);
     void link_signature_with_stem(CSignature*, QString this_signature_string,  QString stem, QString name_of_calling_function);
     void link_signatures_with_words(QString& name_of_calling_function);
@@ -403,15 +445,19 @@ public:
 
     void ReSignaturizeWithKnownAffixes();
     void step6a_create_temporary_map_from_stems_to_affix_sets(Stem_to_sig_map&); //map_sigstring_to_stem_list &); will delete this
-    //void step6a_create_temporary_stem_to_sig_map(); // will replace preceding version;
     void create_new_parse_set_from_known_affixes();
+    void find_good_signatures_inside_bad();
+    void find_all_signature_spines();
+    void find_new_affixes(protostem*, CSignatureCollection*, CStemCollection*, QStringList& );
+    void find_parasuffixes(int wordno, int stem_length, QStringList working_affix_string_list);
+    void find_paraprefixes(int wordno, int stem_length, QStringList working_affix_string_list);
 
-    void step7_FindGoodSignaturesInsideParaSignatures();
+    void print_signature_transforms();
+
     void step6c_from_stem_to_sig_maps_to_xxx(QString, Stem_to_sig_map ) {return;}
 
     void step8a_compute_word_sig_pairs();
-    //void step8b_compute_sig_pair_map();
-    void step8c_from_sig_pairs_to_parses();
+    void step8c_from_sig_pairs_to_parses_Create_hypotheses();
 
     typedef QMap<sigstring_t, DoomedSignatureInfo> DoomedSignatureInfoMap;
     void step9_from_sig_pair_map_to_hypotheses();
@@ -419,8 +465,10 @@ public:
     void step9b_redirect_ptrs_in_sig_graph_edges_map(const DoomedSignatureInfoMap& ref_doomed_info_map);
     void step9c_from_doomed_info_map_to_hypotheses(const DoomedSignatureInfoMap& ref_doomed_info_map);
     void step10_find_compounds();
-
+    void step11_find_allomorphic_signatures();
     void clear_lexicon();
+    void clear_active_signatures_and_affixes();
+    void clear_parses();
     void compare_opposite_sets_of_signatures(QSet<CSignature*>* sig_set_1, QSet<CSignature*>* sig_set_2,QString letter);
 
     void Crab_1();
@@ -442,7 +490,6 @@ public:
 
      void test_for_phonological_relations_between_signatures();
 
-    void clear_parses();
 };
 
 #endif // CLEXICON_H

@@ -19,18 +19,18 @@ CLexicon* CLexicon::build_sublexicon(MainWindow* my_window)
 
     sublexicon->set_progress_bar(my_window->m_ProgressBar);
     sublexicon->set_status_bar(my_window->statusBar());
-
-    if (m_SuffixesFlag == false &&  m_PrefixSignatures->get_count() < 1) {
+    
+    if (m_suffix_flag == false &&  m_PrefixSignatures->get_count() < 1) {
         return NULL;
     }
-    if (m_SuffixesFlag == true &&  m_Signatures->get_count() < 1) {
+    if (m_suffix_flag == true &&  m_Signatures->get_count() < 1) {
         return NULL;
     }
 
     // Get a map of the full signatures (non-hollow), and then take only the stems
     // associated with full signatures.
     QMap<CSignature*,int> full_signatures;
-    if (m_SuffixesFlag){
+    if (m_suffix_flag){
         QMapIterator<sigstring_t, CSignature*> sig_iter (*m_Signatures->get_map());
         while (sig_iter.hasNext()){
             pSig = sig_iter.next().value();
@@ -46,7 +46,7 @@ CLexicon* CLexicon::build_sublexicon(MainWindow* my_window)
                 continue;
             }
             stem_t  stem = stem_iter.key();
-            sublexicon->get_words()->add(stem);
+            sublexicon->add_word(stem);
         }
     }else{   // prefixal signatures
         QMapIterator<sigstring_t, CSignature*> sig_iter (*m_PrefixSignatures->get_map());
@@ -64,10 +64,10 @@ CLexicon* CLexicon::build_sublexicon(MainWindow* my_window)
                 continue;
             }
             stem_t  stem = stem_iter.key();
-            sublexicon->get_words()->add(stem);
+            sublexicon->add_word(stem);
         }
     }
-    sublexicon->get_word_collection()->sort_word_list(); 
+    sublexicon->get_word_collection()->sort_word_lists(); 
 
     return sublexicon;
 }

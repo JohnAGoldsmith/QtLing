@@ -1,5 +1,6 @@
 #include "SignatureCollection.h"
 #include <QDebug>
+#include <QtMath>
 #include "Typedefs.h"
 #include "Lexicon.h"
 
@@ -97,6 +98,36 @@ CSignature* CSignatureCollection::find_or_fail(const QString& this_sig_string){
     }
 }
 
+int CSignatureCollection::get_total_count_of_letters_in_all_signatures(){
+    int letter_count(0);
+    map_sigstring_to_sig_ptr_iter sig_iter (m_SignatureMap);
+    while (sig_iter.hasNext())
+    {
+        sig_iter.next();
+        letter_count += sig_iter.value()->get_letter_count_in_stems_and_affixes();
+    }
+    return letter_count;
+}
+
+double CSignatureCollection::get_description_length(){
+    double DL = 0;
+    double cost_of_letter = qLn(26) / qLn(2.0);
+    double cost_of_end_marker = qLn(26) / qLn(2.0);
+    double number_of_stems_and_affixes(0);
+
+    DL = get_total_count_of_letters_in_all_signatures() * cost_of_letter;
+
+    // add cost of marking the end of each stem and affix:
+    map_sigstring_to_sig_ptr_iter sig_iter (m_SignatureMap);
+    while (sig_iter.hasNext())
+    {
+        sig_iter.next();
+        number_of_stems_and_affixes += sig_iter.value()->get_number_of_stems() +
+                                        sig_iter.value()->get_number_of_affixes();
+    }
+    DL += number_of_stems_and_affixes * cost_of_end_marker;
+    return DL;
+}
 
 // -->   Sorting  <--     //
 
@@ -174,7 +205,7 @@ void CSignatureCollection::sort_signatures_by_affix_count()
 */
 bool compare_secondary_stem_count(CSignature* pSig1,CSignature* pSig2)
 {
- return  pSig1->get_secondary_stem_count() > pSig2->get_secondary_stem_count();
+ return  pSig1->get_secondary_stem_count() < pSig2->get_secondary_stem_count();
 }
 void CSignatureCollection::sort_signatures_by_secondary_stem_count(){
       m_SortList.clear();
@@ -232,7 +263,6 @@ void CSignatureCollection::calculate_stem_entropy()
     while (sig_iter.hasNext())
     {
         sig_iter.next();
-        //qDebug() << 209 << sig_iter.value()->get_key();
         sig_iter.value()->calculate_stem_entropy();
     }
 }
@@ -354,5 +384,13 @@ void CSignatureCollection::add_this_and_all_subsignatures(QString this_sig_strin
         smaller_sig.removeAt(affix_no);
         QString sig_string_2 = smaller_sig.join("=");
         add_this_and_all_subsignatures(sig_string_2, robustness, signature_check_list);
+    }
+}
+
+void CSignatureCollection::compute_signature_transforms(bool suffix_flag, QTextStream & sig_transforms){
+    map_sigstring_to_sig_ptr_iter sig_iter (m_SignatureMap);
+    while (sig_iter.hasNext())
+    {   sig_iter.next();
+        sig_iter.value()->compute_signature_transforms(suffix_flag, sig_transforms);
     }
 }

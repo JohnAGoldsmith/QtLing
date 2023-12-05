@@ -1,6 +1,20 @@
 #include "string_group.h"
 #include "Typedefs.h"
 
+enum string_type;
+
+QString generalized_string::display(){
+    QString result;
+    QPair<QString, string_type> this_pair;
+    foreach (this_pair, m_string){
+        if (this_pair.second == regular){
+            result += this_pair.first;
+        } else{
+            result += "( " + this_pair.first + " )";
+        }
+    }
+}
+
 //  This puts the result in the input StringPair.
 void right_string_diff(QPair<QString, QString> fraction, QString& common_string )
 {

@@ -14,25 +14,75 @@ CWordCollection::CWordCollection(CLexicon * lexicon)
 
 CWordCollection::~CWordCollection()
 {
-    if ( m_SortedStringArray.size() > 0 )         {  m_SortedStringArray.empty();  }
+    if ( m_sorted_list.size() > 0 )         {  m_sorted_list.empty();  }
 }
+//--------------------//
+void CWordCollection::input_words(QMap<QString, int> word_counts){
+    CWord* pWord;
+    for(auto i = word_counts.begin(), end = word_counts.end(); i != end; i++){
+        add_word(i.key(), i.value());
+    }
+    sort_word_lists();
+}
+bool new_reverse_string_compare(QString s1, QString s2)
+{
+    std::reverse(s1.begin(), s1.end());
+    std::reverse(s2.begin(), s2.end());
+    return s1 < s2;
+}
+void CWordCollection::sort_word_lists()
+{   m_sorted_list.clear();
+    m_end_sorted_list.clear();
+    foreach(QString word, m_WordMap.keys()){
+        m_sorted_list.append(word);
+    }
+    m_sorted_list.sort();
+
+    m_end_sorted_list.reserve(m_WordMap.size());
+    foreach(QString word, m_WordMap.keys()){
+        m_end_sorted_list.append(word);
+    }
+    std::sort(m_end_sorted_list.begin(),m_end_sorted_list.end(), new_reverse_string_compare);
+}
+//--------------------//
+
+void  CWordCollection::clear_all_words_parse_triple_maps(){
+    for (auto i = m_WordMap.cbegin(), end = m_WordMap.cend(); i != end; ++i  ){
+        i.value()->clear_parse_triple_map();
+    }
+}
+
 
 QMapIterator<QString,CWord*> *  CWordCollection::get_iterator(){
     QMapIterator<QString, CWord*> * iter = new QMapIterator<QString,CWord*>(m_WordMap);
     return iter;
 }
-
+int CWordCollection::get_token_count(){
+    int total = 0;
+    QMapIterator<QString, CWord* > iter(m_WordMap);
+    while(iter.hasNext())
+    {
+        iter.next();
+        total += iter.value()->get_word_count();
+        //qDebug() << iter.key() << " : " << iter.value();
+    }
+    qDebug() << total;
+    return total;
+}
 CWord* CWordCollection::get_word(const QString& word){
-    QMap<QString,CWord*>::const_iterator word_iter = m_WordMap.find(word);
-    if (word_iter == m_WordMap.end()){
+    if (m_WordMap.contains(word)){
+        return m_WordMap[word];
+    } else{
         return NULL;
     }
-    return word_iter.value();
 }
 CWord* CWordCollection::get_word(const int n){
-    QString word = get_string_from_sorted_list(n);
-    return get_word(word);
+    return m_word_list[n];
 }
+int CWordCollection::get_word_count(){
+    return m_word_list.count();
+}
+
 
 CWord* CWordCollection::find_or_add(const QString& word_string){
     QMap<QString,CWord*>::const_iterator word_iter = m_WordMap.find(word_string);
@@ -55,82 +105,30 @@ CWord* CWordCollection::find_or_fail(const QString& word_string){
         return word_iter.value();
     }
 }
-CWord* CWordCollection::add(const QString& word)
-{
-    CWord* pWord = new CWord(word);
-    m_WordMap[word] = pWord;
+CWord* CWordCollection::add_word(const QString& word, int count)
+{   CWord* pWord;
+    if (m_WordMap.contains(word)){
+        m_WordMap[word]->SetWordCount(count);
+    } else {
+        pWord = new CWord(word);
+        pWord->SetWordCount(count);
+        m_WordMap[word] = pWord;
+        m_word_list.append(pWord);
+    }
     return pWord;
 }
 
 CWord* CWordCollection::operator <<(const QString& word)
 {
-     return this->add(word);
+    return this->add_word(word);
 }
 
 
 CWord* CWordCollection::operator ^=(const QString& word)
 {
     return this->find_or_add(word);
-
-
 }
 
 
 
-//-->  Reverse string sorting comparator <--//
-// -->  returns true if string1 precedes string2 in reverse alphabetical order  <-- //
-// --> July 2018 -- this had a bug regarding strings of different lengths.
-bool reverse_string_compare(QString string1, QString string2){
-    if (string1.length() == 0) {return true;}
-    if (string2.length() == 0) {return false;}
-    int len1 = string1.length();
-    int len2 = string2.length();
-    int limit = std::min(len1,len2);
-    int i = 1;
-    while ( i <= limit && string1[len1-i] == string2[len2-i] )
-    {
-        i++;
-    }
-    if ( i <= limit){
-       if (string1[len1-i] != string2[len2-i])
-       {
-            return string1[len1-i]  < string2[len2-i];
-       }
-    }
 
-    if (len1 < len2){
-        return true;
-    }
-    if (len2 < len1){
-        return false;
-    }
-    if (string1 == string2 ){
-        return false;
-    }
-    qDebug() <<"Reverse string compare, problem here." << string1 << string2;
-
-    return false;
-}
-
-bool new_reverse_string_compare(QString s1, QString s2)
-{
-    std::reverse(s1.begin(), s1.end());
-    std::reverse(s2.begin(), s2.end());
-    return s1 < s2;
-}
-
-void CWordCollection::sort_word_list()
-{   m_SortedStringArray.clear();
-
-    foreach(QString word, m_WordMap.keys()){
-        m_SortedStringArray.append(word);
-    }
-    m_SortedStringArray.sort();
-
-    m_reverse_sort_list.reserve(m_WordMap.size());
-    foreach(QString word, m_WordMap.keys()){
-        m_reverse_sort_list.append(word);
-    }
-    std::sort(m_reverse_sort_list.begin(),m_reverse_sort_list.end(), new_reverse_string_compare);
-
-}

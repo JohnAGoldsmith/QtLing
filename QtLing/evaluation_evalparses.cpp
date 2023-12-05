@@ -34,7 +34,7 @@ bool EvalParses::evaluate(GoldStandard *p_gs)
 {
     return p_gs->evaluate(this);
 }
-
+// __input
 bool EvalParses::read_morfessor_txt_file()
 {
     if(m_file_name.isEmpty())
@@ -46,13 +46,13 @@ bool EvalParses::read_morfessor_txt_file()
     if (!parse_file.open(QIODevice::ReadOnly))
         return false;
 
-    QTextStream parse_input(&parse_file);
+    QTextStream out_corpus_costs(&parse_file);
 
     int word_count = 0;
 
-    while (!parse_input.atEnd()) {
-        QString line = parse_input.readLine();
-        if (line[0] == "#")
+    while (!parse_file.atEnd()) {
+        QString line = parse_file.readLine();
+        if (line[0] == '#')
             continue;
         word_count++;
         line.remove(QRegularExpression("\\/[A-Z]+"));

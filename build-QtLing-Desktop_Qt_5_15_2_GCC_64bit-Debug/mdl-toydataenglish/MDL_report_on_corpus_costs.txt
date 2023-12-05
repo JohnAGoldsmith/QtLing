@@ -1,0 +1,34 @@
+
+Analyzed words
+     dog   sig:  1.11548          stem: 0.584963         affix: 0.584963    flag as analyzed: 0.206451  count    3     sum 7.47556
+    dogs   sig:  1.11548          stem: 0.584963         affix:  1.58496    flag as analyzed: 0.206451  count    1     sum 3.49185
+    jump   sig: 0.893085          stem:  1.22239         affix:  1.22239    flag as analyzed: 0.206451  count    1     sum 3.54432
+ jumping   sig: 0.893085          stem:  1.22239         affix:  1.80735    flag as analyzed: 0.206451  count    1     sum 4.12928
+   jumps   sig: 0.893085          stem:  1.22239         affix:  1.80735    flag as analyzed: 0.206451  count    1     sum 4.12928
+   laugh   sig: 0.893085          stem: 0.807355         affix:  1.22239    flag as analyzed: 0.206451  count    2     sum 6.25857
+laughing   sig: 0.893085          stem: 0.807355         affix:  1.80735    flag as analyzed: 0.206451  count    1     sum 3.71425
+  laughs   sig: 0.893085          stem: 0.807355         affix:  1.80735    flag as analyzed: 0.206451  count    1     sum 3.71425
+    lion   sig:  1.11548          stem:  1.58496         affix: 0.584963    flag as analyzed: 0.206451  count    1     sum 3.49185
+   lions   sig:  1.11548          stem:  1.58496         affix:  1.58496    flag as analyzed: 0.206451  count    1     sum 4.49185
+Total for analyzed words 44.4411
+
+Unanalyzed words
+
+       jabberwocky pointer:     1  flag as unanalyzed: 2.90689  count    1     sum 3.90689
+             zzzzz pointer:     1  flag as unanalyzed: 2.90689  count    1     sum 3.90689
+Total for unanalyzed words 7.81378
+
+0 NULL 1.32193
+1 ing 2.32193
+2 s 1.32193
+---
+3 / 0 1 2 / 6 7 / 1.22239 1.80735 1.80735 
+4 / 0 2 / 5 8 / 0.584963 1.58496 
+--
+5 dog 0.584963
+6 jump 1.22239
+7 laugh 0.807355
+8 lion 1.58496
+-
+9 jabberwocky 3.90689
+10 zzzzz 3.90689

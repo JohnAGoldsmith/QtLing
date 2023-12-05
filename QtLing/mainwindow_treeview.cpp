@@ -217,29 +217,6 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
     QStandardItem * parses_count_item = new QStandardItem(QString::number(lexicon->get_parses()->count()));
 
 
-// This is part of an experiment:
-//  This code deals with the components in the Lexicon, so that that set can be easily updated by the programmer.
-//  it will eliminate above code and below code too:
-//
-//          QList<QStandardItem*>                   lexicon_items;
-//                                                  lexicon_items.append(lexicon_item);
-//                                                  lexicon_items.append(lexicon_count_item);
-    //                                              parent->appendRow(lexicon_items);
-    //      QMapIterator<QString,eComponentType>    iter (lexicon->get_category_types());
-    //      while (iter.hasNext()){
-    //
-    //          QString             component_name = iter.next().key();
-    //          eComponentType      this_component_type = iter.value();
-    //          QList<QStandardItem*> this_list_of_standard_items;
-    //
-    //          QStandardItem *     component_item = new QStandardItem(component_name);
-    //          QStandardItem *     component_count_item = new QStandardItem(component_count_name);
-    //            this_list_of_standard_items.append(component_item);
-    //            this_list_of_standard_items.append(component_count_item);
-    //            lexicon_item.appendRow(this_list_of_standard_items);
-    //    }
-    // end of experiment
-
 
 
 

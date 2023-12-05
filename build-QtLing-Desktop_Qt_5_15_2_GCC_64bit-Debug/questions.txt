@@ -1,0 +1,15 @@
+Multiple signatures per word are permitted; this needs to be undone.
+
+How? Remove from a signature any word that has been analyzed in a more robust signature? But then some signatures have holes in them (for a given stem, only some of the affixes are "real")
+
+Linguistica is very confused by the presence of punctuation -- completely dominates the true suffix structure discovery.
+
+The structure of the code is too complicated.
+
+It's become opaque to me...
+
+Did not yet include unanalyzed words. 
+
+Quite a few arbitrary decisions:
+	1. Pointers to signatures
+	2. Pointers to affixes based on corpus count (or on word token count? or signature usage?)

@@ -375,7 +375,7 @@ void LowerTableView::table_word(CWord* pWord){
             QStringList report_line_items = report_line.split("=");
             for (int i = 0; i < report_line_items.size(); i++){
                 p_item = new QStandardItem(report_line_items[i]);
-                if (i == 0 && report_line_items[i][0] == "*"){
+                if (i == 0 && report_line_items[i][0] == '*'){
                     p_item->setBackground(Qt::red);
                 } else{
                     p_item->setBackground(Qt::white);
@@ -452,7 +452,7 @@ void LowerTableView::table_stem(stem_t stem, CLexicon* Lexicon){
             QStringList report_line_items = report_line.split("=");
             for (int i = 0; i < report_line_items.size(); i++){
                 p_item = new QStandardItem(report_line_items[i]);
-                if (i == 0 && report_line_items[i][0] == "*"){
+                if (i == 0 && report_line_items[i][0] == '*'){
                     p_item->setBackground(Qt::red);
                 } else{
                     p_item->setBackground(Qt::white);
@@ -487,25 +487,6 @@ void LowerTableView::table_signature(CSignature* pSig ){
     m_my_current_model->appendRow(item_list);
 
     item_list.clear();
-/*    foreach (p_Stem, *sig_stems)  {
-        p_item = new QStandardItem(p_Stem->get_key() );
-        item_list.append(p_item);
-        if (item_list.length() >= m_number_of_columns){
-            m_my_current_model->appendRow(item_list);
-            item_list.clear();
-        }
-    }
-    if (item_list.size() > 0){
-        m_my_current_model->appendRow(item_list);
-    }
-
-    QList<int> count_list;
-    qDebug() << pSig->get_key();
-    for (int stemno = 0; stemno< pSig->get_number_of_stems(); stemno++){
-        count_list << pSig->get_stems()->at(stemno)->get_count();
-    }
-    qSort(count_list);
-*/
 
     CStem* pStem;
     pSig->sort_stems_by_count();
@@ -644,7 +625,7 @@ void LowerTableView::table_protostem(protostem *p_protostem)
         item1->setData(wordno, Qt::DisplayRole);
         const QString& str_word = suffixes_flag?
                     this_lexicon->get_words()->get_string_from_sorted_list(wordno):
-                    this_lexicon->get_words()->get_reverse_sort_list()->at(wordno);
+                    this_lexicon->get_words()->get_string_from_end_sorted_list(wordno);
         QSI* item2 = new QSI(str_word);
         item_list.append(item1);
         item_list.append(item2);

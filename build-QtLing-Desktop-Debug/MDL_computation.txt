@@ -1,0 +1,12 @@
+
+Process signatures part 2
+# NULL=ing=s
+process signatures: affix: NULL  1.32193 . Running total of affix pointer use: 1.32193
+process signatures: affix: ing  2.32193 . Running total of affix pointer use: 3.64386
+process signatures: affix: s  1.32193 . Running total of affix pointer use: 4.96578
+# running total DL of affix pointer use 4.96578
+# NULL=s
+process signatures: affix: NULL  1.32193 . Running total of affix pointer use: 1.32193
+process signatures: affix: s  1.32193 . Running total of affix pointer use: 2.64386
+# running total DL of affix pointer use 7.60964
+Process signatures: Running total of signature pointer use in bits 7.60964

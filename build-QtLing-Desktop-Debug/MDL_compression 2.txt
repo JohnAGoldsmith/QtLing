@@ -1,0 +1,11 @@
+
+Corpus count analyzed words: 222553
+ and of unanalyzed words: 798408
+ Total: 1020961
+1432675 # Corpus Description of analyzed words.
+
+7.9042e+06 # Corpus Description of unanalyzed words.
+
+inf # Cost of flagging which are analyzed.
+
+inf # __Grammar + corpus description.
