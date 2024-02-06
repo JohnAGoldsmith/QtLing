@@ -13,7 +13,7 @@ CLexicon* CLexicon::build_sublexicon(MainWindow* my_window)
 {
     CSignature* pSig;
 
-    CLexicon*  sublexicon = new CLexicon(this, get_suffix_flag());
+    CLexicon*  sublexicon = new CLexicon(m_main_window,this, get_suffix_flag());
     my_window->set_lexicon(sublexicon);
     set_window(my_window);
 

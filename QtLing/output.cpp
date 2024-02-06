@@ -61,7 +61,7 @@ void MainWindow::read_stems_and_words()
         lexicon->add_word(words[0]);
     }
     lexicon->step2_from_protostems_to_parses();
-    lexicon->step3_from_parses_to_stem_to_sig_maps("Reading stems and words");
+    lexicon->step3_from_parses_to_stem2sig_maps("Reading stems and words");
     load_models(lexicon);
     create_or_update_TreeModel(lexicon);
 

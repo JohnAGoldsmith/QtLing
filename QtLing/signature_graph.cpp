@@ -216,7 +216,7 @@ void CLexicon::step8c_from_sig_pairs_to_parses_Create_hypotheses(){
          m_Hypothesis_map->insert (this_hypothesis->express_as_string(),  this_hypothesis);
     }
     //  !! Note: here we want to allow stems that only occur once -- they are pre-approved, so to speak.
-    step3_from_parses_to_stem_to_sig_maps("Splitting up complex morphemes");
+    step3_from_parses_to_stem2sig_maps("Splitting up complex morphemes");
     step4_create_signatures("Splitting up complex morphemes.");
 }
 

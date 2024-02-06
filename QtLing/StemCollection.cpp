@@ -3,7 +3,7 @@
 #include <QMapIterator>
 
 CStemCollection::CStemCollection(CLexicon* lexicon)
-{
+{   m_stem_list             = new QList<CStem*>;
     m_StringToStemMap       = new map_string_to_stem();
     m_CorpusCount			= 0;
     m_MemberName			= QString();
@@ -22,16 +22,9 @@ CStemCollection::~CStemCollection()
 }
 
 void CStemCollection::clear(){
-    map_string_to_stem_ptr_iter iter (*m_StringToStemMap);
-    while (iter.hasNext()){
-        iter.next();
-        delete iter.value();
+    foreach (CStem* stem, *m_stem_list){
+        //delete stem; // memory leak TO DO
     }
-    /*
-    for (int i = 0; i < m_SortList.size(); i++){
-     delete m_SortList.at(i);
-    }
-    */
     m_StringToStemMap->clear();
     m_SortedStringList.clear();
     m_CorpusCount = 0;
@@ -39,6 +32,7 @@ void CStemCollection::clear(){
 CStem* CStemCollection::add(const QString& stem)
 {
     CStem* pStem = new CStem(stem);
+    m_stem_list->append(pStem);
     m_StringToStemMap->insert(stem, pStem);
     m_forward_sort_valid_flag = false;
     return pStem;
@@ -64,16 +58,16 @@ CStem* CStemCollection::get_at( int stemno)
     if (!m_forward_sort_valid_flag){ sort_alphabetically();}
     return m_StringToStemMap->value( m_SortedStringList[stemno]);
 }
-/*
-QListIterator<CStem*> * CStemCollection::get_sorted_list_iterator()
-{
-    if (!m_SortValidFlag    ){
-        sort_alphabetically();
+QStringList CStemCollection::get_list_of_stem_strings(){
+    QStringList result;
+    foreach (CStem* stem, *m_stem_list  ){
+        result.append(stem->get_stem());
     }
-    QListIterator<CStem*> * iter = new QListIterator<CStem*>(m_SortedStringList);
-    return iter;
+    return result;
 }
-*/
+
+
+
 CStem* CStemCollection::find_or_add(const QString& stem)
 {
     if (!m_forward_sort_valid_flag){
@@ -82,9 +76,7 @@ CStem* CStemCollection::find_or_add(const QString& stem)
     if (m_StringToStemMap->contains(stem)){
         return m_StringToStemMap->value(stem);
     } else{
-        CStem* pStem = new CStem(stem);
-        m_StringToStemMap->insert(stem, pStem);
-        return pStem;
+        return add(stem);
     }
 }
 CStem* CStemCollection::find_or_fail(const QString& stem)

@@ -2,6 +2,7 @@
 #define LXAMODELS_H
 #include <QSortFilterProxyModel>
 #include <QStandardItemModel>
+//#include <QAbstractItemModel>    // to do Dec 2023
 #include "generaldefinitions.h"
 #include "evaluation.h"
 class CWordCollection;
@@ -32,7 +33,7 @@ private:
 
 public:
 
-    //void        sort(int column_no, Qt::SortOrder order);
+
     void        load_words(CWordCollection*);
     void        load_stems(CStemCollection * p_stems);
     void        load_prefixes(CPrefixCollection * p_prefixes);
@@ -46,7 +47,8 @@ public:
     void        load_positive_prefix_signatures(CSignatureCollection* p_positive_prefix_signatures);
     void        load_hypotheses(QList<CHypothesis*>*);
     void        load_hypotheses_2(QList<CHypothesis*>*);
-// add component 11
+
+    // add component 11
     void        load_category(QString component_name, eComponentType);
     void        load_parses(QMap<QString, CParse*>* );
 
@@ -71,8 +73,6 @@ private:
     // function to support sorting by signature affix count
 
 };
-
-
 
 
 

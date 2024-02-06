@@ -18,7 +18,6 @@ CWordCollection::~CWordCollection()
 }
 //--------------------//
 void CWordCollection::input_words(QMap<QString, int> word_counts){
-    CWord* pWord;
     for(auto i = word_counts.begin(), end = word_counts.end(); i != end; i++){
         add_word(i.key(), i.value());
     }
@@ -80,7 +79,7 @@ CWord* CWordCollection::get_word(const int n){
     return m_word_list[n];
 }
 int CWordCollection::get_word_count(){
-    return m_word_list.count();
+    return m_WordMap.count();
 }
 
 
@@ -89,6 +88,7 @@ CWord* CWordCollection::find_or_add(const QString& word_string){
     if (word_iter == m_WordMap.end()){
         CWord* pWord = new CWord(word_string);
         m_WordMap[word_string] = pWord;
+        m_word_list.append(pWord);
         return pWord;
     }else{
         return word_iter.value();

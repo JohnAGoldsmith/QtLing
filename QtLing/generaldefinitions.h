@@ -5,6 +5,11 @@
 //class CStem;
 class CSignature;
 
+enum eAffixType{
+    AT_prefix,
+    AT_suffix,
+    AT_neither
+};
 
 enum eHypothesisType{
     HT_affix_goes_to_signature
@@ -55,7 +60,7 @@ enum eDataType{
 enum eDocumentType  // for the Collection View
 { SINGLETON_SIGNATURES,
   PARASIGNATURES,
-  PARASUFFIXES,
+  zPARASUFFIXES,
   PASSIVE_SIGNATURES,
   RESIDUAL_PARASIGNATURES,
   EPOSITIVE_SIGNATURES, // positi

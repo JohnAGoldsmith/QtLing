@@ -223,20 +223,20 @@ void LowerTableView::display_this_item( const  QModelIndex & index )
 
         // add component 9
         /* Lower display function for protostems added by Hanson. */
+    /*
     case e_data_suffixal_protostems:
     case e_data_prefixal_protostems: {
         if (index.isValid()) {row = index.row();}
         QString str_protostem = index.sibling(row,0).data().toString();
-        protostem* p_protostem = UpperView_data_type == e_data_suffixal_protostems ?
-                    this_lexicon->get_suffixal_protostems()->value(str_protostem, NULL):
-                    this_lexicon->get_prefixal_protostems()->value(str_protostem, NULL);
+        UpperView_data_type == e_data_suffixal_protostems ?
+                    this_lexicon->get_suffixal_protostems()->find_or_fail(str_protostem):
+                    this_lexicon->get_prefixal_protostems()->find_or_fail(str_protostem);
         if (p_protostem == NULL) break;
         table_protostem(p_protostem);
         setModel(m_my_current_model);
         break;
-    }   /* Lower display function for protostems added by Hanson. */
-
-        /* Lower display function for compounds added by Hanson. */
+    }
+    */
     case e_data_compound_words: {
         if (index.isValid()) {
             row = index.row();
@@ -298,7 +298,7 @@ void LowerTableView::graphics_sig_graph_edges(CSignature* pSig, CLexicon* p_lexi
 {
     sig_pair *       psig_graph_edge;
     //-->  Graphic display in lower right window <--//
-    // "Signatures" is what should be sent to the Model in the mainwindow.
+    // "Suffixal signatures" is what should be sent to the Model in the mainwindow.
     CSignatureCollection Signatures(p_lexicon);
     Signatures << pSig;
     // We iterate through the SigTreeEdges in the SigTreeEdgeMap. If its Sig1 is pSig, then we enter it into Signatures;

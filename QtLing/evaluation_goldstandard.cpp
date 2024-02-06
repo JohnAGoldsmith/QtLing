@@ -6,7 +6,7 @@
 #include "Lexicon.h"
 #include "Word.h"
 #include "WordCollection.h"
-#include "mainwindow.h"
+//#include "mainwindow.h"
 //#include "CorpusWord.h"
 #include "evaluation.h"
 //#include "CorpusWordCollection.h"
@@ -84,6 +84,8 @@ bool GoldStandard::evaluate(CWordCollection* p_word_collection,
         QMessageBox::information(nullptr, "Gold Standard: Error", errorMsg, QMessageBox::Ok);
         return false;
     }
+    Q_UNUSED(p_true_positive_parses);
+    Q_UNUSED(p_retrieved_parses);
     results.clear();
 
     // TODO: Use these...
@@ -98,8 +100,8 @@ bool GoldStandard::evaluate(CWordCollection* p_word_collection,
     int temp_overlap_word_count = 0; // number of words found in both gold standard and lxa
     int temp_gs_word_count = 0; // number of words foudn in gold standard
     */
-    Word_to_parse_triple_collection_map::const_iterator gs_pm_iter;
-    Parse_triple_collection::const_iterator gs_ptm_iter, lxa_ptm_iter;
+    //Word_to_parse_triple_collection_map::const_iterator gs_pm_iter;
+    //Parse_triple_collection::const_iterator gs_ptm_iter, lxa_ptm_iter;
     //const Parse_triple_collection *p_lxa_ptm, *p_gs_ptm;
     //CWord *p_word;
 /*

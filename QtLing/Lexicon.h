@@ -240,8 +240,12 @@ protected:
     //QList<CParse*> *                m_Parses; // get rid of this list, just use the QMap
     QMap<QString, CParse*>          m_ParseMap;
 
-    QMap<QString, protostem*>       m_suffix_protostems;
-    QMap<QString, protostem*>       m_prefix_protostems;
+    //QMap<QString, protostem*>       m_suffix_protostems;
+    //QMap<QString, protostem*>       m_prefix_protostems;
+    QMultiMap<QString, QString>     m_word2suffix_sigs;
+    QMultiMap<QString, QString>     m_word2prefix_sigs;
+    CStemCollection               * m_suffix_protostems;
+    CStemCollection               * m_prefix_protostems;
 
     bool                            m_suffix_flag;
     CLexicon*                       m_parent_lexicon;
@@ -252,7 +256,7 @@ protected:
     // affixes that are "thrown out" in Crab2
     CSignatureCollection*           m_ParaSignatures;   /*!<  the information we have about stems which we have not yet integrated into a morphological system. */
     //CSuffixCollection *             m_ParaSuffixes;
-    QMap<QString, QStringList*>*      m_ParaSuffixes;
+    QMap<QString, QStringList*>*    m_ParaSuffixes;
     QMap<QString, QStringList*>*    m_ParaPrefixes;
     CStemCollection *               m_ResidualStems;
     CSignatureCollection *          m_ResidualPrefixSignatures;
@@ -271,8 +275,8 @@ protected:
     QMap<QString, CHypothesis*> *   m_Hypothesis_map;
 // add component 1
 
-    Sig_to_stem_map                 m_intermediate_sig_to_stem_map; // used during computation, not permanent.
-    Stem_to_sig_map                 m_intermediate_stem_to_sig_map; // used during computation, not permanent.
+    Sig_to_stem_map                 m_temp_sig2stem_map; // used during computation, not permanent.
+    Stem_to_sig_map                 m_temp_stem2sig_map; // used during computation, not permanent.
 
     QProgressBar*                   m_ProgressBar;
     QStatusBar *                    m_StatusBar;
@@ -288,7 +292,7 @@ protected:
     // end of experiment
 
 public:
-    CLexicon(CLexicon* parent_lexicon = NULL, bool suffix_flag = true);
+    CLexicon(MainWindow *, CLexicon* parent_lexicon = NULL, bool suffix_flag = true);
 public:
 
     ~CLexicon();
@@ -305,20 +309,19 @@ public:
     void                                        dump_signatures_to_debug();
 
     // accessors and protostems
-    void                                        dump_suffixes(QList<QString>*);
+    //void                                        dump_suffixes(QList<QString>*);
     void                                        add_parse(CParse*);
     void                                        add_paraprefix(QString paraprefix, QString word);
     void                                        add_parasuffix(QString parasuffix, QString word);
     CSignature*                                 add_signature(QString);
-    CStem*                                      add_stem(QString);
+    void                                        add_stem(QString);
     CWord*                                      add_word(QString);
     void                                        add_affix_to_signature(QString affix, CSignature*  pSig);
-    void                                        add_analysis_to_word_for_suffix_case(QString stem, QString affix, CSignature* pSig,
-                                                        QString name_of_calling_function);
-    void                                        add_suffix_analysis_to_word(CWord* pWord,QString stem, QString affix, QString sig_string,
-                                                                            QString word_split, QString name_of_calling_function);
-    void                                        add_prefix_analysis_to_word(CWord* pWord,QString stem, QString affix, QString sig_string,
-                                                                            QString word_split, QString name_of_calling_function);
+
+    void                                        add_suffix_analysis_to_word(CWord* pWord,CParse& parse, QString sig_string,
+                                                                            QString name_of_calling_function);
+    void                                        add_prefix_analysis_to_word(CWord* pWord, CParse& parse, QString sig_string,
+                                                                            QString name_of_calling_function);
     void                                        change_minimum_stem_count(int count) {M_MINIMUM_STEM_COUNT = count;}
     //double                                      compute_MDL_1(); // for MDL project with Marina E.
     double                                      compute_MDL(); // for MDL project with Marina E.
@@ -346,14 +349,14 @@ public:
     CSignatureCollection*                       get_prefix_signatures()     { return m_PrefixSignatures;}
     CStemCollection *                           get_prefixal_stems()        { return m_prefixal_stems;}
     CPrefixCollection *                         get_prefixes()              { return m_Prefixes; }
-    QMap<QString, protostem*>*                  get_prefixal_protostems()    { return &m_prefix_protostems; }
+    CStemCollection *                           get_prefixal_protostems()    { return m_prefix_protostems; }
     CSignatureCollection *                      get_residual_signatures()   { return m_ParaSignatures;}
     CSignatureCollection *                      get_sequential_signatures() { return m_SequentialSignatures;}
     CSignatureCollection*                       get_signatures()            { return m_Signatures;}
     CSignatureCollection*                       get_suffix_signatures()     { return m_Signatures;}
     CSuffixCollection*                          get_suffixes()              {return m_Suffixes;}
     CStemCollection *                           get_suffixal_stems()        { return m_suffixal_stems;}
-    QMap<QString, protostem*>*                  get_suffixal_protostems()  { return &m_suffix_protostems; }
+    CStemCollection *                           get_suffixal_protostems()  { return m_suffix_protostems; }
     lxa_sig_graph_edge_map *                    get_sig_graph_edge_map()    { return & m_SigPairMap;}
     sig_pair*                                   get_sig_graph_edge(QString label) {return m_SigPairMap[label];}
     QListIterator<word_sig_pair*>    *          get_sig_graph_edge_list_iter();
@@ -368,16 +371,13 @@ public:
 
     //helper functions:
     // Crab1:
-    void                                        make_protostem_objects_suffix_case(const QStringList* Words);
-    void                                        make_protostem_objects_prefix_case(const QStringList* Words);
-    void                                        make_protostem_if_appropriate_suffix_case(QString this_word, QString next_word);
-    void                                        make_protostem_if_appropriate_prefix_case(QString this_word, QString next_word);
-
+    //void                                        make_protostem_if_appropriate_suffix_case(QString this_word, QString next_word);
+    //void                                        make_protostem_if_appropriate_prefix_case(QString this_word, QString next_word);
     void                                        mark_progress(int); // mark progress bar and process events too.
+
+    QString                                     process_a_word_into_stem_and_affix_possibly_paraaffix(int wordno, int stemlength, bool suffix_flag);
     void                                        initialize_progress(int max_value);
-    void                                        scan_word_for_protostems_suffix_case(QString word);
-    void                                        scan_word_for_protostems_prefix_case(QString word);
-    void                                        attach_affix_to_intermediate_stem(CParse*);
+
     void                                        attach_stem_to_intermediate_signature(QString stem);
 
 
@@ -389,7 +389,7 @@ public:
     QList<QString> *                            get_word_autobiography(const word_t& word) { return m_word_autobiographies[word];}
     void                                        add_to_word_autobiographies (const QString& word, const QString& message);
 
-
+    bool                                        test_if_analysis_has_been_done();
 
     bool                                        word_autobiographies_contains(const QString& word);
     void                                        word_autobiography_positive_notice( QString word, QString stem, QString sig_string, QString calling_function);
@@ -427,17 +427,32 @@ public:
 public:
     // insert functions here
     void step1_from_words_to_protostems();
-    void step2_from_protostems_to_parses();
+    void step1a_make_protostem_if_appropriate(QString this_word, QString next_word);
+    void step1b_make_protostem_objects_suffix_case(const QStringList* Words);
+    void step1b_make_protostem_objects_prefix_case(const QStringList* Words);
 
-    void step3_from_parses_to_stem_to_sig_maps(QString name_of_calling_function);
-    void step3a_from_parses_to_stem_to_sig_map( );
-    void step3b_from_stem_to_sig_map_to_sig_to_stem_map();
+    void step2_from_protostems_to_parses();
+    void step2a_scan_word_for_protostems_suffix_case(QString word);
+    void step2a_scan_word_for_protostems_prefix_case(QString word);
+
+    void step3_from_parses_to_stem2sig_maps(QString name_of_calling_function);
+    void step3a_clear_lexicon_except_protostems();
+    void step3c_attach_affix_to_stem(CParse*);
+    void step3b_from_parses_to_stem2sig_map( );
+    void step3d_from_stem2sig_map_to_sig2stem_map();
+
     void step4_create_signatures(const QString& name_of_calling_function,
                                  eMinimumStemCountFlag min_stem_count_flag = MS_respect_mininmum_stem_count);
-    void step4a_link_signature_with_affix(CSignature*, stem_t, affix_t, QString name_of_calling_function);
-    void step4b_link_all_words_to_signatures(QString name_of_calling_function);
-    void link_signature_with_stem(CSignature*, QString this_signature_string,  QString stem, QString name_of_calling_function);
-    void link_signatures_with_words(QString& name_of_calling_function);
+    void step4a_clear_active_signatures_and_affixes();
+    void step4d_link_signature_with_affix(CSignature*, stem_t, affix_t, QString name_of_calling_function);
+    void step4c_create_stem_then_link_sig_and_stem(CSignature * pSig,  QString stem, QString name_of_calling_function);
+    void step4b_link_sig_with_stems_and_affixes(CSignature*, QSet<stem_t>* stem_set,  QString name_of_calling_function);
+    void step4e_link_all_words_to_signatures(QString name_of_calling_function);
+    void step4f_add_analysis_to_word_for_suffix_case(CParse&,  CSignature* pSig,
+                                                     QString name_of_calling_function);
+    void step4f_add_analysis_to_word_for_prefix_case(CParse&,  CSignature* pSig,
+                                                     QString name_of_calling_function);
+    //void link_signatures_with_words(QString& name_of_calling_function);
 
     void replace_parse_pairs_from_current_signature_structure();
     void repair_low_entropy_signatures();
@@ -449,6 +464,7 @@ public:
     void find_good_signatures_inside_bad();
     void find_all_signature_spines();
     void find_new_affixes(protostem*, CSignatureCollection*, CStemCollection*, QStringList& );
+    void find_parasuffixes();
     void find_parasuffixes(int wordno, int stem_length, QStringList working_affix_string_list);
     void find_paraprefixes(int wordno, int stem_length, QStringList working_affix_string_list);
 
@@ -466,8 +482,8 @@ public:
     void step9c_from_doomed_info_map_to_hypotheses(const DoomedSignatureInfoMap& ref_doomed_info_map);
     void step10_find_compounds();
     void step11_find_allomorphic_signatures();
-    void clear_lexicon();
-    void clear_active_signatures_and_affixes();
+
+
     void clear_parses();
     void compare_opposite_sets_of_signatures(QSet<CSignature*>* sig_set_1, QSet<CSignature*>* sig_set_2,QString letter);
 

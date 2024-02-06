@@ -25,11 +25,11 @@ protected:
     QStringList         m_Autobiography;        // json tag: "autobiography"
     int                 m_word_list_start_point;
     int                 m_word_list_end_point;
-
     int                 m_json_id;
 public:
     CStem (QString);
     CStem(CStem&);
+    ~CStem();
 public:
     //Accessors
     void                add_memo (QString memo) {m_Autobiography.append(memo);}
@@ -48,6 +48,9 @@ public:
     void                read_json_2(const QJsonObject& ref_json, const CJsonInfo& ref_pointers);
     int                 get_json_id() const {return m_json_id;}
     void                set_json_id(const int id) {m_json_id = id;}
+    void                set_start_and_end_word(int a, int b){m_word_list_start_point = a; m_word_list_end_point = b;}
+    int                 get_start_word () {return m_word_list_start_point;}
+    int                 get_end_word(){ return m_word_list_end_point;}
 };
 
 #endif // CSTEM_H

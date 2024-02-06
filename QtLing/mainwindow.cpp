@@ -54,13 +54,14 @@ class LxaStandardItemModel;
 
 MainWindow::MainWindow()
 {
-    m_my_lexicon = new CLexicon();
+    m_my_lexicon = new CLexicon(this);
     m_lexicon_list.append (m_my_lexicon);
     CLexicon * lexicon =  m_my_lexicon;
 
     setFocusPolicy(Qt::StrongFocus); // allows it to capture keystrokes
 
-    // models
+    //---------------------------------------------------------------------------------------------------//
+    // models : this is old, from 2017 or so; I am redoing this, dec 2023 -- jan 2024
     // See explanation of code below in comment in table_views_upper.cpp
     QString str_model_name;
     foreach (str_model_name, m_model_names) {
@@ -71,6 +72,45 @@ MainWindow::MainWindow()
     foreach (str_model_name, m_duplicate_model_names) {
         m_proxy_models[str_model_name] = new LxaSortFilterProxyModel(this);
     }
+    // ---------------- end of old stuff to be removed eventually ----------------------------------//
+
+    // each model needs two proxy models so its data can be shown in two different ways in two TableViews at the same time
+
+    m_word_model = nullptr;
+    m_word_model_proxy_1 = new wordSFProxymodel(this);
+    m_word_model_proxy_2 = new wordSFProxymodel(this);
+
+    /* We set the wordmodel at the point where we read the corpus, whether text or wordlist
+    *  And we need to reset it when we do an analysis, so that the View knows how many parses there are for each word
+    */
+
+
+    m_suffix_signature_model = new signaturemodel(m_my_lexicon->get_signatures());
+    m_prefix_signature_model = new signaturemodel (m_my_lexicon->get_prefix_signatures());
+    m_signature_model_proxy_1 = new signatureSFProxymodel(this);
+    m_signature_model_proxy_2 = new signatureSFProxymodel(this);
+
+    m_suffixal_stem_model = nullptr;
+    m_prefixal_stem_model = nullptr;
+    m_stem_model_proxy_1 = new stemSFProxymodel(this);
+    m_stem_model_proxy_2 = new stemSFProxymodel(this);
+
+    m_suffix_model = nullptr;                           //new affixmodel(m_my_lexicon->get_suffixes()->get_suffix_list());
+    m_prefix_model = nullptr;                           //new affixmodel(m_my_lexicon->get_prefixes()->get_prefix_list());
+
+    m_affix_model_proxy_1 = new affixSFProxymodel (this);
+    m_affix_model_proxy_2 = new affixSFProxymodel (this);
+
+    m_suffixal_protostem_model = nullptr;
+
+
+    // -----------------  old --------------------------------------------------------------
+    m_proxy_models["suffix_signatures_1"] = new LxaSortFilterProxyModel(this);
+    m_proxy_models["suffix_signatures_2"] = new LxaSortFilterProxyModel(this);
+    m_proxy_models["suffix_signatures_1"]->setSourceModel(m_suffix_signature_model);
+    m_proxy_models["suffix_signatures_2"]->setSourceModel(m_suffix_signature_model);
+    // --------------------------------------------------------------------------------------´
+
 
     m_treeModel     = new QStandardItemModel();
 
@@ -78,9 +118,11 @@ MainWindow::MainWindow()
 
     // views
     m_leftTreeView                          = new LeftSideTreeView(this);
+    m_tableView_upper_temp                  = new TableView(this); //UpperTableView (this);
     m_tableView_upper_left                  = new UpperTableView (this);
     m_tableView_upper_right                 = new UpperTableView (this, SIG_BY_AFFIX_COUNT);
     m_tableView_lower                       = new LowerTableView (this);
+    m_tableView_upper_temp->setSortingEnabled(true);
     m_tableView_upper_left->setSortingEnabled(true);
     m_tableView_upper_right->setSortingEnabled(true);
     m_graphics_scene                        = new lxa_graphics_scene( this, lexicon);
@@ -100,6 +142,7 @@ MainWindow::MainWindow()
 
     // new stuff:
     m_top_rightSplitter = new QSplitter(Qt::Horizontal);
+    m_top_rightSplitter->addWidget(m_tableView_upper_temp);
     m_top_rightSplitter->addWidget(m_tableView_upper_left);
     m_top_rightSplitter->addWidget(m_tableView_upper_right );
 
@@ -112,6 +155,7 @@ MainWindow::MainWindow()
     // on left side:
     m_mainSplitter->addWidget(m_leftTreeView);
     m_mainSplitter->addWidget(m_rightSplitter);
+
 
     QWidget::setTabOrder(m_leftTreeView, m_tableView_upper_left);
     QWidget::setTabOrder(m_tableView_upper_left, m_tableView_upper_right);
@@ -133,40 +177,37 @@ MainWindow::MainWindow()
     createStatusBar();
     readSettings();
 
-    // resize the main window
-
     //resize(QDesktopWidget().availableGeometry(this).size() * 0.9);
     resize(QSize(1000,1000));
 
-
-    // set sizes of children of main splitter, i.e. left tree view and tables on the right
     m_mainSplitter->setSizes(QList<int>() << 800 <<2000);
-
     setCurrentFile(QString());
     setUnifiedTitleAndToolBarOnMac(true);
-
-
     setFocus(Qt::OtherFocusReason);
 
-
-    // Qt SIGNAL-SLOT model that connects clicks in the left window to displays on the right side of the screen
-
     // clicking on certain items in the tree view displays tables on the upper left and upper right
-    connect(m_leftTreeView, SIGNAL(clicked(const QModelIndex&)),
-            m_tableView_upper_left, SLOT(ShowModelsUpperTableView(const QModelIndex&)));
-    connect(m_leftTreeView, SIGNAL(clicked(const QModelIndex&)),
-            m_tableView_upper_right, SLOT(ShowModelsUpperTableView(const QModelIndex&)));
+    // new:
+    //          connect(m_leftTreeView, SIGNAL(clicked(QModelIndex)), this, SLOT(display_models(QModelIndex)));
+    //bool ok = connect(m_leftTreeView, &LeftSideTreeView::clicked, this, &MainWindow::display_models   );
+    //Q_ASSERT (ok);
+
+    connect(m_leftTreeView, SIGNAL(clicked(QModelIndex)),
+            m_tableView_upper_left, SLOT(ShowModelsUpperTableView(QModelIndex)));
+    //connect(m_leftTreeView, SIGNAL(clicked(QModelIndex)),
+    //        m_tableView_upper_right, SLOT(ShowModelsUpperTableView(QModelIndex)));
+
+    connect (m_tableView_upper_temp, SIGNAL(clicked(QModelIndex)),
+            m_tableView_lower,SLOT(display_this_item(QModelIndex)));
 
 
-    // clicking on the upperleft corner can signal a graphic view below it, or a table below it.
-    connect(m_tableView_upper_left,SIGNAL(clicked(const QModelIndex & )),
-            m_tableView_lower,SLOT(display_this_item(const QModelIndex &  )));
+    connect(m_tableView_upper_left,SIGNAL(clicked(QModelIndex)),
+            m_tableView_lower,SLOT(display_this_item(QModelIndex)));
 
-    connect(m_tableView_upper_right,SIGNAL(clicked(const QModelIndex & )),
-            m_tableView_lower,SLOT(display_this_item(const QModelIndex &  )));
+    connect(m_tableView_upper_right,SIGNAL(clicked(QModelIndex)),
+            m_tableView_lower,SLOT(display_this_item(QModelIndex)));
 
-    connect(m_tableView_upper_left,SIGNAL(clicked(const QModelIndex & )),
-            m_tableView_upper_right,SLOT(display_this_affixes_signatures(const QModelIndex &  )));
+    connect(m_tableView_upper_left,SIGNAL(clicked(QModelIndex)),
+            m_tableView_upper_right,SLOT(display_this_affixes_signatures(QModelIndex)));
 
     /* Explanation for these signal-slot connections:
      * A signal is sent to the m_main_menu_bar object after the following
@@ -212,26 +253,11 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     switch(this_key){
 
     case Qt::Key_2:
-    {   qDebug() << "main window line 238";
-        if (ke->modifiers() == Qt::ControlModifier)
+    {   if (ke->modifiers() == Qt::ControlModifier)
         {
-            if ( get_lexicon()->get_suffix_flag()
-                &&  get_lexicon()->get_suffixal_stems()->get_count() > 0
-                &&  get_lexicon()->get_suffix_signatures()->get_count() > 0 )
-                {
-                       do_crab2();
-                }
-            else{
-                if (get_lexicon()->get_prefixal_stems()->get_count()  > 0)
-                {
-                    if (get_lexicon()->get_prefix_signatures()->get_count() > 0)
-                    {
-                         do_crab2();
-                    }
-                }
-            }
-         }
-         break;
+            do_crab2();
+        }
+        break;
     }
     case Qt::Key_3:
     {
@@ -493,17 +519,15 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     }
     }
 }
-
-void MainWindow::do_crab1_suffixes()
-{
-    get_lexicon()->set_suffixes_flag();
-    do_crab1();
-
-}
 void MainWindow::do_MDL()
 {
 
     get_lexicon()->compute_MDL();
+}
+void MainWindow::do_crab1_suffixes()
+{
+    get_lexicon()->set_suffixes_flag();
+    do_crab1();
 }
 void MainWindow::do_crab1_prefixes()
 {
@@ -525,8 +549,8 @@ void MainWindow::do_crab1()
           display_epositive_suffix_signatures(get_lexicon()):
           display_epositive_prefix_signatures(get_lexicon());
     statusBar()->showMessage("Crab, phase 1 completed.");
-    emit lexicon_ready();
 }
+
 void MainWindow::do_crab2()
 {   statusBar()->showMessage("Crab 2: Good sigs inside bad.");
     CLexicon* lexicon = get_lexicon();
@@ -615,10 +639,29 @@ void MainWindow::ask_for_project_file()
     m_name_of_project_file = QFileDialog::getOpenFileName (this);
     read_stems_and_words();
 
-    //display_suffix_signatures(get_lexicon());
+    display_suffix_signatures(get_lexicon());
+}
+
+// Dec 2023
+void MainWindow::display_models(const QModelIndex & index){
+    qDebug() << 647 << "display models";
+    QString component;
+    if (index.isValid()){
+        component = index.data().toString();
+    } else return;
+    if (component == "Words")               { display_words();                           return;}
+    if (component == "Suffix signatures")   { display_suffix_signatures(m_my_lexicon);   return;}
+    if (component == "Prefix signatures")   { display_prefix_signatures(m_my_lexicon);   return;}
+    if (component == "Suffix stems")        { display_suffix_stems(m_my_lexicon);        return;}
+    if (component == "Prefixal stems")      { display_prefix_stems(m_my_lexicon);        return;}
+    if (component == "Suffixal protostems") { display_suffixal_protostems(m_my_lexicon); return;} // this currently doesn´t happen
+    if (component == "Suffixes")            { display_suffixes(m_my_lexicon);            return;}
+
 }
 
 
+
+// this will be eliminated, since we keep the data inside the regular Linguistica containers -- not in the models
 void MainWindow::load_models(CLexicon* lexicon)
 {
     qDebug() << "Loading models";
@@ -644,7 +687,7 @@ void MainWindow::load_models(CLexicon* lexicon)
     statusBar()->showMessage("Loading models: Prefixes");
     m_Models["Prefixes"]            ->load_prefixes(lexicon->get_prefixes());
     statusBar()->showMessage("Loading models: Signatures");
-    m_Models["Signatures"]          ->load_signatures(lexicon->get_signatures());
+    m_Models["Suffixal signatures"]          ->load_signatures(lexicon->get_signatures());
     statusBar()->showMessage("Loading models: Signatures completed");
     /* Using the sorting function of the proxy models, we do not need duplicate source models,
      * removed them to save some memory, Hanson 11.2
@@ -664,8 +707,8 @@ void MainWindow::load_models(CLexicon* lexicon)
     m_Models["SigGraphEdges_2"]        ->load_sig_graph_edges(lexicon->get_sig_graph_edge_map(),2);
 
     statusBar()->showMessage("Loading models: Suffixal protostems");
-    m_Models["Suffixal protostems"]->load_protostems(lexicon->get_suffixal_protostems());
-    m_Models["Prefixal protostems"]->load_protostems(lexicon->get_prefixal_protostems());
+    //m_Models["Suffixal protostems"]->load_protostems(lexicon->get_suffixal_protostems());
+    //m_Models["Prefixal protostems"]->load_protostems(lexicon->get_prefixal_protostems());
     m_Models["Compound words"]->load_compounds(lexicon->get_compounds());
 
     // Now all source models are loaded. Link them to proxy models.
@@ -679,19 +722,14 @@ void MainWindow::load_models(CLexicon* lexicon)
     m_proxy_models["Words 2"]->setSourceModel(m_Models["Words"]);
     m_proxy_models["Prefixes 2"]->setSourceModel(m_Models["Prefixes"]);
     m_proxy_models["Suffixes 2"]->setSourceModel(m_Models["Suffixes"]);
-    m_proxy_models["Signatures 2"]->setSourceModel(m_Models["Signatures"]);
+    m_proxy_models["Signatures 2"]->setSourceModel(m_Models["Suffixal signatures"]);
     m_proxy_models["Prefix signatures 2"]->setSourceModel(m_Models["Prefix signatures"]);
     m_proxy_models["EPositive signatures 2"]->setSourceModel(m_Models["EPositive signatures"]);
     m_proxy_models["EPositive prefix signatures 2"]->setSourceModel(m_Models["EPositive prefix signatures"]);
     statusBar()->showMessage("Finished loading models.");
+    qDebug() << "all models loaded";
 
 }
-// ask_for_new_filenmae_for_input
-//
-// read_text_file
-// read_dx1_file
-// do_crab1
-
 
 
 // __input
@@ -757,6 +795,10 @@ void MainWindow::read_dx1_file (QTextStream & in_stream){
         }
     }
     get_lexicon()->input_words(word_counts);
+    if (m_word_model){delete m_word_model;}
+    m_word_model = new wordmodel(get_lexicon()->get_word_collection());
+    m_word_model_proxy_1 ->setSourceModel(m_word_model);
+    m_word_model_proxy_2 ->setSourceModel(m_word_model);
 }
 void MainWindow::read_text_file (QTextStream & in_stream){
     QMap<QString, int> word_counts;
@@ -771,6 +813,10 @@ void MainWindow::read_text_file (QTextStream & in_stream){
         }
     }
     get_lexicon()->input_words(word_counts);
+    if (m_word_model){delete m_word_model;}
+    m_word_model = new wordmodel(get_lexicon()->get_word_collection());
+    m_word_model_proxy_1 ->setSourceModel(m_word_model);
+    m_word_model_proxy_2 ->setSourceModel(m_word_model);
 }
 
 

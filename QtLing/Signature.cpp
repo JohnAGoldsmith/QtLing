@@ -62,6 +62,7 @@ QStringList CSignature::get_affix_string_list(){
     return m_Signature.split("=");
 }
 
+
 QStringList& CSignature::get_stem_strings(QStringList& stem_list)
 {   stem_list.clear();
     for (int stemno = 0; stemno < m_Stems.size(); stemno++){

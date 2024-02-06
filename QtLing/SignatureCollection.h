@@ -17,11 +17,12 @@ class CSignatureCollection : public QObject
     Q_OBJECT
 protected:
     //QMap<QString, CSignature*>
-    map_string_to_sig                       m_SignatureMap;
+    map_string_to_sig                       m_signature_map;
     int                                     m_CorpusCount; // What is this used for?
     QString                                 m_MemberName; // what is this used for?
-    QList<CSignature*>                      m_SortList;
+    QList<CSignature*>                      m_sort_list;
     QList<CSignature*>                      m_signature_list;
+
     bool                                    m_SortValidFlag;
     enum  eSortStyle                        m_SortStyle;
     map_sigstring_to_sig_ptr_iter *         m_MapIterator;
@@ -48,8 +49,8 @@ public:
     CSignature*                             operator<< (const QString&);
     void                                    operator<< ( CSignature* );
     CSignature*                             operator^= (const QString&);
-    CSignature*                             operator[] (int n)              { return m_SortList[n];}
-    CSignature*                             at(int n) {return m_SortList[n];}
+    CSignature*                             operator[] (int n)              { return m_sort_list[n];}
+    CSignature*                             at(int n) {return m_sort_list[n];}
 
     void                                    add_this_and_all_subsignatures(QString sig_string, int stem_count, QStringList & signature_check_list);
     void                                    calculate_stem_entropy();
@@ -61,18 +62,18 @@ public:
     CSignature*                             find_or_add (const QString&);         // same as operatorˆ=
     CSignature *                            find_or_fail(const QString&);
     void                                    find_minimal_cover(); // not used, should be removed
-    CSignature*                             get_at_sorted( uint n )         { return m_SortList[n];}
+    CSignature*                             get_at_sorted( uint n )         { return m_sort_list[n];}
     QMap<CSignature*,QList<CSignature*>*> * get_containment_map()           {return & m_ContainmentMap;}
     QList<word_and_count_list*> *           get_count_vectors(QList<word_and_count_list*> * count_vectors);
-    int                                     get_count()             const   { return m_SignatureMap.size(); }
+    int                                     get_count()             const   { return m_signature_map.size(); }
     void                                    get_epositive_signatures(QMap<CSignature*,int>);
     CLexicon*                               get_lexicon()                   { return m_Lexicon; }
-    map_string_to_sig*                      get_map()                       { return & m_SignatureMap;}
+    map_string_to_sig*                      get_map()                       { return & m_signature_map;}
     QList<CSignature*> *                    get_minimal_cover()            {return & m_minimal_cover;}
     int                                     get_number_of_epositive_signatures();
-    CSignature*                             get_signature(QString sig)      {return m_SignatureMap.value(sig); }
+    CSignature*                             get_signature(QString sig)      {return m_signature_map.value(sig); }
     QList<CSignature*> *                    get_signature_list()            { return & m_signature_list;}
-    QMap<QString, CSignature*> *            get_signature_map()             {  return & m_SignatureMap;}
+    QMap<QString, CSignature*> *            get_signature_map()             {  return & m_signature_map;}
     QListIterator<CSignature*>   *          get_sorted_list_iterator();
     bool                                    get_suffix_flag()               { return m_suffix_flag;}
     int                                     get_total_count_of_letters_in_all_signatures();

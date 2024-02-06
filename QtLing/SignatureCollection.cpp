@@ -11,7 +11,7 @@ CSignatureCollection::CSignatureCollection(CLexicon* p_lexicon, bool suffix_flag
     m_MemberName			= QString();
     m_SortValidFlag			= 0;
     m_SortStyle				= KEY;
-    m_SortedListIterator    = new     QListIterator<CSignature*> (m_SortList);
+    m_SortedListIterator    = new     QListIterator<CSignature*> (m_sort_list);
     m_suffix_flag           = suffix_flag;
     m_Lexicon               = p_lexicon;
     m_minimum_number_of_stems_for_minimal_cover = 5;
@@ -25,8 +25,14 @@ CSignatureCollection::~CSignatureCollection()
 }
 
 void CSignatureCollection::clear(){
-    m_SignatureMap.clear();
-    m_SortList.clear();
+    foreach (CSignature * sig, m_signature_list){
+        delete sig;
+    }
+    m_signature_list.clear();
+    m_signature_map.clear();
+    m_sort_list.clear();
+    m_ContainmentMap.clear();
+    m_minimal_cover.clear();
 }
 
 QListIterator<CSignature*> * CSignatureCollection::get_sorted_list_iterator()
@@ -41,23 +47,23 @@ QListIterator<CSignature*> * CSignatureCollection::get_sorted_list_iterator()
 
 
 bool CSignatureCollection::contains(sigstring_t this_sigstring){
-    return m_SignatureMap.contains(this_sigstring);
+    return m_signature_map.contains(this_sigstring);
 }
 CSignature* CSignatureCollection::operator <<(const QString& this_sigstring)
 {
     CSignature* pSig;
 
     Q_ASSERT(this_sigstring.length() > 0);
-    if (! m_SignatureMap.contains(this_sigstring)){
+    if (! m_signature_map.contains(this_sigstring)){
         pSig = new CSignature(this_sigstring);
         m_signature_list.append(pSig);
-        m_SignatureMap.insert(this_sigstring, pSig);
+        m_signature_map.insert(this_sigstring, pSig);
         m_suffix_flag?
             pSig->set_suffix_flag(true):
             pSig->set_suffix_flag(false);
     } else
     {
-        pSig = m_SignatureMap[this_sigstring];
+        pSig = m_signature_map[this_sigstring];
     }
     pSig->setParent(this);
     return pSig;
@@ -65,9 +71,9 @@ CSignature* CSignatureCollection::operator <<(const QString& this_sigstring)
 
 void CSignatureCollection::operator<< (CSignature * pSig)
 {
-    if (! m_SignatureMap.contains(pSig->get_key())){
+    if (! m_signature_map.contains(pSig->get_key())){
         m_signature_list.append(pSig);
-        m_SignatureMap.insert(pSig->get_key(), pSig);
+        m_signature_map.insert(pSig->get_key(), pSig);
         m_suffix_flag?
             pSig->set_suffix_flag(true):
             pSig->set_suffix_flag(false);
@@ -80,19 +86,19 @@ CSignature* CSignatureCollection::operator ^=(const QString& szSignature)
     return this->find_or_add(szSignature);
 }
 CSignature* CSignatureCollection::find_or_add (const QString& sigstring )
-{   if (m_SignatureMap.contains(sigstring))
-    { return m_SignatureMap[sigstring];
+{   if (m_signature_map.contains(sigstring))
+    { return m_signature_map[sigstring];
     } else {
         CSignature* pSig = new CSignature(sigstring, m_suffix_flag, this);
-        m_SignatureMap[sigstring] = pSig;
+        m_signature_map[sigstring] = pSig;
         m_signature_list.append(pSig);
         return pSig;
     }
 }
 CSignature* CSignatureCollection::find_or_fail(const QString& this_sig_string){
 
-    if (m_SignatureMap.contains(this_sig_string)){
-        return m_SignatureMap[this_sig_string];
+    if (m_signature_map.contains(this_sig_string)){
+        return m_signature_map[this_sig_string];
     } else{
         return NULL;
     }
@@ -100,7 +106,7 @@ CSignature* CSignatureCollection::find_or_fail(const QString& this_sig_string){
 
 int CSignatureCollection::get_total_count_of_letters_in_all_signatures(){
     int letter_count(0);
-    map_sigstring_to_sig_ptr_iter sig_iter (m_SignatureMap);
+    map_sigstring_to_sig_ptr_iter sig_iter (m_signature_map);
     while (sig_iter.hasNext())
     {
         sig_iter.next();
@@ -118,7 +124,7 @@ double CSignatureCollection::get_description_length(){
     DL = get_total_count_of_letters_in_all_signatures() * cost_of_letter;
 
     // add cost of marking the end of each stem and affix:
-    map_sigstring_to_sig_ptr_iter sig_iter (m_SignatureMap);
+    map_sigstring_to_sig_ptr_iter sig_iter (m_signature_map);
     while (sig_iter.hasNext())
     {
         sig_iter.next();
@@ -155,32 +161,27 @@ bool compare_secondary_robustness(CSignature* pSig1, CSignature* pSig2)
 
 void CSignatureCollection::sort(eSortStyle sort_style)
 {
-    m_SortList.clear();
-    map_sigstring_to_sig_ptr_iter sig_iter (m_SignatureMap);
+    m_sort_list.clear();
+    map_sigstring_to_sig_ptr_iter sig_iter (m_signature_map);
     while (sig_iter.hasNext())
     {
         sig_iter.next();
-        m_SortList.append(sig_iter.value());
+        m_sort_list.append(sig_iter.value());
     }
-
     switch (sort_style){
     case SIG_BY_AFFIX_COUNT:
-         //qSort(m_SortList.begin(), m_SortList.end(),  compare_affix_count);
-         std::sort(m_SortList.begin(), m_SortList.end(),  compare_affix_count);
+         std::sort(m_sort_list.begin(), m_sort_list.end(),  compare_affix_count);
          break;
     case SIG_BY_REVERSE_ROBUSTNESS:
-          //qSort(m_SortList.begin(), m_SortList.end(),  compare_robustness_reversed);
-          std::sort(m_SortList.begin(), m_SortList.end(),  compare_robustness_reversed);
+          std::sort(m_sort_list.begin(), m_sort_list.end(),  compare_robustness_reversed);
           break;
     case SIG_BY_SECONDARY_ROBUSTNESS:
-          //qSort(m_SortList.begin(), m_SortList.end(),  compare_robustness_reversed);
-          std::sort(m_SortList.begin(), m_SortList.end(),  compare_secondary_robustness);
+          std::sort(m_sort_list.begin(), m_sort_list.end(),  compare_secondary_robustness);
           for (int i = 0; i < 15; i++)
-              qDebug() << 147 << "sig collection" << m_SortList.at(i)->display();
+              qDebug() << 147 << "sig collection" << m_sort_list.at(i)->display();
           break;
     default:
-          //qSort(m_SortList.begin(), m_SortList.end(),  compare_stem_count);
-        std::sort(m_SortList.begin(), m_SortList.end(),  compare_stem_count);
+        std::sort(m_sort_list.begin(), m_sort_list.end(),  compare_stem_count);
     }
 
 
@@ -207,27 +208,30 @@ bool compare_secondary_stem_count(CSignature* pSig1,CSignature* pSig2)
 {
  return  pSig1->get_secondary_stem_count() < pSig2->get_secondary_stem_count();
 }
+
+// not currently used:
 void CSignatureCollection::sort_signatures_by_secondary_stem_count(){
-      m_SortList.clear();
-       map_sigstring_to_sig_ptr_iter sig_iter (m_SignatureMap);
+      m_sort_list.clear();
+    map_sigstring_to_sig_ptr_iter sig_iter (m_signature_map);
        while (sig_iter.hasNext())
        {
            sig_iter.next();
-           m_SortList.append(sig_iter.value());
+           m_sort_list.append(sig_iter.value());
        }
-       std::sort(m_SortList.begin(), m_SortList.end(),  compare_secondary_stem_count);
+       std::sort(m_sort_list.begin(), m_sort_list.end(),  compare_secondary_stem_count);
 
 }
 
+// I don´t think the containmentmap  is being used:
 void CSignatureCollection::compute_containment_list()
 {   CSignature* pSig, *qSig;
     sort(SIG_BY_AFFIX_COUNT);
-    for (int i = 0; i < m_SortList.size(); i++){
-        pSig = m_SortList[i];
+    for (int i = 0; i < m_sort_list.size(); i++){
+        pSig = m_sort_list[i];
         if (pSig->get_number_of_affixes() < 3) {break;}
         m_ContainmentMap[pSig] = new QList<CSignature*>;
-        for (int j = i+1; j < m_SortList.size(); j++){
-            qSig = m_SortList[j];
+        for (int j = i+1; j < m_sort_list.size(); j++){
+            qSig = m_sort_list[j];
             if (qSig->get_number_of_affixes() < 2) {break;}
             if (pSig->contains(qSig)){
                 m_ContainmentMap[pSig]->append(qSig);
@@ -237,9 +241,11 @@ void CSignatureCollection::compute_containment_list()
     // Sort each row of signatures by stem-count or robustness.
 
 }
+
+// not currently used:
 void CSignatureCollection::sort_each_signatures_stems_alphabetically()
 {
-    map_sigstring_to_sig_ptr_iter sig_iter (m_SignatureMap);
+    map_sigstring_to_sig_ptr_iter sig_iter (m_signature_map);
     while (sig_iter.hasNext())
     {
         sig_iter.next();
@@ -249,9 +255,9 @@ void CSignatureCollection::sort_each_signatures_stems_alphabetically()
 
 QList<word_and_count_list*> *   CSignatureCollection::get_count_vectors(QList<word_and_count_list*> * count_vectors){
     count_vectors->clear();
-    for (int signo = 0; signo<m_SortList.size(); signo++)
+    for (int signo = 0; signo<m_sort_list.size(); signo++)
     {
-        CSignature* pSig = m_SortList[signo];
+        CSignature* pSig = m_sort_list[signo];
         word_and_count_list * pVector = new word_and_count_list;
         count_vectors->append(pSig->get_word_and_count_vectors(pVector));
     }
@@ -259,7 +265,7 @@ QList<word_and_count_list*> *   CSignatureCollection::get_count_vectors(QList<wo
 }
 void CSignatureCollection::calculate_stem_entropy()
 {
-    map_sigstring_to_sig_ptr_iter sig_iter (m_SignatureMap);
+    map_sigstring_to_sig_ptr_iter sig_iter (m_signature_map);
     while (sig_iter.hasNext())
     {
         sig_iter.next();
@@ -269,7 +275,7 @@ void CSignatureCollection::calculate_stem_entropy()
 
 int CSignatureCollection::get_number_of_epositive_signatures()
 {   int count = 0;
-    map_sigstring_to_sig_ptr_iter sig_iter (m_SignatureMap);
+    map_sigstring_to_sig_ptr_iter sig_iter (m_signature_map);
     while (sig_iter.hasNext())
     {
         sig_iter.next();
@@ -282,7 +288,7 @@ int CSignatureCollection::get_number_of_epositive_signatures()
 
 void CSignatureCollection::get_epositive_signatures(QMap<CSignature*, int> sig_map)
 {
-    map_sigstring_to_sig_ptr_iter sig_iter (m_SignatureMap);
+    map_sigstring_to_sig_ptr_iter sig_iter (m_signature_map);
     while (sig_iter.hasNext())
     {
         sig_iter.next();
@@ -311,7 +317,7 @@ void CSignatureCollection::find_minimal_cover()
 
     QList<CSignature*> temporary_sig_list;
     QList<CSignature*> minimal_sig_cover;
-    QListIterator<CSignature*> sig_iter_1(m_SortList);
+    QListIterator<CSignature*> sig_iter_1(m_sort_list);
 
     //--> make a sorted copy of signatures with enough stems <---
     while (sig_iter_1.hasNext()){
@@ -343,8 +349,8 @@ void CSignatureCollection::check_singleton_signatures(const QString &message)
 {
     QMap<QString, CSignature*>::ConstIterator sig_map_iter;
     qDebug() << message << "Checking for singleton signatures";
-    for (sig_map_iter = m_SignatureMap.constBegin();
-         sig_map_iter != m_SignatureMap.constEnd();
+    for (sig_map_iter = m_signature_map.constBegin();
+         sig_map_iter != m_signature_map.constEnd();
          sig_map_iter++) {
         const QString& str_sig = sig_map_iter.key();
         if (!str_sig.contains('='))
@@ -359,7 +365,7 @@ void CSignatureCollection::check_singleton_signatures(const QString &message)
 
 void CSignatureCollection::calculate_sig_robustness()
 {
-    foreach (CSignature* p_sig, m_SignatureMap) {
+    foreach (CSignature* p_sig, m_signature_map) {
         p_sig->calculate_robustness();
     }
     qDebug() << "Calculated signature robustness";
@@ -388,7 +394,7 @@ void CSignatureCollection::add_this_and_all_subsignatures(QString this_sig_strin
 }
 
 void CSignatureCollection::compute_signature_transforms(bool suffix_flag, QTextStream & sig_transforms){
-    map_sigstring_to_sig_ptr_iter sig_iter (m_SignatureMap);
+    map_sigstring_to_sig_ptr_iter sig_iter (m_signature_map);
     while (sig_iter.hasNext())
     {   sig_iter.next();
         sig_iter.value()->compute_signature_transforms(suffix_flag, sig_transforms);

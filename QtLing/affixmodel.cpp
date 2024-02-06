@@ -1,0 +1,174 @@
+#include "affixmodel.h"
+
+affixmodel::affixmodel(QList<CPrefix*> * prefixes, QObject *parent)
+    : QAbstractItemModel{parent}
+{
+    m_prefixes = prefixes;
+    m_suffixes = nullptr;
+}
+affixmodel::affixmodel(QList<CSuffix*> * suffixes, QObject *parent)
+    : QAbstractItemModel{parent}
+{
+    m_suffixes = suffixes;
+    m_prefixes = nullptr;
+    QStringList labels = {tr("word"), tr("word count"), tr("suffix signatures")};
+}
+
+bool greaterthan_suffix_key(CSuffix* a, CSuffix* b){
+    return a->get_key() > b->get_key();
+}
+bool lessthan_suffix_key(CSuffix * a, CSuffix* b){
+    return a->get_key() < b->get_key();
+}
+bool greaterthan_prefix_key(CPrefix* a, CPrefix* b){
+    return a->get_key() > b->get_key();
+}
+bool lessthan_prefix_key(CPrefix* a, CPrefix* b){
+    return a->get_key() < b->get_key();
+}
+bool greaterthan_suffix_count(CSuffix* a, CSuffix* b){
+    return a->get_count() > b->get_count();
+}
+bool lessthan_suffix_count(CSuffix* a, CSuffix* b){
+    return a->get_count() < b->get_count();
+}
+bool greaterthan_prefix_count(CPrefix* a, CPrefix* b){
+    return a->get_count() > b->get_count();
+}
+bool lessthan_prefix_count(CPrefix* a, CPrefix* b){
+    return a->get_count() < b->get_count();
+}
+
+void affixmodel::sort(int column, Qt::SortOrder order){
+    switch(column){
+    case 0:{
+        if (m_prefixes){
+            if (order == Qt::AscendingOrder) {
+                std::sort(m_prefixes->begin(), m_prefixes->end(), lessthan_prefix_key);
+            }else{
+                std::sort(m_prefixes->begin(), m_prefixes->end(), greaterthan_prefix_key);
+            }
+        } else{
+            if (order == Qt::AscendingOrder) {
+                std::sort(m_suffixes->begin(), m_suffixes->end(), lessthan_suffix_key);
+            }else{
+                std::sort(m_suffixes->begin(), m_suffixes->end(), greaterthan_suffix_key);
+            }
+        }
+        break;
+    }
+    case 1: {
+        if (m_prefixes){
+            if (order == Qt::AscendingOrder) {
+                std::sort(m_prefixes->begin(), m_prefixes->end(), lessthan_prefix_count);
+            }else{
+                std::sort(m_prefixes->begin(), m_prefixes->end(), greaterthan_prefix_count);
+            }
+        } else{
+            if (order == Qt::AscendingOrder) {
+                std::sort(m_suffixes->begin(), m_suffixes->end(), lessthan_suffix_count);
+            }else{
+                std::sort(m_suffixes->begin(), m_suffixes->end(), greaterthan_suffix_count);
+            }
+        }
+    }
+    default:
+        break;
+    }
+    emit layoutChanged();
+}
+int affixmodel::rowCount(const QModelIndex &parent)const {
+    Q_UNUSED(parent);
+    if (m_prefixes) {
+        return m_prefixes->count();
+    }
+    return m_suffixes->count();
+}
+int affixmodel::columnCount(const QModelIndex &parent)const {
+    Q_UNUSED(parent);
+    return 3;
+}
+QModelIndex affixmodel::index(int row, int column, const QModelIndex &parent) const {
+    Q_UNUSED(parent);
+    return createIndex(row, column, nullptr);
+}
+QVariant affixmodel::data(const QModelIndex & index, int role)const {
+    if (!index.isValid())
+        return QVariant();
+    int row = index.row();
+    int column = index.column();
+    if (m_suffixes){
+        if ( row > m_suffixes->count()) {
+            return QVariant();
+        }
+    } else {
+        if ( row > m_prefixes->count()){
+                return QVariant();
+        }
+    }
+    switch (column) {
+    case 0:
+        if (role==Qt::DisplayRole){
+            if (m_suffixes){
+                return QVariant(m_suffixes->at(row)->get_key());
+            } else {
+                return QVariant(m_prefixes->at(row)->get_key());
+            }
+         }
+        break;
+    case 1:
+        if (role==Qt::DisplayRole){
+            if (m_suffixes){
+                return QVariant(m_suffixes->at(row)->get_sig_count());
+            } else {
+                return QVariant(m_prefixes->at(row)->get_sig_count());
+            }
+        }
+        break;
+    case 2:
+        if (role==Qt::DisplayRole){
+            return QVariant();
+        }
+        break;
+
+    default:
+        return QVariant();
+        break;
+    }
+    return QVariant();
+}
+QModelIndex affixmodel::parent(const QModelIndex &index) const {
+    Q_UNUSED(index);
+    return QModelIndex();
+}
+QVariant affixmodel::headerData(int section, Qt::Orientation orientation, int role ) const {
+     if (role != Qt::DisplayRole) {return QVariant();}
+    if (orientation == Qt::Horizontal){
+        if (section == 0) return QVariant("Affix" );
+        if (section == 1) return QVariant("signature count");
+    }
+    return QVariant();
+}
+affixSFProxymodel::affixSFProxymodel(QObject* parent ):QSortFilterProxyModel (parent){
+
+}
+
+
+
+bool affixSFProxymodel::lessThan(const QModelIndex & left, const QModelIndex & right) const {
+    int column = left.column();
+    QVariant leftData = sourceModel()->data(left);
+    QVariant rightData = sourceModel()->data(right);
+    switch (column){
+    case 0:{
+        return leftData.toString() < rightData.toString();
+        break;
+    }
+    case 1:{
+        return leftData.toInt() < rightData.toInt();
+        break;
+    }
+    default:
+        return true;
+    }
+}

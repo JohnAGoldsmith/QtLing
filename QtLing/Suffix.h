@@ -7,8 +7,32 @@
 #include <QMap>
 #include <QJsonObject>
 #include "generaldefinitions.h"
+class Affix
+{
+protected:
+    QString m_key;
+    int m_frequency;
+    int m_sig_count;
+    int m_json_id;
+    bool m_suffix_flag;
+public:
+    Affix(QString word);
+    Affix(Affix &);
+public:
+    //Accessors
+    QString get_key() const                 {return m_key;}
+    QString get_affix() const               { return m_key;    }
+    int     GetFrequency()                  { return m_frequency; }
+    void    SetFrequency(int frequency)     { m_frequency = frequency; }
+    int     get_sig_count() const               { return m_sig_count;}
+    int     increment_sig_count()               { m_sig_count+= 1; return m_sig_count;}
+    int     get_count()                     {return m_frequency;}
 
-
+    void    write_json(QJsonObject& ref_json, eJsonType json_type = INDEXED) const;
+    void    read_json(const QJsonObject& ref_json);
+    int     get_json_id() const { return m_json_id; }
+    void    set_json_id(const int id) { m_json_id = id; }
+};
 class CSuffix
 {
 protected:
@@ -19,6 +43,7 @@ protected:
 public:
     CSuffix(QString ssWord);
     CSuffix(CSuffix&);
+    ~CSuffix(){};
 public:
     //Accessors
     QString get_key() const                 {return m_key;}
@@ -27,6 +52,7 @@ public:
     void    SetFrequency(int frequency)     { m_frequency = frequency; }
     int     get_sig_count() const               { return m_sig_count;}
     int     increment_sig_count()               { m_sig_count+= 1; return m_sig_count;}
+    int     get_count()                     { return m_frequency;}
 
     void    write_json(QJsonObject& ref_json, eJsonType json_type = INDEXED) const;
     void    read_json(const QJsonObject& ref_json);
@@ -52,6 +78,7 @@ public:
     void    SetFrequency(int frequency)     { m_frequency = frequency; }
     int     get_sig_count() const               { return m_sig_count;}
     int     increment_sig_count()               { m_sig_count+= 1; return m_sig_count;}
+    int     get_count()                     { return m_frequency; }
 
     void    write_json(QJsonObject& ref_json, eJsonType json_type = INDEXED) const;
     void    read_json(const QJsonObject& ref_json);

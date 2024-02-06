@@ -1,28 +1,44 @@
 #ifndef TABLE_VIEWS_H
 #define TABLE_VIEWS_H
+#include <QTableView>
+#include <QTreeView>
+#include <QLabel>
+#include <QPushButton>
 
-#include "mainwindow.h"
+//#include "mainwindow.h"
 #include "lxamodels.h"
 
 class MainWindow;
 class CLexicon;
 class CompoundWord;
+// ----------------- New --------------------------------------------------------------------------//
+class TableView: public QTableView{
+    Q_OBJECT
+    MainWindow*         m_main_window;
 
+public:
+    TableView(MainWindow* main_window);
+    void show_model(const QModelIndex& index); // gets index from the TreeView on the left side of screen -- has a string which is the name of a component
+
+
+};
+
+
+
+// ----------------- Old ---------------------------------------------------------------------------//
 class UpperTableView : public QTableView
 {
     Q_OBJECT
     MainWindow*             m_parent_window;
     eDataType               m_data_type;     // this says the kind of thing in the table, so another view knows how to handle the information
-
     eSortStyle              m_signature_sort_style;
-
     int                     m_gold_standard_display_order;
 
     // for search functionality //
     int                     find_all_strings(const QString& str, bool exact_match);
     void                    clear_items_found();
     QList<QStandardItem*>   m_items_found;
-    QModelIndexList         m_indeces_found;
+    QModelIndexList         m_indices_found;
     int                     m_row_recently_selected;
     void                    remap_indeces_and_highlight();
     static bool             qsi_row_less_than(const QStandardItem* item1, const QStandardItem* item2);

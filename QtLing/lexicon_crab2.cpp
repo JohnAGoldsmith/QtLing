@@ -21,10 +21,32 @@
 #include "compound.h"
 #include "spine.h"
 
-extern bool contains(QStringList & container, QStringList & contained);
+
 extern QString QStringList2signature(QStringList);
 
-
+bool contains(QStringList& list1, QStringList & list2) {
+    int i(0), j(0);
+    if (list1.length()< list2.length()) {
+        return false;}
+    while (i < list1.length() && j < list2.length()){
+        if (list1[i] == list2[j]){
+            i++;
+            j++;
+            continue;
+        } else {
+            if (list1[i] < list2[j]){
+                i++;
+                continue;
+            } else{
+                return false;
+            }
+        }
+    }
+    if (j == list2.length()){
+        return true;
+    }
+    return false;
+}
 
 
 /**
@@ -45,6 +67,7 @@ void CLexicon::Crab_2()
 
     replace_parse_pairs_from_current_signature_structure();
 
+    find_parasuffixes();
 
 }
 
@@ -65,25 +88,7 @@ void CLexicon::find_all_signature_spines(){  // currently not used
     */
 }
 
-/*
-bool Contains(QList<CSuffix*>* list1, QList<CSuffix*>* list2 ) {
-    foreach (CSuffix* suffix, *list2){
-        qDebug() << 94 << suffix;
-        if (! list1->contains(suffix)){
-            return false;
-        }
-    }
-    return true;
-}
-bool Contains(QList<CPrefix*>* list1, QList<CPrefix*>* list2 ) {
-    foreach (CPrefix* prefix, *list2){
-        if (! list1->contains(prefix)){
-            return false;
-        }
-    }
-    return true;
-}
-*/
+
 int IntersectionCount(QList<CSuffix*>* list1, QList<CSuffix*>* list2){
     int count = 0;
     foreach (CSuffix* suffix, *list2){
@@ -117,6 +122,18 @@ int intersection_count(QStringList& list1, QStringList& list2){
     }
    return count;
 }
+//----------------------------   para-affixes:  continuations on a stem that aren't integrated into signature ----------------------//
+void CLexicon::find_parasuffixes(){
+    foreach (CStem* stem, *m_suffixal_stems->get_stem_list()){
+        CStem* protostem = m_suffix_protostems->find_or_fail(stem->get_stem());
+        for (int n = protostem->get_start_word(); n <= protostem->get_end_word(); n++){
+            QString word = m_Words->get_word(n)->get_word();
+            if (m_word2suffix_sigs.contains(word)) {continue;}
+            qDebug() << 129 << stem->get_stem() << m_Words->get_word(n)->get_word();
+        }
+
+    }
+}
 
 void CLexicon::find_parasuffixes(int wordno, int stem_length, QStringList working_affix_string_list){
     CSuffix *pSuffix;
@@ -142,12 +159,27 @@ void CLexicon::find_paraprefixes(int wordno, int stem_length, QStringList workin
     }
     working_affix_string_list.append(this_affix);
 }
+void  CLexicon::add_parasuffix(QString parasuffix, QString word){
+    if (! m_ParaSuffixes->contains(parasuffix)){
+        m_ParaSuffixes->insert(parasuffix, new QStringList());
+    }
+    m_ParaSuffixes->value(parasuffix)->append(word);
+}
+void  CLexicon::add_paraprefix(QString paraprefix, QString word){
+    if (! m_ParaPrefixes->contains(paraprefix)){
+        m_ParaPrefixes->insert(paraprefix, new QStringList());
+    }
+    m_ParaPrefixes->value(paraprefix)->append(word);
+}
+
+//not currently used:
 void CLexicon::find_new_affixes(protostem* this_protostem, CSignatureCollection * signatures,
                                 CStemCollection* stems, QStringList&  working_affix_string_list) {
+    Q_UNUSED(signatures);
     Affix_list affixes_of_residual_sig;
     affixes_of_residual_sig.clear();
 
-    CSuffix* pSuffix;
+    //CSuffix* pSuffix;
     CPrefix* pPrefix;
     word_t this_word;
     affix_t this_affix;
@@ -189,6 +221,33 @@ void CLexicon::find_new_affixes(protostem* this_protostem, CSignatureCollection 
 }
 
 
+
+QString CLexicon::process_a_word_into_stem_and_affix_possibly_paraaffix(int wordno, int stem_length, bool suffix_flag){
+    QString word, affix;
+    if (suffix_flag){
+        CSuffix * pSuffix;
+        word = m_Words->get_string_from_sorted_list(wordno);
+        affix = word.mid( stem_length );
+        if (affix.length() == 0){affix = "NULL";}
+        pSuffix =  m_Suffixes->find_or_fail(affix);
+        if (! pSuffix ){
+            add_parasuffix(affix, word);
+            return QString();
+        }
+        return affix;
+    } else{
+        CPrefix* pPrefix;
+        word = m_Words->get_end_sorted_list()->at(wordno);
+        affix = word.left(word.length() - stem_length);
+        if (affix.length() == 0){ affix = "NULL"; }
+        pPrefix = m_Prefixes->find_or_fail(affix);
+        if (! pPrefix){
+            add_paraprefix(affix, word);
+            return QString();
+        }
+        return affix;
+    }
+}
 /*!
  *  This function looks at all the non-signatures that were rejected
  *  because they were associated with only one stem. For each one, it
@@ -212,45 +271,31 @@ void   CLexicon::find_good_signatures_inside_bad()  // step 2
     CPrefix*                    pPrefix;
 
     qApp->processEvents();
-
+    if (! test_if_analysis_has_been_done()){
+        return;
+    }
     replace_parse_pairs_from_current_signature_structure();
     generate_virtual_signatures();
-
-    QMap<QString, protostem*> * these_protostems;
+    CStemCollection * these_protostems;
     if (m_suffix_flag) {
-         //signatures = m_Signatures;  // TODO remove this;
          signatures = m_VirtualSignatures;
          stems = m_suffixal_stems;
-         these_protostems = & m_suffix_protostems;
-
+         these_protostems =  m_suffix_protostems;
     } else{
-         qDebug() << 133 << m_prefix_protostems.count();
          signatures = m_VirtualSignatures;
          stems = m_prefixal_stems;
-         these_protostems = & m_prefix_protostems;
+         these_protostems =  m_prefix_protostems;
     }
     signatures->sort(SIG_BY_REVERSE_ROBUSTNESS);
-
-
-    //--------------------------------------------------------------------------------//
-    m_ProgressBar->reset();
-    m_ProgressBar->setMinimum(0);
-    m_ProgressBar->setMaximum(these_protostems->count());
-    //--------------------------------------------------------------------------------//
-
+    initialize_progress(these_protostems->get_count());
     int protostem_count = 0;
-    int temp_i = 0;
-    foreach (auto this_protostem, * these_protostems)
+    foreach (CStem* this_protostem, * these_protostems->get_stem_list())
     {   //-----------------------------------------------------------------------------------------//
-        m_ProgressBar->setValue(protostem_count++);
-        qApp->processEvents();
-        temp_i++;
-        if (temp_i == 1000){
-            temp_i = 0;
+        mark_progress(protostem_count++);
+        if (protostem_count % 1000 == 0){
             m_StatusBar->showMessage("Crab 2: Find good signatures inside bad: " + this_stem);
-            qApp->processEvents();
         } //---------------------------------------------------------------------------------------//
-        affixes_of_residual_sig.clear();
+        affixes_of_residual_sig.   clear();
         working_suffix_string_list.clear();
         working_prefix_string_list.clear();
         stem_t this_stem = this_protostem->get_stem();
@@ -260,25 +305,10 @@ void   CLexicon::find_good_signatures_inside_bad()  // step 2
         }
         for (int wordno= this_protostem->get_start_word(); wordno <= this_protostem->get_end_word(); wordno++){
             if (m_suffix_flag){
-                this_word = m_Words->get_string_from_sorted_list(wordno);
-                this_affix = this_word.mid( stem_length );
-                if (this_affix.length() == 0){this_affix = "NULL";}               
-                pSuffix =  m_Suffixes->find_or_fail(this_affix);
-                if (! pSuffix ){
-                    add_parasuffix(this_affix, this_word);
-                    continue;
-                }
+                this_affix = process_a_word_into_stem_and_affix_possibly_paraaffix(wordno, stem_length, m_suffix_flag);
                 working_suffix_string_list.append(this_affix);
-                if (this_affix.length()==0) qDebug() << 230 << "empty continuation"<< this_stem;
             } else{
-                this_word = m_Words->get_end_sorted_list()->at(wordno);
-                this_affix = this_word.left(this_word.length()- stem_length);
-                if (this_affix.length() == 0){ this_affix = "NULL"; }
-                pPrefix = m_Prefixes->find_or_fail(this_affix);
-                if (! pPrefix){
-                    add_paraprefix(this_affix, this_word);
-                    continue;
-                }
+                this_affix = process_a_word_into_stem_and_affix_possibly_paraaffix(wordno, stem_length, m_suffix_flag);
                 working_prefix_string_list.append(this_affix);
             }
         }
@@ -342,13 +372,12 @@ void   CLexicon::find_good_signatures_inside_bad()  // step 2
              }
         }
         foreach (QString this_affix, best_sig_affix_list){
-            //if (this_affix == "NULL") this_affix = "";
             add_parse(new CParse(this_stem, this_affix, m_suffix_flag));
         }
         // this is the right place to identify parasuffixes -- the extensions of *real* stems, not protostems (as is currently done).
     }// end of protostem loop
-
-    step3_from_parses_to_stem_to_sig_maps("Good sigs inside bad");
+    
+    step3_from_parses_to_stem2sig_maps("Good sigs inside bad");
 
     // We have to drop the condition now -- and in the future -- that all signatures have at least 2 stems...
     change_minimum_stem_count(1);
@@ -358,3 +387,17 @@ void   CLexicon::find_good_signatures_inside_bad()  // step 2
 
 }
 
+void CLexicon::generate_virtual_signatures(){
+    QStringList signature_check_list;
+    if (m_suffix_flag){
+        foreach (CSignature* pSig, *m_Signatures->get_signature_list()){
+            signature_check_list.clear();
+            m_VirtualSignatures->add_this_and_all_subsignatures(pSig->display(), pSig->get_robustness(), signature_check_list);
+        }
+    } else{
+        foreach (CSignature* pSig, *m_PrefixSignatures->get_signature_list()){
+            signature_check_list.clear();
+            m_VirtualSignatures->add_this_and_all_subsignatures(pSig->display(), pSig->get_robustness(),signature_check_list);
+        }
+    }
+}

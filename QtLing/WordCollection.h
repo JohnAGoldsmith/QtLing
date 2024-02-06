@@ -6,12 +6,15 @@
 #include "generaldefinitions.h"
 #include <QMapIterator>
 #include "Lexicon.h"
-class CWord;
 
+
+class CWord;
 
 
 class CWordCollection
 {
+
+
 protected:
 
     QMap<QString, CWord*>   m_WordMap;
@@ -52,7 +55,7 @@ public:
     int                     get_token_count();
     QString                 get_string_from_sorted_list(int n) {return m_sorted_list[n];}
     QString                 get_string_from_end_sorted_list(int n){return m_end_sorted_list[n];}
-   // QMap<QString, CWord*>*  get_map() { return & m_WordMap; }
+    QList<CWord*> *         get_word_list() {return & m_word_list;}
     CWord*                  get_word(int n);
     int                     get_word_count();
     const QMap<QString, CWord*> get_map() {return m_WordMap;}

@@ -17,15 +17,15 @@ void CLexicon::step10_find_compounds()
 {
 
     // PART 1a: go through list of words to find hyphenated compounds
-    const QMap<QString, protostem*>& ref_protostem_map
-        = m_suffix_flag ? m_suffix_protostems : m_prefix_protostems;
+    //const CStemCollection ref_protostem_map
+    //    = m_suffix_flag ? m_suffix_protostems : m_prefix_protostems;
     
     CStemCollection* p_stems = m_suffix_flag ? m_suffixal_stems : m_prefixal_stems;
     initialize_progress(m_Words->get_count() + p_stems->get_count());
     m_StatusBar->showMessage("8: Finding Compounds - part 1.");
 
     // placeholder:
-    (void)  ref_protostem_map;
+    //(void)  ref_protostem_map;
 
     int MINIMUM_COMPOUND_STEM_LENGTH (4);
 
@@ -344,7 +344,8 @@ void CompoundWordCollection::remove_compound_word(CompoundWord* p_word)
 
 // to do: remove poitner to progress bar as argument; not needed.
 void CompoundWordCollection::remove_invalid_components(QProgressBar *p_progressbar)
-{    QList<CompoundComponent*> list_to_remove;
+{   Q_UNUSED(p_progressbar);
+    QList<CompoundComponent*> list_to_remove;
     //QList<QString> list_to_remove;
     QMap<word_t, CompoundComponent*>& ref_components_map
             = m_component_collection->get_map();

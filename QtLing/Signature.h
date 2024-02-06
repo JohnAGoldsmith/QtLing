@@ -77,6 +77,7 @@ public:
     QList<CSuffix*>*            get_suffix_list()                       {return &m_Suffixes;}
     word_and_count_list *       get_word_and_count_vectors(word_and_count_list* );
     void                        increment_secondary_stem_count(int increment) { m_secondary_stem_count += increment;}
+
     void                        remove_suffix(suffix_t);
     void                        remove_prefix(prefix_t);
     void                        sort_stems();

@@ -4,7 +4,10 @@
 #include "Signature.h"
 
 
-CStem::CStem(QString stem) :  m_key(stem), m_Signatures(),m_count(0) {}
+CStem::CStem(QString stem) :  m_key(stem), m_Signatures(),m_count(0) {
+    m_count = 0;
+    m_json_id = 0;
+}
 
 CStem::CStem(CStem& stem) {
     m_key = stem.get_key();
@@ -13,9 +16,12 @@ CStem::CStem(CStem& stem) {
     while (sig_iter.hasNext()){
         m_Signatures.append(sig_iter.next());
     }
+    m_count = 0;
+    m_json_id = 0;
+}
+CStem::~CStem(){
 
 }
-
 void CStem::add_signature(CSignature *p_new_sig)
 {
     foreach (CSignature* p_sig, m_Signatures) {

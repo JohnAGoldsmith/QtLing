@@ -7,7 +7,7 @@ class CLexicon;
 
 CSuffixCollection::CSuffixCollection(CLexicon* lexicon)
 {
-    m_SuffixMap = QMap<QString, CSuffix*>();
+    m_suffix_map = QMap<QString, CSuffix*>();
     m_Lexicon  = lexicon;
 }
 CSuffixCollection::~CSuffixCollection() {
@@ -15,8 +15,11 @@ CSuffixCollection::~CSuffixCollection() {
 }
 
 void CSuffixCollection::clear(){
-    m_SuffixMap.clear();
-    m_SortedList.clear();
+    foreach (CSuffix* suffix, m_suffix_list){
+        //delete suffix;
+    }
+    m_suffix_map.clear();
+    m_suffix_list.clear();
 }
 
 CSuffix* CSuffixCollection::operator ^=(const QString& suffix)
@@ -25,9 +28,9 @@ CSuffix* CSuffixCollection::operator ^=(const QString& suffix)
 }
 CSuffix* CSuffixCollection::find_or_fail(const QString& suffix)
 {
-    QMap<QString,CSuffix*>::iterator suffix_iter = m_SuffixMap.find(suffix);
+    QMap<QString,CSuffix*>::iterator suffix_iter = m_suffix_map.find(suffix);
     //map_string_to_suffix_iter suffix_iter = m_SuffixMap.find(suffix);
-    if (suffix_iter == m_SuffixMap.end()){
+    if (suffix_iter == m_suffix_map.end()){
         return NULL;
     } else{
         return suffix_iter.value();
@@ -37,11 +40,12 @@ CSuffix* CSuffixCollection::find_or_fail(const QString& suffix)
 CSuffix* CSuffixCollection::find_or_add(const QString& suffix)
 {
 
-    QMap<QString,CSuffix*>::iterator suffix_iter = m_SuffixMap.find(suffix);
+    QMap<QString,CSuffix*>::iterator suffix_iter = m_suffix_map.find(suffix);
 
-    if (suffix_iter == m_SuffixMap.end()){
+    if (suffix_iter == m_suffix_map.end()){
       CSuffix* pSuffix = new CSuffix(suffix);
-      m_SuffixMap.insert(suffix, pSuffix);
+        m_suffix_map.insert(suffix, pSuffix);
+      m_suffix_list.append(pSuffix);
       return pSuffix;
     }
     return suffix_iter.value();
@@ -52,17 +56,8 @@ CSuffix* CSuffixCollection::operator << (const QString& suffix)
 {
     return this->find_or_add(suffix);
 }
-/*
-void CSuffixCollection::get_set_of_suffixes(QSet<QString> *p_string_set){
-    p_string_set->fromList(m_SuffixMap.uniqueKeys());
-}
-*/
-void  CSuffixCollection::get_suffixes(QList<QString>* pList)
-{   QMapIterator<QString,CSuffix*> iter (m_SuffixMap);
-    while (iter.hasNext()){
-        iter.next();
-        pList->append(iter.value()->get_key());
-    }
+QList<CSuffix*>  CSuffixCollection::get_suffixes(){
+    return m_suffix_list;
 }
 
 bool count_compare_suffixes(CSuffix* pSuff1, CSuffix* pSuff2){
@@ -72,12 +67,12 @@ bool count_compare_suffixes(CSuffix* pSuff1, CSuffix* pSuff2){
 
 void CSuffixCollection::sort_by_count()
 {
-    QMapIterator<QString, CSuffix*> suffix_iter (m_SuffixMap);
+    QMapIterator<QString, CSuffix*> suffix_iter (m_suffix_map);
     while (suffix_iter.hasNext()){
         suffix_iter.next();
-        m_SortedList.append(suffix_iter.value());
+        m_suffix_list.append(suffix_iter.value());
     }
-    std::sort(m_SortedList.begin(), m_SortedList.end(), count_compare_suffixes);
+    std::sort(m_suffix_list.begin(), m_suffix_list.end(), count_compare_suffixes);
 
 }
 
@@ -97,7 +92,7 @@ CPrefixCollection::~CPrefixCollection() {
 }
 void CPrefixCollection::clear(){
     m_PrefixMap.clear();
-    m_SortedList.clear();
+    m_prefix_list.clear();
 }
 
 CPrefix* CPrefixCollection::operator ^=(const QString& prefix)
@@ -107,7 +102,6 @@ CPrefix* CPrefixCollection::operator ^=(const QString& prefix)
 CPrefix* CPrefixCollection::find_or_fail(const QString& prefix)
 {
     QMap<QString,CPrefix*>::iterator prefix_iter = m_PrefixMap.find(prefix);
-    //map_string_to_suffix_iter suffix_iter = m_SuffixMap.find(suffix);
     if (prefix_iter == m_PrefixMap.end()){
         return NULL;
     } else{
@@ -123,6 +117,7 @@ CPrefix* CPrefixCollection::find_or_add(const QString& prefix)
     if (prefix_iter == m_PrefixMap.end()){
       CPrefix* pPrefix = new CPrefix(prefix);
       m_PrefixMap.insert(prefix, pPrefix);
+      m_prefix_list.append(pPrefix);
       return pPrefix;
     }
     return prefix_iter.value();
@@ -156,9 +151,9 @@ void CPrefixCollection::sort_by_count()
     QMapIterator<QString, CPrefix*> prefix_iter (m_PrefixMap);
     while (prefix_iter.hasNext()){
         prefix_iter.next();
-        m_SortedList.append(prefix_iter.value());
+        m_prefix_list.append(prefix_iter.value());
     }
-    std::sort(m_SortedList.begin(), m_SortedList.end(), count_compare_prefixes);
+    std::sort(m_prefix_list.begin(), m_prefix_list.end(), count_compare_prefixes);
 
 }
 

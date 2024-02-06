@@ -8,6 +8,18 @@
 #include "mainwindow_find.h"
 #include "mainwindow.h"
 
+//---------------------- New from 2023 and 2024 -------------------------------------------------------//
+
+
+
+
+
+
+
+
+
+//---------------------------- Old from 2017 or so ---------------------------------------------------//
+
 // This passes the user keyEvent up to the MainWindow, which responds to users
 // general instructions.
 // Careful: we need to pass on keyboard events that change the selected cell if we implement this.
@@ -122,6 +134,7 @@ UpperTableView::UpperTableView (MainWindow* window, eSortStyle this_sort_style)
  */
 void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
 {
+    qDebug() << "137" << "Show models upperview old";
     CLexicon* lexicon = m_parent_window->get_lexicon();
     QString component;
     eDataType curr_data_type;
@@ -211,89 +224,113 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         right_table->m_gold_standard_display_order = 0;
 
         if (component == "Words"){
-            m_parent_window->display_words();
+            m_parent_window->display_words();            return;
         }
-        else     if (component == "Prefixal stems"){
+        if (component == "Prefixal stems"){
+            // ----------------- new -----------------------------------------------------
+             m_parent_window->display_prefix_stems(m_parent_window->get_lexicon());
+            // ----------------    old -----------------------------------------------------
             setModel(m_parent_window->m_proxy_models["Prefixal stems"]);
             //m_proxy_model->setSourceModel(m_parent_window->m_Models["Prefixal stems"]);
             set_data_type(e_prefixal_stems);
+            return;
         }
-        else     if (component == "Suffixal stems"){
-            setModel(m_parent_window->m_proxy_models["Suffixal stems"]);
-            //m_proxy_model->setSourceModel(m_parent_window->m_Models["Suffixal stems"]);
-            set_data_type(e_suffixal_stems);
-        }
-        else     if (component == "Prefixes"){
-            m_parent_window->display_prefixes();
-            set_data_type(e_data_prefixes);
-        }
-        else     if (component == "Suffixes"){
-            m_parent_window->display_suffixes();
-            set_data_type(e_data_suffixes);
-        }
-        else     if (component == "Signatures"){
-            m_parent_window->display_suffix_signatures(lexicon);
-        }
-        else     if (component == "EPositive signatures"){
-            m_parent_window->display_epositive_suffix_signatures(lexicon);
-        }
-        else     if (component == "Prefix signatures"){
-            m_parent_window->display_prefix_signatures(lexicon);
-        }
-        else     if (component == "EPositive prefix signatures"){
-            m_parent_window->display_epositive_prefix_signatures(lexicon);
-        }
-        else     if (component == "Signature graph edges"){
-            m_parent_window->display_signature_graph_edges(lexicon);
-        }
-        else     if (component == "Residual parasignatures"){
+        if (component == "Suffixal stems"){
+            // ------------- new -----------------------------------------------------------
+             m_parent_window->display_suffix_stems(m_parent_window->get_lexicon());
 
+            // ---------------  old --------------------------------------------------------
+            setModel(m_parent_window->m_proxy_models["Suffixal stems"]);
+            set_data_type(e_suffixal_stems);
+            return;
+            //--------------------------------------------------------------------------------
         }
-        else     if (component == "Parasuffixes"){
+        if (component == "Prefixes"){
+            m_parent_window->display_prefixes(m_parent_window->get_lexicon());
+            set_data_type(e_data_prefixes);
+            return;
+        }
+        if (component == "Suffixes"){
+            m_parent_window->display_suffixes(m_parent_window->get_lexicon());
+            set_data_type(e_data_suffixes);
+            return;
+        }
+        if (component == "Suffixal signatures"){
+            m_parent_window->display_suffix_signatures(lexicon);
+            return;
+        }
+        if (component == "EPositive signatures"){
+            m_parent_window->display_epositive_suffix_signatures(lexicon);
+            return;
+        }
+        if (component == "Prefix signatures"){
+            m_parent_window->display_prefix_signatures(lexicon);
+            return;
+        }
+        if (component == "EPositive prefix signatures"){
+            m_parent_window->display_epositive_prefix_signatures(lexicon);
+            return;
+        }
+        if (component == "Signature graph edges"){
+            m_parent_window->display_signature_graph_edges(lexicon);
+            return;
+        }
+        if (component == "Residual parasignatures"){
+            return;
+        }
+        if (component == "Parasuffixes"){
             setModel(m_parent_window->m_proxy_models["Parasuffixes"]);
             //m_proxy_model->setSourceModel(m_parent_window->m_Models["Parasuffixes"]);
             set_data_type ( e_data_suffixes );
             sortByColumn(1,Qt::AscendingOrder);
+            return;
         }
-        else     if (component == "Singleton signatures"){
-
+        if (component == "Singleton signatures"){
+            return;
         }
-        else     if (component == "Passive signatures"){
+        if (component == "Passive signatures"){
             setModel(m_parent_window->m_proxy_models["Passive signatures"]);
             //m_proxy_model->setSourceModel(m_parent_window->m_Models["Passive signatures"]);
             set_data_type ( e_data_hollow_suffixal_signatures );
             sortByColumn(1,Qt::AscendingOrder);
+            return;
         }
-        else     if (component == "Hypotheses"){
+        if (component == "Hypotheses"){
             m_parent_window->display_hypotheses();
+            return;
         }
-        else     if (component == "Suffixal protostems"){
+         if (component == "Suffixal protostems"){
+            m_parent_window->display_suffixal_protostems(m_parent_window->get_lexicon());
+
+            /*
             setModel(m_parent_window->m_proxy_models["Suffixal protostems"]);
             //m_proxy_model->setSourceModel(m_parent_window->m_Models["Suffixal protostems"]);
             set_data_type(e_data_suffixal_protostems);
             sortByColumn(1,Qt::AscendingOrder);
+            */
+            return;
         }
-        else     if (component == "Prefixal protostems"){
+        if (component == "Prefixal protostems"){
             setModel(m_parent_window->m_proxy_models["Prefixal protostems"]);
             //m_proxy_model->setSourceModel(m_parent_window->m_Models["Prefixal protostems"]);
             set_data_type(e_data_prefixal_protostems);
             sortByColumn(1,Qt::AscendingOrder);
+            return;
         }
-        else     if (component == "Compound words"){
+        if (component == "Compound words"){
             setModel(m_parent_window->m_proxy_models["Compound words"]);
             //m_proxy_model->setSourceModel(m_parent_window->m_Models["Compound words"]);
             set_data_type(e_data_compound_words);
             sortByColumn(1,Qt::AscendingOrder);
+            return;
         }
-        else if(component == "Parses"){
+        if(component == "Parses"){
             setModel(m_parent_window->m_proxy_models["Parses"]);
             set_data_type(e_data_parses);
             sortByColumn(1,Qt::AscendingOrder);
-        }
-        // add component 10
+            return;
+        }  
     }
-
-    resizeColumnsToContents();
 }
 
 /*!
@@ -332,16 +369,16 @@ bool UpperTableView::index_row_less_than(const QModelIndex& i1, const QModelInde
 void UpperTableView::remap_indeces_and_highlight()
 {
     LxaSortFilterProxyModel* proxy_model = (LxaSortFilterProxyModel*) model();
-    m_indeces_found.clear();
+    m_indices_found.clear();
     QStandardItem* item_found;
     QBrush brush_item_found(QColor(57, 197, 187));
     foreach (item_found, m_items_found) {
         item_found->setBackground(brush_item_found);
-        m_indeces_found.append(proxy_model->mapFromSource(item_found->index()));
+        m_indices_found.append(proxy_model->mapFromSource(item_found->index()));
     }
 
 //  qSort(m_indeces_found.begin(), m_indeces_found.end(), index_row_less_than);
-    std::sort(m_indeces_found.begin(), m_indeces_found.end(), index_row_less_than);
+    std::sort(m_indices_found.begin(), m_indices_found.end(), index_row_less_than);
     //Debug() << "Found" << num_items_found << "occurrences of" << str;
 }
 
@@ -399,7 +436,7 @@ void UpperTableView::clear_search()
         p_model->item(row_i)->setBackground(brush);
     }
     m_items_found.clear();
-    m_indeces_found.clear();
+    m_indices_found.clear();
     clearSelection();
     m_row_recently_selected = -2;
 }
@@ -462,8 +499,8 @@ bool UpperTableView::find_next_and_highlight(QString &s)
     bool next_item_found = false;
     QModelIndexList::ConstIterator iter_index_found;
     int curr_row;
-    for (iter_index_found = m_indeces_found.constBegin();
-         iter_index_found != m_indeces_found.constEnd(); ) {
+    for (iter_index_found = m_indices_found.constBegin();
+         iter_index_found != m_indices_found.constEnd(); ) {
         const QModelIndex& curr_index = *iter_index_found;
         curr_row = curr_index.row();
         if (curr_row > m_row_recently_selected) {
@@ -562,8 +599,8 @@ bool UpperTableView::find_prev_and_highlight(QString &s)
     bool next_item_found = false;
     QModelIndexList::reverse_iterator iter_index_found;
     int curr_row;
-    for (iter_index_found = m_indeces_found.rbegin();
-         iter_index_found != m_indeces_found.rend(); ) {
+    for (iter_index_found = m_indices_found.rbegin();
+         iter_index_found != m_indices_found.rend(); ) {
         const QModelIndex& curr_index = *iter_index_found;
         curr_row = curr_index.row();
         if (curr_row < m_row_recently_selected) {

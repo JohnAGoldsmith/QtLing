@@ -166,10 +166,10 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
     QStandardItem * compound_count_item = new QStandardItem(QString::number(lexicon->get_compounds()->get_count()));
 
     QStandardItem * suffixal_protostem_item = new QStandardItem(QString("Suffixal protostems"));
-    QStandardItem * suffixal_protostem_count_item = new QStandardItem(QString::number(lexicon->get_suffixal_protostems()->size()));
+    QStandardItem * suffixal_protostem_count_item = new QStandardItem(QString::number(lexicon->get_suffixal_protostems()->get_count()));
 
     QStandardItem * prefixal_protostem_item = new QStandardItem(QString("Prefixal protostems"));
-    QStandardItem * prefixal_protostem_count_item = new QStandardItem(QString::number(lexicon->get_prefixal_protostems()->size()));
+    QStandardItem * prefixal_protostem_count_item = new QStandardItem(QString::number(lexicon->get_prefixal_protostems()->get_count()));
 
     QStandardItem * suffixal_stem_item = new QStandardItem(QString("Suffixal stems"));
     QStandardItem * suffixal_stem_count_item = new QStandardItem(QString::number(lexicon->get_suffixal_stems()->get_count()));
@@ -185,7 +185,7 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
     QStandardItem * prefix_count_item = new QStandardItem(QString::number(lexicon->get_prefixes()->get_count()));
 
 
-    QStandardItem * sig_item = new QStandardItem(QString("Signatures"));
+    QStandardItem * sig_item = new QStandardItem(QString("Suffixal signatures"));
     QStandardItem * sig_count_item = new QStandardItem(QString::number(lexicon->get_signatures()->get_count()));
 
     QStandardItem * pos_sig_item = new QStandardItem(QString("EPositive signatures"));
@@ -342,10 +342,10 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
     if (m_my_lexicon->get_compounds()->get_count() > 0 )
         lexicon_item->appendRow(compound_items);
 
-    if (m_my_lexicon->get_suffixal_protostems()->count() > 0 )
+    if (m_my_lexicon->get_suffixal_protostems()->get_count() > 0 )
         lexicon_item->appendRow(suffixal_protostem_items);
 
-    if (m_my_lexicon->get_prefixal_protostems()->count() > 0 )
+    if (m_my_lexicon->get_prefixal_protostems()->get_count() > 0 )
         lexicon_item->appendRow(prefixal_protostem_items);
 
     if (m_my_lexicon->get_suffixal_stems()->get_count() > 0 )

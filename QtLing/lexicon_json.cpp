@@ -262,7 +262,7 @@ void CPrefix::read_json(const QJsonObject &ref_json)
 void CSuffixCollection::assign_json_id()
 {
     int curr_json_id = 0;
-    foreach (CSuffix* p_suffix, m_SuffixMap) {
+    foreach (CSuffix* p_suffix, m_suffix_map) {
         p_suffix->set_json_id(curr_json_id++);
     }
 }
@@ -272,7 +272,7 @@ void CSuffixCollection::write_json(QJsonObject &ref_json, eJsonType json_type)
     switch (json_type) {
         case INDEXED: {
             QJsonArray arr_suffixes;
-            foreach (CSuffix* p_suffix, m_SuffixMap) {
+            foreach (CSuffix* p_suffix, m_suffix_map) {
                 QJsonObject json_suffix;
                 p_suffix->write_json(json_suffix);
                 arr_suffixes.append(json_suffix);
@@ -282,17 +282,17 @@ void CSuffixCollection::write_json(QJsonObject &ref_json, eJsonType json_type)
             foreach (CSuffix* p_suffix, m_SortedList) {
                 arr_sorted_suffixes.append(p_suffix->get_json_id());
             }*/
-            ref_json["count"] = m_SuffixMap.size();
+            ref_json["count"] = m_suffix_map.size();
             ref_json["suffixes"] = arr_suffixes;
             // ref_json["sortedSuffixes"] = arr_sorted_suffixes;
             return;
         }
         case MAPPED: { // did not use CSuffix::write_json() here
             QJsonObject map_suffixes;
-            foreach (CSuffix* p_suffix, m_SuffixMap) {
+            foreach (CSuffix* p_suffix, m_suffix_map) {
                 map_suffixes[p_suffix->get_key()] = p_suffix->get_sig_count();
             }
-            ref_json["count"] = m_SuffixMap.size();
+            ref_json["count"] = m_suffix_map.size();
             ref_json["suffixes"] = map_suffixes;
             return;
         }
@@ -652,7 +652,7 @@ void CSignature::write_json(QJsonObject &ref_json, eJsonType json_type) const
 void CSignatureCollection::assign_json_id()
 {
     int curr_json_id = 0;
-    foreach (CSignature* p_sig, m_SignatureMap) {
+    foreach (CSignature* p_sig, m_signature_map) {
         p_sig->set_json_id(curr_json_id++);
     }
 }
@@ -664,7 +664,7 @@ void CSignatureCollection::write_json(QJsonObject& ref_json, eJsonType json_type
             QJsonArray arr_sigs;
 
             //QJsonArray arr_containment_map;
-            foreach (CSignature* p_sig, m_SignatureMap) {
+            foreach (CSignature* p_sig, m_signature_map) {
                 QJsonObject obj_sig;
                 p_sig->write_json(obj_sig);
                 arr_sigs.append(obj_sig);
@@ -688,8 +688,8 @@ void CSignatureCollection::write_json(QJsonObject& ref_json, eJsonType json_type
             foreach (CSignature* p_sig, m_minimal_cover) {
                 arr_minimal_cover.append(p_sig->get_json_id());
             } */
-
-            ref_json["count"] = m_SignatureMap.size();
+            
+            ref_json["count"] = m_signature_map.size();
             //ref_json["containmentMap"] = arr_containment_map;
             //ref_json["minimalCover"] = arr_minimal_cover;
             //ref_json["mimimalCoverMinNumOfStems"] = m_minimum_number_of_stems_for_minimal_cover;
@@ -701,12 +701,12 @@ void CSignatureCollection::write_json(QJsonObject& ref_json, eJsonType json_type
         }
         case MAPPED: { // did not use CSignature::write_json();
             QJsonObject map_sigs;
-            foreach (CSignature* p_sig, m_SignatureMap) {
+            foreach (CSignature* p_sig, m_signature_map) {
                 QJsonObject obj_sig;
                 p_sig->write_json(obj_sig, MAPPED);
                 map_sigs.insert(p_sig->get_key(), obj_sig);
             }
-            ref_json["count"] = m_SignatureMap.size();
+            ref_json["count"] = m_signature_map.size();
             ref_json["sigs"] = map_sigs;
             return;
         }

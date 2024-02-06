@@ -15,6 +15,11 @@
 #include "table_views.h"
 #include <QProgressBar>
 #include "Lexicon.h"
+#include "wordmodel.h"
+#include "signaturemodel.h"
+#include "stemmodel.h"
+#include "affixmodel.h"
+
 
 
 QT_BEGIN_NAMESPACE
@@ -83,11 +88,12 @@ class MainWindow : public QMainWindow
 
     QStringList m_model_names {
         "Words",
+        //"Words_new_model", // JG Dec 2023
         "Suffixal stems",
         "Prefixal stems",
         "Suffixes",
         "Prefixes",
-        "Signatures",
+        "Suffixal signatures",
         "EPositive signatures",
         "Prefix signatures",
         "EPositive prefix signatures",
@@ -103,6 +109,8 @@ class MainWindow : public QMainWindow
         "Compound words",
         "Parses"
     };
+
+    // this isn´t  necessary: 2 QTableViews can display the same model with different sortings...JG Dec 2023
     QStringList m_duplicate_model_names {
         "Words 2",
         "Prefixes 2",
@@ -112,6 +120,31 @@ class MainWindow : public QMainWindow
         "EPositive signatures 2",
         "EPositive prefix signatures 2"
     };
+
+    //December 29 2023
+    // each model needs two proxy models so that it can be displayed in different sort/filter modes by two different QTableViews
+    wordmodel  *                            m_word_model;
+    wordSFProxymodel *                      m_word_model_proxy_1;
+    wordSFProxymodel *                      m_word_model_proxy_2;
+
+    signaturemodel *                        m_suffix_signature_model;
+    signaturemodel *                        m_prefix_signature_model;
+    signatureSFProxymodel *                 m_signature_model_proxy_1;
+    signatureSFProxymodel *                 m_signature_model_proxy_2;
+
+    stemmodel *                             m_suffixal_stem_model;
+    stemmodel*                              m_prefixal_stem_model;
+    stemSFProxymodel*                       m_stem_model_proxy_1;
+    stemSFProxymodel*                       m_stem_model_proxy_2;
+    stemmodel *                             m_suffix_protostem_model;
+    stemmodel *                             m_prefix_protostem_model;
+
+    affixmodel *                            m_suffix_model;
+    affixmodel *                            m_prefix_model;
+    affixSFProxymodel *                     m_affix_model_proxy_1;
+    affixSFProxymodel *                     m_affix_model_proxy_2;
+
+    stemmodel *                             m_suffixal_protostem_model;
 
     QList<CLexicon*>                        m_lexicon_list;
     CLexicon*                               m_my_lexicon;
@@ -130,6 +163,8 @@ class MainWindow : public QMainWindow
     QSplitter *                             m_rightSplitter;
     QSplitter *                             m_top_rightSplitter;
 
+    TableView  *                            m_tableView_upper_temp;
+    //UpperTableView *                        m_tableView_upper_temp;
     UpperTableView *                        m_tableView_upper_left;
     UpperTableView *                        m_tableView_upper_right;
     LowerTableView *                        m_tableView_lower;
@@ -174,18 +209,26 @@ class MainWindow : public QMainWindow
 
 
 public:
+
+                                            MainWindow();
     void                                    analyze_corpus();
-    MainWindow();
+
+    void                                    display_models(const QModelIndex &);
     void                                    display_words();
-    void                                    display_suffixes();
-    void                                    display_prefixes();
+    void                                    display_suffixes(CLexicon*);
+    void                                    display_prefixes(CLexicon*);
+    void                                    display_suffix_stems(CLexicon*);
+    void                                    display_prefix_stems(CLexicon*);
     void                                    display_suffix_signatures(CLexicon*);
     void                                    display_prefix_signatures(CLexicon*);
+    void                                    display_suffixal_protostems(CLexicon*);
+    void                                    display_prefixal_protostem(CLexicon*);
     void                                    display_epositive_suffix_signatures(CLexicon*);
     void                                    display_epositive_prefix_signatures(CLexicon*);
     void                                    display_signature_graph_edges(CLexicon* );
     void                                    display_hypotheses();
 //    void                                    DisplaySignatures();
+    void                                    do_crab1();
     CLexicon*                               get_lexicon()                       { return m_my_lexicon;  }
     QList<CLexicon*>*                       get_lexica()                        { return& m_lexicon_list; }
     bool                                    get_graphic_display_flag()          { return m_graphic_display_flag; }
@@ -206,7 +249,7 @@ private slots:
 
     void                                    do_crab1_suffixes();
     void                                    do_crab1_prefixes();
-    void                                    do_crab1();
+
     void                                    do_crab2();
     void                                    do_crab3();
     void                                    do_crab4();
@@ -250,6 +293,12 @@ public:
     void                    createFindDockWidget(UpperTableView* p_tableview);
 
 //          Qt-style modesl
+
+    void                    show_model (TableView * , QModelIndex index); // the index carries a string, typically from left-hand QTreeView, which carries the name of a component.
+
+
+
+
     void                    load_stem_model();
     void                    load_affix_model();
     void                    load_signature_model();
@@ -291,6 +340,7 @@ public:
 
     lxa_graphics_view*      get_graphics_view()                                 {return  m_graphics_view;}
     lxa_graphics_scene*     get_graphics_scene()                                {return m_graphics_scene;}
+
     UpperTableView *        get_upper_left_tableview()                          { return m_tableView_upper_left;}
     UpperTableView *        get_upper_right_tableview()                         { return m_tableView_upper_right;}
     void                    set_graphics_scene(lxa_graphics_scene* this_scene)  { m_graphics_scene = this_scene;}

@@ -7,7 +7,7 @@
 #include <QtDebug>
 #include <QProgressBar>
 #include <QApplication>
-#include <algorithm>
+//#include <algorithm>
 #include <QChar>
 #include <QSet>
 #include <QRegularExpression>
@@ -23,16 +23,24 @@
 #include "compound.h"
 
 void SortQStringListFromRight(QStringList& ThisStringList);
-bool reverse_string_compare(QString,QString);
+//bool reverse_string_compare(QString,QString);
+
+void CLexicon::mark_progress(int n){
+    m_ProgressBar->setValue(n);
+    qApp->processEvents();
+}
+void CLexicon::initialize_progress(int max_value){
+    m_ProgressBar->reset();
+    m_ProgressBar->setMinimum(0);
+    m_ProgressBar->setMaximum(max_value);
+}
 
 protostem::protostem(QString stem, int start_word, int end_word, bool suffix_flag)
-{
-    m_protostem = stem;
+{   m_protostem = stem;
     m_start_word = start_word;
     m_end_word = end_word;
     m_suffix_flag = suffix_flag;
 }
-
 protostem::protostem(QString stem, bool suffix_flag)
 {
     m_protostem = stem;
@@ -42,42 +50,42 @@ protostem::protostem(QString stem, bool suffix_flag)
 }
 protostem::~protostem()
 {
-
 }
-
-CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag):
+CLexicon::CLexicon(MainWindow * main_window, CLexicon* lexicon, bool suffix_flag):
     M_MINIMUM_STEM_LENGTH(2),
     M_MINIMUM_STEM_COUNT(2),
     M_MAXIMUM_AFFIX_LENGTH(10),
     M_MINIMUM_HYPOTHESIS_WORD_COUNT(2) // Moved to here, originally a fxn variable defined in step 9
 {
+    m_main_window           = main_window;
     m_Signatures            = new CSignatureCollection(this, true);
     m_PrefixSignatures      = new CSignatureCollection(this,false);
-    m_VirtualSignatures     = new CSignatureCollection(this, true);
+    m_VirtualSignatures     = new CSignatureCollection(this, true); // these are really local variables, only in the Lexicon for my convenience.
     m_Words                 = new CWordCollection(this);
     m_prefixal_stems        = new CStemCollection(this);
     m_suffixal_stems        = new CStemCollection(this);
+    m_suffix_protostems   = new CStemCollection(this);
+    m_prefix_protostems   = new CStemCollection(this);
     m_Suffixes              = new CSuffixCollection(this);
     m_Prefixes              = new CPrefixCollection(this);
-    //    m_Parses                = new QList<QPair<QString,QString>>();
-    //m_Parses                = new QList<CParse*>();
-    m_ParaSignatures        =  new CSignatureCollection(this, true);
-    //m_ParaSuffixes          = new CSuffixCollection(this);
+    m_ParaSignatures        = new CSignatureCollection(this, true);
+    //m_ParaSuffixes        = new CSuffixCollection(this);
     m_ParaPrefixes          = new QMap<QString, QStringList*>;
     m_ParaSuffixes          = new QMap<QString, QStringList*>;
     m_ResidualStems         = new CStemCollection(this);
     m_PassiveSignatures     = new CSignatureCollection(this, true);
-    m_SuffixesFlag          = suffix_flag;
+    m_suffix_flag          = suffix_flag;
     m_Hypotheses            = new QList<CHypothesis*>;
     m_Hypothesis_map        = new QMap<QString, CHypothesis*>;
     m_entropy_threshold_for_stems = 0.6;
     m_parent_lexicon        = lexicon;
     m_goldstandard          = NULL;
-    m_eval_parses      = NULL;
+    m_eval_parses           = NULL;
 
     // Put this back in, Hanson 8.1
     m_Compounds             = new CompoundWordCollection(this);
 
+    // this tells us what *kind* of material is kept in various components (words, stems, affixes, signatures, etc.)
     m_category_types["Words"]               = CT_word;
     m_category_types["Suffixal stems"]      = CT_stem;
     m_category_types["Prefixal stems"]      = CT_stem;
@@ -91,20 +99,34 @@ CLexicon::CLexicon( CLexicon* lexicon, bool suffix_flag):
     m_category_types["Parasignatures"]      = CT_signature;
     m_category_types["Parasuffixes"]        = CT_affix;
     m_category_types["Hypotheses"]          = CT_hypothesis;
-    m_category_types["Hypotheses 2"]          = CT_hypothesis2;
-    // add component 2
+    m_category_types["Hypotheses 2"]        = CT_hypothesis2;
+
+}
+void  CLexicon::input_words(QMap<QString, int> word_counts){
+    m_Words->input_words(word_counts);
+}
+bool CLexicon::test_if_analysis_has_been_done(){
+    if (m_suffix_flag){
+        if ( get_suffixal_stems()->get_count() == 0
+            ||  get_suffix_signatures()->get_count() == 0 ) {
+            return false;
+        }
+    } else {
+        if (get_prefixal_stems()->get_count()  == 0
+            || get_prefix_signatures()->get_count() == 0){
+            return false;
+        }
+    }
+    return true;
 }
 
-
 QListIterator<word_sig_pair*> * CLexicon::get_sig_graph_edge_list_iter()
-{
-    QListIterator<word_sig_pair*> * iter = new QListIterator<word_sig_pair*>(m_WordSigPairList);
+{    QListIterator<word_sig_pair*> * iter = new QListIterator<word_sig_pair*>(m_WordSigPairList);
     return iter;
 }
 
 QMapIterator<QString, sig_pair*> * CLexicon::get_sig_graph_edge_map_iter()
-{
-    QMapIterator<QString, sig_pair*> * iter = new QMapIterator<QString, sig_pair*>(m_SigPairMap);
+{    QMapIterator<QString, sig_pair*> * iter = new QMapIterator<QString, sig_pair*>(m_SigPairMap);
     return iter;
 }
 QString sig_pair::display(){
@@ -112,7 +134,6 @@ QString sig_pair::display(){
     response += label();
     return response;
 }
-
 CLexicon::~CLexicon()
 {
     delete m_Signatures;
@@ -122,31 +143,55 @@ CLexicon::~CLexicon()
     delete m_goldstandard;
     //delete m_Parses;
 }
+CWord* CLexicon::add_word(QString word){
+    return  m_Words->add_word(word);
+}
 
+CSignature* CLexicon::add_signature(QString sig_string){
+    return *get_active_signature_collection() << sig_string;
+}
+void  CLexicon::add_stem(QString stem){
+    * get_active_stem_collection() << stem;
+}
 CSignatureCollection* CLexicon::get_active_signature_collection(){
-    if (m_SuffixesFlag){
+    if (m_suffix_flag){
         return m_Signatures;
     }else{
         return m_PrefixSignatures;
     }
-
 }
-void CLexicon::add_parse(CParse * parse){
+CStemCollection* CLexicon::get_active_stem_collection(){
+    if (m_suffix_flag){
+        return m_suffixal_stems;
+    }else{
+        return m_prefixal_stems;
+    }
+}
 
+void CLexicon::add_parse(CParse * parse){
     if (m_ParseMap.contains(parse->display_full())){
         return;
     }
     m_ParseMap[parse->display_full()] = parse;
 }
 void CLexicon::clear_parses()
-{
-    CParse* p_parse;
+{    CParse* p_parse;
     foreach (p_parse, m_ParseMap)
         delete p_parse;
-    //m_Parses->clear();
     m_ParseMap.clear();
 }
-
+void CLexicon::step4a_clear_active_signatures_and_affixes(){
+    if (m_suffix_flag){
+        m_Suffixes->clear();
+        m_Signatures->clear();
+        m_suffixal_stems->clear();
+    }
+    else {
+        m_Prefixes->clear();
+        m_PrefixSignatures->clear();
+        m_prefixal_stems->clear();
+    }
+}
 bool CLexicon::remove_parse(QString full_display_of_parse){
     if (m_ParseMap.contains(full_display_of_parse)){
         m_ParseMap.remove(full_display_of_parse);
@@ -159,102 +204,36 @@ bool CLexicon::remove_parse(QString full_display_of_parse){
 bool CLexicon::remove_parse(CParse* parse){
     if (m_ParseMap.contains(parse->display_full())){
         m_ParseMap.remove(parse->display_full());
-        //qDebug() << 155 << " removed parse:" << parse->display_full();
         return  true;
     } else{
-       //qDebug() << 157 << "Failed to remove parse: " << parse->display_full();
        return false;
     }
 }
+// this isn't used: I avoid references, prefer pointers.
 bool CLexicon::remove_parse(CParse& parse){
     if (m_ParseMap.contains(parse.display_full())){
         m_ParseMap.remove(parse.display_full());
-        //qDebug() << 155 << " removed parse:" << parse.display_full();
         return  true;
     } else{
-       //qDebug() << 157 << "Failed to remove parse: " << parse.display_full();
        return false;
     }
 }
-bool CLexicon::verify_parses(){
-    QMap<QString, int> LexiconsParsesCopy;
-    QMap<QString, int> WordsParsesCopy;
-    // Make a copy of all the parses at the Lexicon level, and call this LexiconsParsesCopy
 
-    foreach (CParse* this_parse, m_ParseMap){
-        if (LexiconsParsesCopy.contains(this_parse->display())){
-            qDebug()<< 140 << "Parse occurs twice" << this_parse->display();
-        }
-        LexiconsParsesCopy[this_parse->display()]= 1;
+
+void CLexicon::step3a_clear_lexicon_except_protostems(){
+    if (m_suffix_flag){
+        m_Signatures->clear();
+        m_suffixal_stems->clear();
+        m_Suffixes->clear();
+        m_ParaSignatures->clear();
+    }else{
+        m_PrefixSignatures->clear();
+        m_Prefixes->clear();
+        m_Prefixes->clear();
+        m_ParaPrefixes->clear();
     }
-
-    QMapIterator<QString, CWord*> i(*m_Words->get_map());
-    while (i.hasNext()) {
-        CWord* pWord = i.next().value();
-        // first check that parse_triples correspond to the morphemic_splits in each word.
-        //cout << i.key() << ": " << i.value() << Qt::endl;
-
-        // Now copy parses from the Word's parses up to our temporary QMap that is storing them
-        foreach (QString morphemic_split, pWord->get_morpheme_splits()){
-            QStringList morpheme_split = morphemic_split.split(" ");
-            for (int m = 0; m < morpheme_split.length()-1; m++){
-                QString bigram = morpheme_split[m] + " " + morpheme_split[m+1];
-                if ( WordsParsesCopy.contains(bigram)){
-                        continue;
-                   }
-                WordsParsesCopy[bigram] = 1;
-            }
-        }
-   }
-
-
-        // Now compare the 2 temporary holders
-
-
-
-
-    return true;
-
-}
-
-void CLexicon::clear_lexicon(){
-
-    QMapIterator<QString, protostem*> stem_iter(m_prefix_protostems);
-    while(stem_iter.hasNext()){
-        stem_iter.next();
-        //delete stem_iter.value();
-    }
-
-    delete m_Signatures;
-    m_Signatures = new CSignatureCollection(this, true);
-    delete m_PrefixSignatures;
-    m_PrefixSignatures = new CSignatureCollection(this, false);
-    delete m_prefixal_stems;
-    m_prefixal_stems = new CStemCollection(this);
-    delete m_suffixal_stems;
-    m_suffixal_stems = new CStemCollection(this);
-    delete m_Suffixes;
-    m_Suffixes = new CSuffixCollection(this);
-    delete m_Prefixes;
-    m_Prefixes = new CPrefixCollection(this);
-    delete m_ParaSignatures;
-    m_ParaSignatures = new CSignatureCollection(this, true);
-    delete m_ParaSuffixes;
-    //m_ParaSuffixes = new CSuffixCollection(this);
-    m_ParaSuffixes = new QMap<QString , QStringList*>;
-    delete m_ParaPrefixes;
-    //m_ParaSuffixes = new CSuffixCollection(this);
-    m_ParaPrefixes = new QMap<QString , QStringList*>;
-    delete m_ResidualStems;
-    m_ResidualStems = new CStemCollection(this);
-    delete m_PassiveSignatures;
-    m_PassiveSignatures = new CSignatureCollection(this);
-
-
-    //delete m_Hypotheses;
-    //m_Hypotheses = new QList<CHypothesis*>;
-
-
+    m_ResidualStems->clear();
+    m_PassiveSignatures->clear();
 }
 
 // for gold standard
@@ -340,7 +319,6 @@ void CLexicon::add_to_stem_autobiographies(const QString& stem, const QString& m
         m_stem_autobiographies[stem] = new QStringList;
     }
     m_stem_autobiographies[stem]->append(message);
-
 }
 
 bool CLexicon::word_autobiographies_contains(const QString& word) {
@@ -365,27 +343,18 @@ void CLexicon::word_autobiography_positive_notice(QString word, QString stem, QS
                                 .arg(stem)
                                 .arg(sig_string));
 }
-void CLexicon::word_autobiography_positive_notice_2( QString word, QString stem, QString sig_string, QString calling_function)
-{ add_to_word_autobiographies(word, QString("[%1]==stem: %2=%3")
-                                       .arg(calling_function)
-                                       .arg(stem)
-                                       .arg(sig_string));
-
-}
 
 void CLexicon::time_stamp(const QString& message)
-{
-    QMapIterator<QString, CStem*> stem_iter (*m_suffixal_stems->get_map());
+{    QMapIterator<QString, CStem*> stem_iter (*m_suffixal_stems->get_map());
     while (stem_iter.hasNext()){
         stem_iter.next();
         QString stemstring = stem_iter.key();
-        if (!m_stem_autobiographies.contains(stemstring))
-        { m_stem_autobiographies[stemstring] = new QStringList();}
+        if (!m_stem_autobiographies.contains(stemstring)){
+            m_stem_autobiographies[stemstring] = new QStringList();
+        }
         m_stem_autobiographies[stemstring]->append(message);
     }
 }
-
-
 
 void CLexicon::dump_signatures_to_debug()
 {
@@ -398,24 +367,17 @@ void CLexicon::dump_signatures_to_debug()
     qDebug() << "******** end of signature dump ********************* ";
 
 }
-void  CLexicon::add_parasuffix(QString parasuffix, QString word){
-    if (! m_ParaSuffixes->contains(parasuffix)){
-        m_ParaSuffixes->insert(parasuffix, new QStringList());
-    }
-    m_ParaSuffixes->value(parasuffix)->append(word);
-}
-void  CLexicon::add_paraprefix(QString paraprefix, QString word){
-    if (! m_ParaPrefixes->contains(paraprefix)){
-        m_ParaPrefixes->insert(paraprefix, new QStringList());
-    }
-    m_ParaPrefixes->value(paraprefix)->append(word);
-}
+
+// these next two functions were never finished or used:
+/*
 QStringList CLexicon::get_affix_continuation(QString affix, bool suffix_flag, QStringList continuations){
     if (suffix_flag){
         CStem * pStem_from_affix = m_suffixal_stems->find_or_fail(affix);
+    } else {
+        // put the prefix case here !
     }
     CSignature* pSig = find_signature_of_stem(affix, suffix_flag);
-   if (pSig->get_suffix_flag()){
+    if (pSig->get_suffix_flag()){
        foreach (QString this_affix, pSig->get_key().split("=")){
            if (this_affix.contains(":")){
                    foreach (QString new_affix,  get_affix_continuation(this_affix, pSig->get_suffix_flag(), continuations) ){
@@ -426,23 +388,17 @@ QStringList CLexicon::get_affix_continuation(QString affix, bool suffix_flag, QS
                 continuations.append(this_affix);
             }
         }
-   } else{
-    // prefixes
+    } else {
+        // prefixes
    }
    return continuations;
 }
+*/
+/*
 CSignature* CLexicon::find_signature_of_stem(QString stem, bool suffix_flag){
     if (suffix_flag){
 
     }
 }
+*/
 
-void CLexicon::generate_virtual_signatures(){
-    QStringList signature_check_list;
-    if (m_SuffixesFlag){
-       foreach (CSignature* pSig, *m_Signatures->get_signature_list()){
-           signature_check_list.clear();
-           m_VirtualSignatures->add_this_and_all_subsignatures(pSig->display(), pSig->get_robustness(), signature_check_list);
-        }
-    }
-}

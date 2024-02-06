@@ -19,7 +19,7 @@ protected:
     map_string_to_stem *        m_StringToStemMap;
     int                         m_CorpusCount;
     QString                     m_MemberName;
-    //QList<CStem*>               m_SortedStemList;
+    QList<CStem*> *             m_stem_list;
     QStringList                 m_SortedStringList;
     bool                        m_forward_sort_valid_flag;
     enum   eSortStyle           m_SortStyle;
@@ -50,6 +50,10 @@ public:
     map_string_to_stem *            get_map() { return m_StringToStemMap;}         //       FIX THIS< DO IT RIGHT;
     QListIterator<CStem*> *         get_sorted_list_iterator();
     //QString                         get_string_from_sorted_list(int n) {return m_SortedStringList[n];}
+    CStem*                          get_stem(int n) {return m_stem_list->at(n);}
+    CStem*                          get_stem(QString stem){return (*m_StringToStemMap)[stem];}
+    QList<CStem*> *                 get_stem_list() {return m_stem_list;}
+    QStringList                     get_list_of_stem_strings();
     map_string_to_stem *            get_stem_map() { return m_StringToStemMap;}
     void                            sort_alphabetically();
     CStem*                          operator<< (const QString& );

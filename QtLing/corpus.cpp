@@ -3,7 +3,7 @@
 #include "WordCollection.h"
 #include "mainwindow.h"
 
-
+// not currently used
 
 void MainWindow::analyze_corpus()
 {

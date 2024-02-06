@@ -1,4 +1,5 @@
 #include <QPair>
+#include <Qt>
 #include "WordCollection.h"
 #include "Word.h"
 #include "mainwindow.h"
@@ -55,7 +56,7 @@ void  LxaStandardItemModel::load_category(QString , eComponentType)
 
 void LxaStandardItemModel::load_words(CWordCollection* p_words)
 {
-    QStringList labels = {tr("word"), tr("word count"), tr("signatures")};
+    QStringList labels = {tr("word"), tr("word count"), tr("suffix signatures")};
     setHorizontalHeaderLabels(labels);
     m_Description = QString (" ");
     clear();
@@ -77,6 +78,7 @@ void LxaStandardItemModel::load_words(CWordCollection* p_words)
         appendRow(item_list);
     }
 }
+
 void LxaStandardItemModel::load_parses(QMap<QString, CParse*> * Parses )
 {
     QStringList labels;
