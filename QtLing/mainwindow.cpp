@@ -703,8 +703,8 @@ void MainWindow::load_models(CLexicon* lexicon)
     statusBar()->showMessage("Loading models: Hypotheses");
     m_Models["Hypotheses"]          ->load_hypotheses(lexicon->get_hypotheses());
     m_Models["Hypotheses 2"]        ->load_hypotheses_2(lexicon->get_hypotheses());
-    m_Models["SigGraphEdges_1"]        ->load_sig_graph_edges(lexicon->get_sig_graph_edge_map(),1);
-    m_Models["SigGraphEdges_2"]        ->load_sig_graph_edges(lexicon->get_sig_graph_edge_map(),2);
+    //m_Models["SigGraphEdges_1"]        ->load_sig_graph_edges(lexicon->get_sig_pairs()->get_map());
+    //m_Models["SigGraphEdges_2"]        ->load_sig_graph_edges(lexicon->get_sig_pairs->get_map(),2);
 
     statusBar()->showMessage("Loading models: Suffixal protostems");
     //m_Models["Suffixal protostems"]->load_protostems(lexicon->get_suffixal_protostems());

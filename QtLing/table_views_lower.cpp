@@ -9,6 +9,8 @@
 #include "graphics.h"
 #include "lxamodels.h"
 #include "compound.h"
+#include "sigpair.h"
+#include "sigpaircollection.h"
 class sig_graph_edge;
 
 // This passes the user keyEvent up to the MainWindow, which responds to users
@@ -156,7 +158,7 @@ void LowerTableView::display_this_item( const  QModelIndex & index )
             column = index.column();
         }
         QString               edge_key = index.sibling(row,6).data().toString();
-        sig_pair*             this_edge = this_lexicon->get_sig_graph_edge_map()->value(edge_key);
+        sig_pair*             this_edge = this_lexicon->get_sig_pairs()->get_map()->value(edge_key);
         CSignature*           pSig1 = this_edge->m_sig_1;
         CSignature*           pSig2 = this_edge->m_sig_2;
         QStandardItem*        p_item;
@@ -302,8 +304,8 @@ void LowerTableView::graphics_sig_graph_edges(CSignature* pSig, CLexicon* p_lexi
     CSignatureCollection Signatures(p_lexicon);
     Signatures << pSig;
     // We iterate through the SigTreeEdges in the SigTreeEdgeMap. If its Sig1 is pSig, then we enter it into Signatures;
-    QMap<QString,sig_pair*>::iterator edge_iter = p_lexicon->get_sig_graph_edge_map()->begin();
-    while (edge_iter !=  p_lexicon->get_sig_graph_edge_map()->constEnd()){
+    QMap<QString,sig_pair*>::iterator edge_iter = p_lexicon->get_sig_pairs()->get_map()->begin();
+    while (edge_iter !=  p_lexicon->get_sig_pairs()->get_map()->constEnd()){
         psig_graph_edge = edge_iter.value();
         if (psig_graph_edge->m_sig_1 == pSig){
             Signatures << psig_graph_edge->m_sig_2;
@@ -565,7 +567,7 @@ void LowerTableView::table_passive_signature(CSignature *p_this_sig)
     QMap<CSignature*, QString>  Morphs;
 
     // put signatures in a Map, values are numbers of stems shared
-    QMap<QString, sig_pair*> * pMap = get_lexicon()->get_sig_graph_edge_map();
+    QMap<QString, sig_pair*> * pMap = get_lexicon()->get_sig_pairs()->get_map();
     QMapIterator<QString, sig_pair*> this_sig_graph_edge_iter (*pMap);
     while (this_sig_graph_edge_iter.hasNext()){
         sig_pair * p_edge  = this_sig_graph_edge_iter.next().value();

@@ -585,6 +585,7 @@ void CLexicon::step4f_add_analysis_to_word_for_prefix_case(CParse& parse, CSigna
 void CLexicon::add_suffix_analysis_to_word(CWord* pWord, CParse& parse, QString sig_string,  QString name_of_calling_function){
     //stem_count += pWord->get_word_count();  TODO
     pWord->add_suffixal_parse_triple(parse.get_stem(), parse.get_affix(), sig_string);
+
     pWord->add_morphemic_split(parse.display_with_gap());
     word_autobiography_positive_notice(pWord->get_key(), parse.get_stem(), sig_string, name_of_calling_function);
     m_word2suffix_sigs.insert(pWord->get_key(),sig_string);

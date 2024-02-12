@@ -6,7 +6,8 @@
 #include "Lexicon.h"
 #include <QProgressBar>
 #include <hypothesis.h>
-
+#include "sigpair.h"
+#include "sigpaircollection.h"
 
 /*!
  * We can build a graph whose nodes are the signatures, where an edge connects
@@ -18,6 +19,39 @@
  *
  * This is Part 1 of the 3rd major function of Crab 2.
  */
+// helper function:
+void add_label_to_sig_pairs(sig_pair_map * SigPairMap,
+                            QString label,
+                            QString shorter_stem,
+                            QString shorter_stem_sig_string,
+                            QString longer_stem_sig_string,
+                            QString difference) {
+    sig_pair * p_sig_pair;
+    if (SigPairMap->contains(label)){
+        p_sig_pair = (*SigPairMap)[label];
+        if (p_sig_pair->contains_stem(shorter_stem)){
+          return;
+        }
+        p_sig_pair->add_stem(shorter_stem);
+    }else{
+        p_sig_pair = new sig_pair(difference, shorter_stem_sig_string, longer_stem_sig_string);
+        p_sig_pair->add_stem(shorter_stem);
+        SigPairMap->insert(label, p_sig_pair);
+    }
+}
+void CLexicon::add_to_word_biographies(int analysis_number,
+                             QString shorter_stem,
+                             QString shorter_stem_sig_string,
+                             QString difference,
+                             CWord * pWord,
+                             QString longer_stem,
+                             QString longer_stem_sig_string){
+    QString message1 = "Comparison #" + QString::number(analysis_number) + "=signature 1:="
+                       + shorter_stem + "=" +  shorter_stem_sig_string + "=" + "difference" + "="  + difference;
+    add_to_word_autobiographies(pWord->get_key(), message1);
+    QString message2 = "=signature 2:   =" + longer_stem + "=" + longer_stem_sig_string;
+    add_to_word_autobiographies(pWord->get_key(),message2);
+}
 void CLexicon::step8a_compute_word_sig_pairs()
 {
     //map_string_to_word *            WordMap = m_Words->get_map();
@@ -29,16 +63,11 @@ void CLexicon::step8a_compute_word_sig_pairs()
     word_t          this_word;
     sig_pair        * p_sig_pair;
     QString         shorter_stem, longer_stem;
-    QString shorter_stem_sig_string, longer_stem_sig_string, label;
-
+    QString         shorter_stem_sig_string, longer_stem_sig_string, label;
     m_StatusBar->showMessage("5 Split morphemes: find words with multiple analyses...");
-    m_ProgressBar->reset();
-    m_ProgressBar->setMinimum(0);
-    m_ProgressBar->setMaximum(m_Words->get_count());
-    int progresscount = 0;
-
+    initialize_progress(m_Words->get_count());
     for (int i = 0; i < m_Words->get_word_count(); i++){
-        m_ProgressBar->setValue(progresscount++);
+        mark_progress(i);
         pWord = m_Words->get_word(i);
         this_word = pWord->get_key();
         analysis_number = 0;
@@ -67,24 +96,10 @@ void CLexicon::step8a_compute_word_sig_pairs()
                 else {
                     label = difference + "/" + shorter_stem_sig_string + "/" + longer_stem_sig_string;
                 }
-                if (m_SigPairMap.contains(label)){
-                    p_sig_pair = m_SigPairMap[label];
-                    if (p_sig_pair->contains_stem(shorter_stem)){
-                        continue;
-                    }
-                    p_sig_pair->add_stem(shorter_stem);
-                }else{
-                    p_sig_pair = new sig_pair(difference, shorter_stem_sig_string, longer_stem_sig_string);
-                    p_sig_pair->add_stem(shorter_stem);
-                    m_SigPairMap.insert(label, p_sig_pair);
-                }
-                QString message1 = "Comparison #" + QString::number(analysis_number) + "=signature 1:="
-                        + shorter_stem + "=" +  shorter_stem_sig_string + "=" + "difference" + "="  + difference;
-                add_to_word_autobiographies(pWord->get_key(), message1);
-
-                QString message2 = "=signature 2:   =" + longer_stem + "=" + longer_stem_sig_string;
-                add_to_word_autobiographies(pWord->get_key(),message2);
-
+                add_label_to_sig_pairs(m_SigPairs->get_map(), label, shorter_stem, shorter_stem_sig_string,
+                                       longer_stem_sig_string, difference);
+                add_to_word_biographies(analysis_number, shorter_stem, shorter_stem_sig_string,
+                                        difference, pWord, longer_stem, longer_stem_sig_string);
                 //qDebug() << "\n" << this_word<< i << j << analysis_number << "\n" << label << "\n" << message1 << "\n" << message2;
             } // end of looking at stems longer than this_stem
         } //end of looking at each stem in this word.
@@ -155,7 +170,7 @@ void add_suffixes_to_signature_stringlist(QString difference,
     }
 }
 void CLexicon::step8c_from_sig_pairs_to_parses_Create_hypotheses(){
-    sig_pair_iter sig_pair_iter (m_SigPairMap);
+    sig_pair_iter sig_pair_iter (*m_SigPairs->get_map());
     QString     this_affix, doomed_affix, remnant, difference;
     QString shorter_stem, longer_stem;
     QString shorter_stem_sig_string, longer_stem_sig_string;

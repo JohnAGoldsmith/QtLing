@@ -8,7 +8,9 @@
  */
 void CLexicon::Crab_3()
 {
-    repair_low_entropy_signatures();
+    find_all_signature_spines();
+
+    //repair_low_entropy_signatures();
 
     m_suffix_flag?
         m_Signatures->calculate_sig_robustness():

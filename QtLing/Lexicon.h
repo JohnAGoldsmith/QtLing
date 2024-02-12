@@ -15,6 +15,7 @@
 #include <QJsonValue>
 #include "generaldefinitions.h"
 
+
 class MainWindow;
 class CWordCollection;
 class CStemCollection;
@@ -25,7 +26,9 @@ class CHypothesis;
 class CParse;
 class CompoundWordCollection;
 class CompoundComponentCollection;
-
+class sig_pair;
+class word_sig_pair;
+class SigPairCollection;
 
 /* The principal objects we use on the way to morphological analysis are:
  *
@@ -70,104 +73,6 @@ public:
 };
 
 //  end of experiment
-
-// a word_sig_pair expresses information about pairs of signatures that both contain a particular word
-// under two different stem-analyses.
-//-----------------------------------------------------------------------//
-class word_sig_pair{
-//-----------------------------------------------------------------------//
-public:
-    CSignature*         m_sig_1;
-    CSignature*         m_sig_2;
-    CLexicon *          m_Lexicon;
-    sigstring_t         m_sig_string_1;
-    sigstring_t         m_sig_string_2;
-    double              m_sig_1_entropy = -1;
-    double              m_sig_2_entropy = -1;
-    morph_t             morph;
-    word_t              word;
-    stem_t              longer_stem; // the longer stem, was stem_1
-    stem_t              shorter_stem;  // was stem_2
-    word_sig_pair();
-    word_sig_pair(CLexicon* lexicon, CSignature* pSig1, CSignature* pSig2, sigstring_t sig_string_1, sigstring_t sig_string_2,morph_t m,word_t w, stem_t stem1, stem_t stem2)
-    {
-
-        m_sig_1 = pSig1;
-        m_sig_2 = pSig2;
-        m_Lexicon = lexicon;
-        m_sig_string_1 = sig_string_1;
-        m_sig_string_2 = sig_string_2;
-        morph = m;
-        word = w;
-        longer_stem = stem1;
-        shorter_stem = stem2;
-        if (longer_stem.length() < shorter_stem.length()){
-            qDebug() << "constructor of word_sig_pair, the stems are in reversed order.";
-        }
-    };
-    QString label() {return morph + "/" + m_sig_string_1 + "/" + m_sig_string_2; }
-};
-//-----------------------------------------------------------------------//
-
-
-//-----------------------------------------------------------------------//
-class sig_pair{   // was: sig_graph_edge{
-//-----------------------------------------------------------------------//
-public:
-    CSignature*  m_sig_1;
-    CSignature*  m_sig_2;
-    CLexicon*    m_lexicon;
-    sigstring_t  m_sig_string_1;
-    sigstring_t  m_sig_string_2;
-    double       m_sig_1_entropy = -1;
-    double       m_sig_2_entropy = -1;
-    morph_t      morph;
-    QStringList  my_stems;
-    QMap<QString, word_stem_struct*> shared_word_stems;
-    sig_pair();
-    sig_pair(QString amorph, CSignature* sig1, CSignature* sig2){
-        morph = amorph;
-        m_sig_1 = sig1;
-        m_sig_2 = sig2;
-    }
-    sig_pair(QString a_morph, QString shorter_stem_sig_string, QString longer_stem_sig_string){
-        morph = a_morph;
-        m_sig_string_1 = shorter_stem_sig_string;
-        m_sig_string_2 = longer_stem_sig_string;
-    }
-    sig_pair(word_sig_pair this_word_sig_pair){
-             m_lexicon = this_word_sig_pair.m_Lexicon;
-             m_sig_1 = this_word_sig_pair.m_sig_1;
-             m_sig_2 = this_word_sig_pair.m_sig_2;
-             m_sig_string_1  = this_word_sig_pair.m_sig_string_1;
-             m_sig_string_2  = this_word_sig_pair.m_sig_string_2;
-             m_sig_1_entropy = this_word_sig_pair.m_sig_1_entropy;
-             m_sig_2_entropy = this_word_sig_pair.m_sig_2_entropy;
-             morph = this_word_sig_pair.morph;
-             /*
-             word_stem_struct * this_word_stems = new word_stem_struct;
-             this_word_stems->word = this_word_sig_pair.word;
-             this_word_stems->stem_1 = this_word_sig_pair.stem_1;
-             this_word_stems->stem_2 = this_word_sig_pair.stem_2;
-             */
-             word_stem_struct * this_word_stems = new word_stem_struct (
-                         this_word_sig_pair.word,
-                         this_word_sig_pair.longer_stem,
-                         this_word_sig_pair.shorter_stem);
-             shared_word_stems[this_word_stems->get_label()] = this_word_stems;
-         }
-    QString     label() {return morph + "/" + m_sig_string_1 + "/" + m_sig_string_2; }
-    int         get_number_of_words() {return my_stems.size();}
-    CSignature* get_sig_1() {return m_sig_1;}
-    CSignature* get_sig_2() {return m_sig_2;}
-    sigstring_t get_sig1_string() { return m_sig_string_1;}
-    sigstring_t get_sig2_string() { return m_sig_string_2;}
-    morph_t     get_morph() {return morph;}
-    QString     display();
-    void        add_stem(QString stem) {my_stems.append(stem);}
-    QStringList& get_my_stems() {return my_stems;}
-    bool        contains_stem(QString stem) {return my_stems.contains(stem);}
-};
 
 struct DoomedSignatureInfo {
     sig_pair* m_edge_ptr;
@@ -233,6 +138,7 @@ protected:
     CPrefixCollection *             m_Prefixes;
     CSignatureCollection *          m_Signatures;
     CSignatureCollection *          m_PrefixSignatures;
+    QList<Spine*>                   m_SpineList;
     CSignatureCollection *          m_VirtualSignatures; // a temporary group of "virtual signatures"; a signature is virtual if it is a proper subsignature of an empirical signature.
     CompoundWordCollection *        m_Compounds;
     CompoundComponentCollection *   m_CompoundComponents;
@@ -264,10 +170,8 @@ protected:
     CSignatureCollection*           m_Subsignatures;
 
     // Finds the difference between signatures, e.g. {ed, es, er, e, ing} vs {d, s, r, NULL}
-    QList<word_sig_pair*>                m_WordSigPairList; //m_SigGraphEdgeList; /*!< the sig_graph_edges in here contain only one word associated with each. */
-    //lxa_sig_graph_edge_map          m_SigGraphEdgeMap;  /*!< the sig_graph_edges in here contain lists of words associated with them. */
-   // sig_pair_map                    m_SigGraphEdgeMap;  /*!< the sig_graph_edges in here contain lists of words associated with them. */
-    sig_pair_map                    m_SigPairMap;  /*!< the sig_pair_edges in here contain lists of words associated with them. */
+    SigPairCollection *             m_SigPairs;
+
     CSignatureCollection *          m_PassiveSignatures;  /*!< these signatures have stems one letter off from another signature. */
     CSignatureCollection *          m_SequentialSignatures; /*! signatures where one affix leads to another signature. */
     // Generalizes repeating
@@ -353,14 +257,17 @@ public:
     CSignatureCollection *                      get_residual_signatures()   { return m_ParaSignatures;}
     CSignatureCollection *                      get_sequential_signatures() { return m_SequentialSignatures;}
     CSignatureCollection*                       get_signatures()            { return m_Signatures;}
+    CSignatureCollection*                       get_suffixal_signatures() {return m_Signatures;}
+    SigPairCollection *                         get_sig_pairs()             {return m_SigPairs;}
     CSignatureCollection*                       get_suffix_signatures()     { return m_Signatures;}
     CSuffixCollection*                          get_suffixes()              {return m_Suffixes;}
     CStemCollection *                           get_suffixal_stems()        { return m_suffixal_stems;}
     CStemCollection *                           get_suffixal_protostems()  { return m_suffix_protostems; }
-    lxa_sig_graph_edge_map *                    get_sig_graph_edge_map()    { return & m_SigPairMap;}
-    sig_pair*                                   get_sig_graph_edge(QString label) {return m_SigPairMap[label];}
+    //lxa_sig_graph_edge_map *                    get_sig_graph_edge_map()    { return & m_SigPairs;}
+    //sig_pair*                                   get_sig_graph_edge(QString label) {return m_SigPairMap[label];}
     QListIterator<word_sig_pair*>    *          get_sig_graph_edge_list_iter();
     sig_pair_iter *                             get_sig_graph_edge_map_iter();
+    //sig_pair_map *                              get_suffixal_sig_pair_map() {return & m_SigPairMap;}
 
     bool                                        get_suffix_flag()           { return m_suffix_flag; }
     CSignatureCollection*                       get_virtual_signatures()    {return m_VirtualSignatures;}
@@ -383,12 +290,19 @@ public:
 
     void                                        keep_only_one_parse_per_word();
 
+
     QList<QString> *                            get_stem_autobiography(const stem_t& stem)   { return m_stem_autobiographies[stem];}
     void                                        add_to_stem_autobiographies (const QString& stem, const QString& message);
     bool                                        stem_autobiographies_contains(const QString& stem);
     QList<QString> *                            get_word_autobiography(const word_t& word) { return m_word_autobiographies[word];}
     void                                        add_to_word_autobiographies (const QString& word, const QString& message);
-
+    void                                        add_to_word_biographies (int analysis_number,
+                                                    QString shorter_stem,
+                                                    QString shorter_stem_sig_string,
+                                                    QString difference,
+                                                    CWord * pWord,
+                                                    QString longer_stem,
+                                                    QString longer_stem_sig_string);
     bool                                        test_if_analysis_has_been_done();
 
     bool                                        word_autobiographies_contains(const QString& word);

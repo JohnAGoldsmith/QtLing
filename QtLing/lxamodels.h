@@ -15,6 +15,20 @@ class MainWindow;
 class sig_graph_edge;
 class protostem;
 class CompoundWordCollection;
+class SigPairCollection;
+
+class SigPairModel: public QAbstractTableModel{
+    Q_OBJECT
+
+    SigPairCollection * sig_pairs;
+
+public:
+    int rowCount();
+    int columnCount();
+    QVariant data  (const QModelIndex &index, int role = Qt::DisplayRole) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+};
+
 
 class LxaStandardItemModel : public QStandardItemModel
 {

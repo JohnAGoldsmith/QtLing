@@ -21,6 +21,7 @@
 #include "evaluation.h"
 #include "cparse.h"
 #include "compound.h"
+#include "sigpaircollection.h"
 
 void SortQStringListFromRight(QStringList& ThisStringList);
 //bool reverse_string_compare(QString,QString);
@@ -75,6 +76,7 @@ CLexicon::CLexicon(MainWindow * main_window, CLexicon* lexicon, bool suffix_flag
     m_ResidualStems         = new CStemCollection(this);
     m_PassiveSignatures     = new CSignatureCollection(this, true);
     m_suffix_flag          = suffix_flag;
+    m_SigPairs              = new SigPairCollection();
     m_Hypotheses            = new QList<CHypothesis*>;
     m_Hypothesis_map        = new QMap<QString, CHypothesis*>;
     m_entropy_threshold_for_stems = 0.6;
@@ -119,7 +121,7 @@ bool CLexicon::test_if_analysis_has_been_done(){
     }
     return true;
 }
-
+/*
 QListIterator<word_sig_pair*> * CLexicon::get_sig_graph_edge_list_iter()
 {    QListIterator<word_sig_pair*> * iter = new QListIterator<word_sig_pair*>(m_WordSigPairList);
     return iter;
@@ -129,11 +131,7 @@ QMapIterator<QString, sig_pair*> * CLexicon::get_sig_graph_edge_map_iter()
 {    QMapIterator<QString, sig_pair*> * iter = new QMapIterator<QString, sig_pair*>(m_SigPairMap);
     return iter;
 }
-QString sig_pair::display(){
-    QString response;
-    response += label();
-    return response;
-}
+*/
 CLexicon::~CLexicon()
 {
     delete m_Signatures;
@@ -367,38 +365,4 @@ void CLexicon::dump_signatures_to_debug()
     qDebug() << "******** end of signature dump ********************* ";
 
 }
-
-// these next two functions were never finished or used:
-/*
-QStringList CLexicon::get_affix_continuation(QString affix, bool suffix_flag, QStringList continuations){
-    if (suffix_flag){
-        CStem * pStem_from_affix = m_suffixal_stems->find_or_fail(affix);
-    } else {
-        // put the prefix case here !
-    }
-    CSignature* pSig = find_signature_of_stem(affix, suffix_flag);
-    if (pSig->get_suffix_flag()){
-       foreach (QString this_affix, pSig->get_key().split("=")){
-           if (this_affix.contains(":")){
-                   foreach (QString new_affix,  get_affix_continuation(this_affix, pSig->get_suffix_flag(), continuations) ){
-                       continuations.append(this_affix + "=" +  new_affix);
-                   }
-
-            } else {
-                continuations.append(this_affix);
-            }
-        }
-    } else {
-        // prefixes
-   }
-   return continuations;
-}
-*/
-/*
-CSignature* CLexicon::find_signature_of_stem(QString stem, bool suffix_flag){
-    if (suffix_flag){
-
-    }
-}
-*/
 

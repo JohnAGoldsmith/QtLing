@@ -4,7 +4,8 @@
 #include "StemCollection.h"
 #include "WordCollection.h"
 #include "SuffixCollection.h"
-
+#include "sigpair.h"
+#include "sigpaircollection.h"
 
 //  I don't think the principal functions here are used anymore -- JG Sept 2021
 // of course the "hypothesis" class functions are used.
@@ -56,7 +57,7 @@ void CLexicon::step9_from_sig_pair_map_to_hypotheses()
     m_StatusBar->showMessage("9: Generating Hypotheses");
 
     sig_pair * p_sig_pair;
-    sig_pair_iter sig_pair_iter (m_SigPairMap);
+    QMapIterator<QString,sig_pair*> iter(*get_sig_pairs()->get_map());
     QString affix_1, doomed_affix;
     QStringList affixes1, affixes2, doomed_affixes;
     // Map from string representation of signature containing doomed affixes
@@ -72,8 +73,8 @@ void CLexicon::step9_from_sig_pair_map_to_hypotheses()
 
     QStringList affected_signatures;
 
-    while (sig_pair_iter.hasNext()){
-        p_sig_pair = sig_pair_iter.next().value();
+    while (iter.hasNext()){
+        p_sig_pair = iter.next().value();
         QString this_morph = p_sig_pair->get_morph();
         sigstring_t original_sig1_affixes_longer_stem = p_sig_pair->m_sig_string_1;
         sigstring_t original_sig2_affixes_shorter_stem = p_sig_pair->m_sig_string_2;
@@ -227,8 +228,8 @@ void CLexicon::step9b_redirect_ptrs_in_sig_graph_edges_map(const DoomedSignature
     CSignatureCollection* p_signatures = m_suffix_flag?
                 m_Signatures : m_PrefixSignatures;
     QMap<QString,sig_pair*>::iterator edge_map_iter;
-    for (edge_map_iter = m_SigPairMap.begin();
-         edge_map_iter != m_SigPairMap.end();
+    for (edge_map_iter = m_SigPairs->get_map()->begin();
+         edge_map_iter != m_SigPairs->get_map()->end();
          edge_map_iter++) {
         sig_pair* p_edge = edge_map_iter.value();
         const sigstring_t& str_sig_1 = p_edge->get_sig1_string();

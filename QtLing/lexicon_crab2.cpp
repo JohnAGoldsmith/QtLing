@@ -71,22 +71,7 @@ void CLexicon::Crab_2()
 
 }
 
-// not used...
-void CLexicon::find_all_signature_spines(){  // currently not used
-    CSignatureCollection * signatures;
-    if (m_suffix_flag){
-        signatures = m_Signatures;
-    } else{
-        signatures = m_PrefixSignatures;
-    }
-    /*
-    foreach (CWord* word, m_Words->get_){
-        if (m_SuffixesFlag){
-            word->get_suffixal_spine();
-        }
-    }
-    */
-}
+
 
 
 int IntersectionCount(QList<CSuffix*>* list1, QList<CSuffix*>* list2){

@@ -1,5 +1,6 @@
 #include <QPair>
 #include <Qt>
+#include <QCoreApplication>
 #include "WordCollection.h"
 #include "Word.h"
 #include "mainwindow.h"
@@ -10,7 +11,42 @@
 #include "lxamodels.h"
 #include "evaluation.h"
 #include "compound.h"
-#include <QCoreApplication>
+#include "sigpair.h"
+#include "sigpaircollection.h"
+
+int SigPairModel::rowCount(){
+    return sig_pairs->count();
+}    SigPairCollection * sig_pairs;
+int SigPairModel::columnCount(){
+    return 2;
+}
+QVariant SigPairModel::data (const QModelIndex &index, int role) const {
+    if (!index.isValid()) {
+        return QVariant();
+    }
+    if (role == Qt::DisplayRole){
+        switch (index.column() ){
+        case 0:
+            return QVariant(sig_pairs->get_map()->values().at(index.row())->get_sig1_string());
+            break;
+        case 1:
+            return QVariant(sig_pairs->get_map()->values().at(index.row())->get_sig2_string());
+            break;
+        }
+    }
+    return QVariant();
+}
+QVariant SigPairModel::headerData(int section, Qt::Orientation orientation, int role) const {
+    if (role != Qt::DisplayRole) {
+        return QVariant();
+    }
+    QStringList these_headers;
+    these_headers  << "Sig 1" << "Sig 2" ;
+    if (orientation == Qt::Orientation::Horizontal){
+        return QVariant(these_headers[section]);
+    }
+}
+
 
 LxaStandardItemModel::LxaStandardItemModel(MainWindow* main_window): QStandardItemModel(main_window)
 {

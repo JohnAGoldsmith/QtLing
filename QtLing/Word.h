@@ -14,6 +14,7 @@
 #include "Suffix.h"
 #include "Signature.h"
 #include "spine.h"
+#include "morphemeparse.h"
 
 class LowerTableView;
 
@@ -40,6 +41,7 @@ protected:
     QList<Parse_triple*>                m_prefixal_parse_triple_list;
     Spine                               m_suffixal_spine;
     Spine                               m_prefixal_spine;
+    MorphemeParse                       m_morpheme_parse; //this replaces m_morphemic_splits below
     QStringList                         m_Morphemic_splits; // a morphemic split is a QString like: "pre bind ing s"
     QList<ptr_to_stem_sig_pair>         m_Signatures;
     int                                 m_json_id;
@@ -75,6 +77,7 @@ public:
     QList<Parse_triple*>* get_prefixal_parse_triple_list()     { return & m_prefixal_parse_triple_list; }
     bool                 contains_this_stem_among_parses (QString stem);
     QStringList          get_compounds(){return m_Compounds;}
+    MorphemeParse *      get_morpheme_parse() {return & m_morpheme_parse;}
     Spine*               get_suffixal_spine();
     Spine*               get_prefixal_spine();
     QString              get_word()      const { return m_Word; }
