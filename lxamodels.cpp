@@ -26,7 +26,7 @@ int SigPairModel::rowCount(const QModelIndex &parent) const {
     return sig_pairs->count();
 }
 int SigPairModel::columnCount(const QModelIndex &parent ) const {
-    return 2;
+    return 4;
 }
 QVariant SigPairModel::data (const QModelIndex &index, int role) const {
     if (!index.isValid()) {
@@ -40,6 +40,12 @@ QVariant SigPairModel::data (const QModelIndex &index, int role) const {
         case 1:
             return QVariant(sig_pairs->get_map()->values().at(index.row())->get_sig2_string());
             break;
+        case 2:
+            return QVariant(sig_pairs->get_map()->values().at(index.row())->get_morph());
+            break;
+        case 3:
+            return QVariant(sig_pairs->get_map()->values().at(index.row())->get_my_stems().count());
+            break;
         }
     }
     return QVariant();
@@ -49,13 +55,38 @@ QVariant SigPairModel::headerData(int section, Qt::Orientation orientation, int 
         return QVariant();
     }
     QStringList these_headers;
-    these_headers  << "Sig 1" << "Sig 2" ;
+    these_headers  << "Sig 1" << "Sig 2" << "Diff" << "count" ;
     if (orientation == Qt::Orientation::Horizontal){
         return QVariant(these_headers[section]);
     }
     return QVariant();
 }
 
+sigpairproxymodel::sigpairproxymodel(QObject* parent ):QSortFilterProxyModel (parent){
+
+}
+
+bool sigpairproxymodel::lessThan(const QModelIndex & left, const QModelIndex & right) const {
+    int column = left.column();
+    QVariant leftData = sourceModel()->data(left);
+    QVariant rightData = sourceModel()->data(right);
+    return true;
+    switch (column){
+    case 0:{
+        return leftData.toString() < rightData.toString();
+        break;
+    }
+    case 1: case 2: case 4:{
+        return leftData.toInt() < rightData.toInt();
+        break;
+    }
+    case 3:{
+        return leftData.toFloat() < rightData.toFloat();
+    }
+    default:
+        return true;
+    }
+}
 
 
 

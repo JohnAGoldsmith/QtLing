@@ -794,6 +794,8 @@ void MainWindow::read_dx1_file (QTextStream & in_stream){
             } else{
                 word_counts[word] = 1;
             }
+        } else{
+            word_counts[word] = 1;
         }
     }
     get_lexicon()->input_words(word_counts);

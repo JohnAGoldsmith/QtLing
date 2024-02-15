@@ -105,6 +105,7 @@ QList<sig_pair*> *  CWord::get_suffixal_sigpairs(){
         sig_pair* this_sig_pair = new sig_pair(thisParseTriple->m_stem, difference, thisParseTriple->m_sig_string, nextParseTriple->m_sig_string );
         m_suffixal_sigpairs.append(this_sig_pair);
     }
+    return & m_suffixal_sigpairs;
 }
 
 bool CWord::contains_this_stem_among_parses(QString stem){

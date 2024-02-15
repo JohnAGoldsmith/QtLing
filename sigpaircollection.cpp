@@ -21,8 +21,6 @@ void SigPairCollection::add(sig_pair* sigpair){
 
 void CLexicon::find_all_suffixal_sigpairs(){  // currently not used
     foreach (CWord* word, *m_Words->get_word_list()){
-        qDebug() << 24 << word->display();
-        qDebug() << 25 << word->get_suffixal_sigpairs();
         for (int n = 0; n < word->get_suffixal_sigpairs()->length(); n++){
             m_suffixal_sig_pairs->add( word->get_suffixal_sigpairs()->at(n) );
         }

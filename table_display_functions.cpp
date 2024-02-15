@@ -36,7 +36,13 @@ void MainWindow::display_prefix_stems(CLexicon* lexicon){
 void MainWindow::display_suffixal_sigpairs(CLexicon* lexicon){
    // if (m_suffixal_sigpair_model) {delete m_suffixal_sigpair_model;} // when I leave this in, it createsa a problem. TO DO! TODO
     m_suffixal_sigpair_model = new SigPairModel(m_my_lexicon->get_suffixal_sig_pairs());
-    m_tableView_upper_temp->setModel(m_suffixal_sigpair_model);
+    QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
+    proxyModel->setSourceModel(m_suffixal_sigpair_model);
+    m_tableView_upper_temp->setModel(proxyModel);
+
+    //m_tableView_upper_temp->setModel(m_suffixal_sigpair_model);
+
+
 }
 
 /**

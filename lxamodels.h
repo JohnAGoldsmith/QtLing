@@ -32,6 +32,17 @@ public:
 };
 
 
+class sigpairproxymodel: public QSortFilterProxyModel{
+    Q_OBJECT
+
+public:
+    sigpairproxymodel(QObject*);
+    ~sigpairproxymodel(){};
+
+private:
+    bool lessThan(const QModelIndex & left, const QModelIndex & right) const override;
+
+};
 
 
 

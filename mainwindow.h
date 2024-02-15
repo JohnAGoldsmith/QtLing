@@ -139,7 +139,8 @@ class MainWindow : public QMainWindow
     stemSFProxymodel*                       m_stem_model_proxy_2;
     stemmodel *                             m_suffix_protostem_model;
     stemmodel *                             m_prefix_protostem_model;
-    SigPairModel *                            m_suffixal_sigpair_model;
+    SigPairModel *                          m_suffixal_sigpair_model;
+    sigpairproxymodel *                     m_suffixal_sigpair_model_proxy;
 
     affixmodel *                            m_suffix_model;
     affixmodel *                            m_prefix_model;
