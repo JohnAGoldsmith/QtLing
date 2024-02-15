@@ -57,7 +57,7 @@ void CLexicon::step9_from_sig_pair_map_to_hypotheses()
     m_StatusBar->showMessage("9: Generating Hypotheses");
 
     sig_pair * p_sig_pair;
-    QMapIterator<QString,sig_pair*> iter(*get_sig_pairs()->get_map());
+    QMapIterator<QString,sig_pair*> iter(*get_suffixal_sig_pairs()->get_map());
     QString affix_1, doomed_affix;
     QStringList affixes1, affixes2, doomed_affixes;
     // Map from string representation of signature containing doomed affixes
@@ -228,8 +228,8 @@ void CLexicon::step9b_redirect_ptrs_in_sig_graph_edges_map(const DoomedSignature
     CSignatureCollection* p_signatures = m_suffix_flag?
                 m_Signatures : m_PrefixSignatures;
     QMap<QString,sig_pair*>::iterator edge_map_iter;
-    for (edge_map_iter = m_SigPairs->get_map()->begin();
-         edge_map_iter != m_SigPairs->get_map()->end();
+    for (edge_map_iter = m_suffixal_sig_pairs->get_map()->begin();
+         edge_map_iter != m_suffixal_sig_pairs->get_map()->end();
          edge_map_iter++) {
         sig_pair* p_edge = edge_map_iter.value();
         const sigstring_t& str_sig_1 = p_edge->get_sig1_string();

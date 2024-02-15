@@ -48,6 +48,7 @@ HEADERS += allosignatures.h \
            sigpair.h \
            sigpaircollection.h \
            spine.h \
+           spinecollection.h \
            stemmodel.h \
            string_group.h \
            stringalignment.h \
@@ -106,6 +107,7 @@ SOURCES += allosignatures.cpp \
            sigpair.cpp \
            sigpaircollection.cpp \
            spine.cpp \
+           spinecollection.cpp \
            stemmodel.cpp \
            string_group.cpp \
            stringalignment.cpp \

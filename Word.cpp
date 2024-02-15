@@ -1,5 +1,6 @@
 #include <QDebug>
 #include "Word.h"
+#include "sigpair.h"
 
 CWord::CWord(QString word) :  m_Word(word), m_WordCount(0), m_morpheme_parse(word)
 {
@@ -92,35 +93,20 @@ void CWord::clear_parse_triple_map()
     }
     m_suffixal_parse_triple_list.clear();
 }
-Spine* CWord::get_suffixal_spine(){
-    if (m_suffixal_spine.length() > 0) {return &m_suffixal_spine;}
-    if (m_suffixal_parse_triple_list.length() < 2) {return NULL;}
+QList<sig_pair*> *  CWord::get_suffixal_sigpairs(){
+    if (m_suffixal_sigpairs.length() > 0) {return &m_suffixal_sigpairs;}
+    if (m_suffixal_parse_triple_list.length() < 2) {return  &m_suffixal_sigpairs;}
     int n= 0;
     for (n = 0; n < m_suffixal_parse_triple_list.length()-1; n++){
         Parse_triple * thisParseTriple = m_suffixal_parse_triple_list.at(n);
-        //qDebug() << 100 << thisParseTriple->display();
         Parse_triple * nextParseTriple = m_suffixal_parse_triple_list.at(n+1);
         int diff = nextParseTriple->m_stem.length() - thisParseTriple->m_stem.length();
         QString difference = nextParseTriple->m_stem.right(diff);
-        m_suffixal_spine.add(thisParseTriple->m_sig_string,difference);
-        //qDebug() <<  m_suffixal_spine.display() <<103;
+        sig_pair* this_sig_pair = new sig_pair(thisParseTriple->m_stem, difference, thisParseTriple->m_sig_string, nextParseTriple->m_sig_string );
+        m_suffixal_sigpairs.append(this_sig_pair);
     }
-    m_suffixal_spine.add(m_suffixal_parse_triple_list.at(n)->m_sig_string, "");
-    qDebug() << m_suffixal_spine.display() << 106;
-    return &m_suffixal_spine;
 }
-Spine* CWord::get_prefixal_spine(){
-    if (m_prefixal_spine.length() > 0) {return &m_prefixal_spine;}
-    if (m_prefixal_parse_triple_list.length() < 2) {return NULL;}
-    for (int n = 0; n < m_prefixal_parse_triple_list.length(); n++){
-        Parse_triple * thisParseTriple = m_prefixal_parse_triple_list.at(n);
-        Parse_triple * nextParseTriple = m_prefixal_parse_triple_list.at(n+1);
-        int diff = nextParseTriple->m_stem.length() - thisParseTriple->m_stem.length();
-        QString difference = nextParseTriple->m_stem.right(diff);
-        m_suffixal_spine.add(thisParseTriple->m_sig_string,difference);
-    }
-    return &m_prefixal_spine;
-}
+
 bool CWord::contains_this_stem_among_parses(QString stem){
     foreach (Parse_triple* triple, m_suffixal_parse_triple_list){
        if (triple->m_stem == stem){

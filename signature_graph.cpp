@@ -96,7 +96,7 @@ void CLexicon::step8a_compute_word_sig_pairs()
                 else {
                     label = difference + "/" + shorter_stem_sig_string + "/" + longer_stem_sig_string;
                 }
-                add_label_to_sig_pairs(m_SigPairs->get_map(), label, shorter_stem, shorter_stem_sig_string,
+                add_label_to_sig_pairs(m_suffixal_sig_pairs->get_map(), label, shorter_stem, shorter_stem_sig_string,
                                        longer_stem_sig_string, difference);
                 add_to_word_biographies(analysis_number, shorter_stem, shorter_stem_sig_string,
                                         difference, pWord, longer_stem, longer_stem_sig_string);
@@ -170,7 +170,7 @@ void add_suffixes_to_signature_stringlist(QString difference,
     }
 }
 void CLexicon::step8c_from_sig_pairs_to_parses_Create_hypotheses(){
-    sig_pair_iter sig_pair_iter (*m_SigPairs->get_map());
+    sig_pair_iter sig_pair_iter (*m_suffixal_sig_pairs->get_map());
     QString     this_affix, doomed_affix, remnant, difference;
     QString shorter_stem, longer_stem;
     QString shorter_stem_sig_string, longer_stem_sig_string;

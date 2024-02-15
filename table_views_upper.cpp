@@ -226,9 +226,10 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
         if (component == "Words"){
             m_parent_window->display_words();            return;
         }
-        if (component == "Spines"){
+        if (component == "Suffixal sig pairs"){
             // ----------------- new -----------------------------------------------------
-            m_parent_window->display_suffixal_spines(m_parent_window->get_lexicon());
+            m_parent_window->display_suffixal_sigpairs(m_parent_window->get_lexicon());
+            return;
         }
         if (component == "Prefixal stems"){
             // ----------------- new -----------------------------------------------------

@@ -1,6 +1,7 @@
 #include "spine.h"
 #include "Lexicon.h"
 #include "WordCollection.h"
+#include "sigpaircollection.h"
 
 // A spine is a list of pairs, which consist of a signature string and a string difference between stems.
 // E.g., List: (e=ed=ing=s, e), (NULL=d=s, "")
@@ -22,18 +23,4 @@ QString Spine::display(){
     return result;
 }
 
-void CLexicon::find_all_signature_spines(){  // currently not used
-    CSignatureCollection * signatures;
-    if (m_suffix_flag){
-        signatures = m_Signatures;
-    } else{
-        signatures = m_PrefixSignatures;
-    }
 
-    foreach (CWord* word, *m_Words->get_word_list()){
-        if (m_suffix_flag){
-            m_suffixal_spines->append( word->get_suffixal_spine() );
-        }
-    }
-
-}

@@ -170,7 +170,7 @@ protected:
     CSignatureCollection*           m_Subsignatures;
 
     // Finds the difference between signatures, e.g. {ed, es, er, e, ing} vs {d, s, r, NULL}
-    SigPairCollection *             m_SigPairs;
+    SigPairCollection *             m_suffixal_sig_pairs;
 
     CSignatureCollection *          m_PassiveSignatures;  /*!< these signatures have stems one letter off from another signature. */
     CSignatureCollection *          m_SequentialSignatures; /*! signatures where one affix leads to another signature. */
@@ -259,7 +259,7 @@ public:
     CSignatureCollection*                       get_signatures()            { return m_Signatures;}
     QList<Spine*>  *                             get_suffixal_spines()                {return m_suffixal_spines;}
     CSignatureCollection*                       get_suffixal_signatures() {return m_Signatures;}
-    SigPairCollection *                         get_sig_pairs()             {return m_SigPairs;}
+    SigPairCollection *                         get_suffixal_sig_pairs()             {return m_suffixal_sig_pairs;}
     CSignatureCollection*                       get_suffix_signatures()     { return m_Signatures;}
     CSuffixCollection*                          get_suffixes()              {return m_Suffixes;}
     CStemCollection *                           get_suffixal_stems()        { return m_suffixal_stems;}
@@ -377,7 +377,7 @@ public:
     void step6a_create_temporary_map_from_stems_to_affix_sets(Stem_to_sig_map&); //map_sigstring_to_stem_list &); will delete this
     void create_new_parse_set_from_known_affixes();
     void find_good_signatures_inside_bad();
-    void find_all_signature_spines();
+    void find_all_suffixal_sigpairs();
     void find_new_affixes(protostem*, CSignatureCollection*, CStemCollection*, QStringList& );
     void find_parasuffixes();
     void find_parasuffixes(int wordno, int stem_length, QStringList working_affix_string_list);

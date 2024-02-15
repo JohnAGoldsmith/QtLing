@@ -3,6 +3,7 @@
 #include "mainwindow.h"
 #include "graphics.h"
 #include "lxamodels.h"
+#include "Lexicon.h"
 
 void MainWindow::display_words()
 {
@@ -32,10 +33,10 @@ void MainWindow::display_prefix_stems(CLexicon* lexicon){
     m_prefixal_stem_model = new stemmodel(m_my_lexicon->get_prefixal_stems());
     m_tableView_upper_temp->setModel(m_prefixal_stem_model);
 }
-void MainWindow::display_suffixal_spines(CLexicon* lexicon){
-    if (m_suffixal_spine_model) {delete m_suffixal_spine_model;}
-    m_suffixal_spine_model = new spinemodel(m_my_lexicon->get_suffixal_spines());
-    m_tableView_upper_temp->setModel(m_suffixal_spine_model);
+void MainWindow::display_suffixal_sigpairs(CLexicon* lexicon){
+   // if (m_suffixal_sigpair_model) {delete m_suffixal_sigpair_model;} // when I leave this in, it createsa a problem. TO DO! TODO
+    m_suffixal_sigpair_model = new SigPairModel(m_my_lexicon->get_suffixal_sig_pairs());
+    m_tableView_upper_temp->setModel(m_suffixal_sigpair_model);
 }
 
 /**

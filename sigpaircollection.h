@@ -12,8 +12,8 @@ class SigPairCollection
 
 public:
     SigPairCollection();
-
-    int     count() {return m_SigPairMap.count();}
+    void            add(sig_pair*);
+    int             count() {return m_SigPairMap.count();}
     sig_pair_map *  get_map() {return & m_SigPairMap;}
 };
 

@@ -14,6 +14,14 @@
 #include "sigpair.h"
 #include "sigpaircollection.h"
 
+
+SigPairModel::SigPairModel(SigPairCollection* sigpairs){
+    sig_pairs = sigpairs;
+}
+
+SigPairModel::~SigPairModel(){
+    delete sig_pairs;
+}
 int SigPairModel::rowCount(const QModelIndex &parent) const {
     return sig_pairs->count();
 }
@@ -45,6 +53,7 @@ QVariant SigPairModel::headerData(int section, Qt::Orientation orientation, int 
     if (orientation == Qt::Orientation::Horizontal){
         return QVariant(these_headers[section]);
     }
+    return QVariant();
 }
 
 /*            Spine model                    */
@@ -494,13 +503,13 @@ struct{
 
 struct{
     bool operator ()(sig_pair* a, sig_pair* b) const
-    {  if (a->morph == b->morph)
+    {  if (a->m_stem_difference == b->m_stem_difference)
         {
                 return a->m_sig_1 < b->m_sig_1;
         }
           else
         {
-            return a->morph < b->morph;
+            return a->m_stem_difference < b->m_stem_difference;
         }
     }
 }custom_compare_2;
@@ -525,12 +534,12 @@ void LxaStandardItemModel::load_sig_graph_edges( QMap<QString, sig_pair*> * this
     while (temp_list_iter.hasNext())
      {
         sig_pair * p_sig_graph_edge = temp_list_iter.next();
-        if (size == 1 && p_sig_graph_edge->morph.length() > 1){
+        if (size == 1 && p_sig_graph_edge->m_stem_difference.length() > 1){
             continue;
-        }else if (size == 2 && p_sig_graph_edge->morph.length()< 2){
+        }else if (size == 2 && p_sig_graph_edge->m_stem_difference.length()< 2){
             continue;
         }
-        QStandardItem * item1 = new QStandardItem(p_sig_graph_edge->morph);
+        QStandardItem * item1 = new QStandardItem(p_sig_graph_edge->m_stem_difference);
         QStandardItem * item2 = new QStandardItem(p_sig_graph_edge->m_sig_string_1); // changed here
         QStandardItem * item3 = new QStandardItem();
         if (p_sig_graph_edge->m_sig_1)              // --- Numerical data --- //

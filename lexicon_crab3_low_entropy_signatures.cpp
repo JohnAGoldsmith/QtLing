@@ -8,7 +8,7 @@
  */
 void CLexicon::Crab_3()
 {
-    find_all_signature_spines();
+    find_all_suffixal_sigpairs();
 
     //repair_low_entropy_signatures();
 

@@ -47,7 +47,7 @@ class LowerTableView;
 class LeftSideTreeView;
 class MainMenuBar;
 class FindDockWidget;
-class spinemodel;
+class SigPairModel;
 
 QT_END_NAMESPACE
 
@@ -139,7 +139,7 @@ class MainWindow : public QMainWindow
     stemSFProxymodel*                       m_stem_model_proxy_2;
     stemmodel *                             m_suffix_protostem_model;
     stemmodel *                             m_prefix_protostem_model;
-    spinemodel *                            m_suffixal_spine_model;
+    SigPairModel *                            m_suffixal_sigpair_model;
 
     affixmodel *                            m_suffix_model;
     affixmodel *                            m_prefix_model;
@@ -225,7 +225,7 @@ public:
     void                                    display_prefix_signatures(CLexicon*);
     void                                    display_suffixal_protostems(CLexicon*);
     void                                    display_prefixal_protostem(CLexicon*);
-    void                                    display_suffixal_spines(CLexicon*);
+    void                                    display_suffixal_sigpairs(CLexicon*);
     void                                    display_epositive_suffix_signatures(CLexicon*);
     void                                    display_epositive_prefix_signatures(CLexicon*);
     void                                    display_signature_graph_edges(CLexicon* );

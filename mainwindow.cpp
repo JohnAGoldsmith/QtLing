@@ -102,7 +102,7 @@ MainWindow::MainWindow()
     m_affix_model_proxy_2 = new affixSFProxymodel (this);
 
     m_suffixal_protostem_model = nullptr;
-    m_suffixal_spine_model = nullptr;
+    m_suffixal_sigpair_model = nullptr;
 
 
     // -----------------  old --------------------------------------------------------------
@@ -657,7 +657,7 @@ void MainWindow::display_models(const QModelIndex & index){
     if (component == "Prefixal stems")      { display_prefix_stems(m_my_lexicon);        return;}
     if (component == "Suffixal protostems") { display_suffixal_protostems(m_my_lexicon); return;} // this currently doesn´t happen
     if (component == "Suffixes")            { display_suffixes(m_my_lexicon);            return;}
-    if (component == "Spines")              { display_suffixal_spines(m_my_lexicon);            return;}
+    if (component == "Suffixal sig pairs")              { display_suffixal_sigpairs(m_my_lexicon);            return;}
 
 }
 

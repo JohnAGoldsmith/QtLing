@@ -72,8 +72,8 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
     if (m_my_lexicon->get_words()->get_count() > 0){
         helper_function("Words", m_my_lexicon->get_word_collection()->get_count(), lexicon_item);
     }
-    if (m_my_lexicon->get_sig_pairs()->count()>0){
-        helper_function("Suffixal sig pairs", m_my_lexicon->get_sig_pairs()->count(), lexicon_item);
+    if (m_my_lexicon->get_suffixal_sig_pairs()->count()>0){
+        helper_function("Suffixal sig pairs", m_my_lexicon->get_suffixal_sig_pairs()->count(), lexicon_item);
     }
     if (m_my_lexicon->get_compounds()->get_count() > 0 ){
         helper_function("Compound words", m_my_lexicon->get_compounds()->get_count(), lexicon_item);
@@ -99,15 +99,10 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
     if (m_my_lexicon->get_prefix_signatures()->get_count() > 0 ){
         helper_function("Prefix signatures", m_my_lexicon->get_prefix_signatures()->get_count(), lexicon_item);
     }
-    if (m_my_lexicon->get_sig_pairs()->count() > 0 ){
-        helper_function("Sig pairs", m_my_lexicon->get_sig_pairs()->count(), lexicon_item);
-    }
     if (m_my_lexicon->get_parses()->count() > 0 ){
         helper_function("Parses", m_my_lexicon->get_parses()->count(), lexicon_item);
     }
-    if (m_my_lexicon->get_suffixal_spines()->count() > 0 ){
-        helper_function("Spines", m_my_lexicon->get_suffixal_spines()->count(), lexicon_item);
-    }
+
     if (m_my_lexicon->get_hypotheses()->count() > 0 )
         lexicon_item->appendRow(hypothesis_items);
 
