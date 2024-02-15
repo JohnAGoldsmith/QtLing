@@ -77,10 +77,6 @@ CLexicon::CLexicon(MainWindow * main_window, CLexicon* lexicon, bool suffix_flag
     m_PassiveSignatures     = new CSignatureCollection(this, true);
     m_suffix_flag          = suffix_flag;
     m_suffixal_sig_pairs   = new SigPairCollection();
-<<<<<<< HEAD
-    //m_suffixal_spines       = new QList<Spine*>;
-=======
->>>>>>> 8b32cff (removing spine class)
     m_Hypotheses            = new QList<CHypothesis*>;
     m_Hypothesis_map        = new QMap<QString, CHypothesis*>;
     m_entropy_threshold_for_stems = 0.6;

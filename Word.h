@@ -39,11 +39,6 @@ protected:
     QList<Parse_triple*>                m_suffixal_parse_triple_list;
     QList<Parse_triple*>                m_prefixal_parse_triple_list;
     QList<sig_pair*>                    m_suffixal_sigpairs;
-<<<<<<< HEAD
-    Spine                               m_prefixal_spine;
-=======
-    //Spine                               m_prefixal_spine;
->>>>>>> 8b32cff (removing spine class)
     MorphemeParse                       m_morpheme_parse; //this replaces m_morphemic_splits below
     QStringList                         m_Morphemic_splits; // a morphemic split is a QString like: "pre bind ing s"
     QList<ptr_to_stem_sig_pair>         m_Signatures;
@@ -82,11 +77,6 @@ public:
     QStringList          get_compounds(){return m_Compounds;}
     MorphemeParse *      get_morpheme_parse() {return & m_morpheme_parse;}
     QList<sig_pair*> *   get_suffixal_sigpairs();
-<<<<<<< HEAD
-    Spine*               get_prefixal_spine();
-=======
-    //Spine*               get_prefixal_spine();
->>>>>>> 8b32cff (removing spine class)
     QString              get_word()      const { return m_Word; }
     QList<ptr_to_stem_sig_pair> get_signatures() {return m_Signatures;}
     void                 IncrementWordCount(int n = 1);

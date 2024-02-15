@@ -1,5 +1,5 @@
 #include "evaluation.h"
-
+#include <QString>
 
 EvaluationResults::EvaluationResults()
 {

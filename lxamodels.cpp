@@ -53,31 +53,6 @@ QVariant SigPairModel::headerData(int section, Qt::Orientation orientation, int 
     if (orientation == Qt::Orientation::Horizontal){
         return QVariant(these_headers[section]);
     }
-<<<<<<< HEAD
-    return QVariant();
-}
-
-/*            Spine model                    */
-
-spinemodel::spinemodel(QObject *parent ){
-
-}
-spinemodel::spinemodel(QList<Spine*> * spines, QObject *parent){
-    m_spines = spines;
-}
-int spinemodel::rowCount(const QModelIndex &parent  )const {
-    return m_spines->count();
-}
-int spinemodel::columnCount(const QModelIndex &parent) const {
-    return 4;
-}
-QVariant spinemodel::data  (const QModelIndex &index, int role) const {
-
-    return QVariant("test");
-}
-QVariant spinemodel::headerData(int section, Qt::Orientation orientation, int role) const{
-=======
->>>>>>> 8b32cff (removing spine class)
     return QVariant();
 }
 
