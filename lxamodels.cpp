@@ -53,6 +53,7 @@ QVariant SigPairModel::headerData(int section, Qt::Orientation orientation, int 
     if (orientation == Qt::Orientation::Horizontal){
         return QVariant(these_headers[section]);
     }
+<<<<<<< HEAD
     return QVariant();
 }
 
@@ -75,11 +76,10 @@ QVariant spinemodel::data  (const QModelIndex &index, int role) const {
     return QVariant("test");
 }
 QVariant spinemodel::headerData(int section, Qt::Orientation orientation, int role) const{
+=======
+>>>>>>> 8b32cff (removing spine class)
     return QVariant();
-
 }
-
-
 
 
 

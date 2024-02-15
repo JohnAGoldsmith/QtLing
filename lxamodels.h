@@ -32,19 +32,6 @@ public:
 };
 
 
-class spinemodel: public QAbstractTableModel{
-    Q_OBJECT
-
-    QList<Spine*> *  m_spines;
-public:
-    spinemodel(QObject *parent = nullptr);
-    explicit spinemodel(QList<Spine*> * spines, QObject *parent = nullptr);
-    int rowCount(const QModelIndex &parent = QModelIndex() )const override;
-    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
-    QVariant data  (const QModelIndex &index, int role = Qt::DisplayRole) const override;
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
-};
-
 
 
 

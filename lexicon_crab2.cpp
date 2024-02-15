@@ -19,7 +19,7 @@
 #include "Word.h"
 #include "cparse.h"
 #include "compound.h"
-#include "spine.h"
+//#include "spine.h"
 
 
 extern QString QStringList2signature(QStringList);

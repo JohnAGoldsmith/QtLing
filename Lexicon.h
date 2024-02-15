@@ -138,7 +138,6 @@ protected:
     CPrefixCollection *             m_Prefixes;
     CSignatureCollection *          m_Signatures;
     CSignatureCollection *          m_PrefixSignatures;
-    QList<Spine*> *                 m_suffixal_spines;
     CSignatureCollection *          m_VirtualSignatures; // a temporary group of "virtual signatures"; a signature is virtual if it is a proper subsignature of an empirical signature.
     CompoundWordCollection *        m_Compounds;
     CompoundComponentCollection *   m_CompoundComponents;
@@ -257,7 +256,7 @@ public:
     CSignatureCollection *                      get_residual_signatures()   { return m_ParaSignatures;}
     CSignatureCollection *                      get_sequential_signatures() { return m_SequentialSignatures;}
     CSignatureCollection*                       get_signatures()            { return m_Signatures;}
-    QList<Spine*>  *                             get_suffixal_spines()                {return m_suffixal_spines;}
+    //QList<Spine*>  *                             get_suffixal_spines()                {return m_suffixal_spines;}
     CSignatureCollection*                       get_suffixal_signatures() {return m_Signatures;}
     SigPairCollection *                         get_suffixal_sig_pairs()             {return m_suffixal_sig_pairs;}
     CSignatureCollection*                       get_suffix_signatures()     { return m_Signatures;}

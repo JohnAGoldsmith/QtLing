@@ -47,8 +47,11 @@ HEADERS += allosignatures.h \
            signaturemodel.h \
            sigpair.h \
            sigpaircollection.h \
+<<<<<<< HEAD
            spine.h \
            spinecollection.h \
+=======
+>>>>>>> 8b32cff (removing spine class)
            stemmodel.h \
            string_group.h \
            stringalignment.h \
@@ -106,8 +109,11 @@ SOURCES += allosignatures.cpp \
            signaturemodel.cpp \
            sigpair.cpp \
            sigpaircollection.cpp \
+<<<<<<< HEAD
            spine.cpp \
            spinecollection.cpp \
+=======
+>>>>>>> 8b32cff (removing spine class)
            stemmodel.cpp \
            string_group.cpp \
            stringalignment.cpp \
