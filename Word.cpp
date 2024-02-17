@@ -6,6 +6,8 @@ CWord::CWord(QString word) :  m_Word(word), m_WordCount(0), m_morpheme_parse(wor
 {
     //m_Signatures.clear();
     //m_morpheme_parse  = MorphemeParse(word);
+    m_compound_component = 0;
+
 }
 
 CWord::CWord(CWord& word):m_morpheme_parse (*word.get_morpheme_parse())
@@ -44,14 +46,19 @@ QString CWord::display(){
             }
             result += "morphemic splits: " + m_Morphemic_splits.join(" = ") + " " +
             //"JSON id: " + m_json_id + " " +
-            "Compounds: " + m_Compounds.join(" = ");
+            "Compounds: " + m_compound_structure.first+"=" + m_compound_structure.second;
             return result;
 }
+/*
 void CWord::add_compound(QString string){
     if (m_Compounds.contains(string)){
         return;
     }
     m_Compounds.append(string);
+}
+*/
+void CWord::analyze_as_compound(QString c1, QString c2){
+    m_compound_structure = QPair(c1, c2);
 }
 void CWord::IncrementWordCount (int n )
 {

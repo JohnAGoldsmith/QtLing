@@ -43,7 +43,9 @@ protected:
     QStringList                         m_Morphemic_splits; // a morphemic split is a QString like: "pre bind ing s"
     QList<ptr_to_stem_sig_pair>         m_Signatures;
     int                                 m_json_id;
-    QStringList                         m_Compounds;
+    //QStringList                         m_Compounds;
+    QPair<QString, QString>             m_compound_structure;
+    int                                 m_compound_component; // how often this word appears as part of a compound
 
     // we want to allow a parse of a word to have more than two pieces, like "govern ment s". This is not entirely consistent with the philosphy behind the Parse_triple, which
     // assumed all words had at most a stem and an affix.
@@ -56,7 +58,7 @@ public:
     ~CWord();
 public:
     //Accessors
-    void                 add_compound(QString string);
+    //void                 add_compound(QString string);
     void                 add_parse(CStem* stem, CSuffix* suffix, CSignature* signature);
     void                 add_suffixal_parse_triple(QString stem, QString affix, sigstring_t this_sig_string);
     void                 add_suffixal_parse_triple(Parse_triple * parse_triple) {m_suffixal_parse_triple_list.append(parse_triple);}
@@ -74,7 +76,7 @@ public:
     QList<Parse_triple*>* get_parse_triple_list()     { return & m_suffixal_parse_triple_list; }
     QList<Parse_triple*>* get_prefixal_parse_triple_list()     { return & m_prefixal_parse_triple_list; }
     bool                 contains_this_stem_among_parses (QString stem);
-    QStringList          get_compounds(){return m_Compounds;}
+   // QStringList          get_compounds(){return m_Compounds;}
     MorphemeParse *      get_morpheme_parse() {return & m_morpheme_parse;}
     QList<sig_pair*> *   get_suffixal_sigpairs();
     QString              get_word()      const { return m_Word; }
@@ -86,6 +88,8 @@ public:
     void                 set_json_id(const int id) {m_json_id = id;}
     int                  get_json_id() const {return m_json_id;}
     void                 write_json(QJsonObject& ref_json, eJsonType json_type = INDEXED) const;
+
+    void                analyze_as_compound (QString, QString);
 
 };
 

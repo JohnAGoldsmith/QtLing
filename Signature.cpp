@@ -358,33 +358,26 @@ double log_base_2(double x)
 }
 
 double CSignature::calculate_stem_entropy()
-{
-    QMap<QChar,double> counts;
+{   QMap<QChar,double> counts;
     double     total_count (0);
     CStem* pStem;
     QChar  letter;
     double entropy =0.0;
     foreach (pStem, m_Stems){
         stem_t this_stem = pStem->get_key();
-        //qDebug() << 321 << this_stem;
-        // check for only the first/last letter
         m_SuffixFlag?
             letter = this_stem.at(this_stem.length()-1):
             letter = this_stem.at(0);
-        if (counts.contains(letter)){
-                counts[letter]++;
-        } else{
+        counts.contains(letter)?
+            counts[letter]++:
             counts[letter] = 1;
-        }
         total_count++;
     }
     if (counts.size() == 1){
         m_stem_entropy = 0.0;
         return 0.0;
     }
-    QMapIterator<QChar,double> this_iter (counts);
-    while (this_iter.hasNext()){
-        letter = this_iter.next().key();
+    foreach (QChar letter, counts.keys()){
         double freq = counts[letter]/total_count;
         entropy += -1.0 * freq * log_base_2 (freq);
     }

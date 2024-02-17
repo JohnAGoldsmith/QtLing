@@ -160,8 +160,8 @@ protected:
     // all of the possible continuations
     // affixes that are "thrown out" in Crab2
     CSignatureCollection*           m_ParaSignatures;   /*!<  the information we have about stems which we have not yet integrated into a morphological system. */
-    //CSuffixCollection *             m_ParaSuffixes;
-    QMap<QString, QStringList*>*    m_ParaSuffixes;
+    CSuffixCollection *             m_ParaSuffixes;
+    //QMap<QString, QStringList*>*    m_ParaSuffixes;
     QMap<QString, QStringList*>*    m_ParaPrefixes;
     CStemCollection *               m_ResidualStems;
     CSignatureCollection *          m_ResidualPrefixSignatures;
@@ -246,8 +246,8 @@ public:
     CHypothesis*                                get_hypothesis(QString hypothesis_label);
     int                                         get_internal_affix_count(QString );
     QMap<QString, CParse* > *                   get_parses()                {return &m_ParseMap;}
-    //CSuffixCollection*                          get_parasuffixes()          { return m_ParaSuffixes;}
-    QMap<QString,QStringList*> *                 get_parasuffixes()          {return m_ParaSuffixes;}
+    CSuffixCollection*                          get_parasuffixes()          { return m_ParaSuffixes;}
+    //QMap<QString,QStringList*> *                 get_parasuffixes()          {return m_ParaSuffixes;}
     CSignatureCollection*                       get_passive_signatures()    { return m_PassiveSignatures;}
     CSignatureCollection*                       get_prefix_signatures()     { return m_PrefixSignatures;}
     CStemCollection *                           get_prefixal_stems()        { return m_prefixal_stems;}
@@ -282,7 +282,7 @@ public:
     //void                                        make_protostem_if_appropriate_prefix_case(QString this_word, QString next_word);
     void                                        mark_progress(int); // mark progress bar and process events too.
 
-    QString                                     process_a_word_into_stem_and_affix_possibly_paraaffix(int wordno, int stemlength, bool suffix_flag);
+    QString                                     process_a_word_into_stem_and_affix(int wordno, int stemlength, bool suffix_flag);
     void                                        initialize_progress(int max_value);
 
     void                                        attach_stem_to_intermediate_signature(QString stem);
@@ -395,6 +395,9 @@ public:
     void step9b_redirect_ptrs_in_sig_graph_edges_map(const DoomedSignatureInfoMap& ref_doomed_info_map);
     void step9c_from_doomed_info_map_to_hypotheses(const DoomedSignatureInfoMap& ref_doomed_info_map);
     void step10_find_compounds();
+    void find_hyphenated_compounds();
+    void find_stems_made_of_stems();
+    void find_words_made_of_words();
     void step11_find_allomorphic_signatures();
 
 

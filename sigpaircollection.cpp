@@ -19,10 +19,15 @@ void SigPairCollection::add(sig_pair* sigpair){
     return;
 }
 
-void CLexicon::find_all_suffixal_sigpairs(){  // currently not used
+void CLexicon::find_all_suffixal_sigpairs(){
     foreach (CWord* word, *m_Words->get_word_list()){
         for (int n = 0; n < word->get_suffixal_sigpairs()->length(); n++){
-            m_suffixal_sig_pairs->add( word->get_suffixal_sigpairs()->at(n) );
+            sig_pair* sigpair;
+            sigpair = word->get_suffixal_sigpairs()->at(n);
+            sigpair->m_sig_1 = m_Signatures->find_or_fail(sigpair->get_sig1_string());
+            sigpair->m_sig_2 = m_Signatures->find_or_fail(sigpair->get_sig2_string());
+            m_suffixal_sig_pairs->add( sigpair );
+
         }
     }
 }

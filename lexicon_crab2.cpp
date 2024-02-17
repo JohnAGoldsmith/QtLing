@@ -67,7 +67,7 @@ void CLexicon::Crab_2()
 
     replace_parse_pairs_from_current_signature_structure();
 
-    find_parasuffixes();
+   // find_parasuffixes();
 
 }
 
@@ -114,7 +114,7 @@ void CLexicon::find_parasuffixes(){
         for (int n = protostem->get_start_word(); n <= protostem->get_end_word(); n++){
             QString word = m_Words->get_word(n)->get_word();
             if (m_word2suffix_sigs.contains(word)) {continue;}
-            qDebug() << 129 << stem->get_stem() << m_Words->get_word(n)->get_word();
+            //qDebug() << 129 << stem->get_stem() << m_Words->get_word(n)->get_word();
         }
 
     }
@@ -128,27 +128,33 @@ void CLexicon::find_parasuffixes(int wordno, int stem_length, QStringList workin
     pSuffix =  m_Suffixes->find_or_fail(this_affix);
     if (! pSuffix ){
         add_parasuffix(this_affix, this_word);
+        qDebug() << 131 << this_affix << this_word;
         return;
     }
     working_affix_string_list.append(this_affix);
 }
+
+// not checked yet or verified:
 void CLexicon::find_paraprefixes(int wordno, int stem_length, QStringList working_affix_string_list){
-    CSuffix *pSuffix;
+    CPrefix *pPrefix;
     QString this_word = m_Words->get_string_from_sorted_list(wordno);
     QString this_affix = this_word.mid( stem_length );
     if (this_affix.length() == 0){this_affix = "NULL";}
-    pSuffix =  m_Suffixes->find_or_fail(this_affix);
-    if (! pSuffix ){
-        add_parasuffix(this_affix, this_word);
+    pPrefix =  m_Prefixes->find_or_fail(this_affix);
+    if (! pPrefix ){
+        add_paraprefix(this_affix, this_word);
         return;
     }
     working_affix_string_list.append(this_affix);
 }
 void  CLexicon::add_parasuffix(QString parasuffix, QString word){
+    m_ParaSuffixes->find_or_add(parasuffix);
+/*
     if (! m_ParaSuffixes->contains(parasuffix)){
         m_ParaSuffixes->insert(parasuffix, new QStringList());
     }
     m_ParaSuffixes->value(parasuffix)->append(word);
+*/
 }
 void  CLexicon::add_paraprefix(QString paraprefix, QString word){
     if (! m_ParaPrefixes->contains(paraprefix)){
@@ -207,7 +213,7 @@ void CLexicon::find_new_affixes(protostem* this_protostem, CSignatureCollection 
 
 
 
-QString CLexicon::process_a_word_into_stem_and_affix_possibly_paraaffix(int wordno, int stem_length, bool suffix_flag){
+QString CLexicon::process_a_word_into_stem_and_affix(int wordno, int stem_length, bool suffix_flag){
     QString word, affix;
     if (suffix_flag){
         CSuffix * pSuffix;
@@ -215,10 +221,12 @@ QString CLexicon::process_a_word_into_stem_and_affix_possibly_paraaffix(int word
         affix = word.mid( stem_length );
         if (affix.length() == 0){affix = "NULL";}
         pSuffix =  m_Suffixes->find_or_fail(affix);
+        /*
         if (! pSuffix ){
             add_parasuffix(affix, word);
             return QString();
         }
+        */
         return affix;
     } else{
         CPrefix* pPrefix;
@@ -226,10 +234,12 @@ QString CLexicon::process_a_word_into_stem_and_affix_possibly_paraaffix(int word
         affix = word.left(word.length() - stem_length);
         if (affix.length() == 0){ affix = "NULL"; }
         pPrefix = m_Prefixes->find_or_fail(affix);
+        /*
         if (! pPrefix){
             add_paraprefix(affix, word);
             return QString();
         }
+        */
         return affix;
     }
 }
@@ -284,16 +294,19 @@ void   CLexicon::find_good_signatures_inside_bad()  // step 2
         working_suffix_string_list.clear();
         working_prefix_string_list.clear();
         stem_t this_stem = this_protostem->get_stem();
+        if (this_stem == "ing"){
+            qDebug() << 288 << "ing is a stem??";
+        }
         int stem_length = this_stem.length();
         if (stems->find_or_fail( this_stem )){
             continue;
         }
         for (int wordno= this_protostem->get_start_word(); wordno <= this_protostem->get_end_word(); wordno++){
             if (m_suffix_flag){
-                this_affix = process_a_word_into_stem_and_affix_possibly_paraaffix(wordno, stem_length, m_suffix_flag);
+                this_affix = process_a_word_into_stem_and_affix(wordno, stem_length, m_suffix_flag);
                 working_suffix_string_list.append(this_affix);
             } else{
-                this_affix = process_a_word_into_stem_and_affix_possibly_paraaffix(wordno, stem_length, m_suffix_flag);
+                this_affix = process_a_word_into_stem_and_affix(wordno, stem_length, m_suffix_flag);
                 working_prefix_string_list.append(this_affix);
             }
         }
@@ -351,13 +364,20 @@ void   CLexicon::find_good_signatures_inside_bad()  // step 2
              if ( contains(sig_affix_list, best_sig_affix_list) &&
                   contains(working_suffix_string_list, sig_affix_list) &&
                   intersection_count(sig_affix_list, working_suffix_string_list) > best_intersection_count){
-                    pBestSig = pSig;
+                    //pBestSig = pSig;
                     best_intersection_count = intersection_count(sig_affix_list, working_suffix_string_list);
                     best_sig_affix_list = sig_affix_list;
              }
         }
         foreach (QString this_affix, best_sig_affix_list){
             add_parse(new CParse(this_stem, this_affix, m_suffix_flag));
+        }
+        foreach (QString affix, working_suffix_string_list){
+            if (best_sig_affix_list.contains(affix)){
+                continue;
+            }
+            CSuffix * parasuffix = m_ParaSuffixes->find_or_add(affix);
+            //parasuffix->add_stem();
         }
         // this is the right place to identify parasuffixes -- the extensions of *real* stems, not protostems (as is currently done).
     }// end of protostem loop

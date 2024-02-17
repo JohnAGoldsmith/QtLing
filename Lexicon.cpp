@@ -70,9 +70,9 @@ CLexicon::CLexicon(MainWindow * main_window, CLexicon* lexicon, bool suffix_flag
     m_Suffixes              = new CSuffixCollection(this);
     m_Prefixes              = new CPrefixCollection(this);
     m_ParaSignatures        = new CSignatureCollection(this, true);
-    //m_ParaSuffixes        = new CSuffixCollection(this);
+    m_ParaSuffixes          = new CSuffixCollection(this);
     m_ParaPrefixes          = new QMap<QString, QStringList*>;
-    m_ParaSuffixes          = new QMap<QString, QStringList*>;
+    //m_ParaSuffixes          = new QMap<QString, QStringList*>;
     m_ResidualStems         = new CStemCollection(this);
     m_PassiveSignatures     = new CSignatureCollection(this, true);
     m_suffix_flag          = suffix_flag;

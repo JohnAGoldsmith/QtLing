@@ -32,6 +32,7 @@ HEADERS += allosignatures.h \
            graphics.h \
            hypothesis.h \
            Lexicon.h \
+           latex.h \
            log2.h \
            lxamodels.h \
            mainwindow.h \
@@ -74,12 +75,14 @@ SOURCES += allosignatures.cpp \
            graphics_polygons.cpp \
            hypothesis.cpp \
            Lexicon.cpp \
+           latex.cpp \
            left_tree_view.cpp \
            lexicon_crab1.cpp \
            lexicon_crab2.cpp \
            lexicon_crab3_low_entropy_signatures.cpp \
            lexicon_crab4_split_morphemes.cpp \
            lexicon_crab_allomorphy.cpp \
+           lexicon_crab_compounds.cpp \
            lexicon_json.cpp \
            lexicon_output.cpp \
            lexicon_sublexicon.cpp \

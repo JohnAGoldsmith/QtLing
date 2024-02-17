@@ -26,26 +26,29 @@ int SigPairModel::rowCount(const QModelIndex &parent) const {
     return sig_pairs->count();
 }
 int SigPairModel::columnCount(const QModelIndex &parent ) const {
-    return 4;
+    return 5;
 }
 QVariant SigPairModel::data (const QModelIndex &index, int role) const {
     if (!index.isValid()) {
         return QVariant();
     }
     if (role == Qt::DisplayRole){
+        sig_pair * sigpair (sig_pairs->get_map()->values().at(index.row()));
         switch (index.column() ){
         case 0:
-            return QVariant(sig_pairs->get_map()->values().at(index.row())->get_sig1_string());
+            return QVariant(sigpair->get_sig1_string());
             break;
         case 1:
-            return QVariant(sig_pairs->get_map()->values().at(index.row())->get_sig2_string());
+            return QVariant(sigpair->get_sig2_string());
             break;
         case 2:
-            return QVariant(sig_pairs->get_map()->values().at(index.row())->get_morph());
+            return QVariant(sigpair->get_morph());
             break;
         case 3:
-            return QVariant(sig_pairs->get_map()->values().at(index.row())->get_my_stems().count());
+            return QVariant(sigpair->get_my_stems().count());
             break;
+        case 4:
+            return QVariant(sigpair->get_sig_2()->get_stem_entropy());
         }
     }
     return QVariant();
@@ -55,7 +58,7 @@ QVariant SigPairModel::headerData(int section, Qt::Orientation orientation, int 
         return QVariant();
     }
     QStringList these_headers;
-    these_headers  << "Sig 1" << "Sig 2" << "Diff" << "count" ;
+    these_headers  << "Sig 1" << "Sig 2" << "Diff" << "count" << "Sig 2 fullness";
     if (orientation == Qt::Orientation::Horizontal){
         return QVariant(these_headers[section]);
     }
@@ -149,10 +152,10 @@ void LxaStandardItemModel::load_words(CWordCollection* p_words)
 
         foreach (const Parse_triple* this_parse_triple, *pWord->get_parse_triple_list())  {
             item_list.append(new QStandardItem(this_parse_triple->m_sig_string)) ;
-        }
-        foreach(QString compound, pWord->get_compounds()){
+        }/*
+        foreach(QString compound, pWord->get_compounds()){                                       TO DO
             item_list.append(new QStandardItem(compound));
-        }
+        }*/
         appendRow(item_list);
     }
 }

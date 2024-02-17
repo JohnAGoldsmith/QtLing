@@ -7,7 +7,7 @@ CStemCollection::CStemCollection(CLexicon* lexicon)
     m_StringToStemMap       = new map_string_to_stem();
     m_CorpusCount			= 0;
     m_MemberName			= QString();
-    m_forward_sort_valid_flag			= 0;
+    m_forward_sort_valid_flag = false;
     m_SortStyle				= KEY;
     m_Lexicon               = lexicon;
 }
@@ -26,7 +26,7 @@ void CStemCollection::clear(){
         //delete stem; // memory leak TO DO
     }
     m_StringToStemMap->clear();
-    m_SortedStringList.clear();
+    //m_SortedStringList.clear();
     m_CorpusCount = 0;
 }
 CStem* CStemCollection::add(const QString& stem)
@@ -56,7 +56,7 @@ CStem* CStemCollection::get_from_string( QString stem)
 CStem* CStemCollection::get_at( int stemno)
 {
     if (!m_forward_sort_valid_flag){ sort_alphabetically();}
-    return m_StringToStemMap->value( m_SortedStringList[stemno]);
+    return m_stem_list->at(stemno);
 }
 QStringList CStemCollection::get_list_of_stem_strings(){
     QStringList result;
@@ -70,9 +70,9 @@ QStringList CStemCollection::get_list_of_stem_strings(){
 
 CStem* CStemCollection::find_or_add(const QString& stem)
 {
-    if (!m_forward_sort_valid_flag){
-        sort_alphabetically();
-    }
+    //if (!m_forward_sort_valid_flag){
+    //    sort_alphabetically();
+    //}
     if (m_StringToStemMap->contains(stem)){
         return m_StringToStemMap->value(stem);
     } else{
@@ -87,17 +87,20 @@ CStem* CStemCollection::find_or_fail(const QString& stem)
         return NULL;
     }
 }
-void CStemCollection::sort_alphabetically()
-{   m_SortedStringList.clear();
-    foreach(QString word, m_StringToStemMap->keys()){
-        m_SortedStringList.append(word);
-    }
+bool compare_stems_by_key(CStem* stem1, CStem* stem2){
+    return stem1->get_key() < stem2->get_key();
+}
 
-    m_SortedStringList.sort();
+void CStemCollection::sort_alphabetically()
+{   m_stem_list->clear();
+    foreach(CStem* stem, m_StringToStemMap->values()){
+        m_stem_list->append(stem);
+    }
+    std::sort(m_stem_list->begin(), m_stem_list->end(), compare_stems_by_key);
     m_forward_sort_valid_flag = true;
 }
 
 QString CStemCollection::get_string_at(int index) {
     if (!m_forward_sort_valid_flag) { sort_alphabetically();}
-        return m_SortedStringList[index];
+    return m_stem_list->at(index)->get_key();
 }

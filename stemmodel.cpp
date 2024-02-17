@@ -52,7 +52,7 @@ int stemmodel::rowCount(const QModelIndex &parent)const {
 }
 int stemmodel::columnCount(const QModelIndex &parent)const {
     Q_UNUSED(parent);
-    return 3;
+    return 4;
 }
 QModelIndex stemmodel::index(int row, int column, const QModelIndex &parent) const {
     Q_UNUSED(parent);
@@ -65,24 +65,30 @@ QVariant stemmodel::data(const QModelIndex & index, int role)const {
     int column = index.column();
     if (row > m_stems->size()){ return QVariant();}
     if (!m_stems){return QVariant();}
+    CStem* stem = m_stems->at(row);
     switch (column) {
     case 0:
-        if (role==Qt::DisplayRole){
-            CStem * stem = m_stems->at(row);
+        if (role==Qt::DisplayRole){             
             return QVariant(stem->get_key());
         }
         break;
     case 1:
         if (role==Qt::DisplayRole){
-            return QVariant(m_stems->at(row)->get_count());
+            return QVariant(stem->get_count());
         }
         break;
     case 2:
         if (role==Qt::DisplayRole){
-           return QVariant(m_stems->at(row)->get_last_signature()->get_key());
+            return QVariant(); // TO DO
+           return QVariant(stem->get_last_signature()->get_key());
         }
         break;
-
+    case 3:
+        if (role == Qt::DisplayRole){
+            if (stem->is_compound()){
+                return QVariant (stem->display_compound_structure());
+            }
+        }
     default:
         return QVariant();
         break;

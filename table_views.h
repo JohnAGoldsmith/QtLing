@@ -15,12 +15,13 @@ class CompoundWord;
 class TableView: public QTableView{
     Q_OBJECT
     MainWindow*         m_main_window;
-
+    eDataType               m_data_type;     // this says the kind of thing in the table, so another view knows how to handle the information
 public:
     TableView(MainWindow* main_window);
     void show_model(const QModelIndex& index); // gets index from the TreeView on the left side of screen -- has a string which is the name of a component
 
-
+    eDataType               get_data_type()                             {return m_data_type;}
+    void                    set_data_type(eDataType type)               {m_data_type = type;}
 };
 
 

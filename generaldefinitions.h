@@ -5,6 +5,8 @@
 //class CStem;
 class CSignature;
 
+typedef QPair<QString, QString> Compound;
+
 enum eAffixType{
     AT_prefix,
     AT_suffix,
@@ -45,6 +47,7 @@ enum eDataType{
     e_data_hypotheses,
     e_data_hollow_suffixal_signatures,
     e_data_hollow_prefixal_signatures,
+    e_sig_pairs,
     // for gold standard
     e_data_gs_true_positive_parses,
     e_data_gs_retrieved_parses,

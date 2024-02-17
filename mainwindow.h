@@ -220,6 +220,8 @@ public:
     void                                    display_words();
     void                                    display_suffixes(CLexicon*);
     void                                    display_prefixes(CLexicon*);
+    void                                    display_parasuffixes(CLexicon*);
+    void                                    display_paraprefixes(CLexicon*);
     void                                    display_suffix_stems(CLexicon*);
     void                                    display_prefix_stems(CLexicon*);
     void                                    display_suffix_signatures(CLexicon*);

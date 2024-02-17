@@ -37,7 +37,7 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
     residual_sig_items.append(residual_sig_count_item);
 
     QStandardItem * parasuffix_item = new QStandardItem(QString("Parasuffixes"));
-    QStandardItem * parasuffix_count_item = new QStandardItem(QString::number(lexicon->get_parasuffixes()->count()));
+    QStandardItem * parasuffix_count_item = new QStandardItem(QString::number(lexicon->get_parasuffixes()->get_count()));
     QList<QStandardItem*> parasuffix_items;
     parasuffix_items.append(parasuffix_item);
     parasuffix_items.append(parasuffix_count_item);
@@ -101,6 +101,9 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
     }
     if (m_my_lexicon->get_parses()->count() > 0 ){
         helper_function("Parses", m_my_lexicon->get_parses()->count(), lexicon_item);
+    }
+    if (m_my_lexicon->get_parasuffixes()->get_count() > 0 ){
+        helper_function("Parasuffixes", m_my_lexicon->get_parasuffixes()->get_count(), lexicon_item);
     }
 
     if (m_my_lexicon->get_hypotheses()->count() > 0 )

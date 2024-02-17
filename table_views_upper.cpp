@@ -250,6 +250,9 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
             return;
             //--------------------------------------------------------------------------------
         }
+        if (component == "Parasuffixes"){
+            m_parent_window->display_parasuffixes(m_parent_window->get_lexicon());
+        }
         if (component == "Prefixes"){
             m_parent_window->display_prefixes(m_parent_window->get_lexicon());
             set_data_type(e_data_prefixes);

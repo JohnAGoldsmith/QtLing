@@ -657,6 +657,7 @@ void MainWindow::display_models(const QModelIndex & index){
     if (component == "Prefixal stems")      { display_prefix_stems(m_my_lexicon);        return;}
     if (component == "Suffixal protostems") { display_suffixal_protostems(m_my_lexicon); return;} // this currently doesn´t happen
     if (component == "Suffixes")            { display_suffixes(m_my_lexicon);            return;}
+    if (component == "Parasuffixes")        { display_parasuffixes(m_my_lexicon);            return;}
     if (component == "Suffixal sig pairs")              { display_suffixal_sigpairs(m_my_lexicon);            return;}
 
 }

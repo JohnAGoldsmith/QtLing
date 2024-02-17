@@ -20,10 +20,11 @@ protected:
     int                         m_CorpusCount;
     QString                     m_MemberName;
     QList<CStem*> *             m_stem_list;
-    QStringList                 m_SortedStringList;
+    //QStringList                 m_SortedStringList;
     bool                        m_forward_sort_valid_flag;
     enum   eSortStyle           m_SortStyle;
     CLexicon*                   m_Lexicon;
+
 public:
     CStemCollection(CLexicon*);
     ~CStemCollection();

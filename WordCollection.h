@@ -57,6 +57,7 @@ public:
     QString                 get_string_from_end_sorted_list(int n){return m_end_sorted_list[n];}
     QList<CWord*> *         get_word_list() {return & m_word_list;}
     CWord*                  get_word(int n);
+    CWord*                  get_at(int n) {get_word(n);}
     int                     get_word_count();
     const QMap<QString, CWord*> get_map() {return m_WordMap;}
     void                    input_words(QMap<QString, int> word_counts);

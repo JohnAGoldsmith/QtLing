@@ -28,6 +28,8 @@ void MainWindow::display_suffix_stems(CLexicon* lexicon){
     m_stem_model_proxy_1->setSourceModel(m_suffixal_stem_model);
     m_tableView_upper_temp->setModel(m_stem_model_proxy_1);
 }
+
+
 void MainWindow::display_prefix_stems(CLexicon* lexicon){
     if (m_prefixal_stem_model) {delete m_prefixal_stem_model;}
     m_prefixal_stem_model = new stemmodel(m_my_lexicon->get_prefixal_stems());
@@ -39,11 +41,21 @@ void MainWindow::display_suffixal_sigpairs(CLexicon* lexicon){
     QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
     proxyModel->setSourceModel(m_suffixal_sigpair_model);
     m_tableView_upper_temp->setModel(proxyModel);
-
+    m_tableView_upper_temp->set_data_type(e_sig_pairs);
     //m_tableView_upper_temp->setModel(m_suffixal_sigpair_model);
+}
+void MainWindow::display_parasuffixes(CLexicon* lexicon)
+{   // new
+    Q_UNUSED (lexicon)
+
+    if (m_suffix_model) {delete m_suffix_model;}
+    m_suffix_model = new affixmodel(get_lexicon()->get_parasuffixes()->get_suffix_list());
+    m_affix_model_proxy_1->setSourceModel(m_suffix_model);
+    m_tableView_upper_temp->setModel(m_affix_model_proxy_1);
 
 
 }
+
 
 /**
  * @brief MainWindow::display_suffix_signatures

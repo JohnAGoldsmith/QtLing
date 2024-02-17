@@ -32,6 +32,7 @@
 #include "log2.h"
 #include "mdl.h"
 #include "mainwindow.h"
+#include "latex.h"
 
 void SortQStringListFromRight(QStringList& ThisStringList);
 //bool reverse_string_compare(QString,QString);
@@ -77,28 +78,6 @@ void CLexicon::Crab_1()
     m_suffix_flag?
        m_Signatures->calculate_sig_robustness():
        m_PrefixSignatures->calculate_sig_robustness(); 
-}
-
-
-/**
- * @brief CLexicon::Crab_5
- *
- */
-void CLexicon::Crab_5()
-{
-   m_StatusBar->showMessage("Crab 5:find simple compounds.");
-   step10_find_compounds();
-   m_StatusBar->showMessage("Crab 5:simple compounds completed.");
-}
-/**
- * @brief CLexicon::Crab_compounds
- *
- */
-void CLexicon::Crab_compounds()
-{
-   m_StatusBar->showMessage("Crab compounds:find simple compounds.");
-   step10_find_compounds();
-   m_StatusBar->showMessage("Crab compounds:simple compounds completed.");
 }
 
 
@@ -474,9 +453,11 @@ QString clean(QString string){
 
 void CLexicon::step4e_link_all_words_to_signatures(QString name_of_calling_function){
     QString word, word_split, stem, sig_string;
-
+    latex this_latex;
+    this_latex.tabular_beginning(QString ("l l l l "));
     if (m_suffix_flag){
         foreach (CSignature* pSig, *m_Signatures->get_signature_list()){
+            this_latex.tabular(pSig);
             sig_string = pSig->get_key();
             foreach (CStem* pStem, *pSig->get_stems()){
                 stem = pStem->get_key();
