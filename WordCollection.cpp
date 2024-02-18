@@ -62,7 +62,7 @@ int CWordCollection::get_token_count(){
     while(iter.hasNext())
     {
         iter.next();
-        total += iter.value()->get_word_count();
+        total += iter.value()->count();
         //qDebug() << iter.key() << " : " << iter.value();
     }
     qDebug() << total;

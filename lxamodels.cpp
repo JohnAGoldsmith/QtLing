@@ -147,7 +147,7 @@ void LxaStandardItemModel::load_words(CWordCollection* p_words)
         item_list.append(new QStandardItem(pWord->get_key()));
 
         QStandardItem* pItem2 = new QStandardItem();
-        pItem2->setData(pWord->get_word_count(), Qt::DisplayRole); // --- Numerical data
+        pItem2->setData(pWord->count(), Qt::DisplayRole); // --- Numerical data
         item_list.append(pItem2);
 
         foreach (const Parse_triple* this_parse_triple, *pWord->get_parse_triple_list())  {
@@ -260,7 +260,7 @@ void LxaStandardItemModel::load_suffixes(CSuffixCollection * p_suffixes)
     while (suffix_iter.hasNext())
     {
         CSuffix* pSuffix = suffix_iter.next();
-        QStandardItem *item = new QStandardItem(pSuffix->GetSuffix());
+        QStandardItem *item = new QStandardItem(pSuffix->get_key());
         QStandardItem *item2 = new QStandardItem();
         item2->setData(pSuffix->get_sig_count(), Qt::DisplayRole); // --- Numerical data --- //
         QList<QStandardItem*> item_list;

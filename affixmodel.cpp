@@ -27,10 +27,10 @@ bool lessthan_prefix_key(CPrefix* a, CPrefix* b){
     return a->get_key() < b->get_key();
 }
 bool greaterthan_suffix_count(CSuffix* a, CSuffix* b){
-    return a->get_count() > b->get_count();
+    return a->count() > b->count();
 }
 bool lessthan_suffix_count(CSuffix* a, CSuffix* b){
-    return a->get_count() < b->get_count();
+    return a->count() < b->count();
 }
 bool greaterthan_prefix_count(CPrefix* a, CPrefix* b){
     return a->get_count() > b->get_count();
@@ -119,9 +119,9 @@ QVariant affixmodel::data(const QModelIndex & index, int role)const {
     case 1:
         if (role==Qt::DisplayRole){
             if (m_suffixes){
-                return QVariant(m_suffixes->at(row)->get_sig_count());
+                return QVariant(m_suffixes->at(row)->count());
             } else {
-                return QVariant(m_prefixes->at(row)->get_sig_count());
+                return QVariant(m_prefixes->at(row)->GetFrequency());
             }
         }
         break;

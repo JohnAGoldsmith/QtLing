@@ -2,7 +2,7 @@
 #include "Word.h"
 #include "sigpair.h"
 
-CWord::CWord(QString word) :  m_Word(word), m_WordCount(0), m_morpheme_parse(word)
+CWord::CWord(QString word) :  m_key(word), m_count(0), m_morpheme_parse(word)
 {
     //m_Signatures.clear();
     //m_morpheme_parse  = MorphemeParse(word);
@@ -11,8 +11,8 @@ CWord::CWord(QString word) :  m_Word(word), m_WordCount(0), m_morpheme_parse(wor
 }
 
 CWord::CWord(CWord& word):m_morpheme_parse (*word.get_morpheme_parse())
-{   m_WordCount = word.get_word_count();
-    m_Word      = word.get_word();
+{   m_count = word.count();
+    m_key      = word.get_key();
     //m_Signatures.clear();
  }
 
@@ -36,8 +36,8 @@ QString parse_triple_list_display(QList<Parse_triple*> triples){
 }
 QString CWord::display(){
     QString result;
-    result = "word: " + m_Word + "; " +
-            "count: " + QString::number(m_WordCount) + " "; // +
+    result = "word: " + m_key + "; " +
+             "count: " + QString::number(m_count) + " "; // +
             if (m_suffixal_parse_triple_list.count() > 0) {
                     result += "suffixal parse triples: " + parse_triple_list_display(m_suffixal_parse_triple_list) + " ";
             }
@@ -62,9 +62,9 @@ void CWord::analyze_as_compound(QString c1, QString c2){
 }
 void CWord::IncrementWordCount (int n )
 {
-  m_WordCount += n;
-  Q_ASSERT (m_WordCount > 0);
-  Q_ASSERT (m_WordCount < 1000000);
+    m_count += n;
+    Q_ASSERT (m_count > 0);
+    Q_ASSERT (m_count < 1000000);
 }
 void CWord::add_suffixal_parse_triple(QString stem, QString affix, QString sig_string)
 {

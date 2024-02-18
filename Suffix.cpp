@@ -5,12 +5,13 @@
 
 CSuffix::CSuffix(QString  suffix): m_key(suffix)
 {m_sig_count = 0;
+    m_count = 0;
 }
 
 CSuffix::CSuffix(CSuffix& suffix)
 {
     m_key = suffix.get_key();
-    m_frequency = suffix.GetFrequency();
+    m_count = suffix.count();
     m_sig_count = 0;
 }
 

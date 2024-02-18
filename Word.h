@@ -34,8 +34,8 @@ class CWord
 {
     friend class LowerTableView;
 protected:
-    QString                             m_Word;
-    int                                 m_WordCount;
+    QString                             m_key;
+    int                                 m_count;
     QList<Parse_triple*>                m_suffixal_parse_triple_list;
     QList<Parse_triple*>                m_prefixal_parse_triple_list;
     QList<sig_pair*>                    m_suffixal_sigpairs;
@@ -71,18 +71,18 @@ public:
     void                 add_to_autobiography(QString line);
     //void                                clear_signatures() { m_Signatures.clear();}
     void                 clear_parse_triple_map();
-    QString              get_key() {return m_Word;}
-    int                  get_word_count() const  { return m_WordCount; }
+    QString              get_key() {return m_key;}
+    int                  count() const  { return m_count; }
     QList<Parse_triple*>* get_parse_triple_list()     { return & m_suffixal_parse_triple_list; }
     QList<Parse_triple*>* get_prefixal_parse_triple_list()     { return & m_prefixal_parse_triple_list; }
     bool                 contains_this_stem_among_parses (QString stem);
    // QStringList          get_compounds(){return m_Compounds;}
     MorphemeParse *      get_morpheme_parse() {return & m_morpheme_parse;}
     QList<sig_pair*> *   get_suffixal_sigpairs();
-    QString              get_word()      const { return m_Word; }
+    //QString              get_word()      const { return m_key; }
     QList<ptr_to_stem_sig_pair> get_signatures() {return m_Signatures;}
     void                 IncrementWordCount(int n = 1);
-    void                 SetWordCount(int count) { m_WordCount = count;}
+    void                 SetWordCount(int count) { m_count = count;}
     void                 sort_suffixal_parse_triple_list();
     void                 sort_prefixal_parse_triple_list();
     void                 set_json_id(const int id) {m_json_id = id;}

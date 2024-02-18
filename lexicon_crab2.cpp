@@ -112,7 +112,7 @@ void CLexicon::find_parasuffixes(){
     foreach (CStem* stem, *m_suffixal_stems->get_stem_list()){
         CStem* protostem = m_suffix_protostems->find_or_fail(stem->get_stem());
         for (int n = protostem->get_start_word(); n <= protostem->get_end_word(); n++){
-            QString word = m_Words->get_word(n)->get_word();
+            QString word = m_Words->get_word(n)->get_key();
             if (m_word2suffix_sigs.contains(word)) {continue;}
             //qDebug() << 129 << stem->get_stem() << m_Words->get_word(n)->get_word();
         }
@@ -377,7 +377,7 @@ void   CLexicon::find_good_signatures_inside_bad()  // step 2
                 continue;
             }
             CSuffix * parasuffix = m_ParaSuffixes->find_or_add(affix);
-            //parasuffix->add_stem();
+            qDebug() << 380 << "add parasuffix "<< affix;
         }
         // this is the right place to identify parasuffixes -- the extensions of *real* stems, not protostems (as is currently done).
     }// end of protostem loop

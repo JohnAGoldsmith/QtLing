@@ -31,7 +31,7 @@ QStringList latex::tabular_word_counts( CWordCollection* words, int number_of_co
     int colno = 0;
     for (int n = 0; n< words->get_count(); n++) {
         CWord* word = words->get_word(n);
-        temp << word->get_word() << QString::number(word->get_word_count());
+        temp << word->get_key() << QString::number(word->count());
         if (colno == number_of_columns || n == words->get_word_count() ){
             line_list.append (temp.join(" & ") + " \\\\");
             temp.clear();

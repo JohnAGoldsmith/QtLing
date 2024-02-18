@@ -19,10 +19,10 @@ bool greaterthan_key(CWord* a, CWord* b){
     return a->get_key() > b->get_key();
 }
 bool lessthan_word_count(CWord* a, CWord* b){
-    return a->get_word_count() < b->get_word_count();
+    return a->count() < b->count();
 }
 bool greaterthan_word_count(CWord* a, CWord* b){
-    return a->get_word_count() > b->get_word_count();
+    return a->count() > b->count();
 }
 void wordmodel::sort(int column, Qt::SortOrder order){
     switch(column){
@@ -67,7 +67,7 @@ QVariant wordmodel::data(const QModelIndex & index, int role)const {
     switch (column) {
     case 0:{
         if (role==Qt::DisplayRole){
-            return QVariant(m_words->get_word(row)->get_word());
+            return QVariant(m_words->get_word(row)->get_key());
         } else{
             return QVariant();
         }
@@ -78,7 +78,7 @@ QVariant wordmodel::data(const QModelIndex & index, int role)const {
     }
     case 1:{
         if (role==Qt::DisplayRole){
-            return QVariant(m_words->get_word(row)->get_word_count());
+            return QVariant(m_words->get_word(row)->count());
         } else{
             return QVariant();
         }

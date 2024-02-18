@@ -332,7 +332,7 @@ word_and_count_list * CSignature::get_word_and_count_vectors(word_and_count_list
                 }
                 CWord* pWord = get_signatures()->get_lexicon()->get_word_collection()->find_or_fail(this_word);
                 if (pWord) {
-                    word_and_count* pWord_and_count = new word_and_count(pWord->get_key(),pWord->get_word_count());
+                    word_and_count* pWord_and_count = new word_and_count(pWord->get_key(),pWord->count());
                     this_vector->append(pWord_and_count);
                 }else{
                     //  FAILURE --

@@ -221,7 +221,7 @@ void MDL::process_a_stem_given_a_signature_and_its_words( CSignature * sig, QStr
              // This is how we guarantee a word has only one analysis in this current implementation.
              // However I am not sure that this is not creating problems.
          } else{
-             int this_word_token_count = pWord->get_word_count();
+             int this_word_token_count = pWord->count();
              adjust_word_token_count(word, this_word_token_count);                                           // stems is affected only here.
              adjust_stem_token_count(stem, this_word_token_count);
              adjust_affix_token_count_For_Choice(affix, word, this_word_token_count, sigstring);
@@ -393,7 +393,7 @@ void MDL::process_unanalyzed_words(QTextStream & out_distributions, QTextStream 
         CWord* pWord = m_Lexicon->get_words()->get_word(i);
         if (! word2sig.contains(pWord->get_key())){
             qDebug() << 321 << "unanalyzed";
-            m_token_count_of_unanalyzed_words += pWord->get_word_count();
+            m_token_count_of_unanalyzed_words += pWord->count();
             m_type_count_of_unanalyzed_words++;
         }
     }
@@ -412,7 +412,7 @@ void MDL::process_unanalyzed_words(QTextStream & out_distributions, QTextStream 
         //bool analyzed_flag = false;
         QString word = pWord->get_key();
         if (! word2sig.contains(word) ){
-            int count = pWord->get_word_count();
+            int count = pWord->count();
             m_word_token_counts[word] = count; // unanalyzed words are affected here; analyzed words are affected elsewhere
             unanalyzed_words.insert(word, unanalyzed_words.count());
             double ratio = count / m_token_count_of_unanalyzed_words;

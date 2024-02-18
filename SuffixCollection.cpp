@@ -39,16 +39,17 @@ CSuffix* CSuffixCollection::find_or_fail(const QString& suffix)
 }
 CSuffix* CSuffixCollection::find_or_add(const QString& suffix)
 {
-
-    QMap<QString,CSuffix*>::iterator suffix_iter = m_suffix_map.find(suffix);
-
-    if (suffix_iter == m_suffix_map.end()){
-      CSuffix* pSuffix = new CSuffix(suffix);
+    CSuffix* pSuffix;
+    if (! m_suffix_map.contains(suffix)){
+        CSuffix* pSuffix = new CSuffix(suffix);
         m_suffix_map.insert(suffix, pSuffix);
-      m_suffix_list.append(pSuffix);
-      return pSuffix;
+        m_suffix_list.append(pSuffix);
+        pSuffix->increment_count(1);
+        return pSuffix;
     }
-    return suffix_iter.value();
+    pSuffix = m_suffix_map.value(suffix);
+    pSuffix->increment_count();
+    return pSuffix;
 }
 
 

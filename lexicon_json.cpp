@@ -736,14 +736,14 @@ void CWord::write_json(QJsonObject &ref_json, eJsonType json_type) const
     */
     switch (json_type) {
         case INDEXED: {
-            ref_json["count"] = m_WordCount;
+        ref_json["count"] = m_count;
             ref_json["id"] = m_json_id;
             //ref_json["parses"] = arr_parses;
-            ref_json["word"] = m_Word;
+            ref_json["word"] = m_key;
             return;
         }
         case MAPPED: {
-            ref_json["count"] = m_WordCount;
+            ref_json["count"] = m_count;
             return;
         }
     }
