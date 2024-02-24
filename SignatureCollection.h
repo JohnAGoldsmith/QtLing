@@ -75,10 +75,11 @@ public:
     QList<CSignature*> *                    get_signature_list()            { return & m_signature_list;}
     QMap<QString, CSignature*> *            get_signature_map()             {  return & m_signature_map;}
     QListIterator<CSignature*>   *          get_sorted_list_iterator();
+    QList<CSignature*> *                    get_sort_list()               {return & m_sort_list;}
     bool                                    get_suffix_flag()               { return m_suffix_flag;}
     int                                     get_total_count_of_letters_in_all_signatures();
     double                                  get_description_length();
-    void                                    sort(eSortStyle);
+    void                                    sort(eSortStyle=SIG_BY_REVERSE_ROBUSTNESS);
     void                                    sort_signatures_by_affix_count();
     void                                    sort_each_signatures_stems_alphabetically();
     void                                    sort_signatures_by_secondary_stem_count();
@@ -89,5 +90,6 @@ public:
     void                                    check_singleton_signatures(const QString& message);
 
     void                                    calculate_sig_robustness();
+    void                                    produce_latex();
 };
 #endif // CSIGNATURECOLLECTION_H

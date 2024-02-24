@@ -92,6 +92,7 @@ public:
     int                         get_robustness()  ;
     void                        increment_robustness(int increment) ;
     QString                     get_highfreq_edge_letters(float frequency_threshold);
+    QStringList                 signature2latex_string_list();
 };
 
 #endif // CSIGNATURE_H

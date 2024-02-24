@@ -32,6 +32,7 @@ HEADERS += allosignatures.h \
            graphics.h \
            hypothesis.h \
            Lexicon.h \
+           hypothesismodel.h \
            latex.h \
            log2.h \
            lxamodels.h \
@@ -75,6 +76,7 @@ SOURCES += allosignatures.cpp \
            graphics_polygons.cpp \
            hypothesis.cpp \
            Lexicon.cpp \
+           hypothesismodel.cpp \
            latex.cpp \
            left_tree_view.cpp \
            lexicon_crab1.cpp \

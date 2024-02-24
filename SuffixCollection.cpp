@@ -38,17 +38,16 @@ CSuffix* CSuffixCollection::find_or_fail(const QString& suffix)
 
 }
 CSuffix* CSuffixCollection::find_or_add(const QString& suffix)
-{
-    CSuffix* pSuffix;
+{    CSuffix* pSuffix;
     if (! m_suffix_map.contains(suffix)){
         CSuffix* pSuffix = new CSuffix(suffix);
         m_suffix_map.insert(suffix, pSuffix);
         m_suffix_list.append(pSuffix);
-        pSuffix->increment_count(1);
+        //pSuffix->increment_count(1);
         return pSuffix;
     }
     pSuffix = m_suffix_map.value(suffix);
-    pSuffix->increment_count();
+    //pSuffix->increment_count();
     return pSuffix;
 }
 
@@ -68,6 +67,7 @@ bool count_compare_suffixes(CSuffix* pSuff1, CSuffix* pSuff2){
 
 void CSuffixCollection::sort_by_count()
 {
+    m_suffix_list.clear();
     QMapIterator<QString, CSuffix*> suffix_iter (m_suffix_map);
     while (suffix_iter.hasNext()){
         suffix_iter.next();

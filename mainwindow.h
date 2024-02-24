@@ -232,7 +232,7 @@ public:
     void                                    display_epositive_suffix_signatures(CLexicon*);
     void                                    display_epositive_prefix_signatures(CLexicon*);
     void                                    display_signature_graph_edges(CLexicon* );
-    void                                    display_hypotheses();
+    void                                    display_hypotheses(CLexicon*);
 //    void                                    DisplaySignatures();
     void                                    do_crab1();
     CLexicon*                               get_lexicon()                       { return m_my_lexicon;  }

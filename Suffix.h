@@ -11,7 +11,7 @@ class Affix
 {
 protected:
     QString m_key;
-    int     m_count;
+    int     m_word_count;
     int     m_sig_count;
     int     m_json_id;
     bool    m_suffix_flag;
@@ -22,11 +22,11 @@ public:
     //Accessors
     QString get_key() const                 {return m_key;}
     QString get_affix() const               { return m_key;    }
-    void    set_count(int frequency)        { m_count = frequency; }
+    void    set_count(int frequency)        { m_word_count = frequency; }
     int     get_sig_count() const           { return m_sig_count;}
     int     increment_sig_count()           { m_sig_count+= 1; return m_sig_count;}
-    int     increment_count()               { m_count++;}
-    int     count()                         { return m_count;}
+    int     increment_count()               { m_word_count++; return m_word_count;}
+    int     count()                         { return m_word_count;}
 
     void    write_json(QJsonObject& ref_json, eJsonType json_type = INDEXED) const;
     void    read_json(const QJsonObject& ref_json);
@@ -37,7 +37,7 @@ class CSuffix
 {
 protected:
     QString m_key;      // json tag: "suffix"
-    int     m_count;    // json tag: "frequency"
+    int     m_word_count;    // json tag: "frequency"
     int     m_sig_count;        // json tag: "count"
     int     m_json_id;      // json tag: "id"
 public:
@@ -47,12 +47,13 @@ public:
 public:
     //Accessors
     QString get_key() const              { return m_key;}
-    int     count()                      { return m_count; }
-    void    set_count(int frequency)     { m_count = frequency; }
+    int     count()                      { return m_word_count; }
+    void    set_count(int frequency)     { m_word_count = frequency; }
     int     get_sig_count() const        { return m_sig_count;}
+    int     get_word_count()                { return m_word_count;}
     int     increment_sig_count()        { m_sig_count+= 1; return m_sig_count;}
-    int     increment_count(int n =1 )   { m_count += n;}
-
+    int     increment_count(int n =1 )   { m_word_count += n; return m_word_count;}
+    int     increment_word_count(int n =1 )   { m_word_count += n; return m_word_count;}
     void    write_json(QJsonObject& ref_json, eJsonType json_type = INDEXED) const;
     void    read_json(const QJsonObject& ref_json);
     int     get_json_id() const { return m_json_id; }
@@ -65,6 +66,7 @@ protected:
     QString m_key;      // json tag: "suffix"
     int m_frequency;    // json tag: "frequency"
     int m_sig_count;        // json tag: "count"
+    int m_word_count;
     int m_json_id;      // json tag: "id"
 public:
     CPrefix(QString ssWord);
@@ -76,7 +78,9 @@ public:
     int     GetFrequency()                  { return m_frequency; }
     void    SetFrequency(int frequency)     { m_frequency = frequency; }
     int     get_sig_count() const               { return m_sig_count;}
+    int     get_word_count()                    {return m_word_count;}
     int     increment_sig_count()               { m_sig_count+= 1; return m_sig_count;}
+    int     increment_word_count(int n)     { m_word_count += n; return m_word_count;}
     int     get_count()                     { return m_frequency; }
 
     void    write_json(QJsonObject& ref_json, eJsonType json_type = INDEXED) const;

@@ -1,8 +1,10 @@
 #include "SignatureCollection.h"
 #include <QDebug>
 #include <QtMath>
+#include <QFile>
 #include "Typedefs.h"
 #include "Lexicon.h"
+#include "latex.h"
 
 CSignatureCollection::CSignatureCollection(CLexicon* p_lexicon, bool suffix_flag)
 {
@@ -399,4 +401,72 @@ void CSignatureCollection::compute_signature_transforms(bool suffix_flag, QTextS
     {   sig_iter.next();
         sig_iter.value()->compute_signature_transforms(suffix_flag, sig_transforms);
     }
+}
+void CSignatureCollection::produce_latex(){
+
+    QString file_name;
+    file_name = "../../../../Dropbox/data/english/lxa/signatures.txt";
+    QFile out_file (file_name);
+    if (! out_file.open(QFile::WriteOnly | QFile::Text))
+    {   qDebug() << "************  no file opened for writing output, file output.cpp";
+        return;
+    }
+    QTextStream textstream (&out_file);
+    textstream.setFieldAlignment(QTextStream::AlignRight);
+    QMap<int, int> max_column_width;
+    int number_of_columns = 5;
+    for (int n = 0; n < number_of_columns; n++){ max_column_width[n] = 0;}
+    QStringList result, temp_stringlist;
+    double sum=0;
+    QString alignments = "l l l l l";
+    latex Latex;
+    sort();
+    result = Latex.tabular_beginning(alignments);
+    foreach (CSignature* sig, m_sort_list){
+        sum += sig->get_robustness();
+        qDebug() << sum;
+    }
+    foreach (CSignature* sig, m_sort_list){
+        temp_stringlist = sig->signature2latex_string_list();
+        if (temp_stringlist[0].length() > max_column_width[0]) {
+            max_column_width[0] = temp_stringlist[0].length();
+        }
+        if (temp_stringlist[1].length() > max_column_width[1]) {
+            max_column_width[1] = temp_stringlist[1].length();
+        }
+        if (temp_stringlist[2].length() > max_column_width[2]) {
+            max_column_width[2] = temp_stringlist[0].length();
+        }
+        if (temp_stringlist[3].length() > max_column_width[3]) {
+            max_column_width[3] = temp_stringlist[3].length();
+        }
+        QString robustness_ratio;
+        robustness_ratio = QString::number(sig->get_robustness()/sum);
+        if (robustness_ratio.length() > max_column_width[4]) {
+            max_column_width[4] = robustness_ratio.length();
+        }
+    }
+    double running_robustness_sum (0.0);
+    foreach (CSignature* sig, m_sort_list){
+        temp_stringlist = sig->signature2latex_string_list();
+        for (int n = 0; n < 4; n++){
+            textstream << temp_stringlist[n] + " & ";
+        }
+        QString robustness_ratio_string;
+        double robustness_ratio;
+        robustness_ratio =  sig->get_robustness()/sum;
+        robustness_ratio_string = QString::number(robustness_ratio);
+        //robustness_ratio_string.resize(max_column_width[4]);
+        textstream << robustness_ratio_string  << " & ";
+
+        running_robustness_sum += robustness_ratio;
+        textstream << QString::number(running_robustness_sum * 100.0);
+        textstream << "\\\\";
+        textstream << Qt::endl;
+    }
+
+
+    result.append(Latex.tabular_ending());
+    out_file.close();
+
 }

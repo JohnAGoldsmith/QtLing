@@ -14,6 +14,7 @@ void MainWindow::display_words()
     m_tableView_upper_temp->setModel(m_word_model_proxy_1);
 
     // ------------ old --------------------------------------------------
+    /*
     m_tableView_upper_left->setModel(m_proxy_models["Words"]);
     m_tableView_upper_left->set_data_type ( e_data_words );
     m_tableView_upper_left->resizeColumnsToContents();
@@ -21,6 +22,7 @@ void MainWindow::display_words()
     m_tableView_upper_right->setModel(m_proxy_models["Words 2"]);
     m_tableView_upper_right->set_data_type ( e_data_words );
     m_tableView_upper_right->resizeColumnsToContents();
+    */
 }
 void MainWindow::display_suffix_stems(CLexicon* lexicon){
     if (m_suffixal_stem_model) {delete m_suffixal_stem_model;}
@@ -52,6 +54,30 @@ void MainWindow::display_parasuffixes(CLexicon* lexicon)
     m_suffix_model = new affixmodel(get_lexicon()->get_parasuffixes()->get_suffix_list());
     m_affix_model_proxy_1->setSourceModel(m_suffix_model);
     m_tableView_upper_temp->setModel(m_affix_model_proxy_1);
+
+
+}
+/**
+ * @brief MainWindow::display_hypotheses
+ * This is called by a QAction.
+ */
+void MainWindow::display_hypotheses(CLexicon* lexicon)
+{
+    // new
+
+
+
+    // old
+    m_tableView_upper_left->setModel(m_proxy_models["Hypotheses 2"]);
+    //m_tableView_upper_left->set_proxy_source_model(m_Models["Hypotheses"]);
+    m_tableView_upper_left->set_data_type ( e_data_hypotheses );
+    m_tableView_upper_left->resizeColumnsToContents();
+    m_tableView_upper_left->model()->sort(4, Qt::DescendingOrder); // word count column
+
+    //m_tableView_upper_left->setModel(m_proxy_models["Hypotheses 2"]);
+    //m_tableView_upper_right->set_proxy_source_model(m_Models["Hypotheses 2"]);
+    m_tableView_upper_right->set_data_type ( e_data_hypotheses );
+    m_tableView_upper_right->resizeColumnsToContents();
 
 
 }
@@ -232,24 +258,5 @@ void MainWindow::display_signature_graph_edges(CLexicon* ){
 }
 
 
-/**
- * @brief MainWindow::display_hypotheses
- * This is called by a QAction.
- */
-void MainWindow::display_hypotheses()
-{
-    m_tableView_upper_left->setModel(m_proxy_models["Hypotheses 2"]);
-    //m_tableView_upper_left->set_proxy_source_model(m_Models["Hypotheses"]);
-    m_tableView_upper_left->set_data_type ( e_data_hypotheses );
-    m_tableView_upper_left->resizeColumnsToContents();
-    m_tableView_upper_left->model()->sort(4, Qt::DescendingOrder); // word count column
-
-    //m_tableView_upper_left->setModel(m_proxy_models["Hypotheses 2"]);
-    //m_tableView_upper_right->set_proxy_source_model(m_Models["Hypotheses 2"]);
-    m_tableView_upper_right->set_data_type ( e_data_hypotheses );
-    m_tableView_upper_right->resizeColumnsToContents();
-
-
-}
 
 

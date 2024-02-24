@@ -10,7 +10,6 @@
 #include "generaldefinitions.h"
 
 class CSuffix;
-class CSignature;
 class CJsonInfo;
 
 class CStem
@@ -23,6 +22,7 @@ protected:
     // but the parasignature has not yet been approved.
     int                 m_count;                // json tag: "count"
     QStringList         m_Autobiography;        // json tag: "autobiography"
+    int                 m_word_type_count;
     int                 m_word_list_start_point;
     int                 m_word_list_end_point;
     int                 m_json_id;
@@ -45,6 +45,8 @@ public:
     CSignature*         get_last_signature()            { return m_Signatures.last(); }
     int                 get_count()             const   {return m_count;}
     void                set_count (int n)               {m_count = n;}
+    int                 get_word_type_count();
+    void                increment_word_type_count (int n=1)  {m_word_type_count += n;}
     void                write_json(QJsonObject& ref_json, eJsonType json_type = INDEXED) const;
     void                read_json_1(const QJsonObject& ref_json);
     void                read_json_2(const QJsonObject& ref_json, const CJsonInfo& ref_pointers);

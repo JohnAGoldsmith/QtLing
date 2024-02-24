@@ -106,28 +106,40 @@ QVariant affixmodel::data(const QModelIndex & index, int role)const {
                 return QVariant();
         }
     }
+    CSuffix * suffix;
+    CPrefix* prefix;
+    if (m_suffixes){
+        suffix = m_suffixes->at(row);
+    } else{
+        prefix = m_prefixes->at(row);
+    }
+
     switch (column) {
     case 0:
         if (role==Qt::DisplayRole){
             if (m_suffixes){
-                return QVariant(m_suffixes->at(row)->get_key());
+                return QVariant(suffix->get_key());
             } else {
-                return QVariant(m_prefixes->at(row)->get_key());
+                return QVariant(prefix->get_key());
             }
          }
         break;
     case 1:
         if (role==Qt::DisplayRole){
             if (m_suffixes){
-                return QVariant(m_suffixes->at(row)->count());
+                return QVariant(suffix->get_sig_count());
             } else {
-                return QVariant(m_prefixes->at(row)->GetFrequency());
+                return QVariant(prefix->get_sig_count());
             }
         }
         break;
     case 2:
         if (role==Qt::DisplayRole){
-            return QVariant();
+            if (m_suffixes){
+                return QVariant(suffix->get_word_count());
+            } else {
+                return QVariant(prefix->get_word_count());
+            }
         }
         break;
 
@@ -146,6 +158,7 @@ QVariant affixmodel::headerData(int section, Qt::Orientation orientation, int ro
     if (orientation == Qt::Horizontal){
         if (section == 0) return QVariant("Affix" );
         if (section == 1) return QVariant("signature count");
+        if (section == 2) return QVariant("word count");
     }
     return QVariant();
 }

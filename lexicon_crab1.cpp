@@ -403,10 +403,23 @@ void CLexicon::step4_create_signatures(const QString& name_of_calling_function,
 
 void CLexicon::step4b_link_sig_with_stems_and_affixes(CSignature* pSig, QSet<stem_t>* this_stem_set, QString name_of_calling_function){ // step 4a of crab 1
     Affix_list affix_list = pSig->get_affix_string_list();
-    foreach (QString stem, *this_stem_set){
+    foreach (QString stem, *this_stem_set){         
         step4c_create_stem_then_link_sig_and_stem(pSig, stem, name_of_calling_function);
         foreach (QString affix, affix_list){
             step4d_link_signature_with_affix(pSig, stem, affix, name_of_calling_function);
+        }
+    }
+    if (m_suffix_flag){
+        foreach (QString affix, affix_list){
+            CSuffix * suffix = m_Suffixes->find_or_fail(affix);
+            suffix->increment_sig_count();
+            suffix->increment_word_count(1 );
+        }
+    } else{
+        foreach (QString affix, affix_list){
+            CPrefix * prefix = m_Prefixes->find_or_fail(affix);
+            prefix->increment_sig_count();
+            prefix->increment_word_count(1 );
         }
     }
 }
@@ -416,11 +429,13 @@ void CLexicon::step4c_create_stem_then_link_sig_and_stem(CSignature * pSig,  QSt
         pStem = m_suffixal_stems->find_or_add(stem):
         pStem = m_prefixal_stems->find_or_add(stem);
     pStem->add_signature(pSig);
+    pStem->increment_word_type_count(pSig->get_number_of_affixes());
     pSig->add_stem_pointer(pStem);
     stem_autobiography_positive_notice(this, stem, name_of_calling_function, pSig->get_key());
 }
 void CLexicon::step4d_link_signature_with_affix(CSignature * pSig, stem_t this_stem, affix_t this_affix, QString name_of_calling_function)
 {   QString this_signature_string = pSig->get_key();
+    //qDebug() << 424 << pSig->display() << this_stem << this_affix;
     add_affix_to_signature(this_affix, pSig);
     stem_autobiography_positive_notice(this, this_stem, name_of_calling_function, this_signature_string);
 }
@@ -428,11 +443,10 @@ void CLexicon::step4d_link_signature_with_affix(CSignature * pSig, stem_t this_s
 void CLexicon::add_affix_to_signature(QString affix, CSignature*  pSig){
     if (m_suffix_flag){
         CSuffix* pSuffix = m_Suffixes->find_or_add(affix);
-        pSuffix->increment_sig_count();
         pSig->add_affix_ptr(pSuffix);
     } else {
         CPrefix* pPrefix = m_Prefixes->find_or_add(affix);
-        pPrefix->increment_sig_count();
+        //pPrefix->increment_word_count(pSig->get_number_of_stems());
         pSig->add_affix_ptr(pPrefix);
     }
 }
@@ -566,10 +580,10 @@ void CLexicon::step4f_add_analysis_to_word_for_prefix_case(CParse& parse, CSigna
 void CLexicon::add_suffix_analysis_to_word(CWord* pWord, CParse& parse, QString sig_string,  QString name_of_calling_function){
     //stem_count += pWord->get_word_count();  TODO
     pWord->add_suffixal_parse_triple(parse.get_stem(), parse.get_affix(), sig_string);
-
     pWord->add_morphemic_split(parse.display_with_gap());
     word_autobiography_positive_notice(pWord->get_key(), parse.get_stem(), sig_string, name_of_calling_function);
     m_word2suffix_sigs.insert(pWord->get_key(),sig_string);
+
 }
 void CLexicon::add_prefix_analysis_to_word(CWord* pWord,  CParse& parse, QString sigstring, QString name_of_calling_function){
     //stem_count += pWord->get_word_count();  TODO

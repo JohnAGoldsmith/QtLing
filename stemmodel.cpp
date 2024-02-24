@@ -74,7 +74,7 @@ QVariant stemmodel::data(const QModelIndex & index, int role)const {
         break;
     case 1:
         if (role==Qt::DisplayRole){
-            return QVariant(stem->get_count());
+            return QVariant(stem->get_word_type_count());
         }
         break;
     case 2:
@@ -103,7 +103,9 @@ QVariant stemmodel::headerData(int section, Qt::Orientation orientation, int rol
     if (role != Qt::DisplayRole) {return    QVariant();}
     if (orientation == Qt::Horizontal){
         if (section == 0) return QVariant("Suffixal stem" );
+        if (section == 1) return QVariant("word type count" );
         if (section == 2) return QVariant("signature");
+        if (section == 3) return QVariant("corpus count" );
     }
     return QVariant();
 }

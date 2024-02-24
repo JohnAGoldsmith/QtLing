@@ -16,6 +16,7 @@ QStringList latex::tabular_ending(){
     return line_list;
 }
 
+// not needed; replaced by CSignature function
 QStringList latex::tabular(CSignature* sig){
     QStringList temp;
     temp    << sig->get_key();
@@ -39,4 +40,18 @@ QStringList latex::tabular_word_counts( CWordCollection* words, int number_of_co
         }
     }
     return line_list;
+}
+
+// not needed; replaced by CSignatureCollection function;
+QStringList latex::tabular_signatures(CSignatureCollection* signatures){
+    QStringList result;
+    double sum=0;
+    QString alignments = "l l l l l";
+    latex Latex;
+    result = tabular_beginning(alignments);
+    foreach (CSignature* sig, *signatures->get_sort_list()){
+        sum += sig->get_robustness();
+    }
+    result << Latex.tabular_beginning(alignments);
+
 }

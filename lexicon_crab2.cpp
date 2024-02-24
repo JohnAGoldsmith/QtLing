@@ -69,6 +69,10 @@ void CLexicon::Crab_2()
 
    // find_parasuffixes();
 
+    if (m_suffix_flag) {
+        m_Signatures->produce_latex ();
+    }
+
 }
 
 
@@ -221,12 +225,10 @@ QString CLexicon::process_a_word_into_stem_and_affix(int wordno, int stem_length
         affix = word.mid( stem_length );
         if (affix.length() == 0){affix = "NULL";}
         pSuffix =  m_Suffixes->find_or_fail(affix);
-        /*
         if (! pSuffix ){
-            add_parasuffix(affix, word);
+            //add_parasuffix(affix, word);
             return QString();
-        }
-        */
+        } 
         return affix;
     } else{
         CPrefix* pPrefix;
@@ -234,12 +236,10 @@ QString CLexicon::process_a_word_into_stem_and_affix(int wordno, int stem_length
         affix = word.left(word.length() - stem_length);
         if (affix.length() == 0){ affix = "NULL"; }
         pPrefix = m_Prefixes->find_or_fail(affix);
-        /*
         if (! pPrefix){
-            add_paraprefix(affix, word);
+            //add_paraprefix(affix, word);
             return QString();
         }
-        */
         return affix;
     }
 }
@@ -304,9 +304,11 @@ void   CLexicon::find_good_signatures_inside_bad()  // step 2
         for (int wordno= this_protostem->get_start_word(); wordno <= this_protostem->get_end_word(); wordno++){
             if (m_suffix_flag){
                 this_affix = process_a_word_into_stem_and_affix(wordno, stem_length, m_suffix_flag);
+                if (this_affix.length() == 0) { continue; }
                 working_suffix_string_list.append(this_affix);
             } else{
                 this_affix = process_a_word_into_stem_and_affix(wordno, stem_length, m_suffix_flag);
+                if (this_affix.length() == 0) { continue; }
                 working_prefix_string_list.append(this_affix);
             }
         }
@@ -376,8 +378,7 @@ void   CLexicon::find_good_signatures_inside_bad()  // step 2
             if (best_sig_affix_list.contains(affix)){
                 continue;
             }
-            CSuffix * parasuffix = m_ParaSuffixes->find_or_add(affix);
-            qDebug() << 380 << "add parasuffix "<< affix;
+            m_ParaSuffixes->find_or_add(affix);
         }
         // this is the right place to identify parasuffixes -- the extensions of *real* stems, not protostems (as is currently done).
     }// end of protostem loop

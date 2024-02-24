@@ -464,6 +464,14 @@ void CSignature::compute_signature_transforms(bool suffix_flag, QTextStream & si
         }
     }
 }
+QStringList CSignature::signature2latex_string_list(){
+    QStringList result;
+    result << get_key();
+    result << QString::number(m_Stems.count());
+    result << QString::number(m_stem_entropy);
+    result << QString::number(m_robustness);
+    return result;
+}
 
 
 /////////////////////////////////////////////////////////////////////////

@@ -134,7 +134,7 @@ UpperTableView::UpperTableView (MainWindow* window, eSortStyle this_sort_style)
  */
 void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
 {
-    qDebug() << "137" << "Show models upperview old";
+    //qDebug() << "137" << "Show models upperview old";
     CLexicon* lexicon = m_parent_window->get_lexicon();
     QString component;
     eDataType curr_data_type;
@@ -304,7 +304,7 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
             return;
         }
         if (component == "Hypotheses"){
-            m_parent_window->display_hypotheses();
+            m_parent_window->display_hypotheses(lexicon);
             return;
         }
          if (component == "Suffixal protostems"){

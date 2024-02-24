@@ -3,6 +3,7 @@
 #include <QStringList>
 
 class CSignature;
+class CSignatureCollection;
 class CWordCollection;
 
 class latex
@@ -16,6 +17,7 @@ public:
     QStringList tabular_ending();
     QStringList display(){return line_list;};
     QStringList tabular_word_counts(  CWordCollection*, int number_of_columns);
+    QStringList tabular_signatures(CSignatureCollection*);
 };
 
 #endif // LATEX_H

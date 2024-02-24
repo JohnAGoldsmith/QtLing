@@ -10,6 +10,7 @@ CStem::CStem(QString stem) :  m_key(stem), m_Signatures(),m_count(0) {
     m_compound_component = 0;
     m_word_list_end_point = -1;
     m_word_list_start_point= -1;
+    m_word_type_count = 0;
 }
 
 CStem::CStem(CStem& stem) {
@@ -21,6 +22,7 @@ CStem::CStem(CStem& stem) {
     }
     m_count = 0;
     m_json_id = 0;
+    m_word_type_count = stem.get_word_type_count();
 }
 CStem::~CStem(){
 
@@ -33,7 +35,9 @@ void CStem::add_signature(CSignature *p_new_sig)
     }
     m_Signatures.append(p_new_sig);
 }
-
+int CStem::get_word_type_count()           {
+    return m_word_type_count;
+}
 QString CStem::display(){
     return m_key;
 }

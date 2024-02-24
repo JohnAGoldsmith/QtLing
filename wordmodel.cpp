@@ -10,7 +10,7 @@ wordmodel::wordmodel(CWordCollection * words, QObject *parent)
             number_of_analyses = word->get_parse_triple_list()->count();
         }
     }
-    m_number_of_columns = number_of_analyses + 1;
+    m_number_of_columns = number_of_analyses + 2;
 }
 bool lessthan_key(CWord* a, CWord* b){
     return a->get_key() < b->get_key();
@@ -64,10 +64,11 @@ QVariant wordmodel::data(const QModelIndex & index, int role)const {
     int row = index.row();
     int column = index.column();
     if (row > m_words->get_count()){ return QVariant();}
+    CWord* word (m_words->get_word(row));
     switch (column) {
     case 0:{
         if (role==Qt::DisplayRole){
-            return QVariant(m_words->get_word(row)->get_key());
+            return QVariant(word->get_key());
         } else{
             return QVariant();
         }
@@ -78,14 +79,41 @@ QVariant wordmodel::data(const QModelIndex & index, int role)const {
     }
     case 1:{
         if (role==Qt::DisplayRole){
-            return QVariant(m_words->get_word(row)->count());
+            return QVariant(word->count());
         } else{
             return QVariant();
         }
         break;
     }
     case 2:{
-
+        if (role==Qt::DisplayRole){
+            if (word->get_parse_triple_list() && word->get_parse_triple_list()->count()>0){
+                return QVariant(word->get_parse_triple_list()->at(0)->m_sig_string);
+            }
+        } else{
+            return QVariant();
+        }
+        break;
+    }
+    case 3:{
+        if (role==Qt::DisplayRole){
+            if (word->get_parse_triple_list() && word->get_parse_triple_list()->count()>1){
+                return QVariant(word->get_parse_triple_list()->at(1)->m_sig_string);
+            }
+        } else{
+            return QVariant();
+        }
+        break;
+    }
+    case 4:{
+        if (role==Qt::DisplayRole){
+            if (word->get_parse_triple_list() && word->get_parse_triple_list()->count()>2){
+                return QVariant(word->get_parse_triple_list()->at(2)->m_sig_string);
+            }
+        } else{
+            return QVariant();
+        }
+        break;
     }
     default:
         return QVariant();

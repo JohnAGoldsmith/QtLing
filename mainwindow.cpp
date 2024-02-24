@@ -565,7 +565,7 @@ void MainWindow::do_crab2()
     get_lexicon()->get_suffix_flag()?
           display_epositive_suffix_signatures(get_lexicon()):
           display_epositive_prefix_signatures(get_lexicon());
-    statusBar()->showMessage("Crab 3: Good sigs inside bad completed.");
+    statusBar()->showMessage("Crab 2: Good sigs inside bad completed.");
     emit lexicon_ready();
 }
 void MainWindow::do_crab3()
@@ -584,7 +584,7 @@ void MainWindow::do_crab3()
     get_lexicon()->get_suffix_flag()?
           display_epositive_suffix_signatures(get_lexicon()):
           display_epositive_prefix_signatures(get_lexicon());
-    statusBar()->showMessage("Crab 4: repair low entropy signatures completed.");
+    statusBar()->showMessage("Crab 3: repair low entropy signatures completed.");
 }
 void MainWindow::do_crab4()
 {   statusBar()->showMessage("Crab 4: split complex morphemes.");
@@ -602,7 +602,7 @@ void MainWindow::do_crab4()
     get_lexicon()->get_suffix_flag()?
           display_epositive_suffix_signatures(get_lexicon()):
           display_epositive_prefix_signatures(get_lexicon());
-    statusBar()->showMessage("Crab 5: split complex morphemes completed.");
+    statusBar()->showMessage("Crab 4: split complex morphemes completed.");
 }
 void MainWindow::do_crab5(){
     statusBar()->showMessage("Crab 5: simple compounds...");
@@ -677,8 +677,9 @@ void MainWindow::load_models(CLexicon* lexicon)
         m_proxy_models[str_model_name]->setSourceModel(nullptr);
     }
 
-    statusBar()->showMessage("Loading models: Words");
-    m_Models["Words"]               ->load_words(lexicon->get_words());
+    // removed these Feb 20 2024; these duplicate use of memory, compared to models which don't replicate the entries.
+    //statusBar()->showMessage("Loading models: Words");
+    //m_Models["Words"]               ->load_words(lexicon->get_words());
     statusBar()->showMessage("Loading models: Parses");
     m_Models["Parses"]              ->load_parses(lexicon->get_parses());
     statusBar()->showMessage("Loading models: Suffixal stems");
