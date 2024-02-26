@@ -186,7 +186,7 @@ void CLexicon::step1_from_words_to_protostems()
     m_ParseMap.clear();
 
 
-    /*
+    /* this created a  bug, signatures with just one suffix, if a word occurred with a hyphen and no other suffixes
     for (int wordno=0; wordno<Words->size()-1; wordno ++) {
         if (wordno % 500 == 0) { mark_progress(wordno);}
         this_word = Words->at(wordno);
@@ -209,9 +209,6 @@ void CLexicon::step1_from_words_to_protostems()
         step1a_make_protostem_if_appropriate(this_word, next_word);
         wordno = next_wordno;
     }
-
-
-
 
     if (m_suffix_flag)
         step1b_make_protostem_objects_suffix_case(Words);

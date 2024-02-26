@@ -447,7 +447,9 @@ void CSignatureCollection::produce_latex(){
         }
     }
     double running_robustness_sum (0.0);
+    int n = 0;
     foreach (CSignature* sig, m_sort_list){
+        textstream << QString::number(n) << " & ";
         temp_stringlist = sig->signature2latex_string_list();
         for (int n = 0; n < 4; n++){
             textstream << temp_stringlist[n] + " & ";
@@ -456,9 +458,7 @@ void CSignatureCollection::produce_latex(){
         double robustness_ratio;
         robustness_ratio =  sig->get_robustness()/sum;
         robustness_ratio_string = QString::number(robustness_ratio);
-        //robustness_ratio_string.resize(max_column_width[4]);
         textstream << robustness_ratio_string  << " & ";
-
         running_robustness_sum += robustness_ratio;
         textstream << QString::number(running_robustness_sum * 100.0);
         textstream << "\\\\";

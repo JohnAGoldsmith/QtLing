@@ -439,17 +439,30 @@ void   CLexicon::find_good_signatures_inside_bad_2()  // step 2
         if (stems->find_or_fail( this_stem )){
             continue;
         }
+        QList<CParse*> temp_holding;
+        temp_holding.clear();
         for (int wordno= this_protostem->get_start_word(); wordno <= this_protostem->get_end_word(); wordno++){
             if (m_suffix_flag){
                 this_affix = process_a_word_into_stem_and_affix(wordno, stem_length, m_suffix_flag);
                 if (this_affix.length() == 0) { continue; }
                 if ( ! m_Suffixes->contains(this_affix)){ continue;}
-                add_parse(new CParse(this_stem, this_affix, m_suffix_flag));
+                temp_holding.append(new CParse(this_stem, this_affix, m_suffix_flag));
+                //add_parse(new CParse(this_stem, this_affix, m_suffix_flag));
             } else{
                 this_affix = process_a_word_into_stem_and_affix(wordno, stem_length, m_suffix_flag);
                 if (this_affix.length() == 0) { continue; }
                 if ( ! m_Prefixes->contains(this_affix)) { continue;}
-                add_parse(new CParse(this_stem, this_affix, m_suffix_flag));
+                temp_holding.append(new CParse(this_stem, this_affix, m_suffix_flag));
+                //add_parse(new CParse(this_stem, this_affix, m_suffix_flag));
+            }            
+        }
+        if (temp_holding.count() > 1 ){
+            foreach (CParse* parse, temp_holding){
+                add_parse(parse);
+            }
+        } else {
+            foreach (CParse* parse, temp_holding){
+                delete parse;
             }
         }
     }

@@ -186,20 +186,11 @@ MainWindow::MainWindow()
     setUnifiedTitleAndToolBarOnMac(true);
     setFocus(Qt::OtherFocusReason);
 
-    // clicking on certain items in the tree view displays tables on the upper left and upper right
-    // new:
-    //          connect(m_leftTreeView, SIGNAL(clicked(QModelIndex)), this, SLOT(display_models(QModelIndex)));
-    //bool ok = connect(m_leftTreeView, &LeftSideTreeView::clicked, this, &MainWindow::display_models   );
-    //Q_ASSERT (ok);
-
-    connect(m_leftTreeView, SIGNAL(clicked(QModelIndex)),
+     connect(m_leftTreeView, SIGNAL(clicked(QModelIndex)),
             m_tableView_upper_left, SLOT(ShowModelsUpperTableView(QModelIndex)));
-    //connect(m_leftTreeView, SIGNAL(clicked(QModelIndex)),
-    //        m_tableView_upper_right, SLOT(ShowModelsUpperTableView(QModelIndex)));
 
     connect (m_tableView_upper_temp, SIGNAL(clicked(QModelIndex)),
             m_tableView_lower,SLOT(display_this_item(QModelIndex)));
-
 
     connect(m_tableView_upper_left,SIGNAL(clicked(QModelIndex)),
             m_tableView_lower,SLOT(display_this_item(QModelIndex)));
