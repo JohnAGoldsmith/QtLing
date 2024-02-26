@@ -70,7 +70,7 @@ void LowerTableView::display_this_item( const  QModelIndex & index )
     case e_data_words:{
         if (index.isValid()) {row = index.row();}
         QString word = index.sibling(row,0).data().toString();
-        CWord* pWord = this_lexicon->get_words()->get_word(word);
+        CWord* pWord = this_lexicon->get_words()->find_or_fail(word);
         table_word(pWord);
         setModel( m_my_current_model);
         break;

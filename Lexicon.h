@@ -376,6 +376,7 @@ public:
     void step6a_create_temporary_map_from_stems_to_affix_sets(Stem_to_sig_map&); //map_sigstring_to_stem_list &); will delete this
     void create_new_parse_set_from_known_affixes();
     void find_good_signatures_inside_bad();
+    void find_good_signatures_inside_bad_2();
     void find_all_suffixal_sigpairs();
     void find_new_affixes(protostem*, CSignatureCollection*, CStemCollection*, QStringList& );
     void find_parasuffixes();

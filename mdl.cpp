@@ -209,7 +209,7 @@ void MDL::process_a_stem_given_a_signature_and_its_words( CSignature * sig, QStr
     sigstring = sig->get_key();
     foreach (QString affix, sig->get_affix_string_list()){
          QString word = build_a_word(m_suffix_flag, stem, affix);
-         CWord * pWord = m_Lexicon->get_words()->get_word(word);
+        CWord * pWord = m_Lexicon->get_words()->find_or_fail(word);
          if (!pWord){
              out_summaries << "process a stem given a signature:" << word << " doesn't exist!";
              continue;

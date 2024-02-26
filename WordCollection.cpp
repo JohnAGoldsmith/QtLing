@@ -32,11 +32,11 @@ bool new_reverse_string_compare(QString s1, QString s2)
 void CWordCollection::sort_word_lists()
 {   m_sorted_list.clear();
     m_end_sorted_list.clear();
+    m_sorted_list.reserve(m_WordMap.size());
     foreach(QString word, m_WordMap.keys()){
         m_sorted_list.append(word);
     }
     m_sorted_list.sort();
-
     m_end_sorted_list.reserve(m_WordMap.size());
     foreach(QString word, m_WordMap.keys()){
         m_end_sorted_list.append(word);
@@ -52,10 +52,10 @@ void  CWordCollection::clear_all_words_parse_triple_maps(){
 }
 
 
-QMapIterator<QString,CWord*> *  CWordCollection::get_iterator(){
-    QMapIterator<QString, CWord*> * iter = new QMapIterator<QString,CWord*>(m_WordMap);
-    return iter;
-}
+//QMapIterator<QString,CWord*> *  CWordCollection::get_iterator(){
+//    QMapIterator<QString, CWord*> * iter = new QMapIterator<QString,CWord*>(m_WordMap);
+//    return iter;
+//}
 int CWordCollection::get_token_count(){
     int total = 0;
     QMapIterator<QString, CWord* > iter(m_WordMap);
@@ -63,18 +63,11 @@ int CWordCollection::get_token_count(){
     {
         iter.next();
         total += iter.value()->count();
-        //qDebug() << iter.key() << " : " << iter.value();
     }
     qDebug() << total;
     return total;
 }
-CWord* CWordCollection::get_word(const QString& word){
-    if (m_WordMap.contains(word)){
-        return m_WordMap[word];
-    } else{
-        return NULL;
-    }
-}
+
 CWord* CWordCollection::get_word(const int n){
     return m_word_list[n];
 }
@@ -84,37 +77,31 @@ int CWordCollection::get_word_count(){
 
 
 CWord* CWordCollection::find_or_add(const QString& word_string){
-    QMap<QString,CWord*>::const_iterator word_iter = m_WordMap.find(word_string);
-    if (word_iter == m_WordMap.end()){
+    if (! m_WordMap.contains(word_string)) {
         CWord* pWord = new CWord(word_string);
         m_WordMap[word_string] = pWord;
         m_word_list.append(pWord);
         return pWord;
     }else{
-        return word_iter.value();
+        return m_WordMap[word_string];
     }
 }
 CWord* CWordCollection::find_or_fail(const QString& word_string){
-    QMap<QString,CWord*>::const_iterator word_iter = m_WordMap.find(word_string);
-    //qDebug() << word_string;
-    if (word_iter == m_WordMap.end()){
-         //qDebug() << word_string + " not found in find or fail";
-         return NULL;
-    }else{
-        //qDebug() << "found something in find or fail";
-        return word_iter.value();
+    if (m_WordMap.contains(word_string)){
+        return m_WordMap[word_string];
     }
+    return NULL;
 }
 CWord* CWordCollection::add_word(const QString& word, int count)
 {   CWord* pWord;
     if (m_WordMap.contains(word)){
         m_WordMap[word]->SetWordCount(count);
-    } else {
-        pWord = new CWord(word);
-        pWord->SetWordCount(count);
-        m_WordMap[word] = pWord;
-        m_word_list.append(pWord);
+        return m_WordMap[word];
     }
+    pWord = new CWord(word);
+    pWord->SetWordCount(count);
+    m_WordMap[word] = pWord;
+    m_word_list.append(pWord);
     return pWord;
 }
 

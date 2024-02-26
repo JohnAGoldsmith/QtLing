@@ -10,9 +10,14 @@ void MainWindow::display_words()
     //New December 29 2023
     if (m_word_model) {delete m_word_model;}
     m_word_model = new wordmodel(m_my_lexicon->get_word_collection());
-    m_word_model_proxy_1->setSourceModel(m_word_model);
-    m_tableView_upper_temp->setModel(m_word_model_proxy_1);
 
+
+    //m_word_model_proxy_1->setSourceModel(m_word_model);
+    QSortFilterProxyModel * proxy_model = new QSortFilterProxyModel();
+    proxy_model->setSourceModel(m_word_model);
+
+    //m_tableView_upper_temp->setModel(m_word_model_proxy_1);
+    m_tableView_upper_temp->setModel(proxy_model);
     // ------------ old --------------------------------------------------
     /*
     m_tableView_upper_left->setModel(m_proxy_models["Words"]);

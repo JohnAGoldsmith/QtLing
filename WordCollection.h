@@ -35,7 +35,6 @@ protected:
 private:
     CWordCollection&        operator=(const CWordCollection& x);
     void                    sort_word_lists();
-
     const QStringList*      get_sorted_list() {return & m_sorted_list;}
     const QStringList*      get_end_sorted_list() {return & m_end_sorted_list;}
 
@@ -66,13 +65,6 @@ public:
     void                    assign_json_id();
     void                    write_json(QJsonObject& ref_json, eJsonType json_type = INDEXED);
 
-    // this should be replaced by find_or_fail:
-    CWord*                  get_word (const QString&);     // returns false if the string is not in the word collection
-
-
-    QMapIterator<QString,CWord*> *  get_iterator();
-    QMap<word_t, CWord*>::iterator  begin()                    { return m_WordMap.begin();}
-    QMap<word_t, CWord*>::iterator  end()                      { return m_WordMap.end();}
 };
 
 #endif // CWORDCOLLECTION_H

@@ -79,7 +79,6 @@ public:
    // QStringList          get_compounds(){return m_Compounds;}
     MorphemeParse *      get_morpheme_parse() {return & m_morpheme_parse;}
     QList<sig_pair*> *   get_suffixal_sigpairs();
-    //QString              get_word()      const { return m_key; }
     QList<ptr_to_stem_sig_pair> get_signatures() {return m_Signatures;}
     void                 IncrementWordCount(int n = 1);
     void                 SetWordCount(int count) { m_count = count;}

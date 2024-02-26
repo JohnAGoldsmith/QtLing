@@ -69,6 +69,12 @@ void CLexicon::Crab_1()
 
     step2_from_protostems_to_parses();
 
+    // at this point, there are some protostems with only one parse --
+    // this will happen if a word occurs alone and also with a hyphen after it.
+    // this will create a signature with just the NULL suffix!
+    // This should be fixed here.
+
+
     step3_from_parses_to_stem2sig_maps(QString("crab_1"));
 
     step4_create_signatures(QString("Crab1"));
@@ -123,6 +129,9 @@ void CLexicon::step1b_make_protostem_objects_suffix_case(const QStringList* Word
     int i = 0;
     for (int p = 0; p<alphabetized_protostems.length(); p++){
         QString protostem = alphabetized_protostems[p];
+        if (protostem=="montreal"){
+            int i = 1;
+        }
         while ( ! Words->at(i).startsWith(protostem))
             i++;
         int j = i;
@@ -175,12 +184,35 @@ void CLexicon::step1_from_words_to_protostems()
     }
     initialize_progress(Words->size());
     m_ParseMap.clear();
+
+
+    /*
     for (int wordno=0; wordno<Words->size()-1; wordno ++) {
         if (wordno % 500 == 0) { mark_progress(wordno);}
         this_word = Words->at(wordno);
         next_word = Words->at(wordno+1);
+        // ideally this would skip words with a hyphen in them...
         step1a_make_protostem_if_appropriate(this_word, next_word);
     }
+    */
+
+    int wordno = 0;
+    int next_wordno = 0;
+    while (wordno < Words->size()-1){
+        if (wordno % 1000 == 0) { mark_progress(wordno);}
+        this_word = Words->at(wordno);
+        next_wordno = wordno + 1;
+        while (Words->at(next_wordno).contains('-')){
+            next_wordno++;
+        }
+        next_word = Words->at(next_wordno);
+        step1a_make_protostem_if_appropriate(this_word, next_word);
+        wordno = next_wordno;
+    }
+
+
+
+
     if (m_suffix_flag)
         step1b_make_protostem_objects_suffix_case(Words);
     else
@@ -231,14 +263,21 @@ void CLexicon::step2_from_protostems_to_parses()
 {   initialize_progress(m_Words->get_count());
     QString                     word;
     int                         wordno (0);
-    foreach (CWord* word, *m_Words->get_word_list()){
-        if (word->get_key().contains('-')){
+    const QStringList *  Words;
+    if (m_suffix_flag){
+        Words = get_word_collection()->get_sorted_list();
+    }else{
+        Words = get_word_collection()->get_end_sorted_list();
+    }
+
+    foreach (QString word, *Words){
+        if (word.contains('-')){
             continue;
         }
         if (m_suffix_flag)
-            step2a_scan_word_for_protostems_suffix_case(word->get_key());
+            step2a_scan_word_for_protostems_suffix_case(word);
         else
-            step2a_scan_word_for_protostems_prefix_case(word->get_key());
+            step2a_scan_word_for_protostems_prefix_case(word);
         mark_progress(wordno++);
      }
 }
@@ -364,6 +403,9 @@ void CLexicon::step4_create_signatures(const QString& name_of_calling_function,
     step4a_clear_active_signatures_and_affixes();
 
     foreach (sigstring, m_temp_sig2stem_map.m_core.keys() ) {
+        if (sigstring == "NULL"){
+            qDebug() << 368 << sigstring;
+        }
         if (count++ % 100 == 0){ mark_progress(count);}
         QSet<QString>* this_stem_set = m_temp_sig2stem_map.get_stem_set(sigstring);
         Affix_list affix_list = sigstring.split("=");
@@ -467,11 +509,11 @@ QString clean(QString string){
 
 void CLexicon::step4e_link_all_words_to_signatures(QString name_of_calling_function){
     QString word, word_split, stem, sig_string;
-    latex this_latex;
-    this_latex.tabular_beginning(QString ("l l l l "));
+    // latex this_latex;
+    // this_latex.tabular_beginning(QString ("l l l l "));
     if (m_suffix_flag){
         foreach (CSignature* pSig, *m_Signatures->get_signature_list()){
-            this_latex.tabular(pSig);
+            //  this_latex.tabular(pSig);
             sig_string = pSig->get_key();
             foreach (CStem* pStem, *pSig->get_stems()){
                 stem = pStem->get_key();

@@ -56,7 +56,8 @@ bool contains(QStringList& list1, QStringList & list2) {
 void CLexicon::Crab_2()
 {    m_StatusBar->showMessage("Crab 2: Find good signatures inside bad.");
 
-    find_good_signatures_inside_bad();
+    find_good_signatures_inside_bad_2();
+    //find_good_signatures_inside_bad();
     m_StatusBar->showMessage("Crab 2: Find good signatures inside bad, completed.");
     m_suffix_flag?
         m_Signatures->calculate_sig_robustness():
@@ -294,9 +295,6 @@ void   CLexicon::find_good_signatures_inside_bad()  // step 2
         working_suffix_string_list.clear();
         working_prefix_string_list.clear();
         stem_t this_stem = this_protostem->get_stem();
-        if (this_stem == "ing"){
-            qDebug() << 288 << "ing is a stem??";
-        }
         int stem_length = this_stem.length();
         if (stems->find_or_fail( this_stem )){
             continue;
@@ -392,7 +390,80 @@ void   CLexicon::find_good_signatures_inside_bad()  // step 2
     replace_parse_pairs_from_current_signature_structure();
 
 }
+void   CLexicon::find_good_signatures_inside_bad_2()  // step 2
+{   stem_t                      this_stem;
+    word_t                      this_word;
+    affix_t                     this_affix;
+    Affix_list                  affixes_of_residual_sig;
+    CSignature*                 pBestSig, *this_sig, *pSig;
+    CSignatureCollection*       signatures;
+    //suffix_t                    Null_string ("NULL");
+    CStemCollection*            stems;
+    int                         best_intersection_count = 0;
+    QStringList                 best_sig_affix_list;
+    QStringList                 working_prefix_string_list;
+    QStringList                 working_suffix_string_list;
+    CSuffix*                    pSuffix;
+    CPrefix*                    pPrefix;
+    int                         MINIMUM_STEM_LENGTH = 5;
+    qApp->processEvents();
+    if (! test_if_analysis_has_been_done()){
+        return;
+    }
+    replace_parse_pairs_from_current_signature_structure();
+    CStemCollection * these_protostems;
+    if (m_suffix_flag) {
+        signatures = m_Signatures;
+        stems = m_suffixal_stems;
+        these_protostems =  m_suffix_protostems;
+    } else{
+        signatures = m_PrefixSignatures;
+        stems = m_prefixal_stems;
+        these_protostems =  m_prefix_protostems;
+    }
+    signatures->sort(SIG_BY_REVERSE_ROBUSTNESS);
+    initialize_progress(these_protostems->get_count());
+    int protostem_count = 0;
+    foreach (CStem* this_protostem, * these_protostems->get_stem_list())
+    {   //-----------------------------------------------------------------------------------------//
+        mark_progress(protostem_count++);
+        if (protostem_count % 1000 == 0){
+            m_StatusBar->showMessage("Crab 2: Find good signatures inside bad: " + this_stem);
+        } //---------------------------------------------------------------------------------------//
+        affixes_of_residual_sig.   clear();
+        working_suffix_string_list.clear();
+        working_prefix_string_list.clear();
+        stem_t this_stem = this_protostem->get_stem();
+        int stem_length = this_stem.length();
+        if (stem_length < MINIMUM_STEM_LENGTH){continue;}
+        if (stems->find_or_fail( this_stem )){
+            continue;
+        }
+        for (int wordno= this_protostem->get_start_word(); wordno <= this_protostem->get_end_word(); wordno++){
+            if (m_suffix_flag){
+                this_affix = process_a_word_into_stem_and_affix(wordno, stem_length, m_suffix_flag);
+                if (this_affix.length() == 0) { continue; }
+                if ( ! m_Suffixes->contains(this_affix)){ continue;}
+                add_parse(new CParse(this_stem, this_affix, m_suffix_flag));
+            } else{
+                this_affix = process_a_word_into_stem_and_affix(wordno, stem_length, m_suffix_flag);
+                if (this_affix.length() == 0) { continue; }
+                if ( ! m_Prefixes->contains(this_affix)) { continue;}
+                add_parse(new CParse(this_stem, this_affix, m_suffix_flag));
+            }
+        }
+    }
+    // end of protostem loop
 
+    step3_from_parses_to_stem2sig_maps("Good sigs inside bad");
+
+    // We have to drop the condition now -- and in the future -- that all signatures have at least 2 stems...
+    change_minimum_stem_count(1);
+
+    step4_create_signatures("Good sigs inside bad");
+    replace_parse_pairs_from_current_signature_structure();
+
+}
 void CLexicon::generate_virtual_signatures(){
     QStringList signature_check_list;
     if (m_suffix_flag){
