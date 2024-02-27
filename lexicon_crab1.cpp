@@ -83,7 +83,11 @@ void CLexicon::Crab_1()
 
     m_suffix_flag?
        m_Signatures->calculate_sig_robustness():
-       m_PrefixSignatures->calculate_sig_robustness(); 
+       m_PrefixSignatures->calculate_sig_robustness();
+
+    if (m_suffix_flag) {
+        m_Signatures->produce_latex ();
+    }
 }
 
 

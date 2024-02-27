@@ -669,8 +669,7 @@ void MainWindow::load_models(CLexicon* lexicon)
     }
 
     // removed these Feb 20 2024; these duplicate use of memory, compared to models which don't replicate the entries.
-    //statusBar()->showMessage("Loading models: Words");
-    //m_Models["Words"]               ->load_words(lexicon->get_words());
+
     statusBar()->showMessage("Loading models: Parses");
     m_Models["Parses"]              ->load_parses(lexicon->get_parses());
     statusBar()->showMessage("Loading models: Suffixal stems");

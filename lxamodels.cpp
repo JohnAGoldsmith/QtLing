@@ -134,7 +134,7 @@ void  LxaStandardItemModel::load_category(QString , eComponentType)
 {
 
 }
-
+/*
 void LxaStandardItemModel::load_words(CWordCollection* p_words)
 {
     QStringList labels = {tr("word"), tr("word count"), tr("suffix signatures")};
@@ -152,14 +152,11 @@ void LxaStandardItemModel::load_words(CWordCollection* p_words)
 
         foreach (const Parse_triple* this_parse_triple, *pWord->get_parse_triple_list())  {
             item_list.append(new QStandardItem(this_parse_triple->m_sig_string)) ;
-        }/*
-        foreach(QString compound, pWord->get_compounds()){                                       TO DO
-            item_list.append(new QStandardItem(compound));
-        }*/
+        }
         appendRow(item_list);
     }
 }
-
+*/
 void LxaStandardItemModel::load_parses(QMap<QString, CParse*> * Parses )
 {
     QStringList labels;

@@ -41,6 +41,7 @@ HEADERS += allosignatures.h \
            mainwindow_menubar.h \
            mdl.h \
            morphemeparse.h \
+           parsemodel.h \
            parsings.h \
            Signature.h \
            SignatureCollection.h \
@@ -99,6 +100,7 @@ SOURCES += allosignatures.cpp \
            morphemeparse.cpp \
            not_currently_used.cpp \
            output.cpp \
+           parsemodel.cpp \
            parsings.cpp \
            Signature.cpp \
            sig_pair.cpp \

@@ -449,7 +449,7 @@ void CSignatureCollection::produce_latex(){
     double running_robustness_sum (0.0);
     int n = 0;
     foreach (CSignature* sig, m_sort_list){
-        textstream << QString::number(n) << " & ";
+        textstream << QString::number(n++) << " & ";
         temp_stringlist = sig->signature2latex_string_list();
         for (int n = 0; n < 4; n++){
             textstream << temp_stringlist[n] + " & ";

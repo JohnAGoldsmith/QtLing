@@ -57,7 +57,7 @@ void CLexicon::Crab_2()
 {    m_StatusBar->showMessage("Crab 2: Find good signatures inside bad.");
 
     find_good_signatures_inside_bad_2();
-    //find_good_signatures_inside_bad();
+    find_good_signatures_inside_bad();
     m_StatusBar->showMessage("Crab 2: Find good signatures inside bad, completed.");
     m_suffix_flag?
         m_Signatures->calculate_sig_robustness():

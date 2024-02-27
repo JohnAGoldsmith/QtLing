@@ -64,7 +64,7 @@ private:
 public:
 
 
-    void        load_words(CWordCollection*);
+    //void        load_words(CWordCollection*);
     void        load_stems(CStemCollection * p_stems);
     void        load_prefixes(CPrefixCollection * p_prefixes);
     void        load_suffixes(CSuffixCollection * p_suffixes);
