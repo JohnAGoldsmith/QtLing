@@ -79,8 +79,8 @@ QVariant stemmodel::data(const QModelIndex & index, int role)const {
         break;
     case 2:
         if (role==Qt::DisplayRole){
-            return QVariant(); // TO DO
-           return QVariant(stem->get_last_signature()->get_key());
+            //return QVariant(); // TO DO
+           return QVariant(stem->get_signature()->get_key());
         }
         break;
     case 3:

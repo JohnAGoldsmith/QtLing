@@ -223,7 +223,7 @@ void LxaStandardItemModel::load_protostems(QMap<QString, protostem *>* p_protost
         appendRow(item_list);
     }
 }
-
+/*
 void LxaStandardItemModel::load_stems(CStemCollection * p_stems)
 {
     CStem*                          stem;
@@ -233,20 +233,26 @@ void LxaStandardItemModel::load_stems(CStemCollection * p_stems)
     {
         QList<QStandardItem*> item_list;
         stem = iter.next().value();
-        QStandardItem *item = new QStandardItem(stem->get_key());
-        item_list.append(item);
+        QStandardItem *item1 = new QStandardItem(stem->get_key());
+        item_list.append(item1);
         QStandardItem *item2 = new QStandardItem();
         item2->setData(stem->get_count(), Qt::DisplayRole); // --- Numerical data --- //
         item_list.append(item2);
-        QListIterator<CSignature*> sig_iter(*stem->GetSignatures());
-        while (sig_iter.hasNext()){
-           sigstring_t sig = sig_iter.next()->get_key();
-           QStandardItem *item = new QStandardItem(sig);
-           item_list.append(item);
-        }
+        QStandardItem * item3 = new QStandardItem(stem->get_signature()->get_key());
+        item_list.append(item3);
+
+        //QListIterator<CSignature*> sig_iter(*stem->GetSignatures());
+        //while (sig_iter.hasNext()){
+        //   sigstring_t sig = sig_iter.next()->get_key();
+        //   QStandardItem *item = new QStandardItem(sig);
+        //   item_list.append(item);
+        //}
+
         appendRow(item_list);
     }
 }
+*/
+/*
 void LxaStandardItemModel::load_suffixes(CSuffixCollection * p_suffixes)
 {
     clear();
@@ -266,6 +272,7 @@ void LxaStandardItemModel::load_suffixes(CSuffixCollection * p_suffixes)
         appendRow(item_list);
     }
 }
+*/
 void LxaStandardItemModel::load_prefixes(CPrefixCollection * p_prefixes)
 {
     clear();
@@ -296,6 +303,7 @@ void LxaStandardItemModel::load_prefixes(CPrefixCollection * p_prefixes)
         appendRow(item_list);
     }
 }
+/*
 void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures, eSortStyle this_sort_style)
 {
     clear();
@@ -325,6 +333,7 @@ void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures, e
         appendRow(items);
     }
 }
+*/
 void LxaStandardItemModel::load_positive_signatures(CSignatureCollection* p_signatures, eSortStyle this_sort_style)
 {
     clear();

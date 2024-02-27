@@ -187,7 +187,7 @@ void CLexicon::step1_from_words_to_protostems()
         Words = get_word_collection()->get_end_sorted_list();
     }
     initialize_progress(Words->size());
-    m_ParseMap.clear();
+    m_Parse_map.clear();
 
 
     /* this created a  bug, signatures with just one suffix, if a word occurred with a hyphen and no other suffixes
@@ -292,7 +292,7 @@ void CLexicon::step2_from_protostems_to_parses()
  * This creates signatures, which in turn creates stems and affixes.
  */
 void   CLexicon::step3_from_parses_to_stem2sig_maps(QString name_of_calling_function)
-{   initialize_progress(m_ParseMap.size());
+{   initialize_progress(m_Parse_map.size());
 
     /* Since this is going to be used several times, and all but the first time
      * there will be a previous set of stems, it would make sense to contrast
@@ -326,7 +326,7 @@ void CLexicon::step3c_attach_affix_to_stem(CParse* parse){
     m_temp_stem2sig_map[stem].insert(parse->get_affix());
 }
 void CLexicon::step3b_from_parses_to_stem2sig_map(  )
-{   foreach (CParse* this_parse, m_ParseMap){
+{   foreach (CParse* this_parse, m_Parse_map){
         step3c_attach_affix_to_stem(this_parse);
     }
 }
@@ -557,7 +557,7 @@ void CLexicon::step4f_add_analysis_to_word_for_suffix_case(CParse& Parse, CSigna
     if (Parse.get_affix().contains(":")){
         CStem* inner_suffix = m_suffixal_stems->find_or_fail(Parse.get_affix());
         if (inner_suffix) {
-            CSignature* pLocalSig = inner_suffix->get_last_signature();
+            CSignature* pLocalSig = inner_suffix->get_signature();
             foreach (QString suffix, pLocalSig->get_affix_string_list())
             {  if (Parse.get_affix() == "NULL") suffix = "";
                 word =       Parse.get_stem()       + clean(Parse.get_affix())         + Parse.get_affix();
@@ -594,7 +594,7 @@ void CLexicon::step4f_add_analysis_to_word_for_prefix_case(CParse& parse, CSigna
     if (parse.get_affix().contains(":")){
         CStem* inner_prefix = m_prefixal_stems->find_or_fail(parse.get_affix());
         if (inner_prefix) {
-            CSignature* pLocalSig = inner_prefix->get_last_signature();
+            CSignature* pLocalSig = inner_prefix->get_signature();
             foreach (QString prefix, pLocalSig->get_affix_string_list()) {
                 if (prefix == "NULL") prefix = "";
                 //word =  stem + clean(affix) + suffix;

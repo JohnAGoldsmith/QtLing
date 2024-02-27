@@ -48,6 +48,7 @@ class LeftSideTreeView;
 class MainMenuBar;
 class FindDockWidget;
 class SigPairModel;
+class parsemodel;
 
 QT_END_NAMESPACE
 
@@ -141,6 +142,7 @@ class MainWindow : public QMainWindow
     stemmodel *                             m_prefix_protostem_model;
     SigPairModel *                          m_suffixal_sigpair_model;
     sigpairproxymodel *                     m_suffixal_sigpair_model_proxy;
+    parsemodel *                            m_parse_model;
 
     affixmodel *                            m_suffix_model;
     affixmodel *                            m_prefix_model;
@@ -218,6 +220,7 @@ public:
 
     void                                    display_models(const QModelIndex &);
     void                                    display_words();
+    void                                    display_parses(CLexicon*);
     void                                    display_suffixes(CLexicon*);
     void                                    display_prefixes(CLexicon*);
     void                                    display_parasuffixes(CLexicon*);

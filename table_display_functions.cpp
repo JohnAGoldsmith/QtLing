@@ -4,6 +4,7 @@
 #include "graphics.h"
 #include "lxamodels.h"
 #include "Lexicon.h"
+#include "parsemodel.h"
 
 void MainWindow::display_words()
 {
@@ -28,6 +29,10 @@ void MainWindow::display_words()
     m_tableView_upper_right->set_data_type ( e_data_words );
     m_tableView_upper_right->resizeColumnsToContents();
     */
+}
+void MainWindow::display_parses(CLexicon* lexicon){
+    m_parse_model = new parsemodel(m_my_lexicon->get_parses(), this);
+    m_tableView_upper_temp->setModel(m_parse_model);
 }
 void MainWindow::display_suffix_stems(CLexicon* lexicon){
     if (m_suffixal_stem_model) {delete m_suffixal_stem_model;}

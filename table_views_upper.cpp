@@ -245,9 +245,9 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
              m_parent_window->display_suffix_stems(m_parent_window->get_lexicon());
 
             // ---------------  old --------------------------------------------------------
-            setModel(m_parent_window->m_proxy_models["Suffixal stems"]);
-            set_data_type(e_suffixal_stems);
-            return;
+            //setModel(m_parent_window->m_proxy_models["Suffixal stems"]);
+            //set_data_type(e_suffixal_stems);
+            //return;
             //--------------------------------------------------------------------------------
         }
         if (component == "Parasuffixes"){
@@ -333,6 +333,10 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
             return;
         }
         if(component == "Parses"){
+            // new:
+             m_parent_window->display_parses(m_parent_window->get_lexicon());
+
+            // old:
             setModel(m_parent_window->m_proxy_models["Parses"]);
             set_data_type(e_data_parses);
             sortByColumn(1,Qt::AscendingOrder);

@@ -104,6 +104,8 @@ MainWindow::MainWindow()
     m_suffixal_protostem_model = nullptr;
     m_suffixal_sigpair_model = nullptr;
 
+    m_parse_model = nullptr;
+
 
     // -----------------  old --------------------------------------------------------------
     m_proxy_models["suffix_signatures_1"] = new LxaSortFilterProxyModel(this);
@@ -648,9 +650,10 @@ void MainWindow::display_models(const QModelIndex & index){
     if (component == "Prefixal stems")      { display_prefix_stems(m_my_lexicon);        return;}
     if (component == "Suffixal protostems") { display_suffixal_protostems(m_my_lexicon); return;} // this currently doesn´t happen
     if (component == "Suffixes")            { display_suffixes(m_my_lexicon);            return;}
-    if (component == "Parasuffixes")        { display_parasuffixes(m_my_lexicon);            return;}
-    if (component == "Suffixal sig pairs")              { display_suffixal_sigpairs(m_my_lexicon);            return;}
-
+    if (component == "Prefixes")            { display_prefixes(m_my_lexicon);            return;}
+    if (component == "Parasuffixes")        { display_parasuffixes(m_my_lexicon);        return;}
+    if (component == "Suffixal sig pairs")   { display_suffixal_sigpairs(m_my_lexicon);  return;}
+    if (component == "Parses")              { display_parses(m_my_lexicon);              return;}
 }
 
 
@@ -672,28 +675,38 @@ void MainWindow::load_models(CLexicon* lexicon)
 
     statusBar()->showMessage("Loading models: Parses");
     m_Models["Parses"]              ->load_parses(lexicon->get_parses());
-    statusBar()->showMessage("Loading models: Suffixal stems");
-    m_Models["Suffixal stems"]      ->load_stems(lexicon->get_suffixal_stems());
-    statusBar()->showMessage("Loading models: Prefixal stems");
-    m_Models["Prefixal stems"]      ->load_stems(lexicon->get_prefixal_stems());
-    statusBar()->showMessage("Loading models: Suffixes");
-    m_Models["Suffixes"]            ->load_suffixes(lexicon->get_suffixes());
+
+    //statusBar()->showMessage("Loading models: Suffixal stems");
+    //m_Models["Suffixal stems"]      ->load_stems(lexicon->get_suffixal_stems());
+    //statusBar()->showMessage("Loading models: Prefixal stems");
+    //m_Models["Prefixal stems"]      ->load_stems(lexicon->get_prefixal_stems());
+    //statusBar()->showMessage("Loading models: Suffixes");
+    //m_Models["Suffixes"]            ->load_suffixes(lexicon->get_suffixes());
+
+
+
     statusBar()->showMessage("Loading models: Prefixes");
     m_Models["Prefixes"]            ->load_prefixes(lexicon->get_prefixes());
     statusBar()->showMessage("Loading models: Signatures");
-    m_Models["Suffixal signatures"]          ->load_signatures(lexicon->get_signatures());
-    statusBar()->showMessage("Loading models: Signatures completed");
+
+
+    //m_Models["Suffixal signatures"]          ->load_signatures(lexicon->get_signatures());
+    //statusBar()->showMessage("Loading models: Signatures completed");
+
+
+
+
     /* Using the sorting function of the proxy models, we do not need duplicate source models,
      * removed them to save some memory, Hanson 11.2
      */
     statusBar()->showMessage("Loading models: EPositive signatures");
     m_Models["EPositive signatures"]->load_positive_signatures(lexicon->get_signatures());
 
-    m_Models["Prefix signatures"]   ->load_signatures( lexicon->get_prefix_signatures());
+    //m_Models["Prefix signatures"]   ->  load_signatures( lexicon->get_prefix_signatures());
     m_Models["EPositive prefix signatures"]->load_positive_signatures(lexicon->get_prefix_signatures());
     //m_Models["Residual parasignatures"]->load_parasignatures(lexicon->get_residual_signatures()); // problem -- these are too big!
     //m_Models["Parasuffixes"]        ->load_parasuffixes(lexicon->get_parasuffixes()); // these are continuations after any protostem.
-    m_Models["Passive signatures"]  ->load_signatures(lexicon->get_passive_signatures());
+    //m_Models["Passive signatures"]  ->load_signatures(lexicon->get_passive_signatures());
     statusBar()->showMessage("Loading models: Hypotheses");
     m_Models["Hypotheses"]          ->load_hypotheses(lexicon->get_hypotheses());
     m_Models["Hypotheses 2"]        ->load_hypotheses_2(lexicon->get_hypotheses());

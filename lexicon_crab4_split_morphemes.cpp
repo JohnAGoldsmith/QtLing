@@ -27,7 +27,7 @@ void CLexicon::Crab_4()
 void CLexicon::replace_parse_pairs_from_current_signature_structure()
 {
     //m_Raw_parses = new QMap<QString, CParse*> (m_ParseMap);
-    m_ParseMap.clear();
+    m_Parse_map.clear();
     QList<CSignature*> *           these_signatures;
     m_suffix_flag?
         these_signatures = m_Signatures->get_signature_list():

@@ -167,16 +167,16 @@ CStemCollection* CLexicon::get_active_stem_collection(){
 }
 
 void CLexicon::add_parse(CParse * parse){
-    if (m_ParseMap.contains(parse->display_full())){
+    if (m_Parse_map.contains(parse->display_full())){
         return;
     }
-    m_ParseMap[parse->display_full()] = parse;
+    m_Parse_map[parse->display_full()] = parse;
 }
 void CLexicon::clear_parses()
 {    CParse* p_parse;
-    foreach (p_parse, m_ParseMap)
+    foreach (p_parse, m_Parse_map)
         delete p_parse;
-    m_ParseMap.clear();
+    m_Parse_map.clear();
 }
 void CLexicon::step4a_clear_active_signatures_and_affixes(){
     if (m_suffix_flag){
@@ -191,8 +191,8 @@ void CLexicon::step4a_clear_active_signatures_and_affixes(){
     }
 }
 bool CLexicon::remove_parse(QString full_display_of_parse){
-    if (m_ParseMap.contains(full_display_of_parse)){
-        m_ParseMap.remove(full_display_of_parse);
+    if (m_Parse_map.contains(full_display_of_parse)){
+        m_Parse_map.remove(full_display_of_parse);
         return  true;
     } else{
        qDebug() <<  "       Failed to remove parse: " << full_display_of_parse << 149;
@@ -200,8 +200,8 @@ bool CLexicon::remove_parse(QString full_display_of_parse){
     }
 }
 bool CLexicon::remove_parse(CParse* parse){
-    if (m_ParseMap.contains(parse->display_full())){
-        m_ParseMap.remove(parse->display_full());
+    if (m_Parse_map.contains(parse->display_full())){
+        m_Parse_map.remove(parse->display_full());
         return  true;
     } else{
        return false;
@@ -209,8 +209,8 @@ bool CLexicon::remove_parse(CParse* parse){
 }
 // this isn't used: I avoid references, prefer pointers.
 bool CLexicon::remove_parse(CParse& parse){
-    if (m_ParseMap.contains(parse.display_full())){
-        m_ParseMap.remove(parse.display_full());
+    if (m_Parse_map.contains(parse.display_full())){
+        m_Parse_map.remove(parse.display_full());
         return  true;
     } else{
        return false;

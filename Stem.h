@@ -16,7 +16,8 @@ class CStem
 {
 protected:
     QString             m_key;                  // json tag: "stem"
-    QList<CSignature*>  m_Signatures;           // json tag: "signatures"
+    //QList<CSignature*>  m_Signatures;           // json tag: "signatures"
+    CSignature*         m_signature;
     QList<CSuffix*>     m_parasignature;        // json tag: "parasignature"
     // a parasignature is made up of approved affixes,
     // but the parasignature has not yet been approved.
@@ -41,8 +42,9 @@ public:
     QString             display_compound_structure () {return m_compound.first + " = " + m_compound.second;}
     QString             get_key()               const{return m_key;}
     QString             get_stem()              const   { return m_key; }
-    QList<CSignature*> * GetSignatures()                { return &m_Signatures; }
-    CSignature*         get_last_signature()            { return m_Signatures.last(); }
+    //QList<CSignature*> * GetSignatures()                { return &m_Signatures; }
+    CSignature*         get_signature() {return m_signature;}
+    //CSignature*         get_last_signature()            { return m_Signatures.last(); }
     int                 get_count()             const   {return m_count;}
     void                set_count (int n)               {m_count = n;}
     int                 get_word_type_count();

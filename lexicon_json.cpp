@@ -399,12 +399,10 @@ void CStem::write_json(QJsonObject &ref_json, eJsonType json_type) const
         case INDEXED: {
             QJsonArray arr_signatures;
             CSignature* p_sig;
-            foreach (p_sig, m_Signatures) {
-                QJsonObject obj_sig;
-                obj_sig["sig"] = p_sig->get_key();
-                obj_sig["id"] = p_sig->get_json_id();
-                arr_signatures.append(obj_sig);
-            }
+            QJsonObject obj_sig;
+            obj_sig["sig"] = m_signature->get_key();
+            obj_sig["id"]= m_signature->get_json_id();
+            arr_signatures.append(obj_sig);
 
             /*QJsonArray arr_parasignature;
             CSuffix* p_suffix;
@@ -431,9 +429,10 @@ void CStem::write_json(QJsonObject &ref_json, eJsonType json_type) const
         }
         case MAPPED: {
             QJsonArray arr_signatures;
-            foreach(CSignature* p_sig, m_Signatures) {
-                arr_signatures.append(p_sig->get_key());
-            }
+            //foreach(CSignature* p_sig, m_Signatures) {
+            //    arr_signatures.append(p_sig->get_key());
+            //}
+            arr_signatures.append(m_signature->get_key());
             ref_json["sigs"] = arr_signatures;
             ref_json["count"] = m_count;
             return;

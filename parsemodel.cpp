@@ -1,8 +1,11 @@
 #include "parsemodel.h"
 #include "cparse.h"
 
-parsemodel::parsemodel(QList<CParse*> * parses, QObject * parent): QAbstractItemModel {parent} {
-    m_parses = parses;
+parsemodel::parsemodel(QMap<QString, CParse*> * parses, QObject * parent): QAbstractItemModel {parent} {
+    m_parses = new QList<CParse*>;
+    foreach (CParse* parse, parses->values()){
+        m_parses->append(parse);
+    }
 }
 
 int parsemodel::rowCount(const QModelIndex &parent )const{
@@ -17,6 +20,13 @@ QVariant parsemodel::data(const QModelIndex & index, int role)const{
     int row = index.row();
     int column = index.column();
     if (row > m_parses->count()){ return QVariant();}
+    if (column == 0){
+        return QVariant(m_parses->at(row)->get_stem());
+    }
+    if (column == 1){
+        return QVariant(m_parses->at(row)->get_affix());
+    }
+    return QVariant();
 }
 QModelIndex parsemodel::index(int row, int column, const QModelIndex &parent) const {
     Q_UNUSED(parent);
@@ -51,6 +61,7 @@ bool lessthan_affix(CParse* parse1, CParse* parse2){
 bool greaterthan_affix(CParse* parse1, CParse* parse2){
     return parse1->get_affix() > parse2->get_affix();
 }
+/*
 void parsemodel::sort(int column, Qt::SortOrder order){
     switch(column){
     case 0:{if (order == Qt::AscendingOrder) {
@@ -72,3 +83,4 @@ void parsemodel::sort(int column, Qt::SortOrder order){
     }
     emit layoutChanged();
 }
+*/

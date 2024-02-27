@@ -143,7 +143,7 @@ protected:
     CompoundComponentCollection *   m_CompoundComponents;
     QMap<QString, CParse*>          m_Raw_parses;
     //QList<CParse*> *                m_Parses; // get rid of this list, just use the QMap
-    QMap<QString, CParse*>          m_ParseMap;
+    QMap<QString, CParse*>          m_Parse_map;
 
     //QMap<QString, protostem*>       m_suffix_protostems;
     //QMap<QString, protostem*>       m_prefix_protostems;
@@ -245,7 +245,7 @@ public:
     QMap<QString, CHypothesis*>  *              get_hypothesis_map()        { return m_Hypothesis_map;}
     CHypothesis*                                get_hypothesis(QString hypothesis_label);
     int                                         get_internal_affix_count(QString );
-    QMap<QString, CParse* > *                   get_parses()                {return &m_ParseMap;}
+    QMap<QString,CParse* > *                    get_parses()                {return  &m_Parse_map;}
     CSuffixCollection*                          get_parasuffixes()          { return m_ParaSuffixes;}
     //QMap<QString,QStringList*> *                 get_parasuffixes()          {return m_ParaSuffixes;}
     CSignatureCollection*                       get_passive_signatures()    { return m_PassiveSignatures;}

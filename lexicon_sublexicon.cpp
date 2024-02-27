@@ -41,7 +41,7 @@ CLexicon* CLexicon::build_sublexicon(MainWindow* my_window)
         QMapIterator<QString, CStem*> stem_iter (*m_suffixal_stems->get_stem_map());
         while (stem_iter.hasNext()){
             CStem* pStem = stem_iter.next().value();
-            CSignature* pSig = pStem->get_last_signature();
+            CSignature* pSig = pStem->get_signature();
             if (pSig->get_stem_entropy() < m_entropy_threshold_for_stems){
                 continue;
             }
@@ -59,7 +59,7 @@ CLexicon* CLexicon::build_sublexicon(MainWindow* my_window)
         QMapIterator<QString, CStem*> stem_iter (*m_prefixal_stems->get_stem_map());
         while (stem_iter.hasNext()){
             CStem* pStem = stem_iter.next().value();
-            CSignature* pSig = pStem->get_last_signature();
+            CSignature* pSig = pStem->get_signature();
             if (pSig->get_stem_entropy() < m_entropy_threshold_for_stems){
                 continue;
             }
