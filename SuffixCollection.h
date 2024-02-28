@@ -72,8 +72,8 @@ private:
     CPrefixCollection& operator=(const CPrefixCollection& x);
 public:
 
-    CPrefix*                operator<< (const QString&);
-    CPrefix*                operator^= (const QString&);
+    //CPrefix*                operator<< (const QString&);
+    //CPrefix*                operator^= (const QString&);
     CPrefix_ptr_list *       get_prefix_list() {return &m_prefix_list;}
     int                     get_count() const               { return m_PrefixMap.size(); }
     CPrefix*                find_or_add        (const QString&); //same as << (find if it is there, else add)

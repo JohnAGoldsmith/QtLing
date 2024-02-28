@@ -96,40 +96,35 @@ void CPrefixCollection::clear(){
     m_prefix_list.clear();
 }
 
-CPrefix* CPrefixCollection::operator ^=(const QString& prefix)
-{
-      return this->find_or_fail ( prefix );
+/*CPrefix* CPrefixCollection::operator ^=(const QString& prefix)
+{      return this->find_or_fail ( prefix );
 }
+*/
 CPrefix* CPrefixCollection::find_or_fail(const QString& prefix)
-{
-    QMap<QString,CPrefix*>::iterator prefix_iter = m_PrefixMap.find(prefix);
-    if (prefix_iter == m_PrefixMap.end()){
-        return NULL;
-    } else{
-        return prefix_iter.value();
+{   if (m_PrefixMap.contains(prefix)){
+        return m_PrefixMap[prefix];
     }
-
+    return NULL;
 }
 CPrefix* CPrefixCollection::find_or_add(const QString& prefix)
-{
-
-    QMap<QString,CPrefix*>::iterator prefix_iter = m_PrefixMap.find(prefix);
-
-    if (prefix_iter == m_PrefixMap.end()){
-      CPrefix* pPrefix = new CPrefix(prefix);
-      m_PrefixMap.insert(prefix, pPrefix);
-      m_prefix_list.append(pPrefix);
-      return pPrefix;
+{   if (m_PrefixMap.contains(prefix)){
+        return m_PrefixMap[prefix];
     }
-    return prefix_iter.value();
+    CPrefix* pPrefix = new CPrefix(prefix);
+    m_PrefixMap.insert(prefix, pPrefix);
+    m_prefix_list.append(pPrefix);
+    qDebug() << 115 << prefix << m_prefix_list.count();
+    return pPrefix;
 }
 
 
-
+/*
 CPrefix* CPrefixCollection::operator << (const QString& prefix)
 {
     return this->find_or_add(prefix);
+    qDebug() << 124;
 }
+*/
 /*
 void CPrefixCollection::get_set_of_prefixes(QSet<QString> *p_string_set){
     p_string_set->fromList(m_PrefixMap.uniqueKeys());
@@ -149,6 +144,7 @@ bool count_compare_prefixes(CPrefix* pPrefix1, CPrefix* pPrefix2){
 
 void CPrefixCollection::sort_by_count()
 {
+    m_prefix_list.clear();
     QMapIterator<QString, CPrefix*> prefix_iter (m_PrefixMap);
     while (prefix_iter.hasNext()){
         prefix_iter.next();

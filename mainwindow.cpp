@@ -534,6 +534,7 @@ void MainWindow::do_crab1()
     CLexicon* lexicon = get_lexicon();
     lexicon->Crab_1();
     load_models(get_lexicon());
+    qDebug() << 537<< get_lexicon()->get_prefixes()->get_count()<< get_lexicon()->get_prefixes()->get_prefix_list()->count();
     write_stems_and_words();
     create_or_update_TreeModel(get_lexicon());
     m_graphics_scene->set_signature_collection(get_lexicon()->get_active_signature_collection());
@@ -543,6 +544,7 @@ void MainWindow::do_crab1()
           display_epositive_suffix_signatures(get_lexicon()):
           display_epositive_prefix_signatures(get_lexicon());
     statusBar()->showMessage("Crab, phase 1 completed.");
+    qDebug() << 547<< get_lexicon()->get_prefixes()->get_count() << get_lexicon()->get_prefixes()->get_prefix_list()->count();
 }
 
 void MainWindow::do_crab2()
@@ -673,8 +675,8 @@ void MainWindow::load_models(CLexicon* lexicon)
 
     // removed these Feb 20 2024; these duplicate use of memory, compared to models which don't replicate the entries.
 
-    statusBar()->showMessage("Loading models: Parses");
-    m_Models["Parses"]              ->load_parses(lexicon->get_parses());
+    //statusBar()->showMessage("Loading models: Parses");
+    //m_Models["Parses"]              ->load_parses(lexicon->get_parses());
 
     //statusBar()->showMessage("Loading models: Suffixal stems");
     //m_Models["Suffixal stems"]      ->load_stems(lexicon->get_suffixal_stems());
@@ -685,11 +687,11 @@ void MainWindow::load_models(CLexicon* lexicon)
 
 
 
-    statusBar()->showMessage("Loading models: Prefixes");
-    m_Models["Prefixes"]            ->load_prefixes(lexicon->get_prefixes());
-    statusBar()->showMessage("Loading models: Signatures");
+    //statusBar()->showMessage("Loading models: Prefixes");
+    //m_Models["Prefixes"]            ->load_prefixes(lexicon->get_prefixes());
 
 
+    //statusBar()->showMessage("Loading models: Signatures");
     //m_Models["Suffixal signatures"]          ->load_signatures(lexicon->get_signatures());
     //statusBar()->showMessage("Loading models: Signatures completed");
 
@@ -727,7 +729,7 @@ void MainWindow::load_models(CLexicon* lexicon)
 
     statusBar()->showMessage("Loading models: proxymodels");
     m_proxy_models["Words 2"]->setSourceModel(m_Models["Words"]);
-    m_proxy_models["Prefixes 2"]->setSourceModel(m_Models["Prefixes"]);
+    //m_proxy_models["Prefixes 2"]->setSourceModel(m_Models["Prefixes"]);
     m_proxy_models["Suffixes 2"]->setSourceModel(m_Models["Suffixes"]);
     m_proxy_models["Signatures 2"]->setSourceModel(m_Models["Suffixal signatures"]);
     m_proxy_models["Prefix signatures 2"]->setSourceModel(m_Models["Prefix signatures"]);

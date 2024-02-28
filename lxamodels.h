@@ -66,7 +66,7 @@ public:
 
     //void        load_words(CWordCollection*);
     //void        load_stems(CStemCollection * p_stems);
-    void        load_prefixes(CPrefixCollection * p_prefixes);
+ //   void        load_prefixes(CPrefixCollection * p_prefixes);
 //    void        load_suffixes(CSuffixCollection * p_suffixes);
 //    void        load_signatures(CSignatureCollection * p_signatures, eSortStyle = SIG_BY_STEM_COUNT);
     void        load_parasignatures(CSignatureCollection * p_signatures);
@@ -80,7 +80,7 @@ public:
 
     // add component 11
     void        load_category(QString component_name, eComponentType);
-    void        load_parses(QMap<QString, CParse*>* );
+    //void        load_parses(QMap<QString, CParse*>* );
 
     // for displaying protostems
     void        load_protostems(QMap<QString, protostem*>* p_protostems);

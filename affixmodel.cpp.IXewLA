@@ -4,10 +4,8 @@ affixmodel::affixmodel(QList<CPrefix*> * prefixes, QObject *parent)
     : QAbstractItemModel{parent}
 {
     m_prefixes = prefixes;
-    qDebug() << 7<< prefixes->count();
-    foreach (CPrefix* prefix, *m_prefixes){
-        qDebug() << 8 << prefix->get_key();
-    }
+    foreach (CPrefix* prefix, *m_prefixes)
+        qDebug() << 8 << prefix;
     m_suffixes = nullptr;
      QStringList labels = {tr("word"), tr("word count"), tr("prefix signatures")};
 }

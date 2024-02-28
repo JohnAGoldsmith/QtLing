@@ -190,8 +190,11 @@ void MainWindow::display_prefixes(CLexicon * lexicon)
     Q_UNUSED (lexicon);
     // new
     Q_UNUSED (lexicon)
-    m_affix_model_proxy_1->setSourceModel(m_prefix_model);
-    m_tableView_upper_temp->setModel(m_affix_model_proxy_1);
+    //m_affix_model_proxy_1->setSourceModel(m_prefix_model);
+    //m_tableView_upper_temp->setModel(m_affix_model_proxy_1);
+
+    m_prefix_model = new affixmodel(get_lexicon()->get_prefixes()->get_prefix_list());
+    m_tableView_upper_temp->setModel(m_prefix_model);
 
     // old
     m_tableView_upper_left->setModel(m_proxy_models["Prefixes"]);

@@ -157,6 +157,7 @@ void LxaStandardItemModel::load_words(CWordCollection* p_words)
     }
 }
 */
+/*
 void LxaStandardItemModel::load_parses(QMap<QString, CParse*> * Parses )
 {
     QStringList labels;
@@ -171,7 +172,7 @@ void LxaStandardItemModel::load_parses(QMap<QString, CParse*> * Parses )
         item_list.append(new QStandardItem(parse->get_right_string()));
         appendRow(item_list);
     }
-}
+}*/
 void LxaStandardItemModel::load_compounds(CompoundWordCollection *p_compounds)
 {
     typedef QStandardItem QSI;
@@ -272,7 +273,7 @@ void LxaStandardItemModel::load_suffixes(CSuffixCollection * p_suffixes)
         appendRow(item_list);
     }
 }
-*/
+
 void LxaStandardItemModel::load_prefixes(CPrefixCollection * p_prefixes)
 {
     clear();
@@ -303,7 +304,7 @@ void LxaStandardItemModel::load_prefixes(CPrefixCollection * p_prefixes)
         appendRow(item_list);
     }
 }
-/*
+
 void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures, eSortStyle this_sort_style)
 {
     clear();

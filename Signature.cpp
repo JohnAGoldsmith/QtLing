@@ -182,18 +182,14 @@ void CSignature::add_stem_pointer(CStem* pStem)
 void CSignature::add_affix_ptr(CPrefix *pPrefix) {
     if (m_Prefixes.contains(pPrefix)){
         return;
-    } else{
-        m_Prefixes.append(pPrefix);
     }
-    return;
+    m_Prefixes.append(pPrefix);
 }
 void CSignature::add_affix_ptr(CSuffix *pSuffix) {
     if (m_Suffixes.contains(pSuffix)){
         return;
-    } else{
-        m_Suffixes.append(pSuffix);
     }
-    return;
+    m_Suffixes.append(pSuffix);
 }
 
 bool compare_stems_of_sig(const CStem* pStem1, const CStem* pStem2)

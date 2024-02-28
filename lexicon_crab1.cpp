@@ -81,6 +81,8 @@ void CLexicon::Crab_1()
 
     //collect_parasuffixes(); // these are suffixes found in a signature with only one stem
 
+    qDebug() << 84 << "Number of prefixes" << m_Prefixes->get_count() << get_prefixes()->get_prefix_list()->count();
+
     m_suffix_flag?
        m_Signatures->calculate_sig_robustness():
        m_PrefixSignatures->calculate_sig_robustness();
@@ -88,6 +90,8 @@ void CLexicon::Crab_1()
     if (m_suffix_flag) {
         m_Signatures->produce_latex ();
     }
+    qDebug() << 93 << "Number of prefixes" << m_Prefixes->get_count() << get_prefixes()->get_prefix_list()->count();
+
 }
 
 
@@ -489,7 +493,6 @@ void CLexicon::add_affix_to_signature(QString affix, CSignature*  pSig){
         pSig->add_affix_ptr(pSuffix);
     } else {
         CPrefix* pPrefix = m_Prefixes->find_or_add(affix);
-        //pPrefix->increment_word_count(pSig->get_number_of_stems());
         pSig->add_affix_ptr(pPrefix);
     }
 }
@@ -597,8 +600,6 @@ void CLexicon::step4f_add_analysis_to_word_for_prefix_case(CParse& parse, CSigna
             CSignature* pLocalSig = inner_prefix->get_signature();
             foreach (QString prefix, pLocalSig->get_affix_string_list()) {
                 if (prefix == "NULL") prefix = "";
-                //word =  stem + clean(affix) + suffix;
-                // is this right?:
                 word = parse.get_affix() + clean(parse.get_affix()) + parse.get_stem();
 
                 CWord* pWord = m_Words->find_or_fail(word);
