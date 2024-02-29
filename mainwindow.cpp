@@ -675,43 +675,21 @@ void MainWindow::load_models(CLexicon* lexicon)
 
     // removed these Feb 20 2024; these duplicate use of memory, compared to models which don't replicate the entries.
 
-    //statusBar()->showMessage("Loading models: Parses");
-    //m_Models["Parses"]              ->load_parses(lexicon->get_parses());
-
-    //statusBar()->showMessage("Loading models: Suffixal stems");
-    //m_Models["Suffixal stems"]      ->load_stems(lexicon->get_suffixal_stems());
-    //statusBar()->showMessage("Loading models: Prefixal stems");
-    //m_Models["Prefixal stems"]      ->load_stems(lexicon->get_prefixal_stems());
-    //statusBar()->showMessage("Loading models: Suffixes");
-    //m_Models["Suffixes"]            ->load_suffixes(lexicon->get_suffixes());
-
-
-
-    //statusBar()->showMessage("Loading models: Prefixes");
-    //m_Models["Prefixes"]            ->load_prefixes(lexicon->get_prefixes());
-
-
-    //statusBar()->showMessage("Loading models: Signatures");
-    //m_Models["Suffixal signatures"]          ->load_signatures(lexicon->get_signatures());
-    //statusBar()->showMessage("Loading models: Signatures completed");
-
-
-
 
     /* Using the sorting function of the proxy models, we do not need duplicate source models,
      * removed them to save some memory, Hanson 11.2
      */
-    statusBar()->showMessage("Loading models: EPositive signatures");
-    m_Models["EPositive signatures"]->load_positive_signatures(lexicon->get_signatures());
+    //statusBar()->showMessage("Loading models: EPositive signatures");
+    //m_Models["EPositive signatures"]->load_positive_signatures(lexicon->get_signatures());
 
     //m_Models["Prefix signatures"]   ->  load_signatures( lexicon->get_prefix_signatures());
-    m_Models["EPositive prefix signatures"]->load_positive_signatures(lexicon->get_prefix_signatures());
+    //m_Models["EPositive prefix signatures"]->load_positive_signatures(lexicon->get_prefix_signatures());
     //m_Models["Residual parasignatures"]->load_parasignatures(lexicon->get_residual_signatures()); // problem -- these are too big!
     //m_Models["Parasuffixes"]        ->load_parasuffixes(lexicon->get_parasuffixes()); // these are continuations after any protostem.
     //m_Models["Passive signatures"]  ->load_signatures(lexicon->get_passive_signatures());
     statusBar()->showMessage("Loading models: Hypotheses");
-    m_Models["Hypotheses"]          ->load_hypotheses(lexicon->get_hypotheses());
-    m_Models["Hypotheses 2"]        ->load_hypotheses_2(lexicon->get_hypotheses());
+    //m_Models["Hypotheses"]          ->load_hypotheses(lexicon->get_hypotheses());
+   // m_Models["Hypotheses 2"]        ->load_hypotheses_2(lexicon->get_hypotheses());
     //m_Models["SigGraphEdges_1"]        ->load_sig_graph_edges(lexicon->get_sig_pairs()->get_map());
     //m_Models["SigGraphEdges_2"]        ->load_sig_graph_edges(lexicon->get_sig_pairs->get_map(),2);
 
@@ -727,16 +705,16 @@ void MainWindow::load_models(CLexicon* lexicon)
     }
     // Link duplicate proxy models to their corresponding source models. Hanson 11.2
 
-    statusBar()->showMessage("Loading models: proxymodels");
-    m_proxy_models["Words 2"]->setSourceModel(m_Models["Words"]);
+    //statusBar()->showMessage("Loading models: proxymodels");
+    //m_proxy_models["Words 2"]->setSourceModel(m_Models["Words"]);
     //m_proxy_models["Prefixes 2"]->setSourceModel(m_Models["Prefixes"]);
-    m_proxy_models["Suffixes 2"]->setSourceModel(m_Models["Suffixes"]);
-    m_proxy_models["Signatures 2"]->setSourceModel(m_Models["Suffixal signatures"]);
-    m_proxy_models["Prefix signatures 2"]->setSourceModel(m_Models["Prefix signatures"]);
-    m_proxy_models["EPositive signatures 2"]->setSourceModel(m_Models["EPositive signatures"]);
-    m_proxy_models["EPositive prefix signatures 2"]->setSourceModel(m_Models["EPositive prefix signatures"]);
-    statusBar()->showMessage("Finished loading models.");
-    qDebug() << "all models loaded";
+    //m_proxy_models["Suffixes 2"]->setSourceModel(m_Models["Suffixes"]);
+    //m_proxy_models["Signatures 2"]->setSourceModel(m_Models["Suffixal signatures"]);
+    //m_proxy_models["Prefix signatures 2"]->setSourceModel(m_Models["Prefix signatures"]);
+    //m_proxy_models["EPositive signatures 2"]->setSourceModel(m_Models["EPositive signatures"]);
+    //m_proxy_models["EPositive prefix signatures 2"]->setSourceModel(m_Models["EPositive prefix signatures"]);
+    //statusBar()->showMessage("Finished loading models.");
+    //qDebug() << "all models loaded";
 
 }
 

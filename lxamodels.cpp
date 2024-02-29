@@ -134,45 +134,7 @@ void  LxaStandardItemModel::load_category(QString , eComponentType)
 {
 
 }
-/*
-void LxaStandardItemModel::load_words(CWordCollection* p_words)
-{
-    QStringList labels = {tr("word"), tr("word count"), tr("suffix signatures")};
-    setHorizontalHeaderLabels(labels);
-    m_Description = QString (" ");
-    clear();
-    for (int i = 0; i < p_words->get_count(); i++){
-        CWord* pWord = p_words->get_word(i);
-        QList<QStandardItem*> item_list;
-        item_list.append(new QStandardItem(pWord->get_key()));
 
-        QStandardItem* pItem2 = new QStandardItem();
-        pItem2->setData(pWord->count(), Qt::DisplayRole); // --- Numerical data
-        item_list.append(pItem2);
-
-        foreach (const Parse_triple* this_parse_triple, *pWord->get_parse_triple_list())  {
-            item_list.append(new QStandardItem(this_parse_triple->m_sig_string)) ;
-        }
-        appendRow(item_list);
-    }
-}
-*/
-/*
-void LxaStandardItemModel::load_parses(QMap<QString, CParse*> * Parses )
-{
-    QStringList labels;
-    labels << "parse";
-    setHorizontalHeaderLabels(labels);
-    m_Description = QString (" ");
-    clear();
-    foreach (CParse* parse, *Parses)
-    {
-        QList<QStandardItem*> item_list;
-        item_list.append(new QStandardItem(parse->get_left_string()));
-        item_list.append(new QStandardItem(parse->get_right_string()));
-        appendRow(item_list);
-    }
-}*/
 void LxaStandardItemModel::load_compounds(CompoundWordCollection *p_compounds)
 {
     typedef QStandardItem QSI;
@@ -224,152 +186,9 @@ void LxaStandardItemModel::load_protostems(QMap<QString, protostem *>* p_protost
         appendRow(item_list);
     }
 }
-/*
-void LxaStandardItemModel::load_stems(CStemCollection * p_stems)
-{
-    CStem*                          stem;
-    QMapIterator<QString, CStem*>  iter ( * p_stems->get_map() ) ;
-    clear();
-    while (iter.hasNext())
-    {
-        QList<QStandardItem*> item_list;
-        stem = iter.next().value();
-        QStandardItem *item1 = new QStandardItem(stem->get_key());
-        item_list.append(item1);
-        QStandardItem *item2 = new QStandardItem();
-        item2->setData(stem->get_count(), Qt::DisplayRole); // --- Numerical data --- //
-        item_list.append(item2);
-        QStandardItem * item3 = new QStandardItem(stem->get_signature()->get_key());
-        item_list.append(item3);
-
-        //QListIterator<CSignature*> sig_iter(*stem->GetSignatures());
-        //while (sig_iter.hasNext()){
-        //   sigstring_t sig = sig_iter.next()->get_key();
-        //   QStandardItem *item = new QStandardItem(sig);
-        //   item_list.append(item);
-        //}
-
-        appendRow(item_list);
-    }
-}
-*/
-/*
-void LxaStandardItemModel::load_suffixes(CSuffixCollection * p_suffixes)
-{
-    clear();
-    QStringList labels;
-    labels << "Suffix" << "# of signatures";
-    setHorizontalHeaderLabels(labels);
-    CSuffix_ptr_list_iterator suffix_iter(*p_suffixes->get_sorted_list());
-    while (suffix_iter.hasNext())
-    {
-        CSuffix* pSuffix = suffix_iter.next();
-        QStandardItem *item = new QStandardItem(pSuffix->get_key());
-        QStandardItem *item2 = new QStandardItem();
-        item2->setData(pSuffix->get_sig_count(), Qt::DisplayRole); // --- Numerical data --- //
-        QList<QStandardItem*> item_list;
-        item_list.append(item);
-        item_list.append(item2);
-        appendRow(item_list);
-    }
-}
-
-void LxaStandardItemModel::load_prefixes(CPrefixCollection * p_prefixes)
-{
-    clear();
-    QStringList labels;
-    labels << "Prefix" << "# of signatures";
-    setHorizontalHeaderLabels(labels);
-    double totalcount = 0;
-    CPrefix_ptr_list_iterator prefix_iter1(*p_prefixes->get_sorted_list());
-    while (prefix_iter1.hasNext())
-    {
-        CPrefix* pPrefix = prefix_iter1.next();
-        totalcount += pPrefix->get_sig_count();
-    }
-
-    CPrefix_ptr_list_iterator prefix_iter(*p_prefixes->get_sorted_list());
-    while (prefix_iter.hasNext())
-    {
-        CPrefix* pPrefix = prefix_iter.next();
-        QStandardItem *item = new QStandardItem(pPrefix->GetPrefix());
-        QStandardItem *item2 = new QStandardItem();
-        item2->setData(pPrefix->get_sig_count(), Qt::DisplayRole); // --- Numerical data --- //
-        QStandardItem *item3 = new QStandardItem();
-        item3->setData(pPrefix->get_sig_count()/totalcount, Qt::DisplayRole); // --- Numerical data --- //
-        QList<QStandardItem*> item_list;
-        item_list.append(item);
-        item_list.append(item2);
-        item_list.append(item3);
-        appendRow(item_list);
-    }
-}
-
-void LxaStandardItemModel::load_signatures(CSignatureCollection* p_signatures, eSortStyle this_sort_style)
-{
-    clear();
-    m_Signatures = p_signatures;
-    CSignature*         sig;
-    p_signatures->sort(this_sort_style);
-    m_sort_style = this_sort_style;
-    QStringList labels;
-    labels  << tr("signature") << "stem count" << "robustness"<< "fullness";
-    setHorizontalHeaderLabels(labels);
-    for (int signo = 0; signo<p_signatures->get_count(); signo++)
-    {
-        sig = p_signatures->get_at_sorted(signo);
-        QList<QStandardItem*> items;
-        const QString& str_sig = sig->get_key();//GetSignature();
-        QStandardItem * item1 = new QStandardItem(str_sig);
-        QStandardItem * item2 = new QStandardItem();
-        QStandardItem * item3 = new QStandardItem();
-        QStandardItem * item4 = new QStandardItem();
-        item2->setData(sig->get_number_of_stems(), Qt::DisplayRole); // --- Numerical data --- //
-        item3->setData(sig->get_robustness(), Qt::DisplayRole);      // --- Numerical data --- //
-        item4->setData(sig->get_stem_entropy(), Qt::DisplayRole);    // --- Numerical data --- //
-        items.append(item1);
-        items.append(item2);
-        items.append(item3);
-        items.append(item4);
-        appendRow(items);
-    }
-}
-*/
-void LxaStandardItemModel::load_positive_signatures(CSignatureCollection* p_signatures, eSortStyle this_sort_style)
-{
-    clear();
-    QStringList labels;
-    labels  << tr("signature") << "stem count" << "robustness"<< "fullness";
-    setHorizontalHeaderLabels(labels);
-    m_Signatures = p_signatures;
-    m_Description = "positive suffix signatures";
-    CSignature*         sig;
-    p_signatures->sort(this_sort_style);
-    m_sort_style = this_sort_style;
-    double threshold = p_signatures->get_lexicon()->get_entropy_threshold_for_positive_signatures();
-    for (int signo = 0; signo<p_signatures->get_count(); signo++)
-    {   sig = p_signatures->get_at_sorted(signo);
-        if (sig->get_stem_entropy() < threshold){continue;}
-
-        QList<QStandardItem*> items;
-        QStandardItem * item2 = new QStandardItem();
-        QStandardItem * item3 = new QStandardItem();
-        QStandardItem * item4 = new QStandardItem();
-        item2->setData(sig->get_number_of_stems(), Qt::DisplayRole);// --- Numerical data --- //
-        item3->setData(sig->get_robustness(), Qt::DisplayRole);     // --- Numerical data --- //
-        item4->setData(sig->get_stem_entropy(), Qt::DisplayRole);   // --- Numerical data --- //
-
-        items.append(new QStandardItem(sig->get_key()));
-        items.append(item2);
-        items.append(item3);
-        items.append(item4);
-        appendRow(items);
 
 
 
-
-    }
-}
 void LxaStandardItemModel::load_parasignatures(CSignatureCollection* p_signatures)
 {
     clear();
@@ -425,6 +244,7 @@ bool sort_function_1(const QPair<QString ,int >  * a ,  QPair<QString , int >  *
         return a->second > b->second;
     }
 };
+/*
 void LxaStandardItemModel::load_hypotheses(QList<CHypothesis*>* p_hypotheses)
 {
     clear();
@@ -493,7 +313,7 @@ void LxaStandardItemModel::load_hypotheses_2(QList<CHypothesis*>* p_hypotheses)
         appendRow(items);
     }
 }
-
+*/
 
 
 

@@ -54,12 +54,11 @@ void CLexicon::add_to_word_biographies(int analysis_number,
 }
 void CLexicon::step8a_compute_word_sig_pairs()
 {
-    //map_string_to_word *            WordMap = m_Words->get_map();
-    //map_string_to_word_ptr_iter     word_iter(*WordMap);
-    CSignature *                    shorter_stem_sig_ptr, * longer_stem_sig_ptr;
-    CWord*                          pWord;
-    morph_t                         difference;
-    int                             analysis_number = 0, length_of_difference;
+
+    CSignature *    shorter_stem_sig_ptr, * longer_stem_sig_ptr;
+    CWord*          pWord;
+    morph_t         difference;
+    int             analysis_number = 0, length_of_difference;
     word_t          this_word;
     sig_pair        * p_sig_pair;
     QString         shorter_stem, longer_stem;
@@ -137,9 +136,6 @@ void remove_parses_1 (CLexicon* lexicon,    QStringList& stems, QStringList&  af
            foreach(QString suffix, affixes){
                CParse this_parse(longer_stem, suffix, lexicon->get_suffix_flag());
                lexicon->remove_parse(& this_parse);
-               if (stem=="abnormal" ){
-                   qDebug() << 142 << longer_stem << suffix;
-               }
            }
     }
 }
@@ -164,7 +160,6 @@ void add_suffixes_to_signature_stringlist(QString difference,
             if (remnant.length() == 0) { remnant= "NULL";}
             if (! affixes_from_longer_stem.contains(remnant)) {
                 affixes_from_longer_stem.append(remnant);
-                //qDebug() << 201 << "      Added new suffix to morph" << remnant;
             }
         }
     }
@@ -186,10 +181,6 @@ void CLexicon::step8c_from_sig_pairs_to_parses_Create_hypotheses(){
          QString difference = p_sig_pair->get_morph();
          difference_length = difference.length();
          if (difference_length < 2){ continue;}
-         /*
-         if (p_sig_pair->get_sig_1()->get_stem_entropy() < m_entropy_threshold_for_stems) {continue;}
-         if (p_sig_pair->get_sig_2()->get_stem_entropy() < m_entropy_threshold_for_stems) {continue;}
-         */
          if (p_sig_pair->get_number_of_words() < MINIMUM_NUMBER_OF_WORDS ){ continue;}
 
          QStringList affixes_from_shorter_stem = p_sig_pair->get_sig1_string().split("=");

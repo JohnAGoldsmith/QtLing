@@ -49,6 +49,7 @@ class MainMenuBar;
 class FindDockWidget;
 class SigPairModel;
 class parsemodel;
+class hypothesismodel;
 
 QT_END_NAMESPACE
 
@@ -143,7 +144,7 @@ class MainWindow : public QMainWindow
     SigPairModel *                          m_suffixal_sigpair_model;
     sigpairproxymodel *                     m_suffixal_sigpair_model_proxy;
     parsemodel *                            m_parse_model;
-
+    hypothesismodel*                        m_hypothesis_model;
     affixmodel *                            m_suffix_model;
     affixmodel *                            m_prefix_model;
     affixSFProxymodel *                     m_affix_model_proxy_1;

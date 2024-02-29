@@ -5,7 +5,7 @@ hypothesismodel::hypothesismodel(QList<CHypothesis*> * hypotheses) {
 }
 
 int             hypothesismodel::rowCount(const QModelIndex &parent )const {
-    return 5;
+    return m_hypotheses->count();
 }
 int             hypothesismodel::columnCount(const QModelIndex &parent )const {
     return m_hypotheses->count();
@@ -15,22 +15,49 @@ QVariant        hypothesismodel::data(const QModelIndex & index, int role )const
         return QVariant();
     int row = index.row();
     int column = index.column();
+    CHypothesis* hypothesis(m_hypotheses->at(row));
     if (row > m_hypotheses->count()){ return QVariant();}
     switch (column) {
     case 0:
         if (role==Qt::DisplayRole){
-            return QVariant(m_hypotheses->at(row)->express_as_string());
+            return QVariant(hypothesis->get_morpheme());
         }
         break;
+    case 1:{
+        if (role==Qt::DisplayRole){
+            return QVariant ("=");
+        }
+        break;
+    }
+    case 2:{
+        if (role==Qt::DisplayRole){
+            return QVariant(hypothesis->get_sig1());
+        }
+        break;
+    }
+    case 3:{
+        if (role==Qt::DisplayRole){
+            return QVariant(hypothesis->get_sig2());
+        }
+        break;
+    }
+    case 4:{
+        if (role==Qt::DisplayRole){
+            return QVariant(hypothesis->get_number_of_words_saved());
+        }
+        break;
+    }
     default:
         return QVariant();
     }
+    return QVariant();
 }
 QModelIndex     hypothesismodel::index(int row, int column, const QModelIndex &parent ) const {
   return createIndex(row, column, nullptr);
 }
 QModelIndex     hypothesismodel::parent(const QModelIndex &index) const {
-
+    Q_UNUSED(index);
+    return QModelIndex();
 }
 QVariant        hypothesismodel::headerData(int section, Qt::Orientation orientation, int role) const {
     if (role != Qt::DisplayRole) {return QVariant();}
