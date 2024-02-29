@@ -48,7 +48,7 @@ QVariant SigPairModel::data (const QModelIndex &index, int role) const {
             return QVariant(sigpair->get_my_stems().count());
             break;
         case 4:
-            return QVariant(sigpair->get_sig_2()->get_stem_entropy());
+            return QVariant(sigpair->m_sig_2_entropy);
         }
     }
     return QVariant();

@@ -87,7 +87,14 @@ void CLexicon::step8a_compute_word_sig_pairs()
                     shorter_stem_sig_ptr = m_PrefixSignatures->find_or_fail(shorter_stem_triple->m_sig_string);
                     longer_stem_sig_ptr = m_PrefixSignatures->find_or_fail(longer_stem_triple->m_sig_string);
                     difference = longer_stem.left(length_of_difference);
-                }                
+                }
+                if (! shorter_stem_sig_ptr ) {
+                    qDebug() << 91 << "signature not found: " << shorter_stem_triple->m_sig_string;
+                }
+                if (! longer_stem_sig_ptr ) {
+                    qDebug() << 95 << "signature not found: " << longer_stem_triple->m_sig_string;
+                }
+
                 shorter_stem_sig_string = shorter_stem_sig_ptr->display();
                 longer_stem_sig_string = longer_stem_sig_ptr->display();
                 if ( shorter_stem_sig_ptr == longer_stem_sig_ptr){
@@ -188,6 +195,7 @@ void CLexicon::step8c_from_sig_pairs_to_parses_Create_hypotheses(){
          
          if (m_suffix_flag){
 
+             // to do : fix next line, so that the count is incremented only if the right-hand signature is new for this affix.
              int count = get_internal_affix_count(difference + ":");
              extended_difference_name = difference + ":" + QString::number(count);
 

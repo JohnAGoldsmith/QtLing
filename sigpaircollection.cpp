@@ -26,8 +26,11 @@ void CLexicon::find_all_suffixal_sigpairs(){
             sigpair = word->get_suffixal_sigpairs()->at(n);
             sigpair->m_sig_1 = m_Signatures->find_or_fail(sigpair->get_sig1_string());
             sigpair->m_sig_2 = m_Signatures->find_or_fail(sigpair->get_sig2_string());
+            sigpair->m_sig_2_entropy = sigpair->m_sig_2->get_stem_entropy();
             m_suffixal_sig_pairs->add( sigpair );
-
+            if (!sigpair->m_sig_1 || ! sigpair->m_sig_2){
+                qDebug() << 31 << "Sig did not exist" << sigpair->m_sig_1->display() << sigpair->m_sig_2->display();
+            }
         }
     }
 }

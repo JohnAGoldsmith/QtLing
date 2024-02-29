@@ -25,7 +25,7 @@ QVariant        hypothesismodel::data(const QModelIndex & index, int role )const
         break;
     case 1:{
         if (role==Qt::DisplayRole){
-            return QVariant ("=");
+            return QVariant ("=>");
         }
         break;
     }

@@ -58,6 +58,7 @@ void MainWindow::display_hypotheses(CLexicon* lexicon)
     if (m_hypothesis_model){delete m_hypothesis_model;}
     m_hypothesis_model  = new hypothesismodel(get_lexicon()->get_hypotheses());
     m_tableView_upper_temp->setModel(m_hypothesis_model);
+    m_tableView_upper_temp->resizeColumnsToContents();
 }
 
 
