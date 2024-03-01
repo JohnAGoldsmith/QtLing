@@ -53,12 +53,12 @@ bool contains(QStringList& list1, QStringList & list2) {
  * @brief CLexicon::Crab_2
  *
  */
-void CLexicon::Crab_2()
-{    m_StatusBar->showMessage("Crab 2: Find good signatures inside bad.");
+void CLexicon::Crab_2_fast()
+{    m_StatusBar->showMessage("Crab 2: Find good signatures inside bad (fast).");
 
-    find_good_signatures_inside_bad_2();
-    find_good_signatures_inside_bad();
-    m_StatusBar->showMessage("Crab 2: Find good signatures inside bad, completed.");
+    find_good_signatures_inside_bad_fast();
+
+    m_StatusBar->showMessage("Crab 2: Find good signatures inside bad (fast), completed.");
     m_suffix_flag?
         m_Signatures->calculate_sig_robustness():
         m_PrefixSignatures->calculate_sig_robustness();
@@ -69,6 +69,29 @@ void CLexicon::Crab_2()
     replace_parse_pairs_from_current_signature_structure();
 
    // find_parasuffixes();
+
+    if (m_suffix_flag) {
+        m_Signatures->produce_latex ();
+    }
+
+}
+/**
+ * @brief CLexicon::Crab_2a
+ *
+ */
+void CLexicon::Crab_2_slow()
+{   find_good_signatures_inside_bad_slow();
+    m_StatusBar->showMessage("Crab 2: Find good signatures inside bad, completed.");
+    m_suffix_flag?
+        m_Signatures->calculate_sig_robustness():
+        m_PrefixSignatures->calculate_sig_robustness();
+    m_suffix_flag ?
+        m_Signatures->calculate_stem_entropy():
+        m_PrefixSignatures->calculate_stem_entropy();
+
+    replace_parse_pairs_from_current_signature_structure();
+
+    // find_parasuffixes();
 
     if (m_suffix_flag) {
         m_Signatures->produce_latex ();
@@ -250,7 +273,7 @@ QString CLexicon::process_a_word_into_stem_and_affix(int wordno, int stem_length
  *  looks for the broadest signature that occurs inside it, and assigns
  *  its stem to that signature.
  */
-void   CLexicon::find_good_signatures_inside_bad()  // step 2
+void   CLexicon::find_good_signatures_inside_bad_slow()  // step 2
 {   stem_t                      this_stem;
     word_t                      this_word;
     affix_t                     this_affix;
@@ -390,7 +413,7 @@ void   CLexicon::find_good_signatures_inside_bad()  // step 2
     replace_parse_pairs_from_current_signature_structure();
 
 }
-void   CLexicon::find_good_signatures_inside_bad_2()  // step 2
+void   CLexicon::find_good_signatures_inside_bad_fast()  // step 2
 {   stem_t                      this_stem;
     word_t                      this_word;
     affix_t                     this_affix;

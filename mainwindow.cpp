@@ -249,11 +249,19 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     case Qt::Key_2:
     {   if (ke->modifiers() == Qt::ControlModifier)
         {
-            do_crab2();
+            do_crab2_slow();
         }
         break;
     }
     case Qt::Key_3:
+    {   if (ke->modifiers() == Qt::ControlModifier)
+        {
+            do_crab2_fast();
+        }
+        break;
+    }
+
+    case Qt::Key_4:
     {
         if (ke->modifiers() == Qt::ControlModifier)
         {
@@ -274,7 +282,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
          }
          break;
     }
-    case Qt::Key_4:
+    case Qt::Key_5:
     {
         if (ke->modifiers() == Qt::ControlModifier)
         {
@@ -295,7 +303,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
          }
          break;
     }
-    case Qt::Key_5:
+    case Qt::Key_6:
     {
         if (ke->modifiers() == Qt::ControlModifier)
         {
@@ -316,14 +324,14 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
          }
          break;
     }
-    case  Qt::Key_6:
+    case  Qt::Key_7:
     {if (ke->modifiers() == Qt::ControlModifier)
         {
            do_crab6();
         }
         break;
     }
-    case Qt::Key_7:
+    case Qt::Key_8:
     {if (ke->modifiers() == Qt::ControlModifier)
         {
             MainWindow* new_window = new MainWindow();
@@ -343,11 +351,11 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
             break;
         }
         break;
-    }
+    }/*
     case Qt::Key_8:{
         get_lexicon()->set_prefixes_flag();
         break;
-    }
+    }*/
     case Qt::Key_9:{
         get_lexicon()->step11_find_allomorphic_signatures();
         break;
@@ -547,10 +555,10 @@ void MainWindow::do_crab1()
     qDebug() << 547<< get_lexicon()->get_prefixes()->get_count() << get_lexicon()->get_prefixes()->get_prefix_list()->count();
 }
 
-void MainWindow::do_crab2()
-{   statusBar()->showMessage("Crab 2: Good sigs inside bad.");
+void MainWindow::do_crab2_fast()
+{   statusBar()->showMessage("Crab 2: Good sigs inside bad (fast).");
     CLexicon* lexicon = get_lexicon();
-    lexicon->Crab_2();
+    lexicon->Crab_2_fast();
     load_models(get_lexicon());
     write_stems_and_words();
     create_or_update_TreeModel(get_lexicon());
@@ -560,7 +568,23 @@ void MainWindow::do_crab2()
     get_lexicon()->get_suffix_flag()?
           display_epositive_suffix_signatures(get_lexicon()):
           display_epositive_prefix_signatures(get_lexicon());
-    statusBar()->showMessage("Crab 2: Good sigs inside bad completed.");
+    statusBar()->showMessage("Crab 2: Good sigs inside bad (fast) completed.");
+    emit lexicon_ready();
+}
+void MainWindow::do_crab2_slow()
+{   statusBar()->showMessage("Crab 2a: Good sigs inside bad (slow).");
+    CLexicon* lexicon = get_lexicon();
+    lexicon->Crab_2_slow();
+    load_models(get_lexicon());
+    write_stems_and_words();
+    create_or_update_TreeModel(get_lexicon());
+    m_graphics_scene->set_signature_collection(get_lexicon()->get_active_signature_collection());
+    m_leftTreeView->expandAll();
+    m_leftTreeView->resizeColumnToContents(0);
+    get_lexicon()->get_suffix_flag()?
+        display_epositive_suffix_signatures(get_lexicon()):
+        display_epositive_prefix_signatures(get_lexicon());
+    statusBar()->showMessage("Crab 2: Good sigs inside bad (slow) completed.");
     emit lexicon_ready();
 }
 void MainWindow::do_crab3()

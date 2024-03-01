@@ -72,6 +72,59 @@ QVariant        hypothesismodel::headerData(int section, Qt::Orientation orienta
     }
     return QVariant();
 }
-//void            hypothesismodel::sort(int column, Qt::SortOrder order ) {
-//
-//};
+bool less_than_affix(CHypothesis* hypothesis1, CHypothesis* hypothesis2){
+    return hypothesis1->get_morpheme() < hypothesis2->get_morpheme();
+}
+bool greater_than_affix(CHypothesis* hypothesis1, CHypothesis* hypothesis2){
+    return hypothesis1->get_morpheme() > hypothesis2->get_morpheme();
+}
+bool less_than_sig1(CHypothesis* hypothesis1, CHypothesis* hypothesis2){
+    return hypothesis1->get_sig1() < hypothesis2->get_sig1();
+}
+bool greater_than_sig1(CHypothesis* hypothesis1, CHypothesis* hypothesis2){
+    return hypothesis1->get_sig1() > hypothesis2->get_sig1();
+}
+bool less_than_sig2(CHypothesis* hypothesis1, CHypothesis* hypothesis2){
+    return hypothesis1->get_sig2() < hypothesis2->get_sig2();
+}
+bool greater_than_sig2(CHypothesis* hypothesis1, CHypothesis* hypothesis2){
+    return hypothesis1->get_sig2() > hypothesis2->get_sig2();
+}
+void hypothesismodel::sort(int column, Qt::SortOrder order ) {
+    switch (column){
+    case 0:{
+        if (order == Qt::AscendingOrder){
+            std::sort(m_hypotheses->begin(), m_hypotheses->end(), less_than_affix);
+        } else{
+            std::sort(m_hypotheses->begin(), m_hypotheses->end(), greater_than_affix);
+        }
+        break;
+    }
+    case 2:{
+        if (order == Qt::AscendingOrder){
+            std::sort(m_hypotheses->begin(), m_hypotheses->end(), less_than_sig1);
+        } else{
+            std::sort(m_hypotheses->begin(), m_hypotheses->end(), greater_than_sig1);
+        }
+        break;
+    }
+    case 3:{
+        if (order == Qt::AscendingOrder){
+            std::sort(m_hypotheses->begin(), m_hypotheses->end(), less_than_sig2);
+        } else{
+            std::sort(m_hypotheses->begin(), m_hypotheses->end(), greater_than_sig2);
+        }
+        break;
+    }
+    }
+
+
+
+
+
+
+
+
+
+    emit layoutChanged();
+};

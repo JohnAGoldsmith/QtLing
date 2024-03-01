@@ -375,8 +375,8 @@ public:
     void ReSignaturizeWithKnownAffixes();
     void step6a_create_temporary_map_from_stems_to_affix_sets(Stem_to_sig_map&); //map_sigstring_to_stem_list &); will delete this
     void create_new_parse_set_from_known_affixes();
-    void find_good_signatures_inside_bad();
-    void find_good_signatures_inside_bad_2();
+    void find_good_signatures_inside_bad_fast();
+    void find_good_signatures_inside_bad_slow();
     void find_all_suffixal_sigpairs();
     void find_new_affixes(protostem*, CSignatureCollection*, CStemCollection*, QStringList& );
     void find_parasuffixes();
@@ -406,7 +406,8 @@ public:
     void compare_opposite_sets_of_signatures(QSet<CSignature*>* sig_set_1, QSet<CSignature*>* sig_set_2,QString letter);
 
     void Crab_1();
-    void Crab_2();
+    void Crab_2_fast();
+    void Crab_2_slow();
     void Crab_3();
     void Crab_4();
     void Crab_5();

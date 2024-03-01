@@ -260,7 +260,8 @@ private slots:
     void                                    do_crab1_suffixes();
     void                                    do_crab1_prefixes();
 
-    void                                    do_crab2();
+    void                                    do_crab2_fast();
+    void                                    do_crab2_slow();
     void                                    do_crab3();
     void                                    do_crab4();
     void                                    do_crab5();

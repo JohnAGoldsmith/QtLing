@@ -19,7 +19,7 @@ public:
     QModelIndex     index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
     QModelIndex     parent(const QModelIndex &index) const override;
     QVariant        headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
-//    void            sort(int column, Qt::SortOrder order = Qt::AscendingOrder) override;
+    void            sort(int column, Qt::SortOrder order = Qt::AscendingOrder) override;
 };
 
 #endif // HYPOTHESISMODEL_H
