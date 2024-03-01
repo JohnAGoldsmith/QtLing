@@ -69,7 +69,6 @@ CLexicon::CLexicon(MainWindow * main_window, CLexicon* lexicon, bool suffix_flag
     m_prefix_protostems   = new CStemCollection(this);
     m_Suffixes              = new CSuffixCollection(this);
     m_Prefixes              = new CPrefixCollection(this);
-    m_ParaSignatures        = new CSignatureCollection(this, true);
     m_ParaSuffixes          = new CSuffixCollection(this);
     m_ParaPrefixes          = new QMap<QString, QStringList*>;
     //m_ParaSuffixes          = new QMap<QString, QStringList*>;
@@ -98,7 +97,6 @@ CLexicon::CLexicon(MainWindow * main_window, CLexicon* lexicon, bool suffix_flag
     m_category_types["Compounds"]           = CT_compound;
     m_category_types["Parses"]              = CT_parse;
     m_category_types["Protostems"]          = CT_stem;
-    m_category_types["Parasignatures"]      = CT_signature;
     m_category_types["Parasuffixes"]        = CT_affix;
     m_category_types["Hypotheses"]          = CT_hypothesis;
     m_category_types["Hypotheses 2"]        = CT_hypothesis2;
@@ -136,7 +134,6 @@ CLexicon::~CLexicon()
 {
     delete m_Signatures;
     delete m_PrefixSignatures;
-    delete m_ParaSignatures;
     delete m_PassiveSignatures;
     delete m_goldstandard;
     //delete m_Parses;
@@ -223,7 +220,6 @@ void CLexicon::step3a_clear_lexicon_except_protostems(){
         m_Signatures->clear();
         m_suffixal_stems->clear();
         m_Suffixes->clear();
-        m_ParaSignatures->clear();
     }else{
         m_PrefixSignatures->clear();
         m_Prefixes->clear();

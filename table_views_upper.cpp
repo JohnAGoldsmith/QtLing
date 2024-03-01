@@ -283,9 +283,6 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
             m_parent_window->display_signature_graph_edges(lexicon);
             return;
         }
-        if (component == "Residual parasignatures"){
-            return;
-        }
         if (component == "Parasuffixes"){
             setModel(m_parent_window->m_proxy_models["Parasuffixes"]);
             //m_proxy_model->setSourceModel(m_parent_window->m_Models["Parasuffixes"]);

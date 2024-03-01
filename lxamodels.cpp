@@ -130,10 +130,6 @@ bool LxaSortFilterProxyModel::lessThan(const QModelIndex & left, const QModelInd
     } else return QSortFilterProxyModel::lessThan(left, right);
 };
 
-void  LxaStandardItemModel::load_category(QString , eComponentType)
-{
-
-}
 
 void LxaStandardItemModel::load_compounds(CompoundWordCollection *p_compounds)
 {
@@ -164,60 +160,6 @@ void LxaStandardItemModel::load_compounds(CompoundWordCollection *p_compounds)
     }
 }
 
-void LxaStandardItemModel::load_protostems(QMap<QString, protostem *>* p_protostems)
-{
-    typedef QStandardItem QSI;
-    clear();
-    protostem* curr_protostem;
-    QMapIterator<QString, protostem*> iter(*p_protostems);
-    QStringList labels;
-    labels << "Protostem" << "Word Count";
-    setHorizontalHeaderLabels(labels);
-    while (iter.hasNext()) {
-        curr_protostem = iter.next().value();
-        QList<QSI*> item_list;
-        QSI* item1 = new QSI(curr_protostem->get_stem());
-        item_list.append(item1);
-        QSI* item2 = new QSI();
-        int word_count = curr_protostem->get_end_word()
-                - curr_protostem->get_start_word() + 1;
-        item2->setData(word_count, Qt::DisplayRole); // --- Numerical data --- //
-        item_list.append(item2);
-        appendRow(item_list);
-    }
-}
-
-
-
-void LxaStandardItemModel::load_parasignatures(CSignatureCollection* p_signatures)
-{
-    clear();
-    m_Description = " ";
-    CSignature*         sig;
-    p_signatures->sort(SIG_BY_AFFIX_COUNT);
-    m_sort_style = SIG_BY_AFFIX_COUNT;
-    stem_t  this_stem;
-    QList<QStandardItem*> items;
-    QStandardItem * item1 = new QStandardItem("stem");
-    QStandardItem * item2 = new QStandardItem("robustness");
-    QStandardItem * item3 = new QStandardItem("signature");
-    items.append(item1);
-    items.append(item2);
-    items.append(item3);
-    appendRow(items);
-
-    for (int signo = 0; signo<p_signatures->get_count(); signo++)
-    {   sig = p_signatures->get_at_sorted(signo);
-        QList<QStandardItem*> items;
-        QStandardItem * item1 = new QStandardItem(sig->get_stems()->first()->get_key());
-        QStandardItem * item3 = new QStandardItem();
-        item3->setData(sig->get_robustness(), Qt::DisplayRole); // --- Numerical data --- //
-        items.append(item1);
-        items.append(item3);
-        items.append(new QStandardItem(sig->get_key()));
-        appendRow(items);
-    }
-}
 
 
 void LxaStandardItemModel::load_parasuffixes(QMap<QString, QStringList *> *  continuations ){
@@ -244,89 +186,10 @@ bool sort_function_1(const QPair<QString ,int >  * a ,  QPair<QString , int >  *
         return a->second > b->second;
     }
 };
-/*
-void LxaStandardItemModel::load_hypotheses(QList<CHypothesis*>* p_hypotheses)
-{
-    clear();
-    m_Description = " ";
-    CHypothesis*         hypothesis;
-    QMap<QString,QList<CHypothesis*> >  Hypothesis_map;
-    QMap<QString,int>                   Key_counts;
-    QList<QPair<QString,int>*>           pairs;
-
-    for (int hypno = 0; hypno<p_hypotheses->count(); hypno++)
-    {   hypothesis = p_hypotheses->at(hypno);
-        QString key = hypothesis->get_key();
-        if (Key_counts.contains(key))  {
-                Key_counts[key] += hypothesis->get_number_of_words_saved();
-            } else{
-                Key_counts[key] = hypothesis->get_number_of_words_saved();
-            }
-    }
-    foreach (QString key, Key_counts.keys()){
-            QPair<QString,int> * pair = new QPair<QString, int>(key, Key_counts[key]);
-        pairs.append(pair);
-    }
-    std::sort(pairs.begin(),pairs.end(),sort_function_1);
-    QListIterator<QPair<QString,int>*> iter (pairs);
-    while (iter.hasNext()){
-        QList<QStandardItem*> items;
-        QPair<QString,int>* pPair = iter.next();
-        QStandardItem* item1 = new QStandardItem();
-        item1->setData(pPair->second, Qt::DisplayRole);     // --- Numerical data --- //
-        items.append(item1);
-        QString this_key = pPair->first;
-        QStringList key_list = this_key.split("@");
-        foreach (QString key, key_list){
-            QStandardItem * this_item = new QStandardItem(key);
-            items.append(this_item);        }
-        appendRow(items);
-    }
-}
-void LxaStandardItemModel::load_hypotheses_2(QList<CHypothesis*>* p_hypotheses)
-{
-    clear();
-    m_Description = " ";
-    CHypothesis*         hypothesis;
-    QMap<QString,QList<CHypothesis*> >  Hypothesis_map;
-    QMap<QString,int>                   Key_counts;
-    QList<QPair<QString,int>*>           pairs;
-
-    QStringList labels;
-    labels  <<  "rule input" << "" << "" << "original sig 1"
-             << "word count";
-    setHorizontalHeaderLabels(labels);
-    for (int hypno = 0; hypno<p_hypotheses->count(); hypno++)
-    {   hypothesis = p_hypotheses->at(hypno);
-        QList<QStandardItem*> items;
-        QStandardItem * item1 = new QStandardItem(hypothesis->get_morpheme());
-        items.append(item1);
-        item1 = new QStandardItem("=>");
-        items.append(item1);
-        item1 = new QStandardItem(hypothesis->get_sig1());
-        items.append(item1);
-        item1 = new QStandardItem(hypothesis->get_sig2());
-        items.append(item1);
-        item1 = new QStandardItem();
-        item1->setData(hypothesis->get_number_of_words_saved(), Qt::DisplayRole);
-        items.append(item1);
-        appendRow(items);
-    }
-}
-*/
 
 
 
 
-void LxaStandardItemModel::sort_signatures(eSortStyle sort_style)
-{
-    if (sort_style==SIG_BY_STEM_COUNT){
-        m_Signatures->sort(SIG_BY_AFFIX_COUNT);
-    } else if (sort_style==SIG_BY_AFFIX_COUNT){
-        m_Signatures->sort(SIG_BY_AFFIX_COUNT);
-    }
-    //qDebug() << "sort_signatures" << 178;
-}
 
 
 /*

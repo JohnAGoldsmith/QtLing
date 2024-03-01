@@ -114,33 +114,3 @@ void CLexicon::dump_suffixes(QList<QString> * pList)
 }
 */
 
-/**
- * @brief CLexicon::collect_parasuffixes
- * Parasignatures are signatures with only a single stem, hence are not used directly.
- * Parasuffixes are affixes found in a parasignature.
- *
- *
- */
-/*
-void CLexicon::collect_parasuffixes()
-{
-    sigstring_t     sigstring;
-    suffix_t        suffix;
-    CSignature*     pSig;
-    CSuffix *       pSuffix;
-    QStringList     suffixes;
-    map_sigstring_to_sig_ptr_iter sig_iter (* m_ParaSignatures->get_map());
-    while (sig_iter.hasNext())
-    {
-        pSig = sig_iter.next().value();
-        sigstring = pSig->get_key();
-        qDebug() << sigstring;
-        suffixes = sigstring.split("=");
-        foreach (suffix, suffixes){
-            pSuffix = *m_ParaSuffixes <<  suffix;
-            pSuffix->increment_sig_count();
-        }
-    }
-    m_ParaSuffixes->sort_by_count();
-}
-*/

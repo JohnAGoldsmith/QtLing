@@ -100,7 +100,6 @@ class MainWindow : public QMainWindow
         "EPositive signatures",
         "Prefix signatures",
         "EPositive prefix signatures",
-        "Residual parasignatures",
         "SigGraphEdges_1",
         "SigGraphEdges_2",
         "Parasuffixes",

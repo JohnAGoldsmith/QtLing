@@ -30,11 +30,6 @@ void MainWindow::create_or_update_TreeModel(CLexicon* lexicon)
     pos_prefix_sig_items.append(pos_prefix_sig_item);
     pos_prefix_sig_items.append(pos_prefix_sig_count_item);
 
-    QStandardItem * residual_sig_item = new QStandardItem(QString("Residual parasignatures"));
-    QStandardItem * residual_sig_count_item = new QStandardItem(QString::number(lexicon->get_residual_signatures()->get_count()));
-    QList<QStandardItem*> residual_sig_items;
-    residual_sig_items.append(residual_sig_item);
-    residual_sig_items.append(residual_sig_count_item);
 
     QStandardItem * parasuffix_item = new QStandardItem(QString("Parasuffixes"));
     QStandardItem * parasuffix_count_item = new QStandardItem(QString::number(lexicon->get_parasuffixes()->get_count()));

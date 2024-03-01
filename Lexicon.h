@@ -162,7 +162,6 @@ protected:
 
     // all of the possible continuations
     // affixes that are "thrown out" in Crab2
-    CSignatureCollection*           m_ParaSignatures;   /*!<  the information we have about stems which we have not yet integrated into a morphological system. */
     CSuffixCollection *             m_ParaSuffixes;
     //QMap<QString, QStringList*>*    m_ParaSuffixes;
     QMap<QString, QStringList*>*    m_ParaPrefixes;
@@ -256,7 +255,6 @@ public:
     CStemCollection *                           get_prefixal_stems()        { return m_prefixal_stems;}
     CPrefixCollection *                         get_prefixes()              { return m_Prefixes; }
     CStemCollection *                           get_prefixal_protostems()    { return m_prefix_protostems; }
-    CSignatureCollection *                      get_residual_signatures()   { return m_ParaSignatures;}
     CSignatureCollection *                      get_sequential_signatures() { return m_SequentialSignatures;}
     CSignatureCollection*                       get_signatures()            { return m_Signatures;}
     //QList<Spine*>  *                             get_suffixal_spines()                {return m_suffixal_spines;}
