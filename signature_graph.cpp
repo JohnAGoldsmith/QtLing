@@ -195,8 +195,7 @@ void CLexicon::step8c_from_sig_pairs_to_parses_Create_hypotheses(){
          
          if (m_suffix_flag){
 
-             // to do : fix next line, so that the count is incremented only if the right-hand signature is new for this affix.
-             int count = get_internal_affix_count(difference + ":");
+             int count = get_internal_affix_count(difference, affixes_from_longer_stem);
              extended_difference_name = difference + ":" + QString::number(count);
 
              // remove parses of longer-stem + affixes in long-stem signature.

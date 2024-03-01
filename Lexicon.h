@@ -155,7 +155,10 @@ protected:
     bool                            m_suffix_flag;
     CLexicon*                       m_parent_lexicon;
     QMap<QString, int>              m_internal_suffix_counts;
+    QMap<QString, int>              m_internal_suffix_plus_sig_counts;
     QMap<QString, int>              m_internal_prefix_counts; // we assign numbers to the names of word-internal affixes, like ":5" to the end of a suffix, and "5:" to the beginning of a prefix.
+    QMap<QString, int>              m_internal_prefix_plus_sig_counts;
+
 
     // all of the possible continuations
     // affixes that are "thrown out" in Crab2
@@ -244,7 +247,7 @@ public:
     QList<CHypothesis*>*                        get_hypotheses ()           {return m_Hypotheses;}
     QMap<QString, CHypothesis*>  *              get_hypothesis_map()        { return m_Hypothesis_map;}
     CHypothesis*                                get_hypothesis(QString hypothesis_label);
-    int                                         get_internal_affix_count(QString );
+    int                                         get_internal_affix_count(QString affix, QStringList affixes);
     QMap<QString,CParse* > *                    get_parses()                {return  &m_Parse_map;}
     CSuffixCollection*                          get_parasuffixes()          { return m_ParaSuffixes;}
     //QMap<QString,QStringList*> *                 get_parasuffixes()          {return m_ParaSuffixes;}

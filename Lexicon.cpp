@@ -255,30 +255,33 @@ bool CLexicon::do_gs_evaluation()
         return true;
     } else return false;
 }
-int CLexicon::get_internal_affix_count(QString affix){
-    if (affix.endsWith(":")){
-        affix.truncate(affix.length()-1);
+int CLexicon::get_internal_affix_count(QString affix, QStringList affixes){
+    QString key = affix + ":" + affixes.join("=");
+    if (m_suffix_flag){
         if (! m_internal_suffix_counts.contains(affix)){
             m_internal_suffix_counts[affix] = 1;
+            m_internal_suffix_plus_sig_counts[key] = 1;
             return 1;
-        }else{
-            m_internal_suffix_counts[affix] += 1;
-            return m_internal_suffix_counts[affix];
         }
-    } else {
-        if (affix.startsWith(":")){
-            affix = affix.mid(1);
-            if (! m_internal_prefix_counts.contains(affix)){
-                m_internal_prefix_counts[affix] = 1;
-                return 1;
-            } else{
-                m_internal_prefix_counts[affix] += 1;
-                return m_internal_prefix_counts[affix];
-            }
-        }else{
-            return 0;
+        if (m_internal_suffix_plus_sig_counts.contains(key)){
+            return m_internal_suffix_plus_sig_counts[key];
         }
+        m_internal_suffix_counts[affix]++;
+        m_internal_suffix_plus_sig_counts[key]= m_internal_suffix_counts[affix];
+        return m_internal_suffix_counts[affix];
     }
+    // prefix case:
+    if (! m_internal_prefix_counts.contains(affix)){
+        m_internal_prefix_counts[affix] = 1;
+        m_internal_prefix_plus_sig_counts[key] = 1;
+        return 1;
+    }
+    if (m_internal_prefix_plus_sig_counts.contains(key)){
+        return m_internal_suffix_plus_sig_counts[key];
+    }
+    m_internal_prefix_counts[affix] += 1;
+    m_internal_prefix_plus_sig_counts[key] = m_internal_prefix_counts[affix];
+    return m_internal_prefix_counts[affix];
 }
 
 EvalParses* CLexicon::new_eval_parses_from_txt(QString& file_name)
