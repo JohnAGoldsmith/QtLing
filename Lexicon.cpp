@@ -143,7 +143,8 @@ CWord* CLexicon::add_word(QString word){
 }
 
 CSignature* CLexicon::add_signature(QString sig_string){
-    return *get_active_signature_collection() << sig_string;
+    //return *get_active_signature_collection() << sig_string; changed March 2024
+    return get_active_signature_collection()->find_or_add(sig_string);
 }
 void  CLexicon::add_stem(QString stem){
     * get_active_stem_collection() << stem;

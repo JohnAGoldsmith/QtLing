@@ -52,9 +52,9 @@ bool CSignatureCollection::contains(sigstring_t this_sigstring){
     return m_signature_map.contains(this_sigstring);
 }
 CSignature* CSignatureCollection::operator <<(const QString& this_sigstring)
-{
+{   return find_or_add(this_sigstring);
+/*   changed March 20204
     CSignature* pSig;
-
     Q_ASSERT(this_sigstring.length() > 0);
     if (! m_signature_map.contains(this_sigstring)){
         pSig = new CSignature(this_sigstring);
@@ -64,13 +64,12 @@ CSignature* CSignatureCollection::operator <<(const QString& this_sigstring)
             pSig->set_suffix_flag(true):
             pSig->set_suffix_flag(false);
     } else
-    {
-        pSig = m_signature_map[this_sigstring];
+    { pSig = m_signature_map[this_sigstring];
     }
     pSig->setParent(this);
     return pSig;
+*/
 }
-
 void CSignatureCollection::operator<< (CSignature * pSig)
 {
     if (! m_signature_map.contains(pSig->get_key())){
@@ -82,20 +81,20 @@ void CSignatureCollection::operator<< (CSignature * pSig)
         pSig->setParent(this);
     }
 }
-
 CSignature* CSignatureCollection::operator ^=(const QString& szSignature)
-{
-    return this->find_or_add(szSignature);
+{    return this->find_or_add(szSignature);
 }
 CSignature* CSignatureCollection::find_or_add (const QString& sigstring )
-{   if (m_signature_map.contains(sigstring))
-    { return m_signature_map[sigstring];
-    } else {
-        CSignature* pSig = new CSignature(sigstring, m_suffix_flag, this);
-        m_signature_map[sigstring] = pSig;
-        m_signature_list.append(pSig);
-        return pSig;
+{   Q_ASSERT(sigstring.length() > 0);
+    if (m_signature_map.contains(sigstring))
+    {
+        return m_signature_map[sigstring];
     }
+    CSignature* pSig = new CSignature(sigstring, m_suffix_flag, this);
+    m_signature_map[sigstring] = pSig;
+    m_signature_list.append(pSig);
+    return pSig;
+
 }
 CSignature* CSignatureCollection::find_or_fail(const QString& this_sig_string){
 

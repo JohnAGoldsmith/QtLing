@@ -1,4 +1,4 @@
-#ifndef GENERALDEFINITIONS_H
+    #ifndef GENERALDEFINITIONS_H
 #define GENERALDEFINITIONS_H
 //#include "Signature.h"
 
@@ -35,6 +35,7 @@ enum eDataType{
     e_data_stems,
     e_suffixal_stems,
     e_prefixal_stems,
+    e_data_suffixal_stems,
     e_data_suffixal_signatures,
     e_data_epositive_suffixal_signatures,
     e_data_prefixal_signatures,
@@ -48,6 +49,7 @@ enum eDataType{
     e_data_hollow_suffixal_signatures,
     e_data_hollow_prefixal_signatures,
     e_sig_pairs,
+    e_suffixal_sigpairs,
     // for gold standard
     e_data_gs_true_positive_parses,
     e_data_gs_retrieved_parses,

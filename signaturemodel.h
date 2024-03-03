@@ -8,6 +8,7 @@
 
 class signaturemodel : public QAbstractItemModel
 {   CSignatureCollection * m_signatures;
+    bool                   m_suffix_flag;
     int                    rowCount(const QModelIndex &parent = QModelIndex())const override;
     int                    columnCount(const QModelIndex &parent = QModelIndex())const override;
     QVariant               data(const QModelIndex & index, int role = Qt::DisplayRole)const override;
@@ -17,7 +18,7 @@ class signaturemodel : public QAbstractItemModel
 
 
 public:
-    explicit signaturemodel(CSignatureCollection *, QObject *parent = nullptr);
+    explicit signaturemodel(CSignatureCollection *, bool suffix_flag, QObject *parent = nullptr);
 };
 
 class signatureSFProxymodel: public QSortFilterProxyModel{

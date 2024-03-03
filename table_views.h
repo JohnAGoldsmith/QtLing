@@ -18,6 +18,7 @@ class TableView: public QTableView{
     eDataType               m_data_type;     // this says the kind of thing in the table, so another view knows how to handle the information
 public:
     TableView(MainWindow* main_window);
+    TableView(MainWindow * main_window, eDataType);
     void show_model(const QModelIndex& index); // gets index from the TreeView on the left side of screen -- has a string which is the name of a component
 
     eDataType               get_data_type()                             {return m_data_type;}

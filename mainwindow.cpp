@@ -85,8 +85,8 @@ MainWindow::MainWindow()
     */
 
 
-    m_suffix_signature_model = new signaturemodel(m_my_lexicon->get_signatures());
-    m_prefix_signature_model = new signaturemodel (m_my_lexicon->get_prefix_signatures());
+    m_suffix_signature_model = nullptr;
+    m_prefix_signature_model = nullptr;
     m_signature_model_proxy_1 = new signatureSFProxymodel(this);
     m_signature_model_proxy_2 = new signatureSFProxymodel(this);
 
@@ -121,12 +121,12 @@ MainWindow::MainWindow()
 
     // views
     m_leftTreeView                          = new LeftSideTreeView(this);
-    m_tableView_upper_temp                  = new TableView(this); //UpperTableView (this);
-    m_tableView_upper_left                  = new UpperTableView (this);
+    m_tableView_upper_new                  = new TableView(this); //UpperTableView (this);
+    m_tableView_upper_left_old                  = new UpperTableView (this);
     m_tableView_upper_right                 = new UpperTableView (this, SIG_BY_AFFIX_COUNT);
     m_tableView_lower                       = new LowerTableView (this);
-    m_tableView_upper_temp->setSortingEnabled(true);
-    m_tableView_upper_left->setSortingEnabled(true);
+    m_tableView_upper_new->setSortingEnabled(true);
+    m_tableView_upper_left_old->setSortingEnabled(true);
     m_tableView_upper_right->setSortingEnabled(true);
     m_graphics_scene                        = new lxa_graphics_scene( this, lexicon);
     m_graphics_view                         = new lxa_graphics_view(m_graphics_scene, this);
@@ -145,8 +145,8 @@ MainWindow::MainWindow()
 
     // new stuff:
     m_top_rightSplitter = new QSplitter(Qt::Horizontal);
-    m_top_rightSplitter->addWidget(m_tableView_upper_temp);
-    m_top_rightSplitter->addWidget(m_tableView_upper_left);
+    m_top_rightSplitter->addWidget(m_tableView_upper_new);
+    m_top_rightSplitter->addWidget(m_tableView_upper_left_old);
     m_top_rightSplitter->addWidget(m_tableView_upper_right );
 
 
@@ -160,8 +160,8 @@ MainWindow::MainWindow()
     m_mainSplitter->addWidget(m_rightSplitter);
 
 
-    QWidget::setTabOrder(m_leftTreeView, m_tableView_upper_left);
-    QWidget::setTabOrder(m_tableView_upper_left, m_tableView_upper_right);
+    QWidget::setTabOrder(m_leftTreeView, m_tableView_upper_left_old);
+    QWidget::setTabOrder(m_tableView_upper_left_old, m_tableView_upper_right);
 
 
     setCentralWidget(m_mainSplitter);
@@ -189,18 +189,18 @@ MainWindow::MainWindow()
     setFocus(Qt::OtherFocusReason);
 
      connect(m_leftTreeView, SIGNAL(clicked(QModelIndex)),
-            m_tableView_upper_left, SLOT(ShowModelsUpperTableView(QModelIndex)));
+            m_tableView_upper_left_old, SLOT(ShowModelsUpperTableView(QModelIndex)));
 
-    connect (m_tableView_upper_temp, SIGNAL(clicked(QModelIndex)),
+    connect (m_tableView_upper_new, SIGNAL(clicked(QModelIndex)),
             m_tableView_lower,SLOT(display_this_item(QModelIndex)));
 
-    connect(m_tableView_upper_left,SIGNAL(clicked(QModelIndex)),
+     connect(m_tableView_upper_left_old,SIGNAL(clicked(QModelIndex)),
             m_tableView_lower,SLOT(display_this_item(QModelIndex)));
 
     connect(m_tableView_upper_right,SIGNAL(clicked(QModelIndex)),
             m_tableView_lower,SLOT(display_this_item(QModelIndex)));
 
-    connect(m_tableView_upper_left,SIGNAL(clicked(QModelIndex)),
+     connect(m_tableView_upper_left_old,SIGNAL(clicked(QModelIndex)),
             m_tableView_upper_right,SLOT(display_this_affixes_signatures(QModelIndex)));
 
     /* Explanation for these signal-slot connections:
@@ -424,7 +424,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         if (ke->modifiers() == Qt::AltModifier)
         {
                 // NB: this could be done with signals/slots.
-                m_tableView_upper_left ->showPrefixSignatures();
+            m_tableView_upper_left_old ->showPrefixSignatures();
                 m_tableView_upper_right->showPrefixSignatures();
                 break;
         }
@@ -447,7 +447,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         if (ke->modifiers() == Qt::AltModifier)
         {
                 // NB: this could be done with signals/slots.
-                m_tableView_upper_left ->showSuffixSignatures();
+            m_tableView_upper_left_old ->showSuffixSignatures();
                 m_tableView_upper_right->showSuffixSignatures();
                 break;
         }
@@ -471,7 +471,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     {
       if (ke->modifiers() == Qt::AltModifier){
         // NB: this could be done with signals/slots.
-        m_tableView_upper_left ->showWords();
+          m_tableView_upper_left_old ->showWords();
         m_tableView_upper_right->showWords();
         }
         break;

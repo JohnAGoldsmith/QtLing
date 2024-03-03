@@ -168,9 +168,9 @@ class MainWindow : public QMainWindow
     QSplitter *                             m_rightSplitter;
     QSplitter *                             m_top_rightSplitter;
 
-    TableView  *                            m_tableView_upper_temp;
+    TableView  *                            m_tableView_upper_new;
     //UpperTableView *                        m_tableView_upper_temp;
-    UpperTableView *                        m_tableView_upper_left;
+    UpperTableView *                        m_tableView_upper_left_old;
     UpperTableView *                        m_tableView_upper_right;
     LowerTableView *                        m_tableView_lower;
     LeftSideTreeView *                      m_leftTreeView;
@@ -307,30 +307,13 @@ public:
     void                    show_model (TableView * , QModelIndex index); // the index carries a string, typically from left-hand QTreeView, which carries the name of a component.
 
 
-
-
-    void                    load_stem_model();
-    void                    load_affix_model();
-    void                    load_signature_model();
-    void                    load_protostem_model();
-    void                    load_multiparse_model();
-    void                    load_raw_signature_model();
-    void                    load_sig_tree_edge_model();
-    void                    load_residual_signature_model();
-    void                    load_singleton_signature_model();
-    void                    load_singleton_stem_model();
-    void                    load_StemSet2_model();
-    void                    load_subsignature_model();
-    void                    load_word_model();
     void                    create_or_update_TreeModel(CLexicon* lexicon);
     //                      update tree model after gs evaluation is completed
     void                    append_eval_results(EvaluationResults& results, QStandardItem* parent_item);
     void                    update_TreeModel_for_gs(CLexicon* lexicon);
     void                    update_TreeModel_for_eval(CLexicon* lexicon);
 
-    void                    sort_upper_table();
-
-    //                      windows
+     //                      windows
 
     void                    createActions();
     void                    createStatusBar();
@@ -348,10 +331,10 @@ public:
     QString                 strippedName(const QString &fullFileName);
     void                    cycle_through_graphic_displays();
 
-    lxa_graphics_view*      get_graphics_view()                                 {return  m_graphics_view;}
+    //lxa_graphics_view*      get_graphics_view()                                 {return  m_graphics_view;}
     lxa_graphics_scene*     get_graphics_scene()                                {return m_graphics_scene;}
 
-    UpperTableView *        get_upper_left_tableview()                          { return m_tableView_upper_left;}
+    UpperTableView *        get_upper_left_tableview()                          { return m_tableView_upper_left_old;}
     UpperTableView *        get_upper_right_tableview()                         { return m_tableView_upper_right;}
     void                    set_graphics_scene(lxa_graphics_scene* this_scene)  { m_graphics_scene = this_scene;}
     void                    set_lexicon(CLexicon* lexicon)                      { m_my_lexicon = lexicon;}

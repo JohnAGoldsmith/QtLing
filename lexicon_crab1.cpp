@@ -437,6 +437,9 @@ void CLexicon::step4_create_signatures(const QString& name_of_calling_function,
     m_suffix_flag?
                 m_suffixal_stems->sort_alphabetically():
                 m_prefixal_stems->sort_alphabetically();
+    m_suffix_flag?
+        m_Signatures->sort():
+        m_PrefixSignatures->sort();
     m_Suffixes->sort_by_count();
     m_Prefixes->sort_by_count();
     m_suffix_flag ?

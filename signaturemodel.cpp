@@ -1,8 +1,8 @@
 #include "signaturemodel.h"
 
-signaturemodel::signaturemodel(CSignatureCollection * signatures, QObject *parent)
+signaturemodel::signaturemodel(CSignatureCollection * signatures, bool suffix_flag, QObject *parent)
     : QAbstractItemModel{parent}
-{
+{   m_suffix_flag = suffix_flag;
     m_signatures = signatures;
 }
 
