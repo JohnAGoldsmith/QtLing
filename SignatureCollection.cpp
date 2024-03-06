@@ -141,10 +141,10 @@ double CSignatureCollection::get_description_length(){
 bool compare_stem_count(const CSignature* pSig1, const CSignature* pSig2)
 { return  pSig1->get_number_of_stems() > pSig2->get_number_of_stems();}
 
-bool compare_affix_count(const CSignature* pSig1, const CSignature* pSig2)
+bool compare_affix_count(  CSignature* pSig1,   CSignature* pSig2)
 {   if (pSig1->get_number_of_affixes() == pSig2->get_number_of_affixes())
      {
-        return pSig1->get_key() < pSig2->get_key();
+        return pSig1->get_robustness() > pSig2->get_robustness();
      }
      return pSig1->get_number_of_affixes() > pSig2->get_number_of_affixes();
 }
@@ -156,7 +156,6 @@ bool compare_secondary_robustness(CSignature* pSig1, CSignature* pSig2)
 {
      qDebug() << 121 << pSig1->calculate_secondary_robustness() << pSig2->calculate_secondary_robustness();
      return pSig1->calculate_secondary_robustness() >pSig2->calculate_secondary_robustness();
-
 }
 
 
@@ -178,16 +177,41 @@ void CSignatureCollection::sort(eSortStyle sort_style)
           break;
     case SIG_BY_SECONDARY_ROBUSTNESS:
           std::sort(m_sort_list.begin(), m_sort_list.end(),  compare_secondary_robustness);
-          for (int i = 0; i < 15; i++)
-              qDebug() << 147 << "sig collection" << m_sort_list.at(i)->display();
           break;
+    case SIG_BY_AFFIX_COUNT_FOR_TREE:
+        sort_signatures_by_affix_count_for_tree();
+        break;
     default:
         std::sort(m_sort_list.begin(), m_sort_list.end(),  compare_stem_count);
     }
+}
+void CSignatureCollection::sort_signatures_by_affix_count_for_tree(){
+    QList<CSignature*> temp_list;
+    sort(SIG_BY_AFFIX_COUNT);
+    int n = 0;
+    while (n < m_sort_list.length()){
+        qDebug() << " ";
+        CSignature* top_sig = m_sort_list.first();
+        qDebug() << top_sig->display();
+        temp_list.append(m_sort_list.takeAt(0));
+        int top_sig_length = top_sig->get_number_of_affixes();
+        int m = n;
+        while (m < m_sort_list.length()){
+            if (top_sig->contains(m_sort_list.at(m))){
+                qDebug() << m_sort_list.at(m)->display();
+                temp_list.append(m_sort_list.takeAt(m));
+                continue;
+            }
+            m++;
+        }
+    }
+    sort(SIG_BY_REVERSE_ROBUSTNESS);
+
+
+
 
 
 }
-
 // ------->                                   <---------------------//
 /*
 bool compare_affix_count(const CSignature* pSig1, const CSignature* pSig2)

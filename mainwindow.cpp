@@ -132,6 +132,7 @@ MainWindow::MainWindow()
     m_graphics_view                         = new lxa_graphics_view(m_graphics_scene, this);
     m_graphic_display_flag                  = false;             // toggle with Ctrl-G
     m_graphics_scene->set_signature_collection(get_lexicon()->get_signatures());
+    //m_treeView_for_signatures               = new QTreeView(this);
 
     // Status bars on top of each table view
 
@@ -149,10 +150,14 @@ MainWindow::MainWindow()
     m_top_rightSplitter->addWidget(m_tableView_upper_left_old);
     m_top_rightSplitter->addWidget(m_tableView_upper_right );
 
-
+    m_bottom_rightSplitter = new QSplitter(Qt::Horizontal);
+    m_bottom_rightSplitter->addWidget(m_tableView_lower);
+    //m_bottom_rightSplitter->addWidget(m_treeView_for_signatures);
     // entire right side:
     m_rightSplitter->addWidget(m_top_rightSplitter);
-    m_rightSplitter->addWidget(m_tableView_lower);
+    m_rightSplitter->addWidget(m_bottom_rightSplitter);
+
+
 
     // top level (whole window)
     // on left side:
@@ -530,6 +535,7 @@ void MainWindow::do_crab1_suffixes()
 {
     get_lexicon()->set_suffixes_flag();
     do_crab1();
+    get_lexicon()->get_signatures()->sort_signatures_by_affix_count_for_tree();
 }
 void MainWindow::do_crab1_prefixes()
 {
@@ -552,7 +558,10 @@ void MainWindow::do_crab1()
           display_epositive_suffix_signatures(get_lexicon()):
           display_epositive_prefix_signatures(get_lexicon());
     statusBar()->showMessage("Crab, phase 1 completed.");
-    qDebug() << 547<< get_lexicon()->get_prefixes()->get_count() << get_lexicon()->get_prefixes()->get_prefix_list()->count();
+    qDebug() << 547<< get_lexicon()->get_prefixes()->get_count() << get_lexicon()->get_prefixes()->get_prefix_list()->count();\
+
+    create_TreeModel_for_signatures(lexicon, lexicon->get_signatures() );
+
 }
 
 void MainWindow::do_crab2_fast()
@@ -683,6 +692,18 @@ void MainWindow::display_models(const QModelIndex & index){
 }
 
 
+
+void  MainWindow::create_TreeModel_for_signatures(CLexicon* lexicon, CSignatureCollection* signatures){
+
+    //QStandardItem * parent = m_treeModel->invisibleRootItem();
+    //QStandardItem * signatures_item = new QStandardItem(QString("Signatures"));
+    //QStandardItem * lexicon_count_item = new QStandardItem(QString("1"));
+    //QList<QStandardItem*> lexicon_items;
+    //lexicon_items.append(signatures_item);
+    //lexicon_items.append(lexicon_count_item);
+    //parent->appendRow(lexicon_items);
+
+}
 
 // this will be eliminated, since we keep the data inside the regular Linguistica containers -- not in the models
 void MainWindow::load_models(CLexicon* lexicon)

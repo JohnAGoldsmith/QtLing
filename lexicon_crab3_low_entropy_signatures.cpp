@@ -10,7 +10,7 @@ void CLexicon::Crab_3()
 {
     find_all_suffixal_sigpairs();
 
-    //repair_low_entropy_signatures();
+    repair_low_entropy_signatures();
 
     m_suffix_flag?
         m_Signatures->calculate_sig_robustness():
@@ -65,8 +65,9 @@ void CLexicon::repair_low_entropy_signatures()
         float EdgeLetterPredominanceThreshold = 0.8;
         letter = pSig->get_highfreq_edge_letters(EdgeLetterPredominanceThreshold);
         foreach (stem, pSig->get_stem_strings(stem_list))
+            qDebug() << 68 <<"  " << pSig->display();
         { if (m_suffix_flag)
-            {      stem2 = stem.left(stem.length()-1);
+            {   stem2 = stem.left(stem.length()-1);
                 foreach (QString affix, pSig->get_affix_string_list() )
                 {
                     CParse parse (stem,affix,get_suffix_flag());
@@ -75,6 +76,7 @@ void CLexicon::repair_low_entropy_signatures()
                     CWord* pWord = get_words()->find_or_fail(word);
                     if (pWord->contains_this_stem_among_parses(stem2))
                     {
+                        qDebug() << 78 << parse.display();
                         this_morphemic_split = parse.display_with_gap();
                         pWord->remove_morphemic_split(this_morphemic_split);
                         remove_parse(&parse);

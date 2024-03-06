@@ -81,6 +81,9 @@ void MainWindow::display_suffix_signatures(CLexicon* lexicon)
     m_signature_model_proxy_1->setSourceModel(m_suffix_signature_model);
     m_tableView_upper_new->setModel(m_signature_model_proxy_1);
     m_tableView_upper_new->set_data_type(e_data_suffixal_signatures);
+
+    m_graphics_scene->assign_lattice_positions_to_signatures(get_lexicon()->get_signatures(), e_data_suffixal_signatures);
+    m_graphics_scene->create_and_place_signatures();
 }
 /**
  * @brief MainWindow::display_prefix_signatures
@@ -136,6 +139,7 @@ void MainWindow::display_suffixal_protostems(CLexicon* lexicon){
 /**
  * @brief MainWindow::display_epositive_suffix_signatures
  */
+
 void MainWindow::display_epositive_suffix_signatures(CLexicon*  )
 {
     if (m_Models["EPositive signatures"]->rowCount() > 0){

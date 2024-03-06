@@ -50,6 +50,7 @@ class FindDockWidget;
 class SigPairModel;
 class parsemodel;
 class hypothesismodel;
+class signature_tree_model;
 
 QT_END_NAMESPACE
 
@@ -167,9 +168,9 @@ class MainWindow : public QMainWindow
     QSplitter *                             m_mainSplitter;
     QSplitter *                             m_rightSplitter;
     QSplitter *                             m_top_rightSplitter;
+    QSplitter *                             m_bottom_rightSplitter;
 
     TableView  *                            m_tableView_upper_new;
-    //UpperTableView *                        m_tableView_upper_temp;
     UpperTableView *                        m_tableView_upper_left_old;
     UpperTableView *                        m_tableView_upper_right;
     LowerTableView *                        m_tableView_lower;
@@ -177,8 +178,11 @@ class MainWindow : public QMainWindow
 
     lxa_graphics_scene *                    m_graphics_scene;
     lxa_graphics_view *                     m_graphics_view;
+    //QTreeView *                             m_treeView_for_signatures;
+
     bool                                    m_graphic_display_flag;
     QStandardItemModel *                    m_treeModel;
+    signature_tree_model *                  m_tree_model_for_signatures;
 
     QGroupBox *                             horizontalGroupBox;
     QGroupBox *                             verticalGroupBox;
@@ -232,6 +236,7 @@ public:
     void                                    display_suffixal_protostems(CLexicon*);
     void                                    display_prefixal_protostem(CLexicon*);
     void                                    display_suffixal_sigpairs(CLexicon*);
+    void                                    display_suffixal_signatures(CLexicon*);
     void                                    display_epositive_suffix_signatures(CLexicon*);
     void                                    display_epositive_prefix_signatures(CLexicon*);
     void                                    display_signature_graph_edges(CLexicon* );
@@ -308,6 +313,7 @@ public:
 
 
     void                    create_or_update_TreeModel(CLexicon* lexicon);
+    void                    create_TreeModel_for_signatures(CLexicon*, CSignatureCollection*);
     //                      update tree model after gs evaluation is completed
     void                    append_eval_results(EvaluationResults& results, QStandardItem* parent_item);
     void                    update_TreeModel_for_gs(CLexicon* lexicon);

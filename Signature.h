@@ -87,9 +87,9 @@ public:
     int                         get_json_id() const {return m_json_id;}
     void                        write_json(QJsonObject& ref_json, eJsonType json_type = INDEXED) const;
 
-    void                        calculate_robustness();
+    double                      calculate_robustness()  ;
     int                         calculate_secondary_robustness(); // does not take into consideration the number of letters in each stem, just *how many* there are and affix letters
-    int                         get_robustness()  ;
+    int                         get_robustness()   ;
     void                        increment_robustness(int increment) ;
     QString                     get_highfreq_edge_letters(float frequency_threshold);
     QStringList                 signature2latex_string_list();

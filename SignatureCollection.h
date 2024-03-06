@@ -20,8 +20,10 @@ protected:
     map_string_to_sig                       m_signature_map;
     int                                     m_CorpusCount; // What is this used for?
     QString                                 m_MemberName; // what is this used for?
-    QList<CSignature*>                      m_sort_list;
+    QList<CSignature*>                      m_sort_list; // not clear that we are using this, since the work is done by the Models generally
     QList<CSignature*>                      m_signature_list;
+    //QList<CSignature*>                      m_list_for_tree_display;
+    //QList<CSignature*>                      m_temp_list_for_tree_display();
 
     bool                                    m_SortValidFlag;
     enum  eSortStyle                        m_SortStyle;
@@ -83,6 +85,7 @@ public:
     void                                    sort_signatures_by_affix_count();
     void                                    sort_each_signatures_stems_alphabetically();
     void                                    sort_signatures_by_secondary_stem_count();
+    void                                    sort_signatures_by_affix_count_for_tree();
 
 
     void                                    assign_json_id();
