@@ -170,7 +170,9 @@ class MainWindow : public QMainWindow
     QSplitter *                             m_top_rightSplitter;
     QSplitter *                             m_bottom_rightSplitter;
 
-    TableView  *                            m_tableView_upper_new;
+    TableView  *                            m_tableView_upper_1;
+    TableView  *                            m_tableView_upper_2;
+    TableView  *                            m_tableView_upper_3;
     UpperTableView *                        m_tableView_upper_left_old;
     UpperTableView *                        m_tableView_upper_right;
     LowerTableView *                        m_tableView_lower;

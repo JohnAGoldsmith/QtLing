@@ -18,6 +18,7 @@ class affixmodel : public QAbstractItemModel
     QModelIndex     parent(const QModelIndex &index) const override;
     QVariant        headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     void            sort(int column, Qt::SortOrder order = Qt::AscendingOrder) override;
+
 public:
     explicit affixmodel(QList<CPrefix*>* words, QObject *parent = nullptr);
     explicit affixmodel(QList<CSuffix*>* words, QObject *parent = nullptr);

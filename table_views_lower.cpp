@@ -60,7 +60,7 @@ LowerTableView::LowerTableView(MainWindow * window)
   */
 void LowerTableView::display_this_item( const  QModelIndex & index )
 {
-    eDataType                  UpperView_data_type = m_parent_window->m_tableView_upper_new->get_data_type();
+    eDataType                  UpperView_data_type = m_parent_window->m_tableView_upper_1->get_data_type();
     QString                    word, stem, prefix, suffix, signature;
     CLexicon *                 this_lexicon = get_parent_window()->get_lexicon();
     int                        row(0), column(0);

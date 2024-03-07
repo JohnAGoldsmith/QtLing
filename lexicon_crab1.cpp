@@ -434,12 +434,16 @@ void CLexicon::step4_create_signatures(const QString& name_of_calling_function,
     }
     step4e_link_all_words_to_signatures(name_of_calling_function);
 
+    qDebug() << 437;
+
     m_suffix_flag?
                 m_suffixal_stems->sort_alphabetically():
                 m_prefixal_stems->sort_alphabetically();
+    qDebug() <<442;
     m_suffix_flag?
         m_Signatures->sort():
         m_PrefixSignatures->sort();
+    qDebug() << 446;
     m_Suffixes->sort_by_count();
     m_Prefixes->sort_by_count();
     m_suffix_flag ?

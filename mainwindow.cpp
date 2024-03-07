@@ -121,22 +121,27 @@ MainWindow::MainWindow()
 
     // views
     m_leftTreeView                          = new LeftSideTreeView(this);
-    m_tableView_upper_new                  = new TableView(this); //UpperTableView (this);
-    m_tableView_upper_left_old                  = new UpperTableView (this);
+
+    m_tableView_upper_1                   = new TableView(this); //UpperTableView (this);
+    m_tableView_upper_2                   = new TableView(this); //UpperTableView (this);
+    m_tableView_upper_3                   = new TableView(this); //UpperTableView (this);
+
+    m_tableView_upper_1->setSortingEnabled(true);
+    m_tableView_upper_2->setSortingEnabled(true);
+
+    m_tableView_upper_left_old              = new UpperTableView (this);
     m_tableView_upper_right                 = new UpperTableView (this, SIG_BY_AFFIX_COUNT);
-    m_tableView_lower                       = new LowerTableView (this);
-    m_tableView_upper_new->setSortingEnabled(true);
     m_tableView_upper_left_old->setSortingEnabled(true);
     m_tableView_upper_right->setSortingEnabled(true);
+
+
+    m_tableView_lower                       = new LowerTableView (this);
     m_graphics_scene                        = new lxa_graphics_scene( this, lexicon);
     m_graphics_view                         = new lxa_graphics_view(m_graphics_scene, this);
     m_graphic_display_flag                  = false;             // toggle with Ctrl-G
     m_graphics_scene->set_signature_collection(get_lexicon()->get_signatures());
-    //m_treeView_for_signatures               = new QTreeView(this);
 
-    // Status bars on top of each table view
-
-    //<--------------     set up main window widget ------------------------->
+     //<--------------     set up main window widget ------------------------->
     // set model for tree view
     m_leftTreeView->setModel(m_treeModel);
     // whole window
@@ -144,30 +149,26 @@ MainWindow::MainWindow()
     // on right side:
     m_rightSplitter = new QSplitter(Qt::Vertical);
 
-    // new stuff:
     m_top_rightSplitter = new QSplitter(Qt::Horizontal);
-    m_top_rightSplitter->addWidget(m_tableView_upper_new);
-    m_top_rightSplitter->addWidget(m_tableView_upper_left_old);
-    m_top_rightSplitter->addWidget(m_tableView_upper_right );
+    m_top_rightSplitter->addWidget(m_tableView_upper_1);
+    m_top_rightSplitter->addWidget(m_tableView_upper_2);
+    m_top_rightSplitter->addWidget(m_tableView_upper_3);
+
+    //m_top_rightSplitter->addWidget(m_tableView_upper_left_old);
+    //m_top_rightSplitter->addWidget(m_tableView_upper_right );
 
     m_bottom_rightSplitter = new QSplitter(Qt::Horizontal);
     m_bottom_rightSplitter->addWidget(m_tableView_lower);
     //m_bottom_rightSplitter->addWidget(m_treeView_for_signatures);
+
     // entire right side:
     m_rightSplitter->addWidget(m_top_rightSplitter);
     m_rightSplitter->addWidget(m_bottom_rightSplitter);
-
-
 
     // top level (whole window)
     // on left side:
     m_mainSplitter->addWidget(m_leftTreeView);
     m_mainSplitter->addWidget(m_rightSplitter);
-
-
-    QWidget::setTabOrder(m_leftTreeView, m_tableView_upper_left_old);
-    QWidget::setTabOrder(m_tableView_upper_left_old, m_tableView_upper_right);
-
 
     setCentralWidget(m_mainSplitter);
 
@@ -193,20 +194,23 @@ MainWindow::MainWindow()
     setUnifiedTitleAndToolBarOnMac(true);
     setFocus(Qt::OtherFocusReason);
 
-     connect(m_leftTreeView, SIGNAL(clicked(QModelIndex)),
-            m_tableView_upper_left_old, SLOT(ShowModelsUpperTableView(QModelIndex)));
-
-    connect (m_tableView_upper_new, SIGNAL(clicked(QModelIndex)),
+    connect (m_tableView_upper_1, SIGNAL(clicked(QModelIndex)),
             m_tableView_lower,SLOT(display_this_item(QModelIndex)));
 
-     connect(m_tableView_upper_left_old,SIGNAL(clicked(QModelIndex)),
+
+    connect(m_leftTreeView, SIGNAL(clicked(QModelIndex)),
+            m_tableView_upper_left_old, SLOT(ShowModelsUpperTableView(QModelIndex)));
+
+
+/*  connect(m_tableView_upper_left_old,SIGNAL(clicked(QModelIndex)),
             m_tableView_lower,SLOT(display_this_item(QModelIndex)));
 
     connect(m_tableView_upper_right,SIGNAL(clicked(QModelIndex)),
             m_tableView_lower,SLOT(display_this_item(QModelIndex)));
 
-     connect(m_tableView_upper_left_old,SIGNAL(clicked(QModelIndex)),
+    connect(m_tableView_upper_left_old,SIGNAL(clicked(QModelIndex)),
             m_tableView_upper_right,SLOT(display_this_affixes_signatures(QModelIndex)));
+*/
 
     /* Explanation for these signal-slot connections:
      * A signal is sent to the m_main_menu_bar object after the following
@@ -429,7 +433,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         if (ke->modifiers() == Qt::AltModifier)
         {
                 // NB: this could be done with signals/slots.
-            m_tableView_upper_left_old ->showPrefixSignatures();
+                m_tableView_upper_left_old ->showPrefixSignatures();
                 m_tableView_upper_right->showPrefixSignatures();
                 break;
         }
@@ -452,7 +456,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
         if (ke->modifiers() == Qt::AltModifier)
         {
                 // NB: this could be done with signals/slots.
-            m_tableView_upper_left_old ->showSuffixSignatures();
+                m_tableView_upper_left_old ->showSuffixSignatures();
                 m_tableView_upper_right->showSuffixSignatures();
                 break;
         }
@@ -555,8 +559,8 @@ void MainWindow::do_crab1()
     m_leftTreeView->expandAll();
     m_leftTreeView->resizeColumnToContents(0);
     get_lexicon()->get_suffix_flag()?
-          display_epositive_suffix_signatures(get_lexicon()):
-          display_epositive_prefix_signatures(get_lexicon());
+          display_suffix_signatures(get_lexicon()):
+          display_prefix_signatures(get_lexicon());
     statusBar()->showMessage("Crab, phase 1 completed.");
     qDebug() << 547<< get_lexicon()->get_prefixes()->get_count() << get_lexicon()->get_prefixes()->get_prefix_list()->count();\
 

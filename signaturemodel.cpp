@@ -75,6 +75,11 @@ QVariant signaturemodel::headerData(int section, Qt::Orientation orientation, in
 
 }
 
+
+
+
+
+// we will get rid of the proxy model
 signatureSFProxymodel::signatureSFProxymodel(QObject* parent ):QSortFilterProxyModel (parent){
 
 }

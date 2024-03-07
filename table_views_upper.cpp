@@ -194,17 +194,13 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
                 left_order = 1;
         } else if (left_order == 1 && right_order == 0) {
             if (this == right_table) {
-                //qDebug() << "Showing " << component << "on the right";
                 setModel(m_parent_window->m_proxy_models[component]);
-                //m_proxy_model->setSourceModel(m_parent_window->m_Models[component]);
                 left_order = 0;
                 right_order = 1;
             }
         } else if (left_order == 0 && right_order == 1) {
             if (this == left_table) {
                 setModel(m_parent_window->m_proxy_models[component]);
-                //m_proxy_model->setSourceModel(m_parent_window->m_Models[component]);
-                //qDebug() << "Showing " << component << "on the left";
             }
             if (this == right_table) {
                 left_order = 1;

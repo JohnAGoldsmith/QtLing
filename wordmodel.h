@@ -17,7 +17,7 @@ class wordmodel : public QAbstractItemModel
     QModelIndex     index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
     QModelIndex     parent(const QModelIndex &index) const override;
     QVariant        headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
-    void           sort(int column, Qt::SortOrder order = Qt::AscendingOrder) override;
+    void            sort(int column, Qt::SortOrder order = Qt::AscendingOrder) override;
 public:
     explicit wordmodel(CWordCollection* words, QObject *parent = nullptr);
     void     beginResetModel();

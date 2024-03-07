@@ -150,7 +150,7 @@ bool compare_affix_count(  CSignature* pSig1,   CSignature* pSig2)
 }
 bool compare_robustness_reversed(  CSignature* pSig1,   CSignature* pSig2)
 {
-     return pSig1->get_robustness() >pSig2->get_robustness();
+    return pSig1->get_robustness() >pSig2->get_robustness();
 }
 bool compare_secondary_robustness(CSignature* pSig1, CSignature* pSig2)
 {
@@ -173,7 +173,9 @@ void CSignatureCollection::sort(eSortStyle sort_style)
          std::sort(m_sort_list.begin(), m_sort_list.end(),  compare_affix_count);
          break;
     case SIG_BY_REVERSE_ROBUSTNESS:
+        qDebug() << 176 << m_sort_list.length();
           std::sort(m_sort_list.begin(), m_sort_list.end(),  compare_robustness_reversed);
+        qDebug() << 178;
           break;
     case SIG_BY_SECONDARY_ROBUSTNESS:
           std::sort(m_sort_list.begin(), m_sort_list.end(),  compare_secondary_robustness);

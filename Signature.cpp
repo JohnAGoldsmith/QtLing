@@ -288,15 +288,20 @@ double CSignature::calculate_robustness()   {
         const QString& str_stem = p_stem->get_key();
         stem_letters += str_stem.length();
     }
+
     /*
     for (int stem_no=0;stem_no<m_Stems->size();stem_no++){
         stem_letters += m_Stems->at(stem_no)->get_key().length();
     }*/
     m_robustness = stem_letters * (get_number_of_affixes()-1)  +  affix_letters * (get_number_of_stems()-1);
+
+    return m_robustness;
 }
 int CSignature::get_robustness()   {
+
     if (m_robustness == 0)  {
         m_robustness = calculate_robustness();
+
     }
     return m_robustness;
 }

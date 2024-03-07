@@ -15,37 +15,37 @@ void MainWindow::display_words()
     //m_word_model_proxy_1->setSourceModel(m_word_model);
     QSortFilterProxyModel * proxy_model = new QSortFilterProxyModel();
     proxy_model->setSourceModel(m_word_model);
-    m_tableView_upper_new->setModel(proxy_model);
-    m_tableView_upper_new->set_data_type(e_data_words);
+    m_tableView_upper_1->setModel(proxy_model);
+    m_tableView_upper_1->set_data_type(e_data_words);
 }
 void MainWindow::display_parses(CLexicon* lexicon){
     m_parse_model = new parsemodel(m_my_lexicon->get_parses(), this);
-    m_tableView_upper_new->setModel(m_parse_model);
-    m_tableView_upper_new->set_data_type(e_data_parses);
+    m_tableView_upper_1->setModel(m_parse_model);
+    m_tableView_upper_1->set_data_type(e_data_parses);
 
 }
 void MainWindow::display_suffix_stems(CLexicon* lexicon){
     if (m_suffixal_stem_model) {delete m_suffixal_stem_model;}
     m_suffixal_stem_model = new stemmodel(m_my_lexicon->get_suffixal_stems());
     m_stem_model_proxy_1->setSourceModel(m_suffixal_stem_model);
-    m_tableView_upper_new->setModel(m_stem_model_proxy_1);
-    m_tableView_upper_new->set_data_type(e_suffixal_stems);
+    m_tableView_upper_1->setModel(m_stem_model_proxy_1);
+    m_tableView_upper_1->set_data_type(e_suffixal_stems);
 
 }
 void MainWindow::display_prefix_stems(CLexicon* lexicon){
     if (m_prefixal_stem_model) {delete m_prefixal_stem_model;}
     m_prefixal_stem_model = new stemmodel(m_my_lexicon->get_prefixal_stems());
-    m_tableView_upper_new->setModel(m_prefixal_stem_model);
-    m_tableView_upper_new->set_data_type(e_prefixal_stems);
+    m_tableView_upper_1->setModel(m_prefixal_stem_model);
+    m_tableView_upper_1->set_data_type(e_prefixal_stems);
 }
 void MainWindow::display_suffixal_sigpairs(CLexicon* lexicon){
    // if (m_suffixal_sigpair_model) {delete m_suffixal_sigpair_model;} // when I leave this in, it createsa a problem. TO DO! TODO
     m_suffixal_sigpair_model = new SigPairModel(m_my_lexicon->get_suffixal_sig_pairs());
     QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
     proxyModel->setSourceModel(m_suffixal_sigpair_model);
-    m_tableView_upper_new->setModel(proxyModel);
-    m_tableView_upper_new->set_data_type(e_sig_pairs);
-    m_tableView_upper_new->set_data_type(e_suffixal_sigpairs);
+    m_tableView_upper_1->setModel(proxyModel);
+    m_tableView_upper_1->set_data_type(e_sig_pairs);
+    m_tableView_upper_1->set_data_type(e_suffixal_sigpairs);
 }
 void MainWindow::display_parasuffixes(CLexicon* lexicon)
 {   // new
@@ -53,7 +53,7 @@ void MainWindow::display_parasuffixes(CLexicon* lexicon)
     if (m_suffix_model) {delete m_suffix_model;}
     m_suffix_model = new affixmodel(get_lexicon()->get_parasuffixes()->get_suffix_list());
     m_affix_model_proxy_1->setSourceModel(m_suffix_model);
-    m_tableView_upper_new->setModel(m_affix_model_proxy_1);
+    m_tableView_upper_1->setModel(m_affix_model_proxy_1);
 }
 /**
  * @brief MainWindow::display_hypotheses
@@ -64,9 +64,9 @@ void MainWindow::display_hypotheses(CLexicon* lexicon)
     Q_UNUSED(lexicon);
     if (m_hypothesis_model){delete m_hypothesis_model;}
     m_hypothesis_model  = new hypothesismodel(get_lexicon()->get_hypotheses());
-    m_tableView_upper_new->setModel(m_hypothesis_model);
-    m_tableView_upper_new->resizeColumnsToContents();
-    m_tableView_upper_new->set_data_type(e_data_hypotheses);
+    m_tableView_upper_1->setModel(m_hypothesis_model);
+    m_tableView_upper_1->resizeColumnsToContents();
+    m_tableView_upper_1->set_data_type(e_data_hypotheses);
 }
 
 
@@ -79,11 +79,18 @@ void MainWindow::display_suffix_signatures(CLexicon* lexicon)
     if (m_suffix_signature_model){delete m_suffix_signature_model;}
     m_suffix_signature_model = new signaturemodel(m_my_lexicon->get_signatures(), m_my_lexicon->get_suffix_flag());
     m_signature_model_proxy_1->setSourceModel(m_suffix_signature_model);
-    m_tableView_upper_new->setModel(m_signature_model_proxy_1);
-    m_tableView_upper_new->set_data_type(e_data_suffixal_signatures);
-
+    m_tableView_upper_1->setModel(m_signature_model_proxy_1);
+    //m_tableView_upper_new->setModel(m_suffix_signature_model);
+    m_tableView_upper_1->set_data_type(e_data_suffixal_signatures);
     m_graphics_scene->assign_lattice_positions_to_signatures(get_lexicon()->get_signatures(), e_data_suffixal_signatures);
     m_graphics_scene->create_and_place_signatures();
+
+    m_signature_model_proxy_2->setSourceModel(m_suffix_signature_model);
+    m_tableView_upper_2->setModel(m_signature_model_proxy_2);
+    m_tableView_upper_2->set_data_type(e_data_suffixal_signatures);
+
+
+
 }
 /**
  * @brief MainWindow::display_prefix_signatures
@@ -95,8 +102,8 @@ void MainWindow::display_prefix_signatures(CLexicon* lexicon)
     if (m_prefix_signature_model){delete m_prefix_signature_model;}
     m_prefix_signature_model = new signaturemodel(m_my_lexicon->get_prefix_signatures(), m_my_lexicon->get_suffix_flag());
     m_signature_model_proxy_1->setSourceModel(m_prefix_signature_model);
-    m_tableView_upper_new->setModel(m_signature_model_proxy_1);
-    m_tableView_upper_new->set_data_type(e_data_prefixal_signatures);
+    m_tableView_upper_1->setModel(m_signature_model_proxy_1);
+    m_tableView_upper_1->set_data_type(e_data_prefixal_signatures);
 }
 
 /**
@@ -109,8 +116,8 @@ void MainWindow::display_suffixes(CLexicon* lexicon)
     if (m_suffix_model) {delete m_suffix_model;}
     m_suffix_model = new affixmodel(get_lexicon()->get_suffixes()->get_suffix_list());
     m_affix_model_proxy_1->setSourceModel(m_suffix_model);
-    m_tableView_upper_new->setModel(m_affix_model_proxy_1);
-    m_tableView_upper_new->set_data_type(e_data_suffixes);
+    m_tableView_upper_1->setModel(m_affix_model_proxy_1);
+    m_tableView_upper_1->set_data_type(e_data_suffixes);
  }
 
 /**
@@ -126,15 +133,15 @@ void MainWindow::display_prefixes(CLexicon * lexicon)
     //m_tableView_upper_temp->setModel(m_affix_model_proxy_1);
 
     m_prefix_model = new affixmodel(get_lexicon()->get_prefixes()->get_prefix_list());
-    m_tableView_upper_new->setModel(m_prefix_model);
-    m_tableView_upper_new->resizeColumnsToContents();
-    m_tableView_upper_new->set_data_type(e_data_prefixes);
+    m_tableView_upper_1->setModel(m_prefix_model);
+    m_tableView_upper_1->resizeColumnsToContents();
+    m_tableView_upper_1->set_data_type(e_data_prefixes);
  }
 void MainWindow::display_suffixal_protostems(CLexicon* lexicon){
     if (m_suffixal_protostem_model){delete m_suffixal_protostem_model;}
     m_suffixal_protostem_model = new stemmodel(lexicon->get_suffixal_protostems());
-    m_tableView_upper_new->setModel(m_suffixal_protostem_model);
-    m_tableView_upper_new->resizeColumnsToContents();
+    m_tableView_upper_1->setModel(m_suffixal_protostem_model);
+    m_tableView_upper_1->resizeColumnsToContents();
 }
 /**
  * @brief MainWindow::display_epositive_suffix_signatures
