@@ -165,33 +165,29 @@ void CSignatureCollection::sort(eSortStyle sort_style)
           std::sort(m_sort_list.begin(), m_sort_list.end(),  compare_secondary_robustness);
           break;
     case SIG_BY_AFFIX_COUNT_FOR_TREE:
-        sort_signates_by_subsets();
+        sort_signatures_by_subsets();
         break;
     default:
         std::sort(m_sort_list.begin(), m_sort_list.end(),  compare_stem_count);
     }
 }
-void CSignatureCollection::sort_signates_by_subsets(){
-    QList<CSignature*> temp_list;
+void CSignatureCollection::sort_signatures_by_subsets(){
     sort(SIG_BY_AFFIX_COUNT);
     int n = 0;
     while (n < m_sort_list.length()){
-        qDebug() << " ";
-        m_sort_list_by_subsets.append(QString());
-        CSignature* top_sig = m_sort_list.first();
-        qDebug() << top_sig->display();
-        m_sort_list_by_subsets.append(top_sig->display());
-        temp_list.append(m_sort_list.takeAt(0));
-        int top_sig_length = top_sig->get_number_of_affixes();
+        QList<CSignature*> * sig_list;
+        sig_list = new QList<CSignature*>;
+        CSignature* top_sig = m_sort_list.at(0);
+        sig_list->append(m_sort_list.takeAt(0));
         int m = n;
         while (m < m_sort_list.length()){
             if (top_sig->contains(m_sort_list.at(m))){
-                qDebug() << m_sort_list.at(m)->display();
-                m_sort_list_by_subsets.append(m_sort_list.takeAt(m)->get_key());
+                sig_list->append(m_sort_list.takeAt(m));
                 continue;
             }
             m++;
         }
+        m_sort_list_by_subsets.append(sig_list);
     }
     sort(SIG_BY_REVERSE_ROBUSTNESS);
 

@@ -9,6 +9,7 @@ class signaturemodel_by_subsets: public QAbstractItemModel
 
     CSignatureCollection*  m_signatures;
     bool                   m_suffix_flag;
+    QList<QStringList*>     m_entries;
     int                    rowCount(const QModelIndex &parent = QModelIndex())const override;
     int                    columnCount(const QModelIndex &parent = QModelIndex())const override;
     QVariant               data(const QModelIndex & index, int role = Qt::DisplayRole)const override;

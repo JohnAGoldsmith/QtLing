@@ -137,9 +137,6 @@ void CLexicon::step1b_make_protostem_objects_suffix_case(const QStringList* Word
     int i = 0;
     for (int p = 0; p<alphabetized_protostems.length(); p++){
         QString protostem = alphabetized_protostems[p];
-        if (protostem=="montreal"){
-            int i = 1;
-        }
         while ( ! Words->at(i).startsWith(protostem))
             i++;
         int j = i;

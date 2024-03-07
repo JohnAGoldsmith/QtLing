@@ -560,11 +560,12 @@ void MainWindow::do_crab1()
     m_graphics_scene->set_signature_collection(get_lexicon()->get_active_signature_collection());
     m_leftTreeView->expandAll();
     m_leftTreeView->resizeColumnToContents(0);
+    get_lexicon()->get_signatures()->sort_signatures_by_subsets();
     get_lexicon()->get_suffix_flag()?
           display_suffix_signatures(get_lexicon()):
           display_prefix_signatures(get_lexicon());
+    
 
-    get_lexicon()->get_signatures()->sort_signates_by_subsets();
     statusBar()->showMessage("Crab, phase 1 completed.");
 
 }

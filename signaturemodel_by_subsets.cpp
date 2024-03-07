@@ -4,7 +4,37 @@
 signaturemodel_by_subsets::signaturemodel_by_subsets(CSignatureCollection * signatures, bool suffix_flag, QObject *parent)
     : QAbstractItemModel{parent}
 {   m_suffix_flag = suffix_flag;
+    m_entries.clear(); // worry about memory leaks here.
     m_signatures = signatures;
+    int number_of_rows = 0;
+    QList<CSignature*> * sig_list;
+    CSignature* sig;
+    QList<QList<CSignature*>* > * list_by_subset = signatures->get_sort_list_by_subsets();
+    for (int n = 0; n < list_by_subset->count(); n++){
+        sig_list = list_by_subset->at(n);
+        int robustness (0);
+        foreach(CSignature* sig, *sig_list){
+            robustness += sig->get_robustness();
+        }
+        for(int n = 0; n < sig_list->count(); n++ ){
+            QStringList * table_row;
+            table_row = new QStringList();
+            sig = sig_list->at(n);
+            if (n==0) {
+                table_row->append(QString::number(robustness));
+            } else {
+                table_row->append(QString());
+            }
+            table_row->append(sig->display());
+            m_entries.append(table_row);
+            number_of_rows++;
+        }
+        QStringList * temp;
+        temp = new QStringList();
+        *temp << QString() << QString();
+        m_entries.append(temp);
+        number_of_rows++;
+    }
 }
 
 
@@ -27,17 +57,18 @@ QVariant signaturemodel_by_subsets::data(const QModelIndex & index, int role)con
         return QVariant();
     int row = index.row();
     int column = index.column();
-    QStringList siglist = m_signatures->get_sort_list_by_subsets();
-    if (row > siglist.count()){ return QVariant();}
+    QStringList * entry;
+    entry = m_entries.at(row);
+    if (row > m_entries.count()){ return QVariant();}
     switch (column) {
     case 0:
         if (role==Qt::DisplayRole){
-            return QVariant("temp");
+            return QVariant(entry->at(0));
         }
         break;
     case 1:
         if (role==Qt::DisplayRole){
-            return QVariant(siglist[row]);
+            return QVariant(entry->at(1));
         }
         break;
 
