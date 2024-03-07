@@ -539,7 +539,7 @@ void MainWindow::do_crab1_suffixes()
 {
     get_lexicon()->set_suffixes_flag();
     do_crab1();
-    get_lexicon()->get_signatures()->sort_signatures_by_affix_count_for_tree();
+
 }
 void MainWindow::do_crab1_prefixes()
 {
@@ -551,8 +551,10 @@ void MainWindow::do_crab1()
 {   statusBar()->showMessage("Crab, phase 1.");
     CLexicon* lexicon = get_lexicon();
     lexicon->Crab_1();
+
+    // remove this:
     load_models(get_lexicon());
-    qDebug() << 537<< get_lexicon()->get_prefixes()->get_count()<< get_lexicon()->get_prefixes()->get_prefix_list()->count();
+
     write_stems_and_words();
     create_or_update_TreeModel(get_lexicon());
     m_graphics_scene->set_signature_collection(get_lexicon()->get_active_signature_collection());
@@ -561,10 +563,9 @@ void MainWindow::do_crab1()
     get_lexicon()->get_suffix_flag()?
           display_suffix_signatures(get_lexicon()):
           display_prefix_signatures(get_lexicon());
-    statusBar()->showMessage("Crab, phase 1 completed.");
-    qDebug() << 547<< get_lexicon()->get_prefixes()->get_count() << get_lexicon()->get_prefixes()->get_prefix_list()->count();\
 
-    create_TreeModel_for_signatures(lexicon, lexicon->get_signatures() );
+    get_lexicon()->get_signatures()->sort_signates_by_subsets();
+    statusBar()->showMessage("Crab, phase 1 completed.");
 
 }
 

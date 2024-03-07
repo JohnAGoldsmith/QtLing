@@ -22,7 +22,7 @@ protected:
     QString                                 m_MemberName; // what is this used for?
     QList<CSignature*>                      m_sort_list; // not clear that we are using this, since the work is done by the Models generally
     QList<CSignature*>                      m_signature_list;
-    //QList<CSignature*>                      m_list_for_tree_display;
+    QStringList                             m_sort_list_by_subsets;
     //QList<CSignature*>                      m_temp_list_for_tree_display();
 
     bool                                    m_SortValidFlag;
@@ -71,13 +71,14 @@ public:
     void                                    get_epositive_signatures(QMap<CSignature*,int>);
     CLexicon*                               get_lexicon()                   { return m_Lexicon; }
     map_string_to_sig*                      get_map()                       { return & m_signature_map;}
-    QList<CSignature*> *                    get_minimal_cover()            {return & m_minimal_cover;}
+    QList<CSignature*> *                    get_minimal_cover()             {return & m_minimal_cover;}
     int                                     get_number_of_epositive_signatures();
     CSignature*                             get_signature(QString sig)      {return m_signature_map.value(sig); }
     QList<CSignature*> *                    get_signature_list()            { return & m_signature_list;}
+    QStringList                             get_sort_list_by_subsets()      {return  m_sort_list_by_subsets;}
     QMap<QString, CSignature*> *            get_signature_map()             {  return & m_signature_map;}
     QListIterator<CSignature*>   *          get_sorted_list_iterator();
-    QList<CSignature*> *                    get_sort_list()               {return & m_sort_list;}
+    QList<CSignature*> *                    get_sort_list()                 {return & m_sort_list;}
     bool                                    get_suffix_flag()               { return m_suffix_flag;}
     int                                     get_total_count_of_letters_in_all_signatures();
     double                                  get_description_length();
@@ -85,7 +86,7 @@ public:
     void                                    sort_signatures_by_affix_count();
     void                                    sort_each_signatures_stems_alphabetically();
     void                                    sort_signatures_by_secondary_stem_count();
-    void                                    sort_signatures_by_affix_count_for_tree();
+    void                                    sort_signates_by_subsets();
 
 
     void                                    assign_json_id();

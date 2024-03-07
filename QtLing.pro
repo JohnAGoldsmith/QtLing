@@ -49,6 +49,7 @@ HEADERS += allosignatures.h \
            StemCollection.h \
            signature_tree_model.h \
            signaturemodel.h \
+           signaturemodel_by_subsets.h \
            sigpair.h \
            sigpaircollection.h \
            stemmodel.h \
@@ -111,6 +112,7 @@ SOURCES += allosignatures.cpp \
            StemCollection.cpp \
            signature_tree_model.cpp \
            signaturemodel.cpp \
+           signaturemodel_by_subsets.cpp \
            sigpair.cpp \
            sigpaircollection.cpp \
            stemmodel.cpp \

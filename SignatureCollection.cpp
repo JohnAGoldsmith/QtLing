@@ -53,22 +53,6 @@ bool CSignatureCollection::contains(sigstring_t this_sigstring){
 }
 CSignature* CSignatureCollection::operator <<(const QString& this_sigstring)
 {   return find_or_add(this_sigstring);
-/*   changed March 20204
-    CSignature* pSig;
-    Q_ASSERT(this_sigstring.length() > 0);
-    if (! m_signature_map.contains(this_sigstring)){
-        pSig = new CSignature(this_sigstring);
-        m_signature_list.append(pSig);
-        m_signature_map.insert(this_sigstring, pSig);
-        m_suffix_flag?
-            pSig->set_suffix_flag(true):
-            pSig->set_suffix_flag(false);
-    } else
-    { pSig = m_signature_map[this_sigstring];
-    }
-    pSig->setParent(this);
-    return pSig;
-*/
 }
 void CSignatureCollection::operator<< (CSignature * pSig)
 {
@@ -181,27 +165,29 @@ void CSignatureCollection::sort(eSortStyle sort_style)
           std::sort(m_sort_list.begin(), m_sort_list.end(),  compare_secondary_robustness);
           break;
     case SIG_BY_AFFIX_COUNT_FOR_TREE:
-        sort_signatures_by_affix_count_for_tree();
+        sort_signates_by_subsets();
         break;
     default:
         std::sort(m_sort_list.begin(), m_sort_list.end(),  compare_stem_count);
     }
 }
-void CSignatureCollection::sort_signatures_by_affix_count_for_tree(){
+void CSignatureCollection::sort_signates_by_subsets(){
     QList<CSignature*> temp_list;
     sort(SIG_BY_AFFIX_COUNT);
     int n = 0;
     while (n < m_sort_list.length()){
         qDebug() << " ";
+        m_sort_list_by_subsets.append(QString());
         CSignature* top_sig = m_sort_list.first();
         qDebug() << top_sig->display();
+        m_sort_list_by_subsets.append(top_sig->display());
         temp_list.append(m_sort_list.takeAt(0));
         int top_sig_length = top_sig->get_number_of_affixes();
         int m = n;
         while (m < m_sort_list.length()){
             if (top_sig->contains(m_sort_list.at(m))){
                 qDebug() << m_sort_list.at(m)->display();
-                temp_list.append(m_sort_list.takeAt(m));
+                m_sort_list_by_subsets.append(m_sort_list.takeAt(m)->get_key());
                 continue;
             }
             m++;

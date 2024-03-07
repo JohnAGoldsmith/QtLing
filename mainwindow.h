@@ -51,6 +51,7 @@ class SigPairModel;
 class parsemodel;
 class hypothesismodel;
 class signature_tree_model;
+class signaturemodel_by_subsets;
 
 QT_END_NAMESPACE
 
@@ -132,6 +133,7 @@ class MainWindow : public QMainWindow
 
     signaturemodel *                        m_suffix_signature_model;
     signaturemodel *                        m_prefix_signature_model;
+    signaturemodel_by_subsets *             m_suffix_signature_model_by_subsets;
     signatureSFProxymodel *                 m_signature_model_proxy_1;
     signatureSFProxymodel *                 m_signature_model_proxy_2;
 

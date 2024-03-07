@@ -9,12 +9,15 @@ signaturemodel::signaturemodel(CSignatureCollection * signatures, bool suffix_fl
 
 
 int signaturemodel::rowCount(const QModelIndex &parent)const {
+    Q_UNUSED(parent);
     return m_signatures->get_count();
 }
 int signaturemodel::columnCount(const QModelIndex &parent)const {
+    Q_UNUSED(parent);
     return 5;
 }
 QModelIndex signaturemodel::index(int row, int column, const QModelIndex &parent) const {
+    Q_UNUSED(parent);
     return createIndex(row, column, nullptr);
 }
 QVariant signaturemodel::data(const QModelIndex & index, int role)const {
@@ -79,7 +82,7 @@ QVariant signaturemodel::headerData(int section, Qt::Orientation orientation, in
 
 
 
-// we will get rid of the proxy model
+
 signatureSFProxymodel::signatureSFProxymodel(QObject* parent ):QSortFilterProxyModel (parent){
 
 }

@@ -5,9 +5,11 @@ hypothesismodel::hypothesismodel(QList<CHypothesis*> * hypotheses) {
 }
 
 int             hypothesismodel::rowCount(const QModelIndex &parent )const {
+    Q_UNUSED(parent);
     return m_hypotheses->count();
 }
 int             hypothesismodel::columnCount(const QModelIndex &parent )const {
+    Q_UNUSED(parent);
     return m_hypotheses->count();
 }
 QVariant        hypothesismodel::data(const QModelIndex & index, int role )const {
@@ -53,6 +55,7 @@ QVariant        hypothesismodel::data(const QModelIndex & index, int role )const
     return QVariant();
 }
 QModelIndex     hypothesismodel::index(int row, int column, const QModelIndex &parent ) const {
+    Q_UNUSED(parent);
   return createIndex(row, column, nullptr);
 }
 QModelIndex     hypothesismodel::parent(const QModelIndex &index) const {

@@ -6,6 +6,7 @@
 #include "Lexicon.h"
 #include "parsemodel.h"
 #include "hypothesismodel.h"
+#include "signaturemodel_by_subsets.h"
 
 void MainWindow::display_words()
 {
@@ -76,20 +77,25 @@ void MainWindow::display_hypotheses(CLexicon* lexicon)
  */
 void MainWindow::display_suffix_signatures(CLexicon* lexicon)
 {   // new
+    CSignatureCollection * signatures = m_my_lexicon->get_suffixal_signatures();
     if (m_suffix_signature_model){delete m_suffix_signature_model;}
-    m_suffix_signature_model = new signaturemodel(m_my_lexicon->get_signatures(), m_my_lexicon->get_suffix_flag());
+    m_suffix_signature_model = new signaturemodel(signatures, m_my_lexicon->get_suffix_flag());
     m_signature_model_proxy_1->setSourceModel(m_suffix_signature_model);
     m_tableView_upper_1->setModel(m_signature_model_proxy_1);
-    //m_tableView_upper_new->setModel(m_suffix_signature_model);
     m_tableView_upper_1->set_data_type(e_data_suffixal_signatures);
-    m_graphics_scene->assign_lattice_positions_to_signatures(get_lexicon()->get_signatures(), e_data_suffixal_signatures);
+
+
+    m_graphics_scene->assign_lattice_positions_to_signatures(signatures, e_data_suffixal_signatures);
     m_graphics_scene->create_and_place_signatures();
 
     m_signature_model_proxy_2->setSourceModel(m_suffix_signature_model);
+    m_signature_model_proxy_2->sort(4, Qt::SortOrder(Qt::DescendingOrder));
     m_tableView_upper_2->setModel(m_signature_model_proxy_2);
     m_tableView_upper_2->set_data_type(e_data_suffixal_signatures);
 
-
+    m_suffix_signature_model_by_subsets = new signaturemodel_by_subsets(signatures, m_my_lexicon->get_suffix_flag(), this);
+    m_tableView_upper_3->setModel(m_suffix_signature_model_by_subsets);
+    m_tableView_upper_2->set_data_type(e_data_suffixal_signatures);
 
 }
 /**
