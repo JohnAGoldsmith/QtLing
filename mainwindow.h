@@ -134,8 +134,15 @@ class MainWindow : public QMainWindow
     signaturemodel *                        m_suffix_signature_model;
     signaturemodel *                        m_prefix_signature_model;
     signaturemodel_by_subsets *             m_suffix_signature_model_by_subsets;
-    signatureSFProxymodel *                 m_signature_model_proxy_1;
-    signatureSFProxymodel *                 m_signature_model_proxy_2;
+    signaturemodel_by_subsets *             m_prefix_signature_model_by_subsets;
+
+    //signatureSFProxymodel *                 m_signature_model_proxy_1;
+    //signatureSFProxymodel *                 m_signature_model_proxy_2;
+    QSortFilterProxyModel *                 m_signature_model_proxy_1;
+    QSortFilterProxyModel *                 m_signature_model_proxy_2;
+
+
+
 
     stemmodel *                             m_suffixal_stem_model;
     stemmodel*                              m_prefixal_stem_model;
@@ -145,6 +152,7 @@ class MainWindow : public QMainWindow
     stemmodel *                             m_prefix_protostem_model;
     SigPairModel *                          m_suffixal_sigpair_model;
     sigpairproxymodel *                     m_suffixal_sigpair_model_proxy;
+    sigpairproxymodel *                     m_prefixal_sigpair_model_proxy;
     parsemodel *                            m_parse_model;
     hypothesismodel*                        m_hypothesis_model;
     affixmodel *                            m_suffix_model;

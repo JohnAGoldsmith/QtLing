@@ -178,10 +178,13 @@ void CSignatureCollection::sort_signatures_by_subsets(){
         QList<CSignature*> * sig_list;
         sig_list = new QList<CSignature*>;
         CSignature* top_sig = m_sort_list.at(0);
+        qDebug() << top_sig->display();
         sig_list->append(m_sort_list.takeAt(0));
+
         int m = n;
         while (m < m_sort_list.length()){
             if (top_sig->contains(m_sort_list.at(m))){
+                qDebug() << 187 << m_sort_list.at(m);
                 sig_list->append(m_sort_list.takeAt(m));
                 continue;
             }

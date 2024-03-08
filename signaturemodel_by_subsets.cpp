@@ -34,6 +34,7 @@ signaturemodel_by_subsets::signaturemodel_by_subsets(CSignatureCollection * sign
         for (int m = 0; m < sig_list->count(); m++){
             QStringList * table_row;
             table_row = new QStringList();
+            qDebug() <<  37 << "";
             sig = sig_list->at(m);
             if (m==0) {
                 int total_robustness = sig2robustness_map[sig->get_key()];
@@ -41,7 +42,9 @@ signaturemodel_by_subsets::signaturemodel_by_subsets(CSignatureCollection * sign
             } else {
                 table_row->append(QString());
             }
+            qDebug() << "";
             table_row->append(sig->display());
+            qDebug() << 47  << sig->display();
             m_entries.append(table_row);
             number_of_rows++;
         }

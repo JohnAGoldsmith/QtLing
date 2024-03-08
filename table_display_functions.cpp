@@ -23,7 +23,7 @@ void MainWindow::display_parses(CLexicon* lexicon){
     m_parse_model = new parsemodel(m_my_lexicon->get_parses(), this);
     m_tableView_upper_1->setModel(m_parse_model);
     m_tableView_upper_1->set_data_type(e_data_parses);
-
+    Q_UNUSED(lexicon);
 }
 void MainWindow::display_suffix_stems(CLexicon* lexicon){
     if (m_suffixal_stem_model) {delete m_suffixal_stem_model;}
@@ -31,13 +31,14 @@ void MainWindow::display_suffix_stems(CLexicon* lexicon){
     m_stem_model_proxy_1->setSourceModel(m_suffixal_stem_model);
     m_tableView_upper_1->setModel(m_stem_model_proxy_1);
     m_tableView_upper_1->set_data_type(e_suffixal_stems);
-
+    Q_UNUSED(lexicon);
 }
 void MainWindow::display_prefix_stems(CLexicon* lexicon){
     if (m_prefixal_stem_model) {delete m_prefixal_stem_model;}
     m_prefixal_stem_model = new stemmodel(m_my_lexicon->get_prefixal_stems());
     m_tableView_upper_1->setModel(m_prefixal_stem_model);
     m_tableView_upper_1->set_data_type(e_prefixal_stems);
+    Q_UNUSED(lexicon);
 }
 void MainWindow::display_suffixal_sigpairs(CLexicon* lexicon){
    // if (m_suffixal_sigpair_model) {delete m_suffixal_sigpair_model;} // when I leave this in, it createsa a problem. TO DO! TODO
@@ -47,6 +48,7 @@ void MainWindow::display_suffixal_sigpairs(CLexicon* lexicon){
     m_tableView_upper_1->setModel(proxyModel);
     m_tableView_upper_1->set_data_type(e_sig_pairs);
     m_tableView_upper_1->set_data_type(e_suffixal_sigpairs);
+    Q_UNUSED(lexicon);
 }
 void MainWindow::display_parasuffixes(CLexicon* lexicon)
 {   // new
@@ -77,6 +79,7 @@ void MainWindow::display_hypotheses(CLexicon* lexicon)
  */
 void MainWindow::display_suffix_signatures(CLexicon* lexicon)
 {   // new
+    Q_UNUSED(lexicon);
     CSignatureCollection * signatures = m_my_lexicon->get_suffixal_signatures();
     if (m_suffix_signature_model){delete m_suffix_signature_model;}
     m_suffix_signature_model = new signaturemodel(signatures, m_my_lexicon->get_suffix_flag());
@@ -104,12 +107,27 @@ void MainWindow::display_suffix_signatures(CLexicon* lexicon)
  */
 void MainWindow::display_prefix_signatures(CLexicon* lexicon)
 {   //------------------ new ----------------------------------------------------
-
+    Q_UNUSED(lexicon);
     if (m_prefix_signature_model){delete m_prefix_signature_model;}
-    m_prefix_signature_model = new signaturemodel(m_my_lexicon->get_prefix_signatures(), m_my_lexicon->get_suffix_flag());
+    CSignatureCollection * signatures = m_my_lexicon->get_prefix_signatures();
+    m_prefix_signature_model = new signaturemodel(signatures, m_my_lexicon->get_suffix_flag());
     m_signature_model_proxy_1->setSourceModel(m_prefix_signature_model);
     m_tableView_upper_1->setModel(m_signature_model_proxy_1);
     m_tableView_upper_1->set_data_type(e_data_prefixal_signatures);
+
+    m_graphics_scene->assign_lattice_positions_to_signatures(signatures, e_data_prefixal_signatures);
+    m_graphics_scene->create_and_place_signatures();
+
+    m_signature_model_proxy_2->setSourceModel(m_prefix_signature_model);
+    m_signature_model_proxy_2->sort(4, Qt::SortOrder(Qt::DescendingOrder));
+    m_tableView_upper_2->setModel(m_signature_model_proxy_2);
+    m_tableView_upper_2->set_data_type(e_data_prefixal_signatures);
+
+    m_prefix_signature_model_by_subsets = new signaturemodel_by_subsets(signatures, m_my_lexicon->get_suffix_flag(), this);
+    m_tableView_upper_3->setModel(m_prefix_signature_model_by_subsets);
+    m_tableView_upper_3->set_data_type(e_data_prefixal_signatures);
+
+
 }
 
 /**

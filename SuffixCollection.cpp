@@ -113,7 +113,6 @@ CPrefix* CPrefixCollection::find_or_add(const QString& prefix)
     CPrefix* pPrefix = new CPrefix(prefix);
     m_PrefixMap.insert(prefix, pPrefix);
     m_prefix_list.append(pPrefix);
-    qDebug() << 115 << prefix << m_prefix_list.count();
     return pPrefix;
 }
 

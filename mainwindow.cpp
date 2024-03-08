@@ -87,8 +87,8 @@ MainWindow::MainWindow()
 
     m_suffix_signature_model = nullptr;
     m_prefix_signature_model = nullptr;
-    m_signature_model_proxy_1 = new signatureSFProxymodel(this);
-    m_signature_model_proxy_2 = new signatureSFProxymodel(this);
+    m_signature_model_proxy_1 = new QSortFilterProxyModel(this);
+    m_signature_model_proxy_2 = new QSortFilterProxyModel(this);
 
     m_suffixal_stem_model = nullptr;
     m_prefixal_stem_model = nullptr;
@@ -553,14 +553,16 @@ void MainWindow::do_crab1()
     lexicon->Crab_1();
 
     // remove this:
-    load_models(get_lexicon());
+    //load_models(get_lexicon());
 
     write_stems_and_words();
     create_or_update_TreeModel(get_lexicon());
     m_graphics_scene->set_signature_collection(get_lexicon()->get_active_signature_collection());
     m_leftTreeView->expandAll();
     m_leftTreeView->resizeColumnToContents(0);
-    get_lexicon()->get_signatures()->sort_signatures_by_subsets();
+    get_lexicon()->get_suffix_flag()?
+        get_lexicon()->get_suffixal_signatures()->sort_signatures_by_subsets():
+        get_lexicon()->get_prefix_signatures()->sort_signatures_by_subsets();
     get_lexicon()->get_suffix_flag()?
           display_suffix_signatures(get_lexicon()):
           display_prefix_signatures(get_lexicon());
