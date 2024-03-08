@@ -1,5 +1,8 @@
-
 #include "signaturemodel_by_subsets.h"
+
+bool helper ( QPair<int ,int > pair1 , QPair<int,int> pair2) {
+    return        pair1.second > pair2.second;
+}
 
 signaturemodel_by_subsets::signaturemodel_by_subsets(CSignatureCollection * signatures, bool suffix_flag, QObject *parent)
     : QAbstractItemModel{parent}
@@ -10,18 +13,31 @@ signaturemodel_by_subsets::signaturemodel_by_subsets(CSignatureCollection * sign
     QList<CSignature*> * sig_list;
     CSignature* sig;
     QList<QList<CSignature*>* > * list_by_subset = signatures->get_sort_list_by_subsets();
+    QList<QPair<int, int >> sigindex2robustness_list;
+    QMap<QString, int> sig2robustness_map;
     for (int n = 0; n < list_by_subset->count(); n++){
         sig_list = list_by_subset->at(n);
         int robustness (0);
+        QString first_sig_key = sig_list->at(0)->get_key();
         foreach(CSignature* sig, *sig_list){
             robustness += sig->get_robustness();
         }
-        for(int n = 0; n < sig_list->count(); n++ ){
+        sigindex2robustness_list.append(QPair<int,int>( n, robustness) );
+        sig2robustness_map[first_sig_key] = robustness;
+    }
+
+    std::sort(sigindex2robustness_list.begin(), sigindex2robustness_list.end(), helper);
+
+    for (int n= 0; n < sigindex2robustness_list.count(); n++){
+        int subset_index = sigindex2robustness_list[n].first;
+        sig_list = list_by_subset->at(subset_index);
+        for (int m = 0; m < sig_list->count(); m++){
             QStringList * table_row;
             table_row = new QStringList();
-            sig = sig_list->at(n);
-            if (n==0) {
-                table_row->append(QString::number(robustness));
+            sig = sig_list->at(m);
+            if (m==0) {
+                int total_robustness = sig2robustness_map[sig->get_key()];
+                table_row->append(QString::number(total_robustness ) );
             } else {
                 table_row->append(QString());
             }
@@ -85,8 +101,8 @@ QModelIndex signaturemodel_by_subsets::parent(const QModelIndex &index) const {
 QVariant signaturemodel_by_subsets::headerData(int section, Qt::Orientation orientation, int role ) const {
     if (role != Qt::DisplayRole) {return QVariant();}
     if (orientation == Qt::Horizontal){
-        if (section == 0) return QVariant("Signature" );
-        if (section == 1) return QVariant("stem count");
+        if (section == 0) return QVariant("Robustness" );
+        if (section == 1) return QVariant("Signature");
 
     }
     return QVariant();
