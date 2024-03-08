@@ -66,7 +66,7 @@ MainWindow::MainWindow()
     QString str_model_name;
     foreach (str_model_name, m_model_names) {
         //new_proxy_model->setSourceModel(m_Models[str_model_name]);
-        m_Models[str_model_name] = new LxaStandardItemModel(str_model_name);
+        //m_Models[str_model_name] = new LxaStandardItemModel(str_model_name);
         m_proxy_models[str_model_name] = new LxaSortFilterProxyModel(this);
     }
     foreach (str_model_name, m_duplicate_model_names) {
@@ -108,10 +108,10 @@ MainWindow::MainWindow()
 
 
     // -----------------  old --------------------------------------------------------------
-    m_proxy_models["suffix_signatures_1"] = new LxaSortFilterProxyModel(this);
-    m_proxy_models["suffix_signatures_2"] = new LxaSortFilterProxyModel(this);
-    m_proxy_models["suffix_signatures_1"]->setSourceModel(m_suffix_signature_model);
-    m_proxy_models["suffix_signatures_2"]->setSourceModel(m_suffix_signature_model);
+    //m_proxy_models["suffix_signatures_1"] = new LxaSortFilterProxyModel(this);
+    //m_proxy_models["suffix_signatures_2"] = new LxaSortFilterProxyModel(this);
+    //m_proxy_models["suffix_signatures_1"]->setSourceModel(m_suffix_signature_model);
+    //m_proxy_models["suffix_signatures_2"]->setSourceModel(m_suffix_signature_model);
     // --------------------------------------------------------------------------------------´
 
 
@@ -348,9 +348,9 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
             m_lexicon_list.append(sublexicon);
             new_window->do_crab1();
             if (sublexicon->get_suffix_flag()){
-                new_window->display_epositive_suffix_signatures(sublexicon);
+                new_window->display_suffix_signatures(sublexicon);
             } else {
-                new_window->display_epositive_prefix_signatures(sublexicon);
+                new_window->display_prefix_signatures(sublexicon);
             }
 
             new_window->resize(600, 400);
@@ -505,7 +505,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
             m_graphics_scene->set_signature_collection(get_lexicon()->get_active_signature_collection());
             display_suffix_signatures(get_lexicon());
         }
-        display_epositive_suffix_signatures(get_lexicon());
+        display_suffix_signatures(get_lexicon());
           break;
     }
     case Qt::Key_Semicolon:
@@ -520,7 +520,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ke)
     }
     case Qt::Key_Comma:
     {
-        display_epositive_suffix_signatures(get_lexicon());
+        display_suffix_signatures(get_lexicon());
         break;
     }
     case Qt::Key_Period:
@@ -581,8 +581,8 @@ void MainWindow::do_crab2_fast()
     m_leftTreeView->expandAll();
     m_leftTreeView->resizeColumnToContents(0);
     get_lexicon()->get_suffix_flag()?
-          display_epositive_suffix_signatures(get_lexicon()):
-          display_epositive_prefix_signatures(get_lexicon());
+          display_suffix_signatures(get_lexicon()):
+          display_prefix_signatures(get_lexicon());
     statusBar()->showMessage("Crab 2: Good sigs inside bad (fast) completed.");
     emit lexicon_ready();
 }
@@ -597,8 +597,8 @@ void MainWindow::do_crab2_slow()
     m_leftTreeView->expandAll();
     m_leftTreeView->resizeColumnToContents(0);
     get_lexicon()->get_suffix_flag()?
-        display_epositive_suffix_signatures(get_lexicon()):
-        display_epositive_prefix_signatures(get_lexicon());
+        display_suffix_signatures(get_lexicon()):
+        display_prefix_signatures(get_lexicon());
     statusBar()->showMessage("Crab 2: Good sigs inside bad (slow) completed.");
     emit lexicon_ready();
 }
@@ -616,8 +616,8 @@ void MainWindow::do_crab3()
     m_leftTreeView->resizeColumnToContents(0);
     write_stems_and_words();
     get_lexicon()->get_suffix_flag()?
-          display_epositive_suffix_signatures(get_lexicon()):
-          display_epositive_prefix_signatures(get_lexicon());
+          display_suffix_signatures(get_lexicon()):
+          display_prefix_signatures(get_lexicon());
     statusBar()->showMessage("Crab 3: repair low entropy signatures completed.");
 }
 void MainWindow::do_crab4()
@@ -634,8 +634,8 @@ void MainWindow::do_crab4()
     m_leftTreeView->resizeColumnToContents(0);
     write_stems_and_words();
     get_lexicon()->get_suffix_flag()?
-          display_epositive_suffix_signatures(get_lexicon()):
-          display_epositive_prefix_signatures(get_lexicon());
+          display_suffix_signatures(get_lexicon()):
+          display_prefix_signatures(get_lexicon());
     statusBar()->showMessage("Crab 4: split complex morphemes completed.");
 }
 void MainWindow::do_crab5(){
@@ -990,11 +990,7 @@ void MainWindow::gs_evaluate()
     bool eval_succeeded = lexicon->do_gs_evaluation();
     if (eval_succeeded) {
         GoldStandard* p_gs = lexicon->get_goldstandard();
-        /*
-        qDebug() << 616 << "Mainwindow.cpp: evaluation succeeded\n" ;
-        qDebug() << "Precision: " << p_gs->get_total_precision()
-                 << "Recall: " << p_gs->get_total_recall();
-        */
+
         // create new model
         //m_Models["Gold Standard Words"] = new LxaStandardItemModel("Gold Standard Words");
         m_Models["True Positive Parses"] = new LxaStandardItemModel("True Positive Parses");

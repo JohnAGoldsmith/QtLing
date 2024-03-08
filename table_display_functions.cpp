@@ -149,10 +149,9 @@ void MainWindow::display_suffixal_protostems(CLexicon* lexicon){
     m_tableView_upper_1->setModel(m_suffixal_protostem_model);
     m_tableView_upper_1->resizeColumnsToContents();
 }
-/**
- * @brief MainWindow::display_epositive_suffix_signatures
- */
 
+
+/*
 void MainWindow::display_epositive_suffix_signatures(CLexicon*  )
 {
     if (m_Models["EPositive signatures"]->rowCount() > 0){
@@ -171,6 +170,7 @@ void MainWindow::display_epositive_suffix_signatures(CLexicon*  )
         m_graphics_scene->create_and_place_signatures();
     }
 }
+*/
 void MainWindow::display_epositive_prefix_signatures(CLexicon* lexicon)
 {
     if (m_Models["EPositive prefix signatures"]->rowCount() > 0){

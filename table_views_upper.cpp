@@ -263,10 +263,10 @@ void UpperTableView::ShowModelsUpperTableView(const QModelIndex& index)
             m_parent_window->display_suffix_signatures(lexicon);
             return;
         }
-        if (component == "EPositive signatures"){
-            m_parent_window->display_epositive_suffix_signatures(lexicon);
-            return;
-        }
+        //if (component == "EPositive signatures"){
+        //    m_parent_window->display_epositive_suffix_signatures(lexicon);
+        //    return;
+        // }
         if (component == "Prefix signatures"){
             m_parent_window->display_prefix_signatures(lexicon);
             return;

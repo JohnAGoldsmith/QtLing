@@ -241,11 +241,9 @@ public:
     void                                    display_prefixal_protostem(CLexicon*);
     void                                    display_suffixal_sigpairs(CLexicon*);
     void                                    display_suffixal_signatures(CLexicon*);
-    void                                    display_epositive_suffix_signatures(CLexicon*);
     void                                    display_epositive_prefix_signatures(CLexicon*);
     void                                    display_signature_graph_edges(CLexicon* );
     void                                    display_hypotheses(CLexicon*);
-//    void                                    DisplaySignatures();
     void                                    do_crab1();
     CLexicon*                               get_lexicon()                       { return m_my_lexicon;  }
     QList<CLexicon*>*                       get_lexica()                        { return& m_lexicon_list; }
