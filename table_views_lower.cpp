@@ -331,49 +331,16 @@ void LowerTableView::table_word(CWord* pWord){
     QList<QStandardItem*>      item_list;
     QStandardItem *            p_item;//, *q_item;
     QString                     word_t = pWord->get_key();
-
     // Create a clean model.
     if (m_my_current_model){
         delete m_my_current_model;
     }
     m_my_current_model = new QStandardItemModel();
-    /*
-    // Find the word's autobiography and set it, line by line, in the lower TableView.
-    QListIterator<QString> line_iter(*pWord->get_autobiography());
-    while (line_iter.hasNext()){
-        QString report_line = line_iter.next();
-        item_list.clear();
-        QStringList report_line_items = report_line.split("=");
-        for (int i = 0; i < report_line_items.size(); i++){
-            p_item = new QStandardItem(report_line_items[i]);
-            if (i == 0 && report_line_items[i][0] == "*"){
-                p_item->setBackground(Qt::red);
-            } else{
-                p_item->setBackground(Qt::white);
-            }
-            item_list.append(p_item);
-        }
-        m_my_current_model->appendRow(item_list);
-    }
-    // Display the signatures this word bears:
-    for (int signo = 0; signo < pWord->m_Signatures.size(); signo++){
-        QString sig = pWord->get_signatures()->at(signo)->second->get_key();
-        QString stem = pWord->get_signatures()->at(signo)->first->get_key();
-        item_list.clear();
-        p_item = new QStandardItem(stem);
-        item_list.append(p_item);
-        q_item = new QStandardItem(sig);
-        item_list.append(q_item);
-        m_my_current_model->appendRow(item_list);
-    }
-    */
     CLexicon* lexicon = m_lexicon;
-    if (lexicon->word_autobiographies_contains(word_t)) {
-        //qDebug() << 339 << "true";
+    if (lexicon->word_autobiographies_contains(word_t)) {         
         QListIterator<QString> line_iter(*(lexicon->get_word_autobiography(word_t)));
         while (line_iter.hasNext()){
-            QString report_line = line_iter.next();
-            qDebug() << report_line;
+            QString report_line = line_iter.next();             
             item_list.clear();
             QStringList report_line_items = report_line.split("=");
             for (int i = 0; i < report_line_items.size(); i++){
@@ -384,52 +351,13 @@ void LowerTableView::table_word(CWord* pWord){
                     p_item->setBackground(Qt::white);
                 }
                 item_list.append(p_item);
-
             }
             m_my_current_model->appendRow(item_list);
         }
     }
-
 }
 
-/**
- * @brief LowerTableView::table_word
- * @param pWord
- * What follows is a set of functions that display different kinds of user-requested information on the Lower Table View.
- */
-/*
-void LowerTableView::table_word(QString word, CLexicon* Lexicon){
-    QList<QStandardItem*>      item_list;
-    QStandardItem *            p_item, *q_item;
 
-    // Create a clean model.
-    if (m_my_current_model){
-        delete m_my_current_model;
-    }
-    m_my_current_model = new QStandardItemModel();
-
-    // Find the word's autobiography and set it, line by line, in the lower TableView.
-    if (Lexicon->word_autobiographies_contains(word)){
-        QListIterator<QString> line_iter(*Lexicon->get_word_autobiography(word));
-        while (line_iter.hasNext()){
-            QString report_line = line_iter.next();
-            item_list.clear();
-            QStringList report_line_items = report_line.split("=");
-            for (int i = 0; i < report_line_items.size(); i++){
-                p_item = new QStandardItem(report_line_items[i]);
-                if (i == 0 && report_line_items[i][0] == "*"){
-                    p_item->setBackground(Qt::red);
-                } else{
-                    p_item->setBackground(Qt::white);
-                }
-                item_list.append(p_item);
-            }
-            m_my_current_model->appendRow(item_list);
-        }
-    }
-
-}
-*/
 /**
  * @brief LowerTableView::table_stem
  * @param pWord
@@ -437,17 +365,15 @@ void LowerTableView::table_word(QString word, CLexicon* Lexicon){
  */
 void LowerTableView::table_stem(stem_t stem, CLexicon* Lexicon){
     QList<QStandardItem*>      item_list;
-    QStandardItem *            p_item;//, *q_item;
+    QStandardItem *            p_item;//, *q_item
 
     // Create a clean model.
     if (m_my_current_model){
         delete m_my_current_model;
     }
     m_my_current_model = new QStandardItemModel();
-
     // Find the stem's autobiography and set it, line by line, in the lower TableView.
     if (Lexicon->stem_autobiographies_contains(stem)) {
-        //qDebug() << 339 << "true";
         QListIterator<QString> line_iter(*Lexicon->get_stem_autobiography(stem));
         while (line_iter.hasNext()){
             QString report_line = line_iter.next();
@@ -461,12 +387,10 @@ void LowerTableView::table_stem(stem_t stem, CLexicon* Lexicon){
                     p_item->setBackground(Qt::white);
                 }
                 item_list.append(p_item);
-
             }
             m_my_current_model->appendRow(item_list);
         }
     }
-
 }
 
 
@@ -477,20 +401,15 @@ void LowerTableView::table_signature(CSignature* pSig ){
     QList<QStandardItem*>      item_list;
 
     item_list.clear();
-    //CStem_ptr_list    *   sig_stems = pSig->get_stems();
     if (m_my_current_model) { delete m_my_current_model;}
     m_my_current_model = new QStandardItemModel();
-
     pItem1 = new QStandardItem("Stem final letter entropy");
-
-    m_my_current_model->appendRow(item_list);
+   // m_my_current_model->appendRow(item_list);
     item_list.append(pItem1);
     pItem1 = new QStandardItem(QString::number(pSig->get_stem_entropy()));
     item_list.append(pItem1);
     m_my_current_model->appendRow(item_list);
-
     item_list.clear();
-
     CStem* pStem;
     pSig->sort_stems_by_count();
     for (int stemno = 0; stemno< pSig->get_number_of_stems(); stemno++){
@@ -501,8 +420,6 @@ void LowerTableView::table_signature(CSignature* pSig ){
         item_list.append(pItem2);
         m_my_current_model->appendRow(item_list);
         item_list.clear();    }
-
-
     resizeColumnsToContents();
 
 }

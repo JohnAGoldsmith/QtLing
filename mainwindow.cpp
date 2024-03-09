@@ -153,9 +153,9 @@ MainWindow::MainWindow()
     m_top_rightSplitter->addWidget(m_tableView_upper_1);
     m_top_rightSplitter->addWidget(m_tableView_upper_2);
     m_top_rightSplitter->addWidget(m_tableView_upper_3);
-
-    //m_top_rightSplitter->addWidget(m_tableView_upper_left_old);
-    //m_top_rightSplitter->addWidget(m_tableView_upper_right );
+    m_top_rightSplitter->setStretchFactor(0,4);
+    m_top_rightSplitter->setStretchFactor(1,4);
+    m_top_rightSplitter->setStretchFactor(2,3);
 
     m_bottom_rightSplitter = new QSplitter(Qt::Horizontal);
     m_bottom_rightSplitter->addWidget(m_tableView_lower);
@@ -189,12 +189,17 @@ MainWindow::MainWindow()
     //resize(QDesktopWidget().availableGeometry(this).size() * 0.9);
     resize(QSize(1000,1000));
 
-    m_mainSplitter->setSizes(QList<int>() << 800 <<2000);
+    //m_mainSplitter->setSizes(QList<int>() << 800 <<2000);
+    m_mainSplitter->setStretchFactor(0,4);
+    m_mainSplitter->setStretchFactor(1,8);
+
     setCurrentFile(QString());
     setUnifiedTitleAndToolBarOnMac(true);
     setFocus(Qt::OtherFocusReason);
 
     connect (m_tableView_upper_1, SIGNAL(clicked(QModelIndex)),
+            m_tableView_lower,SLOT(display_this_item(QModelIndex)));
+    connect (m_tableView_upper_2, SIGNAL(clicked(QModelIndex)),
             m_tableView_lower,SLOT(display_this_item(QModelIndex)));
 
 

@@ -34,7 +34,6 @@ signaturemodel_by_subsets::signaturemodel_by_subsets(CSignatureCollection * sign
         for (int m = 0; m < sig_list->count(); m++){
             QStringList * table_row;
             table_row = new QStringList();
-            qDebug() <<  37 << "";
             sig = sig_list->at(m);
             if (m==0) {
                 int total_robustness = sig2robustness_map[sig->get_key()];
@@ -42,15 +41,14 @@ signaturemodel_by_subsets::signaturemodel_by_subsets(CSignatureCollection * sign
             } else {
                 table_row->append(QString());
             }
-            qDebug() << "";
             table_row->append(sig->display());
-            qDebug() << 47  << sig->display();
+            table_row->append(sig->get_stem_entropy_string());
             m_entries.append(table_row);
             number_of_rows++;
         }
         QStringList * temp;
         temp = new QStringList();
-        *temp << QString() << QString();
+        *temp << QString() << QString()<< QString();
         m_entries.append(temp);
         number_of_rows++;
     }
@@ -63,7 +61,7 @@ int signaturemodel_by_subsets::rowCount(const QModelIndex &parent)const {
 }
 int signaturemodel_by_subsets::columnCount(const QModelIndex &parent)const {
     Q_UNUSED(parent);
-    return 2;
+    return 4;
 }
 QModelIndex signaturemodel_by_subsets::index(int row, int column, const QModelIndex &parent) const {
     Q_UNUSED(parent);
@@ -88,6 +86,11 @@ QVariant signaturemodel_by_subsets::data(const QModelIndex & index, int role)con
     case 1:
         if (role==Qt::DisplayRole){
             return QVariant(entry->at(1));
+        }
+        break;
+    case 2:
+        if (role==Qt::DisplayRole){
+            return QVariant(entry->at(2));
         }
         break;
 

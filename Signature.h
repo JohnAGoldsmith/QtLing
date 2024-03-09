@@ -68,6 +68,7 @@ public:
     int                         get_letter_count_in_stems_and_affixes();
     QList<CPrefix*>*            get_prefix_list()                       {return &m_Prefixes;}
     double                      get_stem_entropy();
+    QString                     get_stem_entropy_string();
     QList<CStem*>*              get_stems()                             { return   &m_Stems;}
     QStringList&                get_stem_strings(QStringList&);
     QStringList                 get_affix_string_list();

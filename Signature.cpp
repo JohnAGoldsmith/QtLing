@@ -353,7 +353,12 @@ double CSignature::get_stem_entropy()
     m_stem_entropy = calculate_stem_entropy();
     return m_stem_entropy;
 }
-
+QString CSignature::get_stem_entropy_string(){
+    if (m_Stems.count() < 3){
+        return QString();
+    }
+    return QString::number(get_stem_entropy());
+}
 double log_base_2(double x)
 {
     return qLn(x) / qLn(2.0);

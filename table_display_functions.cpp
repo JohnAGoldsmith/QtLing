@@ -86,7 +86,7 @@ void MainWindow::display_suffix_signatures(CLexicon* lexicon)
     m_signature_model_proxy_1->setSourceModel(m_suffix_signature_model);
     m_tableView_upper_1->setModel(m_signature_model_proxy_1);
     m_tableView_upper_1->set_data_type(e_data_suffixal_signatures);
-
+    m_tableView_upper_1->resizeColumnToContents(0);
 
     m_graphics_scene->assign_lattice_positions_to_signatures(signatures, e_data_suffixal_signatures);
     m_graphics_scene->create_and_place_signatures();
@@ -95,9 +95,12 @@ void MainWindow::display_suffix_signatures(CLexicon* lexicon)
     m_signature_model_proxy_2->sort(4, Qt::SortOrder(Qt::DescendingOrder));
     m_tableView_upper_2->setModel(m_signature_model_proxy_2);
     m_tableView_upper_2->set_data_type(e_data_suffixal_signatures);
+    m_tableView_upper_2->resizeColumnToContents(0);
 
     m_suffix_signature_model_by_subsets = new signaturemodel_by_subsets(signatures, m_my_lexicon->get_suffix_flag(), this);
     m_tableView_upper_3->setModel(m_suffix_signature_model_by_subsets);
+    m_tableView_upper_3->resizeColumnToContents(0);
+    m_tableView_upper_3->resizeColumnToContents(1);
     m_tableView_upper_2->set_data_type(e_data_suffixal_signatures);
 
 }
