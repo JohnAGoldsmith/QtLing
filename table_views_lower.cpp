@@ -399,12 +399,11 @@ void LowerTableView::table_signature(CSignature* pSig ){
 
     QStandardItem*             pItem1, * pItem2;
     QList<QStandardItem*>      item_list;
-
+    int number_of_columns = 7;
     item_list.clear();
     if (m_my_current_model) { delete m_my_current_model;}
     m_my_current_model = new QStandardItemModel();
     pItem1 = new QStandardItem("Stem final letter entropy");
-   // m_my_current_model->appendRow(item_list);
     item_list.append(pItem1);
     pItem1 = new QStandardItem(QString::number(pSig->get_stem_entropy()));
     item_list.append(pItem1);
@@ -412,14 +411,22 @@ void LowerTableView::table_signature(CSignature* pSig ){
     item_list.clear();
     CStem* pStem;
     pSig->sort_stems_by_count();
-    for (int stemno = 0; stemno< pSig->get_number_of_stems(); stemno++){
-        pStem = pSig->get_stems()->at(stemno);
-        pItem1 = new QStandardItem(pStem->get_key() );
-        item_list.append(pItem1);
-        pItem2 = new QStandardItem(QString::number(pStem->get_count() ));
-        item_list.append(pItem2);
+    int stemno = 0;
+    while (stemno < pSig->get_number_of_stems()) {
+        for (int colno =0; colno<number_of_columns; colno++){
+                pStem = pSig->get_stems()->at(stemno);
+                pItem1 = new QStandardItem(pStem->get_key() );
+                item_list.append(pItem1);
+                pItem2 = new QStandardItem(QString::number(pStem->get_count() ));
+                item_list.append(pItem2);
+                stemno++;
+                if (stemno == pSig->get_number_of_stems()){
+                    break;
+                }
+        }
         m_my_current_model->appendRow(item_list);
-        item_list.clear();    }
+        item_list.clear();
+    }
     resizeColumnsToContents();
 
 }

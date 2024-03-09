@@ -138,7 +138,6 @@ bool compare_robustness_reversed(  CSignature* pSig1,   CSignature* pSig2)
 }
 bool compare_secondary_robustness(CSignature* pSig1, CSignature* pSig2)
 {
-     qDebug() << 121 << pSig1->calculate_secondary_robustness() << pSig2->calculate_secondary_robustness();
      return pSig1->calculate_secondary_robustness() >pSig2->calculate_secondary_robustness();
 }
 
@@ -157,9 +156,7 @@ void CSignatureCollection::sort(eSortStyle sort_style)
          std::sort(m_sort_list.begin(), m_sort_list.end(),  compare_affix_count);
          break;
     case SIG_BY_REVERSE_ROBUSTNESS:
-        qDebug() << 176 << m_sort_list.length();
           std::sort(m_sort_list.begin(), m_sort_list.end(),  compare_robustness_reversed);
-        qDebug() << 178;
           break;
     case SIG_BY_SECONDARY_ROBUSTNESS:
           std::sort(m_sort_list.begin(), m_sort_list.end(),  compare_secondary_robustness);
@@ -174,17 +171,16 @@ void CSignatureCollection::sort(eSortStyle sort_style)
 void CSignatureCollection::sort_signatures_by_subsets(){
     sort(SIG_BY_AFFIX_COUNT);
     int n = 0;
+    m_sort_list_by_subsets.clear();
     while (n < m_sort_list.length()){
         QList<CSignature*> * sig_list;
         sig_list = new QList<CSignature*>;
         CSignature* top_sig = m_sort_list.at(0);
-        qDebug() << top_sig->display();
         sig_list->append(m_sort_list.takeAt(0));
 
         int m = n;
         while (m < m_sort_list.length()){
             if (top_sig->contains(m_sort_list.at(m))){
-                qDebug() << 187 << m_sort_list.at(m);
                 sig_list->append(m_sort_list.takeAt(m));
                 continue;
             }
@@ -345,13 +341,11 @@ void CSignatureCollection::find_minimal_cover()
     while (! temporary_sig_list.isEmpty()){
         pSig = temporary_sig_list.takeFirst();
         m_minimal_cover.append(pSig);
-        //qDebug() << 251 << pSig->display();
         sig_iter_2.toFront();
         while(sig_iter_2.hasNext()){
             CSignature* qSig = sig_iter_2.next();
             if (pSig->contains(qSig)){
                     sig_iter_2.remove();
-                    //qDebug() << 256 << pSig->display() << qSig->display();
             }
         }
     }
@@ -380,7 +374,6 @@ void CSignatureCollection::calculate_sig_robustness()
     foreach (CSignature* p_sig, m_signature_map) {
         p_sig->calculate_robustness();
     }
-    qDebug() << "Calculated signature robustness";
 }
 
 void CSignatureCollection::add_this_and_all_subsignatures(QString this_sig_string, int robustness, QStringList & signature_check_list){ // this is only used when creating "virtual signatures"
@@ -434,7 +427,6 @@ void CSignatureCollection::produce_latex(){
     result = Latex.tabular_beginning(alignments);
     foreach (CSignature* sig, m_sort_list){
         sum += sig->get_robustness();
-        qDebug() << sum;
     }
     foreach (CSignature* sig, m_sort_list){
         temp_stringlist = sig->signature2latex_string_list();

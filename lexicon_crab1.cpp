@@ -66,22 +66,9 @@ void CLexicon::Crab_1()
 
 
     step1_from_words_to_protostems();
-
     step2_from_protostems_to_parses();
-
-    // at this point, there are some protostems with only one parse --
-    // this will happen if a word occurs alone and also with a hyphen after it.
-    // this will create a signature with just the NULL suffix!
-    // This should be fixed here.
-
-
     step3_from_parses_to_stem2sig_maps(QString("crab_1"));
-
     step4_create_signatures(QString("Crab1"));
-
-    //collect_parasuffixes(); // these are suffixes found in a signature with only one stem
-
-    qDebug() << 84 << "Number of prefixes" << m_Prefixes->get_count() << get_prefixes()->get_prefix_list()->count();
 
     m_suffix_flag?
        m_Signatures->calculate_sig_robustness():
@@ -90,7 +77,6 @@ void CLexicon::Crab_1()
     if (m_suffix_flag) {
         m_Signatures->produce_latex ();
     }
-    qDebug() << 93 << "Number of prefixes" << m_Prefixes->get_count() << get_prefixes()->get_prefix_list()->count();
 
 }
 
@@ -431,21 +417,17 @@ void CLexicon::step4_create_signatures(const QString& name_of_calling_function,
     }
     step4e_link_all_words_to_signatures(name_of_calling_function);
 
-    qDebug() << 437;
-
-    m_suffix_flag?
-                m_suffixal_stems->sort_alphabetically():
-                m_prefixal_stems->sort_alphabetically();
-    qDebug() <<442;
+     m_suffix_flag?
+        m_suffixal_stems->sort_alphabetically():
+        m_prefixal_stems->sort_alphabetically();
     m_suffix_flag?
         m_Signatures->sort():
         m_PrefixSignatures->sort();
-    qDebug() << 446;
     m_Suffixes->sort_by_count();
     m_Prefixes->sort_by_count();
     m_suffix_flag ?
-                m_Signatures->calculate_stem_entropy():
-                m_PrefixSignatures->calculate_stem_entropy();
+        m_Signatures->calculate_stem_entropy():
+        m_PrefixSignatures->calculate_stem_entropy();
     print_signature_transforms();
 }
 

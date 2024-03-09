@@ -581,12 +581,14 @@ void MainWindow::do_crab2_fast()
 {   statusBar()->showMessage("Crab 2: Good sigs inside bad (fast).");
     CLexicon* lexicon = get_lexicon();
     lexicon->Crab_2_fast();
-    load_models(get_lexicon());
     write_stems_and_words();
     create_or_update_TreeModel(get_lexicon());
     m_graphics_scene->set_signature_collection(get_lexicon()->get_active_signature_collection());
     m_leftTreeView->expandAll();
     m_leftTreeView->resizeColumnToContents(0);
+    get_lexicon()->get_suffix_flag()?
+        get_lexicon()->get_suffixal_signatures()->sort_signatures_by_subsets():
+        get_lexicon()->get_prefix_signatures()->sort_signatures_by_subsets();
     get_lexicon()->get_suffix_flag()?
           display_suffix_signatures(get_lexicon()):
           display_prefix_signatures(get_lexicon());
@@ -597,12 +599,15 @@ void MainWindow::do_crab2_slow()
 {   statusBar()->showMessage("Crab 2a: Good sigs inside bad (slow).");
     CLexicon* lexicon = get_lexicon();
     lexicon->Crab_2_slow();
-    load_models(get_lexicon());
+    //load_models(get_lexicon());
     write_stems_and_words();
     create_or_update_TreeModel(get_lexicon());
     m_graphics_scene->set_signature_collection(get_lexicon()->get_active_signature_collection());
     m_leftTreeView->expandAll();
     m_leftTreeView->resizeColumnToContents(0);
+    get_lexicon()->get_suffix_flag()?
+        get_lexicon()->get_suffixal_signatures()->sort_signatures_by_subsets():
+        get_lexicon()->get_prefix_signatures()->sort_signatures_by_subsets();
     get_lexicon()->get_suffix_flag()?
         display_suffix_signatures(get_lexicon()):
         display_prefix_signatures(get_lexicon());
@@ -613,7 +618,7 @@ void MainWindow::do_crab3()
 {   statusBar()->showMessage("Crab Nebula, phase 3: repair low entropy signatures.");
     CLexicon* lexicon = get_lexicon();
     lexicon->Crab_3();
-    load_models(lexicon);
+    //load_models(lexicon);
     create_or_update_TreeModel(lexicon);
     if (lexicon->get_suffix_flag())
         print_suffix_signatures();
@@ -623,15 +628,18 @@ void MainWindow::do_crab3()
     m_leftTreeView->resizeColumnToContents(0);
     write_stems_and_words();
     get_lexicon()->get_suffix_flag()?
-          display_suffix_signatures(get_lexicon()):
-          display_prefix_signatures(get_lexicon());
+        get_lexicon()->get_suffixal_signatures()->sort_signatures_by_subsets():
+        get_lexicon()->get_prefix_signatures()->sort_signatures_by_subsets();
+    get_lexicon()->get_suffix_flag()?
+        display_suffix_signatures(get_lexicon()):
+        display_prefix_signatures(get_lexicon());
     statusBar()->showMessage("Crab 3: repair low entropy signatures completed.");
 }
 void MainWindow::do_crab4()
 {   statusBar()->showMessage("Crab 4: split complex morphemes.");
     CLexicon* lexicon = get_lexicon();
     lexicon->Crab_4();
-    load_models(lexicon);
+    //load_models(lexicon);
     create_or_update_TreeModel(lexicon);
     if (lexicon->get_suffix_flag())
         print_suffix_signatures();
@@ -641,25 +649,33 @@ void MainWindow::do_crab4()
     m_leftTreeView->resizeColumnToContents(0);
     write_stems_and_words();
     get_lexicon()->get_suffix_flag()?
+        get_lexicon()->get_suffixal_signatures()->sort_signatures_by_subsets():
+        get_lexicon()->get_prefix_signatures()->sort_signatures_by_subsets();
+    get_lexicon()->get_suffix_flag()?
           display_suffix_signatures(get_lexicon()):
           display_prefix_signatures(get_lexicon());
+
     statusBar()->showMessage("Crab 4: split complex morphemes completed.");
 }
 void MainWindow::do_crab5(){
     statusBar()->showMessage("Crab 5: simple compounds...");
         CLexicon* lexicon = get_lexicon();
         lexicon->Crab_5();
-        load_models(lexicon);
+        //load_models(lexicon);
         create_or_update_TreeModel(lexicon);
         m_leftTreeView->expandAll();
         m_leftTreeView->resizeColumnToContents(0);
         statusBar()->showMessage("Crab 5: simple compounds completed.");
+        get_lexicon()->get_suffix_flag()?
+        get_lexicon()->get_suffixal_signatures()->sort_signatures_by_subsets():
+        get_lexicon()->get_prefix_signatures()->sort_signatures_by_subsets();
 }
+
 void MainWindow::do_crab_compounds(){
     statusBar()->showMessage("Crab compounds: simple compounds...");
         CLexicon* lexicon = get_lexicon();
         lexicon->Crab_compounds();
-        load_models(lexicon);
+        //load_models(lexicon);
         create_or_update_TreeModel(lexicon);
         m_leftTreeView->expandAll();
         m_leftTreeView->resizeColumnToContents(0);
@@ -739,7 +755,7 @@ void MainWindow::load_models(CLexicon* lexicon)
      */
 
 
-    m_Models["Compound words"]->load_compounds(lexicon->get_compounds());
+    //m_Models["Compound words"]->load_compounds(lexicon->get_compounds());
 
     // Now all source models are loaded. Link them to proxy models.
     //statusBar()->showMessage("Loading models: Finishing up");
