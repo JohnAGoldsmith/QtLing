@@ -46,7 +46,7 @@ QVariant signaturemodel::data(const QModelIndex & index, int role)const {
         break;
     case 3:
         if (role==Qt::DisplayRole){
-            return QVariant(m_signatures->at(row)->get_stem_entropy());
+            return QVariant(m_signatures->at(row)->get_stem_entropy_string());
         }
         break;
     case 4:
